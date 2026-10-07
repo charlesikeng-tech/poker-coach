@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: backend/global.json
+      - name: Restore
+        run: dotnet restore PokerCoach.slnx
+      - name: Format check
+        run: dotnet format PokerCoach.slnx --verify-no-changes --no-restore
+      - name: Build
+        run: dotnet build PokerCoach.slnx --configuration Release --no-restore
+      - name: Test
+        run: dotnet test PokerCoach.slnx --configuration Release --no-build
+      - name: Vulnerable packages
+        run: |
+          dotnet list PokerCoach.slnx package --vulnerable --include-transitive | tee vulnerable.txt
+          ! grep -qi "has the following vulnerable packages" vulnerable.txt
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install
+        run: npx -y npm@11 ci
+      - name: Format check
+        run: npx prettier --check "src/**/*.{ts,html,scss}" "public/i18n/*.json"
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm test -- --watch=false
+      - name: Audit (production dependencies)
+        run: npm audit --omit=dev --audit-level=high

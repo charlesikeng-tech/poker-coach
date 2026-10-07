@@ -1,0 +1,82 @@
+{
+  "app": { "name": "Poker Coach" },
+  "nav": {
+    "dashboard": "Dashboard",
+    "performance": "Performance",
+    "tournaments": "Tournaments",
+    "sessions": "Sessions",
+    "statistics": "Statistics",
+    "import": "Import"
+  },
+  "shell": {
+    "skipToContent": "Skip to content",
+    "mainNavigation": "Main navigation",
+    "openNavigation": "Open navigation",
+    "closeNavigation": "Close navigation",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
+    "language": "Language",
+    "themeToLight": "Switch to light theme",
+    "themeToDark": "Switch to dark theme"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "How your game is going and what to work on next.",
+      "empty": {
+        "title": "No results yet",
+        "description": "Import your Winamax hand histories and tournament summaries to see your results here.",
+        "action": "Import files"
+      }
+    },
+    "performance": {
+      "title": "Performance",
+      "description": "Your results over time, by format and buy-in.",
+      "empty": {
+        "title": "No tournaments to analyze yet",
+        "description": "Profit, ROI, ABI and ITM appear once your tournament summaries are imported.",
+        "action": "Import files"
+      }
+    },
+    "tournaments": {
+      "title": "Tournaments",
+      "description": "Every tournament you played, with its buy-in and result.",
+      "empty": {
+        "title": "No tournaments yet",
+        "description": "Imported tournaments are listed here with their buy-in, result and finish position.",
+        "action": "Import files"
+      }
+    },
+    "sessions": {
+      "title": "Sessions",
+      "description": "Your playing sessions, from first hand to last.",
+      "empty": {
+        "title": "No sessions yet",
+        "description": "A session groups the tournaments you play in one sitting. Import your files to build them.",
+        "action": "Import files"
+      }
+    },
+    "statistics": {
+      "title": "Statistics",
+      "description": "How you play, from preflop to river.",
+      "empty": {
+        "title": "No hands to analyze yet",
+        "description": "VPIP, PFR, 3-bet and your other statistics are computed from your imported hand histories.",
+        "action": "Import files"
+      }
+    },
+    "import": {
+      "title": "Import",
+      "description": "Add your Winamax hand histories and tournament summaries.",
+      "unavailable": {
+        "title": "File upload is not available yet",
+        "description": "You will be able to drop your Winamax files or a .zip archive here. Each file is checked before import, and importing the same file twice never creates duplicates."
+      }
+    },
+    "notFound": {
+      "title": "Page not found",
+      "description": "This page does not exist or has moved.",
+      "action": "Back to dashboard"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Use cases. Depends on Domain only; external systems are reached through interfaces declared here. -->
+  <ItemGroup>
+    <ProjectReference Include="..\PokerCoach.Domain\PokerCoach.Domain.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,82 @@
+{
+  "app": { "name": "Poker Coach" },
+  "nav": {
+    "dashboard": "Panel",
+    "performance": "Rendimiento",
+    "tournaments": "Torneos",
+    "sessions": "Sesiones",
+    "statistics": "Estadísticas",
+    "import": "Importar"
+  },
+  "shell": {
+    "skipToContent": "Ir al contenido",
+    "mainNavigation": "Navegación principal",
+    "openNavigation": "Abrir la navegación",
+    "closeNavigation": "Cerrar la navegación",
+    "collapseSidebar": "Contraer el menú",
+    "expandSidebar": "Expandir el menú",
+    "language": "Idioma",
+    "themeToLight": "Cambiar al tema claro",
+    "themeToDark": "Cambiar al tema oscuro"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Panel",
+      "description": "Cómo va tu juego y en qué trabajar a continuación.",
+      "empty": {
+        "title": "Todavía no hay resultados",
+        "description": "Importa tus historiales de manos y resúmenes de torneos de Winamax para ver aquí tus resultados.",
+        "action": "Importar archivos"
+      }
+    },
+    "performance": {
+      "title": "Rendimiento",
+      "description": "Tus resultados a lo largo del tiempo, por formato y buy-in.",
+      "empty": {
+        "title": "Todavía no hay torneos que analizar",
+        "description": "Beneficio, ROI, ABI e ITM aparecen en cuanto importas tus resúmenes de torneos.",
+        "action": "Importar archivos"
+      }
+    },
+    "tournaments": {
+      "title": "Torneos",
+      "description": "Todos los torneos que has jugado, con su buy-in y su resultado.",
+      "empty": {
+        "title": "Todavía no hay torneos",
+        "description": "Los torneos importados aparecen aquí con su buy-in, su resultado y tu posición final.",
+        "action": "Importar archivos"
+      }
+    },
+    "sessions": {
+      "title": "Sesiones",
+      "description": "Tus sesiones de juego, de la primera a la última mano.",
+      "empty": {
+        "title": "Todavía no hay sesiones",
+        "description": "Una sesión agrupa los torneos que juegas de una sentada. Importa tus archivos para crearlas.",
+        "action": "Importar archivos"
+      }
+    },
+    "statistics": {
+      "title": "Estadísticas",
+      "description": "Cómo juegas, del preflop al river.",
+      "empty": {
+        "title": "Todavía no hay manos que analizar",
+        "description": "VPIP, PFR, 3-bet y tus demás estadísticas se calculan a partir de tus historiales de manos importados.",
+        "action": "Importar archivos"
+      }
+    },
+    "import": {
+      "title": "Importar",
+      "description": "Añade tus historiales de manos y resúmenes de torneos de Winamax.",
+      "unavailable": {
+        "title": "La subida de archivos aún no está disponible",
+        "description": "Podrás soltar aquí tus archivos de Winamax o un archivo .zip. Cada archivo se comprueba antes de importarlo, e importar dos veces el mismo archivo nunca crea duplicados."
+      }
+    },
+    "notFound": {
+      "title": "Página no encontrada",
+      "description": "Esta página no existe o se ha movido.",
+      "action": "Volver al panel"
+    }
+  }
+}

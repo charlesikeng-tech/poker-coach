@@ -1,0 +1,280 @@
+// Breakpoints: phone < 768px (off-canvas drawer), tablet 768–1023px (icon rail), desktop ≥ 1024px
+// (full sidebar, user-collapsible to the rail).
+$tablet: 768px;
+$desktop: 1024px;
+
+@mixin rail {
+  .sidebar {
+    width: var(--layout-sidebar-collapsed-width);
+  }
+  .rail-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .sidebar__brand,
+  .nav-link {
+    justify-content: center;
+  }
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+// Declared first: modifier rules below (e.g. hidden on desktop) must win at equal specificity.
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+}
+
+// Sidebar ------------------------------------------------------------------------------------------
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--layout-sidebar-width);
+  height: 100dvh;
+  padding: var(--space-3);
+  overflow-y: auto;
+  background: var(--surface-navigation);
+  border-right: 1px solid var(--border-subtle);
+  transition: width var(--motion-base) var(--easing-standard);
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: calc(var(--layout-topbar-height) - var(--space-3));
+  padding: 0 var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.sidebar__product {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.sidebar__close {
+  display: none;
+  margin-left: auto;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar__nav {
+  flex: 1;
+}
+
+.sidebar__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 2.25rem;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) var(--easing-standard),
+    color var(--motion-fast) var(--easing-standard);
+
+  &:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+}
+
+.nav-link--active {
+  background: var(--surface-selected);
+  color: var(--text-primary);
+
+  app-icon {
+    color: var(--accent-primary);
+  }
+}
+
+// Workspace -----------------------------------------------------------------------------------------
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--layout-topbar-height);
+  padding: 0 var(--space-6);
+  background: var(--surface-background);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.topbar__spacer {
+  flex: 1;
+}
+
+.topbar__menu {
+  display: none;
+}
+
+.topbar__select {
+  height: 2.25rem;
+  padding: 0 var(--space-3);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.content {
+  flex: 1;
+  padding: var(--space-8);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.content__inner {
+  max-width: var(--layout-content-max-width);
+  margin: 0 auto;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
+  }
+}
+
+.backdrop {
+  display: none;
+}
+
+// Responsive ----------------------------------------------------------------------------------------
+
+@media (min-width: $desktop) {
+  .shell--collapsed {
+    @include rail;
+  }
+}
+
+@media (min-width: $tablet) and (max-width: ($desktop - 1px)) {
+  .shell {
+    @include rail;
+  }
+  .sidebar__collapse {
+    display: none;
+  }
+}
+
+@media (max-width: ($tablet - 1px)) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    width: min(18rem, 85vw);
+    transform: translateX(-100%);
+    // Hidden drawer must leave the tab order; visibility flips after the slide-out ends.
+    visibility: hidden;
+    transition:
+      transform var(--motion-base) var(--easing-standard),
+      visibility 0s linear var(--motion-base);
+  }
+
+  .shell--mobile-open {
+    .sidebar {
+      transform: none;
+      visibility: visible;
+      transition-delay: 0s;
+      box-shadow: var(--shadow-elevated);
+    }
+    .backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgb(0 0 0 / 0.45);
+    }
+  }
+
+  .sidebar__close,
+  .topbar__menu {
+    display: inline-grid;
+  }
+
+  .sidebar__collapse {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 var(--space-4);
+  }
+
+  .content {
+    padding: var(--space-6) var(--space-4);
+  }
+}

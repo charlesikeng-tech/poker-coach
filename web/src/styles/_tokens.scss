@@ -1,0 +1,114 @@
+// Poker Coach design tokens.
+// Components consume ONLY these semantic custom properties — never raw hex values.
+// Text/background pairs were checked for WCAG AA (≥ 4.5:1 for body text) in both themes.
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  // Surfaces: five layers, from the page background up to interactive elements.
+  --surface-background: #0c1017;
+  --surface-navigation: #10151e;
+  --surface-primary: #141a24;
+  --surface-secondary: #19202c;
+  --surface-elevated: #202938;
+  --surface-hover: rgb(148 163 184 / 0.08);
+  --surface-selected: rgb(124 156 255 / 0.14);
+
+  --text-primary: #e6eaf2;
+  --text-secondary: #a7b0c0;
+  --text-muted: #8590a2;
+  --text-on-accent: #0c1017;
+
+  --border-subtle: rgb(148 163 184 / 0.1);
+  --border-default: rgb(148 163 184 / 0.18);
+  --border-strong: rgb(148 163 184 / 0.32);
+
+  --accent-primary: #7c9cff;
+  --accent-primary-hover: #94afff;
+  --accent-subtle: rgb(124 156 255 / 0.14);
+
+  // Semantic states. Never the only carrier of meaning: pair with a sign, icon or label.
+  --success: #3fbf8f;
+  --warning: #e6b450;
+  --danger: #f07178;
+  --info: #5fb3e6;
+
+  --focus-ring: #94afff;
+  --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --surface-background: #eef1f5;
+  --surface-navigation: #f6f8fa;
+  --surface-primary: #f6f8fa;
+  --surface-secondary: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-hover: rgb(15 23 42 / 0.05);
+  --surface-selected: rgb(63 91 217 / 0.1);
+
+  --text-primary: #121826;
+  --text-secondary: #4a5568;
+  --text-muted: #646e80;
+  --text-on-accent: #ffffff;
+
+  --border-subtle: rgb(15 23 42 / 0.08);
+  --border-default: rgb(15 23 42 / 0.14);
+  --border-strong: rgb(15 23 42 / 0.26);
+
+  --accent-primary: #3f5bd9;
+  --accent-primary-hover: #3049bf;
+  --accent-subtle: rgb(63 91 217 / 0.1);
+
+  --success: #17744e;
+  --warning: #8a6100;
+  --danger: #b3303b;
+  --info: #1f6fa8;
+
+  --focus-ring: #3f5bd9;
+  --shadow-elevated: 0 8px 24px rgb(15 23 42 / 0.1);
+}
+
+:root {
+  // Typography: one family, scale based on a 1.2 ratio from a 14px base (dense analytics UI).
+  --font-sans: 'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-md: 0.875rem;
+  --font-size-lg: 1.0625rem;
+  --font-size-xl: 1.3125rem;
+  --font-size-2xl: 1.625rem;
+  --font-size-metric: 2rem;
+  --line-height-tight: 1.2;
+  --line-height-body: 1.5;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  // Spacing: 4px grid.
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  // Radii stay small: a precision tool, not a toy.
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --layout-sidebar-width: 15rem;
+  --layout-sidebar-collapsed-width: 4rem;
+  --layout-topbar-height: 3.5rem;
+  --layout-content-max-width: 90rem;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+}

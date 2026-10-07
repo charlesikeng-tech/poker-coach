@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Business core: BCL only. No ASP.NET Core, EF Core, provider, billing or LLM dependency. -->
+</Project>

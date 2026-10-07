@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PokerCoach.Domain/PokerCoach.Domain.csproj" />
+    <Project Path="src/PokerCoach.Application/PokerCoach.Application.csproj" />
+    <Project Path="src/PokerCoach.Infrastructure/PokerCoach.Infrastructure.csproj" />
+    <Project Path="src/PokerCoach.Api/PokerCoach.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PokerCoach.ArchitectureTests/PokerCoach.ArchitectureTests.csproj" />
+    <Project Path="tests/PokerCoach.Api.Tests/PokerCoach.Api.Tests.csproj" />
+  </Folder>
+  <Folder Name="/solution-items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+  </Folder>
+</Solution>

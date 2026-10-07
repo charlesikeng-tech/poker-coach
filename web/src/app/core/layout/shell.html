@@ -1,0 +1,128 @@
+<ng-container *transloco="let t">
+  <button type="button" class="skip-link" (click)="skipToContent()">
+    {{ t('shell.skipToContent') }}
+  </button>
+
+  <div
+    class="shell"
+    [class.shell--collapsed]="collapsed()"
+    [class.shell--mobile-open]="mobileNavigationOpen()"
+  >
+    <aside class="sidebar" id="primary-sidebar">
+      <div class="sidebar__brand">
+        <app-brand-mark />
+        <span class="sidebar__product rail-hidden">{{ t('app.name') }}</span>
+        <button
+          type="button"
+          class="icon-button sidebar__close"
+          [attr.aria-label]="t('shell.closeNavigation')"
+          (click)="closeMobileNavigation()"
+        >
+          <app-icon [icon]="icons.X" />
+        </button>
+      </div>
+
+      <nav class="sidebar__nav" [attr.aria-label]="t('shell.mainNavigation')">
+        <ul>
+          @for (item of primaryNavigation; track item.path) {
+            <li>
+              <a
+                class="nav-link"
+                [routerLink]="item.path"
+                routerLinkActive="nav-link--active"
+                ariaCurrentWhenActive="page"
+                [attr.title]="collapsed() ? t(item.labelKey) : null"
+                (click)="closeMobileNavigation()"
+              >
+                <app-icon [icon]="item.icon" />
+                <span class="rail-hidden">{{ t(item.labelKey) }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <div class="sidebar__footer">
+        <ul>
+          @for (item of secondaryNavigation; track item.path) {
+            <li>
+              <a
+                class="nav-link"
+                [routerLink]="item.path"
+                routerLinkActive="nav-link--active"
+                ariaCurrentWhenActive="page"
+                [attr.title]="collapsed() ? t(item.labelKey) : null"
+                (click)="closeMobileNavigation()"
+              >
+                <app-icon [icon]="item.icon" />
+                <span class="rail-hidden">{{ t(item.labelKey) }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+        <button
+          type="button"
+          class="nav-link sidebar__collapse"
+          aria-controls="primary-sidebar"
+          [attr.aria-expanded]="!collapsed()"
+          (click)="toggleCollapsed()"
+        >
+          <app-icon [icon]="collapsed() ? icons.PanelLeftOpen : icons.PanelLeftClose" />
+          <span class="rail-hidden">
+            {{ collapsed() ? t('shell.expandSidebar') : t('shell.collapseSidebar') }}
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <div class="backdrop" aria-hidden="true" (click)="closeMobileNavigation()"></div>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button
+          type="button"
+          class="icon-button topbar__menu"
+          aria-controls="primary-sidebar"
+          [attr.aria-expanded]="mobileNavigationOpen()"
+          [attr.aria-label]="t('shell.openNavigation')"
+          (click)="openMobileNavigation()"
+        >
+          <app-icon [icon]="icons.Menu" />
+        </button>
+
+        <div class="topbar__spacer"></div>
+
+        <label class="visually-hidden" for="language-select">{{ t('shell.language') }}</label>
+        <select
+          id="language-select"
+          class="topbar__select"
+          (change)="changeLanguage($any($event.target).value)"
+        >
+          @for (code of languages; track code) {
+            <!-- [selected] per option: a [value] binding on <select> runs before the options exist. -->
+            <option [value]="code" [attr.lang]="code" [selected]="code === language.current()">
+              {{ languageNames[code] }}
+            </option>
+          }
+        </select>
+
+        <button
+          type="button"
+          class="icon-button"
+          [attr.aria-label]="
+            theme.current() === 'dark' ? t('shell.themeToLight') : t('shell.themeToDark')
+          "
+          (click)="theme.toggle()"
+        >
+          <app-icon [icon]="theme.current() === 'dark' ? icons.Sun : icons.Moon" />
+        </button>
+      </header>
+
+      <main id="main-content" class="content" tabindex="-1">
+        <div class="content__inner">
+          <router-outlet />
+        </div>
+      </main>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+
+# IDEs / OS
+.idea/
+.DS_Store
+Thumbs.db
+
+# Raw hand histories must never be committed. Anonymized golden files live under
+# backend/tests/**/GoldenFiles and are added explicitly.
+hand-histories/
