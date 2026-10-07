@@ -1,10 +1,10 @@
 # Winamax file format — spike notes
 
 - Date: 2026-10-07
-- Sample: one tournament (CASSIOPEIA, id 1161415333, 10 € PKO, semi-turbo, 6-max) — one summary
-  file and one hand-history file, 72 hands.
-- Status: **one sample**. Every rule below marked *to confirm* needs a second sample before it is
-  coded as a hard rule.
+- Samples (both progressive KO, semi-turbo, 6-max):
+  - CASSIOPEIA (1161415333), 10 €, finished 108th / 994 — 72 hands;
+  - ACCELERATOR (1169257027), 5 €, finished 11th / 753, bounties won — 222 hands on 6 tables.
+- Status: rules marked *to confirm* still need a sample of the kind listed at the end.
 
 ## Files
 
@@ -29,34 +29,44 @@ You finished in 108th place
 You won 10.55€
 ```
 
-- **Buy-in split.** The hand header says `buyIn: 9€ + 1€` and every starting bounty is `5€`, so
-  the summary order is *prize 4 € + bounty 5 € + fee 1 €*. Cross-check: 4956 / 4 = 1239 (integer)
-  whereas 4956 / 5 is not. *To confirm.*
-- **Entries ≠ registered players.** 1239 entries for 994 registered players means ≈ 245
-  re-entries. Entries can only be **inferred** (prizepool / prize part), and that inference breaks
+- **Buy-in split — confirmed on both samples.** Summary order is *prize + bounty + fee*
+  (`4€ + 5€ + 1€`, `2€ + 2.50€ + 0.50€`); the hand header shows *(prize + bounty) + fee*
+  (`9€ + 1€`, `4.50€ + 0.50€`, decimals possible) and starting bounties equal the bounty part.
+  Cross-check: prizepool / prize part is an integer (4956 / 4 = 1239, 1928 / 2 = 964), prizepool /
+  bounty part is not.
+- **Entries ≠ registered players.** 1239 entries for 994 registered (964 for 753): re-entries
+  are counted in the prizepool, not in `Registered players`. Entries can only be **inferred** (prizepool / prize part), and that inference breaks
   as soon as a guarantee overlay exists. → `Entrants` = registered players (stated);
   `Entries` = `INFERRED` or `UNKNOWN`.
 - **Hero re-entries are not visible** in this summary. If the hero re-entered, total investment
   is unknown from the summary alone → ROI must not be computed as one buy-in. *Need a sample
   with a re-entry.*
-- **"You won" does not split prize vs bounties.** *Need a sample where the hero won a bounty.*
+- **Winnings line.** With bounties: `You won 25.42€ + Bounty 18.86€` (prize, then bounty cash).
+  Without: `You won 10.55€` — read as bounty = 0 only for that format; *to confirm* what the line
+  looks like when the hero wins bounties but finishes out of the money, and when he wins nothing.
 - `Levels` gives the blind structure (useful for tournament stage); one level has duration `61`
   — store raw, do not interpret yet.
 
 ## What the hand history gives
 
 - **Header**: tournament name (no id), level number, a composite hand id
-  `#<tournamentKey>-<handNumberAtTable>-<unixSeconds>`, blinds as `(ante/sb/bb)`, UTC timestamp.
-  The full id string is the dedup key; the middle number is consecutive per table (gap detection).
+  `#<tableKey>-<handNumberAtTable>-<unixSeconds>`, blinds as `(ante/sb/bb)`, UTC timestamp.
+  The first part changes with the table (not a tournament id). The full id string is the dedup
+  key; the middle number is consecutive per table, which makes gap detection possible.
+- **One file per tournament**, all tables included, in chronological order (ACCELERATOR: level 1
+  with the 20 000 starting stack, then 6 tables until the bust).
 - **Tournament id** only appears in the table name: `'CASSIOPEIA(1161415333)#0000'` — link hands to
   tournaments through it.
 - **Seats** carry stack and **current bounty** (`(57120, 5€ bounty)`): PKO "who covers whom" and
   bounty growth are available.
 - **Hero**: the `Dealt to <name> [cards]` line.
 
-## Parser rules confirmed on 72/72 hands
+## Parser rules confirmed on 294/294 hands
 
-Verified with a throwaway script (pot conservation + stack continuity between consecutive hands):
+Verified with a throwaway script: pot conservation on every hand (`Σ invested = Total pot =
+Σ collected`) and stack continuity between consecutive hands **of the same table** (1 590 checks).
+The only discontinuities are across a gap in hand numbers (see coverage) — never a parsing error.
+Across a table move, stacks of players who move too are unknown until their next hand.
 
 1. `raises X to Y` — `Y` is the player's street total; `calls X` / `bets X` are increments.
    Blinds count toward the pre-flop street total; antes do not.
@@ -73,17 +83,26 @@ Verified with a throwaway script (pot conservation + stack continuity between co
 7. Bounty displays are rounded to the cent (8.70 + 8.75 / 2 = 13.075 → shown 13.07): bounty
    amounts derived from hand histories are `INFERRED` with ±0.01 € precision.
 8. Eliminations are not announced; they are visible only as a player missing from the next hand
-   with a final stack of 0, and as the winner's bounty increasing by half the loser's bounty
-   (progressive KO, 50 % cash / 50 % head — *to confirm* on other KO types).
+   with a final stack of 0, and as the winner's bounty increasing by half the loser's bounty.
+   **Confirmed on ACCELERATOR**: the hero's bounty went 2.50 → 21.36 €, and the sum of the
+   increases (18.86 €) equals the summary's `Bounty 18.86€` exactly — progressive KO is 50 % cash /
+   50 % head, and bounty cash can be reconstructed when hand coverage is complete.
+   *To confirm* on Mystery KO (bounty amounts are random there).
+9. Seated-but-not-dealt happens often (12 times in 222 hands); dead small blinds too (9 times).
 
 ## Data-coverage finding
 
-The hand-history file covers **levels 12–22 only, one table, hand numbers 82–153**, whereas the
-hero played from 22:30 to 00:48 UTC. The first hand already shows a non-round stack (57 120), so
-earlier hands exist somewhere (other tables, or not exported). → Each imported tournament needs a
-**hand coverage** indicator (first/last level seen, gaps in hand numbers) and statistics must say
-on how many hands they are based. *Ask: is there another file for this tournament in the Winamax
-folder?*
+Hand-history files are **not always complete**:
+
+- CASSIOPEIA covers levels 12–22 only, one table, hand numbers 82–153, whereas the hero played from
+  22:30 to 00:48 UTC and his first recorded stack is 57 120 (not a starting stack).
+- ACCELERATOR is complete from level 1 but has a **7-hand gap** on one table (hand 128 → 136,
+  levels 14 and 23 never appear), with the hero's stack changing across the gap
+  (113 691 → 89 891).
+
+→ Each imported tournament gets a **hand coverage** record: first/last level, per-table hand
+number gaps, stack discontinuities. Statistics say how many hands they rely on; bounty cash
+reconstructed from hands is only trusted when coverage is complete, otherwise the summary wins.
 
 ## Privacy
 
@@ -92,8 +111,8 @@ Hand histories contain opponents' pseudonyms. Golden test files must be anonymiz
 
 ## Samples still needed
 
-1. A tournament where the hero **re-entered**.
-2. A tournament where the hero **won at least one bounty** (to split "You won").
+1. A tournament where the hero **re-entered** (how the summary and the files show it).
+2. A KO tournament where the hero **won bounties but finished out of the money**, and one where he
+   won nothing.
 3. A **non-KO** tournament and a **Mystery KO**.
 4. A **9-max** or final-table hand (positions beyond 6-max).
-5. The complete hand-history folder for one tournament (coverage question above).
