@@ -88,8 +88,7 @@ Phase 0 — open:
       `Directory.Packages.props` on the latest 10.0.x packages at the same time.
 - [ ] Upgrade web to Angular 22 (`ng update @angular/core@22 @angular/cli@22`): the scaffold was
       generated with Angular 21 because the authoring environment's Node version was too old for CLI 22.
-- [ ] Winamax format spike on real, anonymized files (hand histories **and** tournament summaries)
-      — blocks the Tournament model (ADR-0002 open questions).
+- [~] Winamax format spike: first sample analysed (`docs/research/winamax-format-notes.md`); more samples needed
 - [ ] Decide database naming convention (snake_case via `EFCore.NamingConventions` or not)
       **before the first migration**.
 - [ ] OpenTelemetry exporters and API Dockerfile once the hosting target is chosen.

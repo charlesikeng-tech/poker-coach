@@ -64,12 +64,15 @@ Desktop agent     ─┼─▶ Fingerprint ─▶ Import state ─▶ Parse ─�
 - Keeping raw files costs storage and privacy surface, but without them a parser bug means data
   loss. Correctness wins.
 
-## Open questions (blocked on real Winamax samples)
+## Open questions (first sample analysed — see `docs/research/winamax-format-notes.md`)
 
-- Are tournament results (prize, finish position, entrants, re-entries, bounty winnings) only in
-  summary files? If a summary is missing, these fields are `UNKNOWN`, never estimated.
-- File encoding and line endings.
-- How the hero is identified, and how a poker account is linked to the user on first import.
+- Answered: results (finish, winnings, prizepool, registered players) live only in summary files;
+  without a summary they are `UNKNOWN`. Encoding is UTF-8 without BOM, LF. The hero is the
+  `Dealt to` player and the `Player :` line of the summary.
+- Still open: hero re-entries and the prize/bounty split of "You won" are not visible in the first
+  sample; hand-history files may not cover the whole tournament (coverage must be tracked).
+- How a poker account is linked to the user on first import (proposal: the hero pseudonym found in
+  the files, confirmed by the user once).
 
 ## When to revisit
 
