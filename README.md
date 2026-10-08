@@ -87,9 +87,8 @@ Phase 0 — done:
 Phase 0 — open:
 
 - [x] First `dotnet build` of the skeleton.
-- [ ] `dotnet test` on the parser: written without access to the .NET SDK (rules validated on real
-      files with an independent reference script); first run still to do. Align
-      `Directory.Packages.props` on the latest 10.0.x packages.
+- [x] `dotnet test` green, parser included.
+- [ ] Align `Directory.Packages.props` on the latest 10.0.x packages.
 - [ ] Upgrade web to Angular 22 (`ng update @angular/core@22 @angular/cli@22`): the scaffold was
       generated with Angular 21 because the authoring environment's Node version was too old for CLI 22.
 - [x] Winamax format spike on two real tournaments (`docs/research/winamax-format-notes.md`)
