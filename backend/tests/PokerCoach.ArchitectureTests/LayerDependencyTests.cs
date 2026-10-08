@@ -1,6 +1,7 @@
 using System.Reflection;
 using PokerCoach.Application;
 using PokerCoach.Domain;
+using PokerCoach.HandHistories;
 using PokerCoach.Infrastructure.Persistence;
 
 namespace PokerCoach.ArchitectureTests;
@@ -45,6 +46,17 @@ public sealed class LayerDependencyTests
     {
         var offending = ReferencedAssemblyNames(typeof(PokerCoachDbContext).Assembly)
             .Where(name => name.StartsWith("PokerCoach.Api", StringComparison.Ordinal))
+            .ToArray();
+
+        Assert.Empty(offending);
+    }
+
+    [Fact]
+    public void Hand_history_parsing_references_only_the_domain_and_the_base_class_library()
+    {
+        // Must stay hostable anywhere, including the future desktop agent (ADR-0002).
+        var offending = ReferencedAssemblyNames(typeof(IHandHistoryParser).Assembly)
+            .Where(name => !IsBaseClassLibrary(name) && name != "PokerCoach.Domain")
             .ToArray();
 
         Assert.Empty(offending);

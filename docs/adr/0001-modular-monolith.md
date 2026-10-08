@@ -59,6 +59,19 @@ Rules:
 - Cross-module coupling creeping in unnoticed. Mitigation: namespace architecture test before
   Phase 4 (Poker domain), when the second and third modules appear.
 
+## Amendment 1 — 2026-10-08: hand-history parsing library
+
+A fifth project, `PokerCoach.HandHistories`, holds provider parsers (`IHandHistoryParser`,
+`ITournamentSummaryParser`, Winamax implementation) and the provider-neutral parsed model.
+
+- It references **Domain only** (enforced by an architecture test): no ASP.NET Core, no EF Core, no I/O.
+- Why not Infrastructure: the future desktop agent must parse files locally (ADR-0002), and it must
+  not drag EF Core and Npgsql with it.
+- Why not Application: parsing a provider format is an adapter concern, not a use case; the import
+  use case (Application) will consume `ParsedHand` and turn it into domain aggregates.
+- Provider-specific code stays under its `Winamax` namespace; nothing outside the composition root
+  and the import module refers to it.
+
 ## When to revisit
 
 - More than one team working on the backend.

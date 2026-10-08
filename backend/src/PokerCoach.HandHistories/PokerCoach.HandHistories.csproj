@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Provider hand-history parsing. BCL + Domain only, no hosting or persistence dependency, so the
+    future desktop agent can reuse it unchanged (ADR-0001 amendment, ADR-0002).
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\PokerCoach.Domain\PokerCoach.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="PokerCoach.HandHistories.Tests" />
+  </ItemGroup>
+</Project>

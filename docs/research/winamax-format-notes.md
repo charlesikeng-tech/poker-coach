@@ -89,6 +89,18 @@ Across a table move, stacks of players who move too are unknown until their next
    50 % head, and bounty cash can be reconstructed when hand coverage is complete.
    *To confirm* on Mystery KO (bounty amounts are random there).
 9. Seated-but-not-dealt happens often (12 times in 222 hands); dead small blinds too (9 times).
+10. No `Board:` line is printed in the hand summary when the hand ends before the flop.
+11. A winner may show cards voluntarily after everyone folded: `shows` without `*** SHOW DOWN ***`.
+12. `raises X to Y`: `X = Y − current bet`, always (294/294 hands). The parser enforces it.
+
+## Parser (implemented)
+
+`backend/src/PokerCoach.HandHistories` — `WinamaxHandHistoryParser`, `WinamaxTournamentSummaryParser`,
+`WinamaxFileDetector`. Strict: a hand is accepted only when every line is recognized, raises are
+consistent, chips balance and the summary board matches the streets; otherwise it is rejected with
+a code and line number, and the rest of the file is still parsed. Golden tests run on the two
+anonymized samples (`tools/anonymize_winamax.py`); expected values come from the independent
+reference script of this spike.
 
 ## Data-coverage finding
 

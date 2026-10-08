@@ -1,0 +1,4 @@
+* text=auto eol=lf
+
+# Golden files are byte-exact parser inputs: never convert line endings.
+backend/tests/**/GoldenFiles/** -text

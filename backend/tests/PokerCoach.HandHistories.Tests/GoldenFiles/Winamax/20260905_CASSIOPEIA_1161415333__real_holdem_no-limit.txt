@@ -1,0 +1,2602 @@
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 12 - HandId: #4988240872307949569-82-1788566461 - Holdem no limit (160/700/1400) - 2026/09/05 00:01:01 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (47537, 7.50€ bounty)
+Seat 2: Hero (57120, 5€ bounty)
+Seat 3: Villain02 (111217, 18.90€ bounty)
+Seat 4: Villain03 (52540, 5€ bounty)
+Seat 5: Villain04 (104775, 7.20€ bounty)
+Seat 6: Villain05 (108400, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 160
+Villain04 posts ante 160
+Villain01 posts ante 160
+Hero posts ante 160
+Villain05 posts ante 160
+Villain03 posts small blind 700
+Villain04 posts big blind 1400
+Dealt to Hero [8c 2d]
+*** PRE-FLOP *** 
+Villain05 calls 1400
+Villain01 folds
+Hero folds
+Villain03 raises 5000 to 6400
+Villain04 folds
+Villain05 calls 5000
+*** FLOP *** [5c 2h Ac]
+Villain03 checks
+Villain05 checks
+*** TURN *** [5c 2h Ac][7s]
+Villain03 checks
+Villain05 bets 5250
+Villain03 calls 5250
+*** RIVER *** [5c 2h Ac 7s][9s]
+Villain03 checks
+Villain05 bets 96590 and is all-in
+Villain03 folds
+Villain05 collected 122090 from pot
+*** SUMMARY ***
+Total pot 122090 | No rake
+Board: [5c 2h Ac 7s 9s]
+Seat 6: Villain05 won 122090
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 13 - HandId: #4988240872307949569-83-1788566567 - Holdem no limit (200/800/1600) - 2026/09/05 00:02:47 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (47377, 7.50€ bounty)
+Seat 2: Hero (56960, 5€ bounty)
+Seat 3: Villain02 (111217, 18.90€ bounty)
+Seat 4: Villain03 (40730, 5€ bounty)
+Seat 5: Villain04 (103215, 7.20€ bounty)
+Seat 6: Villain05 (122090, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 200
+Villain05 posts ante 200
+Villain01 posts ante 200
+Hero posts ante 200
+Villain02 posts ante 200
+Villain03 posts ante 200
+Villain04 posts small blind 800
+Villain05 posts big blind 1600
+Dealt to Hero [4c Ks]
+*** PRE-FLOP *** 
+Villain01 folds
+Hero folds
+Villain02 folds
+Villain03 raises 1600 to 3200
+Villain04 raises 9600 to 12800
+Villain05 folds
+Villain03 raises 27730 to 40530 and is all-in
+Villain04 calls 27730
+*** FLOP *** [5s Qh Tc]
+*** TURN *** [5s Qh Tc][Th]
+*** RIVER *** [5s Qh Tc Th][Jc]
+*** SHOW DOWN ***
+Villain04 shows [8h 8d] (Two pairs : Tens and 8)
+Villain03 shows [Ac Qs] (Two pairs : Queens and Tens)
+Villain03 collected 83860 from pot
+*** SUMMARY ***
+Total pot 83860 | No rake
+Board: [5s Qh Tc Th Jc]
+Seat 4: Villain03 (button) showed [Ac Qs] and won 83860 with Two pairs : Queens and Tens
+Seat 5: Villain04 (small blind) showed [8h 8d] and lost with Two pairs : Tens and 8
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 13 - HandId: #4988240872307949569-84-1788566639 - Holdem no limit (200/800/1600) - 2026/09/05 00:03:59 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (47177, 7.50€ bounty)
+Seat 2: Hero (56760, 5€ bounty)
+Seat 3: Villain02 (111017, 18.90€ bounty)
+Seat 4: Villain03 (83860, 5€ bounty)
+Seat 5: Villain04 (62485, 7.20€ bounty)
+Seat 6: Villain05 (120290, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain05 posts ante 200
+Villain01 posts ante 200
+Hero posts ante 200
+Villain02 posts ante 200
+Villain03 posts ante 200
+Villain04 posts ante 200
+Villain05 posts small blind 800
+Villain01 posts big blind 1600
+Dealt to Hero [2d 8c]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 raises 2000 to 3600
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain01 folds
+Villain02 collected 7200 from pot
+*** SUMMARY ***
+Total pot 7200 | No rake
+Seat 3: Villain02 won 7200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 13 - HandId: #4988240872307949569-85-1788566663 - Holdem no limit (200/800/1600) - 2026/09/05 00:04:23 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (45377, 7.50€ bounty)
+Seat 2: Hero (56560, 5€ bounty)
+Seat 3: Villain02 (114417, 18.90€ bounty)
+Seat 4: Villain03 (83660, 5€ bounty)
+Seat 5: Villain04 (62285, 7.20€ bounty)
+Seat 6: Villain05 (119290, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain01 posts ante 200
+Hero posts ante 200
+Villain02 posts ante 200
+Villain03 posts ante 200
+Villain04 posts ante 200
+Villain05 posts ante 200
+Villain01 posts small blind 800
+Hero posts big blind 1600
+Dealt to Hero [9s Kd]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain05 raises 1600 to 3200
+Villain01 folds
+Hero folds
+Villain05 collected 6800 from pot
+*** SUMMARY ***
+Total pot 6800 | No rake
+Seat 6: Villain05 (button) won 6800
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 13 - HandId: #4988240872307949569-86-1788566704 - Holdem no limit (200/800/1600) - 2026/09/05 00:05:04 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (44377, 7.50€ bounty)
+Seat 2: Hero (54760, 5€ bounty)
+Seat 3: Villain02 (114217, 18.90€ bounty)
+Seat 4: Villain03 (83460, 5€ bounty)
+Seat 5: Villain04 (62085, 7.20€ bounty)
+Seat 6: Villain05 (122690, 21€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 200
+Villain02 posts ante 200
+Villain01 posts ante 200
+Villain03 posts ante 200
+Villain04 posts ante 200
+Villain05 posts ante 200
+Hero posts small blind 800
+Villain02 posts big blind 1600
+Dealt to Hero [Qh Jh]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain01 folds
+Hero raises 3200 to 4800
+Villain02 calls 3200
+*** FLOP *** [5s 2s 2d]
+Hero checks
+Villain02 checks
+*** TURN *** [5s 2s 2d][Js]
+Hero checks
+Villain02 bets 8640
+Hero calls 8640
+*** RIVER *** [5s 2s 2d Js][8d]
+Hero checks
+Villain02 bets 18252
+Hero calls 18252
+*** SHOW DOWN ***
+Villain02 shows [Kc Ts] (One pair : 2)
+Hero shows [Qh Jh] (Two pairs : Jacks and 2)
+Hero collected 64584 from pot
+*** SUMMARY ***
+Total pot 64584 | No rake
+Board: [5s 2s 2d Js 8d]
+Seat 2: Hero (small blind) showed [Qh Jh] and won 64584 with Two pairs : Jacks and 2
+Seat 3: Villain02 (big blind) showed [Kc Ts] and lost with One pair : 2
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 13 - HandId: #4988240872307949569-87-1788566787 - Holdem no limit (200/800/1600) - 2026/09/05 00:06:27 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (44177, 7.50€ bounty)
+Seat 2: Hero (87452, 5€ bounty)
+Seat 3: Villain02 (82325, 18.90€ bounty)
+Seat 4: Villain03 (83260, 5€ bounty)
+Seat 5: Villain04 (61885, 7.20€ bounty)
+Seat 6: Villain05 (122490, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 200
+Villain03 posts ante 200
+Villain01 posts ante 200
+Hero posts ante 200
+Villain04 posts ante 200
+Villain05 posts ante 200
+Villain02 posts small blind 800
+Villain03 posts big blind 1600
+Dealt to Hero [6c 8d]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain05 folds
+Villain01 raises 1600 to 3200
+Hero folds
+Villain02 raises 6400 to 9600
+Villain03 calls 8000
+Villain01 calls 6400
+*** FLOP *** [3d 7h Qd]
+Villain02 checks
+Villain03 checks
+Villain01 checks
+*** TURN *** [3d 7h Qd][7s]
+Villain02 bets 15000
+Villain03 folds
+Villain01 raises 19377 to 34377 and is all-in
+Villain02 folds
+Villain01 collected 79377 from pot
+*** SUMMARY ***
+Total pot 79377 | No rake
+Board: [3d 7h Qd 7s]
+Seat 1: Villain01 won 79377
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-88-1788566849 - Holdem no limit (250/1000/2000) - 2026/09/05 00:07:29 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (79377, 7.50€ bounty)
+Seat 2: Hero (87252, 5€ bounty)
+Seat 3: Villain02 (57525, 18.90€ bounty)
+Seat 4: Villain03 (73460, 5€ bounty)
+Seat 5: Villain04 (61685, 7.20€ bounty)
+Seat 6: Villain05 (122290, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 250
+Villain04 posts ante 250
+Villain01 posts ante 250
+Hero posts ante 250
+Villain02 posts ante 250
+Villain05 posts ante 250
+Villain03 posts small blind 1000
+Villain04 posts big blind 2000
+Dealt to Hero [Qs 4c]
+*** PRE-FLOP *** 
+Villain05 folds
+Villain01 folds
+Hero folds
+Villain02 folds
+Villain03 calls 1000
+Villain04 checks
+*** FLOP *** [8c Kd Th]
+Villain03 checks
+Villain04 checks
+*** TURN *** [8c Kd Th][Js]
+Villain03 checks
+Villain04 bets 2000
+Villain03 folds
+Villain04 collected 7500 from pot
+*** SUMMARY ***
+Total pot 7500 | No rake
+Board: [8c Kd Th Js]
+Seat 5: Villain04 (big blind) won 7500
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-89-1788566902 - Holdem no limit (250/1000/2000) - 2026/09/05 00:08:22 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (79127, 7.50€ bounty)
+Seat 2: Hero (87002, 5€ bounty)
+Seat 3: Villain02 (57275, 18.90€ bounty)
+Seat 4: Villain03 (71210, 5€ bounty)
+Seat 5: Villain04 (64935, 7.20€ bounty)
+Seat 6: Villain05 (122040, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 250
+Villain05 posts ante 250
+Villain01 posts ante 250
+Hero posts ante 250
+Villain02 posts ante 250
+Villain03 posts ante 250
+Villain04 posts small blind 1000
+Villain05 posts big blind 2000
+Dealt to Hero [4h 8d]
+*** PRE-FLOP *** 
+Villain01 raises 2000 to 4000
+Hero folds
+Villain02 folds
+Villain03 raises 8000 to 12000
+Villain04 folds
+Villain05 folds
+Villain01 raises 8000 to 20000
+Villain03 raises 50960 to 70960 and is all-in
+Villain01 raises 7917 to 78877 and is all-in
+*** FLOP *** [7s Ks 6d]
+*** TURN *** [7s Ks 6d][Jh]
+*** RIVER *** [7s Ks 6d Jh][5c]
+*** SHOW DOWN ***
+Villain01 shows [Jc Tc] (One pair : Jacks)
+Villain03 shows [Qh Qd] (One pair : Queens)
+Villain03 collected 146420 from main pot
+Villain01 collected 7917 from side pot 1
+*** SUMMARY ***
+Total pot 154337 | No rake
+Board: [7s Ks 6d Jh 5c]
+Seat 1: Villain01 showed [Jc Tc] and won 7917 with One pair : Jacks
+Seat 4: Villain03 (button) showed [Qh Qd] and won 146420 with One pair : Queens
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-90-1788566929 - Holdem no limit (250/1000/2000) - 2026/09/05 00:08:49 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (7917, 7.50€ bounty)
+Seat 2: Hero (86752, 5€ bounty)
+Seat 3: Villain02 (57025, 18.90€ bounty)
+Seat 4: Villain03 (146420, 5€ bounty)
+Seat 5: Villain04 (63685, 7.20€ bounty)
+Seat 6: Villain05 (119790, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain05 posts ante 250
+Villain01 posts ante 250
+Hero posts ante 250
+Villain02 posts ante 250
+Villain03 posts ante 250
+Villain04 posts ante 250
+Villain05 posts small blind 1000
+Villain01 posts big blind 2000
+Dealt to Hero [4d Ac]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 raises 3000 to 5000
+Villain05 calls 4000
+Villain01 raises 2667 to 7667 and is all-in
+Villain04 calls 2667
+Villain05 calls 2667
+*** FLOP *** [9c 4s 7h]
+Villain05 checks
+Villain04 bets 12251
+Villain05 raises 99622 to 111873 and is all-in
+Villain04 calls 43517 and is all-in
+*** TURN *** [9c 4s 7h][Qc]
+*** RIVER *** [9c 4s 7h Qc][3h]
+*** SHOW DOWN ***
+Villain01 shows [3s 3d] (Trips of 3)
+Villain04 shows [Kd Kc] (One pair : Kings)
+Villain05 shows [2h 9h] (One pair : 9)
+Villain05 collected 56105 from side pot 2
+Villain04 collected 111536 from side pot 1
+Villain01 collected 24501 from main pot
+*** SUMMARY ***
+Total pot 192142 | No rake
+Board: [9c 4s 7h Qc 3h]
+Seat 1: Villain01 (big blind) showed [3s 3d] and won 24501 with Trips of 3
+Seat 5: Villain04 (button) showed [Kd Kc] and won 111536 with One pair : Kings
+Seat 6: Villain05 (small blind) showed [2h 9h] and won 56105 with One pair : 9
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-91-1788566978 - Holdem no limit (250/1000/2000) - 2026/09/05 00:09:38 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (24501, 7.50€ bounty)
+Seat 2: Hero (86502, 5€ bounty)
+Seat 3: Villain02 (56775, 18.90€ bounty)
+Seat 4: Villain03 (146170, 5€ bounty)
+Seat 5: Villain04 (111536, 7.20€ bounty)
+Seat 6: Villain05 (56105, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain01 posts ante 250
+Hero posts ante 250
+Villain02 posts ante 250
+Villain03 posts ante 250
+Villain04 posts ante 250
+Villain05 posts ante 250
+Villain01 posts small blind 1000
+Hero posts big blind 2000
+Dealt to Hero [9h 8d]
+*** PRE-FLOP *** 
+Villain02 raises 2000 to 4000
+Villain03 calls 4000
+Villain04 folds
+Villain05 folds
+Villain01 folds
+Hero calls 2000
+*** FLOP *** [Kc Jd 4s]
+Hero checks
+Villain02 checks
+Villain03 checks
+*** TURN *** [Kc Jd 4s][Qh]
+Hero checks
+Villain02 bets 11600
+Villain03 calls 11600
+Hero folds
+*** RIVER *** [Kc Jd 4s Qh][2h]
+Villain02 bets 40925 and is all-in
+Villain03 folds
+Villain02 collected 78625 from pot
+*** SUMMARY ***
+Total pot 78625 | No rake
+Board: [Kc Jd 4s Qh 2h]
+Seat 3: Villain02 won 78625
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-92-1788567022 - Holdem no limit (250/1000/2000) - 2026/09/05 00:10:22 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (23251, 7.50€ bounty)
+Seat 2: Hero (82252, 5€ bounty)
+Seat 3: Villain02 (78625, 18.90€ bounty)
+Seat 4: Villain03 (130320, 5€ bounty)
+Seat 5: Villain04 (111286, 7.20€ bounty)
+Seat 6: Villain05 (55855, 21€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 250
+Villain02 posts ante 250
+Villain01 posts ante 250
+Villain03 posts ante 250
+Villain04 posts ante 250
+Villain05 posts ante 250
+Hero posts small blind 1000
+Villain02 posts big blind 2000
+Dealt to Hero [Tc 6c]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain01 raises 21001 to 23001 and is all-in
+Hero folds
+Villain02 folds
+Villain01 collected 27501 from pot
+*** SUMMARY ***
+Total pot 27501 | No rake
+Seat 1: Villain01 (button) won 27501
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-93-1788567049 - Holdem no limit (250/1000/2000) - 2026/09/05 00:10:49 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (27501, 7.50€ bounty)
+Seat 2: Hero (81002, 5€ bounty)
+Seat 3: Villain02 (76375, 18.90€ bounty)
+Seat 4: Villain03 (130070, 5€ bounty)
+Seat 5: Villain04 (111036, 7.20€ bounty)
+Seat 6: Villain05 (55605, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 250
+Villain03 posts ante 250
+Villain01 posts ante 250
+Hero posts ante 250
+Villain04 posts ante 250
+Villain05 posts ante 250
+Villain02 posts small blind 1000
+Villain03 posts big blind 2000
+Dealt to Hero [7c Qd]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain05 folds
+Villain01 raises 25251 to 27251 and is all-in
+Hero folds
+Villain02 folds
+Villain03 calls 25251
+*** FLOP *** [3h 9h 8c]
+*** TURN *** [3h 9h 8c][6s]
+*** RIVER *** [3h 9h 8c 6s][2s]
+*** SHOW DOWN ***
+Villain01 shows [Ah Jh] (High card : Ace)
+Villain03 shows [2h 2d] (Trips of 2)
+Villain03 collected 57002 from pot
+*** SUMMARY ***
+Total pot 57002 | No rake
+Board: [3h 9h 8c 6s 2s]
+Seat 1: Villain01 showed [Ah Jh] and lost with High card : Ace
+Seat 4: Villain03 (big blind) showed [2h 2d] and won 57002 with Trips of 2
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 14 - HandId: #4988240872307949569-94-1788567088 - Holdem no limit (250/1000/2000) - 2026/09/05 00:11:28 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 2: Hero (80752, 5€ bounty)
+Seat 3: Villain02 (75125, 18.90€ bounty)
+Seat 4: Villain03 (159571, 8.75€ bounty)
+Seat 5: Villain04 (110786, 7.20€ bounty)
+Seat 6: Villain05 (55355, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 250
+Villain04 posts ante 250
+Hero posts ante 250
+Villain02 posts ante 250
+Villain05 posts ante 250
+Villain03 posts small blind 1000
+Villain04 posts big blind 2000
+Dealt to Hero [Jh Qd]
+*** PRE-FLOP *** 
+Villain05 folds
+Hero raises 2200 to 4200
+Villain02 folds
+Villain03 folds
+Villain04 calls 2200
+*** FLOP *** [2c Td 5s]
+Villain04 checks
+Hero checks
+*** TURN *** [2c Td 5s][Qc]
+Villain04 checks
+Hero checks
+*** RIVER *** [2c Td 5s Qc][Jd]
+Villain04 bets 3727
+Hero calls 3727
+*** SHOW DOWN ***
+Villain04 shows [Ad Jc] (One pair : Jacks)
+Hero shows [Jh Qd] (Two pairs : Queens and Jacks)
+Hero collected 18104 from pot
+*** SUMMARY ***
+Total pot 18104 | No rake
+Board: [2c Td 5s Qc Jd]
+Seat 2: Hero showed [Jh Qd] and won 18104 with Two pairs : Queens and Jacks
+Seat 5: Villain04 (big blind) showed [Ad Jc] and lost with One pair : Jacks
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-95-1788567155 - Holdem no limit (300/1250/2500) - 2026/09/05 00:12:35 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (125198, 9.75€ bounty)
+Seat 2: Hero (90679, 5€ bounty)
+Seat 3: Villain02 (74875, 18.90€ bounty)
+Seat 4: Villain03 (158321, 8.75€ bounty)
+Seat 5: Villain04 (102609, 7.20€ bounty)
+Seat 6: Villain05 (55105, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 300
+Villain05 posts ante 300
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain04 posts small blind 1250
+Villain05 posts big blind 2500
+Dealt to Hero [Qh 7c]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 raises 72075 to 74575 and is all-in
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain02 collected 80125 from pot
+*** SUMMARY ***
+Total pot 80125 | No rake
+Seat 3: Villain02 won 80125
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-96-1788567177 - Holdem no limit (300/1250/2500) - 2026/09/05 00:12:57 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (124898, 9.75€ bounty)
+Seat 2: Hero (90379, 5€ bounty)
+Seat 3: Villain02 (80125, 18.90€ bounty)
+Seat 4: Villain03 (158021, 8.75€ bounty)
+Seat 5: Villain04 (101059, 7.20€ bounty)
+Seat 6: Villain05 (52305, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain05 posts ante 300
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain04 posts ante 300
+Villain05 posts small blind 1250
+Villain06 posts big blind 2500
+Dealt to Hero [4h Qc]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 raises 3125 to 5625
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain06 calls 3125
+*** FLOP *** [5d 3s 9s]
+Villain06 checks
+Villain02 bets 9295
+Villain06 folds
+Villain02 collected 23595 from pot
+*** SUMMARY ***
+Total pot 23595 | No rake
+Board: [5d 3s 9s]
+Seat 3: Villain02 won 23595
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-97-1788567201 - Holdem no limit (300/1250/2500) - 2026/09/05 00:13:21 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (118973, 9.75€ bounty)
+Seat 2: Hero (90079, 5€ bounty)
+Seat 3: Villain02 (88500, 18.90€ bounty)
+Seat 4: Villain03 (157721, 8.75€ bounty)
+Seat 5: Villain04 (100759, 7.20€ bounty)
+Seat 6: Villain05 (50755, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain04 posts ante 300
+Villain05 posts ante 300
+Villain06 posts small blind 1250
+Hero posts big blind 2500
+Dealt to Hero [3d Jh]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain06 calls 1250
+Hero checks
+*** FLOP *** [4h 2h 6d]
+Villain06 checks
+Hero bets 4080
+Villain06 folds
+Hero collected 10880 from pot
+*** SUMMARY ***
+Total pot 10880 | No rake
+Board: [4h 2h 6d]
+Seat 2: Hero (big blind) won 10880
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-98-1788567229 - Holdem no limit (300/1250/2500) - 2026/09/05 00:13:49 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (116173, 9.75€ bounty)
+Seat 2: Hero (94079, 5€ bounty)
+Seat 3: Villain02 (88200, 18.90€ bounty)
+Seat 4: Villain03 (157421, 8.75€ bounty)
+Seat 5: Villain04 (100459, 7.20€ bounty)
+Seat 6: Villain05 (50455, 21€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 300
+Villain02 posts ante 300
+Villain06 posts ante 300
+Villain03 posts ante 300
+Villain04 posts ante 300
+Villain05 posts ante 300
+Hero posts small blind 1250
+Villain02 posts big blind 2500
+Dealt to Hero [Ad 4h]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain06 raises 2500 to 5000
+Hero folds
+Villain02 folds
+Villain06 collected 10550 from pot
+*** SUMMARY ***
+Total pot 10550 | No rake
+Seat 1: Villain06 (button) won 10550
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-99-1788567243 - Holdem no limit (300/1250/2500) - 2026/09/05 00:14:03 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (121423, 9.75€ bounty)
+Seat 2: Hero (92529, 5€ bounty)
+Seat 3: Villain02 (85400, 18.90€ bounty)
+Seat 4: Villain03 (157121, 8.75€ bounty)
+Seat 5: Villain04 (100159, 7.20€ bounty)
+Seat 6: Villain05 (50155, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain06 posts ante 300
+Hero posts ante 300
+Villain04 posts ante 300
+Villain05 posts ante 300
+Villain02 posts small blind 1250
+Villain03 posts big blind 2500
+Dealt to Hero [4h Ac]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain05 folds
+Villain06 folds
+Hero folds
+Villain02 raises 6800 to 9300
+Villain03 folds
+Villain02 collected 13600 from pot
+*** SUMMARY ***
+Total pot 13600 | No rake
+Seat 3: Villain02 (small blind) won 13600
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-100-1788567263 - Holdem no limit (300/1250/2500) - 2026/09/05 00:14:23 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (121123, 9.75€ bounty)
+Seat 2: Hero (92229, 5€ bounty)
+Seat 3: Villain02 (89400, 18.90€ bounty)
+Seat 4: Villain03 (154321, 8.75€ bounty)
+Seat 5: Villain04 (99859, 7.20€ bounty)
+Seat 6: Villain05 (49855, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 300
+Villain04 posts ante 300
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain05 posts ante 300
+Villain03 posts small blind 1250
+Villain04 posts big blind 2500
+Dealt to Hero [5d Qd]
+*** PRE-FLOP *** 
+Villain05 folds
+Villain06 folds
+Hero folds
+Villain02 raises 2500 to 5000
+Villain03 folds
+Villain04 calls 2500
+*** FLOP *** [5c 9h Js]
+Villain04 checks
+Villain02 checks
+*** TURN *** [5c 9h Js][Tc]
+Villain04 bets 4568
+Villain02 folds
+Villain04 collected 17618 from pot
+*** SUMMARY ***
+Total pot 17618 | No rake
+Board: [5c 9h Js Tc]
+Seat 5: Villain04 (big blind) won 17618
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-101-1788567304 - Holdem no limit (300/1250/2500) - 2026/09/05 00:15:04 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (120823, 9.75€ bounty)
+Seat 2: Hero (91929, 5€ bounty)
+Seat 3: Villain02 (84100, 18.90€ bounty)
+Seat 4: Villain03 (152771, 8.75€ bounty)
+Seat 5: Villain04 (107609, 7.20€ bounty)
+Seat 6: Villain05 (49555, 21€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 300
+Villain05 posts ante 300
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain04 posts small blind 1250
+Villain05 posts big blind 2500
+Dealt to Hero [9s Qs]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 raises 3125 to 5625
+Villain03 folds
+Villain04 calls 4375
+Villain05 calls 3125
+*** FLOP *** [7s 4h 8c]
+Villain04 checks
+Villain05 bets 18675
+Villain02 raises 59500 to 78175 and is all-in
+Villain04 folds
+Villain05 calls 24955 and is all-in
+*** TURN *** [7s 4h 8c][6h]
+*** RIVER *** [7s 4h 8c 6h][3h]
+*** SHOW DOWN ***
+Villain05 shows [8h Jc] (One pair : 8)
+Villain02 shows [Ad As] (One pair : Aces)
+Villain02 collected 140480 from pot
+*** SUMMARY ***
+Total pot 140480 | No rake
+Board: [7s 4h 8c 6h 3h]
+Seat 3: Villain02 showed [Ad As] and won 140480 with One pair : Aces
+Seat 6: Villain05 (big blind) showed [8h Jc] and lost with One pair : 8
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-102-1788567383 - Holdem no limit (300/1250/2500) - 2026/09/05 00:16:23 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (120523, 9.75€ bounty)
+Seat 2: Hero (91629, 5€ bounty)
+Seat 3: Villain02 (140480, 29.40€ bounty)
+Seat 4: Villain03 (152471, 8.75€ bounty)
+Seat 5: Villain04 (101684, 7.20€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain04 posts ante 300
+Villain06 posts big blind 2500
+Dealt to Hero [5c 3h]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain06 collected 4000 from pot
+*** SUMMARY ***
+Total pot 4000 | No rake
+Seat 1: Villain06 (big blind) won 4000
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 15 - HandId: #4988240872307949569-103-1788567394 - Holdem no limit (300/1250/2500) - 2026/09/05 00:16:34 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (121723, 9.75€ bounty)
+Seat 2: Hero (91329, 5€ bounty)
+Seat 3: Villain02 (140180, 29.40€ bounty)
+Seat 4: Villain03 (152171, 8.75€ bounty)
+Seat 5: Villain04 (101384, 7.20€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 300
+Hero posts ante 300
+Villain02 posts ante 300
+Villain03 posts ante 300
+Villain04 posts ante 300
+Villain06 posts small blind 1250
+Hero posts big blind 2500
+Dealt to Hero [9d 4d]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 calls 2500
+Villain04 raises 5000 to 7500
+Villain06 folds
+Hero folds
+Villain03 calls 5000
+*** FLOP *** [4c 3h Kh]
+Villain03 checks
+Villain04 checks
+*** TURN *** [4c 3h Kh][Qs]
+Villain03 bets 20250
+Villain04 folds
+Villain03 collected 40500 from pot
+*** SUMMARY ***
+Total pot 40500 | No rake
+Board: [4c 3h Kh Qs]
+Seat 4: Villain03 won 40500
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-104-1788567428 - Holdem no limit (350/1500/3000) - 2026/09/05 00:17:08 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (120173, 9.75€ bounty)
+Seat 2: Hero (88529, 5€ bounty)
+Seat 3: Villain02 (139880, 29.40€ bounty)
+Seat 4: Villain03 (164621, 8.75€ bounty)
+Seat 5: Villain04 (93584, 7.20€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 350
+Villain02 posts ante 350
+Villain06 posts ante 350
+Villain03 posts ante 350
+Villain04 posts ante 350
+Hero posts small blind 1500
+Villain02 posts big blind 3000
+Dealt to Hero [4d 2s]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain06 raises 3000 to 6000
+Hero folds
+Villain02 calls 3000
+*** FLOP *** [9c 9h 7d]
+Villain02 bets 5338
+Villain06 calls 5338
+*** TURN *** [9c 9h 7d][7c]
+Villain02 checks
+Villain06 checks
+*** RIVER *** [9c 9h 7d 7c][Kd]
+Villain02 bets 20741
+Villain06 folds
+Villain02 collected 46667 from pot
+*** SUMMARY ***
+Total pot 46667 | No rake
+Board: [9c 9h 7d 7c Kd]
+Seat 3: Villain02 (big blind) won 46667
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-105-1788567470 - Holdem no limit (350/1500/3000) - 2026/09/05 00:17:50 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (108485, 9.75€ bounty)
+Seat 2: Hero (86679, 5€ bounty)
+Seat 3: Villain02 (154118, 29.40€ bounty)
+Seat 4: Villain03 (164271, 8.75€ bounty)
+Seat 5: Villain04 (93234, 7.20€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 350
+Villain03 posts ante 350
+Villain06 posts ante 350
+Hero posts ante 350
+Villain04 posts ante 350
+Villain02 posts small blind 1500
+Villain03 posts big blind 3000
+Dealt to Hero [As Ks]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain06 raises 3000 to 6000
+Hero raises 80329 to 86329 and is all-in
+Villain02 folds
+Villain03 folds
+Villain06 folds
+Hero collected 98579 from pot
+*** SUMMARY ***
+Total pot 98579 | No rake
+Seat 2: Hero (button) won 98579
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-106-1788567489 - Holdem no limit (350/1500/3000) - 2026/09/05 00:18:09 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (102135, 9.75€ bounty)
+Seat 2: Hero (98579, 5€ bounty)
+Seat 3: Villain02 (152268, 29.40€ bounty)
+Seat 4: Villain03 (160921, 8.75€ bounty)
+Seat 5: Villain04 (92884, 7.20€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 350
+Villain04 posts ante 350
+Villain06 posts ante 350
+Hero posts ante 350
+Villain02 posts ante 350
+Villain03 posts small blind 1500
+Villain04 posts big blind 3000
+Dealt to Hero [Ac 7s]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 calls 1500
+Villain04 checks
+*** FLOP *** [Ts 8h 5s]
+Villain03 bets 7750
+Villain04 calls 7750
+*** TURN *** [Ts 8h 5s][Kd]
+Villain03 bets 23250
+Villain04 folds
+Villain03 collected 46500 from pot
+*** SUMMARY ***
+Total pot 46500 | No rake
+Board: [Ts 8h 5s Kd]
+Seat 4: Villain03 (small blind) won 46500
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-107-1788567514 - Holdem no limit (350/1500/3000) - 2026/09/05 00:18:34 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (101785, 9.75€ bounty)
+Seat 2: Hero (98229, 5€ bounty)
+Seat 3: Villain02 (151918, 29.40€ bounty)
+Seat 4: Villain03 (173071, 8.75€ bounty)
+Seat 5: Villain04 (81784, 7.20€ bounty)
+Seat 6: .Villain07 (77309, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 350
+.Villain07 posts ante 350
+Villain06 posts ante 350
+Hero posts ante 350
+Villain02 posts ante 350
+Villain03 posts ante 350
+Villain04 posts small blind 1500
+.Villain07 posts big blind 3000
+Dealt to Hero [Qc 3d]
+*** PRE-FLOP *** 
+Villain06 raises 3000 to 6000
+Hero folds
+Villain02 calls 6000
+Villain03 raises 12000 to 18000
+Villain04 folds
+.Villain07 folds
+Villain06 folds
+Villain02 calls 12000
+*** FLOP *** [6d 2s 3s]
+Villain02 checks
+Villain03 checks
+*** TURN *** [6d 2s 3s][9d]
+Villain02 bets 38880
+Villain03 folds
+Villain02 collected 87480 from pot
+*** SUMMARY ***
+Total pot 87480 | No rake
+Board: [6d 2s 3s 9d]
+Seat 3: Villain02 won 87480
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-108-1788567554 - Holdem no limit (350/1500/3000) - 2026/09/05 00:19:14 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (95435, 9.75€ bounty)
+Seat 2: Hero (97879, 5€ bounty)
+Seat 3: Villain02 (182168, 29.40€ bounty)
+Seat 4: Villain03 (154721, 8.75€ bounty)
+Seat 5: Villain04 (79934, 7.20€ bounty)
+Seat 6: .Villain07 (73959, 16€ bounty)
+*** ANTE/BLINDS ***
+.Villain07 posts ante 350
+Villain06 posts ante 350
+Hero posts ante 350
+Villain02 posts ante 350
+Villain03 posts ante 350
+Villain04 posts ante 350
+.Villain07 posts small blind 1500
+Villain06 posts big blind 3000
+Dealt to Hero [4h Ac]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 calls 3000
+Villain04 folds
+.Villain07 calls 1500
+Villain06 checks
+*** FLOP *** [3s 5c 9d]
+.Villain07 checks
+Villain06 checks
+Villain03 bets 11100
+.Villain07 folds
+Villain06 folds
+Villain03 collected 22200 from pot
+*** SUMMARY ***
+Total pot 22200 | No rake
+Board: [3s 5c 9d]
+Seat 4: Villain03 won 22200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-109-1788567591 - Holdem no limit (350/1500/3000) - 2026/09/05 00:19:51 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (92085, 9.75€ bounty)
+Seat 2: Hero (97529, 5€ bounty)
+Seat 3: Villain02 (181818, 29.40€ bounty)
+Seat 4: Villain03 (162471, 8.75€ bounty)
+Seat 5: Villain04 (79584, 7.20€ bounty)
+Seat 6: .Villain07 (70609, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 350
+Hero posts ante 350
+Villain02 posts ante 350
+Villain03 posts ante 350
+Villain04 posts ante 350
+.Villain07 posts ante 350
+Villain06 posts small blind 1500
+Hero posts big blind 3000
+Dealt to Hero [Ts 2d]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 raises 9600 to 12600
+Villain04 folds
+.Villain07 folds
+Villain06 folds
+Hero folds
+Villain03 collected 19200 from pot
+*** SUMMARY ***
+Total pot 19200 | No rake
+Seat 4: Villain03 won 19200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 16 - HandId: #4988240872307949569-110-1788567621 - Holdem no limit (350/1500/3000) - 2026/09/05 00:20:21 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (90235, 9.75€ bounty)
+Seat 2: Hero (94179, 5€ bounty)
+Seat 3: Villain02 (181468, 29.40€ bounty)
+Seat 4: Villain03 (168721, 8.75€ bounty)
+Seat 5: Villain04 (79234, 7.20€ bounty)
+Seat 6: .Villain07 (70259, 16€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 350
+Villain02 posts ante 350
+Villain06 posts ante 350
+Villain03 posts ante 350
+Villain04 posts ante 350
+.Villain07 posts ante 350
+Hero posts small blind 1500
+Villain02 posts big blind 3000
+Dealt to Hero [5h Ts]
+*** PRE-FLOP *** 
+Villain03 calls 3000
+Villain04 folds
+.Villain07 folds
+Villain06 folds
+Hero folds
+Villain02 checks
+*** FLOP *** [Th Ks 2d]
+Villain02 checks
+Villain03 checks
+*** TURN *** [Th Ks 2d][4s]
+Villain02 checks
+Villain03 checks
+*** RIVER *** [Th Ks 2d 4s][4c]
+Villain02 checks
+Villain03 checks
+*** SHOW DOWN ***
+Villain02 shows [9d 3d] (One pair : 4)
+Villain03 shows [Ac Jc] (One pair : 4)
+Villain03 collected 9600 from pot
+*** SUMMARY ***
+Total pot 9600 | No rake
+Board: [Th Ks 2d 4s 4c]
+Seat 3: Villain02 (big blind) showed [9d 3d] and lost with One pair : 4
+Seat 4: Villain03 showed [Ac Jc] and won 9600 with One pair : 4
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 17 - HandId: #4988240872307949569-111-1788567739 - Holdem no limit (400/1750/3500) - 2026/09/05 00:22:19 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (89885, 9.75€ bounty)
+Seat 2: Hero (92329, 5€ bounty)
+Seat 3: Villain02 (178118, 29.40€ bounty)
+Seat 4: Villain03 (174971, 8.75€ bounty)
+Seat 5: Villain04 (78884, 7.20€ bounty)
+Seat 6: .Villain07 (69909, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 400
+Villain03 posts ante 400
+Villain06 posts ante 400
+Hero posts ante 400
+Villain04 posts ante 400
+.Villain07 posts ante 400
+Villain02 posts small blind 1750
+Villain03 posts big blind 3500
+Dealt to Hero [7c Jd]
+*** PRE-FLOP *** 
+Villain04 folds
+.Villain07 folds
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 collected 7650 from pot
+*** SUMMARY ***
+Total pot 7650 | No rake
+Seat 4: Villain03 (big blind) won 7650
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 17 - HandId: #4988240872307949569-112-1788567788 - Holdem no limit (400/1750/3500) - 2026/09/05 00:23:08 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (89485, 9.75€ bounty)
+Seat 2: Hero (91929, 5€ bounty)
+Seat 3: Villain02 (175968, 29.40€ bounty)
+Seat 4: Villain03 (178721, 8.75€ bounty)
+Seat 5: Villain04 (78484, 7.20€ bounty)
+Seat 6: .Villain07 (69509, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 400
+Villain04 posts ante 400
+Villain06 posts ante 400
+Hero posts ante 400
+Villain02 posts ante 400
+.Villain07 posts ante 400
+Villain03 posts small blind 1750
+Villain04 posts big blind 3500
+Dealt to Hero [Th Kc]
+*** PRE-FLOP *** 
+.Villain07 calls 3500
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 calls 1750
+Villain04 raises 74584 to 78084 and is all-in
+.Villain07 folds
+Villain03 folds
+Villain04 collected 87484 from pot
+*** SUMMARY ***
+Total pot 87484 | No rake
+Seat 5: Villain04 (big blind) won 87484
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 17 - HandId: #4988240872307949569-113-1788567822 - Holdem no limit (400/1750/3500) - 2026/09/05 00:23:42 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (89085, 9.75€ bounty)
+Seat 2: Hero (91529, 5€ bounty)
+Seat 3: Villain02 (175568, 29.40€ bounty)
+Seat 4: Villain03 (174821, 8.75€ bounty)
+Seat 5: Villain04 (87484, 7.20€ bounty)
+Seat 6: .Villain07 (65609, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 400
+.Villain07 posts ante 400
+Villain06 posts ante 400
+Hero posts ante 400
+Villain02 posts ante 400
+Villain03 posts ante 400
+Villain04 posts small blind 1750
+.Villain07 posts big blind 3500
+Dealt to Hero [4h 2s]
+*** PRE-FLOP *** 
+Villain06 raises 3500 to 7000
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+.Villain07 calls 3500
+*** FLOP *** [Jh 9c Qs]
+.Villain07 checks
+Villain06 checks
+*** TURN *** [Jh 9c Qs][Ts]
+.Villain07 checks
+Villain06 checks
+*** RIVER *** [Jh 9c Qs Ts][7s]
+.Villain07 checks
+Villain06 bets 6353
+.Villain07 folds
+Villain06 collected 24503 from pot
+*** SUMMARY ***
+Total pot 24503 | No rake
+Board: [Jh 9c Qs Ts 7s]
+Seat 1: Villain06 won 24503
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 17 - HandId: #4988240872307949569-114-1788567858 - Holdem no limit (400/1750/3500) - 2026/09/05 00:24:18 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (99835, 9.75€ bounty)
+Seat 2: Hero (91129, 5€ bounty)
+Seat 3: Villain02 (175168, 29.40€ bounty)
+Seat 4: Villain03 (174421, 8.75€ bounty)
+Seat 5: Villain04 (85334, 7.20€ bounty)
+Seat 6: .Villain07 (58209, 16€ bounty)
+*** ANTE/BLINDS ***
+.Villain07 posts ante 400
+Villain06 posts ante 400
+Hero posts ante 400
+Villain02 posts ante 400
+Villain03 posts ante 400
+Villain04 posts ante 400
+.Villain07 posts small blind 1750
+Villain06 posts big blind 3500
+Dealt to Hero [6c Td]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 calls 3500
+Villain03 calls 3500
+Villain04 folds
+.Villain07 folds
+Villain06 checks
+*** FLOP *** [7s 4h Qc]
+Villain06 checks
+Villain02 bets 3500
+Villain03 folds
+Villain06 folds
+Villain02 collected 18150 from pot
+*** SUMMARY ***
+Total pot 18150 | No rake
+Board: [7s 4h Qc]
+Seat 3: Villain02 won 18150
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 17 - HandId: #4988240872307949569-115-1788567937 - Holdem no limit (400/1750/3500) - 2026/09/05 00:25:37 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (95935, 9.75€ bounty)
+Seat 2: Hero (90729, 5€ bounty)
+Seat 3: Villain02 (185918, 29.40€ bounty)
+Seat 4: Villain03 (170521, 8.75€ bounty)
+Seat 5: Villain04 (84934, 7.20€ bounty)
+Seat 6: .Villain07 (56059, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 400
+Hero posts ante 400
+Villain02 posts ante 400
+Villain03 posts ante 400
+Villain04 posts ante 400
+.Villain07 posts ante 400
+Villain06 posts small blind 1750
+Hero posts big blind 3500
+Dealt to Hero [2h Qd]
+*** PRE-FLOP *** 
+Villain02 calls 3500
+Villain03 folds
+Villain04 folds
+.Villain07 folds
+Villain06 raises 12250 to 15750
+Hero folds
+Villain02 calls 12250
+*** FLOP *** [6h Jd Ts]
+Villain06 bets 13090
+Villain02 folds
+Villain06 collected 50490 from pot
+*** SUMMARY ***
+Total pot 50490 | No rake
+Board: [6h Jd Ts]
+Seat 1: Villain06 (small blind) won 50490
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 17 - HandId: #4988240872307949569-116-1788567980 - Holdem no limit (400/1750/3500) - 2026/09/05 00:26:20 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (117185, 9.75€ bounty)
+Seat 2: Hero (86829, 5€ bounty)
+Seat 3: Villain02 (169768, 29.40€ bounty)
+Seat 4: Villain03 (170121, 8.75€ bounty)
+Seat 5: Villain04 (84534, 7.20€ bounty)
+Seat 6: .Villain07 (55659, 16€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 400
+Villain02 posts ante 400
+Villain06 posts ante 400
+Villain03 posts ante 400
+Villain04 posts ante 400
+.Villain07 posts ante 400
+Hero posts small blind 1750
+Villain02 posts big blind 3500
+Dealt to Hero [Th 3h]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+.Villain07 folds
+Villain06 raises 3500 to 7000
+Hero folds
+Villain02 calls 3500
+*** FLOP *** [9c Qc 8h]
+Villain02 bets 6353
+Villain06 calls 6353
+*** TURN *** [9c Qc 8h][4c]
+Villain02 bets 15428
+Villain06 calls 15428
+*** RIVER *** [9c Qc 8h 4c][Qd]
+Villain02 checks
+Villain06 bets 21599
+Villain02 folds
+Villain06 collected 83311 from pot
+*** SUMMARY ***
+Total pot 83311 | No rake
+Board: [9c Qc 8h 4c Qd]
+Seat 1: Villain06 (button) won 83311
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-117-1788568041 - Holdem no limit (500/2000/4000) - 2026/09/05 00:27:21 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (149716, 9.75€ bounty)
+Seat 2: Hero (84679, 5€ bounty)
+Seat 3: Villain02 (140587, 29.40€ bounty)
+Seat 4: Villain03 (169721, 8.75€ bounty)
+Seat 5: Villain04 (84134, 7.20€ bounty)
+Seat 6: .Villain07 (55259, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 500
+Villain03 posts ante 500
+Villain06 posts ante 500
+Hero posts ante 500
+Villain04 posts ante 500
+.Villain07 posts ante 500
+Villain02 posts small blind 2000
+Villain03 posts big blind 4000
+Dealt to Hero [7h Ts]
+*** PRE-FLOP *** 
+Villain04 folds
+.Villain07 folds
+Villain06 folds
+Hero folds
+Villain02 raises 4000 to 8000
+Villain03 calls 4000
+*** FLOP *** [As Tc 3s]
+Villain02 checks
+Villain03 checks
+*** TURN *** [As Tc 3s][5h]
+Villain02 checks
+Villain03 checks
+*** RIVER *** [As Tc 3s 5h][8c]
+Villain02 bets 6650
+Villain03 calls 6650
+*** SHOW DOWN ***
+Villain02 shows [Kh 7d] (High card : Ace)
+Villain03 shows [8d Jh] (One pair : 8)
+Villain03 collected 32300 from pot
+*** SUMMARY ***
+Total pot 32300 | No rake
+Board: [As Tc 3s 5h 8c]
+Seat 3: Villain02 (small blind) showed [Kh 7d] and lost with High card : Ace
+Seat 4: Villain03 (big blind) showed [8d Jh] and won 32300 with One pair : 8
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-118-1788568088 - Holdem no limit (500/2000/4000) - 2026/09/05 00:28:08 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (149216, 9.75€ bounty)
+Seat 2: Hero (84179, 5€ bounty)
+Seat 3: Villain02 (125437, 29.40€ bounty)
+Seat 4: Villain03 (186871, 8.75€ bounty)
+Seat 5: Villain04 (83634, 7.20€ bounty)
+Seat 6: .Villain07 (54759, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 500
+Villain04 posts ante 500
+Villain06 posts ante 500
+Hero posts ante 500
+Villain02 posts ante 500
+.Villain07 posts ante 500
+Villain03 posts small blind 2000
+Villain04 posts big blind 4000
+Dealt to Hero [Tc Qs]
+*** PRE-FLOP *** 
+.Villain07 folds
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 collected 9000 from pot
+*** SUMMARY ***
+Total pot 9000 | No rake
+Seat 5: Villain04 (big blind) won 9000
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-119-1788568117 - Holdem no limit (500/2000/4000) - 2026/09/05 00:28:37 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (148716, 9.75€ bounty)
+Seat 2: Hero (83679, 5€ bounty)
+Seat 3: Villain02 (124937, 29.40€ bounty)
+Seat 4: Villain03 (184371, 8.75€ bounty)
+Seat 5: Villain04 (88134, 7.20€ bounty)
+Seat 6: .Villain07 (54259, 16€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 500
+.Villain07 posts ante 500
+Villain06 posts ante 500
+Hero posts ante 500
+Villain02 posts ante 500
+Villain03 posts ante 500
+Villain04 posts small blind 2000
+.Villain07 posts big blind 4000
+Dealt to Hero [Kc Th]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 calls 4000
+Villain04 folds
+.Villain07 checks
+*** FLOP *** [Kh 4c 7d]
+.Villain07 checks
+Villain03 bets 13000
+.Villain07 folds
+Villain03 collected 26000 from pot
+*** SUMMARY ***
+Total pot 26000 | No rake
+Board: [Kh 4c 7d]
+Seat 4: Villain03 (button) won 26000
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-120-1788568149 - Holdem no limit (500/2000/4000) - 2026/09/05 00:29:09 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (148216, 9.75€ bounty)
+Seat 2: Hero (83179, 5€ bounty)
+Seat 3: Villain02 (124437, 29.40€ bounty)
+Seat 4: Villain03 (192871, 8.75€ bounty)
+Seat 5: Villain04 (85634, 7.20€ bounty)
+Seat 6: .Villain07 (49759, 16€ bounty)
+*** ANTE/BLINDS ***
+.Villain07 posts ante 500
+Villain06 posts ante 500
+Hero posts ante 500
+Villain02 posts ante 500
+Villain03 posts ante 500
+Villain04 posts ante 500
+.Villain07 posts small blind 2000
+Villain06 posts big blind 4000
+Dealt to Hero [9s 2d]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+.Villain07 raises 45259 to 49259 and is all-in
+Villain06 raises 45259 to 94518
+*** FLOP *** [5s 2s 4h]
+*** TURN *** [5s 2s 4h][9d]
+*** RIVER *** [5s 2s 4h 9d][6d]
+*** SHOW DOWN ***
+.Villain07 shows [Qh Kc] (High card : King)
+Villain06 shows [Th Ah] (High card : Ace)
+Villain06 collected 146777 from pot
+*** SUMMARY ***
+Total pot 146777 | No rake
+Board: [5s 2s 4h 9d 6d]
+Seat 1: Villain06 (big blind) showed [Th Ah] and won 146777 with High card : Ace
+Seat 6: .Villain07 (small blind) showed [Qh Kc] and lost with High card : King
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-121-1788568193 - Holdem no limit (500/2000/4000) - 2026/09/05 00:29:53 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (199975, 17.75€ bounty)
+Seat 2: Hero (82679, 5€ bounty)
+Seat 3: Villain02 (123937, 29.40€ bounty)
+Seat 4: Villain03 (192371, 8.75€ bounty)
+Seat 5: Villain04 (85134, 7.20€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 500
+Hero posts ante 500
+Villain02 posts ante 500
+Villain03 posts ante 500
+Villain04 posts ante 500
+Villain06 posts small blind 2000
+Hero posts big blind 4000
+Dealt to Hero [Qd 8s]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain06 raises 5000 to 9000
+Hero folds
+Villain06 collected 15500 from pot
+*** SUMMARY ***
+Total pot 15500 | No rake
+Seat 1: Villain06 (small blind) won 15500
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-122-1788568207 - Holdem no limit (500/2000/4000) - 2026/09/05 00:30:07 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (205975, 17.75€ bounty)
+Seat 2: Hero (78179, 5€ bounty)
+Seat 3: Villain02 (123437, 29.40€ bounty)
+Seat 4: Villain03 (191871, 8.75€ bounty)
+Seat 5: Villain04 (84634, 7.20€ bounty)
+Seat 6: Villain 08 x (111619, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 500
+Villain02 posts ante 500
+Villain06 posts ante 500
+Villain03 posts ante 500
+Villain04 posts ante 500
+Villain 08 x posts ante 500
+Hero posts small blind 2000
+Villain02 posts big blind 4000
+Dealt to Hero [2d 2s]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 08 x raises 13000 to 17000
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain 08 x collected 26000 from pot
+*** SUMMARY ***
+Total pot 26000 | No rake
+Seat 6: Villain 08 x won 26000
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-123-1788568239 - Holdem no limit (500/2000/4000) - 2026/09/05 00:30:39 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (205475, 17.75€ bounty)
+Seat 2: Hero (75679, 5€ bounty)
+Seat 3: Villain02 (118937, 29.40€ bounty)
+Seat 4: Villain03 (191371, 8.75€ bounty)
+Seat 5: Villain04 (84134, 7.20€ bounty)
+Seat 6: Villain 08 x (120119, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 500
+Villain03 posts ante 500
+Villain06 posts ante 500
+Hero posts ante 500
+Villain04 posts ante 500
+Villain 08 x posts ante 500
+Villain02 posts small blind 2000
+Villain03 posts big blind 4000
+Dealt to Hero [Js 2s]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 08 x calls 4000
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 checks
+*** FLOP *** [Jd As 9c]
+Villain03 checks
+Villain 08 x bets 4000
+Villain03 calls 4000
+*** TURN *** [Jd As 9c][6h]
+Villain03 checks
+Villain 08 x bets 4000
+Villain03 calls 4000
+*** RIVER *** [Jd As 9c 6h][5c]
+Villain03 checks
+Villain 08 x checks
+*** SHOW DOWN ***
+Villain 08 x shows [Kh Th] (High card : Ace)
+Villain03 shows [6c 9s] (Two pairs : 9 and 6)
+Villain03 collected 29000 from pot
+*** SUMMARY ***
+Total pot 29000 | No rake
+Board: [Jd As 9c 6h 5c]
+Seat 4: Villain03 (big blind) showed [6c 9s] and won 29000 with Two pairs : 9 and 6
+Seat 6: Villain 08 x showed [Kh Th] and lost with High card : Ace
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 18 - HandId: #4988240872307949569-124-1788568286 - Holdem no limit (500/2000/4000) - 2026/09/05 00:31:26 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (204975, 17.75€ bounty)
+Seat 2: Hero (75179, 5€ bounty)
+Seat 3: Villain02 (116437, 29.40€ bounty)
+Seat 4: Villain03 (207871, 8.75€ bounty)
+Seat 5: Villain04 (83634, 7.20€ bounty)
+Seat 6: Villain 08 x (107619, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 500
+Villain04 posts ante 500
+Villain06 posts ante 500
+Hero posts ante 500
+Villain02 posts ante 500
+Villain 08 x posts ante 500
+Villain03 posts small blind 2000
+Villain04 posts big blind 4000
+Dealt to Hero [As 5s]
+*** PRE-FLOP *** 
+Villain 08 x calls 4000
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 calls 2000
+Villain04 raises 79134 to 83134 and is all-in
+Villain 08 x folds
+Villain03 calls 79134
+*** FLOP *** [Qc 2h 7c]
+*** TURN *** [Qc 2h 7c][8h]
+*** RIVER *** [Qc 2h 7c 8h][3s]
+*** SHOW DOWN ***
+Villain03 shows [9s Ac] (High card : Ace)
+Villain04 shows [Ad 9d] (High card : Ace)
+Villain04 collected 86634 from pot
+Villain03 collected 86634 from pot
+*** SUMMARY ***
+Total pot 173268 | No rake
+Board: [Qc 2h 7c 8h 3s]
+Seat 4: Villain03 (small blind) showed [9s Ac] and won 86634 with High card : Ace
+Seat 5: Villain04 (big blind) showed [Ad 9d] and won 86634 with High card : Ace
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 19 - HandId: #4988240872307949569-125-1788568338 - Holdem no limit (600/2500/5000) - 2026/09/05 00:32:18 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (204475, 17.75€ bounty)
+Seat 2: Hero (74679, 5€ bounty)
+Seat 3: Villain02 (115937, 29.40€ bounty)
+Seat 4: Villain03 (210871, 8.75€ bounty)
+Seat 5: Villain04 (86634, 7.20€ bounty)
+Seat 6: Villain 08 x (103119, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 600
+Villain 08 x posts ante 600
+Villain06 posts ante 600
+Hero posts ante 600
+Villain02 posts ante 600
+Villain03 posts ante 600
+Villain04 posts small blind 2500
+Villain 08 x posts big blind 5000
+Dealt to Hero [3d 9d]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 raises 81034 to 86034 and is all-in
+Villain 08 x folds
+Villain04 collected 94634 from pot
+*** SUMMARY ***
+Total pot 94634 | No rake
+Seat 5: Villain04 (small blind) won 94634
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 19 - HandId: #4988240872307949569-126-1788568350 - Holdem no limit (600/2500/5000) - 2026/09/05 00:32:30 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (203875, 17.75€ bounty)
+Seat 2: Hero (74079, 5€ bounty)
+Seat 3: Villain02 (115337, 29.40€ bounty)
+Seat 4: Villain03 (210271, 8.75€ bounty)
+Seat 5: Villain04 (94634, 7.20€ bounty)
+Seat 6: Villain 08 x (97519, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain 08 x posts ante 600
+Villain06 posts ante 600
+Hero posts ante 600
+Villain02 posts ante 600
+Villain03 posts ante 600
+Villain04 posts ante 600
+Villain 08 x posts small blind 2500
+Villain06 posts big blind 5000
+Dealt to Hero [2d 3s]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 raises 89034 to 94034 and is all-in
+Villain 08 x folds
+Villain06 folds
+Villain04 collected 105134 from pot
+*** SUMMARY ***
+Total pot 105134 | No rake
+Seat 5: Villain04 (button) won 105134
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 19 - HandId: #4988240872307949569-127-1788568400 - Holdem no limit (600/2500/5000) - 2026/09/05 00:33:20 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (198275, 17.75€ bounty)
+Seat 2: Hero (73479, 5€ bounty)
+Seat 3: Villain02 (114737, 29.40€ bounty)
+Seat 4: Villain03 (209671, 8.75€ bounty)
+Seat 5: Villain04 (105134, 7.20€ bounty)
+Seat 6: Villain 08 x (94419, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 600
+Hero posts ante 600
+Villain02 posts ante 600
+Villain03 posts ante 600
+Villain04 posts ante 600
+Villain 08 x posts ante 600
+Villain06 posts small blind 2500
+Hero posts big blind 5000
+Dealt to Hero [Ad 3h]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 raises 7500 to 12500
+Hero raises 60379 to 72879 and is all-in
+Villain06 folds
+Hero collected 88979 from pot
+*** SUMMARY ***
+Total pot 88979 | No rake
+Seat 2: Hero (big blind) won 88979
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 19 - HandId: #4988240872307949569-128-1788568445 - Holdem no limit (600/2500/5000) - 2026/09/05 00:34:05 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (185175, 17.75€ bounty)
+Seat 2: Hero (88979, 5€ bounty)
+Seat 3: Villain02 (114137, 29.40€ bounty)
+Seat 4: Villain03 (209071, 8.75€ bounty)
+Seat 5: Villain04 (104534, 7.20€ bounty)
+Seat 6: Villain 08 x (93819, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 600
+Villain02 posts ante 600
+Villain06 posts ante 600
+Villain03 posts ante 600
+Villain04 posts ante 600
+Villain 08 x posts ante 600
+Hero posts small blind 2500
+Villain02 posts big blind 5000
+Dealt to Hero [3c Ac]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 raises 5000 to 10000
+Hero folds
+Villain02 calls 5000
+*** FLOP *** [2d 7d 7h]
+Villain02 bets 16965
+Villain06 calls 16965
+*** TURN *** [2d 7d 7h][3s]
+Villain02 bets 86572 and is all-in
+Villain06 folds
+Villain02 collected 146602 from pot
+*** SUMMARY ***
+Total pot 146602 | No rake
+Board: [2d 7d 7h 3s]
+Seat 3: Villain02 (big blind) won 146602
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 19 - HandId: #4988240872307949569-129-1788568514 - Holdem no limit (600/2500/5000) - 2026/09/05 00:35:14 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (157610, 17.75€ bounty)
+Seat 2: Hero (85879, 5€ bounty)
+Seat 3: Villain02 (146602, 29.40€ bounty)
+Seat 4: Villain03 (208471, 8.75€ bounty)
+Seat 5: Villain04 (103934, 7.20€ bounty)
+Seat 6: Villain 08 x (93219, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 600
+Villain03 posts ante 600
+Villain06 posts ante 600
+Hero posts ante 600
+Villain04 posts ante 600
+Villain 08 x posts ante 600
+Villain02 posts small blind 2500
+Villain03 posts big blind 5000
+Dealt to Hero [8s Td]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 08 x folds
+Villain06 raises 5000 to 10000
+Hero folds
+Villain02 raises 30000 to 40000
+Villain03 folds
+Villain06 folds
+Villain02 collected 58600 from pot
+*** SUMMARY ***
+Total pot 58600 | No rake
+Seat 3: Villain02 (small blind) won 58600
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 19 - HandId: #4988240872307949569-130-1788568561 - Holdem no limit (600/2500/5000) - 2026/09/05 00:36:01 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (147010, 17.75€ bounty)
+Seat 2: Hero (85279, 5€ bounty)
+Seat 3: Villain02 (164602, 29.40€ bounty)
+Seat 4: Villain03 (202871, 8.75€ bounty)
+Seat 5: Villain04 (103334, 7.20€ bounty)
+Seat 6: Villain 08 x (92619, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 600
+Villain04 posts ante 600
+Villain06 posts ante 600
+Hero posts ante 600
+Villain02 posts ante 600
+Villain 08 x posts ante 600
+Villain03 posts small blind 2500
+Villain04 posts big blind 5000
+Dealt to Hero [6d 6c]
+*** PRE-FLOP *** 
+Villain 08 x folds
+Villain06 folds
+Hero raises 5000 to 10000
+Villain02 folds
+Villain03 calls 7500
+Villain04 calls 5000
+*** FLOP *** [Qh Tc Jc]
+Villain03 checks
+Villain04 checks
+Hero bets 8400
+Villain03 calls 8400
+Villain04 calls 8400
+*** TURN *** [Qh Tc Jc][Kd]
+Villain03 bets 58800
+Villain04 folds
+Hero folds
+Villain03 collected 117600 from pot
+*** SUMMARY ***
+Total pot 117600 | No rake
+Board: [Qh Tc Jc Kd]
+Seat 4: Villain03 (small blind) won 117600
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-131-1788568669 - Holdem no limit (700/3000/6000) - 2026/09/05 00:37:49 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (146410, 17.75€ bounty)
+Seat 2: Hero (66279, 5€ bounty)
+Seat 3: Villain02 (164002, 29.40€ bounty)
+Seat 4: Villain03 (242671, 8.75€ bounty)
+Seat 5: Villain04 (84334, 7.20€ bounty)
+Seat 6: Villain 08 x (92019, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain04 posts small blind 3000
+Villain 08 x posts big blind 6000
+Dealt to Hero [6c 3h]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 08 x collected 13200 from pot
+*** SUMMARY ***
+Total pot 13200 | No rake
+Seat 6: Villain 08 x (big blind) won 13200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-132-1788568678 - Holdem no limit (700/3000/6000) - 2026/09/05 00:37:58 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (145710, 17.75€ bounty)
+Seat 2: Hero (65579, 5€ bounty)
+Seat 3: Villain02 (163302, 29.40€ bounty)
+Seat 4: Villain03 (241971, 8.75€ bounty)
+Seat 5: Villain04 (80634, 7.20€ bounty)
+Seat 6: Villain 08 x (98519, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain 08 x posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts small blind 3000
+Villain06 posts big blind 6000
+Dealt to Hero [Ks Kc]
+*** PRE-FLOP *** 
+Hero raises 58879 to 64879 and is all-in
+Villain02 folds
+Villain03 raises 176392 to 241271 and is all-in
+Villain04 folds
+Villain 08 x folds
+Villain06 folds
+*** FLOP *** [5d 8d 3s]
+*** TURN *** [5d 8d 3s][2d]
+*** RIVER *** [5d 8d 3s 2d][6d]
+*** SHOW DOWN ***
+Hero shows [Ks Kc] (One pair : Kings)
+Villain03 shows [Jc Jh] (One pair : Jacks)
+Villain03 collected 176392 from side pot 1
+Hero collected 142958 from main pot
+*** SUMMARY ***
+Total pot 319350 | No rake
+Board: [5d 8d 3s 2d 6d]
+Seat 2: Hero showed [Ks Kc] and won 142958 with One pair : Kings
+Seat 4: Villain03 showed [Jc Jh] and won 176392 with One pair : Jacks
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-133-1788568715 - Holdem no limit (700/3000/6000) - 2026/09/05 00:38:35 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (139010, 17.75€ bounty)
+Seat 2: Hero (142958, 5€ bounty)
+Seat 3: Villain02 (162602, 29.40€ bounty)
+Seat 4: Villain03 (176392, 8.75€ bounty)
+Seat 5: Villain04 (79934, 7.20€ bounty)
+Seat 6: Villain 08 x (94819, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Villain06 posts small blind 3000
+Hero posts big blind 6000
+Dealt to Hero [6c Ah]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 raises 73234 to 79234 and is all-in
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain04 collected 92434 from pot
+*** SUMMARY ***
+Total pot 92434 | No rake
+Seat 5: Villain04 won 92434
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-134-1788568736 - Holdem no limit (700/3000/6000) - 2026/09/05 00:38:56 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (135310, 17.75€ bounty)
+Seat 2: Hero (136258, 5€ bounty)
+Seat 3: Villain02 (161902, 29.40€ bounty)
+Seat 4: Villain03 (175692, 8.75€ bounty)
+Seat 5: Villain04 (92434, 7.20€ bounty)
+Seat 6: Villain 08 x (94119, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 700
+Villain02 posts ante 700
+Villain06 posts ante 700
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Hero posts small blind 3000
+Villain02 posts big blind 6000
+Dealt to Hero [3d 5h]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 raises 6000 to 12000
+Hero folds
+Villain02 raises 149202 to 161202 and is all-in
+Villain06 folds
+Villain02 collected 180402 from pot
+*** SUMMARY ***
+Total pot 180402 | No rake
+Seat 3: Villain02 (big blind) won 180402
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-135-1788568758 - Holdem no limit (700/3000/6000) - 2026/09/05 00:39:18 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (122610, 17.75€ bounty)
+Seat 2: Hero (132558, 5€ bounty)
+Seat 3: Villain02 (180402, 29.40€ bounty)
+Seat 4: Villain03 (174992, 8.75€ bounty)
+Seat 5: Villain04 (91734, 7.20€ bounty)
+Seat 6: Villain 08 x (93419, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Villain02 posts small blind 3000
+Villain03 posts big blind 6000
+Dealt to Hero [Kc 4c]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 08 x folds
+Villain06 raises 6000 to 12000
+Hero folds
+Villain02 folds
+Villain03 calls 6000
+*** FLOP *** [9d 8s 6d]
+Villain03 checks
+Villain06 checks
+*** TURN *** [9d 8s 6d][3c]
+Villain03 checks
+Villain06 checks
+*** RIVER *** [9d 8s 6d 3c][Qc]
+Villain03 checks
+Villain06 bets 20280
+Villain03 folds
+Villain06 collected 51480 from pot
+*** SUMMARY ***
+Total pot 51480 | No rake
+Board: [9d 8s 6d 3c Qc]
+Seat 1: Villain06 won 51480
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-136-1788568790 - Holdem no limit (700/3000/6000) - 2026/09/05 00:39:50 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (141110, 17.75€ bounty)
+Seat 2: Hero (131858, 5€ bounty)
+Seat 3: Villain02 (176702, 29.40€ bounty)
+Seat 4: Villain03 (162292, 8.75€ bounty)
+Seat 5: Villain04 (91034, 7.20€ bounty)
+Seat 6: Villain 08 x (92719, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain 08 x posts ante 700
+Villain03 posts small blind 3000
+Villain04 posts big blind 6000
+Dealt to Hero [3d 7d]
+*** PRE-FLOP *** 
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain02 raises 6000 to 12000
+Villain03 folds
+Villain04 calls 6000
+*** FLOP *** [7s 4s 8d]
+Villain04 checks
+Villain02 bets 15600
+Villain04 calls 15600
+*** TURN *** [7s 4s 8d][As]
+Villain04 checks
+Villain02 bets 40560
+Villain04 folds
+Villain02 collected 102960 from pot
+*** SUMMARY ***
+Total pot 102960 | No rake
+Board: [7s 4s 8d As]
+Seat 3: Villain02 (button) won 102960
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-137-1788568818 - Holdem no limit (700/3000/6000) - 2026/09/05 00:40:18 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (140410, 17.75€ bounty)
+Seat 2: Hero (131158, 5€ bounty)
+Seat 3: Villain02 (210802, 29.40€ bounty)
+Seat 4: Villain03 (158592, 8.75€ bounty)
+Seat 5: Villain04 (62734, 7.20€ bounty)
+Seat 6: Villain 08 x (92019, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain04 posts small blind 3000
+Villain 08 x posts big blind 6000
+Dealt to Hero [Ah 6c]
+*** PRE-FLOP *** 
+Villain06 raises 6000 to 12000
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 08 x calls 6000
+*** FLOP *** [As 5c 3d]
+Villain 08 x checks
+Villain06 bets 7800
+Villain 08 x folds
+Villain06 collected 39000 from pot
+*** SUMMARY ***
+Total pot 39000 | No rake
+Board: [As 5c 3d]
+Seat 1: Villain06 won 39000
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-138-1788568853 - Holdem no limit (700/3000/6000) - 2026/09/05 00:40:53 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (158910, 17.75€ bounty)
+Seat 2: Hero (130458, 5€ bounty)
+Seat 3: Villain02 (210102, 29.40€ bounty)
+Seat 4: Villain03 (157892, 8.75€ bounty)
+Seat 5: Villain04 (59034, 7.20€ bounty)
+Seat 6: Villain 08 x (79319, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain 08 x posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts small blind 3000
+Villain06 posts big blind 6000
+Dealt to Hero [Jc 6s]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 collected 13200 from pot
+*** SUMMARY ***
+Total pot 13200 | No rake
+Seat 1: Villain06 (big blind) won 13200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-139-1788568871 - Holdem no limit (700/3000/6000) - 2026/09/05 00:41:11 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (165410, 17.75€ bounty)
+Seat 2: Hero (129758, 5€ bounty)
+Seat 3: Villain02 (209402, 29.40€ bounty)
+Seat 4: Villain03 (157192, 8.75€ bounty)
+Seat 5: Villain04 (58334, 7.20€ bounty)
+Seat 6: Villain 08 x (75619, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 700
+Hero posts ante 700
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Villain06 posts small blind 3000
+Hero posts big blind 6000
+Dealt to Hero [5c 4h]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 raises 51634 to 57634 and is all-in
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain04 collected 70834 from pot
+*** SUMMARY ***
+Total pot 70834 | No rake
+Seat 5: Villain04 won 70834
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-140-1788568888 - Holdem no limit (700/3000/6000) - 2026/09/05 00:41:28 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (161710, 17.75€ bounty)
+Seat 2: Hero (123058, 5€ bounty)
+Seat 3: Villain02 (208702, 29.40€ bounty)
+Seat 4: Villain03 (156492, 8.75€ bounty)
+Seat 5: Villain04 (70834, 7.20€ bounty)
+Seat 6: Villain 08 x (74919, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 700
+Villain02 posts ante 700
+Villain06 posts ante 700
+Villain03 posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Hero posts small blind 3000
+Villain02 posts big blind 6000
+Dealt to Hero [Qs Jh]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 raises 6000 to 12000
+Hero folds
+Villain02 folds
+Villain06 collected 25200 from pot
+*** SUMMARY ***
+Total pot 25200 | No rake
+Seat 1: Villain06 (button) won 25200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 20 - HandId: #4988240872307949569-141-1788568915 - Holdem no limit (700/3000/6000) - 2026/09/05 00:41:55 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (174210, 17.75€ bounty)
+Seat 2: Hero (119358, 5€ bounty)
+Seat 3: Villain02 (202002, 29.40€ bounty)
+Seat 4: Villain03 (155792, 8.75€ bounty)
+Seat 5: Villain04 (70134, 7.20€ bounty)
+Seat 6: Villain 08 x (74219, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 700
+Villain03 posts ante 700
+Villain06 posts ante 700
+Hero posts ante 700
+Villain04 posts ante 700
+Villain 08 x posts ante 700
+Villain02 posts small blind 3000
+Villain03 posts big blind 6000
+Dealt to Hero [9c 7d]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 collected 13200 from pot
+*** SUMMARY ***
+Total pot 13200 | No rake
+Seat 4: Villain03 (big blind) won 13200
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-142-1788568934 - Holdem no limit (800/3500/7000) - 2026/09/05 00:42:14 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (173510, 17.75€ bounty)
+Seat 2: Hero (118658, 5€ bounty)
+Seat 3: Villain02 (198302, 29.40€ bounty)
+Seat 4: Villain03 (162292, 8.75€ bounty)
+Seat 5: Villain04 (69434, 7.20€ bounty)
+Seat 6: Villain 08 x (73519, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 800
+Villain04 posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain 08 x posts ante 800
+Villain03 posts small blind 3500
+Villain04 posts big blind 7000
+Dealt to Hero [3c Th]
+*** PRE-FLOP *** 
+Villain 08 x folds
+Villain06 raises 7000 to 14000
+Hero folds
+Villain02 folds
+Villain03 raises 28000 to 42000
+Villain04 folds
+Villain06 folds
+Villain03 collected 67800 from pot
+*** SUMMARY ***
+Total pot 67800 | No rake
+Seat 4: Villain03 (small blind) won 67800
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-143-1788568972 - Holdem no limit (800/3500/7000) - 2026/09/05 00:42:52 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (158710, 17.75€ bounty)
+Seat 2: Hero (117858, 5€ bounty)
+Seat 3: Villain02 (197502, 29.40€ bounty)
+Seat 4: Villain03 (187292, 8.75€ bounty)
+Seat 5: Villain04 (61634, 7.20€ bounty)
+Seat 6: Villain 08 x (72719, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 800
+Villain 08 x posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain03 posts ante 800
+Villain04 posts small blind 3500
+Villain 08 x posts big blind 7000
+Dealt to Hero [Kd 6d]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 08 x collected 15300 from pot
+*** SUMMARY ***
+Total pot 15300 | No rake
+Seat 6: Villain 08 x (big blind) won 15300
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-144-1788568983 - Holdem no limit (800/3500/7000) - 2026/09/05 00:43:03 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (157910, 17.75€ bounty)
+Seat 2: Hero (117058, 5€ bounty)
+Seat 3: Villain02 (196702, 29.40€ bounty)
+Seat 4: Villain03 (186492, 8.75€ bounty)
+Seat 5: Villain04 (57334, 7.20€ bounty)
+Seat 6: Villain 08 x (80219, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain 08 x posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain03 posts ante 800
+Villain04 posts ante 800
+Villain 08 x posts small blind 3500
+Villain06 posts big blind 7000
+Dealt to Hero [Js 2s]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 raises 7000 to 14000
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 folds
+Villain02 collected 29300 from pot
+*** SUMMARY ***
+Total pot 29300 | No rake
+Seat 3: Villain02 won 29300
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-145-1788568997 - Holdem no limit (800/3500/7000) - 2026/09/05 00:43:17 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (150110, 17.75€ bounty)
+Seat 2: Hero (116258, 5€ bounty)
+Seat 3: Villain02 (211202, 29.40€ bounty)
+Seat 4: Villain03 (185692, 8.75€ bounty)
+Seat 5: Villain04 (56534, 7.20€ bounty)
+Seat 6: Villain 08 x (75919, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain03 posts ante 800
+Villain04 posts ante 800
+Villain 08 x posts ante 800
+Villain06 posts small blind 3500
+Hero posts big blind 7000
+Dealt to Hero [4c 6c]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 calls 7000
+Villain04 raises 48734 to 55734 and is all-in
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain03 calls 48734
+*** FLOP *** [3s As 7s]
+*** TURN *** [3s As 7s][4h]
+*** RIVER *** [3s As 7s 4h][6s]
+*** SHOW DOWN ***
+Villain03 shows [Kh Qc] (High card : Ace)
+Villain04 shows [Ad 3h] (Two pairs : Aces and 3)
+Villain04 collected 126768 from pot
+*** SUMMARY ***
+Total pot 126768 | No rake
+Board: [3s As 7s 4h 6s]
+Seat 4: Villain03 showed [Kh Qc] and lost with High card : Ace
+Seat 5: Villain04 showed [Ad 3h] and won 126768 with Two pairs : Aces and 3
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-146-1788569065 - Holdem no limit (800/3500/7000) - 2026/09/05 00:44:25 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (145810, 17.75€ bounty)
+Seat 2: Hero (108458, 5€ bounty)
+Seat 3: Villain02 (210402, 29.40€ bounty)
+Seat 4: Villain03 (129158, 8.75€ bounty)
+Seat 5: Villain04 (126768, 7.20€ bounty)
+Seat 6: Villain 08 x (75119, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 800
+Villain02 posts ante 800
+Villain06 posts ante 800
+Villain03 posts ante 800
+Villain04 posts ante 800
+Villain 08 x posts ante 800
+Hero posts small blind 3500
+Villain02 posts big blind 7000
+Dealt to Hero [5h Qs]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain02 collected 15300 from pot
+*** SUMMARY ***
+Total pot 15300 | No rake
+Seat 3: Villain02 (big blind) won 15300
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-147-1788569077 - Holdem no limit (800/3500/7000) - 2026/09/05 00:44:37 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (145010, 17.75€ bounty)
+Seat 2: Hero (104158, 5€ bounty)
+Seat 3: Villain02 (217902, 29.40€ bounty)
+Seat 4: Villain03 (128358, 8.75€ bounty)
+Seat 5: Villain04 (125968, 7.20€ bounty)
+Seat 6: Villain 08 x (74319, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 800
+Villain03 posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain04 posts ante 800
+Villain 08 x posts ante 800
+Villain02 posts small blind 3500
+Villain03 posts big blind 7000
+Dealt to Hero [Kd 4h]
+*** PRE-FLOP *** 
+Villain04 raises 118168 to 125168 and is all-in
+Villain 08 x calls 73519 and is all-in
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+*** FLOP *** [7s Qc 3d]
+*** TURN *** [7s Qc 3d][8s]
+*** RIVER *** [7s Qc 3d 8s][8h]
+*** SHOW DOWN ***
+Villain04 shows [Ad Jd] (One pair : 8)
+Villain 08 x shows [Ts Tc] (Two pairs : Tens and 8)
+Villain 08 x collected 162338 from main pot
+Villain04 collected 51649 from side pot 1
+*** SUMMARY ***
+Total pot 213987 | No rake
+Board: [7s Qc 3d 8s 8h]
+Seat 5: Villain04 showed [Ad Jd] and won 51649 with One pair : 8
+Seat 6: Villain 08 x showed [Ts Tc] and won 162338 with Two pairs : Tens and 8
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-148-1788569105 - Holdem no limit (800/3500/7000) - 2026/09/05 00:45:05 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (144210, 17.75€ bounty)
+Seat 2: Hero (103358, 5€ bounty)
+Seat 3: Villain02 (213602, 29.40€ bounty)
+Seat 4: Villain03 (120558, 8.75€ bounty)
+Seat 5: Villain04 (51649, 7.20€ bounty)
+Seat 6: Villain 08 x (162338, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 800
+Villain04 posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain 08 x posts ante 800
+Villain03 posts small blind 3500
+Villain04 posts big blind 7000
+Dealt to Hero [9d 4c]
+*** PRE-FLOP *** 
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 raises 112758 to 119758 and is all-in
+Villain04 calls 43849 and is all-in
+*** FLOP *** [4d 2s 4h]
+*** TURN *** [4d 2s 4h][Kc]
+*** RIVER *** [4d 2s 4h Kc][5c]
+*** SHOW DOWN ***
+Villain03 shows [2d Qs] (Two pairs : 4 and 2)
+Villain04 shows [6d 6s] (Two pairs : 6 and 4)
+Villain04 collected 106498 from main pot
+Villain03 collected 68909 from side pot 1
+*** SUMMARY ***
+Total pot 175407 | No rake
+Board: [4d 2s 4h Kc 5c]
+Seat 4: Villain03 (small blind) showed [2d Qs] and won 68909 with Two pairs : 4 and 2
+Seat 5: Villain04 (big blind) showed [6d 6s] and won 106498 with Two pairs : 6 and 4
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-149-1788569134 - Holdem no limit (800/3500/7000) - 2026/09/05 00:45:34 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (143410, 17.75€ bounty)
+Seat 2: Hero (102558, 5€ bounty)
+Seat 3: Villain02 (212802, 29.40€ bounty)
+Seat 4: Villain03 (68909, 8.75€ bounty)
+Seat 5: Villain04 (106498, 7.20€ bounty)
+Seat 6: Villain 08 x (161538, 8.70€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 800
+Villain 08 x posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain03 posts ante 800
+Villain04 posts small blind 3500
+Villain 08 x posts big blind 7000
+Dealt to Hero [3h 4c]
+*** PRE-FLOP *** 
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain03 raises 61109 to 68109 and is all-in
+Villain04 folds
+Villain 08 x raises 92629 to 160738 and is all-in
+*** FLOP *** [4s Qd 6s]
+*** TURN *** [4s Qd 6s][6c]
+*** RIVER *** [4s Qd 6s 6c][2d]
+*** SHOW DOWN ***
+Villain03 shows [As Jh] (One pair : 6)
+Villain 08 x shows [Th Td] (Two pairs : Tens and 6)
+Villain 08 x collected 237147 from pot
+*** SUMMARY ***
+Total pot 237147 | No rake
+Board: [4s Qd 6s 6c 2d]
+Seat 4: Villain03 (button) showed [As Jh] and lost with One pair : 6
+Seat 6: Villain 08 x (big blind) showed [Th Td] and won 237147 with Two pairs : Tens and 6
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 21 - HandId: #4988240872307949569-150-1788569171 - Holdem no limit (800/3500/7000) - 2026/09/05 00:46:11 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (142610, 17.75€ bounty)
+Seat 2: Hero (101758, 5€ bounty)
+Seat 3: Villain02 (212002, 29.40€ bounty)
+Seat 5: Villain04 (102198, 7.20€ bounty)
+Seat 6: Villain 08 x (237147, 13.07€ bounty)
+*** ANTE/BLINDS ***
+Villain 08 x posts ante 800
+Villain06 posts ante 800
+Hero posts ante 800
+Villain02 posts ante 800
+Villain04 posts ante 800
+Villain 08 x posts small blind 3500
+Villain06 posts big blind 7000
+Dealt to Hero [8c 3s]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain04 raises 87398 to 94398
+Villain 08 x folds
+Villain06 folds
+Villain04 collected 108898 from pot
+*** SUMMARY ***
+Total pot 108898 | No rake
+Seat 5: Villain04 (button) won 108898
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 22 - HandId: #4988240872307949569-151-1788569231 - Holdem no limit (1000/4000/8000) - 2026/09/05 00:47:11 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (134810, 17.75€ bounty)
+Seat 2: Hero (100958, 5€ bounty)
+Seat 3: Villain02 (211202, 29.40€ bounty)
+Seat 4: Villain09 (315033, 5€ bounty)
+Seat 5: Villain04 (115898, 7.20€ bounty)
+Seat 6: Villain 08 x (232847, 13.07€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 1000
+Hero posts ante 1000
+Villain02 posts ante 1000
+Villain09 posts ante 1000
+Villain04 posts ante 1000
+Villain 08 x posts ante 1000
+Villain06 posts small blind 4000
+Hero posts big blind 8000
+Dealt to Hero [3h As]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain09 folds
+Villain04 folds
+Villain 08 x calls 8000
+Villain06 calls 4000
+Hero checks
+*** FLOP *** [8s 3d Qd]
+Villain06 checks
+Hero checks
+Villain 08 x bets 8000
+Villain06 folds
+Hero folds
+Villain 08 x collected 38000 from pot
+*** SUMMARY ***
+Total pot 38000 | No rake
+Board: [8s 3d Qd]
+Seat 6: Villain 08 x (button) won 38000
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 22 - HandId: #4988240872307949569-152-1788569252 - Holdem no limit (1000/4000/8000) - 2026/09/05 00:47:32 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (125810, 17.75€ bounty)
+Seat 2: Hero (91958, 5€ bounty)
+Seat 3: Villain02 (210202, 29.40€ bounty)
+Seat 4: Villain09 (314033, 5€ bounty)
+Seat 5: Villain04 (114898, 7.20€ bounty)
+Seat 6: Villain 08 x (253847, 13.07€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 1000
+Villain02 posts ante 1000
+Villain06 posts ante 1000
+Villain09 posts ante 1000
+Villain04 posts ante 1000
+Villain 08 x posts ante 1000
+Hero posts small blind 4000
+Villain02 posts big blind 8000
+Dealt to Hero [Ad 5h]
+*** PRE-FLOP *** 
+Villain09 calls 8000
+Villain04 raises 105898 to 113898 and is all-in
+Villain 08 x folds
+Villain06 folds
+Hero folds
+Villain02 folds
+Villain09 folds
+Villain04 collected 139898 from pot
+*** SUMMARY ***
+Total pot 139898 | No rake
+Seat 5: Villain04 won 139898
+
+
+Winamax Poker - Tournament "CASSIOPEIA" buyIn: 9€ + 1€ level: 22 - HandId: #4988240872307949569-153-1788569270 - Holdem no limit (1000/4000/8000) - 2026/09/05 00:47:50 UTC
+Table: 'CASSIOPEIA(1161415333)#0000' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (124810, 17.75€ bounty)
+Seat 2: Hero (86958, 5€ bounty)
+Seat 3: Villain02 (201202, 29.40€ bounty)
+Seat 4: Villain09 (305033, 5€ bounty)
+Seat 5: Villain04 (139898, 7.20€ bounty)
+Seat 6: Villain 08 x (252847, 13.07€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 1000
+Villain09 posts ante 1000
+Villain06 posts ante 1000
+Hero posts ante 1000
+Villain04 posts ante 1000
+Villain 08 x posts ante 1000
+Villain02 posts small blind 4000
+Villain09 posts big blind 8000
+Dealt to Hero [Qc Jc]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 08 x folds
+Villain06 folds
+Hero raises 77958 to 85958 and is all-in
+Villain02 raises 114244 to 200202 and is all-in
+Villain09 folds
+*** FLOP *** [5h 4h 8d]
+*** TURN *** [5h 4h 8d][9h]
+*** RIVER *** [5h 4h 8d 9h][Ks]
+*** SHOW DOWN ***
+Hero shows [Qc Jc] (High card : King)
+Villain02 shows [9c Ac] (One pair : 9)
+Villain02 collected 300160 from pot
+*** SUMMARY ***
+Total pot 300160 | No rake
+Board: [5h 4h 8d 9h Ks]
+Seat 2: Hero (button) showed [Qc Jc] and lost with High card : King
+Seat 3: Villain02 (small blind) showed [9c Ac] and won 300160 with One pair : 9
+
+

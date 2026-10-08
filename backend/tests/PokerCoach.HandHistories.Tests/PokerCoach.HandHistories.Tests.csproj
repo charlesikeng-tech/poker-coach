@@ -16,7 +16,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PokerCoach.Api\PokerCoach.Api.csproj" />
     <ProjectReference Include="..\..\src\PokerCoach.HandHistories\PokerCoach.HandHistories.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Anonymized real files (tools/anonymize_winamax.py). Never commit raw hand histories. -->
+    <None Include="GoldenFiles\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

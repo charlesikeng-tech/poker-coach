@@ -11,17 +11,20 @@ backend/                 .NET 10 modular monolith (ADR-0001)
   src/
     PokerCoach.Domain          business core, BCL only
     PokerCoach.Application     use cases
+    PokerCoach.HandHistories   provider parsers (Winamax), Domain-only dependency
     PokerCoach.Infrastructure  EF Core / PostgreSQL, external systems
     PokerCoach.Api             ASP.NET Core host, composition root
   tests/
     PokerCoach.ArchitectureTests   dependency rule guards
     PokerCoach.Api.Tests           HTTP contract tests (no database)
+    PokerCoach.HandHistories.Tests parser golden tests on anonymized real files
 web/                     Angular app (ADR-0003)
   src/app/core/          shell, i18n, theme, navigation
   src/app/shared/ui/     design-system primitives
   src/app/features/      one folder per product screen
   public/i18n/           fr / en / es translations
 docs/adr/                architecture decision records
+tools/                   anonymize_winamax.py (golden files)
 docker-compose.yml       local PostgreSQL
 ```
 
@@ -83,12 +86,15 @@ Phase 0 — done:
 
 Phase 0 — open:
 
-- [ ] **First `dotnet build` / `dotnet test`**: the backend was written in an environment without
-      access to the .NET SDK or NuGet, so it has not been compiled yet. Align
-      `Directory.Packages.props` on the latest 10.0.x packages at the same time.
+- [x] First `dotnet build` of the skeleton.
+- [ ] `dotnet test` on the parser: written without access to the .NET SDK (rules validated on real
+      files with an independent reference script); first run still to do. Align
+      `Directory.Packages.props` on the latest 10.0.x packages.
 - [ ] Upgrade web to Angular 22 (`ng update @angular/core@22 @angular/cli@22`): the scaffold was
       generated with Angular 21 because the authoring environment's Node version was too old for CLI 22.
-- [~] Winamax format spike: first sample analysed (`docs/research/winamax-format-notes.md`); more samples needed
+- [x] Winamax format spike on two real tournaments (`docs/research/winamax-format-notes.md`)
+- [x] Winamax hand-history and summary parsers with golden tests (ADR-0001 amendment 1);
+      more samples still needed for re-entry, non-KO, Mystery KO, 9-max
 - [ ] Decide database naming convention (snake_case via `EFCore.NamingConventions` or not)
       **before the first migration**.
 - [ ] OpenTelemetry exporters and API Dockerfile once the hosting target is chosen.
