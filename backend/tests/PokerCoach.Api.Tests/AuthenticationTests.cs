@@ -29,7 +29,14 @@ public sealed class AuthenticationTests
     public async Task Unsafe_requests_without_an_anti_forgery_token_are_rejected(string method, string path)
     {
         await using var factory = new ApiFactory(signedIn: true);
-        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        // HTTPS: outside Development the anti-forgery cookie is Secure-only, and the antiforgery system
+        // refuses to run on a plain-HTTP request in that configuration.
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false,
+            BaseAddress = new Uri("https://localhost"),
+        });
 
         using var request = new HttpRequestMessage(new HttpMethod(method), new Uri(path, UriKind.Relative))
         {
