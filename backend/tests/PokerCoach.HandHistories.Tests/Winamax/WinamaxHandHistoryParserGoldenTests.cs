@@ -177,8 +177,8 @@ public sealed class WinamaxHandHistoryParserGoldenTests
         var hands = parser.Parse(GoldenFiles.Read(GoldenFiles.AcceleratorHands)).Hands;
         var actingPlayers = hands.SelectMany(h => h.Actions).Select(a => a.PlayerName).Distinct().ToList();
 
-        Assert.Contains("Villain 08 x", actingPlayers);
-        Assert.Contains(".Villain07", actingPlayers);
+        Assert.Contains("Villain 23 x", actingPlayers);
+        Assert.Contains(".Villain25", actingPlayers);
         Assert.Contains("Villain-39", actingPlayers);
         Assert.Contains("Villain.11", actingPlayers);
     }
