@@ -166,13 +166,14 @@ ul {
   display: none;
 }
 
-.topbar__select {
-  height: 2.25rem;
-  padding: 0 var(--space-3);
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
-  cursor: pointer;
+.topbar__user {
+  max-width: 12rem;
+  margin-left: var(--space-2);
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .content {
@@ -272,6 +273,10 @@ ul {
 
   .topbar {
     padding: 0 var(--space-4);
+  }
+
+  .topbar__user {
+    display: none;
   }
 
   .content {

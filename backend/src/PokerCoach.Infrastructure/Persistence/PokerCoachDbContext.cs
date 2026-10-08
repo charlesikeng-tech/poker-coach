@@ -11,5 +11,6 @@ public sealed class PokerCoachDbContext(DbContextOptions<PokerCoachDbContext> op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PokerCoachDbContext).Assembly);
+        SnakeCaseNaming.Apply(modelBuilder);
     }
 }

@@ -17,6 +17,7 @@ backend/                 .NET 10 modular monolith (ADR-0001)
   tests/
     PokerCoach.ArchitectureTests   dependency rule guards
     PokerCoach.Api.Tests           HTTP contract tests (no database)
+    PokerCoach.Application.Tests   use-case tests (identity)
     PokerCoach.HandHistories.Tests parser golden tests on anonymized real files
 web/                     Angular app (ADR-0003)
   src/app/core/          shell, i18n, theme, navigation
@@ -41,18 +42,36 @@ docker-compose.yml       local PostgreSQL
 cp .env.example .env            # choose a local password
 docker compose up -d
 
-# 2. API (http://localhost:5080)
+# 2. Google OAuth client (once) — Google Cloud Console > APIs & Services > Credentials
+#    Create an OAuth client ID of type "Web application" with this authorized redirect URI:
+#      http://localhost:4200/signin-google
+#    (sign-in goes through the web dev server, which proxies /api and /signin-google to the API)
+
+# 3. API (http://localhost:5080) — secrets never go in appsettings
 cd backend
 dotnet user-secrets set "ConnectionStrings:PokerCoach" \
   "Host=localhost;Port=5432;Database=poker_coach;Username=poker_coach;Password=<your .env password>" \
   --project src/PokerCoach.Api
+dotnet user-secrets set "Authentication:Google:ClientId" "<client id>" --project src/PokerCoach.Api
+dotnet user-secrets set "Authentication:Google:ClientSecret" "<client secret>" --project src/PokerCoach.Api
+
+dotnet tool install --global dotnet-ef   # once
+dotnet ef database update --project src/PokerCoach.Infrastructure --startup-project src/PokerCoach.Api
 dotnet run --project src/PokerCoach.Api
 # Health: /health/live, /health/ready — OpenAPI (Development only): /openapi/v1.json
 
-# 3. Web (http://localhost:4200, /api proxied to the API)
+# 4. Web — open http://localhost:4200 (not the API port: the session cookie is same-origin)
 cd web
 npm ci
 npm start
+```
+
+Database changes:
+
+```bash
+cd backend
+dotnet ef migrations add <Name> --project src/PokerCoach.Infrastructure \
+  --startup-project src/PokerCoach.Api --output-dir Persistence/Migrations
 ```
 
 Checks run in CI:
@@ -94,7 +113,16 @@ Phase 0 — open:
 - [x] Winamax format spike on two real tournaments (`docs/research/winamax-format-notes.md`)
 - [x] Winamax hand-history and summary parsers with golden tests (ADR-0001 amendment 1);
       more samples still needed for re-entry, non-KO, Mystery KO, 9-max
-- [ ] Decide database naming convention (snake_case via `EFCore.NamingConventions` or not)
-      **before the first migration**.
-- [ ] OpenTelemetry exporters and API Dockerfile once the hosting target is chosen.
+- [x] Database naming: snake_case, applied by an in-house convention (`SnakeCaseNaming`), one
+      schema per module.
+- [ ] OpenTelemetry exporters and API Dockerfile once the hosting target is chosen
+      (includes persisted data-protection keys, ADR-0004).
 - [ ] ADR on opponent data (pseudonyms in hand histories): minimization and retention.
+
+Phase 1 — Identity:
+
+- [x] Google sign-in handled by the API, HttpOnly cookie session, CSRF token (ADR-0004)
+- [x] Accounts with internal id + external identity, idempotent first sign-in
+- [x] `GET /api/me`, `PUT /api/me/preferences` (language), sign-in page, sign-out, route guard
+- [ ] First migration `InitialIdentity` (generate with `dotnet ef`, see above)
+- [ ] PostgreSQL integration tests (Testcontainers) for constraints and the sign-in race

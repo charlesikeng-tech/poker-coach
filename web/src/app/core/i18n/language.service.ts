@@ -1,8 +1,10 @@
 import { DOCUMENT } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 
+import { SessionService } from '../auth/session.service';
 import { LocalPreferenceStore } from '../storage/local-preference-store';
 import { FALLBACK_LANGUAGE, Language, resolveLanguage } from './languages';
 
@@ -13,25 +15,36 @@ export class LanguageService {
   private readonly transloco = inject(TranslocoService);
   private readonly store = inject(LocalPreferenceStore);
   private readonly document = inject(DOCUMENT);
+  private readonly http = inject(HttpClient);
+  private readonly session = inject(SessionService);
 
   private readonly currentLanguage = signal<Language>(FALLBACK_LANGUAGE);
   readonly current = this.currentLanguage.asReadonly();
 
   /**
    * Runs before the first render so the shell never flashes raw translation keys.
-   * Phase 1: pass the signed-in user's saved preference as `userPreference`.
+   * The account preference wins over this browser's last choice (spec §13).
    */
-  initialize(): Promise<void> {
+  initialize(userPreference?: string | null): Promise<void> {
     const language = resolveLanguage({
+      userPreference,
       storedChoice: this.store.read(STORAGE_KEY),
       browserLanguages: this.document.defaultView?.navigator.languages ?? [],
     });
     return this.apply(language);
   }
 
-  use(language: Language): Promise<void> {
+  async use(language: Language): Promise<void> {
     this.store.write(STORAGE_KEY, language);
-    return this.apply(language);
+    await this.apply(language);
+    if (this.session.status() === 'authenticated') {
+      try {
+        await firstValueFrom(this.http.put('/api/me/preferences', { language }));
+      } catch (error) {
+        // The UI already switched; the account keeps its previous language until the next change.
+        console.error('Could not save the language preference.', error);
+      }
+    }
   }
 
   private async apply(language: Language): Promise<void> {

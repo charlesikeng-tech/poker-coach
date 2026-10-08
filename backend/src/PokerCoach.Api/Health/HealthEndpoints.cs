@@ -12,12 +12,13 @@ public static class HealthEndpoints
     public static IEndpointRouteBuilder MapHealthEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false })
+            .AllowAnonymous()
             .ExcludeFromDescription();
 
         endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
         {
             Predicate = check => check.Tags.Contains(HealthCheckTags.Ready),
-        }).ExcludeFromDescription();
+        }).AllowAnonymous().ExcludeFromDescription();
 
         return endpoints;
     }

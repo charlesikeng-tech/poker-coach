@@ -1,12 +1,20 @@
 import { Routes } from '@angular/router';
 
+import { anonymousOnlyGuard, authenticatedGuard } from './core/auth/guards';
 import { Shell } from './core/layout/shell';
 
 // Route titles are translation keys, resolved by TranslatedTitleStrategy.
 export const routes: Routes = [
   {
+    path: 'sign-in',
+    title: 'pages.signIn.title',
+    canActivate: [anonymousOnlyGuard],
+    loadComponent: () => import('./features/sign-in/sign-in-page').then((m) => m.SignInPage),
+  },
+  {
     path: '',
     component: Shell,
+    canActivate: [authenticatedGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       {

@@ -1,5 +1,7 @@
 {
-  "app": { "name": "Poker Coach" },
+  "app": {
+    "name": "Poker Coach"
+  },
   "nav": {
     "dashboard": "Tableau de bord",
     "performance": "Performance",
@@ -17,7 +19,8 @@
     "expandSidebar": "Déplier le menu",
     "language": "Langue",
     "themeToLight": "Passer au thème clair",
-    "themeToDark": "Passer au thème sombre"
+    "themeToDark": "Passer au thème sombre",
+    "signOut": "Se déconnecter"
   },
   "pages": {
     "dashboard": {
@@ -77,6 +80,19 @@
       "title": "Page introuvable",
       "description": "Cette page n'existe pas ou a été déplacée.",
       "action": "Retour au tableau de bord"
+    },
+    "signIn": {
+      "title": "Connexion",
+      "heading": "Connexion à Poker Coach",
+      "description": "Retrouve tes tournois, tes statistiques et ton coaching.",
+      "action": "Continuer avec Google",
+      "privacy": "Ton compte Google sert uniquement à t'identifier. Poker Coach ne publie jamais rien.",
+      "statement": "Comprends ton jeu. Corrige tes leaks. Mesure tes progrès.",
+      "retry": "Réessayer",
+      "errors": {
+        "google": "La connexion avec Google n'a pas abouti. Réessaie.",
+        "unavailable": "Poker Coach est momentanément injoignable. Réessaie dans un instant."
+      }
     }
   }
 }

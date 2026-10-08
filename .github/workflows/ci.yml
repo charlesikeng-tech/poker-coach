@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: dotnet build PokerCoach.slnx --configuration Release --no-restore
       - name: Test
-        run: dotnet test PokerCoach.slnx --configuration Release --no-build
+        run: dotnet test --solution PokerCoach.slnx --configuration Release --no-build
       - name: Vulnerable packages
         run: |
           dotnet list PokerCoach.slnx package --vulnerable --include-transitive | tee vulnerable.txt

@@ -17,6 +17,7 @@ public static class ApiErrorCodes
     public const string RateLimited = "RATE_LIMITED";
     public const string InternalError = "INTERNAL_ERROR";
     public const string ServiceUnavailable = "SERVICE_UNAVAILABLE";
+    public const string InvalidAntiforgeryToken = "INVALID_ANTIFORGERY_TOKEN";
     public const string Unknown = "UNKNOWN_ERROR";
 
     public static string FromStatusCode(int statusCode) => statusCode switch

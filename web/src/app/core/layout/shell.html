@@ -92,19 +92,7 @@
 
         <div class="topbar__spacer"></div>
 
-        <label class="visually-hidden" for="language-select">{{ t('shell.language') }}</label>
-        <select
-          id="language-select"
-          class="topbar__select"
-          (change)="changeLanguage($any($event.target).value)"
-        >
-          @for (code of languages; track code) {
-            <!-- [selected] per option: a [value] binding on <select> runs before the options exist. -->
-            <option [value]="code" [attr.lang]="code" [selected]="code === language.current()">
-              {{ languageNames[code] }}
-            </option>
-          }
-        </select>
+        <app-language-select />
 
         <button
           type="button"
@@ -115,6 +103,19 @@
           (click)="theme.toggle()"
         >
           <app-icon [icon]="theme.current() === 'dark' ? icons.Sun : icons.Moon" />
+        </button>
+
+        @if (session.user(); as user) {
+          <span class="topbar__user" [attr.title]="user.email">{{ user.displayName }}</span>
+        }
+        <button
+          type="button"
+          class="icon-button"
+          [attr.aria-label]="t('shell.signOut')"
+          [attr.title]="t('shell.signOut')"
+          (click)="signOut()"
+        >
+          <app-icon [icon]="icons.LogOut" />
         </button>
       </header>
 

@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PokerCoach.Application.Identity;
+using PokerCoach.Infrastructure.Identity;
 using PokerCoach.Infrastructure.Persistence;
 
 namespace PokerCoach.Infrastructure;
@@ -24,6 +26,8 @@ public static class InfrastructureServiceCollectionExtensions
             options.UseNpgsql(database.ConnectionString, npgsql =>
                 npgsql.MigrationsHistoryTable("__ef_migrations_history", "public"));
         });
+
+        services.AddScoped<IUserAccountStore, UserAccountStore>();
 
         services.AddHealthChecks()
             .AddDbContextCheck<PokerCoachDbContext>("database", tags: [HealthCheckTags.Ready]);

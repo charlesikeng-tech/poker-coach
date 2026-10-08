@@ -9,6 +9,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/PokerCoach.ArchitectureTests/PokerCoach.ArchitectureTests.csproj" />
     <Project Path="tests/PokerCoach.Api.Tests/PokerCoach.Api.Tests.csproj" />
+    <Project Path="tests/PokerCoach.Application.Tests/PokerCoach.Application.Tests.csproj" />
     <Project Path="tests/PokerCoach.HandHistories.Tests/PokerCoach.HandHistories.Tests.csproj" />
   </Folder>
   <Folder Name="/solution-items/">

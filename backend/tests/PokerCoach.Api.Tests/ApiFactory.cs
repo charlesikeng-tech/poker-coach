@@ -9,12 +9,19 @@ namespace PokerCoach.Api.Tests;
 /// cover HTTP behaviour that must not depend on PostgreSQL. Database behaviour is covered by
 /// Testcontainers-based integration tests (added with the first persisted module).
 /// </summary>
-internal sealed class ApiFactory(string? connectionString = "Host=localhost;Database=unused") : WebApplicationFactory<Program>
+internal sealed class ApiFactory(
+    string? connectionString = "Host=localhost;Database=unused",
+    string googleClientId = "test-client-id") : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Production");
         builder.ConfigureAppConfiguration(configuration => configuration.AddInMemoryCollection(
-            new Dictionary<string, string?> { ["ConnectionStrings:PokerCoach"] = connectionString }));
+            new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:PokerCoach"] = connectionString,
+                ["Authentication:Google:ClientId"] = googleClientId,
+                ["Authentication:Google:ClientSecret"] = "test-client-secret",
+            }));
     }
 }

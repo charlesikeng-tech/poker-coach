@@ -10,6 +10,7 @@ import { TitleStrategy, provideRouter, withComponentInputBinding } from '@angula
 import { provideTransloco } from '@jsverse/transloco';
 
 import { routes } from './app.routes';
+import { SessionService } from './core/auth/session.service';
 import { LanguageService } from './core/i18n/language.service';
 import { FALLBACK_LANGUAGE, SUPPORTED_LANGUAGES } from './core/i18n/languages';
 import { TranslatedTitleStrategy } from './core/i18n/translated-title-strategy';
@@ -33,9 +34,13 @@ export const appConfig: ApplicationConfig = {
       loader: TranslocoHttpLoader,
     }),
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
-    provideAppInitializer(() => {
+    // Who is signed in decides the first screen and the language: both are known before the first render.
+    provideAppInitializer(async () => {
       inject(ThemeService).initialize();
-      return inject(LanguageService).initialize();
+      const session = inject(SessionService);
+      const language = inject(LanguageService);
+      await session.load();
+      await language.initialize(session.user()?.preferredLanguage);
     }),
   ],
 };

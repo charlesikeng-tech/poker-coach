@@ -1,0 +1,121 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.sign-in {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  min-height: 100dvh;
+}
+
+// The analytical grid is the product's texture: a range matrix seen from afar.
+.sign-in__brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  padding: var(--space-12);
+  overflow: hidden;
+  background-color: var(--surface-navigation);
+  background-image:
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.sign-in__mark {
+  --brand-mark-size: 4.5rem;
+}
+
+.sign-in__statement {
+  max-width: 22ch;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+}
+
+.sign-in__panel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--space-8) var(--space-6);
+}
+
+.sign-in__language {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+}
+
+.sign-in__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  width: min(100%, 24rem);
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.01em;
+}
+
+.sign-in__description {
+  color: var(--text-secondary);
+}
+
+.sign-in__action {
+  justify-content: center;
+  width: 100%;
+  height: 2.75rem;
+  margin-top: var(--space-2);
+}
+
+.sign-in__alert {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+}
+
+.sign-in__privacy {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 767px) {
+  .sign-in {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  .sign-in__brand {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-4);
+    border-right: 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .sign-in__mark {
+    --brand-mark-size: 2.5rem;
+  }
+
+  .sign-in__statement {
+    font-size: var(--font-size-lg);
+  }
+
+  .sign-in__panel {
+    place-items: start center;
+    // Clears the language selector pinned to the top-right corner.
+    padding-top: calc(var(--space-4) + 2.25rem + var(--space-8));
+  }
+}
