@@ -46,10 +46,12 @@ public sealed class AuthenticationTests
             BaseAddress = new Uri("https://localhost"),
         });
 
-        using var request = new HttpRequestMessage(new HttpMethod(method), new Uri(path, UriKind.Relative))
-        {
-            Content = JsonContent.Create(new { language = "fr" }),
-        };
+        // Each endpoint gets a body it accepts: the upload declares multipart/form-data only, and any
+        // other media type is refused (415) by routing before the anti-forgery filter runs.
+        HttpContent content = path == "/api/import/files"
+            ? new MultipartFormDataContent { { new ByteArrayContent("hands"u8.ToArray()), "files", "hands.txt" } }
+            : JsonContent.Create(new { language = "fr" });
+        using var request = new HttpRequestMessage(new HttpMethod(method), new Uri(path, UriKind.Relative)) { Content = content };
         var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

@@ -24,6 +24,8 @@
     <ProjectReference Include="..\..\src\PokerCoach.Infrastructure\PokerCoach.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Tests share one database and the import queue: run them one at a time. -->
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\PokerCoach.HandHistories.Tests\GoldenFiles\**\*" LinkBase="GoldenFiles" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -12,8 +12,6 @@ using Testcontainers.PostgreSql;
 
 [assembly: AssemblyFixture(typeof(PokerCoach.IntegrationTests.PostgresFixture))]
 
-// Tests share one database and the import queue: run them one at a time.
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace PokerCoach.IntegrationTests;
 
@@ -23,9 +21,13 @@ namespace PokerCoach.IntegrationTests;
 /// </summary>
 public sealed class PostgresFixture : IAsyncLifetime
 {
+    // Same image as docker-compose.yml. The parameterless builder is obsolete in recent Testcontainers
+    // versions in favour of a constructor taking the image; WithImage works with both.
+#pragma warning disable CS0618
     private readonly PostgreSqlContainer container = new PostgreSqlBuilder()
         .WithImage("postgres:18-alpine")
         .Build();
+#pragma warning restore CS0618
 
     private ServiceProvider? services;
 
