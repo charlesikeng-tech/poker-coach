@@ -16,3 +16,7 @@ Thumbs.db
 # Raw hand histories must never be committed. Anonymized golden files live under
 # backend/tests/**/GoldenFiles and are added explicitly.
 hand-histories/
+
+# Local setup logs (tools/dev-setup.command)
+.dev-setup.log
+.dev-setup-migration.sql
