@@ -124,5 +124,5 @@ Phase 1 — Identity:
 - [x] Google sign-in handled by the API, HttpOnly cookie session, CSRF token (ADR-0004)
 - [x] Accounts with internal id + external identity, idempotent first sign-in
 - [x] `GET /api/me`, `PUT /api/me/preferences` (language), sign-in page, sign-out, route guard
-- [ ] First migration `InitialIdentity` (generate with `dotnet ef`, see above)
+- [x] First migration `InitialIdentity`
 - [ ] PostgreSQL integration tests (Testcontainers) for constraints and the sign-in race
