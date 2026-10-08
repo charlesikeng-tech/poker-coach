@@ -127,4 +127,12 @@ Phase 1 — Identity:
 - [x] `GET /api/me`, `PUT /api/me/preferences` (language), sign-in page, sign-out, route guard
 - [x] End-to-end Google sign-in verified locally (Google Cloud project `poker-coach-511022`, test mode)
 - [x] First migration `InitialIdentity`
-- [ ] PostgreSQL integration tests (Testcontainers) for constraints and the sign-in race
+- [x] PostgreSQL integration tests (Testcontainers) for constraints and the sign-in race
+
+Phase 2 — Import (MVP-1, ADR-0005):
+
+- [x] Upload `.txt`/`.zip` (`POST /api/import/files`), batch status (`GET /api/import/batches/{id}`)
+- [x] Background processing queue in PostgreSQL; idempotent files, accounts, tournaments and hands
+- [x] Poker accounts detected from files: list, confirm, "not me" (`/api/poker-accounts`)
+- [x] Migration `Import`
+- [ ] Web: import page (drag & drop, progress, account confirmation)
