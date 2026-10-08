@@ -11,6 +11,11 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/me")]
     [InlineData("PUT", "/api/me/preferences")]
     [InlineData("POST", "/api/auth/logout")]
+    [InlineData("POST", "/api/import/files")]
+    [InlineData("GET", "/api/import/batches/0199c5a8-0000-7000-8000-000000000000")]
+    [InlineData("GET", "/api/poker-accounts")]
+    [InlineData("POST", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000/confirm")]
+    [InlineData("DELETE", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
     {
         await using var factory = new ApiFactory();
@@ -26,6 +31,9 @@ public sealed class AuthenticationTests
     [Theory]
     [InlineData("POST", "/api/auth/logout")]
     [InlineData("PUT", "/api/me/preferences")]
+    [InlineData("POST", "/api/import/files")]
+    [InlineData("POST", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000/confirm")]
+    [InlineData("DELETE", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Unsafe_requests_without_an_anti_forgery_token_are_rejected(string method, string path)
     {
         await using var factory = new ApiFactory(signedIn: true);

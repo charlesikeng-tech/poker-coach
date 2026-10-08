@@ -17,8 +17,9 @@ backend/                 .NET 10 modular monolith (ADR-0001)
   tests/
     PokerCoach.ArchitectureTests   dependency rule guards
     PokerCoach.Api.Tests           HTTP contract tests (no database)
-    PokerCoach.Application.Tests   use-case tests (identity)
+    PokerCoach.Application.Tests   use-case tests (identity, import)
     PokerCoach.HandHistories.Tests parser golden tests on anonymized real files
+    PokerCoach.IntegrationTests    PostgreSQL (Testcontainers, Docker required): import, constraints, races
 web/                     Angular app (ADR-0003)
   src/app/core/          shell, i18n, theme, navigation
   src/app/shared/ui/     design-system primitives

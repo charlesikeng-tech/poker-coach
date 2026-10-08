@@ -14,4 +14,16 @@ public static class ApiProblems
                 ["code"] = ApiErrorCodes.ValidationFailed,
                 ["errors"] = new Dictionary<string, string[]> { [field] = [message] },
             });
+
+    /// <summary>A problem with a code more precise than the status code's default one.</summary>
+    public static ProblemHttpResult WithCode(int statusCode, string code, string title, IDictionary<string, object?>? details = null)
+    {
+        var extensions = new Dictionary<string, object?> { ["code"] = code };
+        if (details is not null)
+        {
+            extensions["details"] = details;
+        }
+
+        return TypedResults.Problem(statusCode: statusCode, title: title, extensions: extensions);
+    }
 }

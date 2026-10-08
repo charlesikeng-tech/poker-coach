@@ -26,6 +26,7 @@ internal sealed class ApiFactory(
                 ["ConnectionStrings:PokerCoach"] = connectionString,
                 ["Authentication:Google:ClientId"] = googleClientId,
                 ["Authentication:Google:ClientSecret"] = "test-client-secret",
+                ["Import:WorkerEnabled"] = "false",
             }));
 
         if (signedIn)

@@ -3,8 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Import;
+using PokerCoach.Application.Poker;
 using PokerCoach.Infrastructure.Identity;
+using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
+using PokerCoach.Infrastructure.Poker;
 
 namespace PokerCoach.Infrastructure;
 
@@ -28,6 +32,12 @@ public static class InfrastructureServiceCollectionExtensions
         });
 
         services.AddScoped<IUserAccountStore, UserAccountStore>();
+        services.AddScoped<IImportStore, ImportStore>();
+        services.AddScoped<IPokerAccountStore, PokerAccountStore>();
+
+        // Starts only when Import:WorkerEnabled is true (default); needs ImportProcessor and ImportOptions
+        // registered by the host.
+        services.AddHostedService<ImportWorker>();
 
         services.AddHealthChecks()
             .AddDbContextCheck<PokerCoachDbContext>("database", tags: [HealthCheckTags.Ready]);

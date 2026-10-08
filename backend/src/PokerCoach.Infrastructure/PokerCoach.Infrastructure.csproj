@@ -10,6 +10,9 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="PokerCoach.IntegrationTests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\PokerCoach.Application\PokerCoach.Application.csproj" />
   </ItemGroup>
 </Project>

@@ -1,12 +1,5 @@
 namespace PokerCoach.HandHistories.Winamax;
 
-public enum HandHistoryFileKind
-{
-    Unknown,
-    HandHistory,
-    TournamentSummary,
-}
-
 /// <summary>Tells which parser a Winamax file needs, from its first non-empty line (never from its name).</summary>
 public static class WinamaxFileDetector
 {

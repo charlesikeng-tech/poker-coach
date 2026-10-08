@@ -1,13 +1,25 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 using PokerCoach.Api.Account;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Health;
+using PokerCoach.Api.Import;
+using PokerCoach.Api.Poker;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Import;
+using PokerCoach.Application.Poker;
+using PokerCoach.HandHistories;
+using PokerCoach.HandHistories.Winamax;
 using PokerCoach.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+// Enums travel as camelCase strings ("pending", "winamax"): readable and stable when members are added.
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 builder.Services.AddApiProblemDetails();
 builder.Services.AddApiAuthentication(builder.Configuration, builder.Environment);
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -15,6 +27,18 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<ExternalSignInService>();
 builder.Services.AddScoped<UserProfileService>();
+
+builder.Services.AddOptions<ImportOptions>()
+    .BindConfiguration(ImportOptions.SectionName)
+    .Validate(
+        o => o.MaxFileBytes > 0 && o.MaxFilesPerUpload > 0 && o.MaxUploadBytes > 0 && o.MaxExpandedBytes > 0 && o.MaxProcessingAttempts > 0,
+        "Import limits must be positive.")
+    .ValidateOnStart();
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<ImportOptions>>().Value);
+builder.Services.AddSingleton<IHandHistoryProvider, WinamaxHandHistoryProvider>();
+builder.Services.AddScoped<ImportService>();
+builder.Services.AddScoped<ImportProcessor>();
+builder.Services.AddScoped<PokerAccountService>();
 
 var app = builder.Build();
 
@@ -47,6 +71,8 @@ if (app.Environment.IsDevelopment())
 app.MapHealthEndpoints();
 app.MapAuthEndpoints();
 app.MapAccountEndpoints();
+app.MapImportEndpoints();
+app.MapPokerAccountEndpoints();
 
 app.Run();
 

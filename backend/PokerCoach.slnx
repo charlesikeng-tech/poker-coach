@@ -11,6 +11,7 @@
     <Project Path="tests/PokerCoach.Api.Tests/PokerCoach.Api.Tests.csproj" />
     <Project Path="tests/PokerCoach.Application.Tests/PokerCoach.Application.Tests.csproj" />
     <Project Path="tests/PokerCoach.HandHistories.Tests/PokerCoach.HandHistories.Tests.csproj" />
+    <Project Path="tests/PokerCoach.IntegrationTests/PokerCoach.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/solution-items/">
     <File Path="Directory.Build.props" />
