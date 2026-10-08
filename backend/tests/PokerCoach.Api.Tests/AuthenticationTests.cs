@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -20,6 +21,36 @@ public sealed class AuthenticationTests
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         Assert.Equal("UNAUTHENTICATED", await ErrorCodeAsync(response));
+    }
+
+    [Theory]
+    [InlineData("POST", "/api/auth/logout")]
+    [InlineData("PUT", "/api/me/preferences")]
+    public async Task Unsafe_requests_without_an_anti_forgery_token_are_rejected(string method, string path)
+    {
+        await using var factory = new ApiFactory(signedIn: true);
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        using var request = new HttpRequestMessage(new HttpMethod(method), new Uri(path, UriKind.Relative))
+        {
+            Content = JsonContent.Create(new { language = "fr" }),
+        };
+        var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("INVALID_ANTIFORGERY_TOKEN", await ErrorCodeAsync(response));
+    }
+
+    [Fact]
+    public async Task Unknown_routes_are_404_even_for_anonymous_callers()
+    {
+        await using var factory = new ApiFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync(new Uri("/api/nothing-here", UriKind.Relative), TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("NOT_FOUND", await ErrorCodeAsync(response));
     }
 
     [Fact]

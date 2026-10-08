@@ -20,7 +20,23 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+
 app.UseAuthentication();
+
+// The fallback authorization policy also applies to requests matching no endpoint: answer 404, not 401.
+// Placed after UseAuthentication on purpose: the Google callback (/signin-google) has no endpoint and is
+// handled by the authentication middleware itself.
+app.Use(async (context, next) =>
+{
+    if (context.GetEndpoint() is null)
+    {
+        context.Response.StatusCode = StatusCodes.Status404NotFound;
+        return;
+    }
+
+    await next(context);
+});
+
 app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())

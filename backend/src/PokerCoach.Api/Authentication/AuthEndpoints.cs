@@ -16,7 +16,10 @@ public static class AuthEndpoints
         // Browser navigation (not XHR): ends on Google's consent page.
         group.MapGet("/login", SignIn).AllowAnonymous();
 
-        group.MapPost("/logout", SignOutAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        // Explicit delegate type: a method group taking only HttpContext and returning a Task would bind to
+        // the RequestDelegate overload, where endpoint filters (here, the CSRF check) do not run.
+        group.MapPost("/logout", (Func<HttpContext, Task<NoContent>>)SignOutAsync)
+            .AddEndpointFilter<AntiforgeryValidationFilter>();
 
         return endpoints;
     }

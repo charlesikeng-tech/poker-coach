@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 
 namespace PokerCoach.Api.Tests;
@@ -11,7 +13,8 @@ namespace PokerCoach.Api.Tests;
 /// </summary>
 internal sealed class ApiFactory(
     string? connectionString = "Host=localhost;Database=unused",
-    string googleClientId = "test-client-id") : WebApplicationFactory<Program>
+    string googleClientId = "test-client-id",
+    bool signedIn = false) : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -23,5 +26,12 @@ internal sealed class ApiFactory(
                 ["Authentication:Google:ClientId"] = googleClientId,
                 ["Authentication:Google:ClientSecret"] = "test-client-secret",
             }));
+
+        if (signedIn)
+        {
+            builder.ConfigureTestServices(services => services
+                .AddAuthentication(TestAuthenticationHandler.SchemeName)
+                .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(TestAuthenticationHandler.SchemeName, _ => { }));
+        }
     }
 }

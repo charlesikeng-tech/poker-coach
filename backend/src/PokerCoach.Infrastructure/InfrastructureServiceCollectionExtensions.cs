@@ -24,7 +24,7 @@ public static class InfrastructureServiceCollectionExtensions
         {
             var database = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
             options.UseNpgsql(database.ConnectionString, npgsql =>
-                npgsql.MigrationsHistoryTable("__ef_migrations_history", "public"));
+                npgsql.MigrationsHistoryTable(DatabaseOptions.MigrationsHistoryTable, "public"));
         });
 
         services.AddScoped<IUserAccountStore, UserAccountStore>();
