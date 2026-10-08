@@ -8,7 +8,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-poker_coach}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env (copy .env.example)}
     ports:
-      - "127.0.0.1:5432:5432"
+      # Host port configurable: 5432 is often taken by another local PostgreSQL.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       # PostgreSQL 18 images store data under /var/lib/postgresql/<major>/docker.
       - postgres-data:/var/lib/postgresql

@@ -50,7 +50,7 @@ docker compose up -d
 # 3. API (http://localhost:5080) — secrets never go in appsettings
 cd backend
 dotnet user-secrets set "ConnectionStrings:PokerCoach" \
-  "Host=localhost;Port=5432;Database=poker_coach;Username=poker_coach;Password=<your .env password>" \
+  "Host=localhost;Port=<POSTGRES_PORT from .env>;Database=poker_coach;Username=poker_coach;Password=<your .env password>" \
   --project src/PokerCoach.Api
 dotnet user-secrets set "Authentication:Google:ClientId" "<client id>" --project src/PokerCoach.Api
 dotnet user-secrets set "Authentication:Google:ClientSecret" "<client secret>" --project src/PokerCoach.Api
