@@ -42,6 +42,7 @@ builder.Services.AddScoped<ImportService>();
 builder.Services.AddScoped<ImportProcessor>();
 builder.Services.AddScoped<PokerAccountService>();
 builder.Services.AddScoped<TournamentListService>();
+builder.Services.AddScoped<PerformanceService>();
 
 var app = builder.Build();
 

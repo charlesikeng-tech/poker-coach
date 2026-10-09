@@ -18,13 +18,18 @@ public enum TournamentResultStatus
 }
 
 /// <summary>Money result of the player in one tournament. Amounts are null unless the status is known.</summary>
+/// <param name="PaidEntries">
+/// Entries that won a prize (bounties excluded: the files do not give the paid places, so "in the money"
+/// means a prize was printed).
+/// </param>
 public sealed record TournamentResult(
     TournamentResultStatus Status,
     int? Entries,
     decimal? TotalBuyIn,
     decimal? PrizeWinnings,
     decimal? BountyWinnings,
-    decimal? Profit)
+    decimal? Profit,
+    int? PaidEntries = null)
 {
     /// <summary>
     /// Profit = prize + bounties − buy-in × entries (fee included: it is money the player paid).
@@ -50,7 +55,14 @@ public sealed record TournamentResult(
         var prize = entries.Sum(e => e.PrizeWinnings ?? 0m);
         var bounty = entries.Sum(e => e.BountyWinnings ?? 0m);
         var totalBuyIn = buyIn * entries.Count;
-        return new TournamentResult(TournamentResultStatus.Known, entries.Count, totalBuyIn, prize, bounty, prize + bounty - totalBuyIn);
+        return new TournamentResult(
+            TournamentResultStatus.Known,
+            entries.Count,
+            totalBuyIn,
+            prize,
+            bounty,
+            prize + bounty - totalBuyIn,
+            entries.Count(e => e.PrizeWinnings > 0m));
     }
 
     private static TournamentResult Unknown(TournamentResultStatus status, int? entries) =>

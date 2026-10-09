@@ -10,7 +10,7 @@ public sealed class TournamentResultTests
         // ACCELERATOR: 5 € entry, 11th, 25.42 € + 18.86 € bounty.
         var result = TournamentResult.Compute(5m, [new EntryOutcome(11, 25.42m, 18.86m)]);
 
-        Assert.Equal(new TournamentResult(TournamentResultStatus.Known, 1, 5m, 25.42m, 18.86m, 39.28m), result);
+        Assert.Equal(new TournamentResult(TournamentResultStatus.Known, 1, 5m, 25.42m, 18.86m, 39.28m, PaidEntries: 1), result);
     }
 
     [Fact]
@@ -32,6 +32,7 @@ public sealed class TournamentResultTests
         Assert.Equal(0m, result.PrizeWinnings);
         Assert.Equal(1m, result.BountyWinnings);
         Assert.Equal(-4m, result.Profit);
+        Assert.Equal(0, result.PaidEntries);
     }
 
     [Fact]

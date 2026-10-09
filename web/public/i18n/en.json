@@ -39,6 +39,71 @@
         "title": "No tournaments to analyze yet",
         "description": "Profit, ROI, ABI and ITM appear once your tournament summaries are imported.",
         "action": "Import files"
+      },
+      "loading": "Loading your performance…",
+      "error": {
+        "title": "Your performance could not be loaded",
+        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "retry": "Try again"
+      },
+      "filters": {
+        "period": "Period",
+        "periods": {
+          "all": "All time",
+          "7d": "Last 7 days",
+          "30d": "Last 30 days",
+          "90d": "Last 90 days",
+          "year": "This year"
+        }
+      },
+      "totals": {
+        "profit": "Profit",
+        "roi": "ROI",
+        "itm": "In the money",
+        "entries": "Entries",
+        "buyIns": "Buy-ins"
+      },
+      "excluded": "{{count}} tournament(s) without a summary file are not counted: import their summary to include them.",
+      "chart": {
+        "title": "Cumulative profit",
+        "tournament": "Tournament:",
+        "cumulative": "Total:",
+        "aria": "Cumulative profit over {{count}} tournaments, ending at {{profit}}. Use the arrow keys to go through tournaments.",
+        "axis": "Horizontal axis: tournaments in the order played. In the money = a prize was won (bounties alone do not count).",
+        "notEnough": "The curve appears from two tournaments with a known result."
+      },
+      "breakdown": {
+        "buyIn": "By buy-in",
+        "type": "By type",
+        "speed": "By speed"
+      },
+      "columns": {
+        "group": "Group",
+        "tournaments": "Tournaments",
+        "buyIns": "Buy-ins",
+        "winnings": "Winnings",
+        "profit": "Profit",
+        "roi": "ROI",
+        "itm": "ITM"
+      },
+      "groups": {
+        "unknown": "Unknown",
+        "buyIn": {
+          "upTo5": "Up to €5",
+          "from5To10": "€5 to €10",
+          "from10To20": "€10 to €20",
+          "over20": "Over €20"
+        },
+        "type": {
+          "knockout": "Knockout (bounty)",
+          "normal": "Classic"
+        },
+        "speed": {
+          "normal": "Normal",
+          "semiturbo": "Semi-turbo",
+          "turbo": "Turbo",
+          "hyperturbo": "Hyper-turbo"
+        }
       }
     },
     "tournaments": {

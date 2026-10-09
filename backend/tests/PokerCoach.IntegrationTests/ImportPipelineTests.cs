@@ -161,12 +161,17 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
 
         // ACCELERATOR: 5 € in, 44.28 € back. ASTEROID: two 5 € entries, nothing back.
         // CASSIOPEIA: hands only, no summary: listed, not counted.
-        Assert.Equal(new TournamentTotals(3, 2, 3, 15m, 44.28m, 29.28m, 1.952m), page.Totals);
+        Assert.Equal(new PerformanceFigures(3, 2, 3, 1, 15m, 44.28m, 29.28m, 1.952m, 0.3333m), page.Totals);
         var accelerator = page.Items.Single(i => i.Name == "ACCELERATOR");
         Assert.Equal(222, accelerator.HandCount);
         Assert.Equal(11, accelerator.FinishPosition);
         Assert.Equal(TournamentResultStatus.MissingSummary, page.Items.Single(i => i.Name == "CASSIOPEIA").Result.Status);
         Assert.Equal(new[] { "ASTEROID", "ACCELERATOR", "CASSIOPEIA" }, page.Items.Select(i => i.Name).ToArray());
+
+        var performance = await scope.ServiceProvider.GetRequiredService<PerformanceService>().GetAsync(userId, null, null, Ct);
+        Assert.Equal(page.Totals, performance.Totals);
+        Assert.Equal(new[] { 39.28m, 29.28m }, performance.Curve.Select(p => p.CumulativeProfit));
+        Assert.Equal(new[] { "upTo5", "from5To10" }, performance.ByBuyIn.Select(g => g.Key));
     }
 
     [Fact]

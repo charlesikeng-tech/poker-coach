@@ -15,7 +15,9 @@ public sealed record TournamentFacts(
     decimal? Fee,
     int? RegisteredPlayers,
     int HandCount,
-    IReadOnlyList<EntryOutcome> Entries);
+    IReadOnlyList<EntryOutcome> Entries,
+    string? Type = null,
+    string? Speed = null);
 
 public interface ITournamentReadStore
 {
@@ -42,18 +44,7 @@ public sealed record TournamentListItem(
     int HandCount,
     TournamentResult Result);
 
-/// <summary>Totals over the filtered tournaments whose result is known; the others are only counted.</summary>
-/// <param name="Roi">Profit / buy-ins (0.12 = +12 %); null without buy-ins.</param>
-public sealed record TournamentTotals(
-    int Tournaments,
-    int TournamentsWithResult,
-    int Entries,
-    decimal BuyIns,
-    decimal Winnings,
-    decimal Profit,
-    decimal? Roi);
-
-public sealed record TournamentPage(IReadOnlyList<TournamentListItem> Items, int Page, int PageSize, int TotalCount, TournamentTotals Totals);
+public sealed record TournamentPage(IReadOnlyList<TournamentListItem> Items, int Page, int PageSize, int TotalCount, PerformanceFigures Totals);
 
 /// <summary>
 /// The tournaments screen: list, filters and totals. Results are computed in memory over all filtered
@@ -74,10 +65,10 @@ public sealed class TournamentListService(ITournamentReadStore store)
             .ToList();
 
         var page = items.Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).ToList();
-        return new TournamentPage(page, filter.Page, filter.PageSize, items.Count, Totals(items));
+        return new TournamentPage(page, filter.Page, filter.PageSize, items.Count, PerformanceFigures.Of(items.Select(i => i.Result).ToList()));
     }
 
-    private static TournamentListItem ToItem(TournamentFacts facts)
+    internal static TournamentListItem ToItem(TournamentFacts facts)
     {
         var buyIn = BuyInPerEntry(facts);
         return new TournamentListItem(
@@ -99,20 +90,4 @@ public sealed class TournamentListService(ITournamentReadStore store)
             : facts.BuyInExcludingFee is { } excludingFee && facts.Fee is { } handFee
                 ? excludingFee + handFee
                 : null;
-
-    private static TournamentTotals Totals(IReadOnlyList<TournamentListItem> items)
-    {
-        var known = items.Where(i => i.Result.Status == TournamentResultStatus.Known).Select(i => i.Result).ToList();
-        var buyIns = known.Sum(r => r.TotalBuyIn!.Value);
-        var winnings = known.Sum(r => r.PrizeWinnings!.Value + r.BountyWinnings!.Value);
-        var profit = winnings - buyIns;
-        return new TournamentTotals(
-            items.Count,
-            known.Count,
-            known.Sum(r => r.Entries!.Value),
-            buyIns,
-            winnings,
-            profit,
-            buyIns == 0m ? null : Math.Round(profit / buyIns, 4));
-    }
 }

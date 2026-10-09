@@ -1,0 +1,144 @@
+<ng-container *transloco="let t; prefix: 'pages.performance'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (report(); as report) {
+    @if (report.totals.tournamentsWithResult === 0 && period() === 'all') {
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      <div class="filters">
+        <label>
+          <span>{{ t('filters.period') }}</span>
+          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+            @for (option of periods; track option) {
+              <option [value]="option">{{ t('filters.periods.' + option) }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <div [class.stale]="state() === 'loading'">
+        <dl class="totals">
+          <div>
+            <dt>{{ t('totals.profit') }}</dt>
+            <dd class="numeric" [attr.data-sign]="sign(report.totals.profit)">
+              {{ signedMoney(report.totals.profit) }}
+            </dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.roi') }}</dt>
+            <dd class="numeric" [attr.data-sign]="sign(report.totals.roi)">
+              {{ percent(report.totals.roi) }}
+            </dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.itm') }}</dt>
+            <dd class="numeric">{{ share(report.totals.itmRate) }}</dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.entries') }}</dt>
+            <dd class="numeric">{{ integer(report.totals.entries) }}</dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.buyIns') }}</dt>
+            <dd class="numeric">{{ money(report.totals.buyIns) }}</dd>
+          </div>
+        </dl>
+        @if (report.totals.tournamentsWithResult < report.totals.tournaments) {
+          <p class="hint">
+            {{
+              t('excluded', {
+                count: report.totals.tournaments - report.totals.tournamentsWithResult,
+              })
+            }}
+          </p>
+        }
+
+        <section class="panel">
+          <h2>{{ t('chart.title') }}</h2>
+          @if (chartPoints().length > 1) {
+            <app-line-chart
+              [points]="chartPoints()"
+              [formatY]="formatAxis()"
+              [ariaLabel]="
+                t('chart.aria', {
+                  count: chartPoints().length,
+                  profit: signedMoney(report.totals.profit),
+                })
+              "
+            />
+            <p class="hint">{{ t('chart.axis') }}</p>
+          } @else {
+            <p class="hint">{{ t('chart.notEnough') }}</p>
+          }
+        </section>
+
+        @for (
+          section of [
+            { dimension: 'buyIn', groups: report.byBuyIn },
+            { dimension: 'type', groups: report.byType },
+            { dimension: 'speed', groups: report.bySpeed },
+          ];
+          track section.dimension
+        ) {
+          <section class="panel">
+            <h2>{{ t('breakdown.' + section.dimension) }}</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">{{ t('columns.group') }}</th>
+                    <th scope="col" class="num">{{ t('columns.tournaments') }}</th>
+                    <th scope="col" class="num optional">{{ t('columns.buyIns') }}</th>
+                    <th scope="col" class="num optional">{{ t('columns.winnings') }}</th>
+                    <th scope="col" class="num">{{ t('columns.profit') }}</th>
+                    <th scope="col" class="num">{{ t('columns.roi') }}</th>
+                    <th scope="col" class="num optional">{{ t('columns.itm') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (group of section.groups; track group.key) {
+                    <tr>
+                      @let key = groupKey($any(section.dimension), group);
+                      <th scope="row">{{ key ? t(key) : group.key }}</th>
+                      <td class="num numeric">
+                        {{ integer(group.figures.tournamentsWithResult) }}
+                        @if (group.figures.tournaments > group.figures.tournamentsWithResult) {
+                          <span class="muted">/ {{ integer(group.figures.tournaments) }}</span>
+                        }
+                      </td>
+                      <td class="num numeric optional">{{ money(group.figures.buyIns) }}</td>
+                      <td class="num numeric optional">{{ money(group.figures.winnings) }}</td>
+                      <td class="num numeric" [attr.data-sign]="sign(group.figures.profit)">
+                        {{ signedMoney(group.figures.profit) }}
+                      </td>
+                      <td class="num numeric" [attr.data-sign]="sign(group.figures.roi)">
+                        {{ percent(group.figures.roi) }}
+                      </td>
+                      <td class="num numeric optional">{{ share(group.figures.itmRate) }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+        }
+      </div>
+    }
+  } @else {
+    <p class="hint" role="status">{{ t('loading') }}</p>
+  }
+</ng-container>

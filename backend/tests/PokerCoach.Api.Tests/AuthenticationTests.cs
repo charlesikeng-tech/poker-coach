@@ -16,6 +16,8 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/poker-accounts")]
     [InlineData("POST", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000/confirm")]
     [InlineData("DELETE", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000")]
+    [InlineData("GET", "/api/tournaments")]
+    [InlineData("GET", "/api/performance")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
     {
         await using var factory = new ApiFactory();

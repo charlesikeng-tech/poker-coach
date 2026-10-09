@@ -145,3 +145,10 @@ Phase 3 — Tournaments (MVP-1):
       without a "You won" line but with a finish position means zero; no summary means unknown, excluded
       from totals
 - [x] Web: tournaments page (totals, filters, table, missing-summary marker)
+
+Phase 4 — Performance (MVP-1):
+
+- [x] `GET /api/performance`: totals, cumulative profit curve, breakdown by buy-in band, type, speed
+- [x] ITM = share of entries that won a prize (bounties alone do not count: the files do not give the
+      paid places)
+- [x] Web: performance page (KPIs, accessible line chart with crosshair, breakdown tables)

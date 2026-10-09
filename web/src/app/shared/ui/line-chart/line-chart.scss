@@ -1,0 +1,74 @@
+:host {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+svg {
+  display: block;
+  overflow: visible;
+  touch-action: pan-y;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+.grid {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+.grid--zero {
+  stroke: var(--border-strong);
+}
+
+.tick {
+  fill: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  fill: none;
+  stroke: var(--accent-primary);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.crosshair {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.marker {
+  fill: var(--accent-primary);
+  stroke: var(--surface-secondary);
+  stroke-width: 2;
+}
+
+.tooltip {
+  position: absolute;
+  top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 16rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+
+  strong {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-medium);
+  }
+}

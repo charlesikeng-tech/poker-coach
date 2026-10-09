@@ -27,6 +27,8 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.BuyInExcludingFee,
                 t.Fee,
                 t.RegisteredPlayers,
+                t.TournamentType,
+                t.Speed,
                 HasSummary = t.SummaryImportedAt != null,
             };
 
@@ -72,7 +74,9 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.Fee,
                 t.RegisteredPlayers,
                 handCounts.GetValueOrDefault(t.Id),
-                t.HasSummary ? entries[t.Id].ToList() : []))
+                t.HasSummary ? entries[t.Id].ToList() : [],
+                t.TournamentType,
+                t.Speed))
             .ToList();
     }
 }

@@ -18,7 +18,7 @@ public sealed class TournamentListServiceTests
         var page = await new TournamentListService(store).ListAsync(UserId, Filter(), TestContext.Current.CancellationToken);
 
         Assert.Equal(3, page.TotalCount);
-        Assert.Equal(new TournamentTotals(3, 2, 3, 15m, 44.28m, 29.28m, 1.952m), page.Totals);
+        Assert.Equal(new PerformanceFigures(3, 2, 3, 1, 15m, 44.28m, 29.28m, 1.952m, 0.3333m), page.Totals);
         var noSummary = page.Items.Single(i => i.Name == "NO SUMMARY");
         Assert.Equal(10m, noSummary.BuyIn);
         Assert.Equal(TournamentResultStatus.MissingSummary, noSummary.Result.Status);

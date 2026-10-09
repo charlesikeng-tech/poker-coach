@@ -26,22 +26,42 @@ public sealed record TournamentResponse(
     int HandCount,
     TournamentResultResponse Result);
 
+/// <summary>Money and rates cover tournaments with a known result only.</summary>
 /// <param name="Roi">Ratio: 0.12 means +12 %.</param>
-public sealed record TournamentTotalsResponse(
+/// <param name="ItmRate">Share of entries that won a prize (bounties excluded), as a ratio.</param>
+public sealed record PerformanceFiguresResponse(
     int Tournaments,
     int TournamentsWithResult,
     int Entries,
+    int PaidEntries,
     decimal BuyIns,
     decimal Winnings,
     decimal Profit,
-    decimal? Roi);
+    decimal? Roi,
+    decimal? ItmRate)
+{
+    public static PerformanceFiguresResponse From(PerformanceFigures f) =>
+        new(f.Tournaments, f.TournamentsWithResult, f.Entries, f.PaidEntries, f.BuyIns, f.Winnings, f.Profit, f.Roi, f.ItmRate);
+}
 
 public sealed record TournamentPageResponse(
     IReadOnlyList<TournamentResponse> Items,
     int Page,
     int PageSize,
     int TotalCount,
-    TournamentTotalsResponse Totals);
+    PerformanceFiguresResponse Totals);
+
+public sealed record ProfitPointResponse(int Index, DateTimeOffset? StartedAt, string Name, decimal Profit, decimal CumulativeProfit);
+
+/// <param name="Key">Band name (upTo5, from5To10, from10To20, over20) or the room's raw value; null when unknown.</param>
+public sealed record PerformanceGroupResponse(string? Key, PerformanceFiguresResponse Figures);
+
+public sealed record PerformanceResponse(
+    PerformanceFiguresResponse Totals,
+    IReadOnlyList<ProfitPointResponse> Curve,
+    IReadOnlyList<PerformanceGroupResponse> ByBuyIn,
+    IReadOnlyList<PerformanceGroupResponse> ByType,
+    IReadOnlyList<PerformanceGroupResponse> BySpeed);
 
 public static class TournamentEndpoints
 {
@@ -50,6 +70,7 @@ public static class TournamentEndpoints
     public static IEndpointRouteBuilder MapTournamentEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGroup("/api/tournaments").WithTags("Tournaments").MapGet("/", ListAsync);
+        endpoints.MapGet("/api/performance", GetPerformanceAsync).WithTags("Performance");
         return endpoints;
     }
 
@@ -95,7 +116,6 @@ public static class TournamentEndpoints
             new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize),
             cancellationToken);
 
-        var totals = result.Totals;
         return TypedResults.Ok(new TournamentPageResponse(
             result.Items.Select(i => new TournamentResponse(
                 i.Id,
@@ -116,13 +136,36 @@ public static class TournamentEndpoints
             result.Page,
             result.PageSize,
             result.TotalCount,
-            new TournamentTotalsResponse(
-                totals.Tournaments,
-                totals.TournamentsWithResult,
-                totals.Entries,
-                totals.BuyIns,
-                totals.Winnings,
-                totals.Profit,
-                totals.Roi)));
+            PerformanceFiguresResponse.From(result.Totals)));
     }
+
+    /// <param name="to">Exclusive upper bound on the start time.</param>
+    private static async Task<Results<Ok<PerformanceResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetPerformanceAsync(
+        HttpContext context,
+        PerformanceService performance,
+        CancellationToken cancellationToken,
+        DateTimeOffset? from = null,
+        DateTimeOffset? to = null)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (from is not null && to is not null && from >= to)
+        {
+            return ApiProblems.Validation("to", "Must be after 'from'.");
+        }
+
+        var report = await performance.GetAsync(userId, from, to, cancellationToken);
+        return TypedResults.Ok(new PerformanceResponse(
+            PerformanceFiguresResponse.From(report.Totals),
+            report.Curve.Select(p => new ProfitPointResponse(p.Index, p.StartedAt, p.Name, p.Profit, p.CumulativeProfit)).ToList(),
+            Groups(report.ByBuyIn),
+            Groups(report.ByType),
+            Groups(report.BySpeed)));
+    }
+
+    private static List<PerformanceGroupResponse> Groups(IReadOnlyList<PerformanceGroup> groups) =>
+        groups.Select(g => new PerformanceGroupResponse(g.Key, PerformanceFiguresResponse.From(g.Figures))).ToList();
 }

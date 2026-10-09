@@ -27,14 +27,17 @@ export interface Tournament {
   readonly result: TournamentResult;
 }
 
-export interface TournamentTotals {
+/** Money and rates cover tournaments with a known result only. Rates are ratios (0.12 = 12 %). */
+export interface PerformanceFigures {
   readonly tournaments: number;
   readonly tournamentsWithResult: number;
   readonly entries: number;
+  readonly paidEntries: number;
   readonly buyIns: number;
   readonly winnings: number;
   readonly profit: number;
   readonly roi: number | null;
+  readonly itmRate: number | null;
 }
 
 export interface TournamentPage {
@@ -42,7 +45,7 @@ export interface TournamentPage {
   readonly page: number;
   readonly pageSize: number;
   readonly totalCount: number;
-  readonly totals: TournamentTotals;
+  readonly totals: PerformanceFigures;
 }
 
 export interface TournamentQuery {
