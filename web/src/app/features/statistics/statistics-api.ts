@@ -68,9 +68,10 @@ export class StatisticsApi {
   }
 }
 
-export type StackFilter = 'all' | 'under15' | 'from15To30' | 'from30To50' | 'over50';
+export type StackFilter = 'all' | 'over15' | 'under15' | 'from15To30' | 'from30To50' | 'over50';
 export const STACK_FILTERS: readonly StackFilter[] = [
   'all',
+  'over15',
   'under15',
   'from15To30',
   'from30To50',
@@ -82,6 +83,8 @@ export function stackBounds(filter: StackFilter): { minStackBb?: number; maxStac
   switch (filter) {
     case 'all':
       return {};
+    case 'over15':
+      return { minStackBb: 15 };
     case 'under15':
       return { maxStackBb: 15 };
     case 'from15To30':

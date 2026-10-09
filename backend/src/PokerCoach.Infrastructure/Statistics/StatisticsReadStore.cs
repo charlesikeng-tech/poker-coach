@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Infrastructure.Persistence;
@@ -9,7 +10,7 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore
 {
     public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
@@ -83,6 +84,31 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         return new StatisticsSample(tournaments.Count, tournaments.Count(t => t.Complete));
     }
 
+    /// <summary>One query grouped by position and exact holding: at most 1,326 rows per position leave the database.</summary>
+    public async Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+    {
+        var rows = await Filtered(userId, filter, factsVersion)
+            .Where(x => x.F.RfiOpportunity && x.F.Position != null && x.HeroCards != null)
+            .GroupBy(x => new { x.F.Position, x.HeroCards })
+            .Select(g => new
+            {
+                g.Key.Position,
+                g.Key.HeroCards,
+                Dealt = g.Count(),
+                Opens = g.Count(x => x.F.Rfi),
+                Limps = g.Count(x => x.F.Limp),
+            })
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(r => new OpeningHoldingCount(r.Position!.Value, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
+            .ToList();
+    }
+
     /// <summary>The user's analyzed hands within the filter, with whether their tournament's history is complete.</summary>
     private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion)
     {
@@ -98,6 +124,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 F = f,
                 StartedAt = h.StartedAt,
                 TournamentId = h.TournamentId,
+                HeroCards = h.HeroCards,
                 Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
             };
 
@@ -144,6 +171,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         public DateTimeOffset StartedAt { get; init; }
 
         public Guid TournamentId { get; init; }
+
+        public string? HeroCards { get; init; }
 
         public bool Complete { get; init; }
     }

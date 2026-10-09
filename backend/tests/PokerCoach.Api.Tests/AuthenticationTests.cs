@@ -21,6 +21,7 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/hands/0199c5a8-0000-7000-8000-000000000000")]
     [InlineData("GET", "/api/performance")]
     [InlineData("GET", "/api/statistics")]
+    [InlineData("GET", "/api/ranges/opening")]
     [InlineData("GET", "/api/leaks")]
     [InlineData("POST", "/api/leaks/explanations")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)

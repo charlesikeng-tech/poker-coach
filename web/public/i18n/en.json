@@ -9,7 +9,8 @@
     "sessions": "Sessions",
     "statistics": "Statistics",
     "import": "Import",
-    "leaks": "Leaks"
+    "leaks": "Leaks",
+    "ranges": "Ranges"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -342,7 +343,8 @@
           "under15": "Under 15 BB",
           "from15To30": "15 to 30 BB",
           "from30To50": "30 to 50 BB",
-          "over50": "50 BB and more"
+          "over50": "50 BB and more",
+          "over15": "15 BB and more"
         },
         "completeOnly": "Complete histories only"
       },
@@ -783,6 +785,67 @@
       "potLabel": "Pot",
       "timeline": "Position in the hand",
       "speed": "Playback speed"
+    },
+    "ranges": {
+      "title": "Ranges",
+      "description": "What you actually open from each position when folded to you, hand by hand.",
+      "loading": "Loading your ranges…",
+      "pending": "{{count}} hand(s) still being analysed: the grids are filling in.",
+      "error": {
+        "title": "Could not load your ranges",
+        "description": "Poker Coach could not answer. Try again.",
+        "retry": "Retry"
+      },
+      "empty": {
+        "title": "No range yet",
+        "description": "Import your hands: every spot where you are first in fills your grid.",
+        "action": "Import files"
+      },
+      "noMatch": "No opening spot for these filters.",
+      "period": "Period",
+      "stack": "Stack",
+      "periods": {
+        "all": "Since the start",
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "year": "This year"
+      },
+      "stacks": {
+        "all": "All stacks",
+        "over15": "15 BB and more",
+        "under15": "Under 15 BB",
+        "from15To30": "15 to 30 BB",
+        "from30To50": "30 to 50 BB",
+        "over50": "Over 50 BB"
+      },
+      "positions": "Positions",
+      "gridLabel": "Actual range from {{position}}",
+      "cellLabel": "{{hand}}: dealt {{dealt}} times, raised {{opens}}, limped {{limps}}",
+      "summary": {
+        "title": "Opening from {{position}}",
+        "counts": "{{opens}} raises in {{dealt}} spots",
+        "limps": "{{count}} limp(s)",
+        "gauge": "Reference {{min}} to {{max}}",
+        "reference": "Reference v{{version}}: {{min}} to {{max}} (€5–20 MTT, 15 BB and more)."
+      },
+      "detail": {
+        "hint": "Hover a cell to see how often you were dealt that hand and what you did with it.",
+        "never": "Never dealt in this spot for these filters.",
+        "dealt": "Dealt",
+        "opens": "Raised",
+        "limps": "Limped",
+        "folds": "Folded",
+        "thin": "Too few occurrences to conclude anything."
+      },
+      "legend": {
+        "open": "Raised share",
+        "limp": "Limped share",
+        "fold": "Folded",
+        "never": "Never dealt",
+        "sample": "The small number is how many times you were dealt the hand. A pale cell rests on fewer than 3 occurrences."
+      },
+      "method": "Counted on your real hands, when everyone before you folded. Coming next: the reference range cell by cell, and training (ADR-0009)."
     }
   },
   "welcome": {

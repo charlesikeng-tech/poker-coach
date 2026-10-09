@@ -65,6 +65,11 @@ export const routes: Routes = [
           import('./features/statistics/statistics-page').then((m) => m.StatisticsPage),
       },
       {
+        path: 'ranges',
+        title: 'nav.ranges',
+        loadComponent: () => import('./features/ranges/ranges-page').then((m) => m.RangesPage),
+      },
+      {
         path: 'leaks',
         title: 'nav.leaks',
         loadComponent: () => import('./features/leaks/leaks-page').then((m) => m.LeaksPage),

@@ -9,7 +9,8 @@
     "sessions": "Sesiones",
     "statistics": "Estadísticas",
     "import": "Importar",
-    "leaks": "Fugas"
+    "leaks": "Fugas",
+    "ranges": "Rangos"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -342,7 +343,8 @@
           "under15": "Menos de 15 BB",
           "from15To30": "De 15 a 30 BB",
           "from30To50": "De 30 a 50 BB",
-          "over50": "50 BB o más"
+          "over50": "50 BB o más",
+          "over15": "15 BB o más"
         },
         "completeOnly": "Solo historiales completos"
       },
@@ -783,6 +785,67 @@
       "potLabel": "Bote",
       "timeline": "Posición en la mano",
       "speed": "Velocidad de reproducción"
+    },
+    "ranges": {
+      "title": "Rangos",
+      "description": "Lo que realmente abres desde cada posición cuando te llega foldeado, mano por mano.",
+      "loading": "Cargando tus rangos…",
+      "pending": "{{count}} mano(s) aún en análisis: las cuadrículas se completan.",
+      "error": {
+        "title": "No se pudieron cargar tus rangos",
+        "description": "Poker Coach no pudo responder. Inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "empty": {
+        "title": "Aún no hay rango",
+        "description": "Importa tus manos: cada spot en el que eres el primero en hablar llena tu cuadrícula.",
+        "action": "Importar archivos"
+      },
+      "noMatch": "Ningún spot de apertura para estos filtros.",
+      "period": "Periodo",
+      "stack": "Stack",
+      "periods": {
+        "all": "Desde el principio",
+        "7d": "Últimos 7 días",
+        "30d": "Últimos 30 días",
+        "90d": "Últimos 90 días",
+        "year": "Este año"
+      },
+      "stacks": {
+        "all": "Todos los stacks",
+        "over15": "15 BB o más",
+        "under15": "Menos de 15 BB",
+        "from15To30": "15 a 30 BB",
+        "from30To50": "30 a 50 BB",
+        "over50": "Más de 50 BB"
+      },
+      "positions": "Posiciones",
+      "gridLabel": "Rango real desde {{position}}",
+      "cellLabel": "{{hand}}: recibida {{dealt}} veces, subida {{opens}}, limpeada {{limps}}",
+      "summary": {
+        "title": "Apertura desde {{position}}",
+        "counts": "{{opens}} subidas en {{dealt}} spots",
+        "limps": "{{count}} limp(s)",
+        "gauge": "Referencia {{min}} a {{max}}",
+        "reference": "Referencia v{{version}}: {{min}} a {{max}} (MTT 5–20 €, 15 BB o más)."
+      },
+      "detail": {
+        "hint": "Pasa el ratón por una casilla para ver cuántas veces recibiste esa mano y qué hiciste.",
+        "never": "Nunca recibida en este spot con estos filtros.",
+        "dealt": "Recibida",
+        "opens": "Subida",
+        "limps": "Limpeada",
+        "folds": "Retirada",
+        "thin": "Muy pocas ocurrencias para sacar conclusiones."
+      },
+      "legend": {
+        "open": "Parte subida",
+        "limp": "Parte limpeada",
+        "fold": "Retirada",
+        "never": "Nunca recibida",
+        "sample": "El número pequeño es cuántas veces recibiste la mano. Una casilla pálida se basa en menos de 3 ocurrencias."
+      },
+      "method": "Contadas en tus manos reales, cuando todos antes que tú se retiraron. Próximamente: el rango de referencia casilla por casilla y el entrenamiento (ADR-0009)."
     }
   },
   "welcome": {

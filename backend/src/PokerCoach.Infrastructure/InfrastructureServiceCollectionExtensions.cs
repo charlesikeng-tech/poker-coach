@@ -7,6 +7,7 @@ using PokerCoach.Application.Hands;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Infrastructure.Coaching;
@@ -48,7 +49,9 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ITournamentDetailStore>(sp => sp.GetRequiredService<TournamentReadStore>());
         services.AddScoped<ICoverageStore, CoverageStore>();
         services.AddScoped<IHandFactsStore, HandFactsStore>();
-        services.AddScoped<IStatisticsReadStore, StatisticsReadStore>();
+        services.AddScoped<StatisticsReadStore>();
+        services.AddScoped<IStatisticsReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
+        services.AddScoped<IRangeReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<ICoachingStore, CoachingStore>();
 
         // No API key = coaching unavailable, not a startup failure (ADR-0008).

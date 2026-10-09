@@ -1,5 +1,6 @@
 import {
   CalendarDays,
+  Grid3x3,
   ChartColumn,
   LayoutDashboard,
   Radar,
@@ -27,6 +28,7 @@ export const PRIMARY_NAVIGATION: readonly NavigationItem[] = [
   { path: '/sessions', labelKey: 'nav.sessions', icon: CalendarDays },
   { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },
   { path: '/leaks', labelKey: 'nav.leaks', icon: Radar },
+  { path: '/ranges', labelKey: 'nav.ranges', icon: Grid3x3 },
 ];
 
 export const SECONDARY_NAVIGATION: readonly NavigationItem[] = [

@@ -181,6 +181,14 @@ MVP-2 — Game analysis (ADR-0006):
       restricted to complete histories
 - [ ] Per-entry attribution of hands, postflop statistics
 
+Ranges (ADR-0009):
+
+- [x] Domain `HandClass` (169 starting hands, 13×13 grid)
+- [x] `GET /api/ranges/opening`: actual opening range per position from the player's hands (RFI
+      spots, per-hand counts, never extrapolated), against the position's reference rate
+- [x] Web: Ranges page (position tabs, animated 13×13 grid with raise/limp shares and counts)
+- [ ] Reference ranges per position and stack band; trainer; push/fold equilibrium below 15 BB
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

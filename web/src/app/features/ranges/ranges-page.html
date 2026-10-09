@@ -1,0 +1,196 @@
+<ng-container *transloco="let t; prefix: 'pages.ranges'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (data(); as data) {
+    @if (
+      data.positions.length === 0 &&
+      period() === 'all' &&
+      stack() === 'all' &&
+      data.pendingHands === 0
+    ) {
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      @if (data.pendingHands > 0) {
+        <p class="pending glass" role="status">
+          <app-icon class="spin" [icon]="icons.LoaderCircle" />
+          {{ t('pending', { count: data.pendingHands }) }}
+        </p>
+      }
+
+      <div class="toolbar">
+        <label>
+          <span>{{ t('period') }}</span>
+          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+            @for (option of periods; track option) {
+              <option [value]="option">{{ t('periods.' + option) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>{{ t('stack') }}</span>
+          <select [value]="stack()" (change)="setStack($any($event.target).value)">
+            @for (option of stacks; track option) {
+              <option [value]="option">{{ t('stacks.' + option) }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      @if (data.positions.length === 0) {
+        <p class="hint">{{ t('noMatch') }}</p>
+      } @else {
+        <nav class="positions" [attr.aria-label]="t('positions')">
+          @for (p of data.positions; track p.position) {
+            <button
+              type="button"
+              class="position"
+              [class.position--active]="range()?.position === p.position"
+              [attr.aria-pressed]="range()?.position === p.position"
+              (click)="selected.set(p.position)"
+            >
+              <strong>{{ short[p.position] }}</strong>
+              <span class="numeric">{{ percent(p.openRate.rate) }}</span>
+            </button>
+          }
+        </nav>
+
+        @if (range(); as r) {
+          <div class="layout">
+            <!-- Keyed on the position: the grid fills again when it changes. -->
+            @for (shown of [r]; track shown.position) {
+              <div
+                class="grid glass"
+                role="grid"
+                [attr.aria-label]="t('gridLabel', { position: short[r.position] })"
+              >
+                @for (cell of r.cells; track cell.hand; let i = $index) {
+                  <button
+                    type="button"
+                    class="cell"
+                    role="gridcell"
+                    [class.cell--never]="cell.dealt === 0"
+                    [class.cell--thin]="cell.dealt > 0 && cell.dealt < thinSample"
+                    [style.--open]="openShare(cell)"
+                    [style.--limp]="limpShare(cell)"
+                    [style.animation-delay.ms]="delay(i)"
+                    [attr.aria-label]="
+                      t('cellLabel', {
+                        hand: cell.hand,
+                        dealt: cell.dealt,
+                        opens: cell.opens,
+                        limps: cell.limps,
+                      })
+                    "
+                    (mouseenter)="hovered.set(cell)"
+                    (focus)="hovered.set(cell)"
+                    (mouseleave)="hovered.set(null)"
+                    (blur)="hovered.set(null)"
+                  >
+                    <span class="cell__fill" aria-hidden="true"></span>
+                    <span class="cell__hand">{{ cell.hand }}</span>
+                    @if (cell.dealt > 0) {
+                      <span class="cell__count numeric">{{ cell.dealt }}</span>
+                    }
+                  </button>
+                }
+              </div>
+            }
+
+            <aside class="side">
+              <section class="card glass">
+                <h2>{{ t('summary.title', { position: short[r.position] }) }}</h2>
+                <p class="big numeric">{{ percent(r.openRate.rate) }}</p>
+                <p class="muted">
+                  {{ t('summary.counts', { opens: r.opens, dealt: r.dealt }) }}
+                  @if (r.limps > 0) {
+                    · {{ t('summary.limps', { count: r.limps }) }}
+                  }
+                </p>
+                @if (r.reference; as ref) {
+                  <app-range-gauge
+                    [rate]="r.openRate.rate ?? 0"
+                    [low]="r.openRate.rate ?? 0"
+                    [high]="r.openRate.rate ?? 0"
+                    [min]="ref.min"
+                    [max]="ref.max"
+                    [format]="share()"
+                    [label]="t('summary.gauge', { min: percent(ref.min), max: percent(ref.max) })"
+                  />
+                  <p class="muted">
+                    {{
+                      t('summary.reference', {
+                        min: percent(ref.min),
+                        max: percent(ref.max),
+                        version: data.referenceVersion,
+                      })
+                    }}
+                  </p>
+                }
+              </section>
+
+              <section class="card glass detail" aria-live="polite">
+                @if (focus(); as c) {
+                  <p class="detail__hand">{{ c.hand }}</p>
+                  @if (c.dealt === 0) {
+                    <p class="muted">{{ t('detail.never') }}</p>
+                  } @else {
+                    <dl>
+                      <div>
+                        <dt>{{ t('detail.dealt') }}</dt>
+                        <dd class="numeric">{{ c.dealt }}</dd>
+                      </div>
+                      <div>
+                        <dt><span class="swatch swatch--open"></span>{{ t('detail.opens') }}</dt>
+                        <dd class="numeric">{{ c.opens }} · {{ percent(openShare(c)) }}</dd>
+                      </div>
+                      <div>
+                        <dt><span class="swatch swatch--limp"></span>{{ t('detail.limps') }}</dt>
+                        <dd class="numeric">{{ c.limps }}</dd>
+                      </div>
+                      <div>
+                        <dt><span class="swatch swatch--fold"></span>{{ t('detail.folds') }}</dt>
+                        <dd class="numeric">{{ c.dealt - c.opens - c.limps }}</dd>
+                      </div>
+                    </dl>
+                    @if (c.dealt < thinSample) {
+                      <p class="muted">{{ t('detail.thin') }}</p>
+                    }
+                  }
+                } @else {
+                  <p class="muted">{{ t('detail.hint') }}</p>
+                }
+              </section>
+
+              <section class="card glass legend">
+                <p><span class="swatch swatch--open"></span>{{ t('legend.open') }}</p>
+                <p><span class="swatch swatch--limp"></span>{{ t('legend.limp') }}</p>
+                <p><span class="swatch swatch--fold"></span>{{ t('legend.fold') }}</p>
+                <p><span class="swatch swatch--never"></span>{{ t('legend.never') }}</p>
+                <p class="muted">{{ t('legend.sample') }}</p>
+              </section>
+            </aside>
+          </div>
+          <p class="method">{{ t('method') }}</p>
+        }
+      }
+    }
+  } @else {
+    <div class="layout" role="status" [attr.aria-label]="t('loading')">
+      <div class="grid glass skeleton-grid"><span class="skeleton"></span></div>
+    </div>
+  }
+</ng-container>
