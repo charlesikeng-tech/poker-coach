@@ -150,6 +150,9 @@ Phase 3 — Tournaments (MVP-1):
 - [x] Tournament detail (`GET /api/tournaments/{id}`): stack curve, key moments ranked by share of
       stack (domain `KeyMoments`), session stats labelled as descriptive; master-detail page with
       name search
+- [x] Hand replayer (`GET /api/hands/{id}`): table with seats by position (other players' pseudonyms
+      never leave the server), street-by-street frames incl. all-in run-outs, previous/next hand and
+      key moment; key moments and coach-cited hands link to it
 
 Phase 4 — Performance (MVP-1):
 

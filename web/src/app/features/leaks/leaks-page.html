@@ -117,7 +117,9 @@
                       <ul class="coach-hands">
                         @for (hand of e.hands; track hand.ref) {
                           <li>
-                            <span class="numeric">{{ handLabel(hand, t) }}</span>
+                            <a class="numeric" [routerLink]="['/hands', hand.handId]">{{
+                              handLabel(hand, t)
+                            }}</a>
                             <span>{{ hand.note }}</span>
                           </li>
                         }

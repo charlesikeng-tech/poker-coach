@@ -710,6 +710,66 @@
           }
         }
       }
+    },
+    "hand": {
+      "pageTitle": "Hand",
+      "title": "Hand {{index}} / {{count}}",
+      "level": "Level {{level}}",
+      "ante": "ante {{ante}}",
+      "loading": "Loading the hand…",
+      "backToTournaments": "Back to tournaments",
+      "navigation": "Hand navigation",
+      "previousHand": "Previous",
+      "nextHand": "Next",
+      "previousKey": "Previous key moment",
+      "nextKey": "Next key moment",
+      "keyMoment": "Key moment {{number}}",
+      "notFound": {
+        "title": "Hand not found",
+        "description": "It does not exist or does not belong to one of your confirmed accounts."
+      },
+      "error": {
+        "title": "Could not load this hand",
+        "description": "Poker Coach could not answer. Try again.",
+        "retry": "Retry"
+      },
+      "table": "Table",
+      "button": "Button",
+      "pot": "Pot {{amount}}",
+      "you": "You",
+      "player": "Player",
+      "sittingOut": "Away",
+      "hiddenCard": "Hidden card",
+      "allIn": "All-in",
+      "streets": {
+        "label": "Streets",
+        "preflop": "Preflop",
+        "flop": "Flop",
+        "turn": "Turn",
+        "river": "River",
+        "showdown": "Result"
+      },
+      "first": "Start of hand",
+      "back": "Previous action",
+      "forward": "Next action",
+      "last": "End of hand",
+      "play": "Play",
+      "pause": "Pause",
+      "unit": "Unit",
+      "chips": "Chips",
+      "keys": "Keyboard: ← → to step, space to play, Home / End.",
+      "log": "Actions",
+      "result": "Your result: {{amount}}",
+      "actions": {
+        "fold": "folds",
+        "check": "checks",
+        "call": "calls {{amount}}",
+        "bet": "bets {{amount}}",
+        "raise": "raises to {{amount}}",
+        "postAnte": "ante {{amount}}",
+        "postSmallBlind": "small blind {{amount}}",
+        "postBigBlind": "big blind {{amount}}"
+      }
     }
   }
 }

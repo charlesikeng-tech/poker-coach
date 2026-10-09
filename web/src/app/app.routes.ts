@@ -47,6 +47,12 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'hands/:id',
+        title: 'pages.hand.pageTitle',
+        loadComponent: () =>
+          import('./features/hands/hand-replay-page').then((m) => m.HandReplayPage),
+      },
+      {
         path: 'sessions',
         title: 'nav.sessions',
         loadComponent: () =>

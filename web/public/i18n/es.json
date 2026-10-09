@@ -710,6 +710,66 @@
           }
         }
       }
+    },
+    "hand": {
+      "pageTitle": "Mano",
+      "title": "Mano {{index}} / {{count}}",
+      "level": "Nivel {{level}}",
+      "ante": "ante {{ante}}",
+      "loading": "Cargando la mano…",
+      "backToTournaments": "Volver a los torneos",
+      "navigation": "Navegación entre manos",
+      "previousHand": "Anterior",
+      "nextHand": "Siguiente",
+      "previousKey": "Momento clave anterior",
+      "nextKey": "Momento clave siguiente",
+      "keyMoment": "Momento clave {{number}}",
+      "notFound": {
+        "title": "Mano no encontrada",
+        "description": "No existe o no pertenece a una de tus cuentas confirmadas."
+      },
+      "error": {
+        "title": "No se pudo cargar esta mano",
+        "description": "Poker Coach no pudo responder. Inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "table": "Mesa",
+      "button": "Botón",
+      "pot": "Bote {{amount}}",
+      "you": "Tú",
+      "player": "Jugador",
+      "sittingOut": "Ausente",
+      "hiddenCard": "Carta oculta",
+      "allIn": "All-in",
+      "streets": {
+        "label": "Calles",
+        "preflop": "Preflop",
+        "flop": "Flop",
+        "turn": "Turn",
+        "river": "River",
+        "showdown": "Resultado"
+      },
+      "first": "Inicio de la mano",
+      "back": "Acción anterior",
+      "forward": "Acción siguiente",
+      "last": "Fin de la mano",
+      "play": "Reproducir",
+      "pause": "Pausa",
+      "unit": "Unidad",
+      "chips": "Fichas",
+      "keys": "Teclado: ← → para avanzar, espacio para reproducir, Inicio / Fin.",
+      "log": "Acciones",
+      "result": "Tu resultado: {{amount}}",
+      "actions": {
+        "fold": "se retira",
+        "check": "pasa",
+        "call": "iguala {{amount}}",
+        "bet": "apuesta {{amount}}",
+        "raise": "sube a {{amount}}",
+        "postAnte": "ante {{amount}}",
+        "postSmallBlind": "ciega pequeña {{amount}}",
+        "postBigBlind": "ciega grande {{amount}}"
+      }
     }
   }
 }

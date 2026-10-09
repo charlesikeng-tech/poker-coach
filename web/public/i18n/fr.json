@@ -710,6 +710,66 @@
           }
         }
       }
+    },
+    "hand": {
+      "pageTitle": "Main",
+      "title": "Main {{index}} / {{count}}",
+      "level": "Niveau {{level}}",
+      "ante": "ante {{ante}}",
+      "loading": "Chargement de la main…",
+      "backToTournaments": "Retour aux tournois",
+      "navigation": "Navigation entre les mains",
+      "previousHand": "Précédente",
+      "nextHand": "Suivante",
+      "previousKey": "Moment clé précédent",
+      "nextKey": "Moment clé suivant",
+      "keyMoment": "Moment clé {{number}}",
+      "notFound": {
+        "title": "Main introuvable",
+        "description": "Elle n'existe pas ou n'appartient pas à l'un de tes comptes confirmés."
+      },
+      "error": {
+        "title": "Impossible de charger cette main",
+        "description": "Poker Coach n'a pas pu répondre. Réessaie.",
+        "retry": "Réessayer"
+      },
+      "table": "Table",
+      "button": "Bouton",
+      "pot": "Pot {{amount}}",
+      "you": "Toi",
+      "player": "Joueur",
+      "sittingOut": "Absent",
+      "hiddenCard": "Carte cachée",
+      "allIn": "Tapis",
+      "streets": {
+        "label": "Streets",
+        "preflop": "Préflop",
+        "flop": "Flop",
+        "turn": "Turn",
+        "river": "River",
+        "showdown": "Résultat"
+      },
+      "first": "Début de la main",
+      "back": "Action précédente",
+      "forward": "Action suivante",
+      "last": "Fin de la main",
+      "play": "Lecture",
+      "pause": "Pause",
+      "unit": "Unité",
+      "chips": "Jetons",
+      "keys": "Clavier : ← → pour avancer, espace pour la lecture, Début / Fin.",
+      "log": "Actions",
+      "result": "Ton résultat : {{amount}}",
+      "actions": {
+        "fold": "se couche",
+        "check": "checke",
+        "call": "suit {{amount}}",
+        "bet": "mise {{amount}}",
+        "raise": "relance à {{amount}}",
+        "postAnte": "ante {{amount}}",
+        "postSmallBlind": "petite blinde {{amount}}",
+        "postBigBlind": "grosse blinde {{amount}}"
+      }
     }
   }
 }

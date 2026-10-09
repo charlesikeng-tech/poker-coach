@@ -161,30 +161,36 @@
             <ol class="moments">
               @for (m of moments(); track m.moment.handId) {
                 @let k = m.moment;
-                <li class="moment" [attr.data-sign]="sign(k.netChips)">
-                  <span class="moment__number">{{ m.number }}</span>
-                  <div class="moment__body">
-                    <p class="moment__title">
-                      {{ t('detail.moments.kinds.' + swingKind(k)) }}
-                      <span class="moment__stage"
-                        >· {{ t('detail.moments.stages.' + k.stage) }}</span
-                      >
-                    </p>
-                    <p class="moment__meta numeric">
-                      {{ t('detail.handTitle', { index: k.index, level: k.level }) }}
-                      @if (k.position) {
-                        · {{ t('detail.positions.' + k.position) }}
-                      }
-                      @if (k.heroCards) {
-                        · <span class="cards">{{ k.heroCards }}</span>
-                      }
-                      · {{ t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) }) }}
-                    </p>
-                  </div>
-                  <div class="moment__swing numeric">
-                    <strong>{{ signedBigBlinds(k.netBigBlinds) }}</strong>
-                    <span>{{ t('detail.moments.share', { share: share(k) }) }}</span>
-                  </div>
+                <li>
+                  <a
+                    class="moment"
+                    [attr.data-sign]="sign(k.netChips)"
+                    [routerLink]="['/hands', k.handId]"
+                  >
+                    <span class="moment__number">{{ m.number }}</span>
+                    <div class="moment__body">
+                      <p class="moment__title">
+                        {{ t('detail.moments.kinds.' + swingKind(k)) }}
+                        <span class="moment__stage"
+                          >· {{ t('detail.moments.stages.' + k.stage) }}</span
+                        >
+                      </p>
+                      <p class="moment__meta numeric">
+                        {{ t('detail.handTitle', { index: k.index, level: k.level }) }}
+                        @if (k.position) {
+                          · {{ t('detail.positions.' + k.position) }}
+                        }
+                        @if (k.heroCards) {
+                          · <span class="cards">{{ k.heroCards }}</span>
+                        }
+                        · {{ t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) }) }}
+                      </p>
+                    </div>
+                    <div class="moment__swing numeric">
+                      <strong>{{ signedBigBlinds(k.netBigBlinds) }}</strong>
+                      <span>{{ t('detail.moments.share', { share: share(k) }) }}</span>
+                    </div>
+                  </a>
                 </li>
               }
             </ol>

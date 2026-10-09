@@ -1,0 +1,310 @@
+<ng-container *transloco="let t; prefix: 'pages.hand'">
+  @switch (state()) {
+    @case ('notFound') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('notFound.title')"
+        [description]="t('notFound.description')"
+      >
+        <a appButton variant="secondary" routerLink="/tournaments">{{ t('backToTournaments') }}</a>
+      </app-empty-state>
+    }
+    @case ('error') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('error.title')"
+        [description]="t('error.description')"
+      >
+        <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+      </app-empty-state>
+    }
+    @default {
+      @if (hand(); as h) {
+        @let tbl = table();
+        @let f = frame();
+        <header class="head">
+          <a class="back" [routerLink]="['/tournaments', h.tournamentId]">
+            <app-icon [icon]="icons.ArrowLeft" />
+            {{ h.tournamentName }}
+          </a>
+          <div class="head__row">
+            <div>
+              <h1>{{ t('title', { index: h.index, count: h.handCount }) }}</h1>
+              <p class="head__meta numeric">
+                {{ t('level', { level: h.level }) }} · {{ amount(h.smallBlind) }} /
+                {{ amount(h.bigBlind) }}
+                @if (h.ante) {
+                  · {{ t('ante', { ante: amount(h.ante) }) }}
+                }
+                · {{ date(h.startedAt) }}
+              </p>
+            </div>
+            <nav class="hand-nav" [attr.aria-label]="t('navigation')">
+              @if (keyMoment(); as k) {
+                @if (k.number) {
+                  <span class="key-badge">{{ t('keyMoment', { number: k.number }) }}</span>
+                }
+                <a
+                  appButton
+                  variant="ghost"
+                  [class.disabled]="!k.previous"
+                  [attr.aria-disabled]="!k.previous"
+                  [routerLink]="k.previous ? ['/hands', k.previous] : null"
+                  [attr.title]="t('previousKey')"
+                >
+                  <app-icon [icon]="icons.ChevronFirst" />
+                  <span class="sr-only">{{ t('previousKey') }}</span>
+                </a>
+              }
+              <a
+                appButton
+                variant="secondary"
+                [class.disabled]="!h.previousHandId"
+                [attr.aria-disabled]="!h.previousHandId"
+                [routerLink]="h.previousHandId ? ['/hands', h.previousHandId] : null"
+              >
+                <app-icon [icon]="icons.ChevronLeft" />
+                {{ t('previousHand') }}
+              </a>
+              <a
+                appButton
+                variant="secondary"
+                [class.disabled]="!h.nextHandId"
+                [attr.aria-disabled]="!h.nextHandId"
+                [routerLink]="h.nextHandId ? ['/hands', h.nextHandId] : null"
+              >
+                {{ t('nextHand') }}
+                <app-icon [icon]="icons.ChevronRight" />
+              </a>
+              @if (keyMoment(); as k) {
+                <a
+                  appButton
+                  variant="ghost"
+                  [class.disabled]="!k.next"
+                  [attr.aria-disabled]="!k.next"
+                  [routerLink]="k.next ? ['/hands', k.next] : null"
+                  [attr.title]="t('nextKey')"
+                >
+                  <app-icon [icon]="icons.ChevronLast" />
+                  <span class="sr-only">{{ t('nextKey') }}</span>
+                </a>
+              }
+            </nav>
+          </div>
+        </header>
+
+        <div class="replay">
+          <section class="table-card glass" [attr.aria-label]="t('table')">
+            <div class="felt">
+              <div class="felt__rail" aria-hidden="true"></div>
+
+              <!-- Middle: pot and board -->
+              <div class="middle">
+                <div class="board">
+                  @for (card of h.board.slice(0, f?.boardCount ?? 0); track $index) {
+                    <app-playing-card [card]="card" />
+                  }
+                </div>
+                @if (tbl && tbl.pot > 0) {
+                  <p class="pot numeric">{{ t('pot', { amount: amount(tbl.pot) }) }}</p>
+                }
+              </div>
+
+              @if (dealer(); as d) {
+                <span
+                  class="dealer"
+                  [style.left.%]="d.x"
+                  [style.top.%]="d.y"
+                  [attr.title]="t('button')"
+                  >D</span
+                >
+              }
+
+              @for (p of placed(); track p.seat.seatNumber) {
+                @let s = seatState(p.seat.seatNumber);
+                @if (s && s.bet > 0) {
+                  <span class="bet numeric" [style.left.%]="p.betX" [style.top.%]="p.betY">
+                    <span class="bet__chip" aria-hidden="true"></span>
+                    {{ amount(s.bet) }}
+                  </span>
+                }
+                <div
+                  class="seat"
+                  [style.left.%]="p.x"
+                  [style.top.%]="p.y"
+                  [class.seat--hero]="p.seat.isHero"
+                  [class.seat--folded]="s?.folded"
+                  [class.seat--out]="!p.seat.isDealt"
+                  [class.seat--acting]="actingSeat() === p.seat.seatNumber"
+                  [class.seat--winner]="f?.isResult && p.seat.collected > 0"
+                >
+                  <div class="seat__cards">
+                    @for (card of cardsOf(p.seat, s?.folded ?? false); track $index) {
+                      <app-playing-card
+                        size="small"
+                        [card]="card"
+                        [hiddenLabel]="t('hiddenCard')"
+                      />
+                    }
+                  </div>
+                  <div class="seat__plate">
+                    <span class="seat__name">
+                      @if (p.seat.isHero) {
+                        {{ t('you') }}
+                        @if (p.seat.position) {
+                          <small>{{ positionLabel(p.seat) }}</small>
+                        }
+                      } @else if (p.seat.isDealt) {
+                        {{ positionLabel(p.seat) || t('player') }}
+                      } @else {
+                        {{ t('sittingOut') }}
+                      }
+                    </span>
+                    <span class="seat__stack numeric">
+                      @if (s?.allIn && !f?.isResult && s?.stack === 0) {
+                        {{ t('allIn') }}
+                      } @else {
+                        {{ amount(s?.stack ?? p.seat.stack) }}
+                      }
+                    </span>
+                  </div>
+                  @if (f?.isResult && p.seat.collected > 0) {
+                    <span class="seat__won numeric">+{{ amount(p.seat.collected) }}</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+              <div class="streets" role="group" [attr.aria-label]="t('streets.label')">
+                @for (street of streetButtons; track street) {
+                  <button
+                    type="button"
+                    [class.active]="f?.street === street"
+                    [disabled]="!hasStreet(street)"
+                    (click)="goToStreet(street)"
+                  >
+                    {{ t('streets.' + street) }}
+                  </button>
+                }
+              </div>
+              <div class="steps">
+                <button
+                  type="button"
+                  class="icon-btn"
+                  [attr.aria-label]="t('first')"
+                  (click)="goTo(0)"
+                >
+                  <app-icon [icon]="icons.ChevronFirst" />
+                </button>
+                <button
+                  type="button"
+                  class="icon-btn"
+                  [attr.aria-label]="t('back')"
+                  [disabled]="frameIndex() === 0"
+                  (click)="goTo(frameIndex() - 1)"
+                >
+                  <app-icon [icon]="icons.StepBack" />
+                </button>
+                <button
+                  type="button"
+                  class="icon-btn icon-btn--play"
+                  [attr.aria-label]="playing() ? t('pause') : t('play')"
+                  (click)="togglePlay()"
+                >
+                  <app-icon [icon]="playing() ? icons.Pause : icons.Play" />
+                </button>
+                <button
+                  type="button"
+                  class="icon-btn"
+                  [attr.aria-label]="t('forward')"
+                  [disabled]="frameIndex() >= frames().length - 1"
+                  (click)="goTo(frameIndex() + 1)"
+                >
+                  <app-icon [icon]="icons.StepForward" />
+                </button>
+                <button
+                  type="button"
+                  class="icon-btn"
+                  [attr.aria-label]="t('last')"
+                  (click)="goTo(frames().length - 1)"
+                >
+                  <app-icon [icon]="icons.ChevronLast" />
+                </button>
+                <span class="steps__count numeric"
+                  >{{ frameIndex() + 1 }} / {{ frames().length }}</span
+                >
+              </div>
+              <div class="segmented" role="group" [attr.aria-label]="t('unit')">
+                <button
+                  type="button"
+                  [class.active]="unit() === 'bigBlinds'"
+                  [attr.aria-pressed]="unit() === 'bigBlinds'"
+                  (click)="unit.set('bigBlinds')"
+                >
+                  BB
+                </button>
+                <button
+                  type="button"
+                  [class.active]="unit() === 'chips'"
+                  [attr.aria-pressed]="unit() === 'chips'"
+                  (click)="unit.set('chips')"
+                >
+                  {{ t('chips') }}
+                </button>
+              </div>
+            </div>
+            <p class="keys">{{ t('keys') }}</p>
+          </section>
+
+          <!-- Action log -->
+          <aside class="log glass" [attr.aria-label]="t('log')">
+            <h2 class="log__title">{{ t('log') }}</h2>
+            @for (group of log(); track group.street) {
+              <h3 class="log__street">{{ t('streets.' + group.street) }}</h3>
+              <ol>
+                @for (item of group.actions; track item.index) {
+                  @let who = seatOf(item.action.seatNumber);
+                  <li>
+                    <button
+                      type="button"
+                      class="log__action"
+                      [class.log__action--current]="f?.actionIndex === item.index"
+                      [class.log__action--hero]="who?.isHero"
+                      (click)="goToAction(item.index)"
+                    >
+                      <span class="log__who">{{
+                        who?.isHero ? t('you') : who ? positionLabel(who) : '?'
+                      }}</span>
+                      <span>
+                        {{ t('actions.' + item.action.kind, { amount: actionAmount(item.index) }) }}
+                        @if (item.action.isAllIn) {
+                          <strong class="log__allin">{{ t('allIn') }}</strong>
+                        }
+                      </span>
+                    </button>
+                  </li>
+                }
+              </ol>
+            }
+            @if (heroResult(); as result) {
+              <p
+                class="log__result numeric"
+                [attr.data-sign]="result > 0 ? 'positive' : 'negative'"
+              >
+                {{ t('result', { amount: signedAmount(result) }) }}
+              </p>
+            } @else {
+              <p class="log__result numeric">{{ t('result', { amount: signedAmount(0) }) }}</p>
+            }
+          </aside>
+        </div>
+      } @else {
+        <div role="status" [attr.aria-label]="t('loading')" class="glass skeleton-felt">
+          <span class="skeleton"></span>
+        </div>
+      }
+    }
+  }
+</ng-container>

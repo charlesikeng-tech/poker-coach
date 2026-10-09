@@ -299,6 +299,22 @@
   }
 }
 
+.moment {
+  color: inherit;
+  text-decoration: none;
+  transition:
+    background-color var(--motion-fast) var(--easing-standard),
+    border-color var(--motion-fast) var(--easing-standard);
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+  }
+}
+
 // Session stats ------------------------------------------------------------------------------------
 
 .metrics--stats dd {
