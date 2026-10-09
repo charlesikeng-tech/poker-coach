@@ -15,6 +15,24 @@ public sealed record TournamentResultResponse(
     decimal? BountyWinnings,
     decimal? Profit);
 
+/// <summary>How much of the tournament the imported hands cover. See TournamentCoverage.</summary>
+public sealed record TournamentCoverageResponse(
+    CoverageStatus Status,
+    int HandCount,
+    int? FirstLevel,
+    int? LastLevel,
+    int MissingHands,
+    int StackBreaks,
+    int EntriesSeen,
+    bool? StartMissing,
+    bool EndSeen)
+{
+    public static TournamentCoverageResponse? From(TournamentCoverage? c) => c is null
+        ? null
+        : new(c.Status, c.HandCount, c.FirstLevel, c.LastLevel, c.MissingHands, c.StackBreaks, c.EntriesSeen, c.StartMissing, c.EndSeen);
+}
+
+/// <param name="Coverage">Null while it is being computed.</param>
 public sealed record TournamentResponse(
     Guid Id,
     string Name,
@@ -24,7 +42,8 @@ public sealed record TournamentResponse(
     int? RegisteredPlayers,
     int? FinishPosition,
     int HandCount,
-    TournamentResultResponse Result);
+    TournamentResultResponse Result,
+    TournamentCoverageResponse? Coverage);
 
 /// <summary>Money and rates cover tournaments with a known result only.</summary>
 /// <param name="Roi">Ratio: 0.12 means +12 %.</param>
@@ -132,7 +151,8 @@ public static class TournamentEndpoints
                     i.Result.TotalBuyIn,
                     i.Result.PrizeWinnings,
                     i.Result.BountyWinnings,
-                    i.Result.Profit))).ToList(),
+                    i.Result.Profit),
+                TournamentCoverageResponse.From(i.Coverage))).ToList(),
             result.Page,
             result.PageSize,
             result.TotalCount,

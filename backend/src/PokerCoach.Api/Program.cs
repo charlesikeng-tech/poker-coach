@@ -46,6 +46,7 @@ builder.Services.AddScoped<PokerAccountService>();
 builder.Services.AddScoped<TournamentListService>();
 builder.Services.AddScoped<PerformanceService>();
 builder.Services.AddScoped<HandFactsBackfill>();
+builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
 
 var app = builder.Build();

@@ -15,6 +15,22 @@ export interface TournamentResult {
   readonly profit: number | null;
 }
 
+export type CoverageStatus = 'noHands' | 'complete' | 'partial';
+
+/** How much of the tournament the imported hands cover; null while it is being computed. */
+export interface TournamentCoverage {
+  readonly status: CoverageStatus;
+  readonly handCount: number;
+  readonly firstLevel: number | null;
+  readonly lastLevel: number | null;
+  readonly missingHands: number;
+  readonly stackBreaks: number;
+  readonly entriesSeen: number;
+  /** null: cannot be told (late registration or no summary). */
+  readonly startMissing: boolean | null;
+  readonly endSeen: boolean;
+}
+
 export interface Tournament {
   readonly id: string;
   readonly name: string;
@@ -25,6 +41,7 @@ export interface Tournament {
   readonly finishPosition: number | null;
   readonly handCount: number;
   readonly result: TournamentResult;
+  readonly coverage: TournamentCoverage | null;
 }
 
 /** Money and rates cover tournaments with a known result only. Rates are ratios (0.12 = 12 %). */

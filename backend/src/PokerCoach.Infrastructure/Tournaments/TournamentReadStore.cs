@@ -14,9 +14,12 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
         var query =
             from t in db.Set<TournamentRecord>().AsNoTracking()
             join a in db.Set<PokerAccountRecord>() on t.PokerAccountId equals a.Id
+            join c in db.Set<TournamentCoverageRecord>() on t.Id equals c.TournamentId into coverage
+            from c in coverage.DefaultIfEmpty()
             where a.UserId == userId && a.ConfirmedAt != null
             select new
             {
+                Coverage = c,
                 t.Id,
                 t.Name,
                 // The summary's start time when known; otherwise the first imported hand.
@@ -76,7 +79,9 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 handCounts.GetValueOrDefault(t.Id),
                 t.HasSummary ? entries[t.Id].ToList() : [],
                 t.TournamentType,
-                t.Speed))
+                t.Speed,
+                // Outdated coverage is not shown: it is being recomputed.
+                t.Coverage is { } stored && stored.CoverageVersion == TournamentCoverage.Version ? stored.ToDomain() : null))
             .ToList();
     }
 }

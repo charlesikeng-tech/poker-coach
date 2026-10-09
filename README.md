@@ -164,4 +164,7 @@ MVP-2 — Game analysis (ADR-0006):
 - [x] Versioned per-hand facts (`poker.hand_hero_facts`), computed in the background, SQL aggregates
 - [x] `GET /api/statistics` (period, stack depth) and the statistics page (tiles, by position)
 - [x] Migration `HandHeroFacts`
-- [ ] Hand coverage (gaps), per-entry attribution, postflop statistics
+- [x] Hand coverage per tournament (levels, hand-number gaps, stack breaks, entries seen, start/end
+      seen), computed in the background after facts, shown in the tournaments list
+- [ ] Migration `TournamentCoverage` (generate with `dotnet ef`)
+- [ ] Per-entry attribution of hands, postflop statistics

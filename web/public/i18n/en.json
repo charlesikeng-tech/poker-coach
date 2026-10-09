@@ -191,7 +191,8 @@
         "position": "Finish",
         "winnings": "Winnings",
         "profit": "Profit",
-        "hands": "Hands"
+        "hands": "Hands",
+        "coverage": "Hand history"
       },
       "status": {
         "missingSummary": "No summary",
@@ -204,6 +205,19 @@
         "previous": "Previous page",
         "next": "Next page",
         "position": "Page {{page}} of {{count}}"
+      },
+      "coverage": {
+        "complete": "Complete",
+        "completeHint": "Every hand from your start to your elimination is imported.",
+        "partial": "Partial",
+        "noHands": "No hands",
+        "pending": "…",
+        "pendingHint": "Being computed",
+        "levels": "Levels {{first}} to {{last}} imported",
+        "startMissing": "The start of the tournament is missing",
+        "missingHands": "{{count}} hand(s) missing at a table",
+        "stackBreaks": "{{count}} unexplained stack change(s): hands missing",
+        "endMissing": "Your last hands are missing"
       }
     },
     "sessions": {

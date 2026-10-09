@@ -3,13 +3,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker.Analysis;
 
 namespace PokerCoach.Infrastructure.Import;
 
 /// <summary>
 /// Drains the import queue: one file at a time per instance, several instances share the queue safely
 /// (claims use SKIP LOCKED). When the queue is empty, brings per-hand statistics facts up to date
-/// (ADR-0006). Polling keeps it simple; LISTEN/NOTIFY can cut the latency later if it ever matters.
+/// (ADR-0006), then each tournament's hand coverage. Polling keeps it simple; LISTEN/NOTIFY can cut the latency later if it ever matters.
 /// </summary>
 internal sealed partial class ImportWorker(
     IServiceScopeFactory scopes,
@@ -48,6 +50,13 @@ internal sealed partial class ImportWorker(
                 else if (factsDue || time.GetUtcNow() - factsCheckedAt > FactsRecheckInterval)
                 {
                     factsComputed = await scope.ServiceProvider.GetRequiredService<HandFactsBackfill>().ProcessBatchAsync(stoppingToken);
+                    if (factsComputed == 0)
+                    {
+                        // Coverage needs every hand's facts: it runs once facts are up to date.
+                        factsComputed = await scope.ServiceProvider.GetRequiredService<CoverageBackfill>()
+                            .ProcessBatchAsync(HeroHandFacts.Version, stoppingToken);
+                    }
+
                     factsCheckedAt = time.GetUtcNow();
                     factsDue = factsComputed > 0;
                 }

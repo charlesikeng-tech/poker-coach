@@ -17,7 +17,8 @@ public sealed record TournamentFacts(
     int HandCount,
     IReadOnlyList<EntryOutcome> Entries,
     string? Type = null,
-    string? Speed = null);
+    string? Speed = null,
+    TournamentCoverage? Coverage = null);
 
 public interface ITournamentReadStore
 {
@@ -33,6 +34,7 @@ public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, 
 
 /// <param name="BuyIn">Price of one entry, fee included; null when unknown.</param>
 /// <param name="FinishPosition">Position of the last entry.</param>
+/// <param name="Coverage">Null while it is being computed.</param>
 public sealed record TournamentListItem(
     Guid Id,
     string Name,
@@ -42,7 +44,8 @@ public sealed record TournamentListItem(
     int? RegisteredPlayers,
     int? FinishPosition,
     int HandCount,
-    TournamentResult Result);
+    TournamentResult Result,
+    TournamentCoverage? Coverage = null);
 
 public sealed record TournamentPage(IReadOnlyList<TournamentListItem> Items, int Page, int PageSize, int TotalCount, PerformanceFigures Totals);
 
@@ -80,7 +83,8 @@ public sealed class TournamentListService(ITournamentReadStore store)
             facts.RegisteredPlayers,
             facts.Entries.Count == 0 ? null : facts.Entries[^1].FinishPosition,
             facts.HandCount,
-            TournamentResult.Compute(buyIn, facts.Entries));
+            TournamentResult.Compute(buyIn, facts.Entries),
+            facts.Coverage);
     }
 
     /// <summary>The summary splits the buy-in (prize pool + bounty + fee); hands only give it without the fee, plus the fee.</summary>

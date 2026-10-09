@@ -58,7 +58,22 @@ refreshes until it reaches zero.
 - Only hero statistics for now; opponents' statistics (for a HUD) would need per-player facts and an
   opponent-data retention decision first.
 
+## Hand coverage (amendment, same day)
+
+Per tournament, `TournamentCoverage` (Domain) is computed in the background once the tournament's
+hand facts are current, stored in `poker.tournament_coverage` (versioned, recomputed when hands are
+added or a newer summary arrives):
+
+- **hand-number gaps** per table, read from the room's hand ids through the provider
+  (`IHandHistoryProvider.TryReadTableSequence`; Winamax ids are `table-number-timestamp`);
+- **stack breaks**: the hero's stack at a hand differs from the previous hand's end (start + net);
+  a bust followed by a new stack is a **re-entry**, not a break;
+- **start missing**: registered on time (summary) but first hand past level 1; unknown with late
+  registration; **end seen**: last hand ends at 0 chips, or the summary says he won.
+
+Complete = no gap, no break, end seen, start not known missing, entries seen = summary entries.
+
 ## Not covered yet
 
-- Hand coverage (gaps in hand histories) and per-entry attribution of hands (re-entries).
+- Per-entry attribution of hands (re-entries) for statistics by entry.
 - Postflop beyond flop c-bet and showdown; all-in adjusted results.

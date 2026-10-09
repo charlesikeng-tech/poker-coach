@@ -107,6 +107,7 @@
                 <th scope="col" class="num optional">{{ t('columns.winnings') }}</th>
                 <th scope="col" class="num">{{ t('columns.profit') }}</th>
                 <th scope="col" class="num optional">{{ t('columns.hands') }}</th>
+                <th scope="col" class="optional">{{ t('columns.coverage') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -141,6 +142,37 @@
                     </td>
                   }
                   <td class="num numeric optional">{{ integer(tournament.handCount) }}</td>
+                  <td class="optional">
+                    @if (tournament.coverage; as coverage) {
+                      @switch (coverage.status) {
+                        @case ('complete') {
+                          <span
+                            class="coverage coverage--complete"
+                            [attr.title]="t('coverage.completeHint')"
+                          >
+                            {{ t('coverage.complete') }}
+                          </span>
+                        }
+                        @case ('partial') {
+                          <span class="coverage coverage--partial" tabindex="0">
+                            {{ t('coverage.partial') }}
+                            <span class="coverage__details" role="tooltip">
+                              @for (reason of coverageReasons(coverage); track reason.key) {
+                                <span>{{ t('coverage.' + reason.key, reason.params) }}</span>
+                              }
+                            </span>
+                          </span>
+                        }
+                        @default {
+                          <span class="coverage">{{ t('coverage.noHands') }}</span>
+                        }
+                      }
+                    } @else {
+                      <span class="coverage" [attr.title]="t('coverage.pendingHint')">{{
+                        t('coverage.pending')
+                      }}</span>
+                    }
+                  </td>
                 </tr>
               }
             </tbody>

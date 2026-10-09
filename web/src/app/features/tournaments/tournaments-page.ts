@@ -25,7 +25,7 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi } from '../import/import-api';
 import { BUY_IN_FILTERS, BuyInFilter, PERIOD_FILTERS, PeriodFilter, toQuery } from './filters';
-import { Tournament, TournamentPage, TournamentsApi } from './tournaments-api';
+import { Tournament, TournamentCoverage, TournamentPage, TournamentsApi } from './tournaments-api';
 
 const PAGE_SIZE = 50;
 
@@ -128,6 +128,32 @@ export class TournamentsPage {
     return prizeWinnings === null || bountyWinnings === null
       ? null
       : prizeWinnings + bountyWinnings;
+  }
+
+  /** Translation keys (relative to pages.tournaments.coverage) explaining a partial coverage. */
+  protected coverageReasons(
+    coverage: TournamentCoverage,
+  ): { key: string; params: Record<string, unknown> }[] {
+    const reasons: { key: string; params: Record<string, unknown> }[] = [];
+    if (coverage.firstLevel !== null) {
+      reasons.push({
+        key: 'levels',
+        params: { first: coverage.firstLevel, last: coverage.lastLevel },
+      });
+    }
+    if (coverage.startMissing) {
+      reasons.push({ key: 'startMissing', params: {} });
+    }
+    if (coverage.missingHands > 0) {
+      reasons.push({ key: 'missingHands', params: { count: coverage.missingHands } });
+    }
+    if (coverage.stackBreaks > 0) {
+      reasons.push({ key: 'stackBreaks', params: { count: coverage.stackBreaks } });
+    }
+    if (!coverage.endSeen) {
+      reasons.push({ key: 'endMissing', params: {} });
+    }
+    return reasons;
   }
 
   protected sign(value: number | null): 'positive' | 'negative' | 'neutral' {

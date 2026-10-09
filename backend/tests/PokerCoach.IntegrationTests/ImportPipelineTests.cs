@@ -210,6 +210,37 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
     }
 
     [Fact]
+    public async Task Coverage_is_computed_after_hand_facts()
+    {
+        var userId = await CreateUserAsync();
+        await UploadAsync(userId, (AcceleratorHands, Golden(AcceleratorHands)), (AcceleratorSummary, Golden(AcceleratorSummary)));
+        await ProcessQueueAsync();
+        await using var scope = fixture.Services.CreateAsyncScope();
+        var accounts = scope.ServiceProvider.GetRequiredService<PokerAccountService>();
+        await accounts.ConfirmAsync(userId, Assert.Single(await accounts.ListAsync(userId, Ct)).Id, Ct);
+
+        // What the worker does when idle: facts first, then coverage.
+        var facts = scope.ServiceProvider.GetRequiredService<HandFactsBackfill>();
+        while (await facts.ProcessBatchAsync(Ct) > 0)
+        {
+        }
+
+        var coverage = scope.ServiceProvider.GetRequiredService<CoverageBackfill>();
+        while (await coverage.ProcessBatchAsync(PokerCoach.Domain.Poker.Analysis.HeroHandFacts.Version, Ct) > 0)
+        {
+        }
+
+        var page = await scope.ServiceProvider.GetRequiredService<TournamentListService>()
+            .ListAsync(userId, new TournamentFilter(null, null, null, null, 1, 50), Ct);
+        var accelerator = Assert.Single(page.Items).Coverage;
+        Assert.NotNull(accelerator);
+        Assert.Equal(CoverageStatus.Partial, accelerator.Status);
+        Assert.Equal(222, accelerator.HandCount);
+        Assert.Equal(7, accelerator.MissingHands);
+        Assert.Equal(0, await coverage.ProcessBatchAsync(PokerCoach.Domain.Poker.Analysis.HeroHandFacts.Version, Ct));
+    }
+
+    [Fact]
     public async Task A_failed_file_is_processed_again_when_uploaded_again()
     {
         var userId = await CreateUserAsync();

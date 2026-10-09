@@ -191,7 +191,8 @@
         "position": "Puesto",
         "winnings": "Ganancias",
         "profit": "Beneficio",
-        "hands": "Manos"
+        "hands": "Manos",
+        "coverage": "Historial"
       },
       "status": {
         "missingSummary": "Sin resumen",
@@ -204,6 +205,19 @@
         "previous": "Página anterior",
         "next": "Página siguiente",
         "position": "Página {{page}} de {{count}}"
+      },
+      "coverage": {
+        "complete": "Completo",
+        "completeHint": "Todas las manos, desde tu inicio hasta tu eliminación, están importadas.",
+        "partial": "Parcial",
+        "noHands": "Sin manos",
+        "pending": "…",
+        "pendingHint": "Calculándose",
+        "levels": "Niveles {{first}} a {{last}} importados",
+        "startMissing": "Falta el inicio del torneo",
+        "missingHands": "Falta(n) {{count}} mano(s) en una mesa",
+        "stackBreaks": "{{count}} cambio(s) de stack sin explicar: faltan manos",
+        "endMissing": "Faltan tus últimas manos"
       }
     },
     "sessions": {

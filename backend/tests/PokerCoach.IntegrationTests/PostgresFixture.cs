@@ -56,6 +56,7 @@ public sealed class PostgresFixture : IAsyncLifetime
         collection.AddScoped<TournamentListService>();
         collection.AddScoped<PerformanceService>();
         collection.AddScoped<HandFactsBackfill>();
+        collection.AddScoped<CoverageBackfill>();
         collection.AddScoped<StatisticsService>();
         collection.AddScoped<ExternalSignInService>();
         services = collection.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = false });

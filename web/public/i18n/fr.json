@@ -191,7 +191,8 @@
         "position": "Place",
         "winnings": "Gains",
         "profit": "Profit",
-        "hands": "Mains"
+        "hands": "Mains",
+        "coverage": "Historique"
       },
       "status": {
         "missingSummary": "Sans résumé",
@@ -204,6 +205,19 @@
         "previous": "Page précédente",
         "next": "Page suivante",
         "position": "Page {{page}} sur {{count}}"
+      },
+      "coverage": {
+        "complete": "Complet",
+        "completeHint": "Toutes les mains, de votre début à votre élimination, sont importées.",
+        "partial": "Partiel",
+        "noHands": "Aucune main",
+        "pending": "…",
+        "pendingHint": "En cours de calcul",
+        "levels": "Niveaux {{first}} à {{last}} importés",
+        "startMissing": "Le début du tournoi manque",
+        "missingHands": "{{count}} main(s) manquante(s) à une table",
+        "stackBreaks": "{{count}} variation(s) de tapis inexpliquée(s) : des mains manquent",
+        "endMissing": "Vos dernières mains manquent"
       }
     },
     "sessions": {
