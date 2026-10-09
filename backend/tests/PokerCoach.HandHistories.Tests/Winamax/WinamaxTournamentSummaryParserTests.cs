@@ -75,6 +75,19 @@ public sealed class WinamaxTournamentSummaryParserTests
     }
 
     [Fact]
+    public void Reads_bounties_won_out_of_the_money()
+    {
+        var result = parser.Parse(GoldenFiles.Read(GoldenFiles.ArcturusSummary));
+
+        Assert.Empty(result.Errors);
+        var summary = Assert.IsType<ParsedTournamentSummary>(result.Summary);
+        Assert.Equal(185, summary.FinishPosition);
+        Assert.Equal(1m, summary.BountyWinnings);
+        Assert.Null(summary.PrizeWinnings);
+        Assert.False(summary.LateRegistration);
+    }
+
+    [Fact]
     public void A_summary_without_late_registration_says_so()
     {
         var summary = parser.Parse(GoldenFiles.Read(GoldenFiles.CassiopeiaSummary)).Summary;
@@ -99,6 +112,7 @@ public sealed class WinamaxTournamentSummaryParserTests
 
     [Theory]
     [InlineData(GoldenFiles.QuantumSummary, 4740)]
+    [InlineData(GoldenFiles.ArcturusSummary, 659)]
     [InlineData(GoldenFiles.CassiopeiaSummary, 1239)]
     [InlineData(GoldenFiles.AcceleratorSummary, 964)]
     public void The_prize_pool_is_a_whole_number_of_prize_pool_buy_ins(string fileName, int entries)

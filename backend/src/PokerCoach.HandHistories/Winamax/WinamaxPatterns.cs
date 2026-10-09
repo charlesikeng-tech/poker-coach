@@ -79,8 +79,10 @@ internal static partial class WinamaxPatterns
     [GeneratedRegex(@"^You finished in (?<position>[0-9]+)(?:st|nd|rd|th) place$", Options)]
     internal static partial Regex SummaryFinished();
 
+    // Three shapes seen: "You won 10.55€", "You won 25.42€ + Bounty 18.86€", "You won Bounty 1€"
+    // (bounties only, finished out of the money).
     [GeneratedRegex(
-        @"^You won (?<prize>[0-9]+(?:\.[0-9]+)?)€(?: \+ Bounty (?<bounty>[0-9]+(?:\.[0-9]+)?)€)?$",
+        @"^You won (?:(?<prize>[0-9]+(?:\.[0-9]+)?)€(?: \+ Bounty (?<bounty>[0-9]+(?:\.[0-9]+)?)€)?|Bounty (?<bounty>[0-9]+(?:\.[0-9]+)?)€)$",
         Options)]
     internal static partial Regex SummaryWon();
 }

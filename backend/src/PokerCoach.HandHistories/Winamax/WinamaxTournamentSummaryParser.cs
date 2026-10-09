@@ -159,12 +159,17 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
         var won = WinamaxPatterns.SummaryWon().Match(text);
         if (won.Success)
         {
-            if (!WinamaxValues.TryParseEuros(won.Groups["prize"].Value, out var prize))
+            // Without a prize part (bounties only), the prize stays unknown: not printed is not zero here.
+            if (won.Groups["prize"].Success)
             {
-                return ParseErrorCodes.InvalidNumber;
+                if (!WinamaxValues.TryParseEuros(won.Groups["prize"].Value, out var prize))
+                {
+                    return ParseErrorCodes.InvalidNumber;
+                }
+
+                fields.PrizeWinnings = prize;
             }
 
-            fields.PrizeWinnings = prize;
             if (won.Groups["bounty"].Success)
             {
                 if (!WinamaxValues.TryParseEuros(won.Groups["bounty"].Value, out var bounty))

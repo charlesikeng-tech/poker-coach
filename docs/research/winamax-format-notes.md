@@ -133,10 +133,14 @@ Hand histories contain opponents' pseudonyms. Golden test files must be anonymiz
 - `You played 52min 33s` (no hours part) confirmed.
 - The file ended with a stray `\r` line; lines are right-trimmed, so it is harmless.
 
+## Fourth sample: ARCTURUS (summary only, 2026-10-02)
+
+- Out of the money with one bounty: `You won Bounty 1€` — a third shape of the `You won` line, with
+  no prize part. Prize stays `UNKNOWN` at parse time (same rule as a missing line); bounty is 1 €.
+
 ## Samples still needed
 
 1. A tournament where the hero **re-entered** (how the summary and the files show it).
-2. A KO tournament where the hero **won bounties but finished out of the money** (the case where he
-   won nothing is covered by QUANTUM).
+2. ~~KO out of the money, with and without bounties~~ — covered by ARCTURUS and QUANTUM.
 3. A **non-KO** tournament and a **Mystery KO**.
 4. A **9-max** or final-table hand (positions beyond 6-max).
