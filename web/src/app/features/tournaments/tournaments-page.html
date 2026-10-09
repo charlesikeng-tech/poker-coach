@@ -1,0 +1,175 @@
+<ng-container *transloco="let t; prefix: 'pages.tournaments'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (unconfirmedAccounts()) {
+    <p class="notice" role="status">
+      <app-icon [icon]="icons.CircleAlert" />
+      <span>{{ t('unconfirmed') }}</span>
+      <a routerLink="/import">{{ t('unconfirmedAction') }}</a>
+    </p>
+  }
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (data(); as data) {
+    @if (data.totalCount === 0 && !filtered()) {
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      <div class="filters">
+        <label>
+          <span>{{ t('filters.period') }}</span>
+          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+            @for (option of periods; track option) {
+              <option [value]="option">{{ t('filters.periods.' + option) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>{{ t('filters.buyIn') }}</span>
+          <select [value]="buyIn()" (change)="setBuyIn($any($event.target).value)">
+            @for (option of buyIns; track option) {
+              <option [value]="option">{{ t('filters.buyIns.' + option) }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <dl class="totals" [class.totals--stale]="state() === 'loading'">
+        <div>
+          <dt>{{ t('totals.profit') }}</dt>
+          <dd class="numeric" [attr.data-sign]="sign(data.totals.profit)">
+            {{ signedMoney(data.totals.profit) }}
+          </dd>
+        </div>
+        <div>
+          <dt>{{ t('totals.roi') }}</dt>
+          <dd class="numeric" [attr.data-sign]="sign(data.totals.roi)">
+            {{ percent(data.totals.roi) }}
+          </dd>
+        </div>
+        <div>
+          <dt>{{ t('totals.buyIns') }}</dt>
+          <dd class="numeric">{{ money(data.totals.buyIns) }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('totals.winnings') }}</dt>
+          <dd class="numeric">{{ money(data.totals.winnings) }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('totals.tournaments') }}</dt>
+          <dd class="numeric">
+            {{ integer(data.totals.tournaments) }}
+            @if (data.totals.entries > data.totals.tournamentsWithResult) {
+              <small>{{ t('totals.entries', { count: data.totals.entries }) }}</small>
+            }
+          </dd>
+        </div>
+      </dl>
+      @if (data.totals.tournamentsWithResult < data.totals.tournaments) {
+        <p class="hint">
+          {{
+            t('totals.excluded', {
+              count: data.totals.tournaments - data.totals.tournamentsWithResult,
+            })
+          }}
+        </p>
+      }
+
+      @if (data.totalCount === 0) {
+        <p class="hint">{{ t('noMatch') }}</p>
+      } @else {
+        <div class="table-wrap" [class.table-wrap--stale]="state() === 'loading'">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{{ t('columns.date') }}</th>
+                <th scope="col">{{ t('columns.name') }}</th>
+                <th scope="col" class="num">{{ t('columns.buyIn') }}</th>
+                <th scope="col" class="num optional">{{ t('columns.entries') }}</th>
+                <th scope="col" class="num">{{ t('columns.position') }}</th>
+                <th scope="col" class="num optional">{{ t('columns.winnings') }}</th>
+                <th scope="col" class="num">{{ t('columns.profit') }}</th>
+                <th scope="col" class="num optional">{{ t('columns.hands') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (tournament of data.items; track tournament.id) {
+                <tr>
+                  <td class="date">{{ date(tournament.startedAt) }}</td>
+                  <td class="name">{{ tournament.name }}</td>
+                  <td class="num numeric">{{ money(tournament.buyIn) }}</td>
+                  <td class="num numeric optional">{{ integer(tournament.result.entries) }}</td>
+                  <td class="num numeric">
+                    @if (tournament.finishPosition !== null) {
+                      {{ integer(tournament.finishPosition) }}
+                      <span class="of">/ {{ integer(tournament.registeredPlayers) }}</span>
+                    } @else {
+                      —
+                    }
+                  </td>
+                  @if (tournament.result.status === 'known') {
+                    <td class="num numeric optional">{{ money(winnings(tournament)) }}</td>
+                    <td class="num numeric" [attr.data-sign]="sign(tournament.result.profit)">
+                      {{ signedMoney(tournament.result.profit) }}
+                    </td>
+                  } @else {
+                    <td class="num optional"></td>
+                    <td class="num">
+                      <span
+                        class="chip"
+                        [attr.title]="t('status.' + tournament.result.status + 'Hint')"
+                      >
+                        {{ t('status.' + tournament.result.status) }}
+                      </span>
+                    </td>
+                  }
+                  <td class="num numeric optional">{{ integer(tournament.handCount) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (pageCount() > 1) {
+          <nav class="pager" [attr.aria-label]="t('pager.label')">
+            <button
+              appButton
+              variant="ghost"
+              [disabled]="page() === 1"
+              [attr.aria-label]="t('pager.previous')"
+              (click)="page.set(page() - 1)"
+            >
+              <app-icon [icon]="icons.ChevronLeft" />
+            </button>
+            <span class="numeric">{{
+              t('pager.position', { page: page(), count: pageCount() })
+            }}</span>
+            <button
+              appButton
+              variant="ghost"
+              [disabled]="page() >= pageCount()"
+              [attr.aria-label]="t('pager.next')"
+              (click)="page.set(page() + 1)"
+            >
+              <app-icon [icon]="icons.ChevronRight" />
+            </button>
+          </nav>
+        }
+      }
+    }
+  } @else {
+    <p class="hint" role="status">{{ t('loading') }}</p>
+  }
+</ng-container>

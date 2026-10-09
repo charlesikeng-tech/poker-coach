@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Tournaments;
 using PokerCoach.HandHistories;
 using PokerCoach.HandHistories.Winamax;
 using PokerCoach.Infrastructure;
@@ -51,6 +52,7 @@ public sealed class PostgresFixture : IAsyncLifetime
         collection.AddScoped<ImportService>();
         collection.AddScoped<ImportProcessor>();
         collection.AddScoped<PokerAccountService>();
+        collection.AddScoped<TournamentListService>();
         collection.AddScoped<ExternalSignInService>();
         services = collection.BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true, ValidateOnBuild = false });
 

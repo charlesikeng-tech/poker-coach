@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Tournaments;
 using PokerCoach.Domain.Identity;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
@@ -16,6 +18,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
     private const string CassiopeiaHands = "20260905_CASSIOPEIA_1161415333__real_holdem_no-limit.txt";
     private const string CassiopeiaSummary = "20260905_CASSIOPEIA_1161415333__real_holdem_no-limit_summary.txt";
     private const string AcceleratorHands = "20260916_ACCELERATOR_1169257027__real_holdem_no-limit.txt";
+    private const string AcceleratorSummary = "20260916_ACCELERATOR_1169257027__real_holdem_no-limit_summary.txt";
     private const string AsteroidSummary = "20261003_ASTEROID_1178140542__real_holdem_no-limit_summary.txt";
 
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
@@ -133,6 +136,37 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
             .Select(e => e.FinishPosition)
             .ToListAsync(Ct);
         Assert.Equal(new int?[] { 1151, 978 }, entries);
+    }
+
+    [Fact]
+    public async Task Tournaments_count_once_the_account_is_confirmed()
+    {
+        var userId = await CreateUserAsync();
+        await UploadAsync(
+            userId,
+            (AcceleratorHands, Golden(AcceleratorHands)),
+            (AcceleratorSummary, Golden(AcceleratorSummary)),
+            (AsteroidSummary, Golden(AsteroidSummary)),
+            (CassiopeiaHands, Golden(CassiopeiaHands)));
+        await ProcessQueueAsync();
+
+        await using var scope = fixture.Services.CreateAsyncScope();
+        var tournaments = scope.ServiceProvider.GetRequiredService<TournamentListService>();
+        var filter = new TournamentFilter(null, null, null, null, 1, 50);
+        Assert.Equal(0, (await tournaments.ListAsync(userId, filter, Ct)).TotalCount);
+
+        var accounts = scope.ServiceProvider.GetRequiredService<PokerAccountService>();
+        await accounts.ConfirmAsync(userId, Assert.Single(await accounts.ListAsync(userId, Ct)).Id, Ct);
+        var page = await tournaments.ListAsync(userId, filter, Ct);
+
+        // ACCELERATOR: 5 € in, 44.28 € back. ASTEROID: two 5 € entries, nothing back.
+        // CASSIOPEIA: hands only, no summary: listed, not counted.
+        Assert.Equal(new TournamentTotals(3, 2, 3, 15m, 44.28m, 29.28m, 1.952m), page.Totals);
+        var accelerator = page.Items.Single(i => i.Name == "ACCELERATOR");
+        Assert.Equal(222, accelerator.HandCount);
+        Assert.Equal(11, accelerator.FinishPosition);
+        Assert.Equal(TournamentResultStatus.MissingSummary, page.Items.Single(i => i.Name == "CASSIOPEIA").Result.Status);
+        Assert.Equal(new[] { "ASTEROID", "ACCELERATOR", "CASSIOPEIA" }, page.Items.Select(i => i.Name).ToArray());
     }
 
     [Fact]

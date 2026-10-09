@@ -7,9 +7,11 @@ using PokerCoach.Api.Errors;
 using PokerCoach.Api.Health;
 using PokerCoach.Api.Import;
 using PokerCoach.Api.Poker;
+using PokerCoach.Api.Tournaments;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Tournaments;
 using PokerCoach.HandHistories;
 using PokerCoach.HandHistories.Winamax;
 using PokerCoach.Infrastructure;
@@ -39,6 +41,7 @@ builder.Services.AddSingleton<IHandHistoryProvider, WinamaxHandHistoryProvider>(
 builder.Services.AddScoped<ImportService>();
 builder.Services.AddScoped<ImportProcessor>();
 builder.Services.AddScoped<PokerAccountService>();
+builder.Services.AddScoped<TournamentListService>();
 
 var app = builder.Build();
 
@@ -73,6 +76,7 @@ app.MapAuthEndpoints();
 app.MapAccountEndpoints();
 app.MapImportEndpoints();
 app.MapPokerAccountEndpoints();
+app.MapTournamentEndpoints();
 
 app.Run();
 

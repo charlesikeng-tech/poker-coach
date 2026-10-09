@@ -48,6 +48,64 @@
         "title": "Todavía no hay torneos",
         "description": "Los torneos importados aparecen aquí con su buy-in, su resultado y tu posición final.",
         "action": "Importar archivos"
+      },
+      "unconfirmed": "Algunas cuentas de Winamax importadas aún no están confirmadas: sus torneos no aparecen.",
+      "unconfirmedAction": "Confirmar en la página de importación",
+      "loading": "Cargando tus torneos…",
+      "error": {
+        "title": "No se han podido cargar tus torneos",
+        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "filters": {
+        "period": "Periodo",
+        "buyIn": "Buy-in",
+        "periods": {
+          "all": "Desde el principio",
+          "7d": "Últimos 7 días",
+          "30d": "Últimos 30 días",
+          "90d": "Últimos 90 días",
+          "year": "Este año"
+        },
+        "buyIns": {
+          "all": "Todos los buy-ins",
+          "upTo5": "Hasta 5 €",
+          "upTo10": "Hasta 10 €",
+          "upTo20": "Hasta 20 €",
+          "over20": "Más de 20 €"
+        }
+      },
+      "totals": {
+        "profit": "Beneficio",
+        "roi": "ROI",
+        "buyIns": "Buy-ins",
+        "winnings": "Ganancias",
+        "tournaments": "Torneos",
+        "entries": "{{count}} entradas",
+        "excluded": "{{count}} torneo(s) sin archivo de resumen aparecen en la lista pero no cuentan en estos totales: importa su resumen para incluirlos."
+      },
+      "noMatch": "Ningún torneo coincide con estos filtros.",
+      "columns": {
+        "date": "Fecha",
+        "name": "Torneo",
+        "buyIn": "Buy-in",
+        "entries": "Entradas",
+        "position": "Puesto",
+        "winnings": "Ganancias",
+        "profit": "Beneficio",
+        "hands": "Manos"
+      },
+      "status": {
+        "missingSummary": "Sin resumen",
+        "missingSummaryHint": "Solo se importaron las manos: importa el resumen del torneo para obtener el resultado.",
+        "incomplete": "Incompleto",
+        "incompleteHint": "El resumen no incluye todo lo necesario para calcular el resultado."
+      },
+      "pager": {
+        "label": "Páginas",
+        "previous": "Página anterior",
+        "next": "Página siguiente",
+        "position": "Página {{page}} de {{count}}"
       }
     },
     "sessions": {

@@ -48,6 +48,64 @@
         "title": "Aucun tournoi pour l'instant",
         "description": "Les tournois importés apparaissent ici avec leur buy-in, leur résultat et ta place finale.",
         "action": "Importer des fichiers"
+      },
+      "unconfirmed": "Certains comptes Winamax importés ne sont pas encore confirmés : leurs tournois ne sont pas listés.",
+      "unconfirmedAction": "Confirmer sur la page d'import",
+      "loading": "Chargement de vos tournois…",
+      "error": {
+        "title": "Impossible de charger vos tournois",
+        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "retry": "Réessayer"
+      },
+      "filters": {
+        "period": "Période",
+        "buyIn": "Buy-in",
+        "periods": {
+          "all": "Depuis le début",
+          "7d": "7 derniers jours",
+          "30d": "30 derniers jours",
+          "90d": "90 derniers jours",
+          "year": "Cette année"
+        },
+        "buyIns": {
+          "all": "Tous les buy-ins",
+          "upTo5": "Jusqu'à 5 €",
+          "upTo10": "Jusqu'à 10 €",
+          "upTo20": "Jusqu'à 20 €",
+          "over20": "Plus de 20 €"
+        }
+      },
+      "totals": {
+        "profit": "Profit",
+        "roi": "ROI",
+        "buyIns": "Buy-ins",
+        "winnings": "Gains",
+        "tournaments": "Tournois",
+        "entries": "{{count}} entrées",
+        "excluded": "{{count}} tournoi(s) sans fichier de résumé sont listés mais pas comptés dans ces totaux : importez leur résumé pour les inclure."
+      },
+      "noMatch": "Aucun tournoi ne correspond à ces filtres.",
+      "columns": {
+        "date": "Date",
+        "name": "Tournoi",
+        "buyIn": "Buy-in",
+        "entries": "Entrées",
+        "position": "Place",
+        "winnings": "Gains",
+        "profit": "Profit",
+        "hands": "Mains"
+      },
+      "status": {
+        "missingSummary": "Sans résumé",
+        "missingSummaryHint": "Seules les mains ont été importées : importez le résumé du tournoi pour obtenir le résultat.",
+        "incomplete": "Incomplet",
+        "incompleteHint": "Le résumé ne donne pas tout ce qu'il faut pour calculer le résultat."
+      },
+      "pager": {
+        "label": "Pages",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "position": "Page {{page}} sur {{count}}"
       }
     },
     "sessions": {

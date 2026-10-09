@@ -5,10 +5,12 @@ using Microsoft.Extensions.Options;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Tournaments;
 using PokerCoach.Infrastructure.Identity;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Infrastructure.Poker;
+using PokerCoach.Infrastructure.Tournaments;
 
 namespace PokerCoach.Infrastructure;
 
@@ -34,6 +36,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IUserAccountStore, UserAccountStore>();
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
+        services.AddScoped<ITournamentReadStore, TournamentReadStore>();
 
         // Starts only when Import:WorkerEnabled is true (default); needs ImportProcessor and ImportOptions
         // registered by the host.

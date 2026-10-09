@@ -48,6 +48,64 @@
         "title": "No tournaments yet",
         "description": "Imported tournaments are listed here with their buy-in, result and finish position.",
         "action": "Import files"
+      },
+      "unconfirmed": "Some of your imported Winamax accounts are not confirmed yet: their tournaments are not listed.",
+      "unconfirmedAction": "Confirm on the import page",
+      "loading": "Loading your tournaments…",
+      "error": {
+        "title": "Your tournaments could not be loaded",
+        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "retry": "Try again"
+      },
+      "filters": {
+        "period": "Period",
+        "buyIn": "Buy-in",
+        "periods": {
+          "all": "All time",
+          "7d": "Last 7 days",
+          "30d": "Last 30 days",
+          "90d": "Last 90 days",
+          "year": "This year"
+        },
+        "buyIns": {
+          "all": "All buy-ins",
+          "upTo5": "Up to €5",
+          "upTo10": "Up to €10",
+          "upTo20": "Up to €20",
+          "over20": "Over €20"
+        }
+      },
+      "totals": {
+        "profit": "Profit",
+        "roi": "ROI",
+        "buyIns": "Buy-ins",
+        "winnings": "Winnings",
+        "tournaments": "Tournaments",
+        "entries": "{{count}} entries",
+        "excluded": "{{count}} tournament(s) without a summary file are listed but not counted in these totals: import their summary to include them."
+      },
+      "noMatch": "No tournament matches these filters.",
+      "columns": {
+        "date": "Date",
+        "name": "Tournament",
+        "buyIn": "Buy-in",
+        "entries": "Entries",
+        "position": "Finish",
+        "winnings": "Winnings",
+        "profit": "Profit",
+        "hands": "Hands"
+      },
+      "status": {
+        "missingSummary": "No summary",
+        "missingSummaryHint": "Only the hands were imported: import the tournament summary to get the result.",
+        "incomplete": "Incomplete",
+        "incompleteHint": "The summary does not give everything needed to compute the result."
+      },
+      "pager": {
+        "label": "Pages",
+        "previous": "Previous page",
+        "next": "Next page",
+        "position": "Page {{page}} of {{count}}"
       }
     },
     "sessions": {

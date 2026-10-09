@@ -136,3 +136,12 @@ Phase 2 — Import (MVP-1, ADR-0005):
 - [x] Poker accounts detected from files: list, confirm, "not me" (`/api/poker-accounts`)
 - [x] Migration `Import`
 - [x] Web: import page (drag & drop of files, folders or zip; progress; account confirmation)
+- [x] Re-entries (one tournament entry per summary block), late registration, bounty-only winnings
+
+Phase 3 — Tournaments (MVP-1):
+
+- [x] `GET /api/tournaments`: confirmed accounts only, period and buy-in filters, paging, totals
+- [x] Result rule (domain `TournamentResult`): profit = prize + bounties − buy-in × entries; a summary
+      without a "You won" line but with a finish position means zero; no summary means unknown, excluded
+      from totals
+- [x] Web: tournaments page (totals, filters, table, missing-summary marker)
