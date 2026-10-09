@@ -801,9 +801,7 @@
         "description": "Import your hands: every spot where you are first in fills your grid.",
         "action": "Import files"
       },
-      "noMatch": "No opening spot for these filters.",
       "period": "Period",
-      "stack": "Stack",
       "periods": {
         "all": "Since the start",
         "7d": "Last 7 days",
@@ -811,23 +809,15 @@
         "90d": "Last 90 days",
         "year": "This year"
       },
-      "stacks": {
-        "all": "All stacks",
-        "over15": "15 BB and more",
-        "under15": "Under 15 BB",
-        "from15To30": "15 to 30 BB",
-        "from30To50": "30 to 50 BB",
-        "over50": "Over 50 BB"
-      },
       "positions": "Positions",
-      "gridLabel": "Actual range from {{position}}",
       "cellLabel": "{{hand}}: dealt {{dealt}} times, raised {{opens}}, limped {{limps}}",
       "summary": {
         "title": "Opening from {{position}}",
         "counts": "{{opens}} raises in {{dealt}} spots",
         "limps": "{{count}} limp(s)",
         "gauge": "Reference {{min}} to {{max}}",
-        "reference": "Reference v{{version}}: {{min}} to {{max}} (€5–20 MTT, 15 BB and more)."
+        "none": "No opening spot at this position for these filters.",
+        "reference": "Reference rate: {{min}} to {{max}}."
       },
       "detail": {
         "hint": "Hover a cell to see how often you were dealt that hand and what you did with it.",
@@ -836,16 +826,53 @@
         "opens": "Raised",
         "limps": "Limped",
         "folds": "Folded",
-        "thin": "Too few occurrences to conclude anything."
+        "thin": "Too few occurrences to conclude anything.",
+        "inReference": "In the reference",
+        "outReference": "Not in the reference"
       },
       "legend": {
         "open": "Raised share",
         "limp": "Limped share",
         "fold": "Folded",
         "never": "Never dealt",
-        "sample": "The small number is how many times you were dealt the hand. A pale cell rests on fewer than 3 occurrences."
+        "sample": "The small number is how many times you were dealt the hand. A pale cell rests on fewer than 3 occurrences.",
+        "refOpen": "Opened by the reference",
+        "refFold": "Folded by the reference",
+        "match": "Like the reference",
+        "tooLoose": "Opened, not in the reference",
+        "tooTight": "Folded, though the reference opens it",
+        "neverGap": "Never dealt (gold edge: in the reference)"
       },
-      "method": "Counted on your real hands, when everyone before you folded. Coming next: the reference range cell by cell, and training (ADR-0009)."
+      "method": "Your range is counted on your real hands, when everyone before you folded. Positions are named by distance to the button: \"UTG\" 6-handed counts as LJ. Reference v{{version}} (ADR-0009).",
+      "band": "Stack",
+      "bands": {
+        "short": "15 to 25 BB",
+        "mid": "25 to 40 BB",
+        "deep": "40 BB and more"
+      },
+      "view": "View",
+      "views": {
+        "mine": "My range",
+        "reference": "Reference",
+        "gap": "Gap"
+      },
+      "gridLabel": {
+        "mine": "Your actual range from {{position}}",
+        "reference": "Reference range from {{position}}",
+        "gap": "Gap with the reference from {{position}}"
+      },
+      "reference": {
+        "title": "Reference v{{version}} · {{position}}",
+        "share": "of starting hands (in combinations)",
+        "note": "Our conventions for €5–20 online MTTs with antes, written hand by hand (open or not). This is not a GTO computation."
+      },
+      "gap": {
+        "title": "Gap · {{position}}",
+        "none": "No hand played in this spot for these filters.",
+        "tooLoose": "{{count}} hand(s) opened outside the reference",
+        "tooTight": "{{count}} reference hand(s) you fold",
+        "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
+      }
     }
   },
   "welcome": {

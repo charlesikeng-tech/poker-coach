@@ -84,7 +84,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         return new StatisticsSample(tournaments.Count, tournaments.Count(t => t.Complete));
     }
 
-    /// <summary>One query grouped by position and exact holding: at most 1,326 rows per position leave the database.</summary>
+    /// <summary>One query grouped by position, table size and exact holding: a few thousand rows at most.</summary>
     public async Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
         Guid userId,
         StatisticsFilter filter,
@@ -93,10 +93,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
     {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.RfiOpportunity && x.F.Position != null && x.HeroCards != null)
-            .GroupBy(x => new { x.F.Position, x.HeroCards })
+            .GroupBy(x => new { x.F.Position, x.F.PlayersDealt, x.HeroCards })
             .Select(g => new
             {
                 g.Key.Position,
+                g.Key.PlayersDealt,
                 g.Key.HeroCards,
                 Dealt = g.Count(),
                 Opens = g.Count(x => x.F.Rfi),
@@ -105,7 +106,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToListAsync(cancellationToken);
 
         return rows
-            .Select(r => new OpeningHoldingCount(r.Position!.Value, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
+            .Select(r => new OpeningHoldingCount(r.Position!.Value, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
             .ToList();
     }
 

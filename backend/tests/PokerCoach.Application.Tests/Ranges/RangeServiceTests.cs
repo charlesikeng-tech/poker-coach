@@ -1,35 +1,39 @@
 using PokerCoach.Application.Ranges;
 using PokerCoach.Domain.Poker.Analysis;
+using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Application.Tests.Ranges;
 
 public sealed class RangeServiceTests
 {
     [Fact]
-    public void Holdings_of_one_class_are_summed_and_every_hand_is_listed()
+    public void Holdings_are_summed_per_hand_and_seat_and_compared_with_the_reference()
     {
         var positions = RangeService.Build(
-        [
-            new OpeningHoldingCount(PokerPosition.Button, "AhKd", 3, 3, 0),
-            new OpeningHoldingCount(PokerPosition.Button, "KsAc", 2, 1, 1),
-            new OpeningHoldingCount(PokerPosition.Button, "7h2c", 4, 0, 0),
-            new OpeningHoldingCount(PokerPosition.Utg, "AsAd", 1, 1, 0),
-            // Unreadable: left out, not guessed.
-            new OpeningHoldingCount(PokerPosition.Utg, "??", 5, 5, 0),
-        ]);
+            StackBand.Deep,
+            [
+                new OpeningHoldingCount(PokerPosition.Button, 6, "AhKd", 3, 3, 0),
+                new OpeningHoldingCount(PokerPosition.Button, 9, "KsAc", 2, 1, 1),
+                new OpeningHoldingCount(PokerPosition.Button, 6, "7h2c", 4, 0, 0),
+                // UTG at a 6-handed table is the lojack: counted there.
+                new OpeningHoldingCount(PokerPosition.Utg, 6, "AsAd", 1, 1, 0),
+                // Unreadable: left out, not guessed.
+                new OpeningHoldingCount(PokerPosition.Button, 6, "??", 5, 5, 0),
+            ]);
 
-        Assert.Equal(new[] { PokerPosition.Utg, PokerPosition.Button }, positions.Select(p => p.Position));
+        Assert.Equal(ReferenceOpeningRanges.Positions, positions.Select(p => p.Position));
 
-        var button = positions[1];
+        var button = positions.Single(p => p.Position == PokerPosition.Button);
         Assert.Equal(169, button.Cells.Count);
         var ako = button.Cells.Single(c => c.Hand.ToString() == "AKo");
-        Assert.Equal((5, 4, 1), (ako.Dealt, ako.Opens, ako.Limps));
+        Assert.Equal((5, 4, 1, true), (ako.Dealt, ako.Opens, ako.Limps, ako.InReference));
+        Assert.False(button.Cells.Single(c => c.Hand.ToString() == "72o").InReference);
         Assert.Equal(9, button.Dealt);
-        Assert.Equal(4, button.Opens);
         Assert.Equal(0.4444m, button.OpenRate.Rate);
-        Assert.NotNull(button.Reference);
-        Assert.Equal(0, button.Cells.Single(c => c.Hand.ToString() == "AA").Dealt);
+        Assert.NotNull(button.ReferenceRate);
+        Assert.NotNull(button.ReferenceNotation);
 
-        Assert.Equal(1, positions[0].Dealt);
+        Assert.Equal(1, positions.Single(p => p.Position == PokerPosition.Lojack).Dealt);
+        Assert.Equal(0, positions.Single(p => p.Position == PokerPosition.Utg).Dealt);
     }
 }

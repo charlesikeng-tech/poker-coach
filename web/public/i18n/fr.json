@@ -801,9 +801,7 @@
         "description": "Importe tes mains : chaque spot où tu es premier à parler remplit ta grille.",
         "action": "Importer des fichiers"
       },
-      "noMatch": "Aucun spot d'ouverture pour ces filtres.",
       "period": "Période",
-      "stack": "Tapis",
       "periods": {
         "all": "Depuis le début",
         "7d": "7 derniers jours",
@@ -811,23 +809,15 @@
         "90d": "90 derniers jours",
         "year": "Cette année"
       },
-      "stacks": {
-        "all": "Tous les tapis",
-        "over15": "15 BB et plus",
-        "under15": "Moins de 15 BB",
-        "from15To30": "15 à 30 BB",
-        "from30To50": "30 à 50 BB",
-        "over50": "Plus de 50 BB"
-      },
       "positions": "Positions",
-      "gridLabel": "Range réelle depuis {{position}}",
       "cellLabel": "{{hand}} : reçue {{dealt}} fois, relancée {{opens}}, limpée {{limps}}",
       "summary": {
         "title": "Ouverture depuis {{position}}",
         "counts": "{{opens}} relances sur {{dealt}} spots",
         "limps": "{{count}} limp(s)",
         "gauge": "Repère {{min}} à {{max}}",
-        "reference": "Repère v{{version}} : {{min}} à {{max}} (MTT 5–20 €, 15 BB et plus)."
+        "none": "Aucun spot d'ouverture à cette position pour ces filtres.",
+        "reference": "Taux de référence : {{min}} à {{max}}."
       },
       "detail": {
         "hint": "Survole une case pour voir combien de fois tu as reçu cette main et ce que tu en as fait.",
@@ -836,16 +826,53 @@
         "opens": "Relancée",
         "limps": "Limpée",
         "folds": "Couchée",
-        "thin": "Trop peu d'occurrences pour en tirer une conclusion."
+        "thin": "Trop peu d'occurrences pour en tirer une conclusion.",
+        "inReference": "Dans le repère",
+        "outReference": "Hors repère"
       },
       "legend": {
         "open": "Part relancée",
         "limp": "Part limpée",
         "fold": "Couchée",
         "never": "Jamais reçue",
-        "sample": "Le petit chiffre indique combien de fois tu as reçu la main. Une case pâle repose sur moins de 3 occurrences."
+        "sample": "Le petit chiffre indique combien de fois tu as reçu la main. Une case pâle repose sur moins de 3 occurrences.",
+        "refOpen": "Ouverte par le repère",
+        "refFold": "Couchée par le repère",
+        "match": "Comme le repère",
+        "tooLoose": "Ouverte, hors repère",
+        "tooTight": "Couchée, alors que le repère l'ouvre",
+        "neverGap": "Jamais reçue (bord or : dans le repère)"
       },
-      "method": "Comptées sur tes mains réelles, quand tout le monde avant toi s'est couché. Bientôt : la range de référence case par case et l'entraînement (ADR-0009)."
+      "method": "Ta range est comptée sur tes mains réelles, quand tout le monde avant toi s'est couché. Les positions sont nommées par leur distance au bouton : « UTG » à 6 joueurs compte comme LJ. Repère v{{version}} (ADR-0009).",
+      "band": "Tapis",
+      "bands": {
+        "short": "15 à 25 BB",
+        "mid": "25 à 40 BB",
+        "deep": "40 BB et plus"
+      },
+      "view": "Affichage",
+      "views": {
+        "mine": "Ma range",
+        "reference": "Repère",
+        "gap": "Écart"
+      },
+      "gridLabel": {
+        "mine": "Ta range réelle depuis {{position}}",
+        "reference": "Range de référence depuis {{position}}",
+        "gap": "Écart avec la référence depuis {{position}}"
+      },
+      "reference": {
+        "title": "Repère v{{version}} · {{position}}",
+        "share": "des mains de départ (en combinaisons)",
+        "note": "Nos conventions pour des MTT en ligne à 5–20 € avec antes, écrites main par main (ouvre ou non). Ce n'est pas un calcul GTO."
+      },
+      "gap": {
+        "title": "Écart · {{position}}",
+        "none": "Aucune main jouée dans ce spot pour ces filtres.",
+        "tooLoose": "{{count}} main(s) ouvertes hors du repère",
+        "tooTight": "{{count}} main(s) du repère que tu couches",
+        "rule": "Une main compte comme « ouverte » si tu la relances au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
+      }
     }
   },
   "welcome": {

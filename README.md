@@ -187,7 +187,9 @@ Ranges (ADR-0009):
 - [x] `GET /api/ranges/opening`: actual opening range per position from the player's hands (RFI
       spots, per-hand counts, never extrapolated), against the position's reference rate
 - [x] Web: Ranges page (position tabs, animated 13×13 grid with raise/limp shares and counts)
-- [ ] Reference ranges per position and stack band; trainer; push/fold equilibrium below 15 BB
+- [x] Reference opening ranges v1 per position and stack band (`ReferenceOpeningRanges`, range
+      notation parser, seats named by distance to the button), compared hand by hand (gap view)
+- [ ] Trainer; push/fold equilibrium below 15 BB
 
 MVP-3 — Leaks (ADR-0007):
 

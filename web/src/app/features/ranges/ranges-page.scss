@@ -42,6 +42,34 @@
   }
 }
 
+.views {
+  display: inline-flex;
+  align-self: flex-end;
+  padding: 2px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+
+  button {
+    padding: var(--space-1) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: background-color var(--motion-fast) var(--easing-standard);
+
+    &.active {
+      background: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+      color: var(--accent-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--focus-ring);
+    }
+  }
+}
+
 .hint,
 .method,
 .muted {
@@ -225,6 +253,34 @@
   }
 }
 
+// Reference view: the hands the reference opens, solid gold.
+.cell[data-view='reference'].cell--in .cell__fill {
+  background: var(--accent-primary);
+}
+
+// Gap view: agreement in muted green, the two kinds of disagreement in red and blue; the reference
+// outline stays visible on hands never dealt.
+.cell[data-gap] .cell__fill {
+  background: var(--gap-color, transparent);
+  opacity: 0.8;
+}
+
+.cell[data-gap='match'] {
+  --gap-color: color-mix(in srgb, var(--success) 45%, transparent);
+}
+
+.cell[data-gap='tooLoose'] {
+  --gap-color: var(--danger);
+}
+
+.cell[data-gap='tooTight'] {
+  --gap-color: #5f9fd6;
+}
+
+.cell[data-gap='never'].cell--in {
+  border: 1px dashed color-mix(in srgb, var(--accent-primary) 60%, transparent);
+}
+
 // Side ----------------------------------------------------------------------------------------------
 
 .side {
@@ -315,6 +371,60 @@
 .swatch--fold {
   border: 1px solid var(--border-default);
   background: var(--surface-secondary);
+}
+
+.swatch--match {
+  background: color-mix(in srgb, var(--success) 45%, transparent);
+}
+
+.swatch--loose {
+  background: var(--danger);
+}
+
+.swatch--tight {
+  background: #5f9fd6;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hands {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.6;
+}
+
+.notation {
+  display: block;
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface-secondary) 70%, transparent);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  white-space: normal;
+}
+
+.tag {
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  vertical-align: middle;
+}
+
+.tag--in {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }
 
 .swatch--never {

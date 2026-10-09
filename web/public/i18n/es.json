@@ -801,9 +801,7 @@
         "description": "Importa tus manos: cada spot en el que eres el primero en hablar llena tu cuadrícula.",
         "action": "Importar archivos"
       },
-      "noMatch": "Ningún spot de apertura para estos filtros.",
       "period": "Periodo",
-      "stack": "Stack",
       "periods": {
         "all": "Desde el principio",
         "7d": "Últimos 7 días",
@@ -811,23 +809,15 @@
         "90d": "Últimos 90 días",
         "year": "Este año"
       },
-      "stacks": {
-        "all": "Todos los stacks",
-        "over15": "15 BB o más",
-        "under15": "Menos de 15 BB",
-        "from15To30": "15 a 30 BB",
-        "from30To50": "30 a 50 BB",
-        "over50": "Más de 50 BB"
-      },
       "positions": "Posiciones",
-      "gridLabel": "Rango real desde {{position}}",
       "cellLabel": "{{hand}}: recibida {{dealt}} veces, subida {{opens}}, limpeada {{limps}}",
       "summary": {
         "title": "Apertura desde {{position}}",
         "counts": "{{opens}} subidas en {{dealt}} spots",
         "limps": "{{count}} limp(s)",
         "gauge": "Referencia {{min}} a {{max}}",
-        "reference": "Referencia v{{version}}: {{min}} a {{max}} (MTT 5–20 €, 15 BB o más)."
+        "none": "Ningún spot de apertura en esta posición con estos filtros.",
+        "reference": "Tasa de referencia: {{min}} a {{max}}."
       },
       "detail": {
         "hint": "Pasa el ratón por una casilla para ver cuántas veces recibiste esa mano y qué hiciste.",
@@ -836,16 +826,53 @@
         "opens": "Subida",
         "limps": "Limpeada",
         "folds": "Retirada",
-        "thin": "Muy pocas ocurrencias para sacar conclusiones."
+        "thin": "Muy pocas ocurrencias para sacar conclusiones.",
+        "inReference": "En la referencia",
+        "outReference": "Fuera de la referencia"
       },
       "legend": {
         "open": "Parte subida",
         "limp": "Parte limpeada",
         "fold": "Retirada",
         "never": "Nunca recibida",
-        "sample": "El número pequeño es cuántas veces recibiste la mano. Una casilla pálida se basa en menos de 3 ocurrencias."
+        "sample": "El número pequeño es cuántas veces recibiste la mano. Una casilla pálida se basa en menos de 3 ocurrencias.",
+        "refOpen": "Abierta por la referencia",
+        "refFold": "Tirada por la referencia",
+        "match": "Como la referencia",
+        "tooLoose": "Abierta, fuera de la referencia",
+        "tooTight": "Tirada, aunque la referencia la abre",
+        "neverGap": "Nunca recibida (borde dorado: en la referencia)"
       },
-      "method": "Contadas en tus manos reales, cuando todos antes que tú se retiraron. Próximamente: el rango de referencia casilla por casilla y el entrenamiento (ADR-0009)."
+      "method": "Tu rango se cuenta en tus manos reales, cuando todos antes que tú se retiraron. Las posiciones se nombran por su distancia al botón: «UTG» con 6 jugadores cuenta como LJ. Referencia v{{version}} (ADR-0009).",
+      "band": "Stack",
+      "bands": {
+        "short": "15 a 25 BB",
+        "mid": "25 a 40 BB",
+        "deep": "40 BB o más"
+      },
+      "view": "Vista",
+      "views": {
+        "mine": "Mi rango",
+        "reference": "Referencia",
+        "gap": "Diferencia"
+      },
+      "gridLabel": {
+        "mine": "Tu rango real desde {{position}}",
+        "reference": "Rango de referencia desde {{position}}",
+        "gap": "Diferencia con la referencia desde {{position}}"
+      },
+      "reference": {
+        "title": "Referencia v{{version}} · {{position}}",
+        "share": "de las manos iniciales (en combinaciones)",
+        "note": "Nuestras convenciones para MTT online de 5–20 € con antes, escritas mano por mano (abrir o no). No es un cálculo GTO."
+      },
+      "gap": {
+        "title": "Diferencia · {{position}}",
+        "none": "Ninguna mano jugada en este spot con estos filtros.",
+        "tooLoose": "{{count}} mano(s) abiertas fuera de la referencia",
+        "tooTight": "{{count}} mano(s) de la referencia que tiras",
+        "rule": "Una mano cuenta como «abierta» si la subes al menos la mitad de las veces. Fíjate en el número pequeño: con 1 o 2 ocurrencias solo es un indicio."
+      }
     }
   },
   "welcome": {

@@ -10,183 +10,248 @@
       <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
     </app-empty-state>
   } @else if (data(); as data) {
-    @if (
-      data.positions.length === 0 &&
-      period() === 'all' &&
-      stack() === 'all' &&
-      data.pendingHands === 0
-    ) {
-      <app-empty-state
-        [icon]="icons.Upload"
-        [heading]="t('empty.title')"
-        [description]="t('empty.description')"
-      >
-        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
-      </app-empty-state>
-    } @else {
-      @if (data.pendingHands > 0) {
-        <p class="pending glass" role="status">
-          <app-icon class="spin" [icon]="icons.LoaderCircle" />
-          {{ t('pending', { count: data.pendingHands }) }}
-        </p>
-      }
+    @if (data.pendingHands > 0) {
+      <p class="pending glass" role="status">
+        <app-icon class="spin" [icon]="icons.LoaderCircle" />
+        {{ t('pending', { count: data.pendingHands }) }}
+      </p>
+    }
 
-      <div class="toolbar">
-        <label>
-          <span>{{ t('period') }}</span>
-          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
-            @for (option of periods; track option) {
-              <option [value]="option">{{ t('periods.' + option) }}</option>
-            }
-          </select>
-        </label>
-        <label>
-          <span>{{ t('stack') }}</span>
-          <select [value]="stack()" (change)="setStack($any($event.target).value)">
-            @for (option of stacks; track option) {
-              <option [value]="option">{{ t('stacks.' + option) }}</option>
-            }
-          </select>
-        </label>
-      </div>
-
-      @if (data.positions.length === 0) {
-        <p class="hint">{{ t('noMatch') }}</p>
-      } @else {
-        <nav class="positions" [attr.aria-label]="t('positions')">
-          @for (p of data.positions; track p.position) {
-            <button
-              type="button"
-              class="position"
-              [class.position--active]="range()?.position === p.position"
-              [attr.aria-pressed]="range()?.position === p.position"
-              (click)="selected.set(p.position)"
-            >
-              <strong>{{ short[p.position] }}</strong>
-              <span class="numeric">{{ percent(p.openRate.rate) }}</span>
-            </button>
+    <div class="toolbar">
+      <label>
+        <span>{{ t('band') }}</span>
+        <select [value]="band()" (change)="setBand($any($event.target).value)">
+          @for (option of bands; track option) {
+            <option [value]="option">{{ t('bands.' + option) }}</option>
           }
-        </nav>
+        </select>
+      </label>
+      <label>
+        <span>{{ t('period') }}</span>
+        <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+          @for (option of periods; track option) {
+            <option [value]="option">{{ t('periods.' + option) }}</option>
+          }
+        </select>
+      </label>
+      <div class="views" role="group" [attr.aria-label]="t('view')">
+        @for (v of views; track v) {
+          <button
+            type="button"
+            [class.active]="view() === v"
+            [attr.aria-pressed]="view() === v"
+            (click)="view.set(v)"
+          >
+            {{ t('views.' + v) }}
+          </button>
+        }
+      </div>
+    </div>
 
-        @if (range(); as r) {
-          <div class="layout">
-            <!-- Keyed on the position: the grid fills again when it changes. -->
-            @for (shown of [r]; track shown.position) {
-              <div
-                class="grid glass"
-                role="grid"
-                [attr.aria-label]="t('gridLabel', { position: short[r.position] })"
-              >
-                @for (cell of r.cells; track cell.hand; let i = $index) {
-                  <button
-                    type="button"
-                    class="cell"
-                    role="gridcell"
-                    [class.cell--never]="cell.dealt === 0"
-                    [class.cell--thin]="cell.dealt > 0 && cell.dealt < thinSample"
-                    [style.--open]="openShare(cell)"
-                    [style.--limp]="limpShare(cell)"
-                    [style.animation-delay.ms]="delay(i)"
-                    [attr.aria-label]="
-                      t('cellLabel', {
-                        hand: cell.hand,
-                        dealt: cell.dealt,
-                        opens: cell.opens,
-                        limps: cell.limps,
-                      })
-                    "
-                    (mouseenter)="hovered.set(cell)"
-                    (focus)="hovered.set(cell)"
-                    (mouseleave)="hovered.set(null)"
-                    (blur)="hovered.set(null)"
-                  >
-                    <span class="cell__fill" aria-hidden="true"></span>
-                    <span class="cell__hand">{{ cell.hand }}</span>
-                    @if (cell.dealt > 0) {
-                      <span class="cell__count numeric">{{ cell.dealt }}</span>
-                    }
-                  </button>
-                }
-              </div>
+    <nav class="positions" [attr.aria-label]="t('positions')">
+      @for (p of data.positions; track p.position) {
+        <button
+          type="button"
+          class="position"
+          [class.position--active]="range()?.position === p.position"
+          [attr.aria-pressed]="range()?.position === p.position"
+          (click)="selected.set(p.position)"
+        >
+          <strong>{{ short[p.position] }}</strong>
+          <span class="numeric">
+            @if (view() === 'reference') {
+              {{ percent(p.referenceShare) }}
+            } @else {
+              {{ percent(p.openRate.rate) }}
             }
+          </span>
+        </button>
+      }
+    </nav>
 
-            <aside class="side">
+    @if (range(); as r) {
+      <div class="layout">
+        <!-- Keyed on position and view: the grid fills again when either changes. -->
+        @for (shown of [r.position + view()]; track shown) {
+          <div
+            class="grid glass"
+            role="grid"
+            [attr.aria-label]="t('gridLabel.' + view(), { position: short[r.position] })"
+          >
+            @for (cell of r.cells; track cell.hand; let i = $index) {
+              <button
+                type="button"
+                class="cell"
+                role="gridcell"
+                [attr.data-view]="view()"
+                [attr.data-gap]="view() === 'gap' ? gap(cell) : null"
+                [class.cell--in]="cell.inReference"
+                [class.cell--never]="view() !== 'reference' && cell.dealt === 0"
+                [class.cell--thin]="view() === 'mine' && cell.dealt > 0 && cell.dealt < thinSample"
+                [style.--open]="view() === 'mine' ? openShare(cell) : 0"
+                [style.--limp]="view() === 'mine' ? limpShare(cell) : 0"
+                [style.animation-delay.ms]="delay(i)"
+                [attr.aria-label]="
+                  t('cellLabel', {
+                    hand: cell.hand,
+                    dealt: cell.dealt,
+                    opens: cell.opens,
+                    limps: cell.limps,
+                  })
+                "
+                (mouseenter)="hovered.set(cell)"
+                (focus)="hovered.set(cell)"
+                (mouseleave)="hovered.set(null)"
+                (blur)="hovered.set(null)"
+              >
+                <span class="cell__fill" aria-hidden="true"></span>
+                <span class="cell__hand">{{ cell.hand }}</span>
+                @if (cell.dealt > 0 && view() !== 'reference') {
+                  <span class="cell__count numeric">{{ cell.dealt }}</span>
+                }
+              </button>
+            }
+          </div>
+        }
+
+        <aside class="side">
+          @switch (view()) {
+            @case ('reference') {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('reference.title', {
+                      position: short[r.position],
+                      version: data.referenceVersion,
+                    })
+                  }}
+                </h2>
+                <p class="big numeric">{{ percent(r.referenceShare) }}</p>
+                <p class="muted">{{ t('reference.share') }}</p>
+                @if (r.referenceNotation) {
+                  <code class="notation">{{ r.referenceNotation }}</code>
+                }
+                <p class="muted">{{ t('reference.note') }}</p>
+              </section>
+            }
+            @case ('gap') {
+              <section class="card glass">
+                <h2>{{ t('gap.title', { position: short[r.position] }) }}</h2>
+                @if (gapSummary().played === 0) {
+                  <p class="muted">{{ t('gap.none') }}</p>
+                } @else {
+                  <p class="line">
+                    <span class="swatch swatch--loose"></span>
+                    {{ t('gap.tooLoose', { count: gapSummary().tooLoose.length }) }}
+                  </p>
+                  @if (gapSummary().tooLoose.length > 0) {
+                    <p class="hands">{{ gapSummary().tooLoose.join(' · ') }}</p>
+                  }
+                  <p class="line">
+                    <span class="swatch swatch--tight"></span>
+                    {{ t('gap.tooTight', { count: gapSummary().tooTight.length }) }}
+                  </p>
+                  @if (gapSummary().tooTight.length > 0) {
+                    <p class="hands">{{ gapSummary().tooTight.join(' · ') }}</p>
+                  }
+                  <p class="muted">{{ t('gap.rule') }}</p>
+                }
+              </section>
+            }
+            @default {
               <section class="card glass">
                 <h2>{{ t('summary.title', { position: short[r.position] }) }}</h2>
-                <p class="big numeric">{{ percent(r.openRate.rate) }}</p>
-                <p class="muted">
-                  {{ t('summary.counts', { opens: r.opens, dealt: r.dealt }) }}
-                  @if (r.limps > 0) {
-                    · {{ t('summary.limps', { count: r.limps }) }}
-                  }
-                </p>
-                @if (r.reference; as ref) {
-                  <app-range-gauge
-                    [rate]="r.openRate.rate ?? 0"
-                    [low]="r.openRate.rate ?? 0"
-                    [high]="r.openRate.rate ?? 0"
-                    [min]="ref.min"
-                    [max]="ref.max"
-                    [format]="share()"
-                    [label]="t('summary.gauge', { min: percent(ref.min), max: percent(ref.max) })"
-                  />
-                  <p class="muted">
-                    {{
-                      t('summary.reference', {
-                        min: percent(ref.min),
-                        max: percent(ref.max),
-                        version: data.referenceVersion,
-                      })
-                    }}
-                  </p>
-                }
-              </section>
-
-              <section class="card glass detail" aria-live="polite">
-                @if (focus(); as c) {
-                  <p class="detail__hand">{{ c.hand }}</p>
-                  @if (c.dealt === 0) {
-                    <p class="muted">{{ t('detail.never') }}</p>
-                  } @else {
-                    <dl>
-                      <div>
-                        <dt>{{ t('detail.dealt') }}</dt>
-                        <dd class="numeric">{{ c.dealt }}</dd>
-                      </div>
-                      <div>
-                        <dt><span class="swatch swatch--open"></span>{{ t('detail.opens') }}</dt>
-                        <dd class="numeric">{{ c.opens }} · {{ percent(openShare(c)) }}</dd>
-                      </div>
-                      <div>
-                        <dt><span class="swatch swatch--limp"></span>{{ t('detail.limps') }}</dt>
-                        <dd class="numeric">{{ c.limps }}</dd>
-                      </div>
-                      <div>
-                        <dt><span class="swatch swatch--fold"></span>{{ t('detail.folds') }}</dt>
-                        <dd class="numeric">{{ c.dealt - c.opens - c.limps }}</dd>
-                      </div>
-                    </dl>
-                    @if (c.dealt < thinSample) {
-                      <p class="muted">{{ t('detail.thin') }}</p>
-                    }
-                  }
+                @if (r.dealt === 0) {
+                  <p class="muted">{{ t('summary.none') }}</p>
                 } @else {
-                  <p class="muted">{{ t('detail.hint') }}</p>
+                  <p class="big numeric">{{ percent(r.openRate.rate) }}</p>
+                  <p class="muted">
+                    {{ t('summary.counts', { opens: r.opens, dealt: r.dealt }) }}
+                    @if (r.limps > 0) {
+                      · {{ t('summary.limps', { count: r.limps }) }}
+                    }
+                  </p>
+                  @if (r.referenceRate; as ref) {
+                    <app-range-gauge
+                      [rate]="r.openRate.rate ?? 0"
+                      [low]="r.openRate.rate ?? 0"
+                      [high]="r.openRate.rate ?? 0"
+                      [min]="ref.min"
+                      [max]="ref.max"
+                      [format]="share()"
+                      [label]="t('summary.gauge', { min: percent(ref.min), max: percent(ref.max) })"
+                    />
+                    <p class="muted">
+                      {{ t('summary.reference', { min: percent(ref.min), max: percent(ref.max) }) }}
+                    </p>
+                  }
                 }
               </section>
+            }
+          }
 
-              <section class="card glass legend">
+          <section class="card glass detail" aria-live="polite">
+            @if (focus(); as c) {
+              <p class="detail__hand">
+                {{ c.hand }}
+                <span class="tag" [class.tag--in]="c.inReference">{{
+                  c.inReference ? t('detail.inReference') : t('detail.outReference')
+                }}</span>
+              </p>
+              @if (c.dealt === 0) {
+                <p class="muted">{{ t('detail.never') }}</p>
+              } @else {
+                <dl>
+                  <div>
+                    <dt>{{ t('detail.dealt') }}</dt>
+                    <dd class="numeric">{{ c.dealt }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--open"></span>{{ t('detail.opens') }}</dt>
+                    <dd class="numeric">{{ c.opens }} · {{ percent(openShare(c)) }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--limp"></span>{{ t('detail.limps') }}</dt>
+                    <dd class="numeric">{{ c.limps }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--fold"></span>{{ t('detail.folds') }}</dt>
+                    <dd class="numeric">{{ c.dealt - c.opens - c.limps }}</dd>
+                  </div>
+                </dl>
+                @if (c.dealt < thinSample) {
+                  <p class="muted">{{ t('detail.thin') }}</p>
+                }
+              }
+            } @else {
+              <p class="muted">{{ t('detail.hint') }}</p>
+            }
+          </section>
+
+          <section class="card glass legend">
+            @switch (view()) {
+              @case ('mine') {
                 <p><span class="swatch swatch--open"></span>{{ t('legend.open') }}</p>
                 <p><span class="swatch swatch--limp"></span>{{ t('legend.limp') }}</p>
                 <p><span class="swatch swatch--fold"></span>{{ t('legend.fold') }}</p>
                 <p><span class="swatch swatch--never"></span>{{ t('legend.never') }}</p>
                 <p class="muted">{{ t('legend.sample') }}</p>
-              </section>
-            </aside>
-          </div>
-          <p class="method">{{ t('method') }}</p>
-        }
-      }
+              }
+              @case ('reference') {
+                <p><span class="swatch swatch--open"></span>{{ t('legend.refOpen') }}</p>
+                <p><span class="swatch swatch--fold"></span>{{ t('legend.refFold') }}</p>
+              }
+              @default {
+                <p><span class="swatch swatch--match"></span>{{ t('legend.match') }}</p>
+                <p><span class="swatch swatch--loose"></span>{{ t('legend.tooLoose') }}</p>
+                <p><span class="swatch swatch--tight"></span>{{ t('legend.tooTight') }}</p>
+                <p><span class="swatch swatch--never"></span>{{ t('legend.neverGap') }}</p>
+              }
+            }
+          </section>
+        </aside>
+      </div>
+      <p class="method">{{ t('method', { version: data.referenceVersion }) }}</p>
     }
   } @else {
     <div class="layout" role="status" [attr.aria-label]="t('loading')">

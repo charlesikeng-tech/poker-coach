@@ -5,15 +5,16 @@ using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Application.Ranges;
 
-/// <summary>Raise-first-in spots of one position for one exact holding ("AhKd").</summary>
+/// <summary>Raise-first-in spots of one position, table size and exact holding ("AhKd").</summary>
+/// <param name="PlayersDealt">Players dealt in: with the position, it tells how many are left to act.</param>
 /// <param name="Dealt">Times the hero had this holding when folded to (an RFI opportunity).</param>
 /// <param name="Opens">Times he raised first in.</param>
 /// <param name="Limps">Times he called first in.</param>
-public sealed record OpeningHoldingCount(PokerPosition Position, string HeroCards, int Dealt, int Opens, int Limps);
+public sealed record OpeningHoldingCount(PokerPosition Position, int PlayersDealt, string HeroCards, int Dealt, int Opens, int Limps);
 
 public interface IRangeReadStore
 {
-    /// <summary>RFI spots of the user's analysed hands within the filter, grouped by position and holding.</summary>
+    /// <summary>RFI spots of the user's analysed hands within the filter, grouped by position, table size and holding.</summary>
     Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
         Guid userId,
         StatisticsFilter filter,
@@ -21,11 +22,15 @@ public interface IRangeReadStore
         CancellationToken cancellationToken);
 }
 
-/// <summary>One starting hand of a position's actual range. All zero when never dealt in that spot.</summary>
-public sealed record RangeCell(HandClass Hand, int Dealt, int Opens, int Limps);
+/// <summary>One starting hand: what the player did with it, and whether the reference opens it.</summary>
+/// <param name="InReference">The reference range of the position and band raises it first in.</param>
+public sealed record RangeCell(HandClass Hand, int Dealt, int Opens, int Limps, bool InReference);
 
+/// <param name="Position">Seat by distance to the button (see <see cref="OpeningSeat"/>).</param>
 /// <param name="OpenRate">Opens over RFI spots: the position's opening frequency.</param>
-/// <param name="Reference">The position's reference opening rate (ADR-0007), when one exists.</param>
+/// <param name="ReferenceRate">The position's reference opening rate (ADR-0007), when one exists.</param>
+/// <param name="ReferenceNotation">The reference range as written ("22+, A2s+, …").</param>
+/// <param name="ReferenceShare">Share of all two-card holdings the reference range opens.</param>
 /// <param name="Cells">The 169 starting hands, in grid order.</param>
 public sealed record PositionRange(
     PokerPosition Position,
@@ -33,62 +38,73 @@ public sealed record PositionRange(
     int Opens,
     int Limps,
     StatRate OpenRate,
-    ReferenceRange? Reference,
+    ReferenceRange? ReferenceRate,
+    string? ReferenceNotation,
+    decimal? ReferenceShare,
     IReadOnlyList<RangeCell> Cells);
 
-/// <param name="Positions">Positions with at least one RFI spot, from UTG to the small blind.</param>
+/// <param name="Positions">Every position that opens, from UTG to the small blind, even without spots
+/// (the reference is still worth showing).</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: ranges are partial until 0.</param>
-public sealed record OpeningRanges(IReadOnlyList<PositionRange> Positions, int PendingHands, int ReferenceVersion);
+public sealed record OpeningRanges(StackBand Band, IReadOnlyList<PositionRange> Positions, int PendingHands, int ReferenceVersion);
 
 /// <summary>
-/// The player's actual opening ranges (ADR-0009, block 1): for each position, how often each of the 169
-/// starting hands is raised first in. Only counts, never extrapolated: a hand dealt twice shows "2".
+/// The player's actual opening ranges next to the reference ones (ADR-0009, blocks 1 and 2): for each
+/// position, how often each of the 169 starting hands is raised first in, and whether the reference opens
+/// it. Only counts, never extrapolated.
 /// </summary>
 public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore statistics)
 {
-    public async Task<OpeningRanges> GetOpeningAsync(Guid userId, StatisticsFilter filter, CancellationToken cancellationToken)
+    public async Task<OpeningRanges> GetOpeningAsync(
+        Guid userId,
+        StackBand band,
+        DateTimeOffset? from,
+        DateTimeOffset? to,
+        CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(filter);
-
-        var counts = await ranges.CountOpeningsAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
+        var (min, max) = ReferenceOpeningRanges.Bounds(band);
+        var counts = await ranges.CountOpeningsAsync(userId, new StatisticsFilter(from, to, min, max), HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
-        return new OpeningRanges(Build(counts), pending, ReferenceRanges.Version);
+        return new OpeningRanges(band, Build(band, counts), pending, ReferenceOpeningRanges.Version);
     }
 
-    internal static List<PositionRange> Build(IEnumerable<OpeningHoldingCount> counts)
+    internal static List<PositionRange> Build(StackBand band, IEnumerable<OpeningHoldingCount> counts)
     {
         var byPosition = counts
             .Select(c => (Count: c, Ok: HandClass.TryParseHoldings(c.HeroCards, out var hand), Hand: hand))
             // Unreadable hero cards are left out rather than guessed.
             .Where(x => x.Ok)
-            .GroupBy(x => x.Count.Position);
+            .ToLookup(x => OpeningSeat.Canonical(x.Count.Position, x.Count.PlayersDealt));
 
-        return byPosition
-            .OrderBy(g => g.Key)
-            .Select(g =>
+        return ReferenceOpeningRanges.Positions
+            .Select(position =>
             {
-                var perHand = g
+                var perHand = byPosition[position]
                     .GroupBy(x => x.Hand)
                     .ToDictionary(
                         h => h.Key,
                         h => (Dealt: h.Sum(x => x.Count.Dealt), Opens: h.Sum(x => x.Count.Opens), Limps: h.Sum(x => x.Count.Limps)));
+                var reference = ReferenceOpeningRanges.For(band, position);
                 var cells = HandClass.All
-                    .Select(hand => perHand.TryGetValue(hand, out var c)
-                        ? new RangeCell(hand, c.Dealt, c.Opens, c.Limps)
-                        : new RangeCell(hand, 0, 0, 0))
+                    .Select(hand =>
+                    {
+                        var c = perHand.GetValueOrDefault(hand);
+                        return new RangeCell(hand, c.Dealt, c.Opens, c.Limps, reference?.Contains(hand) ?? false);
+                    })
                     .ToList();
                 var dealt = cells.Sum(c => c.Dealt);
                 var opens = cells.Sum(c => c.Opens);
                 return new PositionRange(
-                    g.Key,
+                    position,
                     dealt,
                     opens,
                     cells.Sum(c => c.Limps),
                     StatRate.Of(opens, dealt),
-                    ReferenceRanges.LowStakesMtt.FirstOrDefault(r => r.Stat == LeakStat.Rfi && r.Position == g.Key),
+                    ReferenceRanges.LowStakesMtt.FirstOrDefault(r => r.Stat == LeakStat.Rfi && r.Position == position),
+                    ReferenceOpeningRanges.NotationFor(band, position),
+                    reference is null ? null : ReferenceOpeningRanges.ComboShare(reference),
                     cells);
             })
-            .Where(p => p.Dealt > 0)
             .ToList();
     }
 }

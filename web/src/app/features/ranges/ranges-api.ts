@@ -13,7 +13,12 @@ export interface RangeCell {
   readonly dealt: number;
   readonly opens: number;
   readonly limps: number;
+  /** The reference range raises it first in. */
+  readonly inReference: boolean;
 }
+
+export type StackBand = 'short' | 'mid' | 'deep';
+export const STACK_BANDS: readonly StackBand[] = ['short', 'mid', 'deep'];
 
 export interface PositionRange {
   readonly position: PokerPosition;
@@ -21,21 +26,26 @@ export interface PositionRange {
   readonly opens: number;
   readonly limps: number;
   readonly openRate: StatRate;
-  readonly reference: { readonly min: number; readonly max: number } | null;
+  /** The position's reference opening rate (ADR-0007). */
+  readonly referenceRate: { readonly min: number; readonly max: number } | null;
+  /** The reference range as written ("22+, A2s+, …"). */
+  readonly referenceNotation: string | null;
+  /** Share of all two-card holdings the reference opens. */
+  readonly referenceShare: number | null;
   /** 169 hands in grid order: row by row from aces, pairs on the diagonal, suited above. */
   readonly cells: readonly RangeCell[];
 }
 
 export interface OpeningRanges {
+  readonly band: StackBand;
   readonly positions: readonly PositionRange[];
   readonly pendingHands: number;
   readonly referenceVersion: number;
 }
 
 export interface RangeQuery {
+  readonly band: StackBand;
   readonly from?: string;
-  readonly minStackBb?: number;
-  readonly maxStackBb?: number;
 }
 
 @Injectable({ providedIn: 'root' })
