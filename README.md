@@ -166,5 +166,7 @@ MVP-2 — Game analysis (ADR-0006):
 - [x] Migration `HandHeroFacts`
 - [x] Hand coverage per tournament (levels, hand-number gaps, stack breaks, entries seen, start/end
       seen), computed in the background after facts, shown in the tournaments list
-- [ ] Migration `TournamentCoverage` (generate with `dotnet ef`)
+- [x] Migration `TournamentCoverage`
+- [x] Rebuy/add-on tournaments (second Winamax summary layout), counted in money paid
+- [ ] Migration `Rebuys` (generate with `dotnet ef`)
 - [ ] Per-entry attribution of hands, postflop statistics
