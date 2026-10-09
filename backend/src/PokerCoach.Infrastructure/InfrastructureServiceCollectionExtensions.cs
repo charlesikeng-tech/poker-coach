@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Infrastructure.Coaching;
 using PokerCoach.Infrastructure.Identity;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
@@ -42,6 +44,11 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ICoverageStore, CoverageStore>();
         services.AddScoped<IHandFactsStore, HandFactsStore>();
         services.AddScoped<IStatisticsReadStore, StatisticsReadStore>();
+        services.AddScoped<ICoachingStore, CoachingStore>();
+
+        // No API key = coaching unavailable, not a startup failure (ADR-0008).
+        services.AddOptions<AnthropicOptions>().BindConfiguration(AnthropicOptions.SectionName);
+        services.AddHttpClient<ICoachingModel, AnthropicCoachingModel>(client => client.Timeout = TimeSpan.FromSeconds(90));
 
         // Starts only when Import:WorkerEnabled is true (default); needs ImportProcessor and ImportOptions
         // registered by the host.

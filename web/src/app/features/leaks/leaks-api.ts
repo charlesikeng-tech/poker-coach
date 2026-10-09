@@ -48,6 +48,28 @@ export interface LeakAnalysis {
   readonly referenceVersion: number;
 }
 
+/** A hand the coach used as an example, labelled with our own data (ADR-0008). */
+export interface ExampleHand {
+  readonly ref: string;
+  readonly handId: string;
+  readonly startedAt: string;
+  readonly level: number;
+  readonly position: PokerPosition | null;
+  readonly heroCards: string | null;
+  readonly stackInBigBlinds: number;
+  readonly note: string;
+}
+
+/** AI-written text: always displayed as such, never as a measurement. */
+export interface LeakExplanation {
+  readonly summary: string;
+  readonly whyItCosts: string;
+  readonly actions: readonly string[];
+  readonly hands: readonly ExampleHand[];
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class LeaksApi {
   private readonly http = inject(HttpClient);
@@ -55,5 +77,18 @@ export class LeaksApi {
   get(from: string | undefined): Promise<LeakAnalysis> {
     const params = from ? new HttpParams().set('from', from) : new HttpParams();
     return firstValueFrom(this.http.get<LeakAnalysis>('/api/leaks', { params }));
+  }
+
+  /** Returns the stored explanation when the leak has not changed; otherwise asks the coach. */
+  explain(leak: Leak, from: string | undefined, language: string): Promise<LeakExplanation> {
+    return firstValueFrom(
+      this.http.post<LeakExplanation>('/api/leaks/explanations', {
+        stat: leak.stat,
+        position: leak.position,
+        direction: leak.direction,
+        from: from ?? null,
+        language,
+      }),
+    );
   }
 }

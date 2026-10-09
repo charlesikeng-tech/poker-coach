@@ -10,6 +10,7 @@ using PokerCoach.Api.Leaks;
 using PokerCoach.Api.Poker;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Api.Tournaments;
+using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Leaks;
@@ -51,6 +52,12 @@ builder.Services.AddScoped<HandFactsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
 builder.Services.AddScoped<LeakService>();
+builder.Services.AddOptions<CoachingOptions>()
+    .BindConfiguration(CoachingOptions.SectionName)
+    .Validate(o => o.MonthlyBudgetUsd >= 0 && o.DailyExplanationsPerUser >= 0 && o.ExampleHands is > 0 and <= 10, "Invalid coaching limits.")
+    .ValidateOnStart();
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<CoachingOptions>>().Value);
+builder.Services.AddScoped<LeakCoachService>();
 
 var app = builder.Build();
 

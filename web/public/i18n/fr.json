@@ -449,6 +449,23 @@
       "figures": "{{rate}} sur {{opportunities}} situations · repère {{min}}–{{max}}",
       "gauge": "Votre taux {{rate}}, repère de {{min}} à {{max}}",
       "workOn": "À travailler :",
+      "coach": {
+        "action": "Explication du coach",
+        "loading": "Le coach analyse tes mains…",
+        "label": "Explication IA",
+        "hands": "Dans tes mains",
+        "hand": "{{date}} · niveau {{level}} · {{position}} · {{cards}} · {{stack}} BB",
+        "disclaimer": "Texte rédigé par une IA à partir de tes chiffres et de mains anonymisées. Les mesures viennent de Poker Coach, pas de l'IA.",
+        "errors": {
+          "LEAK_NOT_FOUND": "Cette fuite n'apparaît plus dans tes dernières données. Recharge la page.",
+          "COACHING_DAILY_LIMIT": "Limite quotidienne d'explications atteinte. Réessaie demain.",
+          "COACHING_BUDGET_EXHAUSTED": "Le coach est en pause jusqu'au mois prochain.",
+          "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré sur ce serveur.",
+          "COACHING_FAILED": "Le coach n'a pas pu répondre. Réessaie.",
+          "network": "Connexion impossible. Vérifie ton réseau.",
+          "unknown": "Une erreur inattendue est survenue."
+        }
+      },
       "under": {
         "title": "{{count}} statistique(s) pas encore jugeable(s) : trop peu de situations"
       },

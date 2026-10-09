@@ -55,6 +55,8 @@ dotnet user-secrets set "ConnectionStrings:PokerCoach" \
   --project src/PokerCoach.Api
 dotnet user-secrets set "Authentication:Google:ClientId" "<client id>" --project src/PokerCoach.Api
 dotnet user-secrets set "Authentication:Google:ClientSecret" "<client secret>" --project src/PokerCoach.Api
+# Optional: the AI coach (ADR-0008). Without a key, explanations answer COACHING_UNAVAILABLE.
+dotnet user-secrets set "Coaching:Anthropic:ApiKey" "<api key>" --project src/PokerCoach.Api
 
 dotnet tool install --global dotnet-ef   # once
 dotnet ef database update --project src/PokerCoach.Infrastructure --startup-project src/PokerCoach.Api
@@ -178,4 +180,8 @@ MVP-3 — Leaks (ADR-0007):
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,
       confirmed / to watch / not judgeable yet
 - [x] `GET /api/leaks` and the leaks page (range gauge, why it costs, what to work on)
-- [ ] Adjustable references; AI explanations with example hands (provider ADR first)
+- [x] AI explanations with example hands (ADR-0008): `POST /api/leaks/explanations`, Anthropic
+      adapter with structured output, anonymised hand stories, stored by fingerprint, per-user daily
+      limit and global monthly budget, usage ledger
+- [x] Migration `Coaching`
+- [ ] Adjustable references; evaluation set for explanations

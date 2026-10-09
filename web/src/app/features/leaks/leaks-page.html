@@ -95,6 +95,56 @@
                   <strong>{{ t('workOn') }}</strong>
                   {{ t('items.' + leak.stat + '.' + leak.direction + '.work', p) }}
                 </p>
+                @let c = coach()[key(leak)];
+                @if (c?.status === 'ready') {
+                  @let e = $any(c).explanation;
+                  <section class="coach" aria-live="polite">
+                    <p class="coach-label">
+                      <app-icon [icon]="icons.Sparkles" />
+                      {{ t('coach.label') }}
+                    </p>
+                    <p>{{ e.summary }}</p>
+                    <p class="coach-why">{{ e.whyItCosts }}</p>
+                    @if (e.actions.length > 0) {
+                      <ul class="coach-actions">
+                        @for (action of e.actions; track $index) {
+                          <li>{{ action }}</li>
+                        }
+                      </ul>
+                    }
+                    @if (e.hands.length > 0) {
+                      <h4>{{ t('coach.hands') }}</h4>
+                      <ul class="coach-hands">
+                        @for (hand of e.hands; track hand.ref) {
+                          <li>
+                            <span class="numeric">{{ handLabel(hand, t) }}</span>
+                            <span>{{ hand.note }}</span>
+                          </li>
+                        }
+                      </ul>
+                    }
+                    <p class="coach-disclaimer">{{ t('coach.disclaimer') }}</p>
+                  </section>
+                } @else {
+                  @if (c?.status === 'error') {
+                    <p class="coach-error" role="alert">
+                      {{ t('coach.errors.' + $any(c).code) }}
+                    </p>
+                  }
+                  <button
+                    appButton
+                    variant="secondary"
+                    class="coach-button"
+                    [disabled]="c?.status === 'loading'"
+                    (click)="explain(leak)"
+                  >
+                    <app-icon
+                      [class.spin]="c?.status === 'loading'"
+                      [icon]="c?.status === 'loading' ? icons.LoaderCircle : icons.Sparkles"
+                    />
+                    {{ c?.status === 'loading' ? t('coach.loading') : t('coach.action') }}
+                  </button>
+                }
               </article>
             }
           </div>

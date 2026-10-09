@@ -449,6 +449,23 @@
       "figures": "{{rate}} over {{opportunities}} situations · reference {{min}}–{{max}}",
       "gauge": "Your rate {{rate}}, reference from {{min}} to {{max}}",
       "workOn": "Work on:",
+      "coach": {
+        "action": "Coach's explanation",
+        "loading": "The coach is reviewing your hands…",
+        "label": "AI explanation",
+        "hands": "In your hands",
+        "hand": "{{date}} · level {{level}} · {{position}} · {{cards}} · {{stack}} BB",
+        "disclaimer": "Written by an AI from your figures and anonymised hands. Measurements come from Poker Coach, not from the AI.",
+        "errors": {
+          "LEAK_NOT_FOUND": "This leak no longer shows in your latest data. Reload the page.",
+          "COACHING_DAILY_LIMIT": "Daily limit of explanations reached. Try again tomorrow.",
+          "COACHING_BUDGET_EXHAUSTED": "The coach is paused until next month.",
+          "COACHING_UNAVAILABLE": "The AI coach is not configured on this server.",
+          "COACHING_FAILED": "The coach could not answer. Try again.",
+          "network": "Cannot connect. Check your network.",
+          "unknown": "An unexpected error occurred."
+        }
+      },
       "under": {
         "title": "{{count}} statistic(s) cannot be judged yet: too few situations"
       },
