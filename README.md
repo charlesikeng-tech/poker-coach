@@ -209,7 +209,7 @@ Bankroll (roadmap step 1):
 - [x] Web: Bankroll page (onboarding, balance curve with movements, buy-in limit of the rule,
       true-ROI interval, risk of ruin, movements); replaces the empty Sessions page (`/sessions`
       redirects)
-- [ ] Migration `Bankroll`
+- [x] Migration `Bankroll`
 
 MVP-3 — Leaks (ADR-0007):
 
