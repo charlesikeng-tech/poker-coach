@@ -6,12 +6,12 @@
     "dashboard": "Dashboard",
     "performance": "Performance",
     "tournaments": "Tournaments",
-    "sessions": "Sessions",
     "statistics": "Statistics",
     "import": "Import",
     "leaks": "Leaks",
     "ranges": "Ranges",
-    "training": "Training"
+    "training": "Training",
+    "bankroll": "Bankroll"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -305,13 +305,111 @@
         }
       }
     },
-    "sessions": {
-      "title": "Sessions",
-      "description": "Your playing sessions, from first hand to last.",
-      "empty": {
-        "title": "No sessions yet",
-        "description": "A session groups the tournaments you play in one sitting. Import your files to build them.",
-        "action": "Import files"
+    "bankroll": {
+      "title": "Bankroll",
+      "description": "Your poker money: balance, buy-in limit and risk, computed from your own results.",
+      "loading": "Computing your bankroll…",
+      "settings": "Settings",
+      "since": "Since {{date}} · started with {{amount}} · {{rule}} rule",
+      "importAction": "Import files",
+      "unknownResults": "{{count}} tournament(s) without a summary file are not counted: import their summary for an exact balance.",
+      "setup": {
+        "title": "Set up your bankroll",
+        "description": "Tell us what you started with and how careful you want to be. From then on, every imported result updates your balance by itself.",
+        "editTitle": "Bankroll settings",
+        "startingAmount": "Starting bankroll (€)",
+        "startedOn": "Starting on",
+        "startedOnHint": "Tournaments played before do not count in the balance.",
+        "rule": "Management rule",
+        "start": "Start tracking",
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "rules": {
+        "conservative": {
+          "name": "Conservative",
+          "text": "200 buy-ins. The usual MTT advice: big fields bring very long downswings."
+        },
+        "standard": {
+          "name": "Standard",
+          "text": "100 buy-ins. Fine for small fields or a proven winning player."
+        },
+        "aggressive": {
+          "name": "Aggressive",
+          "text": "50 buy-ins. Fast progression, with a real risk of going broke."
+        }
+      },
+      "totals": {
+        "balance": "Balance",
+        "tournamentProfit": "Tournament results",
+        "netDeposits": "Net deposits"
+      },
+      "limit": {
+        "title": "Buy-in limit",
+        "perTournament": "max average buy-in ({{buyIns}} buy-ins)",
+        "recent": {
+          "good": "Your recent average buy-in ({{average}}) is well within your limit.",
+          "warn": "Your recent average buy-in ({{average}}) is getting close to your limit.",
+          "bad": "Your recent average buy-in ({{average}}) is above your limit: move down or reload."
+        },
+        "above": "{{count}} of {{total}} tournament(s) in the last 30 days had a buy-in above your limit.",
+        "noTournaments": "No tournament with a result yet."
+      },
+      "roi": {
+        "title": "True ROI",
+        "explain": "Over {{count}} tournaments, your true ROI has a 95 % chance of being in this range. In MTTs it takes thousands of tournaments to narrow it.",
+        "aria": "Estimated ROI between {{low}} and {{high}}",
+        "none": "No tournament with a result yet."
+      },
+      "chart": {
+        "title": "Balance over time",
+        "aria": "Bankroll over time, current balance {{balance}}",
+        "notEnough": "The curve appears after your first tournament or movement.",
+        "start": "Start",
+        "movement": "Movement",
+        "balance": "Balance"
+      },
+      "risk": {
+        "title": "Risk of ruin",
+        "lead": "What can happen over the next {{count}} tournaments at {{buyIn}} on average, replaying your own results at random 2,000 times.",
+        "ruin": "Losing it all",
+        "halfLoss": "Losing half",
+        "downswing": "Typical downswing",
+        "buyIns": "{{count}} buy-ins",
+        "outcomes": "Your bankroll after {{count}} tournaments",
+        "low": "Bad case (1 in 10)",
+        "median": "Median case",
+        "high": "Good case (1 in 10)",
+        "disclaimer": "Your past is the model: if it was lucky, the real risk is higher. This is not financial advice.",
+        "notEnough": "At least {{needed}} tournaments with a result are needed to simulate your risk ({{count}} so far).",
+        "broke": "No bankroll left: reload to simulate what comes next."
+      },
+      "movements": {
+        "title": "Deposits and withdrawals",
+        "kind": "Type",
+        "kinds": {
+          "deposit": "Deposit",
+          "withdrawal": "Withdrawal",
+          "adjustment": "Adjustment"
+        },
+        "amount": "Amount (€)",
+        "date": "Date",
+        "note": "Note",
+        "notePlaceholder": "Optional: rakeback, another room…",
+        "add": "Add",
+        "delete": "Delete this movement",
+        "adjustmentHint": "An adjustment corrects the balance either way: a negative amount takes money out (losing cash games, another room…).",
+        "empty": "No deposit or withdrawal since the start."
+      },
+      "errors": {
+        "validation": "Check the values: the date must be after the bankroll's start and not in the future.",
+        "notFound": "This movement no longer exists.",
+        "unknown": "Poker Coach could not save. Try again."
+      },
+      "error": {
+        "title": "Could not load your bankroll",
+        "description": "Poker Coach did not respond. Your data is not lost: try again.",
+        "retry": "Try again"
       }
     },
     "statistics": {

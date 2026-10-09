@@ -6,12 +6,12 @@
     "dashboard": "Panel",
     "performance": "Rendimiento",
     "tournaments": "Torneos",
-    "sessions": "Sesiones",
     "statistics": "Estadísticas",
     "import": "Importar",
     "leaks": "Fugas",
     "ranges": "Rangos",
-    "training": "Entrenamiento"
+    "training": "Entrenamiento",
+    "bankroll": "Bankroll"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -305,13 +305,111 @@
         }
       }
     },
-    "sessions": {
-      "title": "Sesiones",
-      "description": "Tus sesiones de juego, de la primera a la última mano.",
-      "empty": {
-        "title": "Todavía no hay sesiones",
-        "description": "Una sesión agrupa los torneos que juegas de una sentada. Importa tus archivos para crearlas.",
-        "action": "Importar archivos"
+    "bankroll": {
+      "title": "Bankroll",
+      "description": "Tu dinero de póker: saldo, límite de buy-in y riesgo, calculados con tus propios resultados.",
+      "loading": "Calculando tu bankroll…",
+      "settings": "Ajustes",
+      "since": "Desde el {{date}} · inicio {{amount}} · regla {{rule}}",
+      "importAction": "Importar archivos",
+      "unknownResults": "{{count}} torneo(s) sin archivo de resumen no se cuentan: importa su resumen para un saldo exacto.",
+      "setup": {
+        "title": "Configura tu bankroll",
+        "description": "Indica con cuánto empezaste y cuánta prudencia quieres. Después, cada resultado importado actualiza tu saldo solo.",
+        "editTitle": "Ajustes del bankroll",
+        "startingAmount": "Bankroll inicial (€)",
+        "startedOn": "A partir del",
+        "startedOnHint": "Los torneos jugados antes no cuentan en el saldo.",
+        "rule": "Regla de gestión",
+        "start": "Empezar el seguimiento",
+        "save": "Guardar",
+        "cancel": "Cancelar"
+      },
+      "rules": {
+        "conservative": {
+          "name": "Prudente",
+          "text": "200 buy-ins. El consejo habitual en MTT: los campos grandes traen downswings muy largos."
+        },
+        "standard": {
+          "name": "Estándar",
+          "text": "100 buy-ins. Correcto para campos pequeños o un jugador ganador confirmado."
+        },
+        "aggressive": {
+          "name": "Agresiva",
+          "text": "50 buy-ins. Progresión rápida, con un riesgo real de perderlo todo."
+        }
+      },
+      "totals": {
+        "balance": "Saldo",
+        "tournamentProfit": "Resultado de los torneos",
+        "netDeposits": "Depósitos netos"
+      },
+      "limit": {
+        "title": "Límite de buy-in",
+        "perTournament": "de buy-in medio máx. ({{buyIns}} buy-ins)",
+        "recent": {
+          "good": "Tu buy-in medio reciente ({{average}}) está dentro de tu límite.",
+          "warn": "Tu buy-in medio reciente ({{average}}) se acerca a tu límite.",
+          "bad": "Tu buy-in medio reciente ({{average}}) supera tu límite: baja de nivel o recarga."
+        },
+        "above": "{{count}} de {{total}} torneo(s) de los últimos 30 días tenían un buy-in por encima de tu límite.",
+        "noTournaments": "Todavía no hay torneos con resultado."
+      },
+      "roi": {
+        "title": "ROI real",
+        "explain": "Con {{count}} torneos, tu ROI real tiene un 95 % de probabilidades de estar en este rango. En MTT hacen falta miles de torneos para estrecharlo.",
+        "aria": "ROI estimado entre {{low}} y {{high}}",
+        "none": "Todavía no hay torneos con resultado."
+      },
+      "chart": {
+        "title": "Evolución del saldo",
+        "aria": "Evolución del bankroll, saldo actual {{balance}}",
+        "notEnough": "La curva aparece con tu primer torneo o movimiento.",
+        "start": "Inicio",
+        "movement": "Movimiento",
+        "balance": "Saldo"
+      },
+      "risk": {
+        "title": "Riesgo de ruina",
+        "lead": "Lo que puede pasar en los próximos {{count}} torneos a {{buyIn}} de media, repitiendo tus propios resultados al azar 2000 veces.",
+        "ruin": "Perderlo todo",
+        "halfLoss": "Perder la mitad",
+        "downswing": "Downswing típico",
+        "buyIns": "{{count}} buy-ins",
+        "outcomes": "Tu bankroll tras {{count}} torneos",
+        "low": "Caso malo (1 de 10)",
+        "median": "Caso mediano",
+        "high": "Caso bueno (1 de 10)",
+        "disclaimer": "Tu pasado sirve de modelo: si tuviste suerte, el riesgo real es mayor. No es un consejo financiero.",
+        "notEnough": "Se necesitan al menos {{needed}} torneos con resultado para simular tu riesgo ({{count}} por ahora).",
+        "broke": "No queda bankroll: recarga para simular lo que viene."
+      },
+      "movements": {
+        "title": "Depósitos y retiros",
+        "kind": "Tipo",
+        "kinds": {
+          "deposit": "Depósito",
+          "withdrawal": "Retiro",
+          "adjustment": "Ajuste"
+        },
+        "amount": "Importe (€)",
+        "date": "Fecha",
+        "note": "Nota",
+        "notePlaceholder": "Opcional: rakeback, otra sala…",
+        "add": "Añadir",
+        "delete": "Eliminar este movimiento",
+        "adjustmentHint": "Un ajuste corrige el saldo en un sentido u otro: importe negativo para restar (cash game perdedor, otra sala…).",
+        "empty": "Ningún depósito ni retiro desde el inicio."
+      },
+      "errors": {
+        "validation": "Revisa los valores: la fecha debe ser posterior al inicio del bankroll y no futura.",
+        "notFound": "Este movimiento ya no existe.",
+        "unknown": "Poker Coach no pudo guardar. Inténtalo de nuevo."
+      },
+      "error": {
+        "title": "No se pudo cargar tu bankroll",
+        "description": "Poker Coach no respondió. Tus datos no se han perdido: inténtalo de nuevo.",
+        "retry": "Reintentar"
       }
     },
     "statistics": {

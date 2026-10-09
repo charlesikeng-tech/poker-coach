@@ -197,7 +197,19 @@ Ranges (ADR-0009):
 - [x] Migration `Training`
 - [x] Push/fold equilibrium below 15 BB (`PushFoldNash`, preflop equity table from
       `backend/tools/preflop-equity`): push band in Ranges (stack 3–15 BB) and in the trainer
-- [ ] Migration `TrainingPushStack`
+- [x] Migration `TrainingPushStack`
+
+Bankroll (roadmap step 1):
+
+- [x] Domain `BankrollLedger` (balance since a start date: known results + deposits, withdrawals,
+      adjustments) and `RiskSimulation` (ROI with its 95 % interval, risk of ruin by bootstrap of the
+      player's own results, 2,000 paths, seeded so figures do not move between refreshes)
+- [x] `GET /api/bankroll`, `PUT /api/bankroll/settings`, `POST|DELETE /api/bankroll/movements`
+      (schema `bankroll`)
+- [x] Web: Bankroll page (onboarding, balance curve with movements, buy-in limit of the rule,
+      true-ROI interval, risk of ruin, movements); replaces the empty Sessions page (`/sessions`
+      redirects)
+- [ ] Migration `Bankroll`
 
 MVP-3 — Leaks (ADR-0007):
 

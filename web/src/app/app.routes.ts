@@ -53,11 +53,13 @@ export const routes: Routes = [
           import('./features/hands/hand-replay-page').then((m) => m.HandReplayPage),
       },
       {
-        path: 'sessions',
-        title: 'nav.sessions',
+        path: 'bankroll',
+        title: 'nav.bankroll',
         loadComponent: () =>
-          import('./features/sessions/sessions-page').then((m) => m.SessionsPage),
+          import('./features/bankroll/bankroll-page').then((m) => m.BankrollPage),
       },
+      // The Sessions placeholder became the bankroll (roadmap step 1): keep old links working.
+      { path: 'sessions', redirectTo: 'bankroll' },
       {
         path: 'statistics',
         title: 'nav.statistics',

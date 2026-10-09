@@ -1,0 +1,389 @@
+<ng-container *transloco="let t; prefix: 'pages.bankroll'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <ng-template #settingsForm let-onboarding="onboarding">
+    <form class="settings glass" (submit)="$event.preventDefault(); saveSettings()">
+      @if (onboarding) {
+        <div class="settings-intro">
+          <span class="settings-icon"><app-icon [icon]="icons.Wallet" /></span>
+          <div>
+            <h2>{{ t('setup.title') }}</h2>
+            <p>{{ t('setup.description') }}</p>
+          </div>
+        </div>
+      } @else {
+        <h2>{{ t('setup.editTitle') }}</h2>
+      }
+
+      <div class="fields">
+        <label class="field">
+          <span>{{ t('setup.startingAmount') }}</span>
+          <input
+            type="number"
+            inputmode="decimal"
+            min="0"
+            step="0.01"
+            required
+            [value]="startingAmount()"
+            (input)="startingAmount.set(value($event))"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('setup.startedOn') }}</span>
+          <input
+            type="date"
+            required
+            [max]="today"
+            [value]="startedOn()"
+            (input)="startedOn.set(value($event))"
+          />
+          <small>{{ t('setup.startedOnHint') }}</small>
+        </label>
+      </div>
+
+      <fieldset class="rules">
+        <legend>{{ t('setup.rule') }}</legend>
+        @for (r of rules; track r) {
+          <label class="rule" [class.selected]="rule() === r">
+            <input
+              type="radio"
+              name="rule"
+              class="visually-hidden"
+              [value]="r"
+              [checked]="rule() === r"
+              (change)="rule.set(r)"
+            />
+            <span class="rule-buy-ins numeric">{{ ruleBuyIns[r] }}</span>
+            <span class="rule-name">{{ t('rules.' + r + '.name') }}</span>
+            <span class="rule-text">{{ t('rules.' + r + '.text') }}</span>
+          </label>
+        }
+      </fieldset>
+
+      @if (writeError(); as code) {
+        <p class="error" role="alert">
+          {{ t('errors.' + (code === 'VALIDATION_FAILED' ? 'validation' : 'unknown')) }}
+        </p>
+      }
+
+      <div class="actions">
+        @if (!onboarding) {
+          <button appButton type="button" variant="ghost" (click)="cancelSettings()">
+            {{ t('setup.cancel') }}
+          </button>
+        }
+        <button appButton type="submit" variant="primary" [disabled]="!settingsValid() || saving()">
+          {{ t(onboarding ? 'setup.start' : 'setup.save') }}
+        </button>
+      </div>
+    </form>
+  </ng-template>
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (bankroll(); as bankroll) {
+    @if (!bankroll.settings || !bankroll.summary) {
+      <ng-container *ngTemplateOutlet="settingsForm; context: { onboarding: true }" />
+    } @else if (editingSettings()) {
+      <ng-container *ngTemplateOutlet="settingsForm; context: { onboarding: false }" />
+    } @else {
+      @let settings = bankroll.settings;
+      @let summary = bankroll.summary;
+
+      <div class="toolbar">
+        <p class="since">
+          {{
+            t('since', {
+              date: date(settings.startedOn),
+              amount: money(settings.startingAmount),
+              rule: t('rules.' + settings.rule + '.name'),
+            })
+          }}
+        </p>
+        <button appButton variant="ghost" (click)="editSettings()">
+          <app-icon [icon]="icons.Settings2" />{{ t('settings') }}
+        </button>
+      </div>
+
+      <div class="totals">
+        <app-stat-tile
+          class="stat-tile--hero"
+          [label]="t('totals.balance')"
+          [value]="summary.balance"
+          [format]="formats().money"
+        />
+        <app-stat-tile
+          [label]="t('totals.tournamentProfit')"
+          [value]="summary.tournamentProfit"
+          [format]="formats().signedMoney"
+          [signed]="true"
+        />
+        <app-stat-tile
+          [label]="t('totals.netDeposits')"
+          [value]="summary.netDeposits"
+          [format]="formats().signedMoney"
+          [signed]="true"
+        />
+      </div>
+      @if (summary.unknownResults > 0) {
+        <p class="hint">{{ t('unknownResults', { count: summary.unknownResults }) }}</p>
+      }
+
+      <div class="grid">
+        <section class="panel glass limit" [attr.data-tone]="limitTone()">
+          <h2>{{ t('limit.title') }}</h2>
+          <p class="limit-figure">
+            <span class="numeric">{{ money(summary.limit.maxAverageBuyIn) }}</span>
+            <small>{{ t('limit.perTournament', { buyIns: settings.buyIns }) }}</small>
+          </p>
+          @if (summary.limit.recentAverageBuyIn !== null) {
+            <div class="gauge" role="presentation">
+              <span class="gauge-fill" [style.width.%]="limitUse() * 100"></span>
+            </div>
+            <p>
+              {{
+                t('limit.recent.' + limitTone(), {
+                  average: money(summary.limit.recentAverageBuyIn),
+                })
+              }}
+            </p>
+            @if (summary.limit.aboveLimitRecently > 0) {
+              <p class="warning">
+                {{
+                  t('limit.above', {
+                    count: summary.limit.aboveLimitRecently,
+                    total: summary.limit.playedRecently,
+                  })
+                }}
+              </p>
+            }
+          } @else {
+            <p class="hint">{{ t('limit.noTournaments') }}</p>
+          }
+        </section>
+
+        <section class="panel glass roi">
+          <h2>{{ t('roi.title') }}</h2>
+          @if (roiScale(); as scale) {
+            <p class="roi-figure numeric" [attr.data-sign]="sign(summary.roi.mean)">
+              {{ percent(summary.roi.mean) }}
+            </p>
+            <div
+              class="interval"
+              role="img"
+              [attr.aria-label]="
+                t('roi.aria', { low: percent(summary.roi.low), high: percent(summary.roi.high) })
+              "
+            >
+              <span class="interval-zero" [style.left.%]="scale.zero"></span>
+              <span
+                class="interval-band"
+                [style.left.%]="scale.low"
+                [style.width.%]="scale.high - scale.low"
+              ></span>
+              <span class="interval-mean" [style.left.%]="scale.mean"></span>
+            </div>
+            <div class="interval-labels numeric">
+              <span>{{ percent(summary.roi.low) }}</span>
+              <span>{{ percent(summary.roi.high) }}</span>
+            </div>
+            <p>{{ t('roi.explain', { count: integer(summary.roi.tournaments) }) }}</p>
+          } @else {
+            <p class="hint">{{ t('roi.none') }}</p>
+          }
+        </section>
+      </div>
+
+      <section class="panel glass">
+        <h2>{{ t('chart.title') }}</h2>
+        @if (chartPoints().length > 1) {
+          <app-line-chart
+            [points]="chartPoints()"
+            [markers]="chartMarkers()"
+            [formatY]="formatAxis()"
+            [ariaLabel]="t('chart.aria', { balance: money(summary.balance) })"
+          />
+        } @else {
+          <p class="hint">{{ t('chart.notEnough') }}</p>
+        }
+      </section>
+
+      <section class="panel glass risk" [attr.data-tone]="ruinTone()">
+        <h2>{{ t('risk.title') }}</h2>
+        @if (summary.risk; as risk) {
+          <p class="risk-lead">
+            {{
+              t('risk.lead', {
+                count: integer(risk.tournaments),
+                buyIn: money(risk.averageBuyIn),
+              })
+            }}
+          </p>
+          <dl class="risk-figures">
+            <div class="risk-main">
+              <dt>{{ t('risk.ruin') }}</dt>
+              <dd class="numeric">{{ chance(risk.ruin) }}</dd>
+            </div>
+            <div>
+              <dt>{{ t('risk.halfLoss') }}</dt>
+              <dd class="numeric">{{ chance(risk.halfLoss) }}</dd>
+            </div>
+            <div>
+              <dt>{{ t('risk.downswing') }}</dt>
+              <dd class="numeric">
+                {{ t('risk.buyIns', { count: integer(risk.typicalDownswing) }) }}
+              </dd>
+            </div>
+          </dl>
+          <div class="outcomes">
+            <span class="outcomes-title">{{
+              t('risk.outcomes', { count: integer(risk.tournaments) })
+            }}</span>
+            <div class="outcomes-row numeric">
+              <span
+                ><small>{{ t('risk.low') }}</small
+                >{{ money(risk.finalLow) }}</span
+              >
+              <span class="median"
+                ><small>{{ t('risk.median') }}</small
+                >{{ money(risk.finalMedian) }}</span
+              >
+              <span
+                ><small>{{ t('risk.high') }}</small
+                >{{ money(risk.finalHigh) }}</span
+              >
+            </div>
+          </div>
+          <p class="hint">{{ t('risk.disclaimer') }}</p>
+        } @else {
+          <p class="hint">
+            {{
+              summary.balance <= 0
+                ? t('risk.broke')
+                : t('risk.notEnough', {
+                    needed: summary.minTournamentsForRisk,
+                    count: summary.roi.tournaments,
+                  })
+            }}
+          </p>
+          @if (summary.roi.tournaments === 0) {
+            <a appButton variant="secondary" routerLink="/import">{{ t('importAction') }}</a>
+          }
+        }
+      </section>
+
+      <section class="panel glass">
+        <h2>{{ t('movements.title') }}</h2>
+        <form class="movement-form" (submit)="$event.preventDefault(); addMovement()">
+          <label class="field">
+            <span>{{ t('movements.kind') }}</span>
+            <select [value]="kind()" (change)="kind.set($any(value($event)))">
+              @for (k of kinds; track k) {
+                <option [value]="k">{{ t('movements.kinds.' + k) }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span>{{ t('movements.amount') }}</span>
+            <input
+              type="number"
+              inputmode="decimal"
+              step="0.01"
+              [min]="kind() === 'adjustment' ? null : 0.01"
+              [value]="amount()"
+              (input)="amount.set(value($event))"
+            />
+          </label>
+          <label class="field">
+            <span>{{ t('movements.date') }}</span>
+            <input
+              type="date"
+              [min]="settings.startedOn.slice(0, 10)"
+              [max]="today"
+              [value]="occurredOn()"
+              (input)="occurredOn.set(value($event))"
+            />
+          </label>
+          <label class="field field--wide">
+            <span>{{ t('movements.note') }}</span>
+            <input
+              type="text"
+              maxlength="200"
+              [placeholder]="t('movements.notePlaceholder')"
+              [value]="note()"
+              (input)="note.set(value($event))"
+            />
+          </label>
+          <button
+            appButton
+            type="submit"
+            variant="primary"
+            [disabled]="!movementValid() || saving()"
+          >
+            {{ t('movements.add') }}
+          </button>
+        </form>
+        @if (kind() === 'adjustment') {
+          <p class="hint">{{ t('movements.adjustmentHint') }}</p>
+        }
+        @if (writeError(); as code) {
+          <p class="error" role="alert">
+            {{
+              t(
+                'errors.' +
+                  (code === 'VALIDATION_FAILED'
+                    ? 'validation'
+                    : code === 'BANKROLL_MOVEMENT_NOT_FOUND'
+                      ? 'notFound'
+                      : 'unknown')
+              )
+            }}
+          </p>
+        }
+
+        @if (summary.movements.length > 0) {
+          <ul class="movements">
+            @for (m of summary.movements; track m.id) {
+              <li animate.enter="row-in" animate.leave="row-out">
+                <span class="movement-date">{{ date(m.occurredAt) }}</span>
+                <span class="movement-kind">{{ t('movements.kinds.' + m.kind) }}</span>
+                <span class="movement-note">{{ m.note }}</span>
+                <span class="numeric movement-amount" [attr.data-sign]="sign(signedAmount(m))">
+                  {{ signedMoney(signedAmount(m)) }}
+                </span>
+                <button
+                  type="button"
+                  class="icon-button"
+                  [attr.aria-label]="t('movements.delete')"
+                  [disabled]="saving()"
+                  (click)="deleteMovement(m)"
+                >
+                  <app-icon [icon]="icons.Trash2" />
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="hint">{{ t('movements.empty') }}</p>
+        }
+      </section>
+    }
+  } @else {
+    <div role="status" [attr.aria-label]="t('loading')">
+      <div class="totals">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="glass skeleton-tile">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        }
+      </div>
+      <div class="panel glass"><span class="skeleton skeleton-chart"></span></div>
+    </div>
+  }
+</ng-container>

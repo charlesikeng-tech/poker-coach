@@ -6,12 +6,12 @@
     "dashboard": "Tableau de bord",
     "performance": "Performance",
     "tournaments": "Tournois",
-    "sessions": "Sessions",
     "statistics": "Statistiques",
     "import": "Import",
     "leaks": "Fuites",
     "ranges": "Ranges",
-    "training": "Entraînement"
+    "training": "Entraînement",
+    "bankroll": "Bankroll"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -305,13 +305,111 @@
         }
       }
     },
-    "sessions": {
-      "title": "Sessions",
-      "description": "Tes sessions de jeu, de la première à la dernière main.",
-      "empty": {
-        "title": "Aucune session pour l'instant",
-        "description": "Une session regroupe les tournois joués d'une traite. Importe tes fichiers pour les reconstituer.",
-        "action": "Importer des fichiers"
+    "bankroll": {
+      "title": "Bankroll",
+      "description": "Ton argent de poker : solde, limite de buy-in et risque, calculés sur tes propres résultats.",
+      "loading": "Calcul de ta bankroll…",
+      "settings": "Réglages",
+      "since": "Depuis le {{date}} · départ {{amount}} · règle {{rule}}",
+      "importAction": "Importer des fichiers",
+      "unknownResults": "{{count}} tournoi(s) sans fichier de résumé ne sont pas comptés : importe leur résumé pour un solde exact.",
+      "setup": {
+        "title": "Pose ta bankroll",
+        "description": "Indique ce que tu avais au départ et la prudence voulue. Ensuite, chaque résultat importé met ton solde à jour tout seul.",
+        "editTitle": "Réglages de la bankroll",
+        "startingAmount": "Bankroll de départ (€)",
+        "startedOn": "À partir du",
+        "startedOnHint": "Les tournois joués avant ne comptent pas dans le solde.",
+        "rule": "Règle de gestion",
+        "start": "Démarrer le suivi",
+        "save": "Enregistrer",
+        "cancel": "Annuler"
+      },
+      "rules": {
+        "conservative": {
+          "name": "Prudente",
+          "text": "200 buy-ins. Le conseil habituel en MTT : les gros champs font des downswings très longs."
+        },
+        "standard": {
+          "name": "Standard",
+          "text": "100 buy-ins. Correct pour des champs réduits ou un joueur gagnant confirmé."
+        },
+        "aggressive": {
+          "name": "Agressive",
+          "text": "50 buy-ins. Progression rapide, mais risque réel de tout perdre."
+        }
+      },
+      "totals": {
+        "balance": "Solde",
+        "tournamentProfit": "Résultat des tournois",
+        "netDeposits": "Dépôts nets"
+      },
+      "limit": {
+        "title": "Limite de buy-in",
+        "perTournament": "de buy-in moyen max ({{buyIns}} buy-ins)",
+        "recent": {
+          "good": "Ton buy-in moyen récent ({{average}}) est bien dans ta limite.",
+          "warn": "Ton buy-in moyen récent ({{average}}) approche de ta limite.",
+          "bad": "Ton buy-in moyen récent ({{average}}) dépasse ta limite : redescends de limite ou recharge."
+        },
+        "above": "{{count}} tournoi(s) sur {{total}} ces 30 derniers jours avaient un buy-in au-dessus de ta limite.",
+        "noTournaments": "Aucun tournoi avec résultat pour l'instant."
+      },
+      "roi": {
+        "title": "ROI réel",
+        "explain": "Sur {{count}} tournois, ton vrai ROI a 95 % de chances d'être dans cette fourchette. En MTT, il faut des milliers de tournois pour qu'elle se resserre.",
+        "aria": "ROI estimé entre {{low}} et {{high}}",
+        "none": "Aucun tournoi avec résultat pour l'instant."
+      },
+      "chart": {
+        "title": "Évolution du solde",
+        "aria": "Évolution de la bankroll, solde actuel {{balance}}",
+        "notEnough": "La courbe apparaît dès ton premier tournoi ou mouvement.",
+        "start": "Départ",
+        "movement": "Mouvement",
+        "balance": "Solde"
+      },
+      "risk": {
+        "title": "Risque de ruine",
+        "lead": "Ce qui peut arriver sur les {{count}} prochains tournois à {{buyIn}} de moyenne, en rejouant tes propres résultats au hasard 2 000 fois.",
+        "ruin": "Tout perdre",
+        "halfLoss": "Perdre la moitié",
+        "downswing": "Downswing typique",
+        "buyIns": "{{count}} buy-ins",
+        "outcomes": "Ta bankroll après {{count}} tournois",
+        "low": "Mauvais cas (1 sur 10)",
+        "median": "Cas médian",
+        "high": "Bon cas (1 sur 10)",
+        "disclaimer": "Ton passé sert de modèle : s'il a été chanceux, le risque réel est plus élevé. Ce n'est pas un conseil financier.",
+        "notEnough": "Il faut au moins {{needed}} tournois avec résultat pour simuler ton risque ({{count}} pour l'instant).",
+        "broke": "Plus de bankroll : recharge pour simuler la suite."
+      },
+      "movements": {
+        "title": "Dépôts et retraits",
+        "kind": "Type",
+        "kinds": {
+          "deposit": "Dépôt",
+          "withdrawal": "Retrait",
+          "adjustment": "Ajustement"
+        },
+        "amount": "Montant (€)",
+        "date": "Date",
+        "note": "Note",
+        "notePlaceholder": "Facultatif : rakeback, autre salle…",
+        "add": "Ajouter",
+        "delete": "Supprimer ce mouvement",
+        "adjustmentHint": "Un ajustement corrige le solde dans un sens ou dans l'autre : montant négatif pour retirer (cash game perdant, autre salle…).",
+        "empty": "Aucun dépôt ni retrait depuis le départ."
+      },
+      "errors": {
+        "validation": "Vérifie les valeurs saisies : la date doit être après le départ de la bankroll et pas dans le futur.",
+        "notFound": "Ce mouvement n'existe plus.",
+        "unknown": "Poker Coach n'a pas pu enregistrer. Réessaie."
+      },
+      "error": {
+        "title": "Impossible de charger ta bankroll",
+        "description": "Poker Coach n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
+        "retry": "Réessayer"
       }
     },
     "statistics": {

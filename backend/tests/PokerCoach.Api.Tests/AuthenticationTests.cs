@@ -27,6 +27,10 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/training/opening/progress")]
     [InlineData("GET", "/api/leaks")]
     [InlineData("POST", "/api/leaks/explanations")]
+    [InlineData("GET", "/api/bankroll")]
+    [InlineData("PUT", "/api/bankroll/settings")]
+    [InlineData("POST", "/api/bankroll/movements")]
+    [InlineData("DELETE", "/api/bankroll/movements/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
     {
         await using var factory = new ApiFactory();
@@ -47,6 +51,9 @@ public sealed class AuthenticationTests
     [InlineData("DELETE", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000")]
     [InlineData("POST", "/api/leaks/explanations")]
     [InlineData("POST", "/api/training/opening/answers")]
+    [InlineData("PUT", "/api/bankroll/settings")]
+    [InlineData("POST", "/api/bankroll/movements")]
+    [InlineData("DELETE", "/api/bankroll/movements/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Unsafe_requests_without_an_anti_forgery_token_are_rejected(string method, string path)
     {
         await using var factory = new ApiFactory(signedIn: true);

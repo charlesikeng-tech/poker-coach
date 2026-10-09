@@ -1,5 +1,4 @@
 import {
-  CalendarDays,
   Grid3x3,
   ChartColumn,
   Dumbbell,
@@ -8,6 +7,7 @@ import {
   TrendingUp,
   Trophy,
   Upload,
+  Wallet,
 } from 'lucide';
 
 import { IconNode } from '../../shared/ui/icon/icon';
@@ -26,11 +26,11 @@ export const PRIMARY_NAVIGATION: readonly NavigationItem[] = [
   { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
   { path: '/performance', labelKey: 'nav.performance', icon: TrendingUp },
   { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy },
-  { path: '/sessions', labelKey: 'nav.sessions', icon: CalendarDays },
   { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },
   { path: '/leaks', labelKey: 'nav.leaks', icon: Radar },
   { path: '/ranges', labelKey: 'nav.ranges', icon: Grid3x3 },
   { path: '/training', labelKey: 'nav.training', icon: Dumbbell },
+  { path: '/bankroll', labelKey: 'nav.bankroll', icon: Wallet },
 ];
 
 export const SECONDARY_NAVIGATION: readonly NavigationItem[] = [
