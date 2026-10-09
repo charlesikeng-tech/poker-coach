@@ -14,6 +14,7 @@ public sealed class WinamaxHandHistoryParserGoldenTests
     [Theory]
     [InlineData(GoldenFiles.CassiopeiaHands, 72)]
     [InlineData(GoldenFiles.AcceleratorHands, 222)]
+    [InlineData(GoldenFiles.AsteroidHands, 54)]
     public void Every_hand_of_a_real_file_is_accepted(string fileName, int expectedHands)
     {
         var result = parser.Parse(GoldenFiles.Read(fileName));
@@ -25,6 +26,7 @@ public sealed class WinamaxHandHistoryParserGoldenTests
     [Theory]
     [InlineData(GoldenFiles.CassiopeiaHands)]
     [InlineData(GoldenFiles.AcceleratorHands)]
+    [InlineData(GoldenFiles.AsteroidHands)]
     public void Every_accepted_hand_balances_and_identifies_the_hero(string fileName)
     {
         var hands = parser.Parse(GoldenFiles.Read(fileName)).Hands;
@@ -37,6 +39,19 @@ public sealed class WinamaxHandHistoryParserGoldenTests
             Assert.Equal(2, hand.HeroCards.Count);
             Assert.All(hand.Actions, action => Assert.Contains(hand.Seats, seat => seat.PlayerName == action.PlayerName));
         });
+    }
+
+    [Fact]
+    public void A_re_entry_shows_as_a_starting_stack_at_a_new_table_after_a_bust()
+    {
+        // Hands carry no entry number: the second entry is only visible as the hero coming back with the
+        // starting stack on another table (and another hand-id prefix) after busting.
+        var hands = parser.Parse(GoldenFiles.Read(GoldenFiles.AsteroidHands)).Hands;
+        var heroStacks = hands.Select(h => (h.TableName, h.Level, Stack: h.Seats.Single(s => s.PlayerName == "Hero").Stack)).ToList();
+
+        Assert.Equal(new[] { "ASTEROID(1178140542)#122", "ASTEROID(1178140542)#165" }, heroStacks.Select(s => s.TableName).Distinct());
+        Assert.Equal(("ASTEROID(1178140542)#122", 1, 20_000L), heroStacks[0]);
+        Assert.Equal(("ASTEROID(1178140542)#165", 4, 20_000L), heroStacks.First(s => s.TableName.EndsWith("#165", StringComparison.Ordinal)));
     }
 
     [Fact]

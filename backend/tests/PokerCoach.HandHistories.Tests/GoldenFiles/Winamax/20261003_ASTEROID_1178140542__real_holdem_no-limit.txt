@@ -1,0 +1,2149 @@
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-23-1791031013 - Holdem no limit (25/100/200) - 2026/10/03 12:36:53 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (13522, 2.50€ bounty)
+Seat 2: Villain02 (54214, 3.75€ bounty)
+Seat 3: Villain03 (32230, 2.50€ bounty)
+Seat 4: Villain04 (20900, 2.50€ bounty)
+Seat 5: Villain 05 x (32320, 3.75€ bounty)
+Seat 6: Hero (20000, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Hero posts ante 25
+Villain04 posts small blind 100
+Villain 05 x posts big blind 200
+Dealt to Hero [7d 3s]
+*** PRE-FLOP *** 
+Hero folds
+Villain01 folds
+Villain02 folds
+Villain03 folds
+Villain04 calls 100
+Villain 05 x raises 600 to 800
+Villain04 folds
+Villain 05 x collected 1150 from pot
+*** SUMMARY ***
+Total pot 1150 | No rake
+Seat 5: Villain 05 x (big blind) won 1150
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-24-1791031049 - Holdem no limit (25/100/200) - 2026/10/03 12:37:29 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (13497, 2.50€ bounty)
+Seat 2: Villain02 (54189, 3.75€ bounty)
+Seat 3: Villain03 (32205, 2.50€ bounty)
+Seat 4: Villain04 (20675, 2.50€ bounty)
+Seat 5: Villain 05 x (32645, 3.75€ bounty)
+Seat 6: Hero (19975, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain 05 x posts ante 25
+Hero posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts small blind 100
+Hero posts big blind 200
+Dealt to Hero [Qc 9d]
+*** PRE-FLOP *** 
+Villain01 folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 05 x calls 100
+Hero checks
+*** FLOP *** [5c Jc Kd]
+Villain 05 x checks
+Hero checks
+*** TURN *** [5c Jc Kd][6c]
+Villain 05 x checks
+Hero checks
+*** RIVER *** [5c Jc Kd 6c][3h]
+Villain 05 x checks
+Hero checks
+*** SHOW DOWN ***
+Villain 05 x shows [Td 8s] (High card : King)
+Hero shows [Qc 9d] (High card : King)
+Hero collected 550 from pot
+*** SUMMARY ***
+Total pot 550 | No rake
+Board: [5c Jc Kd 6c 3h]
+Seat 5: Villain 05 x (small blind) showed [Td 8s] and lost with High card : King
+Seat 6: Hero (big blind) showed [Qc 9d] and won 550 with High card : King
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-25-1791031118 - Holdem no limit (25/100/200) - 2026/10/03 12:38:38 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (13472, 2.50€ bounty)
+Seat 2: Villain02 (54164, 3.75€ bounty)
+Seat 3: Villain03 (32180, 2.50€ bounty)
+Seat 4: Villain04 (20650, 2.50€ bounty)
+Seat 5: Villain 05 x (32420, 3.75€ bounty)
+Seat 6: Hero (20300, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Hero posts small blind 100
+Villain01 posts big blind 200
+Dealt to Hero [9s Ts]
+*** PRE-FLOP *** 
+Villain02 raises 200 to 400
+Villain03 folds
+Villain04 raises 1200 to 1600
+Villain 05 x calls 1600
+Hero folds
+Villain01 folds
+Villain02 calls 1200
+*** FLOP *** [Jh 4c 2d]
+Villain02 checks
+Villain04 bets 2625
+Villain 05 x folds
+Villain02 calls 2625
+*** TURN *** [Jh 4c 2d][2c]
+Villain02 checks
+Villain04 bets 16400 and is all-in
+Villain02 folds
+Villain04 collected 26900 from pot
+*** SUMMARY ***
+Total pot 26900 | No rake
+Board: [Jh 4c 2d 2c]
+Seat 4: Villain04 won 26900
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-26-1791031206 - Holdem no limit (25/100/200) - 2026/10/03 12:40:06 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (13247, 2.50€ bounty)
+Seat 2: Villain02 (49914, 3.75€ bounty)
+Seat 3: Villain03 (32155, 2.50€ bounty)
+Seat 4: Villain04 (26900, 2.50€ bounty)
+Seat 5: Villain 05 x (30795, 3.75€ bounty)
+Seat 6: Hero (20175, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Hero posts ante 25
+Villain01 posts small blind 100
+Villain02 posts big blind 200
+Dealt to Hero [Kc 5h]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 05 x folds
+Hero folds
+Villain01 folds
+Villain02 collected 450 from pot
+*** SUMMARY ***
+Total pot 450 | No rake
+Seat 2: Villain02 (big blind) won 450
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-27-1791031246 - Holdem no limit (25/100/200) - 2026/10/03 12:40:46 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (13122, 2.50€ bounty)
+Seat 2: Villain02 (50139, 3.75€ bounty)
+Seat 3: Villain03 (32130, 2.50€ bounty)
+Seat 4: Villain04 (26875, 2.50€ bounty)
+Seat 5: Villain 05 x (30770, 3.75€ bounty)
+Seat 6: Hero (20150, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain01 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Hero posts ante 25
+Villain02 posts small blind 100
+Villain03 posts big blind 200
+Dealt to Hero [Qc 5s]
+*** PRE-FLOP *** 
+Villain04 raises 300 to 500
+Villain 05 x folds
+Hero folds
+Villain01 folds
+Villain02 folds
+Villain03 folds
+Villain04 collected 950 from pot
+*** SUMMARY ***
+Total pot 950 | No rake
+Seat 4: Villain04 won 950
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-28-1791031269 - Holdem no limit (25/100/200) - 2026/10/03 12:41:09 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (13097, 2.50€ bounty)
+Seat 2: Villain02 (50014, 3.75€ bounty)
+Seat 3: Villain03 (31905, 2.50€ bounty)
+Seat 4: Villain04 (27300, 2.50€ bounty)
+Seat 5: Villain 05 x (30745, 3.75€ bounty)
+Seat 6: Hero (20125, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain 05 x posts ante 25
+Hero posts ante 25
+Villain03 posts small blind 100
+Villain04 posts big blind 200
+Dealt to Hero [Ts 8h]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Hero folds
+Villain01 folds
+Villain02 folds
+Villain03 raises 300 to 500
+Villain04 folds
+Villain03 collected 850 from pot
+*** SUMMARY ***
+Total pot 850 | No rake
+Seat 3: Villain03 (small blind) won 850
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-29-1791031291 - Holdem no limit (25/100/200) - 2026/10/03 12:41:31 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (13072, 2.50€ bounty)
+Seat 2: Villain02 (49989, 3.75€ bounty)
+Seat 3: Villain03 (32230, 2.50€ bounty)
+Seat 4: Villain04 (27075, 2.50€ bounty)
+Seat 5: Villain 05 x (30720, 3.75€ bounty)
+Seat 6: Hero (20100, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Hero posts ante 25
+Villain04 posts small blind 100
+Villain 05 x posts big blind 200
+Dealt to Hero [5c Jd]
+*** PRE-FLOP *** 
+Hero folds
+Villain01 folds
+Villain02 folds
+Villain03 folds
+Villain04 calls 100
+Villain 05 x raises 600 to 800
+Villain04 calls 600
+*** FLOP *** [6d Kd 3c]
+Villain04 checks
+Villain 05 x bets 875
+Villain04 folds
+Villain 05 x collected 2625 from pot
+*** SUMMARY ***
+Total pot 2625 | No rake
+Board: [6d Kd 3c]
+Seat 5: Villain 05 x (big blind) won 2625
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-30-1791031377 - Holdem no limit (25/100/200) - 2026/10/03 12:42:57 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (13047, 2.50€ bounty)
+Seat 2: Villain02 (49964, 3.75€ bounty)
+Seat 3: Villain03 (32205, 2.50€ bounty)
+Seat 4: Villain04 (26250, 2.50€ bounty)
+Seat 5: Villain 05 x (31645, 3.75€ bounty)
+Seat 6: Hero (20075, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain 05 x posts ante 25
+Hero posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts small blind 100
+Hero posts big blind 200
+Dealt to Hero [9s 6d]
+*** PRE-FLOP *** 
+Villain01 folds
+Villain02 raises 300 to 500
+Villain03 folds
+Villain04 folds
+Villain 05 x folds
+Hero folds
+Villain02 collected 950 from pot
+*** SUMMARY ***
+Total pot 950 | No rake
+Seat 2: Villain02 won 950
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-31-1791031420 - Holdem no limit (25/100/200) - 2026/10/03 12:43:40 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (13022, 2.50€ bounty)
+Seat 2: Villain02 (50389, 3.75€ bounty)
+Seat 3: Villain03 (32180, 2.50€ bounty)
+Seat 4: Villain04 (26225, 2.50€ bounty)
+Seat 5: Villain 05 x (31520, 3.75€ bounty)
+Seat 6: Hero (19850, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 25
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Hero posts small blind 100
+Villain01 posts big blind 200
+Dealt to Hero [As 9h]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 05 x raises 300 to 500
+Hero raises 1000 to 1500
+Villain01 folds
+Villain 05 x raises 3000 to 4500
+Hero folds
+Villain 05 x collected 6350 from pot
+*** SUMMARY ***
+Total pot 6350 | No rake
+Seat 5: Villain 05 x (button) won 6350
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 1 - HandId: #5060075097981714555-32-1791031511 - Holdem no limit (25/100/200) - 2026/10/03 12:45:11 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (12797, 2.50€ bounty)
+Seat 2: Villain02 (50364, 3.75€ bounty)
+Seat 3: Villain03 (32155, 2.50€ bounty)
+Seat 4: Villain04 (26200, 2.50€ bounty)
+Seat 5: Villain 05 x (33345, 3.75€ bounty)
+Seat 6: Hero (18325, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain01 posts ante 25
+Villain02 posts ante 25
+Villain03 posts ante 25
+Villain04 posts ante 25
+Villain 05 x posts ante 25
+Hero posts ante 25
+Villain01 posts small blind 100
+Villain02 posts big blind 200
+Dealt to Hero [7h 9s]
+*** PRE-FLOP *** 
+Villain03 raises 200 to 400
+Villain04 folds
+Villain 05 x folds
+Hero folds
+Villain01 folds
+Villain02 folds
+Villain03 collected 850 from pot
+*** SUMMARY ***
+Total pot 850 | No rake
+Seat 3: Villain03 won 850
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 2 - HandId: #5060075097981714555-33-1791031567 - Holdem no limit (30/125/250) - 2026/10/03 12:46:07 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (12672, 2.50€ bounty)
+Seat 2: Villain02 (50139, 3.75€ bounty)
+Seat 3: Villain03 (32580, 2.50€ bounty)
+Seat 4: Villain04 (26175, 2.50€ bounty)
+Seat 5: Villain 05 x (33320, 3.75€ bounty)
+Seat 6: Hero (18300, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 30
+Villain03 posts ante 30
+Villain01 posts ante 30
+Villain04 posts ante 30
+Villain 05 x posts ante 30
+Hero posts ante 30
+Villain02 posts small blind 125
+Villain03 posts big blind 250
+Dealt to Hero [Kh 9c]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 05 x folds
+Hero raises 300 to 550
+Villain01 folds
+Villain02 folds
+Villain03 calls 300
+*** FLOP *** [6c 4c 5d]
+Villain03 checks
+Hero bets 250
+Villain03 folds
+Hero collected 1655 from pot
+*** SUMMARY ***
+Total pot 1655 | No rake
+Board: [6c 4c 5d]
+Seat 6: Hero won 1655
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 2 - HandId: #5060075097981714555-34-1791031634 - Holdem no limit (30/125/250) - 2026/10/03 12:47:14 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (12642, 2.50€ bounty)
+Seat 2: Villain02 (49984, 3.75€ bounty)
+Seat 3: Villain03 (32000, 2.50€ bounty)
+Seat 4: Villain04 (26145, 2.50€ bounty)
+Seat 5: Villain 05 x (33290, 3.75€ bounty)
+Seat 6: Hero (19125, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 30
+Villain04 posts ante 30
+Villain01 posts ante 30
+Villain02 posts ante 30
+Villain 05 x posts ante 30
+Hero posts ante 30
+Villain03 posts small blind 125
+Villain04 posts big blind 250
+Dealt to Hero [Kc Js]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Hero raises 300 to 550
+Villain01 folds
+Villain02 calls 550
+Villain03 folds
+Villain04 calls 300
+*** FLOP *** [8h 3c Th]
+Villain04 checks
+Hero checks
+Villain02 bets 684
+Villain04 calls 684
+Hero folds
+*** TURN *** [8h 3c Th][Qh]
+Villain04 checks
+Villain02 bets 2160
+Villain04 folds
+Villain02 collected 5483 from pot
+*** SUMMARY ***
+Total pot 5483 | No rake
+Board: [8h 3c Th Qh]
+Seat 2: Villain02 (button) won 5483
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 2 - HandId: #5060075097981714555-35-1791031751 - Holdem no limit (30/125/250) - 2026/10/03 12:49:11 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (12612, 2.50€ bounty)
+Seat 2: Villain02 (52043, 3.75€ bounty)
+Seat 3: Villain03 (31845, 2.50€ bounty)
+Seat 4: Villain04 (24881, 2.50€ bounty)
+Seat 5: Villain 05 x (33260, 3.75€ bounty)
+Seat 6: Hero (18545, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 30
+Villain 05 x posts ante 30
+Villain01 posts ante 30
+Villain02 posts ante 30
+Villain03 posts ante 30
+Hero posts ante 30
+Villain04 posts small blind 125
+Villain 05 x posts big blind 250
+Dealt to Hero [8c 8d]
+*** PRE-FLOP *** 
+Hero raises 300 to 550
+Villain01 folds
+Villain02 calls 550
+Villain03 raises 2205 to 2755
+Villain04 folds
+Villain 05 x folds
+Hero folds
+Villain02 folds
+Villain03 collected 4410 from pot
+*** SUMMARY ***
+Total pot 4410 | No rake
+Seat 3: Villain03 (button) won 4410
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 2 - HandId: #5060075097981714555-36-1791031817 - Holdem no limit (30/125/250) - 2026/10/03 12:50:17 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (12582, 2.50€ bounty)
+Seat 2: Villain02 (51463, 3.75€ bounty)
+Seat 3: Villain03 (33470, 2.50€ bounty)
+Seat 4: Villain04 (24726, 2.50€ bounty)
+Seat 5: Villain 05 x (32980, 3.75€ bounty)
+Seat 6: Hero (17965, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain 05 x posts ante 30
+Hero posts ante 30
+Villain01 posts ante 30
+Villain02 posts ante 30
+Villain03 posts ante 30
+Villain04 posts ante 30
+Villain 05 x posts small blind 125
+Hero posts big blind 250
+Dealt to Hero [5d 6d]
+*** PRE-FLOP *** 
+Villain01 folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 05 x folds
+Hero collected 555 from pot
+*** SUMMARY ***
+Total pot 555 | No rake
+Seat 6: Hero (big blind) won 555
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 2 - HandId: #5060075097981714555-37-1791031836 - Holdem no limit (30/125/250) - 2026/10/03 12:50:36 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (12552, 2.50€ bounty)
+Seat 2: Villain02 (51433, 3.75€ bounty)
+Seat 3: Villain03 (33440, 2.50€ bounty)
+Seat 4: Villain04 (24696, 2.50€ bounty)
+Seat 5: Villain 05 x (32825, 3.75€ bounty)
+Seat 6: Hero (18240, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 30
+Villain01 posts ante 30
+Villain02 posts ante 30
+Villain03 posts ante 30
+Villain04 posts ante 30
+Villain 05 x posts ante 30
+Hero posts small blind 125
+Villain01 posts big blind 250
+Dealt to Hero [3h 5d]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 05 x raises 375 to 625
+Hero folds
+Villain01 calls 375
+*** FLOP *** [Qd 8d 3c]
+Villain01 checks
+Villain 05 x bets 778
+Villain01 folds
+Villain 05 x collected 2333 from pot
+*** SUMMARY ***
+Total pot 2333 | No rake
+Board: [Qd 8d 3c]
+Seat 5: Villain 05 x (button) won 2333
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 3 - HandId: #5060075097981714555-38-1791031915 - Holdem no limit (35/150/300) - 2026/10/03 12:51:55 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (11897, 2.50€ bounty)
+Seat 2: Villain02 (51403, 3.75€ bounty)
+Seat 3: Villain03 (33410, 2.50€ bounty)
+Seat 4: Villain04 (24666, 2.50€ bounty)
+Seat 5: Villain 05 x (33725, 3.75€ bounty)
+Seat 6: Hero (18085, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain01 posts ante 35
+Villain02 posts ante 35
+Villain03 posts ante 35
+Villain04 posts ante 35
+Villain 05 x posts ante 35
+Hero posts ante 35
+Villain01 posts small blind 150
+Villain02 posts big blind 300
+Dealt to Hero [9s 2d]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Villain 05 x folds
+Hero folds
+Villain01 calls 150
+Villain02 checks
+*** FLOP *** [Ts 3d Jh]
+Villain01 checks
+Villain02 bets 527
+Villain01 folds
+Villain02 collected 1337 from pot
+*** SUMMARY ***
+Total pot 1337 | No rake
+Board: [Ts 3d Jh]
+Seat 2: Villain02 (big blind) won 1337
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 3 - HandId: #5060075097981714555-39-1791031991 - Holdem no limit (35/150/300) - 2026/10/03 12:53:11 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (11562, 2.50€ bounty)
+Seat 2: Villain02 (51878, 3.75€ bounty)
+Seat 3: Villain03 (33375, 2.50€ bounty)
+Seat 4: Villain04 (24631, 2.50€ bounty)
+Seat 5: Villain 05 x (33690, 3.75€ bounty)
+Seat 6: Hero (18050, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain02 posts ante 35
+Villain03 posts ante 35
+Villain01 posts ante 35
+Villain04 posts ante 35
+Villain 05 x posts ante 35
+Hero posts ante 35
+Villain02 posts small blind 150
+Villain03 posts big blind 300
+Dealt to Hero [As Qs]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain 05 x folds
+Hero raises 360 to 660
+Villain01 folds
+Villain02 folds
+Villain03 folds
+Hero collected 1320 from pot
+*** SUMMARY ***
+Total pot 1320 | No rake
+Seat 6: Hero won 1320
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 3 - HandId: #5060075097981714555-40-1791032003 - Holdem no limit (35/150/300) - 2026/10/03 12:53:23 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (11527, 2.50€ bounty)
+Seat 2: Villain02 (51693, 3.75€ bounty)
+Seat 3: Villain03 (33040, 2.50€ bounty)
+Seat 4: Villain04 (24596, 2.50€ bounty)
+Seat 5: Villain 05 x (33655, 3.75€ bounty)
+Seat 6: Hero (18675, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain03 posts ante 35
+Villain04 posts ante 35
+Villain01 posts ante 35
+Villain02 posts ante 35
+Villain 05 x posts ante 35
+Hero posts ante 35
+Villain03 posts small blind 150
+Villain04 posts big blind 300
+Dealt to Hero [Js 2s]
+*** PRE-FLOP *** 
+Villain 05 x raises 450 to 750
+Hero folds
+Villain01 folds
+Villain02 calls 750
+Villain03 calls 600
+Villain04 folds
+*** FLOP *** [5s Tc 9d]
+Villain03 checks
+Villain 05 x checks
+Villain02 checks
+*** TURN *** [5s Tc 9d][7d]
+Villain03 checks
+Villain 05 x checks
+Villain02 bets 1794
+Villain03 calls 1794
+Villain 05 x calls 1794
+*** RIVER *** [5s Tc 9d 7d][Kc]
+Villain03 checks
+Villain 05 x checks
+Villain02 checks
+*** SHOW DOWN ***
+Villain02 shows [2c 4d] (High card : King)
+Villain 05 x shows [Ad 6d] (High card : Ace)
+Villain03 shows [5c 6c] (One pair : 5)
+Villain03 collected 8142 from pot
+*** SUMMARY ***
+Total pot 8142 | No rake
+Board: [5s Tc 9d 7d Kc]
+Seat 2: Villain02 (button) showed [2c 4d] and lost with High card : King
+Seat 3: Villain03 (small blind) showed [5c 6c] and won 8142 with One pair : 5
+Seat 5: Villain 05 x showed [Ad 6d] and lost with High card : Ace
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 3 - HandId: #5060075097981714555-41-1791032460 - Holdem no limit (35/150/300) - 2026/10/03 13:01:00 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (11492, 2.50€ bounty)
+Seat 2: Villain02 (49114, 3.75€ bounty)
+Seat 3: Villain03 (38603, 2.50€ bounty)
+Seat 4: Villain04 (24261, 2.50€ bounty)
+Seat 5: Villain 05 x (31076, 3.75€ bounty)
+Seat 6: Hero (18640, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain04 posts ante 35
+Villain 05 x posts ante 35
+Villain01 posts ante 35
+Villain02 posts ante 35
+Villain03 posts ante 35
+Hero posts ante 35
+Villain04 posts small blind 150
+Villain 05 x posts big blind 300
+Dealt to Hero [5h 6s]
+*** PRE-FLOP *** 
+Hero folds
+Villain01 calls 300
+Villain02 folds
+Villain03 folds
+Villain04 raises 900 to 1200
+Villain 05 x folds
+Villain01 calls 900
+*** FLOP *** [9s Qh 6h]
+Villain04 bets 1455
+Villain01 folds
+Villain04 collected 4365 from pot
+*** SUMMARY ***
+Total pot 4365 | No rake
+Board: [9s Qh 6h]
+Seat 4: Villain04 (small blind) won 4365
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 3 - HandId: #5060075097981714555-42-1791032532 - Holdem no limit (35/150/300) - 2026/10/03 13:02:12 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (10257, 2.50€ bounty)
+Seat 2: Villain02 (49079, 3.75€ bounty)
+Seat 3: Villain03 (38568, 2.50€ bounty)
+Seat 4: Villain04 (25936, 2.50€ bounty)
+Seat 5: Villain 05 x (30741, 3.75€ bounty)
+Seat 6: Hero (18605, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain 05 x posts ante 35
+Hero posts ante 35
+Villain01 posts ante 35
+Villain02 posts ante 35
+Villain03 posts ante 35
+Villain04 posts ante 35
+Villain 05 x posts small blind 150
+Hero posts big blind 300
+Dealt to Hero [Tc 3c]
+*** PRE-FLOP *** 
+Villain01 folds
+Villain02 folds
+Villain03 raises 450 to 750
+Villain04 folds
+Villain 05 x folds
+Hero folds
+Villain03 collected 1410 from pot
+*** SUMMARY ***
+Total pot 1410 | No rake
+Seat 3: Villain03 won 1410
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 3 - HandId: #5060075097981714555-43-1791032560 - Holdem no limit (35/150/300) - 2026/10/03 13:02:40 UTC
+Table: 'ASTEROID(1178140542)#122' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (10222, 2.50€ bounty)
+Seat 2: Villain02 (49044, 3.75€ bounty)
+Seat 3: Villain03 (39193, 2.50€ bounty)
+Seat 4: Villain04 (25901, 2.50€ bounty)
+Seat 5: Villain 05 x (30556, 3.75€ bounty)
+Seat 6: Hero (18270, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 35
+Villain01 posts ante 35
+Villain02 posts ante 35
+Villain03 posts ante 35
+Villain04 posts ante 35
+Villain 05 x posts ante 35
+Hero posts small blind 150
+Villain01 posts big blind 300
+Dealt to Hero [Jd Qc]
+*** PRE-FLOP *** 
+Villain02 raises 300 to 600
+Villain03 folds
+Villain04 folds
+Villain 05 x folds
+Hero raises 1050 to 1650
+Villain01 folds
+Villain02 calls 1050
+*** FLOP *** [Qh 9c Ts]
+Hero bets 1350
+Villain02 calls 1350
+*** TURN *** [Qh 9c Ts][6h]
+Hero checks
+Villain02 bets 4232
+Hero calls 4232
+*** RIVER *** [Qh 9c Ts 6h][7d]
+Hero checks
+Villain02 bets 14974
+Hero calls 11003 and is all-in
+*** SHOW DOWN ***
+Hero shows [Jd Qc] (One pair : Queens)
+Villain02 shows [As 8d] (Straight Ten high)
+Villain02 collected 40951 from pot
+*** SUMMARY ***
+Total pot 40951 | No rake
+Board: [Qh 9c Ts 6h 7d]
+Seat 2: Villain02 showed [As 8d] and won 40951 with Straight Ten high
+Seat 6: Hero (small blind) showed [Jd Qc] and lost with One pair : Queens
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 4 - HandId: #5060075097981714598-41-1791032905 - Holdem no limit (40/175/350) - 2026/10/03 13:08:25 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (39329, 3€ bounty)
+Seat 2: Villain07 (105124, 5€ bounty)
+Seat 3: Villain08 (19920, 2.50€ bounty)
+Seat 4: Villain09 (21057, 2.50€ bounty)
+Seat 5: Villain.10 (50636, 3€ bounty)
+Seat 6: Hero (20000, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain07 posts ante 40
+Villain08 posts ante 40
+Villain06 posts ante 40
+Villain09 posts ante 40
+Villain.10 posts ante 40
+Hero posts ante 40
+Villain07 posts small blind 175
+Villain08 posts big blind 350
+Dealt to Hero [Jd As]
+*** PRE-FLOP *** 
+Villain09 folds
+Villain.10 calls 350
+Hero raises 875 to 1225
+Villain06 folds
+Villain07 calls 1050
+Villain08 folds
+Villain.10 calls 875
+*** FLOP *** [Th 2h 5c]
+Villain07 bets 1493
+Villain.10 calls 1493
+Hero folds
+*** TURN *** [Th 2h 5c][Qc]
+Villain07 checks
+Villain.10 checks
+*** RIVER *** [Th 2h 5c Qc][8s]
+Villain07 bets 3626
+Villain.10 folds
+Villain07 collected 10877 from pot
+*** SUMMARY ***
+Total pot 10877 | No rake
+Board: [Th 2h 5c Qc 8s]
+Seat 2: Villain07 (small blind) won 10877
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-42-1791032968 - Holdem no limit (50/200/400) - 2026/10/03 13:09:28 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (39289, 3€ bounty)
+Seat 2: Villain07 (109617, 5€ bounty)
+Seat 3: Villain08 (19530, 2.50€ bounty)
+Seat 4: Villain09 (21017, 2.50€ bounty)
+Seat 5: Villain.10 (47878, 3€ bounty)
+Seat 6: Hero (18735, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain08 posts ante 50
+Villain09 posts ante 50
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain.10 posts ante 50
+Hero posts ante 50
+Villain08 posts small blind 200
+Villain09 posts big blind 400
+Dealt to Hero [7d 7c]
+*** PRE-FLOP *** 
+Villain.10 folds
+Hero raises 480 to 880
+Villain06 calls 880
+Villain07 folds
+Villain08 folds
+Villain09 folds
+*** FLOP *** [5c 2c 9s]
+Hero bets 878
+Villain06 raises 1722 to 2600
+Hero folds
+Villain06 collected 6138 from pot
+*** SUMMARY ***
+Total pot 6138 | No rake
+Board: [5c 2c 9s]
+Seat 1: Villain06 won 6138
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-43-1791033041 - Holdem no limit (50/200/400) - 2026/10/03 13:10:41 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (41897, 3€ bounty)
+Seat 2: Villain07 (109567, 5€ bounty)
+Seat 3: Villain08 (19280, 2.50€ bounty)
+Seat 4: Villain09 (20567, 2.50€ bounty)
+Seat 5: Villain.10 (47828, 3€ bounty)
+Seat 6: Hero (16927, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain09 posts ante 50
+Villain.10 posts ante 50
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain08 posts ante 50
+Hero posts ante 50
+Villain09 posts small blind 200
+Villain.10 posts big blind 400
+Dealt to Hero [7s 8c]
+*** PRE-FLOP *** 
+Hero folds
+Villain06 folds
+Villain07 raises 400 to 800
+Villain08 raises 1600 to 2400
+Villain09 folds
+Villain.10 folds
+Villain07 calls 1600
+*** FLOP *** [Kh 9d 3s]
+Villain07 bets 2850
+Villain08 calls 2850
+*** TURN *** [Kh 9d 3s][Ac]
+Villain07 checks
+Villain08 bets 7410
+Villain07 raises 96857 to 104267 and is all-in
+Villain08 calls 6570 and is all-in
+*** RIVER *** [Kh 9d 3s Ac][8s]
+*** SHOW DOWN ***
+Villain07 shows [Ad 6d] (One pair : Aces)
+Villain08 shows [Kd Ks] (Trips of Kings)
+Villain08 collected 39360 from main pot
+Villain07 collected 90287 from side pot 1
+*** SUMMARY ***
+Total pot 129647 | No rake
+Board: [Kh 9d 3s Ac 8s]
+Seat 2: Villain07 showed [Ad 6d] and won 90287 with One pair : Aces
+Seat 3: Villain08 (button) showed [Kd Ks] and won 39360 with Trips of Kings
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-44-1791033103 - Holdem no limit (50/200/400) - 2026/10/03 13:11:43 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (41847, 3€ bounty)
+Seat 2: Villain07 (90287, 5€ bounty)
+Seat 3: Villain08 (39360, 2.50€ bounty)
+Seat 4: Villain09 (20317, 2.50€ bounty)
+Seat 5: Villain.10 (47378, 3€ bounty)
+Seat 6: Hero (16877, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain.10 posts ante 50
+Hero posts ante 50
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain08 posts ante 50
+Villain09 posts ante 50
+Villain.10 posts small blind 200
+Hero posts big blind 400
+Dealt to Hero [6d 9h]
+*** PRE-FLOP *** 
+Villain06 folds
+Villain07 raises 400 to 800
+Villain08 folds
+Villain09 calls 800
+Villain.10 folds
+Hero folds
+*** FLOP *** [2c 8c Ac]
+Villain07 checks
+Villain09 checks
+*** TURN *** [2c 8c Ac][8d]
+Villain07 bets 1250
+Villain09 calls 1250
+*** RIVER *** [2c 8c Ac 8d][Jh]
+Villain07 checks
+Villain09 checks
+*** SHOW DOWN ***
+Villain09 shows [Tc Ks] (One pair : 8)
+Villain07 shows [4c 4h] (Two pairs : 8 and 4)
+Villain07 collected 5000 from pot
+*** SUMMARY ***
+Total pot 5000 | No rake
+Board: [2c 8c Ac 8d Jh]
+Seat 2: Villain07 showed [4c 4h] and won 5000 with Two pairs : 8 and 4
+Seat 4: Villain09 (button) showed [Tc Ks] and lost with One pair : 8
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-45-1791033137 - Holdem no limit (50/200/400) - 2026/10/03 13:12:17 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (41797, 3€ bounty)
+Seat 2: Villain07 (93187, 5€ bounty)
+Seat 3: Villain08 (39310, 2.50€ bounty)
+Seat 4: Villain09 (18217, 2.50€ bounty)
+Seat 5: Villain.10 (47128, 3€ bounty)
+Seat 6: Hero (16427, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 50
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain08 posts ante 50
+Villain09 posts ante 50
+Villain.10 posts ante 50
+Hero posts small blind 200
+Villain06 posts big blind 400
+Dealt to Hero [7s Qh]
+*** PRE-FLOP *** 
+Villain07 folds
+Villain08 folds
+Villain09 folds
+Villain.10 calls 400
+Hero raises 1000 to 1400
+Villain06 folds
+Villain.10 calls 1000
+*** FLOP *** [2s Th 9c]
+Hero bets 1155
+Villain.10 folds
+Hero collected 4655 from pot
+*** SUMMARY ***
+Total pot 4655 | No rake
+Board: [2s Th 9c]
+Seat 6: Hero (small blind) won 4655
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-46-1791033193 - Holdem no limit (50/200/400) - 2026/10/03 13:13:13 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (41347, 3€ bounty)
+Seat 2: Villain07 (93137, 5€ bounty)
+Seat 3: Villain08 (39260, 2.50€ bounty)
+Seat 4: Villain09 (18167, 2.50€ bounty)
+Seat 5: Villain.10 (45678, 3€ bounty)
+Seat 6: Hero (18477, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain08 posts ante 50
+Villain09 posts ante 50
+Villain.10 posts ante 50
+Hero posts ante 50
+Villain06 posts small blind 200
+Villain07 posts big blind 400
+Dealt to Hero [Qd 6c]
+*** PRE-FLOP *** 
+Villain08 folds
+Villain09 calls 400
+Villain.10 calls 400
+Hero folds
+Villain06 calls 200
+Villain07 checks
+*** FLOP *** [Kd 2h 5d]
+Villain06 checks
+Villain07 bets 950
+Villain09 calls 950
+Villain.10 folds
+Villain06 folds
+*** TURN *** [Kd 2h 5d][4s]
+Villain07 bets 1900
+Villain09 raises 4275 to 6175
+Villain07 raises 85562 to 91737 and is all-in
+Villain09 calls 10592 and is all-in
+*** RIVER *** [Kd 2h 5d 4s][Js]
+*** SHOW DOWN ***
+Villain07 shows [5c 4c] (Two pairs : 5 and 4)
+Villain09 shows [As 3s] (Straight 5 high)
+Villain09 collected 37334 from main pot
+Villain07 collected 74970 from side pot 1
+*** SUMMARY ***
+Total pot 112304 | No rake
+Board: [Kd 2h 5d 4s Js]
+Seat 2: Villain07 (big blind) showed [5c 4c] and won 74970 with Two pairs : 5 and 4
+Seat 4: Villain09 showed [As 3s] and won 37334 with Straight 5 high
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-47-1791033242 - Holdem no limit (50/200/400) - 2026/10/03 13:14:02 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (40897, 3€ bounty)
+Seat 2: Villain07 (74970, 5€ bounty)
+Seat 3: Villain08 (39210, 2.50€ bounty)
+Seat 4: Villain09 (37334, 2.50€ bounty)
+Seat 5: Villain.10 (45228, 3€ bounty)
+Seat 6: Hero (18427, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain07 posts ante 50
+Villain08 posts ante 50
+Villain06 posts ante 50
+Villain09 posts ante 50
+Villain.10 posts ante 50
+Hero posts ante 50
+Villain07 posts small blind 200
+Villain08 posts big blind 400
+Dealt to Hero [9h 4c]
+*** PRE-FLOP *** 
+Villain09 folds
+Villain.10 folds
+Hero folds
+Villain06 folds
+Villain07 calls 200
+Villain08 checks
+*** FLOP *** [Td 9s As]
+Villain07 bets 550
+Villain08 folds
+Villain07 collected 1650 from pot
+*** SUMMARY ***
+Total pot 1650 | No rake
+Board: [Td 9s As]
+Seat 2: Villain07 (small blind) won 1650
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-48-1791033268 - Holdem no limit (50/200/400) - 2026/10/03 13:14:28 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (40847, 3€ bounty)
+Seat 2: Villain07 (75620, 5€ bounty)
+Seat 3: Villain08 (38760, 2.50€ bounty)
+Seat 4: Villain09 (37284, 2.50€ bounty)
+Seat 5: Villain.10 (45178, 3€ bounty)
+Seat 6: Hero (18377, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain08 posts ante 50
+Villain09 posts ante 50
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain.10 posts ante 50
+Hero posts ante 50
+Villain08 posts small blind 200
+Villain09 posts big blind 400
+Dealt to Hero [5h Td]
+*** PRE-FLOP *** 
+Villain.10 folds
+Hero folds
+Villain06 raises 400 to 800
+Villain07 calls 800
+Villain08 folds
+Villain09 calls 400
+*** FLOP *** [Jh Ks Qs]
+Villain09 checks
+Villain06 checks
+Villain07 bets 1885
+Villain09 folds
+Villain06 folds
+Villain07 collected 4785 from pot
+*** SUMMARY ***
+Total pot 4785 | No rake
+Board: [Jh Ks Qs]
+Seat 2: Villain07 (button) won 4785
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 5 - HandId: #5060075097981714598-49-1791033311 - Holdem no limit (50/200/400) - 2026/10/03 13:15:11 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (39997, 3€ bounty)
+Seat 2: Villain07 (77670, 5€ bounty)
+Seat 3: Villain08 (38510, 2.50€ bounty)
+Seat 4: Villain09 (36434, 2.50€ bounty)
+Seat 5: Villain.10 (45128, 3€ bounty)
+Seat 6: Hero (18327, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain09 posts ante 50
+Villain.10 posts ante 50
+Villain06 posts ante 50
+Villain07 posts ante 50
+Villain08 posts ante 50
+Hero posts ante 50
+Villain09 posts small blind 200
+Villain.10 posts big blind 400
+Dealt to Hero [4h 4c]
+*** PRE-FLOP *** 
+Hero raises 480 to 880
+Villain06 folds
+Villain07 folds
+Villain08 folds
+Villain09 calls 680
+Villain.10 calls 480
+*** FLOP *** [Th 5h 7c]
+Villain09 checks
+Villain.10 bets 44198 and is all-in
+Hero folds
+Villain09 calls 35504 and is all-in
+*** TURN *** [Th 5h 7c][Ks]
+*** RIVER *** [Th 5h 7c Ks][2h]
+*** SHOW DOWN ***
+Villain09 shows [As Ts] (One pair : Tens)
+Villain.10 shows [Ad Td] (One pair : Tens)
+Villain.10 collected 45668 from side pot 1
+Villain09 collected 36974 from main pot
+*** SUMMARY ***
+Total pot 82642 | No rake
+Board: [Th 5h 7c Ks 2h]
+Seat 4: Villain09 (small blind) showed [As Ts] and won 36974 with One pair : Tens
+Seat 5: Villain.10 (big blind) showed [Ad Td] and won 45668 with One pair : Tens
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-50-1791033359 - Holdem no limit (60/250/500) - 2026/10/03 13:15:59 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (39947, 3€ bounty)
+Seat 2: Villain07 (77620, 5€ bounty)
+Seat 3: Villain08 (38460, 2.50€ bounty)
+Seat 4: Villain09 (36974, 2.50€ bounty)
+Seat 5: Villain.10 (45668, 3€ bounty)
+Seat 6: Hero (17397, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain.10 posts ante 60
+Hero posts ante 60
+Villain06 posts ante 60
+Villain07 posts ante 60
+Villain08 posts ante 60
+Villain09 posts ante 60
+Villain.10 posts small blind 250
+Hero posts big blind 500
+Dealt to Hero [Ah 5s]
+*** PRE-FLOP *** 
+Villain06 raises 500 to 1000
+Villain07 folds
+Villain08 folds
+Villain09 folds
+Villain.10 calls 750
+Hero folds
+*** FLOP *** [Ad 4s 2s]
+Villain.10 checks
+Villain06 bets 1050
+Villain.10 calls 1050
+*** TURN *** [Ad 4s 2s][Jc]
+Villain.10 checks
+Villain06 bets 2730
+Villain.10 calls 2730
+*** RIVER *** [Ad 4s 2s Jc][7d]
+Villain.10 bets 40828 and is all-in
+Villain06 folds
+Villain.10 collected 51248 from pot
+*** SUMMARY ***
+Total pot 51248 | No rake
+Board: [Ad 4s 2s Jc 7d]
+Seat 5: Villain.10 (small blind) won 51248
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-51-1791033440 - Holdem no limit (60/250/500) - 2026/10/03 13:17:20 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #5 is the button
+Seat 1: Villain06 (35107, 3€ bounty)
+Seat 2: Villain07 (77560, 5€ bounty)
+Seat 3: Villain08 (38400, 2.50€ bounty)
+Seat 4: Villain09 (36914, 2.50€ bounty)
+Seat 5: Villain.10 (51248, 3€ bounty)
+Seat 6: Hero (16837, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 60
+Villain06 posts ante 60
+Villain07 posts ante 60
+Villain08 posts ante 60
+Villain09 posts ante 60
+Villain.10 posts ante 60
+Hero posts small blind 250
+Villain06 posts big blind 500
+Dealt to Hero [Qh 9c]
+*** PRE-FLOP *** 
+Villain07 folds
+Villain08 folds
+Villain09 folds
+Villain.10 raises 1610 to 2110
+Hero folds
+Villain06 calls 1610
+*** FLOP *** [Kh 5d Th]
+Villain06 checks
+Villain.10 bets 4830
+Villain06 folds
+Villain.10 collected 9660 from pot
+*** SUMMARY ***
+Total pot 9660 | No rake
+Board: [Kh 5d Th]
+Seat 5: Villain.10 (button) won 9660
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-52-1791033475 - Holdem no limit (60/250/500) - 2026/10/03 13:17:55 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #6 is the button
+Seat 1: Villain06 (32937, 3€ bounty)
+Seat 2: Villain07 (77500, 5€ bounty)
+Seat 3: Villain08 (38340, 2.50€ bounty)
+Seat 4: Villain09 (36854, 2.50€ bounty)
+Seat 5: Villain.10 (53908, 3€ bounty)
+Seat 6: Hero (16527, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain06 posts ante 60
+Villain07 posts ante 60
+Villain08 posts ante 60
+Villain09 posts ante 60
+Villain.10 posts ante 60
+Hero posts ante 60
+Villain06 posts small blind 250
+Villain07 posts big blind 500
+Dealt to Hero [Qc 6d]
+*** PRE-FLOP *** 
+Villain08 folds
+Villain09 calls 500
+Villain.10 folds
+Hero folds
+Villain06 calls 250
+Villain07 checks
+*** FLOP *** [8h 6h 7c]
+Villain06 checks
+Villain07 bets 1209
+Villain09 calls 1209
+Villain06 raises 31168 to 32377 and is all-in
+Villain07 folds
+Villain09 folds
+Villain06 collected 36655 from pot
+*** SUMMARY ***
+Total pot 36655 | No rake
+Board: [8h 6h 7c]
+Seat 1: Villain06 (small blind) won 36655
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-53-1791033502 - Holdem no limit (60/250/500) - 2026/10/03 13:18:22 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #1 is the button
+Seat 1: Villain06 (36655, 3€ bounty)
+Seat 2: Villain07 (75731, 5€ bounty)
+Seat 3: Villain08 (38280, 2.50€ bounty)
+Seat 4: Villain09 (35085, 2.50€ bounty)
+Seat 5: Villain.10 (53848, 3€ bounty)
+Seat 6: Hero (16467, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain07 posts ante 60
+Villain08 posts ante 60
+Villain06 posts ante 60
+Villain09 posts ante 60
+Villain.10 posts ante 60
+Hero posts ante 60
+Villain07 posts small blind 250
+Villain08 posts big blind 500
+Dealt to Hero [Jh Ts]
+*** PRE-FLOP *** 
+Villain09 folds
+Villain.10 calls 500
+Hero raises 1000 to 1500
+Villain06 folds
+Villain07 calls 1250
+Villain08 calls 1000
+Villain.10 calls 1000
+*** FLOP *** [6d 7d 3c]
+Villain07 checks
+Villain08 checks
+Villain.10 bets 52288 and is all-in
+Hero folds
+Villain07 folds
+Villain08 folds
+Villain.10 collected 58648 from pot
+*** SUMMARY ***
+Total pot 58648 | No rake
+Board: [6d 7d 3c]
+Seat 5: Villain.10 won 58648
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-54-1791033567 - Holdem no limit (60/250/500) - 2026/10/03 13:19:27 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #2 is the button
+Seat 1: Villain06 (36595, 3€ bounty)
+Seat 2: Villain07 (74171, 5€ bounty)
+Seat 3: Villain08 (36720, 2.50€ bounty)
+Seat 4: Villain09 (35025, 2.50€ bounty)
+Seat 5: Villain.10 (58648, 3€ bounty)
+Seat 6: Hero (14907, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain08 posts ante 60
+Villain09 posts ante 60
+Villain06 posts ante 60
+Villain07 posts ante 60
+Villain.10 posts ante 60
+Hero posts ante 60
+Villain08 posts small blind 250
+Villain09 posts big blind 500
+Dealt to Hero [Ah 7s]
+*** PRE-FLOP *** 
+Villain.10 folds
+Hero raises 500 to 1000
+Villain06 folds
+Villain07 calls 1000
+Villain08 calls 750
+Villain09 calls 500
+*** FLOP *** [2d 3c Jd]
+Villain08 checks
+Villain09 checks
+Hero checks
+Villain07 bets 2834
+Villain08 folds
+Villain09 calls 2834
+Hero folds
+*** TURN *** [2d 3c Jd][7h]
+Villain09 checks
+Villain07 checks
+*** RIVER *** [2d 3c Jd 7h][9c]
+Villain09 checks
+Villain07 bets 3510
+Villain09 calls 3510
+*** SHOW DOWN ***
+Villain09 shows [8h 8d] (One pair : 8)
+Villain07 shows [Qd Js] (One pair : Jacks)
+Villain07 collected 17048 from pot
+*** SUMMARY ***
+Total pot 17048 | No rake
+Board: [2d 3c Jd 7h 9c]
+Seat 2: Villain07 (button) showed [Qd Js] and won 17048 with One pair : Jacks
+Seat 4: Villain09 (big blind) showed [8h 8d] and lost with One pair : 8
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-55-1791033643 - Holdem no limit (60/250/500) - 2026/10/03 13:20:43 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #3 is the button
+Seat 1: Villain06 (36535, 3€ bounty)
+Seat 2: Villain07 (83815, 5€ bounty)
+Seat 3: Villain08 (35660, 2.50€ bounty)
+Seat 4: Villain09 (27621, 2.50€ bounty)
+Seat 5: Villain.10 (58588, 3€ bounty)
+Seat 6: Hero (13847, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain09 posts ante 60
+Villain.10 posts ante 60
+Villain06 posts ante 60
+Villain07 posts ante 60
+Villain08 posts ante 60
+Hero posts ante 60
+Villain09 posts small blind 250
+Villain.10 posts big blind 500
+Dealt to Hero [Th 9s]
+*** PRE-FLOP *** 
+Hero folds
+Villain06 folds
+Villain07 folds
+Villain08 folds
+Villain09 calls 250
+Villain.10 checks
+*** FLOP *** [5h Tc Jd]
+Villain09 checks
+Villain.10 bets 884
+Villain09 calls 884
+*** TURN *** [5h Tc Jd][7h]
+Villain09 checks
+Villain.10 checks
+*** RIVER *** [5h Tc Jd 7h][Qs]
+Villain09 bets 3128
+Villain.10 calls 3128
+*** SHOW DOWN ***
+Villain.10 shows [Ac 5s] (One pair : 5)
+Villain09 shows [Ks 9h] (Straight King high)
+Villain09 collected 9384 from pot
+*** SUMMARY ***
+Total pot 9384 | No rake
+Board: [5h Tc Jd 7h Qs]
+Seat 4: Villain09 (small blind) showed [Ks 9h] and won 9384 with Straight King high
+Seat 5: Villain.10 (big blind) showed [Ac 5s] and lost with One pair : 5
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 6 - HandId: #5060075097981714598-56-1791033669 - Holdem no limit (60/250/500) - 2026/10/03 13:21:09 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #4 is the button
+Seat 1: Villain06 (36475, 3€ bounty)
+Seat 2: Villain07 (83755, 5€ bounty)
+Seat 3: Villain08 (35600, 2.50€ bounty)
+Seat 4: Villain09 (32433, 2.50€ bounty)
+Seat 5: Villain.10 (54016, 3€ bounty)
+Seat 6: Hero (13787, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain.10 posts ante 60
+Hero posts ante 60
+Villain06 posts ante 60
+Villain07 posts ante 60
+Villain08 posts ante 60
+Villain09 posts ante 60
+Villain.10 posts small blind 250
+Hero posts big blind 500
+Dealt to Hero [Ac 4h]
+*** PRE-FLOP *** 
+Villain06 raises 500 to 1000
+Villain07 folds
+Villain08 folds
+Villain09 folds
+Villain.10 raises 21343 to 22343
+Hero folds
+Villain06 raises 14072 to 36415 and is all-in
+Villain.10 calls 14072
+*** FLOP *** [Td 7d Qh]
+*** TURN *** [Td 7d Qh][Jd]
+*** RIVER *** [Td 7d Qh Jd][Ad]
+*** SHOW DOWN ***
+Villain06 shows [Qc Kc] (Straight Ace high)
+Villain.10 shows [5h 5d] (Flush Ace high)
+Villain.10 collected 73690 from pot
+*** SUMMARY ***
+Total pot 73690 | No rake
+Board: [Td 7d Qh Jd Ad]
+Seat 1: Villain06 showed [Qc Kc] and lost with Straight Ace high
+Seat 5: Villain.10 (small blind) showed [5h 5d] and won 73690 with Flush Ace high
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-57-1791033722 - Holdem no limit (70/300/600) - 2026/10/03 13:22:02 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #5 is the button
+Seat 2: Villain07 (83695, 5€ bounty)
+Seat 3: Villain08 (35540, 2.50€ bounty)
+Seat 4: Villain09 (32373, 2.50€ bounty)
+Seat 5: Villain.10 (91231, 3.60€ bounty)
+Seat 6: Hero (13227, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 70
+Villain07 posts ante 70
+Villain08 posts ante 70
+Villain09 posts ante 70
+Villain.10 posts ante 70
+Hero posts small blind 300
+Villain07 posts big blind 600
+Dealt to Hero [6h Qs]
+*** PRE-FLOP *** 
+Villain08 folds
+Villain09 folds
+Villain.10 raises 900 to 1500
+Hero folds
+Villain07 calls 900
+*** FLOP *** [Kh 8h Ts]
+Villain07 bets 1825
+Villain.10 calls 1825
+*** TURN *** [Kh 8h Ts][Kd]
+Villain07 checks
+Villain.10 bets 4745
+Villain07 calls 4745
+*** RIVER *** [Kh 8h Ts Kd][Qh]
+Villain07 bets 8395
+Villain.10 calls 8395
+*** SHOW DOWN ***
+Villain07 shows [5d Td] (Two pairs : Kings and Tens)
+Villain.10 shows [Qd Ah] (Two pairs : Kings and Queens)
+Villain.10 collected 33580 from pot
+*** SUMMARY ***
+Total pot 33580 | No rake
+Board: [Kh 8h Ts Kd Qh]
+Seat 2: Villain07 (big blind) showed [5d Td] and lost with Two pairs : Kings and Tens
+Seat 5: Villain.10 (button) showed [Qd Ah] and won 33580 with Two pairs : Kings and Queens
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-58-1791033749 - Holdem no limit (70/300/600) - 2026/10/03 13:22:29 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #6 is the button
+Seat 1: Villain11 (20000, 2.50€ bounty)
+Seat 2: Villain07 (67160, 5€ bounty)
+Seat 3: Villain08 (35470, 2.50€ bounty)
+Seat 4: Villain09 (32303, 2.50€ bounty)
+Seat 5: Villain.10 (108276, 3.60€ bounty)
+Seat 6: Hero (12857, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain07 posts ante 70
+Villain08 posts ante 70
+Villain09 posts ante 70
+Villain.10 posts ante 70
+Hero posts ante 70
+Villain07 posts small blind 300
+Villain08 posts big blind 600
+Dealt to Hero [6h 2s]
+*** PRE-FLOP *** 
+Villain09 folds
+Villain.10 calls 600
+Hero folds
+Villain07 calls 300
+Villain08 checks
+*** FLOP *** [7c 5s 4d]
+Villain07 checks
+Villain08 checks
+Villain.10 bets 753
+Villain07 calls 753
+Villain08 calls 753
+*** TURN *** [7c 5s 4d][Qd]
+Villain07 bets 1543
+Villain08 calls 1543
+Villain.10 calls 1543
+*** RIVER *** [7c 5s 4d Qd][As]
+Villain07 bets 3163
+Villain08 calls 3163
+Villain.10 calls 3163
+*** SHOW DOWN ***
+Villain07 shows [2h Ac] (One pair : Aces)
+Villain.10 shows [Jd Qs] (One pair : Queens)
+Villain08 shows [4c Qh] (Two pairs : Queens and 4)
+Villain08 collected 18527 from pot
+*** SUMMARY ***
+Total pot 18527 | No rake
+Board: [7c 5s 4d Qd As]
+Seat 2: Villain07 (small blind) showed [2h Ac] and lost with One pair : Aces
+Seat 3: Villain08 (big blind) showed [4c Qh] and won 18527 with Two pairs : Queens and 4
+Seat 5: Villain.10 showed [Jd Qs] and lost with One pair : Queens
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-59-1791033803 - Holdem no limit (70/300/600) - 2026/10/03 13:23:23 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #2 is the button
+Seat 1: Villain11 (20000, 2.50€ bounty)
+Seat 2: Villain07 (61031, 5€ bounty)
+Seat 3: Villain08 (47868, 2.50€ bounty)
+Seat 4: Villain09 (32233, 2.50€ bounty)
+Seat 5: Villain.10 (102147, 3.60€ bounty)
+Seat 6: Hero (12787, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain08 posts ante 70
+Villain09 posts ante 70
+Villain11 posts ante 70
+Villain07 posts ante 70
+Villain.10 posts ante 70
+Hero posts ante 70
+Villain08 posts small blind 300
+Villain09 posts big blind 600
+Dealt to Hero [4d Td]
+*** PRE-FLOP *** 
+Villain.10 folds
+Hero folds
+Villain11 calls 600
+Villain07 folds
+Villain08 folds
+Villain09 raises 1920 to 2520
+Villain11 folds
+Villain09 collected 3840 from pot
+*** SUMMARY ***
+Total pot 3840 | No rake
+Seat 4: Villain09 (big blind) won 3840
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-60-1791033828 - Holdem no limit (70/300/600) - 2026/10/03 13:23:48 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #3 is the button
+Seat 1: Villain11 (19330, 2.50€ bounty)
+Seat 2: Villain07 (60961, 5€ bounty)
+Seat 3: Villain08 (47498, 2.50€ bounty)
+Seat 4: Villain09 (33483, 2.50€ bounty)
+Seat 5: Villain.10 (102077, 3.60€ bounty)
+Seat 6: Hero (12717, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain09 posts ante 70
+Villain.10 posts ante 70
+Villain11 posts ante 70
+Villain07 posts ante 70
+Villain08 posts ante 70
+Hero posts ante 70
+Villain09 posts small blind 300
+Villain.10 posts big blind 600
+Dealt to Hero [4c Js]
+*** PRE-FLOP *** 
+Hero folds
+Villain11 calls 600
+Villain07 raises 600 to 1200
+Villain08 raises 600 to 1800
+Villain09 folds
+Villain.10 folds
+Villain11 calls 1200
+Villain07 calls 600
+*** FLOP *** [5c Ks 6c]
+Villain11 checks
+Villain07 checks
+Villain08 bets 2352
+Villain11 calls 2352
+Villain07 folds
+*** TURN *** [5c Ks 6c][Jd]
+Villain11 checks
+Villain08 bets 3998
+Villain11 calls 3998
+*** RIVER *** [5c Ks 6c Jd][Qd]
+Villain11 checks
+Villain08 bets 12623
+Villain11 calls 11110 and is all-in
+*** SHOW DOWN ***
+Villain11 shows [Kh Qc] (Two pairs : Kings and Queens)
+Villain08 shows [Qh Qs] (Trips of Queens)
+Villain08 collected 43153 from pot
+*** SUMMARY ***
+Total pot 43153 | No rake
+Board: [5c Ks 6c Jd Qd]
+Seat 1: Villain11 showed [Kh Qc] and lost with Two pairs : Kings and Queens
+Seat 3: Villain08 (button) showed [Qh Qs] and won 43153 with Trips of Queens
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-61-1791033900 - Holdem no limit (70/300/600) - 2026/10/03 13:25:00 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #4 is the button
+Seat 2: Villain07 (59091, 5€ bounty)
+Seat 3: Villain08 (69808, 3€ bounty)
+Seat 4: Villain09 (33113, 2.50€ bounty)
+Seat 5: Villain.10 (101407, 3.60€ bounty)
+Seat 6: Hero (12647, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain.10 posts ante 70
+Hero posts ante 70
+Villain07 posts ante 70
+Villain08 posts ante 70
+Villain09 posts ante 70
+Villain.10 posts small blind 300
+Hero posts big blind 600
+Dealt to Hero [Jh 3d]
+*** PRE-FLOP *** 
+Villain07 raises 600 to 1200
+Villain08 folds
+Villain09 calls 1200
+Villain.10 folds
+Hero folds
+*** FLOP *** [Qs Tc 4h]
+Villain07 checks
+Villain09 checks
+*** TURN *** [Qs Tc 4h][3h]
+Villain07 bets 1825
+Villain09 folds
+Villain07 collected 5475 from pot
+*** SUMMARY ***
+Total pot 5475 | No rake
+Board: [Qs Tc 4h 3h]
+Seat 2: Villain07 won 5475
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-62-1791033928 - Holdem no limit (70/300/600) - 2026/10/03 13:25:28 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #5 is the button
+Seat 1: Villain12 (52634, 4.25€ bounty)
+Seat 2: Villain07 (61471, 5€ bounty)
+Seat 3: Villain08 (69738, 3€ bounty)
+Seat 4: Villain09 (31843, 2.50€ bounty)
+Seat 5: Villain.10 (101037, 3.60€ bounty)
+Seat 6: Hero (11977, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 70
+Villain12 posts ante 70
+Villain07 posts ante 70
+Villain08 posts ante 70
+Villain09 posts ante 70
+Villain.10 posts ante 70
+Hero posts small blind 300
+Villain12 posts big blind 600
+Dealt to Hero [6c 9s]
+*** PRE-FLOP *** 
+Villain07 raises 600 to 1200
+Villain08 folds
+Villain09 calls 1200
+Villain.10 folds
+Hero folds
+Villain12 folds
+*** FLOP *** [3h 5d Jd]
+Villain07 bets 2418
+Villain09 calls 2418
+*** TURN *** [3h 5d Jd][5s]
+Villain07 bets 4278
+Villain09 calls 4278
+*** RIVER *** [3h 5d Jd 5s][6h]
+Villain07 bets 53505 and is all-in
+Villain09 calls 23877 and is all-in
+*** SHOW DOWN ***
+Villain07 shows [Kd 8d] (One pair : 5)
+Villain09 shows [Js Ts] (Two pairs : Jacks and 5)
+Villain09 collected 64866 from main pot
+Villain07 collected 29628 from side pot 1
+*** SUMMARY ***
+Total pot 94494 | No rake
+Board: [3h 5d Jd 5s 6h]
+Seat 2: Villain07 showed [Kd 8d] and won 29628 with One pair : 5
+Seat 4: Villain09 showed [Js Ts] and won 64866 with Two pairs : Jacks and 5
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-63-1791033965 - Holdem no limit (70/300/600) - 2026/10/03 13:26:05 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #6 is the button
+Seat 1: Villain12 (51964, 4.25€ bounty)
+Seat 2: Villain07 (29628, 5€ bounty)
+Seat 3: Villain08 (69668, 3€ bounty)
+Seat 4: Villain09 (64866, 2.50€ bounty)
+Seat 5: Villain.10 (100967, 3.60€ bounty)
+Seat 6: Hero (11607, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain12 posts ante 70
+Villain07 posts ante 70
+Villain08 posts ante 70
+Villain09 posts ante 70
+Villain.10 posts ante 70
+Hero posts ante 70
+Villain12 posts small blind 300
+Villain07 posts big blind 600
+Dealt to Hero [As 4s]
+*** PRE-FLOP *** 
+Villain08 folds
+Villain09 folds
+Villain.10 folds
+Hero raises 600 to 1200
+Villain12 folds
+Villain07 calls 600
+*** FLOP *** [3h 4d Kd]
+Villain07 checks
+Hero bets 1030
+Villain07 raises 1030 to 2060
+Hero calls 1030
+*** TURN *** [3h 4d Kd][7h]
+Villain07 bets 26298 and is all-in
+Hero folds
+Villain07 collected 33538 from pot
+*** SUMMARY ***
+Total pot 33538 | No rake
+Board: [3h 4d Kd 7h]
+Seat 2: Villain07 (big blind) won 33538
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 7 - HandId: #5060075097981714598-64-1791034005 - Holdem no limit (70/300/600) - 2026/10/03 13:26:45 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #1 is the button
+Seat 1: Villain12 (51594, 4.25€ bounty)
+Seat 2: Villain07 (33538, 5€ bounty)
+Seat 3: Villain08 (69598, 3€ bounty)
+Seat 4: Villain09 (64796, 2.50€ bounty)
+Seat 5: Villain.10 (100897, 3.60€ bounty)
+Seat 6: Hero (8277, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain07 posts ante 70
+Villain08 posts ante 70
+Villain12 posts ante 70
+Villain09 posts ante 70
+Villain.10 posts ante 70
+Hero posts ante 70
+Villain07 posts small blind 300
+Villain08 posts big blind 600
+Dealt to Hero [5c 4h]
+*** PRE-FLOP *** 
+Villain09 folds
+Villain.10 folds
+Hero folds
+Villain12 raises 600 to 1200
+Villain07 calls 900
+Villain08 folds
+*** FLOP *** [Td 4s 6h]
+Villain07 bets 2223
+Villain12 calls 2223
+*** TURN *** [Td 4s 6h][Qd]
+Villain07 bets 6293
+Villain12 calls 6293
+*** RIVER *** [Td 4s 6h Qd][Qh]
+Villain07 bets 23752 and is all-in
+Villain12 raises 18056 to 41808 and is all-in
+*** SHOW DOWN ***
+Villain12 shows [Ts 6s] (Two pairs : Queens and Tens)
+Villain07 shows [Qs 9s] (Trips of Queens)
+Villain07 collected 67956 from main pot
+Villain12 collected 18056 from side pot 1
+*** SUMMARY ***
+Total pot 86012 | No rake
+Board: [Td 4s 6h Qd Qh]
+Seat 1: Villain12 (button) showed [Ts 6s] and won 18056 with Two pairs : Queens and Tens
+Seat 2: Villain07 (small blind) showed [Qs 9s] and won 67956 with Trips of Queens
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-65-1791034071 - Holdem no limit (80/350/700) - 2026/10/03 13:27:51 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #2 is the button
+Seat 1: Villain12 (18056, 4.25€ bounty)
+Seat 2: Villain07 (67956, 5€ bounty)
+Seat 3: Villain08 (68928, 3€ bounty)
+Seat 4: Villain09 (64726, 2.50€ bounty)
+Seat 5: Villain.10 (100827, 3.60€ bounty)
+Seat 6: Hero (8207, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain08 posts ante 80
+Villain09 posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain.10 posts ante 80
+Hero posts ante 80
+Villain08 posts small blind 350
+Villain09 posts big blind 700
+Dealt to Hero [4s 9d]
+*** PRE-FLOP *** 
+Villain.10 calls 700
+Hero folds
+Villain12 folds
+Villain07 calls 700
+Villain08 calls 350
+Villain09 checks
+*** FLOP *** [Tc 3c Th]
+Villain08 checks
+Villain09 checks
+Villain.10 checks
+Villain07 checks
+*** TURN *** [Tc 3c Th][6c]
+Villain08 checks
+Villain09 checks
+Villain.10 checks
+Villain07 bets 1640
+Villain08 folds
+Villain09 folds
+Villain.10 folds
+Villain07 collected 4920 from pot
+*** SUMMARY ***
+Total pot 4920 | No rake
+Board: [Tc 3c Th 6c]
+Seat 2: Villain07 (button) won 4920
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-66-1791034112 - Holdem no limit (80/350/700) - 2026/10/03 13:28:32 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #3 is the button
+Seat 1: Villain12 (17976, 4.25€ bounty)
+Seat 2: Villain07 (70456, 5€ bounty)
+Seat 3: Villain08 (68148, 3€ bounty)
+Seat 4: Villain09 (63946, 2.50€ bounty)
+Seat 5: Villain.10 (100047, 3.60€ bounty)
+Seat 6: Hero (8127, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain09 posts ante 80
+Villain.10 posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain08 posts ante 80
+Hero posts ante 80
+Villain09 posts small blind 350
+Villain.10 posts big blind 700
+Dealt to Hero [2c 9h]
+*** PRE-FLOP *** 
+Hero folds
+Villain12 folds
+Villain07 calls 700
+Villain08 folds
+Villain09 folds
+Villain.10 checks
+*** FLOP *** [7c 8c Ah]
+Villain.10 checks
+Villain07 bets 2230
+Villain.10 calls 2230
+*** TURN *** [7c 8c Ah][Td]
+Villain.10 checks
+Villain07 bets 6690
+Villain.10 calls 6690
+*** RIVER *** [7c 8c Ah Td][Jd]
+Villain.10 checks
+Villain07 checks
+*** SHOW DOWN ***
+Villain.10 shows [7h Kc] (One pair : 7)
+Villain07 shows [7d Tc] (Two pairs : Tens and 7)
+Villain07 collected 20070 from pot
+*** SUMMARY ***
+Total pot 20070 | No rake
+Board: [7c 8c Ah Td Jd]
+Seat 2: Villain07 showed [7d Tc] and won 20070 with Two pairs : Tens and 7
+Seat 5: Villain.10 (big blind) showed [7h Kc] and lost with One pair : 7
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-67-1791034160 - Holdem no limit (80/350/700) - 2026/10/03 13:29:20 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #4 is the button
+Seat 1: Villain12 (17896, 4.25€ bounty)
+Seat 2: Villain07 (80826, 5€ bounty)
+Seat 3: Villain08 (68068, 3€ bounty)
+Seat 4: Villain09 (63516, 2.50€ bounty)
+Seat 5: Villain.10 (90347, 3.60€ bounty)
+Seat 6: Hero (8047, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain.10 posts ante 80
+Hero posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain08 posts ante 80
+Villain09 posts ante 80
+Villain.10 posts small blind 350
+Hero posts big blind 700
+Dealt to Hero [Jh 3h]
+*** PRE-FLOP *** 
+Villain12 folds
+Villain07 raises 700 to 1400
+Villain08 calls 1400
+Villain09 folds
+Villain.10 calls 1050
+Hero folds
+*** FLOP *** [8d 4h 8s]
+Villain.10 checks
+Villain07 bets 2690
+Villain08 folds
+Villain.10 folds
+Villain07 collected 8070 from pot
+*** SUMMARY ***
+Total pot 8070 | No rake
+Board: [8d 4h 8s]
+Seat 2: Villain07 won 8070
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-68-1791034193 - Holdem no limit (80/350/700) - 2026/10/03 13:29:53 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #5 is the button
+Seat 1: Villain12 (17816, 4.25€ bounty)
+Seat 2: Villain07 (84726, 5€ bounty)
+Seat 3: Villain08 (66588, 3€ bounty)
+Seat 4: Villain09 (63436, 2.50€ bounty)
+Seat 5: Villain.10 (88867, 3.60€ bounty)
+Seat 6: Hero (7267, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain08 posts ante 80
+Villain09 posts ante 80
+Villain.10 posts ante 80
+Hero posts small blind 350
+Villain12 posts big blind 700
+Dealt to Hero [Ad 7s]
+*** PRE-FLOP *** 
+Villain07 folds
+Villain08 folds
+Villain09 calls 700
+Villain.10 folds
+Hero raises 6487 to 7187 and is all-in
+Villain12 folds
+Villain09 calls 6487
+*** FLOP *** [6c Kc 9d]
+*** TURN *** [6c Kc 9d][Td]
+*** RIVER *** [6c Kc 9d Td][5s]
+*** SHOW DOWN ***
+Villain09 shows [Jd 8d] (High card : King)
+Hero shows [Ad 7s] (High card : Ace)
+Hero collected 15554 from pot
+*** SUMMARY ***
+Total pot 15554 | No rake
+Board: [6c Kc 9d Td 5s]
+Seat 4: Villain09 showed [Jd 8d] and lost with High card : King
+Seat 6: Hero (small blind) showed [Ad 7s] and won 15554 with High card : Ace
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-69-1791034219 - Holdem no limit (80/350/700) - 2026/10/03 13:30:19 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #6 is the button
+Seat 1: Villain12 (17036, 4.25€ bounty)
+Seat 2: Villain07 (84646, 5€ bounty)
+Seat 3: Villain08 (66508, 3€ bounty)
+Seat 4: Villain09 (56169, 2.50€ bounty)
+Seat 5: Villain.10 (88787, 3.60€ bounty)
+Seat 6: Hero (15554, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain08 posts ante 80
+Villain09 posts ante 80
+Villain.10 posts ante 80
+Hero posts ante 80
+Villain12 posts small blind 350
+Villain07 posts big blind 700
+Dealt to Hero [3h Tc]
+*** PRE-FLOP *** 
+Villain08 folds
+Villain09 calls 700
+Villain.10 folds
+Hero folds
+Villain12 folds
+Villain07 checks
+*** FLOP *** [Kd 2d Js]
+Villain07 bets 1450
+Villain09 calls 1450
+*** TURN *** [Kd 2d Js][Ad]
+Villain07 checks
+Villain09 bets 1795
+Villain07 folds
+Villain09 collected 6925 from pot
+*** SUMMARY ***
+Total pot 6925 | No rake
+Board: [Kd 2d Js Ad]
+Seat 4: Villain09 won 6925
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-70-1791034243 - Holdem no limit (80/350/700) - 2026/10/03 13:30:43 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #1 is the button
+Seat 1: Villain12 (16606, 4.25€ bounty)
+Seat 2: Villain07 (82416, 5€ bounty)
+Seat 3: Villain08 (66428, 3€ bounty)
+Seat 4: Villain09 (59069, 2.50€ bounty)
+Seat 5: Villain.10 (88707, 3.60€ bounty)
+Seat 6: Hero (15474, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain07 posts ante 80
+Villain08 posts ante 80
+Villain12 posts ante 80
+Villain09 posts ante 80
+Villain.10 posts ante 80
+Hero posts ante 80
+Villain07 posts small blind 350
+Villain08 posts big blind 700
+Dealt to Hero [As 3c]
+*** PRE-FLOP *** 
+Villain09 folds
+Villain.10 raises 1400 to 2100
+Hero folds
+Villain12 folds
+Villain07 calls 1750
+Villain08 folds
+*** FLOP *** [Ks Tc Kd]
+Villain07 checks
+Villain.10 bets 5380
+Villain07 calls 5380
+*** TURN *** [Ks Tc Kd][6h]
+Villain07 checks
+Villain.10 bets 81147 and is all-in
+Villain07 calls 74856 and is all-in
+*** RIVER *** [Ks Tc Kd 6h][4d]
+*** SHOW DOWN ***
+Villain07 shows [Kc 6c] (Full of Kings and 6)
+Villain.10 shows [Jc Qc] (One pair : Kings)
+Villain.10 collected 6291 from side pot 1
+Villain07 collected 165852 from main pot
+*** SUMMARY ***
+Total pot 172143 | No rake
+Board: [Ks Tc Kd 6h 4d]
+Seat 2: Villain07 (small blind) showed [Kc 6c] and won 165852 with Full of Kings and 6
+Seat 5: Villain.10 showed [Jc Qc] and won 6291 with One pair : Kings
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-71-1791034282 - Holdem no limit (80/350/700) - 2026/10/03 13:31:22 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #2 is the button
+Seat 1: Villain12 (16526, 4.25€ bounty)
+Seat 2: Villain07 (165852, 5€ bounty)
+Seat 3: Villain08 (65648, 3€ bounty)
+Seat 4: Villain09 (58989, 2.50€ bounty)
+Seat 5: Villain.10 (6291, 3.60€ bounty)
+Seat 6: Hero (15394, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain08 posts ante 80
+Villain09 posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain.10 posts ante 80
+Hero posts ante 80
+Villain08 posts small blind 350
+Villain09 posts big blind 700
+Dealt to Hero [8c 7s]
+*** PRE-FLOP *** 
+Villain.10 raises 5511 to 6211 and is all-in
+Hero folds
+Villain12 folds
+Villain07 calls 6211
+Villain08 folds
+Villain09 calls 5511
+*** FLOP *** [Kd 2c 6s]
+Villain09 checks
+Villain07 checks
+*** TURN *** [Kd 2c 6s][3d]
+Villain09 checks
+Villain07 bets 9732
+Villain09 folds
+*** RIVER *** [Kd 2c 6s 3d][Ac]
+*** SHOW DOWN ***
+Villain07 shows [9h 5h] (High card : Ace)
+Villain.10 shows [2s Th] (One pair : 2)
+Villain.10 collected 19463 from main pot
+Villain07 collected 9732 from side pot 1
+*** SUMMARY ***
+Total pot 29195 | No rake
+Board: [Kd 2c 6s 3d Ac]
+Seat 2: Villain07 (button) showed [9h 5h] and won 9732 with High card : Ace
+Seat 5: Villain.10 showed [2s Th] and won 19463 with One pair : 2
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-72-1791034334 - Holdem no limit (80/350/700) - 2026/10/03 13:32:14 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #3 is the button
+Seat 1: Villain12 (16446, 4.25€ bounty)
+Seat 2: Villain07 (159561, 5€ bounty)
+Seat 3: Villain08 (65218, 3€ bounty)
+Seat 4: Villain09 (52698, 2.50€ bounty)
+Seat 5: Villain.10 (19463, 3.60€ bounty)
+Seat 6: Hero (15314, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Villain09 posts ante 80
+Villain.10 posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain08 posts ante 80
+Hero posts ante 80
+Villain09 posts small blind 350
+Villain.10 posts big blind 700
+Dealt to Hero [6h As]
+*** PRE-FLOP *** 
+Hero folds
+Villain12 folds
+Villain07 calls 700
+Villain08 folds
+Villain09 calls 350
+Villain.10 raises 18683 to 19383 and is all-in
+Villain07 folds
+Villain09 calls 18683
+*** FLOP *** [5c Kh Ad]
+*** TURN *** [5c Kh Ad][Jd]
+*** RIVER *** [5c Kh Ad Jd][8s]
+*** SHOW DOWN ***
+Villain.10 shows [6d 9h] (High card : Ace)
+Villain09 shows [Qc Tc] (Straight Ace high)
+Villain09 collected 39946 from pot
+*** SUMMARY ***
+Total pot 39946 | No rake
+Board: [5c Kh Ad Jd 8s]
+Seat 4: Villain09 (small blind) showed [Qc Tc] and won 39946 with Straight Ace high
+Seat 5: Villain.10 (big blind) showed [6d 9h] and lost with High card : Ace
+
+
+Winamax Poker - Tournament "ASTEROID" buyIn: 4.50€ + 0.50€ level: 8 - HandId: #5060075097981714598-73-1791034363 - Holdem no limit (80/350/700) - 2026/10/03 13:32:43 UTC
+Table: 'ASTEROID(1178140542)#165' 6-max (real money) Seat #4 is the button
+Seat 1: Villain12 (16366, 4.25€ bounty)
+Seat 2: Villain07 (158781, 5€ bounty)
+Seat 3: Villain08 (65138, 3€ bounty)
+Seat 4: Villain09 (73181, 4.30€ bounty)
+Seat 6: Hero (15234, 2.50€ bounty)
+*** ANTE/BLINDS ***
+Hero posts ante 80
+Villain12 posts ante 80
+Villain07 posts ante 80
+Villain08 posts ante 80
+Villain09 posts ante 80
+Hero posts big blind 700
+Dealt to Hero [Ac Tc]
+*** PRE-FLOP *** 
+Villain12 folds
+Villain07 raises 700 to 1400
+Villain08 folds
+Villain09 calls 1400
+Hero raises 13754 to 15154 and is all-in
+Villain07 calls 13754
+Villain09 calls 13754
+*** FLOP *** [6d Js 4d]
+Villain07 bets 143547 and is all-in
+Villain09 calls 57947 and is all-in
+*** TURN *** [6d Js 4d][Ad]
+*** RIVER *** [6d Js 4d Ad][Qd]
+*** SHOW DOWN ***
+Hero shows [Ac Tc] (One pair : Aces)
+Villain07 shows [Qc Jc] (Two pairs : Queens and Jacks)
+Villain09 shows [3d 3h] (Flush Ace high)
+Villain09 collected 161756 from main pot
+Villain07 collected 85600 from side pot 1
+*** SUMMARY ***
+Total pot 247356 | No rake
+Board: [6d Js 4d Ad Qd]
+Seat 2: Villain07 showed [Qc Jc] and won 85600 with Two pairs : Queens and Jacks
+Seat 4: Villain09 (button) showed [3d 3h] and won 161756 with Flush Ace high
+Seat 6: Hero (big blind) showed [Ac Tc] and lost with One pair : Aces
+
+

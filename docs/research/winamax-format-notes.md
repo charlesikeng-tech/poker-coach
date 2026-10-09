@@ -146,15 +146,20 @@ Hand histories contain opponents' pseudonyms. Golden test files must be anonymiz
   that elimination).
 - Both blocks carry ` - Late Registration`. Finish positions 1151 then 978; `1151th` (Winamax always
   writes `th`).
-- Whether `You played` of the second block is cumulative is unknown (50 min, then 1 h 18 min).
+- `You played` is **the time from the tournament start to that elimination**, not time actually
+  seated: start 12:15:01 + 50 min 18 s ≈ last hand of entry 1 (13:02:40); + 1 h 18 min 25 s ≈ last
+  hand of entry 2 (13:32:43). With late registration it overstates time at the table.
+- In the **hand-history file** (54 hands), nothing marks the re-entry: entry 1 is table `#122`
+  (hand-id prefix `…714555`, levels 1–3, hero starts at 20 000 and busts), entry 2 is table `#165`
+  (prefix `…714598`, from level 4, hero back at 20 000). Same tournament id, one file. Attributing a
+  hand to an entry must be inferred (bust + starting stack at a new table); not done yet.
 - Modelled as **tournament entries** (`poker.tournament_entries`): results per entry, tournament-level
   figures from the last block. All blocks must agree on tournament, player and buy-in, otherwise the
   summary is rejected. ROI must count one buy-in per entry.
 
 ## Samples still needed
 
-1. ~~Re-entry in the summary~~ — covered by ASTEROID. Still needed: its **hand-history** file (how
-   the second entry appears in hands).
+1. ~~Re-entry~~ — covered by ASTEROID (summary and hands).
 2. ~~KO out of the money, with and without bounties~~ — covered by ARCTURUS and QUANTUM.
 3. A **non-KO** tournament and a **Mystery KO**.
 4. A **9-max** or final-table hand (positions beyond 6-max).

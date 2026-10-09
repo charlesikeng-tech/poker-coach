@@ -29,6 +29,12 @@ internal static class GoldenFiles
     /// 5 € PKO with a re-entry: two complete blocks in one file (1151st after 50 min, then 978th),
     /// both late registration. Registered players and prize pool grow from the first block to the second.
     /// </summary>
+    /// <summary>
+    /// Hands of the same ASTEROID tournament: 21 hands of the first entry (table #122, levels 1–3, bust),
+    /// then 33 of the re-entry (table #165 from level 4, starting stack again).
+    /// </summary>
+    public const string AsteroidHands = "20261003_ASTEROID_1178140542__real_holdem_no-limit.txt";
+
     public const string AsteroidSummary = "20261003_ASTEROID_1178140542__real_holdem_no-limit_summary.txt";
 
     public static string Read(string fileName) =>
