@@ -61,7 +61,10 @@ internal static partial class WinamaxPatterns
 
     // Tournament summary file.
 
-    [GeneratedRegex(@"^Winamax Poker - Tournament summary : (?<name>.+)\((?<id>[0-9]+)\)$", Options)]
+    // Known suffixes only: an unknown one rejects the summary rather than being silently ignored.
+    [GeneratedRegex(
+        @"^Winamax Poker - Tournament summary : (?<name>.+)\((?<id>[0-9]+)\)(?<late> - Late Registration)?$",
+        Options)]
     internal static partial Regex SummaryHeader();
 
     [GeneratedRegex(@"^(?<key>Player|Buy-In|Registered players|Mode|Type|Speed|Flight ID|Prizepool) : (?<value>.+)$", Options)]

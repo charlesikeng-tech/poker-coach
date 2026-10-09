@@ -51,4 +51,10 @@ public sealed record ParsedTournamentSummary
 
     /// <summary>Bounty cash won. Null when the summary does not print a bounty amount.</summary>
     public required decimal? BountyWinnings { get; init; }
+
+    /// <summary>
+    /// The player registered during late registration (header suffix " - Late Registration"): he started
+    /// with the starting stack at a later level, i.e. fewer big blinds.
+    /// </summary>
+    public required bool LateRegistration { get; init; }
 }

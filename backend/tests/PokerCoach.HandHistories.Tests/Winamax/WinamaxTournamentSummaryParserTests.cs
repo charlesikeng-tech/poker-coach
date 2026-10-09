@@ -54,7 +54,51 @@ public sealed class WinamaxTournamentSummaryParserTests
         Assert.Equal(18.86m, summary.BountyWinnings);
     }
 
+    [Fact]
+    public void Reads_a_late_registration_summary_finished_out_of_the_money()
+    {
+        var result = parser.Parse(GoldenFiles.Read(GoldenFiles.QuantumSummary));
+
+        Assert.Empty(result.Errors);
+        var summary = Assert.IsType<ParsedTournamentSummary>(result.Summary);
+        Assert.Equal("1181101290", summary.ExternalTournamentId);
+        Assert.Equal("QUANTUM", summary.TournamentName);
+        Assert.True(summary.LateRegistration);
+        Assert.Equal(3808, summary.RegisteredPlayers);
+        Assert.Equal(9480m, summary.PrizePool);
+        Assert.Equal(new TimeSpan(0, 52, 33), summary.PlayedDuration);
+        Assert.Equal(2686, summary.FinishPosition);
+
+        // No "You won" line: not printed means unknown here; the performance module decides it is zero.
+        Assert.Null(summary.PrizeWinnings);
+        Assert.Null(summary.BountyWinnings);
+    }
+
+    [Fact]
+    public void A_summary_without_late_registration_says_so()
+    {
+        var summary = parser.Parse(GoldenFiles.Read(GoldenFiles.CassiopeiaSummary)).Summary;
+
+        Assert.NotNull(summary);
+        Assert.False(summary.LateRegistration);
+    }
+
+    [Fact]
+    public void An_unknown_header_suffix_rejects_the_summary()
+    {
+        var content = GoldenFiles.ReplaceFirst(
+            GoldenFiles.Read(GoldenFiles.QuantumSummary),
+            " - Late Registration",
+            " - Something New");
+
+        var result = parser.Parse(content);
+
+        Assert.Null(result.Summary);
+        Assert.Equal(new ParseError(ParseErrorCodes.UnrecognizedFormat, 1, null), Assert.Single(result.Errors));
+    }
+
     [Theory]
+    [InlineData(GoldenFiles.QuantumSummary, 4740)]
     [InlineData(GoldenFiles.CassiopeiaSummary, 1239)]
     [InlineData(GoldenFiles.AcceleratorSummary, 964)]
     public void The_prize_pool_is_a_whole_number_of_prize_pool_buy_ins(string fileName, int entries)

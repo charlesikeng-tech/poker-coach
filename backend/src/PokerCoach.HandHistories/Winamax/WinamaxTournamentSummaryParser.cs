@@ -49,6 +49,7 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
 
                 fields.TournamentName = header.Groups["name"].Value;
                 fields.TournamentId = header.Groups["id"].Value;
+                fields.LateRegistration = header.Groups["late"].Success;
                 headerRead = true;
                 continue;
             }
@@ -94,6 +95,7 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
             FinishPosition = fields.FinishPosition,
             PrizeWinnings = fields.PrizeWinnings,
             BountyWinnings = fields.BountyWinnings,
+            LateRegistration = fields.LateRegistration,
         };
         return new TournamentSummaryParseResult(summary, []);
     }
@@ -291,5 +293,7 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
         public decimal? PrizeWinnings { get; set; }
 
         public decimal? BountyWinnings { get; set; }
+
+        public bool LateRegistration { get; set; }
     }
 }

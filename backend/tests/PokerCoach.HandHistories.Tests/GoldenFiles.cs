@@ -16,6 +16,12 @@ internal static class GoldenFiles
 
     public const string AcceleratorSummary = "20260916_ACCELERATOR_1169257027__real_holdem_no-limit_summary.txt";
 
+    /// <summary>
+    /// 2 € + 2.50 € PKO, late registration, hero 2686th / 3808: out of the money, no bounty, so no
+    /// "You won" line. Ends with a stray "\r" line as received.
+    /// </summary>
+    public const string QuantumSummary = "20261008_QUANTUM_1181101290__real_holdem_no-limit_summary.txt";
+
     public static string Read(string fileName) =>
         File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Winamax", fileName));
 

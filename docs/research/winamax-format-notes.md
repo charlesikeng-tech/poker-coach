@@ -121,10 +121,22 @@ reconstructed from hands is only trusted when coverage is complete, otherwise th
 Hand histories contain opponents' pseudonyms. Golden test files must be anonymized
 (deterministic pseudonym mapping) before being committed.
 
+## Third sample: QUANTUM (summary only, 2026-10-08)
+
+- Header suffix `QUANTUM(1181101290) - Late Registration`: the hero registered during late
+  registration. The parser accepts this suffix only (`LateRegistration`); any other suffix rejects
+  the summary until it is understood. Not persisted yet: re-parse the stored raw file when the
+  performance module needs it.
+- Finished out of the money (2686th / 3808) in a KO without a bounty won: **no `You won` line at
+  all**. Prize and bounty stay `UNKNOWN` at parse time; the performance module will treat a missing line
+  with a known finish position as zero.
+- `You played 52min 33s` (no hours part) confirmed.
+- The file ended with a stray `\r` line; lines are right-trimmed, so it is harmless.
+
 ## Samples still needed
 
 1. A tournament where the hero **re-entered** (how the summary and the files show it).
-2. A KO tournament where the hero **won bounties but finished out of the money**, and one where he
-   won nothing.
+2. A KO tournament where the hero **won bounties but finished out of the money** (the case where he
+   won nothing is covered by QUANTUM).
 3. A **non-KO** tournament and a **Mystery KO**.
 4. A **9-max** or final-table hand (positions beyond 6-max).
