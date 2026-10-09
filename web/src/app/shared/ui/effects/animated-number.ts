@@ -26,6 +26,8 @@ const DURATION_MS = 700;
 export class AnimatedNumber {
   readonly value = input.required<number | null>();
   readonly format = input.required<(value: number | null) => string>();
+  /** Count up from zero on the first value (key figures); false shows it at once (live counters). */
+  readonly countFromZero = input(true);
 
   private readonly shown = signal<number | null>(null);
   protected readonly text = computed(() => this.format()(this.shown()));
@@ -43,6 +45,10 @@ export class AnimatedNumber {
       const from = untracked(this.shown);
       window?.cancelAnimationFrame(this.frame);
       if (target === null || from === target || reduced || !window) {
+        this.shown.set(target);
+        return;
+      }
+      if (from === null && !untracked(this.countFromZero)) {
         this.shown.set(target);
         return;
       }

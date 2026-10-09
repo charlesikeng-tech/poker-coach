@@ -9,7 +9,8 @@ const SUITS: Record<string, { symbol: string; name: string }> = {
 
 /**
  * One card, four-color deck (the online-poker convention: suits are told apart at a glance).
- * A null card is face down.
+ * A null card is face down; when it becomes known the face turns over (a showdown reveal).
+ * Where the card comes from (dealt, mucked) is the parent's animation: this one only owns the flip.
  */
 @Component({
   selector: 'app-playing-card',
@@ -17,39 +18,54 @@ const SUITS: Record<string, { symbol: string; name: string }> = {
   host: {
     role: 'img',
     '[attr.aria-label]': 'label()',
-    '[attr.data-suit]': 'face()?.suit',
-    '[class.back]': 'face() === null',
     '[class.small]': "size() === 'small'",
   },
   template: `
     @if (face(); as f) {
-      <span class="rank">{{ f.rank }}</span>
-      <span class="suit" aria-hidden="true">{{ f.symbol }}</span>
+      <span class="face" [attr.data-suit]="f.suit" animate.enter="flip-in">
+        <span class="rank">{{ f.rank }}</span>
+        <span class="suit" aria-hidden="true">{{ f.symbol }}</span>
+      </span>
+    } @else {
+      <span class="back"></span>
     }
   `,
   styles: `
     :host {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      position: relative;
+      display: inline-block;
       width: 2.5rem;
       height: 3.5rem;
-      border-radius: 0.375rem;
-      background: #f6f4ec;
-      box-shadow:
-        0 1px 0 rgb(255 255 255 / 0.6) inset,
-        0 4px 10px rgb(0 0 0 / 0.35);
-      font-family: var(--font-display);
-      font-weight: var(--font-weight-semibold);
-      line-height: 1;
+      perspective: 400px;
       user-select: none;
-      animation: deal 0.25s var(--easing-emphasized) both;
     }
     :host(.small) {
       width: 1.875rem;
       height: 2.625rem;
+    }
+    .face,
+    .back {
+      position: absolute;
+      inset: 0;
+      border-radius: 0.375rem;
+      box-shadow:
+        0 1px 0 rgb(255 255 255 / 0.6) inset,
+        0 6px 14px rgb(0 0 0 / 0.4);
+    }
+    :host(.small) .face,
+    :host(.small) .back {
       border-radius: 0.3rem;
+    }
+    .face {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #fffdf6, #ece8da);
+      font-family: var(--font-display);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1;
+      backface-visibility: hidden;
     }
     .rank {
       font-size: 1.15rem;
@@ -63,32 +79,35 @@ const SUITS: Record<string, { symbol: string; name: string }> = {
     :host(.small) .suit {
       font-size: 0.8rem;
     }
-    :host([data-suit='spades']) {
+    .face[data-suit='spades'] {
       color: #1d2421;
     }
-    :host([data-suit='hearts']) {
+    .face[data-suit='hearts'] {
       color: #c62f3a;
     }
-    :host([data-suit='diamonds']) {
+    .face[data-suit='diamonds'] {
       color: #2364c4;
     }
-    :host([data-suit='clubs']) {
+    .face[data-suit='clubs'] {
       color: #1d8a4e;
     }
     /* Face down: the felt's gold accent, never mistaken for a known card. */
-    :host(.back) {
+    .back {
       background:
         repeating-linear-gradient(45deg, transparent 0 4px, rgb(233 185 73 / 0.18) 4px 5px), #1c2a24;
       border: 1px solid rgb(233 185 73 / 0.35);
     }
-    @keyframes deal {
+    .flip-in {
+      animation: flip-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+    @keyframes flip-in {
       from {
-        opacity: 0;
-        transform: translateY(-6px) scale(0.96);
+        transform: rotateY(90deg) scale(0.96);
+        filter: brightness(1.6);
       }
     }
     @media (prefers-reduced-motion: reduce) {
-      :host {
+      .flip-in {
         animation: none;
       }
     }

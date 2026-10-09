@@ -95,83 +95,171 @@
 
         <div class="replay">
           <section class="table-card glass" [attr.aria-label]="t('table')">
-            <div class="felt">
+            <div class="felt" #felt>
               <div class="felt__rail" aria-hidden="true"></div>
+              <div class="felt__glow" aria-hidden="true"></div>
 
-              <!-- Middle: pot and board -->
-              <div class="middle">
-                <div class="board">
-                  @for (card of h.board.slice(0, f?.boardCount ?? 0); track $index) {
-                    <app-playing-card [card]="card" />
-                  }
-                </div>
-                @if (tbl && tbl.pot > 0) {
-                  <p class="pot numeric">{{ t('pot', { amount: amount(tbl.pot) }) }}</p>
-                }
-              </div>
-
-              @if (dealer(); as d) {
-                <span
-                  class="dealer"
-                  [style.left.%]="d.x"
-                  [style.top.%]="d.y"
-                  [attr.title]="t('button')"
-                  >D</span
-                >
-              }
-
-              @for (p of placed(); track p.seat.seatNumber) {
-                @let s = seatState(p.seat.seatNumber);
-                @if (s && s.bet > 0) {
-                  <span class="bet numeric" [style.left.%]="p.betX" [style.top.%]="p.betY">
-                    <span class="bet__chip" aria-hidden="true"></span>
-                    {{ amount(s.bet) }}
-                  </span>
-                }
-                <div
-                  class="seat"
-                  [style.left.%]="p.x"
-                  [style.top.%]="p.y"
-                  [class.seat--hero]="p.seat.isHero"
-                  [class.seat--folded]="s?.folded"
-                  [class.seat--out]="!p.seat.isDealt"
-                  [class.seat--acting]="actingSeat() === p.seat.seatNumber"
-                  [class.seat--winner]="f?.isResult && p.seat.collected > 0"
-                >
-                  <div class="seat__cards">
-                    @for (card of cardsOf(p.seat, s?.folded ?? false); track $index) {
+              <!-- Keyed on the hand: a new hand is dealt again from the middle. -->
+              @for (dealt of [h]; track dealt.handId) {
+                <!-- Middle: pot and board -->
+                <div class="middle">
+                  <div class="board">
+                    @for (card of h.board.slice(0, f?.boardCount ?? 0); track $index) {
                       <app-playing-card
-                        size="small"
                         [card]="card"
-                        [hiddenLabel]="t('hiddenCard')"
+                        animate.enter="board-in"
+                        [style.animation-delay.ms]="$index < 3 ? $index * 140 : 0"
                       />
                     }
                   </div>
-                  <div class="seat__plate">
-                    <span class="seat__name">
-                      @if (p.seat.isHero) {
-                        {{ t('you') }}
-                        @if (p.seat.position) {
-                          <small>{{ positionLabel(p.seat) }}</small>
-                        }
-                      } @else if (p.seat.isDealt) {
-                        {{ positionLabel(p.seat) || t('player') }}
-                      } @else {
-                        {{ t('sittingOut') }}
-                      }
-                    </span>
-                    <span class="seat__stack numeric">
-                      @if (s?.allIn && !f?.isResult && s?.stack === 0) {
-                        {{ t('allIn') }}
-                      } @else {
-                        {{ amount(s?.stack ?? p.seat.stack) }}
-                      }
-                    </span>
-                  </div>
-                  @if (f?.isResult && p.seat.collected > 0) {
-                    <span class="seat__won numeric">+{{ amount(p.seat.collected) }}</span>
-                  }
+                  <p class="pot numeric" [class.pot--empty]="!tbl || tbl.pot === 0">
+                    <span class="pot__chips" aria-hidden="true"><i></i><i></i><i></i></span>
+                    {{ t('potLabel') }}
+                    <app-animated-number
+                      [value]="tbl?.pot ?? 0"
+                      [format]="chipsFormat()"
+                      [countFromZero]="false"
+                    />
+                  </p>
                 </div>
+
+                @if (dealer(); as d) {
+                  <span
+                    class="dealer"
+                    [style.left.%]="d.x"
+                    [style.top.%]="d.y"
+                    [attr.title]="t('button')"
+                    >D</span
+                  >
+                }
+
+                @for (p of placed(); track p.seat.seatNumber) {
+                  @let s = seatState(p.seat.seatNumber);
+                  @if (s && s.bet > 0) {
+                    <span
+                      class="bet numeric"
+                      [style.left.%]="p.betX"
+                      [style.top.%]="p.betY"
+                      [style.--seat-x.%]="p.x"
+                      [style.--seat-y.%]="p.y"
+                      animate.enter="bet-in"
+                      animate.leave="bet-sweep"
+                    >
+                      <span class="bet__chip" aria-hidden="true"></span>
+                      <app-animated-number
+                        [value]="s.bet"
+                        [format]="chipsFormat()"
+                        [countFromZero]="false"
+                      />
+                    </span>
+                  }
+                  <div
+                    class="seat"
+                    [style.left.%]="p.x"
+                    [style.top.%]="p.y"
+                    [style.--cx.px]="p.toCenterX"
+                    [style.--cy.px]="p.toCenterY"
+                    [class.seat--hero]="p.seat.isHero"
+                    [class.seat--folded]="s?.folded"
+                    [class.seat--out]="!p.seat.isDealt"
+                    [class.seat--acting]="actingSeat() === p.seat.seatNumber"
+                    [class.seat--winner]="f?.isResult && p.seat.collected > 0"
+                    [class.seat--allin]="s?.allIn && !f?.isResult"
+                  >
+                    <div class="seat__cards">
+                      @for (card of cardsOf(p.seat, s?.folded ?? false); track $index) {
+                        <app-playing-card
+                          size="small"
+                          [card]="card"
+                          [hiddenLabel]="t('hiddenCard')"
+                          animate.enter="deal-in"
+                          animate.leave="muck"
+                          [style.animation-delay.ms]="($index * placed().length + p.dealOrder) * 70"
+                        />
+                      }
+                    </div>
+                    <div class="seat__plate">
+                      <span class="seat__name">
+                        @if (p.seat.isHero) {
+                          {{ t('you') }}
+                          @if (p.seat.position) {
+                            <small>{{ positionLabel(p.seat) }}</small>
+                          }
+                        } @else if (p.seat.isDealt) {
+                          {{ positionLabel(p.seat) || t('player') }}
+                        } @else {
+                          {{ t('sittingOut') }}
+                        }
+                      </span>
+                      <span class="seat__stack numeric">
+                        @if (s?.allIn && !f?.isResult && s?.stack === 0) {
+                          <span class="allin">{{ t('allIn') }}</span>
+                        } @else {
+                          <app-animated-number
+                            [value]="s?.stack ?? p.seat.stack"
+                            [format]="chipsFormat()"
+                            [countFromZero]="false"
+                          />
+                        }
+                      </span>
+                    </div>
+                    @if (f?.isResult && p.seat.collected > 0) {
+                      <span class="seat__won numeric" animate.enter="rise"
+                        >+{{ amount(p.seat.collected) }}</span
+                      >
+                    }
+                  </div>
+                }
+
+                <!-- The action just played -->
+                @for (b of bubble(); track b.key) {
+                  <span
+                    class="bubble"
+                    [attr.data-kind]="b.action.isAllIn ? 'allIn' : b.action.kind"
+                    [style.left.%]="b.x"
+                    [style.top.%]="b.y"
+                    animate.enter="pop"
+                    animate.leave="pop-out"
+                  >
+                    {{ t('actions.' + b.action.kind, { amount: actionAmount(b.index) }) }}
+                    @if (b.action.isAllIn) {
+                      · {{ t('allIn') }}
+                    }
+                  </span>
+                }
+
+                <!-- The pot going to the winner(s) -->
+                @for (p of payouts(); track p.seat.seatNumber) {
+                  <span
+                    class="payout"
+                    [style.left.%]="p.x"
+                    [style.top.%]="p.y"
+                    animate.enter="payout-in"
+                    aria-hidden="true"
+                    ><i></i><i></i><i></i
+                  ></span>
+                }
+              }
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline">
+              <input
+                type="range"
+                min="0"
+                [max]="frames().length - 1"
+                [value]="frameIndex()"
+                [style.--progress.%]="(frameIndex() / (frames().length - 1 || 1)) * 100"
+                [attr.aria-label]="t('timeline')"
+                (input)="goTo(+$any($event.target).value)"
+              />
+              @for (m of streetMarks(); track m.index) {
+                <span
+                  class="timeline__mark"
+                  [class.timeline__mark--passed]="m.index <= frameIndex()"
+                  [style.left.%]="(m.index / (frames().length - 1 || 1)) * 100"
+                  [attr.title]="t('streets.' + m.street)"
+                ></span>
               }
             </div>
 
@@ -232,6 +320,18 @@
                 >
                   <app-icon [icon]="icons.ChevronLast" />
                 </button>
+                <div class="speed" role="group" [attr.aria-label]="t('speed')">
+                  @for (sp of speeds; track sp) {
+                    <button
+                      type="button"
+                      [class.active]="speed() === sp"
+                      [attr.aria-pressed]="speed() === sp"
+                      (click)="setSpeed(sp)"
+                    >
+                      {{ sp }}×
+                    </button>
+                  }
+                </div>
                 <span class="steps__count numeric"
                   >{{ frameIndex() + 1 }} / {{ frames().length }}</span
                 >

@@ -735,7 +735,6 @@
       },
       "table": "Table",
       "button": "Button",
-      "pot": "Pot {{amount}}",
       "you": "You",
       "player": "Player",
       "sittingOut": "Away",
@@ -769,7 +768,10 @@
         "postAnte": "ante {{amount}}",
         "postSmallBlind": "small blind {{amount}}",
         "postBigBlind": "big blind {{amount}}"
-      }
+      },
+      "potLabel": "Pot",
+      "timeline": "Position in the hand",
+      "speed": "Playback speed"
     }
   }
 }

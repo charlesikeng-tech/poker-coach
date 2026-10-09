@@ -2,12 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   computed,
   effect,
   inject,
   input,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -28,6 +30,7 @@ import {
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
+import { AnimatedNumber } from '../../shared/ui/effects/animated-number';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
@@ -39,7 +42,10 @@ import { Frame, SeatState, buildFrames, isPost, streetTotal, tableAt } from './r
 type LoadState = 'loading' | 'ready' | 'notFound' | 'error';
 type Unit = 'bigBlinds' | 'chips';
 
-const PLAY_STEP_MS = 900;
+/** Autoplay pacing at 1×: a new street and the result get time for their animations to land. */
+const PACE_MS = { action: 950, street: 1300 } as const;
+export const SPEEDS = [0.5, 1, 2] as const;
+type Speed = (typeof SPEEDS)[number];
 
 /** Poker abbreviations: the same in every language. */
 const POSITION_LABELS: Record<PokerPosition, string> = {
@@ -64,8 +70,13 @@ const STREET_BUTTONS: readonly (Street | 'showdown')[] = [
 
 interface PlacedSeat {
   readonly seat: ReplaySeat;
+  /** Order around the table from the small blind: the dealing order. */
+  readonly dealOrder: number;
   readonly x: number;
   readonly y: number;
+  /** From the seat to the middle of the table, in pixels: where cards come from and are mucked to. */
+  readonly toCenterX: number;
+  readonly toCenterY: number;
   /** Where the seat's bet sits, between the seat and the middle. */
   readonly betX: number;
   readonly betY: number;
@@ -73,7 +84,7 @@ interface PlacedSeat {
 
 @Component({
   selector: 'app-hand-replay-page',
-  imports: [TranslocoDirective, RouterLink, Button, EmptyState, Icon, PlayingCard],
+  imports: [TranslocoDirective, RouterLink, AnimatedNumber, Button, EmptyState, Icon, PlayingCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter', '(window:keydown)': 'onKey($event)' },
   templateUrl: './hand-replay-page.html',
@@ -92,6 +103,10 @@ export class HandReplayPage {
   protected readonly frameIndex = signal(0);
   protected readonly playing = signal(false);
   protected readonly unit = signal<Unit>('bigBlinds');
+  protected readonly speed = signal<Speed>(1);
+  protected readonly speeds = SPEEDS;
+  private readonly feltRef = viewChild<ElementRef<HTMLElement>>('felt');
+  private readonly feltSize = signal({ width: 800, height: 500 });
   /** Key moments of the hand's tournament, in play order. */
   private readonly keyMoments = signal<readonly { handId: string; index: number }[]>([]);
   private keyMomentsTournament: string | null = null;
@@ -112,7 +127,8 @@ export class HandReplayPage {
 
   private readonly locale = computed(() => this.language.current());
   private request = 0;
-  private timer: ReturnType<typeof setInterval> | undefined;
+  private timer: ReturnType<typeof setTimeout> | undefined;
+  private resize: ResizeObserver | undefined;
 
   protected readonly frames = computed(() => {
     const hand = this.hand();
@@ -139,14 +155,50 @@ export class HandReplayPage {
     }
     const count = Math.max(hand.maxSeats, ...hand.seats.map((s) => s.seatNumber));
     const hero = this.heroSeat();
+    const { width, height } = this.feltSize();
     return hand.seats.map((seat) => {
       const step = (((seat.seatNumber - hero) % count) + count) % count;
       const angle = Math.PI / 2 + (step * 2 * Math.PI) / count;
       const x = 50 + 41 * Math.cos(angle);
       const y = 50 + 37 * Math.sin(angle);
-      return { seat, x, y, betX: 50 + (x - 50) * 0.55, betY: 50 + (y - 50) * 0.5 };
+      const fromButton = (((seat.seatNumber - hand.buttonSeat - 1) % count) + count) % count;
+      return {
+        seat,
+        dealOrder: fromButton,
+        x,
+        y,
+        toCenterX: ((50 - x) / 100) * width,
+        toCenterY: ((50 - y) / 100) * height,
+        betX: 50 + (x - 50) * 0.55,
+        betY: 50 + (y - 50) * 0.5,
+      };
     });
   });
+
+  /** The action just played, as a bubble over its seat; keyed so each action pops anew. */
+  protected readonly bubble = computed(() => {
+    const hand = this.hand();
+    const index = this.frame()?.actionIndex;
+    if (!hand || index === null || index === undefined) {
+      return [];
+    }
+    const action = hand.actions[index];
+    const seat = this.placed().find((p) => p.seat.seatNumber === action.seatNumber);
+    return seat ? [{ key: index, action, index, x: seat.x, y: seat.y }] : [];
+  });
+
+  /** On the result, the pot slides to each seat that collected chips. */
+  protected readonly payouts = computed(() =>
+    this.frame()?.isResult ? this.placed().filter((p) => p.seat.collected > 0) : [],
+  );
+
+  /** Frames where a street starts: marks on the timeline. */
+  protected readonly streetMarks = computed(() =>
+    this.frames()
+      .map((f, i) => ({ f, i }))
+      .filter(({ f, i }) => i > 0 && f.actionIndex === null)
+      .map(({ f, i }) => ({ index: i, street: f.street })),
+  );
 
   protected readonly dealer = computed(() => {
     const hand = this.hand();
@@ -215,8 +267,38 @@ export class HandReplayPage {
       const id = this.id();
       untracked(() => void this.load(id));
     });
-    inject(DestroyRef).onDestroy(() => this.stop());
+    // Card and chip flights are measured in pixels: follow the felt's size.
+    effect(() => {
+      const felt = this.feltRef()?.nativeElement;
+      this.resize?.disconnect();
+      if (!felt) {
+        return;
+      }
+      this.resize = new ResizeObserver(([entry]) =>
+        this.feltSize.set({ width: entry.contentRect.width, height: entry.contentRect.height }),
+      );
+      this.resize.observe(felt);
+    });
+    inject(DestroyRef).onDestroy(() => {
+      this.stop();
+      this.resize?.disconnect();
+    });
   }
+
+  /** Formatter for animated figures; rebuilt when the unit or language changes. */
+  protected readonly chipsFormat = computed(() => {
+    const locale = this.locale();
+    const unit = this.unit();
+    const bigBlind = this.hand()?.bigBlind ?? 1;
+    const integer = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
+    const bb = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+    return (value: number | null) =>
+      value === null
+        ? '—'
+        : unit === 'chips'
+          ? integer.format(value)
+          : `${bb.format(value / bigBlind)} BB`;
+  });
 
   protected amount(chips: number): string {
     const hand = this.hand();
@@ -299,13 +381,29 @@ export class HandReplayPage {
       this.frameIndex.set(0);
     }
     this.playing.set(true);
-    this.timer = setInterval(() => {
-      if (this.frameIndex() >= this.frames().length - 1) {
-        this.stop();
-        return;
-      }
+    this.scheduleNext();
+  }
+
+  protected setSpeed(speed: Speed): void {
+    this.speed.set(speed);
+    if (this.playing()) {
+      clearTimeout(this.timer);
+      this.scheduleNext();
+    }
+  }
+
+  /** Each step waits for the animations of the frame it lands on. */
+  private scheduleNext(): void {
+    const next = this.frames()[this.frameIndex() + 1];
+    if (!next) {
+      this.stop();
+      return;
+    }
+    const pace = next.actionIndex === null ? PACE_MS.street : PACE_MS.action;
+    this.timer = setTimeout(() => {
       this.frameIndex.update((i) => i + 1);
-    }, PLAY_STEP_MS);
+      this.scheduleNext();
+    }, pace / this.speed());
   }
 
   protected onKey(event: KeyboardEvent): void {
@@ -330,7 +428,7 @@ export class HandReplayPage {
   }
 
   private stop(): void {
-    clearInterval(this.timer);
+    clearTimeout(this.timer);
     this.timer = undefined;
     this.playing.set(false);
   }

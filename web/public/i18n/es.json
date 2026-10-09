@@ -735,7 +735,6 @@
       },
       "table": "Mesa",
       "button": "Botón",
-      "pot": "Bote {{amount}}",
       "you": "Tú",
       "player": "Jugador",
       "sittingOut": "Ausente",
@@ -769,7 +768,10 @@
         "postAnte": "ante {{amount}}",
         "postSmallBlind": "ciega pequeña {{amount}}",
         "postBigBlind": "ciega grande {{amount}}"
-      }
+      },
+      "potLabel": "Bote",
+      "timeline": "Posición en la mano",
+      "speed": "Velocidad de reproducción"
     }
   }
 }

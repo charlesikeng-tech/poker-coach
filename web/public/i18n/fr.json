@@ -735,7 +735,6 @@
       },
       "table": "Table",
       "button": "Bouton",
-      "pot": "Pot {{amount}}",
       "you": "Toi",
       "player": "Joueur",
       "sittingOut": "Absent",
@@ -769,7 +768,10 @@
         "postAnte": "ante {{amount}}",
         "postSmallBlind": "petite blinde {{amount}}",
         "postBigBlind": "grosse blinde {{amount}}"
-      }
+      },
+      "potLabel": "Pot",
+      "timeline": "Avancement dans la main",
+      "speed": "Vitesse de lecture"
     }
   }
 }
