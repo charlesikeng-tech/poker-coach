@@ -5,22 +5,22 @@
 
 .sign-in {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
   min-height: 100dvh;
 }
 
-// The felt under a lamp: a pool of warm light, the range-matrix grid fading into the dark.
-.sign-in__brand {
+// Brand side: the felt under a lamp, the range-matrix grid fading into the dark ------------------------
+
+.brand {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   gap: var(--space-8);
-  padding: var(--space-12);
+  padding: var(--space-10) var(--space-12);
   overflow: hidden;
   background:
-    radial-gradient(70% 60% at 30% 35%, var(--felt-light), transparent 70%),
-    radial-gradient(40% 30% at 30% 35%, var(--felt-glow), transparent 70%);
+    radial-gradient(60% 55% at 62% 40%, var(--felt-light), transparent 70%),
+    radial-gradient(30% 25% at 62% 40%, var(--felt-glow), transparent 70%);
   border-right: 1px solid var(--border-subtle);
 
   &::before {
@@ -31,110 +31,321 @@
       linear-gradient(var(--border-subtle) 1px, transparent 1px),
       linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
     background-size: 2.5rem 2.5rem;
-    mask-image: radial-gradient(70% 70% at 30% 40%, black, transparent);
+    mask-image: radial-gradient(60% 60% at 62% 42%, black, transparent);
     pointer-events: none;
+  }
+
+  > * {
+    position: relative;
   }
 }
 
-.sign-in__mark {
-  --brand-mark-size: 4.5rem;
-  position: relative;
-  filter: drop-shadow(0 0 24px var(--accent-glow));
-  animation: page-enter var(--motion-slow) var(--easing-emphasized) both;
-}
-
-// The statement is the page's one bold moment: big, display type, rising in after the mark.
-.sign-in__statement {
-  position: relative;
-  max-width: 18ch;
+.brand__logo {
+  --brand-mark-size: 2rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.1;
-  letter-spacing: -0.035em;
-  animation: page-enter var(--motion-slow) var(--easing-emphasized) 120ms both;
+  letter-spacing: -0.02em;
+  animation: rise 0.7s var(--easing-emphasized) both;
 }
 
-.sign-in__panel {
+// Three chips at different depths: the back one blurred, the small one in front.
+.brand__chips {
+  position: relative;
+  align-self: center;
+  justify-self: center;
+  width: min(26rem, 80%);
+  aspect-ratio: 1.3;
+  animation: rise 0.9s var(--easing-emphasized) 0.1s both;
+}
+
+.chip {
+  position: absolute;
+}
+
+.chip--main {
+  --size: clamp(8rem, 14vw, 12rem);
+  top: 18%;
+  left: 30%;
+  filter: drop-shadow(0 30px 40px rgb(0 0 0 / 0.55)) drop-shadow(0 0 30px var(--accent-glow));
+}
+
+.chip--back {
+  --size: clamp(5rem, 8vw, 7rem);
+  top: 2%;
+  left: 6%;
+  opacity: 0.7;
+  filter: blur(2.5px) drop-shadow(0 20px 30px rgb(0 0 0 / 0.5));
+}
+
+.chip--small {
+  --size: clamp(3.5rem, 5.5vw, 4.75rem);
+  right: 4%;
+  bottom: 6%;
+  filter: drop-shadow(0 16px 24px rgb(0 0 0 / 0.5));
+}
+
+.brand__statement {
+  max-width: 17ch;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  background: linear-gradient(
+    100deg,
+    var(--text-primary) 40%,
+    var(--accent-primary) 50%,
+    var(--text-primary) 60%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  background-clip: text;
+  color: transparent;
+  animation:
+    rise 0.8s var(--easing-emphasized) 0.2s both,
+    sheen 2.4s ease-in-out 1s both;
+}
+
+.brand__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    animation: rise 0.6s var(--easing-emphasized) both;
+  }
+}
+
+.suit {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 40%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  color: var(--accent-primary);
+  font-size: 0.9rem;
+}
+
+// Panel ---------------------------------------------------------------------------------------------
+
+.panel {
   position: relative;
   display: grid;
   place-items: center;
   padding: var(--space-8) var(--space-6);
 }
 
-.sign-in__language {
+.panel__language {
   position: absolute;
   top: var(--space-4);
   right: var(--space-4);
 }
 
-.sign-in__card {
-  animation: page-enter var(--motion-slow) var(--easing-emphasized) 240ms both;
+.card {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: var(--space-4);
-  width: min(100%, 24rem);
+  width: min(100%, 25rem);
+  animation: rise 0.8s var(--easing-emphasized) 0.3s both;
+  transition:
+    transform 0.6s var(--easing-emphasized),
+    opacity 0.6s var(--easing-emphasized);
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.02em;
+  }
 }
 
-h1 {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.01em;
-}
-
-.sign-in__description {
+.card__description {
   color: var(--text-secondary);
 }
 
-.sign-in__action {
-  justify-content: center;
-  width: 100%;
-  height: 2.75rem;
-  margin-top: var(--space-2);
-}
-
-.sign-in__alert {
-  width: 100%;
+.card__alert {
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--danger);
   border-radius: var(--radius-md);
   color: var(--text-primary);
 }
 
-.sign-in__privacy {
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
+// Google's button: white, official "G", per Google's sign-in branding guidelines.
+.google {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  height: 3rem;
+  margin-top: var(--space-2);
+  overflow: hidden;
+  border: 1px solid #dadce0;
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: #1f1f1f;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+  transition:
+    transform var(--motion-fast) var(--easing-standard),
+    box-shadow var(--motion-fast) var(--easing-standard);
+
+  // A gold light runs along the button on hover.
+  &::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 30%,
+      rgb(233 185 73 / 0.35) 50%,
+      transparent 70%
+    );
+    background-size: 250% 100%;
+    background-position: 130% 0;
+    content: '';
+    transition: background-position 0.8s var(--easing-standard);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 12px 30px rgb(0 0 0 / 0.3),
+      0 0 0 3px color-mix(in srgb, var(--accent-primary) 35%, transparent);
+
+    &::after {
+      background-position: -30% 0;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
 }
 
-@media (max-width: 767px) {
+.google__logo {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.google__chip {
+  --size: 1.6rem;
+}
+
+.card__divider {
+  height: 1px;
+  margin: var(--space-2) 0;
+  background: linear-gradient(90deg, transparent, var(--border-default), transparent);
+}
+
+.card__promises {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+
+  li::before {
+    margin-right: var(--space-2);
+    color: var(--accent-primary);
+    content: '✓';
+  }
+}
+
+.card__privacy {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
+// Leaving for Google: the brand chips speed up and lift, the card recedes.
+.sign-in--launching {
+  .card {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+
+  .brand__chips {
+    animation: lift 0.65s cubic-bezier(0.6, 0, 0.3, 1) forwards;
+  }
+}
+
+@keyframes lift {
+  to {
+    transform: translateY(-30px) scale(1.06);
+    filter: brightness(1.25);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(4px);
+  }
+}
+
+@keyframes sheen {
+  to {
+    background-position: -50% 0;
+  }
+}
+
+@media (max-width: 899px) {
   .sign-in {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr;
   }
 
-  .sign-in__brand {
-    flex-direction: row;
-    justify-content: flex-start;
+  .brand {
+    grid-template-rows: auto;
+    grid-template-columns: auto 1fr;
     align-items: center;
     gap: var(--space-4);
-    padding: var(--space-6) var(--space-4);
+    padding: var(--space-5) var(--space-4);
     border-right: 0;
     border-bottom: 1px solid var(--border-subtle);
   }
 
-  .sign-in__mark {
-    --brand-mark-size: 2.5rem;
+  .brand__chips,
+  .brand__features {
+    display: none;
   }
 
-  .sign-in__statement {
-    font-size: var(--font-size-lg);
+  .brand__statement {
+    grid-column: 1 / -1;
+    font-size: var(--font-size-xl);
   }
 
-  .sign-in__panel {
+  .panel {
     place-items: start center;
-    // Clears the language selector pinned to the top-right corner.
-    padding-top: calc(var(--space-4) + 2.25rem + var(--space-8));
+    padding-top: calc(var(--space-4) + 2.25rem + var(--space-6));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand__logo,
+  .brand__chips,
+  .brand__statement,
+  .brand__features li,
+  .card {
+    animation: none;
   }
 }

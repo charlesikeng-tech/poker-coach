@@ -488,6 +488,17 @@
       "errors": {
         "google": "La connexion avec Google n'a pas abouti. Réessaie.",
         "unavailable": "Poker Coach est momentanément injoignable. Réessaie dans un instant."
+      },
+      "product": "Poker Coach",
+      "launching": "Direction Google…",
+      "features": {
+        "import": "Importe tes historiques Winamax en un glisser-déposer.",
+        "leaks": "Repère tes fuites, mesurées avec un intervalle de confiance.",
+        "replay": "Rejoue tes mains clés, expliquées par ton coach IA."
+      },
+      "promises": {
+        "readOnly": "Aucune publication, aucun accès à tes mails",
+        "private": "Tes mains restent privées, les pseudos adverses aussi"
       }
     },
     "leaks": {
@@ -773,5 +784,10 @@
       "timeline": "Avancement dans la main",
       "speed": "Vitesse de lecture"
     }
+  },
+  "welcome": {
+    "hello": "Bonne session",
+    "helloName": "Bonne session, {{name}}",
+    "line": "Tes tables t'attendent."
   }
 }

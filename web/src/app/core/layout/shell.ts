@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X } from 'lucide';
@@ -7,10 +7,12 @@ import { LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X } from 'lucid
 import { BrandMark } from '../../shared/ui/brand-mark/brand-mark';
 import { Icon } from '../../shared/ui/icon/icon';
 import { SessionService } from '../auth/session.service';
+import { WelcomeService } from '../auth/welcome';
 import { LanguageSelect } from '../i18n/language-select';
 import { PRIMARY_NAVIGATION, SECONDARY_NAVIGATION } from '../navigation/navigation';
 import { LocalPreferenceStore } from '../storage/local-preference-store';
 import { ThemeService } from '../theme/theme.service';
+import { WelcomeIntro } from './welcome-intro';
 
 const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
 
@@ -24,6 +26,7 @@ const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
     Icon,
     BrandMark,
     LanguageSelect,
+    WelcomeIntro,
   ],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
@@ -43,6 +46,11 @@ export class Shell {
   /** Desktop only: tablets always use the compact rail, phones the off-canvas drawer (see shell.scss). */
   protected readonly collapsed = signal(this.store.read(SIDEBAR_STORAGE_KEY) === 'true');
   protected readonly mobileNavigationOpen = signal(false);
+  /** Once, right after signing in from this tab. */
+  protected readonly welcome = signal(inject(WelcomeService).consume());
+  protected readonly firstName = computed(
+    () => this.session.user()?.displayName.trim().split(/\s+/)[0] ?? '',
+  );
 
   protected toggleCollapsed(): void {
     this.collapsed.update((value) => !value);

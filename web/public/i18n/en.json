@@ -488,6 +488,17 @@
       "errors": {
         "google": "Signing in with Google did not complete. Try again.",
         "unavailable": "Poker Coach cannot be reached right now. Try again in a moment."
+      },
+      "product": "Poker Coach",
+      "launching": "Off to Google…",
+      "features": {
+        "import": "Import your Winamax histories with a drag and drop.",
+        "leaks": "Spot your leaks, measured with a confidence interval.",
+        "replay": "Replay your key hands, explained by your AI coach."
+      },
+      "promises": {
+        "readOnly": "No posting, no access to your email",
+        "private": "Your hands stay private, so do opponents' names"
       }
     },
     "leaks": {
@@ -773,5 +784,10 @@
       "timeline": "Position in the hand",
       "speed": "Playback speed"
     }
+  },
+  "welcome": {
+    "hello": "Good session",
+    "helloName": "Good session, {{name}}",
+    "line": "Your tables are waiting."
   }
 }

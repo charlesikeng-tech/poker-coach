@@ -126,4 +126,8 @@
       </main>
     </div>
   </div>
+
+  @if (welcome()) {
+    <app-welcome-intro [name]="firstName()" (done)="welcome.set(false)" />
+  }
 </ng-container>

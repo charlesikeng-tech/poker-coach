@@ -488,6 +488,17 @@
       "errors": {
         "google": "El inicio de sesión con Google no se completó. Inténtalo de nuevo.",
         "unavailable": "No se puede acceder a Poker Coach en este momento. Inténtalo de nuevo en un instante."
+      },
+      "product": "Poker Coach",
+      "launching": "Rumbo a Google…",
+      "features": {
+        "import": "Importa tus historiales de Winamax arrastrando y soltando.",
+        "leaks": "Detecta tus fugas, medidas con un intervalo de confianza.",
+        "replay": "Repite tus manos clave, explicadas por tu coach IA."
+      },
+      "promises": {
+        "readOnly": "Sin publicaciones, sin acceso a tu correo",
+        "private": "Tus manos son privadas, y los nombres rivales también"
       }
     },
     "leaks": {
@@ -773,5 +784,10 @@
       "timeline": "Posición en la mano",
       "speed": "Velocidad de reproducción"
     }
+  },
+  "welcome": {
+    "hello": "Buena sesión",
+    "helloName": "Buena sesión, {{name}}",
+    "line": "Tus mesas te esperan."
   }
 }
