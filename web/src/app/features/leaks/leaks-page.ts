@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -83,7 +84,9 @@ export class LeaksPage {
 
   constructor() {
     effect(() => {
-      void this.load(this.period());
+      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
+      const period = this.period();
+      untracked(() => void this.load(period));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }

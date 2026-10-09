@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { BadgeCheck, UserRound } from 'lucide';
@@ -42,7 +43,7 @@ export class PokerAccounts {
     // Initial load, then again after every import: a new pseudonym may have appeared.
     effect(() => {
       this.session.completedImports();
-      void this.load();
+      untracked(() => void this.load());
     });
   }
 

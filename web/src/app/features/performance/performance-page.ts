@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -99,7 +100,9 @@ export class PerformancePage {
 
   constructor() {
     effect(() => {
-      void this.load(this.period());
+      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
+      const period = this.period();
+      untracked(() => void this.load(period));
     });
   }
 

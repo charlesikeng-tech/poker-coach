@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -131,7 +132,9 @@ export class TournamentsPage {
 
   constructor() {
     effect(() => {
-      void this.load(this.period(), this.buyIn(), this.search(), this.page());
+      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
+      const args = [this.period(), this.buyIn(), this.search(), this.page()] as const;
+      untracked(() => void this.load(...args));
     });
     void this.checkAccounts();
     inject(DestroyRef).onDestroy(() => clearTimeout(this.searchTimer));

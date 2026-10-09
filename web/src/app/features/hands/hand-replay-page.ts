@@ -7,6 +7,7 @@ import {
   inject,
   input,
   signal,
+  untracked,
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -210,7 +211,9 @@ export class HandReplayPage {
 
   constructor() {
     effect(() => {
-      void this.load(this.id());
+      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
+      const id = this.id();
+      untracked(() => void this.load(id));
     });
     inject(DestroyRef).onDestroy(() => this.stop());
   }

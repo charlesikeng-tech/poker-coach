@@ -8,6 +8,7 @@ import {
   inject,
   input,
   signal,
+  untracked,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -114,7 +115,9 @@ export class TournamentDetailPage {
 
   constructor() {
     effect(() => {
-      void this.load(this.id());
+      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
+      const id = this.id();
+      untracked(() => void this.load(id));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }

@@ -6,6 +6,7 @@ import {
   effect,
   inject,
   signal,
+  untracked,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -108,7 +109,9 @@ export class StatisticsPage {
 
   constructor() {
     effect(() => {
-      void this.load(this.period(), this.stack(), this.completeOnly());
+      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
+      const args = [this.period(), this.stack(), this.completeOnly()] as const;
+      untracked(() => void this.load(...args));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }
