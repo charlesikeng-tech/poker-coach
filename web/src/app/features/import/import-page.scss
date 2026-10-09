@@ -1,0 +1,217 @@
+:host {
+  display: block;
+}
+
+h2 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+// Drop zone -----------------------------------------------------------------------------------------
+
+.drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-10) var(--space-8);
+  background: var(--surface-secondary);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--motion-fast) var(--easing-standard),
+    background-color var(--motion-fast) var(--easing-standard);
+
+  p {
+    color: var(--text-secondary);
+    max-width: 60ch;
+  }
+}
+
+.drop-zone--active {
+  border-color: var(--accent-primary);
+  background: var(--accent-subtle);
+}
+
+.drop-zone__icon {
+  --icon-size: 1.25rem;
+  display: inline-flex;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+}
+
+.drop-zone__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.drop-zone .drop-zone__help {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+// Progress and results ------------------------------------------------------------------------------
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.progress__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+// Indeterminate: chunk-level progress is in the heading; byte-level upload progress is not
+// available with the fetch backend.
+.progress__bar {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--surface-elevated);
+}
+
+.progress__bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 30%;
+  border-radius: 2px;
+  background: var(--accent-primary);
+  animation: progress-slide 1.2s var(--easing-standard) infinite;
+}
+
+@keyframes progress-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(340%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress__bar-fill {
+    width: 100%;
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+
+  div {
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+  }
+
+  dt {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  dd {
+    margin: var(--space-1) 0 0;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.notice {
+  --icon-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+}
+
+.notice--danger {
+  color: var(--danger);
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.file {
+  --icon-size: 1rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.file__status {
+  display: inline-flex;
+
+  .ok {
+    color: var(--success);
+  }
+  .ko {
+    color: var(--danger);
+  }
+  .wait {
+    color: var(--text-muted);
+  }
+}
+
+.file__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file__detail {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  text-align: right;
+
+  .warn {
+    color: var(--warning);
+  }
+}
+
+.file--problem .file__detail {
+  color: var(--danger);
+}
+
+@media (max-width: 767px) {
+  .drop-zone,
+  .progress {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .file {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .file__detail {
+    grid-column: 2;
+    text-align: left;
+  }
+}

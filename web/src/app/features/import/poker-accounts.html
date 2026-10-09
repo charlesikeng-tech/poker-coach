@@ -1,0 +1,59 @@
+<ng-container *transloco="let t; prefix: 'pages.import.accounts'">
+  @for (account of unconfirmed(); track account.id) {
+    <section class="account-prompt" [attr.aria-labelledby]="'account-' + account.id">
+      <span class="account-prompt__icon"><app-icon [icon]="icons.UserRound" /></span>
+      <div class="account-prompt__body">
+        @if (pendingDeletion() === account.id) {
+          <h2 [id]="'account-' + account.id">
+            {{ t('rejectTitle', { name: account.screenName }) }}
+          </h2>
+          <p>{{ t('rejectDescription') }}</p>
+          <div class="account-prompt__actions">
+            <button
+              appButton
+              variant="primary"
+              class="danger"
+              [disabled]="busyAccount() === account.id"
+              (click)="delete(account)"
+            >
+              {{ t('rejectConfirm') }}
+            </button>
+            <button appButton variant="ghost" (click)="pendingDeletion.set(null)">
+              {{ t('cancel') }}
+            </button>
+          </div>
+        } @else {
+          <h2 [id]="'account-' + account.id">{{ t('title') }}</h2>
+          <p>{{ t('description', { name: account.screenName }) }}</p>
+          <div class="account-prompt__actions">
+            <button
+              appButton
+              variant="primary"
+              [disabled]="busyAccount() === account.id"
+              (click)="confirm(account)"
+            >
+              {{ t('confirm') }}
+            </button>
+            <button appButton variant="secondary" (click)="pendingDeletion.set(account.id)">
+              {{ t('reject') }}
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  @if (confirmed().length > 0) {
+    <p class="accounts-linked">
+      <app-icon [icon]="icons.BadgeCheck" />
+      <span>{{ t('linked') }}</span>
+      @for (account of confirmed(); track account.id) {
+        <strong>{{ account.screenName }}</strong>
+      }
+    </p>
+  }
+
+  @if (failed()) {
+    <p class="accounts-error" role="alert">{{ t('error') }}</p>
+  }
+</ng-container>

@@ -135,4 +135,4 @@ Phase 2 — Import (MVP-1, ADR-0005):
 - [x] Background processing queue in PostgreSQL; idempotent files, accounts, tournaments and hands
 - [x] Poker accounts detected from files: list, confirm, "not me" (`/api/poker-accounts`)
 - [x] Migration `Import`
-- [ ] Web: import page (drag & drop, progress, account confirmation)
+- [x] Web: import page (drag & drop of files, folders or zip; progress; account confirmation)

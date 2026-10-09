@@ -1,0 +1,80 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+:host:empty {
+  display: none;
+}
+
+.account-prompt {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--surface-secondary);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-lg);
+}
+
+.account-prompt__icon {
+  --icon-size: 1.25rem;
+  display: inline-flex;
+  align-self: flex-start;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+}
+
+.account-prompt__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  h2 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  p {
+    color: var(--text-secondary);
+    max-width: 60ch;
+  }
+}
+
+.account-prompt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+// Destructive confirmation: same button shape, danger color (hover included, it would win otherwise).
+.danger.pc-button--primary,
+.danger.pc-button--primary:hover:not(:disabled) {
+  background: var(--danger);
+}
+
+.accounts-linked {
+  --icon-size: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+
+  app-icon {
+    color: var(--success);
+  }
+
+  strong {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.accounts-error {
+  color: var(--danger);
+}

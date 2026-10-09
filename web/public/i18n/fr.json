@@ -70,10 +70,69 @@
     },
     "import": {
       "title": "Import",
-      "description": "Ajoute tes historiques de mains et tes résumés de tournois Winamax.",
-      "unavailable": {
-        "title": "L'envoi de fichiers n'est pas encore disponible",
-        "description": "Tu pourras déposer ici tes fichiers Winamax ou une archive .zip. Chaque fichier est vérifié avant import, et importer deux fois le même fichier ne crée jamais de doublon."
+      "description": "Ajoutez vos historiques de mains et résumés de tournois Winamax.",
+      "drop": {
+        "title": "Déposez vos fichiers Winamax ici",
+        "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Vous pouvez déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
+        "chooseFiles": "Choisir des fichiers",
+        "chooseFolder": "Choisir un dossier",
+        "where": "Winamax enregistre un fichier d'historique et un fichier de résumé par tournoi dans le dossier « history » de votre compte Winamax.",
+        "nothing": "Aucun fichier .txt ou .zip dans cette sélection."
+      },
+      "progress": {
+        "label": "Import en cours",
+        "uploading": "Envoi des fichiers ({{sent}}/{{total}})…",
+        "processing": "Analyse des fichiers ({{done}}/{{total}})…",
+        "done": "Import terminé",
+        "failed": "Import interrompu",
+        "again": "Importer d'autres fichiers"
+      },
+      "totals": {
+        "handsImported": "Nouvelles mains",
+        "handsAlreadyPresent": "Déjà importées",
+        "handsRejected": "Mains rejetées",
+        "failedFiles": "Fichiers non importés"
+      },
+      "ignored": "{{count}} fichier(s) laissé(s) de côté : seuls les fichiers .txt et .zip sont importés.",
+      "status": {
+        "pending": "En attente",
+        "processing": "Analyse en cours",
+        "completed": "Importé",
+        "failed": "Non importé",
+        "rejected": "Refusé"
+      },
+      "detail": {
+        "hands": "{{imported}} nouvelles mains, {{present}} déjà importées",
+        "rejected": "{{count}} rejetée(s)",
+        "summary": "Résultat du tournoi enregistré",
+        "alreadyImported": "Déjà importé"
+      },
+      "errors": {
+        "UNSUPPORTED_FILE_TYPE": "Ce n'est pas un fichier .txt ou .zip.",
+        "FILE_TOO_LARGE": "Fichier trop volumineux.",
+        "EMPTY_FILE": "Fichier vide.",
+        "INVALID_ARCHIVE": "Archive .zip endommagée ou illisible.",
+        "UPLOAD_TOO_LARGE": "Trop de données d'un coup. Importez moins de fichiers à la fois.",
+        "TOO_MANY_FILES": "Trop de fichiers d'un coup. Importez moins de fichiers à la fois.",
+        "INVALID_ENCODING": "Encodage inattendu : ce n'est pas un fichier Winamax d'origine.",
+        "UNRECOGNIZED_FORMAT": "Ce n'est ni un historique de mains ni un résumé de tournoi Winamax.",
+        "INVALID_SUMMARY": "Résumé de tournoi incomplet ou illisible.",
+        "NO_VALID_HAND": "Aucune main complète n'a pu être lue dans ce fichier.",
+        "PROCESSING_FAILED": "Ce fichier n'a pas pu être traité. Il sera retenté si vous l'importez à nouveau.",
+        "network": "Poker Coach est injoignable. Vérifiez votre connexion et réessayez.",
+        "unknown": "Une erreur est survenue. Réessayez."
+      },
+      "accounts": {
+        "title": "Est-ce votre compte Winamax ?",
+        "description": "Nous avons trouvé le pseudo {{name}} dans vos fichiers. Confirmez qu'il s'agit bien de vous pour que ses résultats comptent dans vos statistiques.",
+        "confirm": "Oui, c'est moi",
+        "reject": "Non, ce n'est pas moi",
+        "rejectTitle": "Supprimer {{name}} ?",
+        "rejectDescription": "Tous les tournois et toutes les mains importés sous ce pseudo seront supprimés. Vous pourrez ensuite importer vos propres fichiers.",
+        "rejectConfirm": "Supprimer",
+        "cancel": "Annuler",
+        "linked": "Compte Winamax :",
+        "error": "Impossible de charger ou de modifier vos comptes Winamax. Réessayez."
       }
     },
     "notFound": {

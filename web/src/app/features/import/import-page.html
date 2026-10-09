@@ -1,0 +1,168 @@
+<ng-container *transloco="let t; prefix: 'pages.import'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <app-poker-accounts />
+
+  @switch (session.phase()) {
+    @case ('idle') {
+      <section
+        class="drop-zone"
+        [class.drop-zone--active]="dragging()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <span class="drop-zone__icon"><app-icon [icon]="icons.Upload" /></span>
+        <h2>{{ t('drop.title') }}</h2>
+        <p>{{ t('drop.hint') }}</p>
+        <div class="drop-zone__actions">
+          <button appButton variant="primary" (click)="filePicker.click()">
+            {{ t('drop.chooseFiles') }}
+          </button>
+          <button appButton variant="secondary" (click)="folderPicker.click()">
+            <app-icon [icon]="icons.FolderOpen" />
+            {{ t('drop.chooseFolder') }}
+          </button>
+        </div>
+        <p class="drop-zone__help">{{ t('drop.where') }}</p>
+        @if (nothingToImport()) {
+          <p class="notice notice--danger" role="alert">{{ t('drop.nothing') }}</p>
+        }
+        <input
+          #filePicker
+          type="file"
+          multiple
+          accept=".txt,.zip"
+          hidden
+          (change)="onPick(filePicker)"
+        />
+        <input #folderPicker type="file" webkitdirectory hidden (change)="onPick(folderPicker)" />
+      </section>
+    }
+    @default {
+      <section class="progress" aria-live="polite">
+        <header class="progress__header">
+          <h2>
+            @switch (session.phase()) {
+              @case ('uploading') {
+                {{
+                  t('progress.uploading', {
+                    sent: session.chunksSent(),
+                    total: session.chunksTotal(),
+                  })
+                }}
+              }
+              @case ('processing') {
+                {{
+                  t('progress.processing', {
+                    done: session.totals().finished,
+                    total: session.totals().files,
+                  })
+                }}
+              }
+              @case ('done') {
+                {{ t('progress.done') }}
+              }
+              @case ('failed') {
+                {{ t('progress.failed') }}
+              }
+            }
+          </h2>
+          @if (!session.busy()) {
+            <button appButton variant="secondary" (click)="session.reset()">
+              {{ t('progress.again') }}
+            </button>
+          }
+        </header>
+
+        @if (session.busy()) {
+          <div class="progress__bar" role="progressbar" [attr.aria-label]="t('progress.label')">
+            <span class="progress__bar-fill"></span>
+          </div>
+        }
+
+        @if (session.errorCode(); as code) {
+          <p class="notice notice--danger" role="alert">
+            <app-icon [icon]="icons.CircleAlert" />
+            {{ t(errorKey(code)) }}
+          </p>
+        }
+
+        <dl class="totals">
+          <div>
+            <dt>{{ t('totals.handsImported') }}</dt>
+            <dd class="numeric">{{ session.totals().handsImported }}</dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.handsAlreadyPresent') }}</dt>
+            <dd class="numeric">{{ session.totals().handsAlreadyPresent }}</dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.handsRejected') }}</dt>
+            <dd class="numeric">{{ session.totals().handsRejected }}</dd>
+          </div>
+          <div>
+            <dt>{{ t('totals.failedFiles') }}</dt>
+            <dd class="numeric">{{ session.totals().failedFiles }}</dd>
+          </div>
+        </dl>
+
+        @if (session.ignored() > 0) {
+          <p class="notice">{{ t('ignored', { count: session.ignored() }) }}</p>
+        }
+
+        <ul class="files">
+          @for (row of sortedRows(); track row.key) {
+            <li
+              class="file"
+              [class.file--problem]="row.status === 'failed' || row.status === 'rejected'"
+            >
+              <span class="file__status">
+                @switch (row.status) {
+                  @case ('completed') {
+                    <app-icon class="ok" [icon]="icons.CircleCheck" />
+                  }
+                  @case ('failed') {
+                    <app-icon class="ko" [icon]="icons.CircleAlert" />
+                  }
+                  @case ('rejected') {
+                    <app-icon class="ko" [icon]="icons.CircleAlert" />
+                  }
+                  @default {
+                    <app-icon class="wait" [icon]="icons.Clock" />
+                  }
+                }
+                <span class="visually-hidden">{{ t('status.' + row.status) }}</span>
+              </span>
+              <span class="file__name" [attr.title]="row.fileName">{{ row.fileName }}</span>
+              <span class="file__detail">
+                @if (row.status === 'failed' || row.status === 'rejected') {
+                  {{ t(errorKey(row.errorCode)) }}
+                } @else if (row.alreadyImported) {
+                  {{ t('detail.alreadyImported') }}
+                } @else if (row.status === 'completed' && row.kind === 'tournamentSummary') {
+                  {{ t('detail.summary') }}
+                } @else if (row.status === 'completed') {
+                  {{
+                    t('detail.hands', {
+                      imported: row.handsImported ?? 0,
+                      present: row.handsAlreadyPresent ?? 0,
+                    })
+                  }}
+                  @if ((row.handsRejected ?? 0) > 0) {
+                    ·
+                    <span class="warn">{{
+                      t('detail.rejected', { count: row.handsRejected })
+                    }}</span>
+                  }
+                } @else {
+                  {{ t('status.' + row.status) }}
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</ng-container>
