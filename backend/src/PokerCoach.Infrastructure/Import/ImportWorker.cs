@@ -2,13 +2,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PokerCoach.Application.Import;
+using PokerCoach.Application.Statistics;
 
 namespace PokerCoach.Infrastructure.Import;
 
 /// <summary>
 /// Drains the import queue: one file at a time per instance, several instances share the queue safely
-/// (claims use SKIP LOCKED). Polling keeps it simple; LISTEN/NOTIFY can cut the latency later if the
-/// 2-second delay ever matters.
+/// (claims use SKIP LOCKED). When the queue is empty, brings per-hand statistics facts up to date
+/// (ADR-0006). Polling keeps it simple; LISTEN/NOTIFY can cut the latency later if it ever matters.
 /// </summary>
 internal sealed partial class ImportWorker(
     IServiceScopeFactory scopes,
@@ -19,6 +20,9 @@ internal sealed partial class ImportWorker(
     private static readonly TimeSpan IdleDelay = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan ErrorDelay = TimeSpan.FromSeconds(10);
 
+    // Once facts are up to date, look again only after an import or this long (cheap, but not free).
+    private static readonly TimeSpan FactsRecheckInterval = TimeSpan.FromMinutes(1);
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         if (!options.WorkerEnabled)
@@ -27,14 +31,28 @@ internal sealed partial class ImportWorker(
             return;
         }
 
+        var factsDue = true;
+        var factsCheckedAt = DateTimeOffset.MinValue;
         while (!stoppingToken.IsCancellationRequested)
         {
             TimeSpan? delay;
             try
             {
                 await using var scope = scopes.CreateAsyncScope();
-                var processed = await scope.ServiceProvider.GetRequiredService<ImportProcessor>().ProcessNextAsync(stoppingToken);
-                delay = processed ? null : IdleDelay;
+                var imported = await scope.ServiceProvider.GetRequiredService<ImportProcessor>().ProcessNextAsync(stoppingToken);
+                var factsComputed = 0;
+                if (imported)
+                {
+                    factsDue = true;
+                }
+                else if (factsDue || time.GetUtcNow() - factsCheckedAt > FactsRecheckInterval)
+                {
+                    factsComputed = await scope.ServiceProvider.GetRequiredService<HandFactsBackfill>().ProcessBatchAsync(stoppingToken);
+                    factsCheckedAt = time.GetUtcNow();
+                    factsDue = factsComputed > 0;
+                }
+
+                delay = imported || factsComputed > 0 ? null : IdleDelay;
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {

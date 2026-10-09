@@ -156,3 +156,12 @@ Phase 4 — Performance (MVP-1):
       unconfirmed accounts and missing summaries)
 - [x] Visual identity "Tapis de nuit" (felt, chip gold, glass panels, Sora + Plex, motion that
       respects reduced-motion)
+
+MVP-2 — Game analysis (ADR-0006):
+
+- [x] Domain `HandAnalyzer`: positions, VPIP, PFR, open, limp, steal, 3-bet, fold to 3-bet, flop
+      c-bet, WTSD, W$SD, net chips / big blinds per hand
+- [x] Versioned per-hand facts (`poker.hand_hero_facts`), computed in the background, SQL aggregates
+- [x] `GET /api/statistics` (period, stack depth) and the statistics page (tiles, by position)
+- [ ] Migration `HandHeroFacts` (generate with `dotnet ef`)
+- [ ] Hand coverage (gaps), per-entry attribution, postflop statistics

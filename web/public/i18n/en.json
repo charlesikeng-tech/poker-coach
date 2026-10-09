@@ -222,6 +222,88 @@
         "title": "No hands to analyze yet",
         "description": "VPIP, PFR, 3-bet and your other statistics are computed from your imported hand histories.",
         "action": "Import files"
+      },
+      "loading": "Loading your statistics…",
+      "error": {
+        "title": "Your statistics could not be loaded",
+        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "retry": "Try again"
+      },
+      "pending": "Analyzing {{count}} hand(s): figures update by themselves.",
+      "filters": {
+        "period": "Period",
+        "stack": "Stack",
+        "periods": {
+          "all": "All time",
+          "7d": "Last 7 days",
+          "30d": "Last 30 days",
+          "90d": "Last 90 days",
+          "year": "This year"
+        },
+        "stacks": {
+          "all": "All stacks",
+          "under15": "Under 15 BB",
+          "from15To30": "15 to 30 BB",
+          "from30To50": "30 to 50 BB",
+          "over50": "50 BB and more"
+        }
+      },
+      "hands": "Hands",
+      "bb100": "BB won / 100 hands",
+      "sample": "{{made}} / {{opportunities}}",
+      "smallSample": "Fewer than 1,000 hands: rates still move a lot from one session to the next.",
+      "byPosition": "By position",
+      "columns": {
+        "position": "Position",
+        "hands": "Hands"
+      },
+      "definitions": "Each rate counts only the hands where the situation happened (hover a figure for the count). Definitions follow the usual tracker conventions.",
+      "stats": {
+        "vpip": "VPIP",
+        "vpipHint": "Put money in the pot voluntarily preflop",
+        "pfr": "PFR",
+        "pfrHint": "Raised preflop",
+        "threeBet": "3-bet",
+        "threeBetHint": "Re-raised when facing one raise",
+        "steal": "Steal",
+        "stealHint": "Opened from the cutoff, button or small blind when folded to",
+        "rfi": "Open",
+        "rfiHint": "First in with a raise when folded to",
+        "limp": "Limp",
+        "limpHint": "First in with a call when folded to",
+        "foldToThreeBet": "Fold to 3-bet",
+        "foldToThreeBetHint": "Folded after opening and facing a re-raise",
+        "cbetFlop": "Flop c-bet",
+        "cbetFlopHint": "Bet the flop as the preflop raiser when checked to",
+        "wentToShowdown": "Went to showdown",
+        "wentToShowdownHint": "Reached showdown after seeing the flop",
+        "wonAtShowdown": "Won at showdown",
+        "wonAtShowdownHint": "Won chips when reaching showdown"
+      },
+      "short": {
+        "vpip": "VPIP",
+        "pfr": "PFR",
+        "threeBet": "3B",
+        "steal": "Steal",
+        "rfi": "Open",
+        "limp": "Limp",
+        "foldToThreeBet": "F3B",
+        "cbetFlop": "CB",
+        "wentToShowdown": "WTSD",
+        "wonAtShowdown": "W$SD",
+        "bb100": "BB/100"
+      },
+      "positions": {
+        "utg": "UTG",
+        "utg1": "UTG+1",
+        "utg2": "UTG+2",
+        "lojack": "Lojack",
+        "hijack": "Hijack",
+        "cutoff": "Cutoff",
+        "button": "Button",
+        "smallBlind": "Small blind",
+        "bigBlind": "Big blind",
+        "unknown": "Unknown"
       }
     },
     "import": {

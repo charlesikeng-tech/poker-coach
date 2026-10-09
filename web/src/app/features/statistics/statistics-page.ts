@@ -1,30 +1,160 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { Upload } from 'lucide';
+import { CircleAlert, LoaderCircle, Upload } from 'lucide';
 
+import { LanguageService } from '../../core/i18n/language.service';
+import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
+import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
+import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
+import {
+  STACK_FILTERS,
+  StackFilter,
+  StatLine,
+  StatRate,
+  StatisticsApi,
+  StatisticsReport,
+  stackBounds,
+} from './statistics-api';
+
+type LoadState = 'loading' | 'ready' | 'error';
+
+/** Statistics shown in tiles and as table columns, in this order. */
+const RATES = [
+  'vpip',
+  'pfr',
+  'threeBet',
+  'steal',
+  'rfi',
+  'limp',
+  'foldToThreeBet',
+  'cbetFlop',
+  'wentToShowdown',
+  'wonAtShowdown',
+] as const;
+type RateKey = (typeof RATES)[number];
+
+/** While hands are still being analyzed, refresh this often. */
+const PENDING_REFRESH_MS = 3000;
 
 @Component({
   selector: 'app-statistics-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, StatTile],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
-  template: `
-    <ng-container *transloco="let t; prefix: 'pages.statistics'">
-      <app-page-header [heading]="t('title')" [description]="t('description')" />
-      <app-empty-state
-        [icon]="uploadIcon"
-        [heading]="t('empty.title')"
-        [description]="t('empty.description')"
-      >
-        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
-      </app-empty-state>
-    </ng-container>
-  `,
+  templateUrl: './statistics-page.html',
+  styleUrl: './statistics-page.scss',
 })
 export class StatisticsPage {
-  protected readonly uploadIcon = Upload;
+  private readonly api = inject(StatisticsApi);
+  private readonly language = inject(LanguageService);
+
+  protected readonly periods = PERIOD_FILTERS;
+  protected readonly stacks = STACK_FILTERS;
+  protected readonly rates = RATES;
+  protected readonly tileRates: readonly RateKey[] = [
+    'vpip',
+    'pfr',
+    'threeBet',
+    'steal',
+    'wentToShowdown',
+    'wonAtShowdown',
+  ];
+  protected readonly period = signal<PeriodFilter>('all');
+  protected readonly stack = signal<StackFilter>('all');
+  protected readonly state = signal<LoadState>('loading');
+  protected readonly report = signal<StatisticsReport | null>(null);
+  protected readonly icons = { CircleAlert, LoaderCircle, Upload };
+
+  private readonly locale = computed(() => this.language.current());
+  private request = 0;
+  private refreshTimer: ReturnType<typeof setTimeout> | undefined;
+
+  protected readonly formats = computed(() => {
+    const locale = this.locale();
+    return {
+      share: (value: number | null) =>
+        value === null
+          ? '—'
+          : new Intl.NumberFormat(locale, {
+              style: 'percent',
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            }).format(value),
+      bb100: (value: number | null) =>
+        value === null
+          ? '—'
+          : new Intl.NumberFormat(locale, {
+              maximumFractionDigits: 1,
+              signDisplay: 'exceptZero',
+            }).format(value),
+      integer: (value: number | null) =>
+        formatInteger(value === null ? null : Math.round(value), locale),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      void this.load(this.period(), this.stack());
+    });
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
+  }
+
+  protected setPeriod(value: string): void {
+    this.period.set(value as PeriodFilter);
+  }
+
+  protected setStack(value: string): void {
+    this.stack.set(value as StackFilter);
+  }
+
+  protected retry(): void {
+    void this.load(this.period(), this.stack());
+  }
+
+  protected rate(line: StatLine, key: RateKey): StatRate {
+    return line[key];
+  }
+
+  protected sign(value: number | null): 'positive' | 'negative' | null {
+    return value === null || value === 0 ? null : value > 0 ? 'positive' : 'negative';
+  }
+
+  private async load(period: PeriodFilter, stack: StackFilter): Promise<void> {
+    clearTimeout(this.refreshTimer);
+    const request = ++this.request;
+    if (this.report() === null) {
+      this.state.set('loading');
+    }
+    try {
+      const report = await this.api.get({
+        from: toQuery(period, 'all', 1, 1, new Date()).from,
+        ...stackBounds(stack),
+      });
+      if (request !== this.request) {
+        return;
+      }
+      this.report.set(report);
+      this.state.set('ready');
+      if (report.pendingHands > 0) {
+        this.refreshTimer = setTimeout(() => void this.load(period, stack), PENDING_REFRESH_MS);
+      }
+    } catch {
+      if (request === this.request) {
+        this.state.set('error');
+      }
+    }
+  }
 }

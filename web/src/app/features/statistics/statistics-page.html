@@ -1,0 +1,133 @@
+<ng-container *transloco="let t; prefix: 'pages.statistics'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (report(); as report) {
+    @if (
+      report.overall.hands === 0 &&
+      report.pendingHands === 0 &&
+      period() === 'all' &&
+      stack() === 'all'
+    ) {
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      @if (report.pendingHands > 0) {
+        <p class="pending glass" role="status">
+          <app-icon class="spin" [icon]="icons.LoaderCircle" />
+          {{ t('pending', { count: report.pendingHands }) }}
+        </p>
+      }
+
+      <div class="filters">
+        <label>
+          <span>{{ t('filters.period') }}</span>
+          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+            @for (option of periods; track option) {
+              <option [value]="option">{{ t('filters.periods.' + option) }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          <span>{{ t('filters.stack') }}</span>
+          <select [value]="stack()" (change)="setStack($any($event.target).value)">
+            @for (option of stacks; track option) {
+              <option [value]="option">{{ t('filters.stacks.' + option) }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <div class="tiles">
+        <app-stat-tile
+          [label]="t('hands')"
+          [value]="report.overall.hands"
+          [format]="formats().integer"
+        />
+        <app-stat-tile
+          [label]="t('bb100')"
+          [value]="report.overall.bigBlindsPer100"
+          [format]="formats().bb100"
+          [signed]="true"
+        />
+        @for (key of tileRates; track key) {
+          @let r = rate(report.overall, key);
+          <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
+            <small class="sample numeric" [attr.title]="t('stats.' + key + 'Hint')">
+              {{
+                t('sample', {
+                  made: formats().integer(r.made),
+                  opportunities: formats().integer(r.opportunities),
+                })
+              }}
+            </small>
+          </app-stat-tile>
+        }
+      </div>
+
+      @if (report.overall.hands < 1000 && report.overall.hands > 0) {
+        <p class="hint">{{ t('smallSample') }}</p>
+      }
+
+      <section class="panel glass">
+        <h2>{{ t('byPosition') }}</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">{{ t('columns.position') }}</th>
+                <th scope="col" class="num">{{ t('columns.hands') }}</th>
+                @for (key of rates; track key) {
+                  <th scope="col" class="num" [attr.title]="t('stats.' + key + 'Hint')">
+                    {{ t('short.' + key) }}
+                  </th>
+                }
+                <th scope="col" class="num">{{ t('short.bb100') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of report.byPosition; track row.position) {
+                <tr>
+                  <th scope="row">{{ t('positions.' + (row.position ?? 'unknown')) }}</th>
+                  <td class="num numeric">{{ formats().integer(row.line.hands) }}</td>
+                  @for (key of rates; track key) {
+                    @let r = rate(row.line, key);
+                    <td class="num numeric" [attr.title]="r.made + ' / ' + r.opportunities">
+                      {{ formats().share(r.rate) }}
+                    </td>
+                  }
+                  <td class="num numeric" [attr.data-sign]="sign(row.line.bigBlindsPer100)">
+                    {{ formats().bb100(row.line.bigBlindsPer100) }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="hint">{{ t('definitions') }}</p>
+      </section>
+    }
+  } @else {
+    <div role="status" [attr.aria-label]="t('loading')">
+      <div class="tiles">
+        @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+          <div class="glass skeleton-tile">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</ng-container>

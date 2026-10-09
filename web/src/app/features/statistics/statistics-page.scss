@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.pending {
+  --icon-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+}
+
+.spin {
+  color: var(--accent-primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  select {
+    min-width: 11rem;
+  }
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--space-3);
+}
+
+.sample {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.hint {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.panel {
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+
+  h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+  white-space: nowrap;
+}
+
+thead th {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+tbody th {
+  font-weight: var(--font-weight-medium);
+}
+
+tbody tr {
+  transition: background-color var(--motion-fast) var(--easing-standard);
+}
+
+tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.num {
+  text-align: right;
+}
+
+.skeleton-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+
+  .skeleton:first-child {
+    width: 50%;
+    height: 0.75rem;
+  }
+
+  .skeleton:last-child {
+    width: 70%;
+    height: 1.5rem;
+  }
+}

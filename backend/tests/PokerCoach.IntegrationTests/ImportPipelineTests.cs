@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Tournaments;
 using PokerCoach.Domain.Identity;
@@ -172,6 +173,40 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         Assert.Equal(page.Totals, performance.Totals);
         Assert.Equal(new[] { 39.28m, 29.28m }, performance.Curve.Select(p => p.CumulativeProfit));
         Assert.Equal(new[] { "upTo5", "from5To10" }, performance.ByBuyIn.Select(g => g.Key));
+    }
+
+    [Fact]
+    public async Task Statistics_appear_once_hand_facts_are_computed()
+    {
+        var userId = await CreateUserAsync();
+        await UploadAsync(userId, (CassiopeiaHands, Golden(CassiopeiaHands)));
+        await ProcessQueueAsync();
+        await using var scope = fixture.Services.CreateAsyncScope();
+        var accounts = scope.ServiceProvider.GetRequiredService<PokerAccountService>();
+        await accounts.ConfirmAsync(userId, Assert.Single(await accounts.ListAsync(userId, Ct)).Id, Ct);
+        var statistics = scope.ServiceProvider.GetRequiredService<StatisticsService>();
+        var noFilter = new StatisticsFilter(null, null, null, null);
+
+        var before = await statistics.GetAsync(userId, noFilter, Ct);
+        Assert.Equal(72, before.PendingHands);
+        Assert.Equal(0, before.Overall.Hands);
+
+        // What the background worker does when the import queue is empty.
+        var backfill = scope.ServiceProvider.GetRequiredService<HandFactsBackfill>();
+        while (await backfill.ProcessBatchAsync(Ct) > 0)
+        {
+        }
+
+        var after = await statistics.GetAsync(userId, noFilter, Ct);
+        Assert.Equal(0, after.PendingHands);
+        Assert.Equal(72, after.Overall.Hands);
+        Assert.Equal(72, after.ByPosition.Sum(p => p.Line.Hands));
+        Assert.InRange(after.Overall.Vpip.Opportunities, 1, 72);
+        Assert.True(after.Overall.Pfr.Made <= after.Overall.Vpip.Made);
+
+        var deep = await statistics.GetAsync(userId, noFilter with { MinStackBigBlinds = 1_000m }, Ct);
+        Assert.Equal(0, deep.Overall.Hands);
+        Assert.Equal(0, await backfill.ProcessBatchAsync(Ct));
     }
 
     [Fact]

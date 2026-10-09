@@ -7,10 +7,12 @@ using PokerCoach.Api.Errors;
 using PokerCoach.Api.Health;
 using PokerCoach.Api.Import;
 using PokerCoach.Api.Poker;
+using PokerCoach.Api.Statistics;
 using PokerCoach.Api.Tournaments;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.HandHistories;
 using PokerCoach.HandHistories.Winamax;
@@ -43,6 +45,8 @@ builder.Services.AddScoped<ImportProcessor>();
 builder.Services.AddScoped<PokerAccountService>();
 builder.Services.AddScoped<TournamentListService>();
 builder.Services.AddScoped<PerformanceService>();
+builder.Services.AddScoped<HandFactsBackfill>();
+builder.Services.AddScoped<StatisticsService>();
 
 var app = builder.Build();
 
@@ -78,6 +82,7 @@ app.MapAccountEndpoints();
 app.MapImportEndpoints();
 app.MapPokerAccountEndpoints();
 app.MapTournamentEndpoints();
+app.MapStatisticsEndpoints();
 
 app.Run();
 

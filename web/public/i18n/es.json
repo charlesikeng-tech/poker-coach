@@ -222,6 +222,88 @@
         "title": "Todavía no hay manos que analizar",
         "description": "VPIP, PFR, 3-bet y tus demás estadísticas se calculan a partir de tus historiales de manos importados.",
         "action": "Importar archivos"
+      },
+      "loading": "Cargando tus estadísticas…",
+      "error": {
+        "title": "No se han podido cargar tus estadísticas",
+        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "pending": "Analizando {{count}} mano(s): las cifras se actualizan solas.",
+      "filters": {
+        "period": "Periodo",
+        "stack": "Stack",
+        "periods": {
+          "all": "Desde el principio",
+          "7d": "Últimos 7 días",
+          "30d": "Últimos 30 días",
+          "90d": "Últimos 90 días",
+          "year": "Este año"
+        },
+        "stacks": {
+          "all": "Todos los stacks",
+          "under15": "Menos de 15 BB",
+          "from15To30": "De 15 a 30 BB",
+          "from30To50": "De 30 a 50 BB",
+          "over50": "50 BB o más"
+        }
+      },
+      "hands": "Manos",
+      "bb100": "BB ganadas / 100 manos",
+      "sample": "{{made}} / {{opportunities}}",
+      "smallSample": "Menos de 1.000 manos: las tasas todavía varían mucho de una sesión a otra.",
+      "byPosition": "Por posición",
+      "columns": {
+        "position": "Posición",
+        "hands": "Manos"
+      },
+      "definitions": "Cada tasa solo cuenta las manos en las que se dio la situación (pasa el cursor por una cifra para ver el detalle). Las definiciones siguen las convenciones habituales de los trackers.",
+      "stats": {
+        "vpip": "VPIP",
+        "vpipHint": "Puso dinero voluntariamente preflop",
+        "pfr": "PFR",
+        "pfrHint": "Subió preflop",
+        "threeBet": "3-bet",
+        "threeBetHint": "Resubió frente a una subida",
+        "steal": "Robo",
+        "stealHint": "Abrió desde el cutoff, el botón o la ciega pequeña cuando le llegó foldeado",
+        "rfi": "Apertura",
+        "rfiHint": "Primero en entrar, subiendo, cuando le llegó foldeado",
+        "limp": "Limp",
+        "limpHint": "Primero en entrar, pagando, cuando le llegó foldeado",
+        "foldToThreeBet": "Fold al 3-bet",
+        "foldToThreeBetHint": "Se retiró tras abrir y recibir una resubida",
+        "cbetFlop": "C-bet flop",
+        "cbetFlopHint": "Apostó el flop como agresor preflop cuando le pasaron",
+        "wentToShowdown": "Showdown",
+        "wentToShowdownHint": "Llegó al showdown tras ver el flop",
+        "wonAtShowdown": "Ganado en showdown",
+        "wonAtShowdownHint": "Ganó fichas al llegar al showdown"
+      },
+      "short": {
+        "vpip": "VPIP",
+        "pfr": "PFR",
+        "threeBet": "3B",
+        "steal": "Robo",
+        "rfi": "Apert.",
+        "limp": "Limp",
+        "foldToThreeBet": "F3B",
+        "cbetFlop": "CB",
+        "wentToShowdown": "WTSD",
+        "wonAtShowdown": "W$SD",
+        "bb100": "BB/100"
+      },
+      "positions": {
+        "utg": "UTG",
+        "utg1": "UTG+1",
+        "utg2": "UTG+2",
+        "lojack": "Lojack",
+        "hijack": "Hijack",
+        "cutoff": "Cutoff",
+        "button": "Botón",
+        "smallBlind": "Ciega pequeña",
+        "bigBlind": "Ciega grande",
+        "unknown": "Desconocida"
       }
     },
     "import": {
