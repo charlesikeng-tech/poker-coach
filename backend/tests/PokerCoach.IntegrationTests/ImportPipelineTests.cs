@@ -237,6 +237,12 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         Assert.Equal(CoverageStatus.Partial, accelerator.Status);
         Assert.Equal(222, accelerator.HandCount);
         Assert.Equal(7, accelerator.MissingHands);
+
+        var statistics = scope.ServiceProvider.GetRequiredService<StatisticsService>();
+        var all = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null), Ct);
+        Assert.Equal(new StatisticsSample(1, 0), all.Sample);
+        var completeOnly = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null, CompleteHistoryOnly: true), Ct);
+        Assert.Equal(0, completeOnly.Overall.Hands);
         Assert.Equal(0, await coverage.ProcessBatchAsync(PokerCoach.Domain.Poker.Analysis.HeroHandFacts.Version, Ct));
     }
 

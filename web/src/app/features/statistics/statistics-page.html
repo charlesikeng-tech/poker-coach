@@ -48,7 +48,25 @@
             }
           </select>
         </label>
+        <label class="toggle">
+          <input
+            type="checkbox"
+            [checked]="completeOnly()"
+            (change)="completeOnly.set($any($event.target).checked)"
+          />
+          <span>{{ t('filters.completeOnly') }}</span>
+        </label>
       </div>
+
+      <p class="sample-line">
+        {{
+          t('basis', {
+            hands: formats().integer(report.overall.hands),
+            tournaments: formats().integer(report.sample.tournaments),
+            complete: formats().integer(report.sample.completeTournaments),
+          })
+        }}
+      </p>
 
       <div class="tiles">
         <app-stat-tile

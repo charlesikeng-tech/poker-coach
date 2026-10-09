@@ -5,7 +5,16 @@ namespace PokerCoach.Application.Statistics;
 /// <param name="To">Exclusive upper bound on the hand start time.</param>
 /// <param name="MinStackBigBlinds">Inclusive lower bound on the hero's stack at the start of the hand.</param>
 /// <param name="MaxStackBigBlinds">Exclusive upper bound.</param>
-public sealed record StatisticsFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinStackBigBlinds, decimal? MaxStackBigBlinds);
+/// <param name="CompleteHistoryOnly">Only hands of tournaments whose hand history is complete (no gap).</param>
+public sealed record StatisticsFilter(
+    DateTimeOffset? From,
+    DateTimeOffset? To,
+    decimal? MinStackBigBlinds,
+    decimal? MaxStackBigBlinds,
+    bool CompleteHistoryOnly = false);
+
+/// <summary>What the figures rest on: tournaments behind the filtered hands, and how many have a complete history.</summary>
+public sealed record StatisticsSample(int Tournaments, int CompleteTournaments);
 
 public interface IStatisticsReadStore
 {
@@ -15,6 +24,8 @@ public interface IStatisticsReadStore
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken);
+
+    Task<StatisticsSample> CountTournamentsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken);
 
     /// <summary>Hands of the user's confirmed accounts whose facts are missing or outdated (still being computed).</summary>
     Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken);
@@ -61,7 +72,7 @@ public sealed record StatLine(
 }
 
 /// <param name="PendingHands">Hands whose facts are still being computed: figures are partial until 0.</param>
-public sealed record StatisticsReport(StatLine Overall, IReadOnlyList<PositionStatLine> ByPosition, int PendingHands);
+public sealed record StatisticsReport(StatLine Overall, IReadOnlyList<PositionStatLine> ByPosition, int PendingHands, StatisticsSample Sample);
 
 /// <param name="Position">Null when the position could not be named.</param>
 public sealed record PositionStatLine(PokerPosition? Position, StatLine Line);
@@ -78,12 +89,13 @@ public sealed class StatisticsService(IStatisticsReadStore store)
     {
         var groups = await store.CountByPositionAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
         var pending = await store.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
+        var sample = await store.CountTournamentsAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
 
         var overall = groups.Aggregate(HeroStatCounts.Zero, (total, g) => total.Add(g.Counts));
         var byPosition = groups
             .OrderBy(g => g.Position is { } p ? Array.IndexOf(Order, p) : int.MaxValue)
             .Select(g => new PositionStatLine(g.Position, StatLine.From(g.Counts)))
             .ToList();
-        return new StatisticsReport(StatLine.From(overall), byPosition, pending);
+        return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample);
     }
 }

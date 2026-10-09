@@ -260,7 +260,8 @@
           "from15To30": "15 à 30 BB",
           "from30To50": "30 à 50 BB",
           "over50": "50 BB et plus"
-        }
+        },
+        "completeOnly": "Historiques complets uniquement"
       },
       "hands": "Mains",
       "bb100": "BB gagnées / 100 mains",
@@ -318,7 +319,8 @@
         "smallBlind": "Petite blinde",
         "bigBlind": "Grosse blinde",
         "unknown": "Inconnue"
-      }
+      },
+      "basis": "Sur {{hands}} mains de {{tournaments}} tournoi(s), dont {{complete}} avec un historique complet."
     },
     "import": {
       "title": "Import",

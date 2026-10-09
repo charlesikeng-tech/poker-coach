@@ -35,12 +35,15 @@ export interface StatisticsReport {
     readonly line: StatLine;
   }[];
   readonly pendingHands: number;
+  /** Tournaments behind the figures, and how many have a complete hand history. */
+  readonly sample: { readonly tournaments: number; readonly completeTournaments: number };
 }
 
 export interface StatisticsQuery {
   readonly from?: string;
   readonly minStackBb?: number;
   readonly maxStackBb?: number;
+  readonly completeOnly?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -57,6 +60,9 @@ export class StatisticsApi {
     }
     if (query.maxStackBb !== undefined) {
       params = params.set('maxStackBb', query.maxStackBb);
+    }
+    if (query.completeOnly) {
+      params = params.set('completeOnly', true);
     }
     return firstValueFrom(this.http.get<StatisticsReport>('/api/statistics', { params }));
   }

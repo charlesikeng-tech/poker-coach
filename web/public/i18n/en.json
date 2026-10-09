@@ -260,7 +260,8 @@
           "from15To30": "15 to 30 BB",
           "from30To50": "30 to 50 BB",
           "over50": "50 BB and more"
-        }
+        },
+        "completeOnly": "Complete histories only"
       },
       "hands": "Hands",
       "bb100": "BB won / 100 hands",
@@ -318,7 +319,8 @@
         "smallBlind": "Small blind",
         "bigBlind": "Big blind",
         "unknown": "Unknown"
-      }
+      },
+      "basis": "Based on {{hands}} hands from {{tournaments}} tournament(s), {{complete}} with a complete hand history."
     },
     "import": {
       "title": "Import",

@@ -260,7 +260,8 @@
           "from15To30": "De 15 a 30 BB",
           "from30To50": "De 30 a 50 BB",
           "over50": "50 BB o más"
-        }
+        },
+        "completeOnly": "Solo historiales completos"
       },
       "hands": "Manos",
       "bb100": "BB ganadas / 100 manos",
@@ -318,7 +319,8 @@
         "smallBlind": "Ciega pequeña",
         "bigBlind": "Ciega grande",
         "unknown": "Desconocida"
-      }
+      },
+      "basis": "Sobre {{hands}} manos de {{tournaments}} torneo(s), {{complete}} con historial completo."
     },
     "import": {
       "title": "Importar",

@@ -74,6 +74,7 @@ export class StatisticsPage {
   ];
   protected readonly period = signal<PeriodFilter>('all');
   protected readonly stack = signal<StackFilter>('all');
+  protected readonly completeOnly = signal(false);
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<StatisticsReport | null>(null);
   protected readonly icons = { CircleAlert, LoaderCircle, Upload };
@@ -107,7 +108,7 @@ export class StatisticsPage {
 
   constructor() {
     effect(() => {
-      void this.load(this.period(), this.stack());
+      void this.load(this.period(), this.stack(), this.completeOnly());
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }
@@ -121,7 +122,7 @@ export class StatisticsPage {
   }
 
   protected retry(): void {
-    void this.load(this.period(), this.stack());
+    void this.load(this.period(), this.stack(), this.completeOnly());
   }
 
   protected rate(line: StatLine, key: RateKey): StatRate {
@@ -132,7 +133,11 @@ export class StatisticsPage {
     return value === null || value === 0 ? null : value > 0 ? 'positive' : 'negative';
   }
 
-  private async load(period: PeriodFilter, stack: StackFilter): Promise<void> {
+  private async load(
+    period: PeriodFilter,
+    stack: StackFilter,
+    completeOnly: boolean,
+  ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
     if (this.report() === null) {
@@ -149,7 +154,10 @@ export class StatisticsPage {
       this.report.set(report);
       this.state.set('ready');
       if (report.pendingHands > 0) {
-        this.refreshTimer = setTimeout(() => void this.load(period, stack), PENDING_REFRESH_MS);
+        this.refreshTimer = setTimeout(
+          () => void this.load(period, stack, completeOnly),
+          PENDING_REFRESH_MS,
+        );
       }
     } catch {
       if (request === this.request) {

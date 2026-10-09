@@ -44,8 +44,16 @@ public sealed record StatLineResponse(
 /// <param name="Position">Null when it could not be named.</param>
 public sealed record PositionStatLineResponse(PokerPosition? Position, StatLineResponse Line);
 
+/// <param name="Tournaments">Tournaments behind the filtered hands.</param>
+/// <param name="CompleteTournaments">Of those, tournaments whose hand history is complete.</param>
+public sealed record StatisticsSampleResponse(int Tournaments, int CompleteTournaments);
+
 /// <param name="PendingHands">Hands still being analyzed: figures are partial while above zero.</param>
-public sealed record StatisticsResponse(StatLineResponse Overall, IReadOnlyList<PositionStatLineResponse> ByPosition, int PendingHands);
+public sealed record StatisticsResponse(
+    StatLineResponse Overall,
+    IReadOnlyList<PositionStatLineResponse> ByPosition,
+    int PendingHands,
+    StatisticsSampleResponse Sample);
 
 public static class StatisticsEndpoints
 {
@@ -57,6 +65,7 @@ public static class StatisticsEndpoints
 
     /// <param name="to">Exclusive upper bound on the hand start time.</param>
     /// <param name="maxStackBb">Exclusive upper bound on the hero's stack in big blinds.</param>
+    /// <param name="completeOnly">Only tournaments with a complete hand history.</param>
     private static async Task<Results<Ok<StatisticsResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         StatisticsService statistics,
@@ -64,7 +73,8 @@ public static class StatisticsEndpoints
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
         decimal? minStackBb = null,
-        decimal? maxStackBb = null)
+        decimal? maxStackBb = null,
+        bool completeOnly = false)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -81,10 +91,11 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("maxStackBb", "Must be above 'minStackBb'.");
         }
 
-        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb), cancellationToken);
+        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly), cancellationToken);
         return TypedResults.Ok(new StatisticsResponse(
             StatLineResponse.From(report.Overall),
             report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
-            report.PendingHands));
+            report.PendingHands,
+            new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments)));
     }
 }

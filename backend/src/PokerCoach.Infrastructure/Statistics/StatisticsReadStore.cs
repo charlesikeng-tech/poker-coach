@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Infrastructure.Persistence;
+using PokerCoach.Domain.Tournaments;
 using PokerCoach.Infrastructure.Poker;
+using PokerCoach.Infrastructure.Tournaments;
 
 namespace PokerCoach.Infrastructure.Statistics;
 
@@ -15,57 +17,32 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         int factsVersion,
         CancellationToken cancellationToken)
     {
-        var query =
-            from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
-            join h in db.Set<HandRecord>() on f.HandId equals h.Id
-            join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
-            where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
-            select new { f, h.StartedAt };
-
-        if (filter.From is { } from)
-        {
-            query = query.Where(x => x.StartedAt >= from);
-        }
-
-        if (filter.To is { } to)
-        {
-            query = query.Where(x => x.StartedAt < to);
-        }
-
-        if (filter.MinStackBigBlinds is { } min)
-        {
-            query = query.Where(x => x.f.StackInBigBlinds >= min);
-        }
-
-        if (filter.MaxStackBigBlinds is { } max)
-        {
-            query = query.Where(x => x.f.StackInBigBlinds < max);
-        }
+        var query = Filtered(userId, filter, factsVersion);
 
         var rows = await query
-            .GroupBy(x => x.f.Position)
+            .GroupBy(x => x.F.Position)
             .Select(g => new
             {
                 Position = g.Key,
                 Hands = g.Count(),
-                PreflopDecisions = g.Count(x => x.f.HadPreflopDecision),
-                Vpip = g.Count(x => x.f.Vpip),
-                Pfr = g.Count(x => x.f.Pfr),
-                RfiOpportunities = g.Count(x => x.f.RfiOpportunity),
-                Rfi = g.Count(x => x.f.Rfi),
-                Limp = g.Count(x => x.f.Limp),
-                StealOpportunities = g.Count(x => x.f.StealOpportunity),
-                Steal = g.Count(x => x.f.Steal),
-                ThreeBetOpportunities = g.Count(x => x.f.ThreeBetOpportunity),
-                ThreeBet = g.Count(x => x.f.ThreeBet),
-                FoldToThreeBetOpportunities = g.Count(x => x.f.FoldToThreeBetOpportunity),
-                FoldToThreeBet = g.Count(x => x.f.FoldToThreeBet),
-                SawFlop = g.Count(x => x.f.SawFlop),
-                CbetFlopOpportunities = g.Count(x => x.f.CbetFlopOpportunity),
-                CbetFlop = g.Count(x => x.f.CbetFlop),
-                WentToShowdown = g.Count(x => x.f.WentToShowdown),
-                WonAtShowdown = g.Count(x => x.f.WonAtShowdown),
-                NetBigBlinds = g.Sum(x => x.f.NetBigBlinds),
+                PreflopDecisions = g.Count(x => x.F.HadPreflopDecision),
+                Vpip = g.Count(x => x.F.Vpip),
+                Pfr = g.Count(x => x.F.Pfr),
+                RfiOpportunities = g.Count(x => x.F.RfiOpportunity),
+                Rfi = g.Count(x => x.F.Rfi),
+                Limp = g.Count(x => x.F.Limp),
+                StealOpportunities = g.Count(x => x.F.StealOpportunity),
+                Steal = g.Count(x => x.F.Steal),
+                ThreeBetOpportunities = g.Count(x => x.F.ThreeBetOpportunity),
+                ThreeBet = g.Count(x => x.F.ThreeBet),
+                FoldToThreeBetOpportunities = g.Count(x => x.F.FoldToThreeBetOpportunity),
+                FoldToThreeBet = g.Count(x => x.F.FoldToThreeBet),
+                SawFlop = g.Count(x => x.F.SawFlop),
+                CbetFlopOpportunities = g.Count(x => x.F.CbetFlopOpportunity),
+                CbetFlop = g.Count(x => x.F.CbetFlop),
+                WentToShowdown = g.Count(x => x.F.WentToShowdown),
+                WonAtShowdown = g.Count(x => x.F.WonAtShowdown),
+                NetBigBlinds = g.Sum(x => x.F.NetBigBlinds),
             })
             .ToListAsync(cancellationToken);
 
@@ -93,6 +70,65 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToList();
     }
 
+    public async Task<StatisticsSample> CountTournamentsAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+    {
+        var tournaments = await Filtered(userId, filter, factsVersion)
+            .Select(x => new { x.TournamentId, x.Complete })
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        return new StatisticsSample(tournaments.Count, tournaments.Count(t => t.Complete));
+    }
+
+    /// <summary>The user's analyzed hands within the filter, with whether their tournament's history is complete.</summary>
+    private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion)
+    {
+        var query =
+            from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
+            join h in db.Set<HandRecord>() on f.HandId equals h.Id
+            join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
+            join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
+            from c in coverage.DefaultIfEmpty()
+            where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
+            select new FilteredHand
+            {
+                F = f,
+                StartedAt = h.StartedAt,
+                TournamentId = h.TournamentId,
+                Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
+            };
+
+        if (filter.From is { } from)
+        {
+            query = query.Where(x => x.StartedAt >= from);
+        }
+
+        if (filter.To is { } to)
+        {
+            query = query.Where(x => x.StartedAt < to);
+        }
+
+        if (filter.MinStackBigBlinds is { } min)
+        {
+            query = query.Where(x => x.F.StackInBigBlinds >= min);
+        }
+
+        if (filter.MaxStackBigBlinds is { } max)
+        {
+            query = query.Where(x => x.F.StackInBigBlinds < max);
+        }
+
+        if (filter.CompleteHistoryOnly)
+        {
+            query = query.Where(x => x.Complete);
+        }
+
+        return query;
+    }
+
     public Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) =>
         (from h in db.Set<HandRecord>()
          join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
@@ -100,4 +136,15 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
          from f in facts.DefaultIfEmpty()
          where a.UserId == userId && a.ConfirmedAt != null && (f == null || f.FactsVersion != factsVersion)
          select h.Id).CountAsync(cancellationToken);
+
+    private sealed class FilteredHand
+    {
+        public required HandHeroFactsRecord F { get; init; }
+
+        public DateTimeOffset StartedAt { get; init; }
+
+        public Guid TournamentId { get; init; }
+
+        public bool Complete { get; init; }
+    }
 }
