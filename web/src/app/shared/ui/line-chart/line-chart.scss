@@ -31,6 +31,11 @@ svg {
   font-variant-numeric: tabular-nums;
 }
 
+// Reference range: a quiet green band the line should sit in.
+.band {
+  fill: color-mix(in srgb, var(--success) 14%, transparent);
+}
+
 // Expected line: dashed, quieter than the real one, no animation (it is the yardstick).
 .reference {
   fill: none;

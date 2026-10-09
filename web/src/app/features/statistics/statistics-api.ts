@@ -52,6 +52,22 @@ export interface StatisticsReport {
   readonly handsByFormat: Readonly<Record<TableFormat, number>>;
 }
 
+export type TournamentPhase = 'early' | 'middle' | 'late';
+export const TOURNAMENT_PHASES: readonly TournamentPhase[] = ['early', 'middle', 'late'];
+
+export interface StatisticsBreakdowns {
+  readonly format: TableFormat;
+  readonly byPhase: readonly { readonly phase: TournamentPhase; readonly line: StatLine }[];
+  /** Months with hands, oldest first; month = first day ("2026-10-01"). */
+  readonly byMonth: readonly { readonly month: string; readonly line: StatLine }[];
+  /** Overall reference ranges by leak statistic. */
+  readonly references: readonly {
+    readonly stat: string;
+    readonly min: number;
+    readonly max: number;
+  }[];
+}
+
 export interface StatisticsQuery {
   /** Omitted: the format with the most hands. */
   readonly format?: TableFormat;
@@ -59,6 +75,8 @@ export interface StatisticsQuery {
   readonly minStackBb?: number;
   readonly maxStackBb?: number;
   readonly completeOnly?: boolean;
+  /** By blind level: early (1–6), middle (7–12), late (13+). */
+  readonly phase?: TournamentPhase;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -82,7 +100,33 @@ export class StatisticsApi {
     if (query.completeOnly) {
       params = params.set('completeOnly', true);
     }
+    if (query.phase) {
+      params = params.set('phase', query.phase);
+    }
     return firstValueFrom(this.http.get<StatisticsReport>('/api/statistics', { params }));
+  }
+
+  /** Same filters as the main view (its phase is ignored: all phases are given). */
+  breakdowns(query: StatisticsQuery): Promise<StatisticsBreakdowns> {
+    let params = new HttpParams();
+    if (query.from) {
+      params = params.set('from', query.from);
+    }
+    if (query.minStackBb !== undefined) {
+      params = params.set('minStackBb', query.minStackBb);
+    }
+    if (query.maxStackBb !== undefined) {
+      params = params.set('maxStackBb', query.maxStackBb);
+    }
+    if (query.format) {
+      params = params.set('format', query.format);
+    }
+    if (query.completeOnly) {
+      params = params.set('completeOnly', true);
+    }
+    return firstValueFrom(
+      this.http.get<StatisticsBreakdowns>('/api/statistics/breakdowns', { params }),
+    );
   }
 
   /** Every table format together: luck does not depend on the table size. */

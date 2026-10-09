@@ -45,6 +45,8 @@ let nextId = 0;
 export class LineChart {
   readonly points = input.required<readonly LinePoint[]>();
   readonly formatY = input.required<(value: number) => string>();
+  /** Labels of the first and last x (axis ends); default: the numbers themselves. */
+  readonly formatX = input<(value: number) => string>((value) => String(value));
   readonly ariaLabel = input.required<string>();
 
   /** Pixel height; the width follows the container. */
@@ -55,6 +57,8 @@ export class LineChart {
    * against what happened. The surrounding legend names it.
    */
   readonly reference = input<readonly number[]>([]);
+  /** Optional horizontal band (a reference range): drawn behind the line, included in the scale. */
+  readonly band = input<{ readonly min: number; readonly max: number } | null>(null);
   protected readonly margin = MARGIN;
   protected readonly width = signal(600);
   protected readonly active = signal<number | null>(null);
@@ -63,7 +67,12 @@ export class LineChart {
   protected readonly scales = computed(() => {
     const points = this.points();
     const width = this.width();
-    const ys = [...points.map((p) => p.y), ...this.reference()];
+    const band = this.band();
+    const ys = [
+      ...points.map((p) => p.y),
+      ...this.reference(),
+      ...(band ? [band.min, band.max] : []),
+    ];
     const ticks = niceTicks(Math.min(...ys, 0), Math.max(...ys, 0));
     const yMin = ticks[0];
     const yMax = ticks[ticks.length - 1];

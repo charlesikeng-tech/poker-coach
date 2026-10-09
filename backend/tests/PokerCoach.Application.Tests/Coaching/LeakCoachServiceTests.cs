@@ -146,6 +146,11 @@ public sealed class LeakCoachServiceTests
         public Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             Task.FromResult(new FormatCounts(500, 0));
 
+        public Task<IReadOnlyList<(DateOnly Month, HeroStatCounts Counts)>> CountByMonthAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+
+            Task.FromResult<IReadOnlyList<(DateOnly, HeroStatCounts)>>([]);
+
+
         public Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) => Task.FromResult(0);
     }
 

@@ -447,7 +447,8 @@
           "over50": "50 BB and more",
           "over15": "15 BB and more"
         },
-        "completeOnly": "Complete histories only"
+        "completeOnly": "Complete histories only",
+        "phase": "Phase"
       },
       "hands": "Hands",
       "bb100": "BB won / 100 hands",
@@ -557,6 +558,29 @@
         "preflop": "Before the flop",
         "postflop": "After the flop",
         "postflopHint": "All positions together. References in Leaks."
+      },
+      "phases": {
+        "all": "All phases",
+        "early": "Early",
+        "middle": "Middle",
+        "late": "Late",
+        "earlyLevels": "levels 1 to 6",
+        "middleLevels": "levels 7 to 12",
+        "lateLevels": "level 13 and later"
+      },
+      "breakdowns": {
+        "phasesTitle": "By tournament phase",
+        "phasesLead": "Your game depending on the stage of the tournament. Style should change as stacks get shorter: more steals, fewer calls.",
+        "phase": "Phase",
+        "phasesHint": "Phases by blind level: Winamax hand histories do not say how many players are left, so the bubble, the money and the final table cannot be told without guessing.",
+        "trendTitle": "Month by month",
+        "trendLead": "Your statistics month by month, with the reference range in green: are your leaks closing?",
+        "trendPick": "Statistic followed",
+        "trendAria": "Monthly trend: {{stat}}",
+        "trendEmpty": "At least two months with hands are needed to draw a trend.",
+        "band": "Reference range: {{min}} % to {{max}} %.",
+        "thin": "Few spots that month: read with care.",
+        "error": "The breakdowns cannot be loaded right now."
       }
     },
     "import": {

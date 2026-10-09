@@ -31,9 +31,9 @@
       {{ formatY()(tick) }}
     </text>
   }
-  <text class="tick" [attr.x]="margin.left" [attr.y]="height() - 8">{{ s.xMin }}</text>
+  <text class="tick" [attr.x]="margin.left" [attr.y]="height() - 8">{{ formatX()(s.xMin) }}</text>
   <text class="tick" [attr.x]="width() - margin.right" [attr.y]="height() - 8" text-anchor="end">
-    {{ s.xMax }}
+    {{ formatX()(s.xMax) }}
   </text>
 
   <defs>
@@ -43,6 +43,15 @@
     </linearGradient>
   </defs>
   <!-- Keyed on the path: new data redraws the line from its start (CSS draw-in). -->
+  @if (band(); as b) {
+    <rect
+      class="band"
+      [attr.x]="margin.left"
+      [attr.width]="s.plotWidth"
+      [attr.y]="s.y(b.max)"
+      [attr.height]="s.y(b.min) - s.y(b.max)"
+    />
+  }
   @if (referencePath()) {
     <path class="reference" [attr.d]="referencePath()" />
   }

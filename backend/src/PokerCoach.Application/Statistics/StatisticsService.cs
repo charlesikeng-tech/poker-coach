@@ -1,4 +1,5 @@
 using PokerCoach.Domain.Poker.Analysis;
+using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Application.Statistics;
@@ -9,13 +10,15 @@ namespace PokerCoach.Application.Statistics;
 /// <param name="CompleteHistoryOnly">Only hands of tournaments whose hand history is complete (no gap).</param>
 /// <param name="Format">Only hands of that table format, positions then named within it (a 6-max UTG is not a
 /// full-ring UTG); null: every format, raw position names.</param>
+/// <param name="Phase">Only hands of that tournament phase (by blind level); null: all.</param>
 public sealed record StatisticsFilter(
     DateTimeOffset? From,
     DateTimeOffset? To,
     decimal? MinStackBigBlinds,
     decimal? MaxStackBigBlinds,
     bool CompleteHistoryOnly = false,
-    TableFormat? Format = null);
+    TableFormat? Format = null,
+    TournamentPhase? Phase = null);
 
 /// <summary>Analysed hands per table format, within a filter (its own format ignored).</summary>
 public sealed record FormatCounts(int SixMax, int FullRing)
@@ -40,6 +43,9 @@ public interface IStatisticsReadStore
 
     /// <summary>Analysed hands per table format within the filter, ignoring its format.</summary>
     Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken);
+
+    /// <summary>Counts per calendar month (UTC) within the filter, oldest first.</summary>
+    Task<IReadOnlyList<(DateOnly Month, HeroStatCounts Counts)>> CountByMonthAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken);
 
     /// <summary>Hands of the user's confirmed accounts whose facts are missing or outdated (still being computed).</summary>
     Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken);
@@ -111,6 +117,19 @@ public sealed record StatisticsReport(
 /// <param name="Position">Null when the position could not be named.</param>
 public sealed record PositionStatLine(PokerPosition? Position, StatLine Line);
 
+public sealed record PhaseStatLine(TournamentPhase Phase, StatLine Line);
+
+/// <param name="Month">First day of the month (UTC).</param>
+public sealed record MonthStatLine(DateOnly Month, StatLine Line);
+
+/// <summary>The same statistics split by tournament phase and by month, within one filter.</summary>
+/// <param name="References">Overall reference ranges (ADR-0007) by statistic: the band drawn under a trend.</param>
+public sealed record StatisticsBreakdowns(
+    TableFormat Format,
+    IReadOnlyList<PhaseStatLine> ByPhase,
+    IReadOnlyList<MonthStatLine> ByMonth,
+    IReadOnlyList<ReferenceRange> References);
+
 public sealed class StatisticsService(IStatisticsReadStore store)
 {
     private static readonly PokerPosition[] Order =
@@ -136,5 +155,33 @@ public sealed class StatisticsService(IStatisticsReadStore store)
             .Select(g => new PositionStatLine(g.Position, StatLine.From(g.Counts)))
             .ToList();
         return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample, format, formats);
+    }
+
+    /// <summary>Months shown when the filter has no start: a year is enough to see a trend.</summary>
+    public const int TrendMonths = 12;
+
+    /// <param name="filter">Its phase is ignored for the phases (all three are given); without a start, the
+    /// trend covers the last <see cref="TrendMonths"/> months.</param>
+    public async Task<StatisticsBreakdowns> GetBreakdownsAsync(Guid userId, StatisticsFilter filter, DateTimeOffset now, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+        var format = filter.Format ?? (await store.CountByFormatAsync(userId, filter, HeroHandFacts.Version, cancellationToken)).Busiest;
+        filter = filter with { Format = format };
+
+        var phases = new List<PhaseStatLine>();
+        foreach (var phase in Enum.GetValues<TournamentPhase>())
+        {
+            var groups = await store.CountByPositionAsync(userId, filter with { Phase = phase }, HeroHandFacts.Version, cancellationToken);
+            phases.Add(new PhaseStatLine(phase, StatLine.From(groups.Aggregate(HeroStatCounts.Zero, (total, g) => total.Add(g.Counts)))));
+        }
+
+        var firstMonth = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero).AddMonths(-(TrendMonths - 1));
+        var months = await store.CountByMonthAsync(userId, filter with { From = filter.From ?? firstMonth }, HeroHandFacts.Version, cancellationToken);
+
+        return new StatisticsBreakdowns(
+            format,
+            phases,
+            months.Select(m => new MonthStatLine(m.Month, StatLine.From(m.Counts))).ToList(),
+            ReferenceRanges.LowStakesMtt.Where(r => r.Position is null).ToList());
     }
 }

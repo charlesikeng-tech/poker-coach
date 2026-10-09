@@ -3,6 +3,7 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
+using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Api.Statistics;
@@ -74,6 +75,22 @@ public sealed record StatisticsResponse(
     TableFormat Format,
     FormatCountsResponse HandsByFormat);
 
+public sealed record PhaseStatLineResponse(TournamentPhase Phase, StatLineResponse Line);
+
+/// <param name="Month">First day of the month (UTC), "2026-10-01".</param>
+public sealed record MonthStatLineResponse(DateOnly Month, StatLineResponse Line);
+
+public sealed record ReferenceRangeResponse(LeakStat Stat, decimal Min, decimal Max);
+
+/// <param name="ByPhase">Early (levels 1–6), middle (7–12), late (13+).</param>
+/// <param name="ByMonth">Months with hands, oldest first.</param>
+/// <param name="References">Overall reference ranges, to draw under a statistic's trend.</param>
+public sealed record StatisticsBreakdownsResponse(
+    TableFormat Format,
+    IReadOnlyList<PhaseStatLineResponse> ByPhase,
+    IReadOnlyList<MonthStatLineResponse> ByMonth,
+    IReadOnlyList<ReferenceRangeResponse> References);
+
 public sealed record LuckPointResponse(int Index, DateTimeOffset StartedAt, decimal ActualBigBlinds, decimal ExpectedBigBlinds);
 
 /// <param name="Equity">The hero's share of the main pot when the money went in (0–1).</param>
@@ -102,6 +119,7 @@ public static class StatisticsEndpoints
     {
         endpoints.MapGet("/api/statistics", GetAsync).WithTags("Statistics");
         endpoints.MapGet("/api/statistics/all-in", GetAllInLuckAsync).WithTags("Statistics");
+        endpoints.MapGet("/api/statistics/breakdowns", GetBreakdownsAsync).WithTags("Statistics");
         return endpoints;
     }
 
@@ -144,9 +162,61 @@ public static class StatisticsEndpoints
     /// <param name="maxStackBb">Exclusive upper bound on the hero's stack in big blinds.</param>
     /// <param name="completeOnly">Only tournaments with a complete hand history.</param>
     /// <param name="format">sixMax or fullRing; omitted: the format with the most hands.</param>
+    /// <param name="phase">early, middle or late (by blind level); omitted: all.</param>
     private static async Task<Results<Ok<StatisticsResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         StatisticsService statistics,
+        CancellationToken cancellationToken,
+        DateTimeOffset? from = null,
+        DateTimeOffset? to = null,
+        decimal? minStackBb = null,
+        decimal? maxStackBb = null,
+        bool completeOnly = false,
+        string? format = null,
+        string? phase = null)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (from is not null && to is not null && from >= to)
+        {
+            return ApiProblems.Validation("to", "Must be after 'from'.");
+        }
+
+        if (minStackBb is not null && maxStackBb is not null && minStackBb >= maxStackBb)
+        {
+            return ApiProblems.Validation("maxStackBb", "Must be above 'minStackBb'.");
+        }
+
+        if (!TableFormatQuery.TryParse(format, out var tableFormat))
+        {
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        if (!TryParsePhase(phase, out var tournamentPhase))
+        {
+            return ApiProblems.Validation("phase", "Must be early, middle or late.");
+        }
+
+        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase), cancellationToken);
+        return TypedResults.Ok(new StatisticsResponse(
+            StatLineResponse.From(report.Overall),
+            report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
+            report.PendingHands,
+            new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
+            report.Format,
+            new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing)));
+    }
+
+    /// <summary>The statistics by tournament phase and by month, with the same filters as the main view.</summary>
+    /// <param name="to">Exclusive upper bound on the hand start time.</param>
+    /// <param name="format">sixMax or fullRing; omitted: the format with the most hands.</param>
+    private static async Task<Results<Ok<StatisticsBreakdownsResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetBreakdownsAsync(
+        HttpContext context,
+        StatisticsService statistics,
+        TimeProvider time,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
@@ -175,13 +245,28 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
-        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat), cancellationToken);
-        return TypedResults.Ok(new StatisticsResponse(
-            StatLineResponse.From(report.Overall),
-            report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
-            report.PendingHands,
-            new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
-            report.Format,
-            new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing)));
+        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat), time.GetUtcNow(), cancellationToken);
+        return TypedResults.Ok(new StatisticsBreakdownsResponse(
+            b.Format,
+            b.ByPhase.Select(p => new PhaseStatLineResponse(p.Phase, StatLineResponse.From(p.Line))).ToList(),
+            b.ByMonth.Select(m => new MonthStatLineResponse(m.Month, StatLineResponse.From(m.Line))).ToList(),
+            b.References.Select(r => new ReferenceRangeResponse(r.Stat, r.Min, r.Max)).ToList()));
+    }
+
+    private static bool TryParsePhase(string? value, out TournamentPhase? phase)
+    {
+        phase = null;
+        if (string.IsNullOrEmpty(value))
+        {
+            return true;
+        }
+
+        if (Enum.TryParse<TournamentPhase>(value, ignoreCase: true, out var parsed) && Enum.IsDefined(parsed) && !int.TryParse(value, out _))
+        {
+            phase = parsed;
+            return true;
+        }
+
+        return false;
     }
 }

@@ -447,7 +447,8 @@
           "over50": "50 BB et plus",
           "over15": "15 BB et plus"
         },
-        "completeOnly": "Historiques complets uniquement"
+        "completeOnly": "Historiques complets uniquement",
+        "phase": "Phase"
       },
       "hands": "Mains",
       "bb100": "BB gagnées / 100 mains",
@@ -557,6 +558,29 @@
         "preflop": "Avant le flop",
         "postflop": "Après le flop",
         "postflopHint": "Toutes positions confondues. Repères dans Leaks."
+      },
+      "phases": {
+        "all": "Toutes les phases",
+        "early": "Début",
+        "middle": "Milieu",
+        "late": "Fin",
+        "earlyLevels": "niveaux 1 à 6",
+        "middleLevels": "niveaux 7 à 12",
+        "lateLevels": "niveau 13 et plus"
+      },
+      "breakdowns": {
+        "phasesTitle": "Par phase de tournoi",
+        "phasesLead": "Ton jeu selon le moment du tournoi. Le style doit changer quand les tapis raccourcissent : plus de vols, moins de calls.",
+        "phase": "Phase",
+        "phasesHint": "Phases par niveau de blindes : les historiques Winamax ne disent pas combien de joueurs restent, donc la bulle, l'entrée dans l'argent et la table finale ne peuvent pas être repérées sans deviner.",
+        "trendTitle": "Évolution mois par mois",
+        "trendLead": "Tes statistiques mois par mois, avec la zone de référence en vert : tes leaks se referment-ils ?",
+        "trendPick": "Statistique suivie",
+        "trendAria": "Évolution mensuelle : {{stat}}",
+        "trendEmpty": "Il faut au moins deux mois avec des mains pour tracer une évolution.",
+        "band": "Zone de référence : {{min}} % à {{max}} %.",
+        "thin": "Peu de spots ce mois-là : à prendre avec prudence.",
+        "error": "Impossible de charger les répartitions pour le moment."
       }
     },
     "import": {

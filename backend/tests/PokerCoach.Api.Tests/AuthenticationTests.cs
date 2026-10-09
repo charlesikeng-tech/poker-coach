@@ -22,6 +22,7 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/performance")]
     [InlineData("GET", "/api/statistics")]
     [InlineData("GET", "/api/statistics/all-in")]
+    [InlineData("GET", "/api/statistics/breakdowns")]
     [InlineData("GET", "/api/ranges/opening")]
     [InlineData("GET", "/api/training/opening/spot")]
     [InlineData("POST", "/api/training/opening/answers")]

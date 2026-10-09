@@ -1,0 +1,82 @@
+<ng-container *transloco="let t; prefix: 'pages.statistics'">
+  @if (failed()) {
+    <section class="panel glass">
+      <p class="hint">{{ t('breakdowns.error') }}</p>
+    </section>
+  } @else if (data(); as d) {
+    <section class="panel glass">
+      <h2>{{ t('breakdowns.phasesTitle') }}</h2>
+      <p class="lead">{{ t('breakdowns.phasesLead') }}</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('breakdowns.phase') }}</th>
+              <th scope="col" class="num">{{ t('columns.hands') }}</th>
+              @for (key of phaseRates; track key) {
+                <th scope="col" class="num" [attr.title]="t('stats.' + key + 'Hint')">
+                  {{ t('short.' + key) }}
+                </th>
+              }
+              <th scope="col" class="num">{{ t('short.bb100') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of d.byPhase; track row.phase) {
+              <tr>
+                <th scope="row">
+                  {{ t('phases.' + row.phase) }}
+                  <small>{{ t('phases.' + row.phase + 'Levels') }}</small>
+                </th>
+                <td class="num numeric">{{ integer(row.line.hands) }}</td>
+                @for (key of phaseRates; track key) {
+                  @let r = rate(row.line, key);
+                  <td class="num numeric" [attr.title]="r.made + ' / ' + r.opportunities">
+                    {{ share(r.rate) }}
+                  </td>
+                }
+                <td class="num numeric" [attr.data-sign]="sign(row.line.bigBlindsPer100)">
+                  {{ bb100(row.line.bigBlindsPer100) }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">{{ t('breakdowns.phasesHint') }}</p>
+    </section>
+
+    <section class="panel glass">
+      <h2>{{ t('breakdowns.trendTitle') }}</h2>
+      <p class="lead">{{ t('breakdowns.trendLead') }}</p>
+      <div class="chips" role="group" [attr.aria-label]="t('breakdowns.trendPick')">
+        @for (key of trendRates; track key) {
+          <button
+            type="button"
+            class="chip"
+            [class.active]="trend() === key"
+            [attr.aria-pressed]="trend() === key"
+            (click)="trend.set(key)"
+          >
+            {{ t('stats.' + key) }}
+          </button>
+        }
+      </div>
+      @if (points().length > 1) {
+        <app-line-chart
+          [points]="points()"
+          [band]="band()"
+          [formatY]="formatAxis()"
+          [formatX]="formatMonth()"
+          [height]="240"
+          [ariaLabel]="t('breakdowns.trendAria', { stat: t('stats.' + trend()) })"
+        />
+        @if (band(); as b) {
+          <p class="hint">{{ t('breakdowns.band', { min: b.min, max: b.max }) }}</p>
+        }
+      } @else {
+        <p class="hint">{{ t('breakdowns.trendEmpty') }}</p>
+      }
+    </section>
+  }
+</ng-container>

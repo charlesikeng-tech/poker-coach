@@ -54,6 +54,15 @@
             }
           </select>
         </label>
+        <label>
+          <span>{{ t('filters.phase') }}</span>
+          <select [value]="phase()" (change)="setPhase($any($event.target).value)">
+            <option value="all">{{ t('phases.all') }}</option>
+            @for (option of phases; track option) {
+              <option [value]="option">{{ t('phases.' + option) }}</option>
+            }
+          </select>
+        </label>
         <label class="toggle">
           <input
             type="checkbox"
@@ -161,6 +170,8 @@
         </div>
         <p class="hint">{{ t('definitions') }}</p>
       </section>
+
+      <app-statistics-breakdowns [query]="breakdownQuery()" [refreshKey]="report.pendingHands" />
 
       <app-all-in-luck
         [from]="fromQuery()"

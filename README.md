@@ -249,6 +249,13 @@ Data rights (before opening to other players):
       AI usage rows kept without the user for the spending cap
 - [x] Web: My account page (link on the name in the top bar)
 
+Tournament phases and trends:
+
+- [x] `TournamentPhase` by blind level (early 1–6, middle 7–12, late 13+: hand histories do not give
+      the players left, so no guessed bubble / money / final table); `phase` filter on statistics
+- [x] `GET /api/statistics/breakdowns`: statistics by phase and by month, with the overall reference
+      ranges; web: phase table and month-by-month chart with the reference band
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

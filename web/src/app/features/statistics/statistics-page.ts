@@ -22,13 +22,17 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
+import { BreakdownsPanel } from './breakdowns-panel';
 import {
   STACK_FILTERS,
   StackFilter,
   StatLine,
   StatRate,
   StatisticsApi,
+  StatisticsQuery,
   StatisticsReport,
+  TOURNAMENT_PHASES,
+  TournamentPhase,
   stackBounds,
 } from './statistics-api';
 
@@ -76,6 +80,7 @@ const PENDING_REFRESH_MS = 3000;
     Icon,
     StatTile,
     AllInLuckPanel,
+    BreakdownsPanel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -97,12 +102,25 @@ export class StatisticsPage {
     () => toQuery(this.period(), 'all', 1, 1, new Date()).from,
   );
   protected readonly stack = signal<StackFilter>('all');
+  protected readonly phases = TOURNAMENT_PHASES;
+  protected readonly phase = signal<TournamentPhase | 'all'>('all');
   protected readonly completeOnly = signal(false);
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<StatisticsReport | null>(null);
   protected readonly icons = { CircleAlert, LoaderCircle, Upload };
+
+  /**
+   * The breakdown panel's query: the page's filters in the format shown, without the phase. A computed
+   * value, not a method: a new object on every check would reload the panel in a loop.
+   */
+  protected readonly breakdownQuery = computed<StatisticsQuery>(() => ({
+    format: this.report()?.format,
+    from: this.fromQuery(),
+    ...stackBounds(this.stack()),
+    completeOnly: this.completeOnly(),
+  }));
 
   private readonly locale = computed(() => this.language.current());
   private request = 0;
@@ -134,7 +152,13 @@ export class StatisticsPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.formatChoice(), this.period(), this.stack(), this.completeOnly()] as const;
+      const args = [
+        this.formatChoice(),
+        this.period(),
+        this.stack(),
+        this.completeOnly(),
+        this.phase(),
+      ] as const;
       untracked(() => void this.load(...args));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
@@ -152,8 +176,18 @@ export class StatisticsPage {
     this.stack.set(value as StackFilter);
   }
 
+  protected setPhase(value: string): void {
+    this.phase.set(value as TournamentPhase | 'all');
+  }
+
   protected retry(): void {
-    void this.load(this.formatChoice(), this.period(), this.stack(), this.completeOnly());
+    void this.load(
+      this.formatChoice(),
+      this.period(),
+      this.stack(),
+      this.completeOnly(),
+      this.phase(),
+    );
   }
 
   protected rate(line: StatLine, key: RateKey): StatRate {
@@ -169,6 +203,7 @@ export class StatisticsPage {
     period: PeriodFilter,
     stack: StackFilter,
     completeOnly: boolean,
+    phase: TournamentPhase | 'all',
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
@@ -181,6 +216,7 @@ export class StatisticsPage {
         from: toQuery(period, 'all', 1, 1, new Date()).from,
         ...stackBounds(stack),
         completeOnly,
+        phase: phase === 'all' ? undefined : phase,
       });
       if (request !== this.request) {
         return;
@@ -189,7 +225,7 @@ export class StatisticsPage {
       this.state.set('ready');
       if (report.pendingHands > 0) {
         this.refreshTimer = setTimeout(
-          () => void this.load(report.format, period, stack, completeOnly),
+          () => void this.load(report.format, period, stack, completeOnly, phase),
           PENDING_REFRESH_MS,
         );
       }
