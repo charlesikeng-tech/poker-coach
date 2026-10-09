@@ -849,7 +849,8 @@
       "bands": {
         "short": "15 to 25 BB",
         "mid": "25 to 40 BB",
-        "deep": "40 BB and more"
+        "deep": "40 BB and more",
+        "push": "Under 15 BB (push/fold)"
       },
       "view": "View",
       "views": {
@@ -865,7 +866,9 @@
       "reference": {
         "title": "Reference v{{version}} · {{position}}",
         "share": "of starting hands (in combinations)",
-        "note": "Our conventions for €5–20 online MTTs with antes, written hand by hand (open or not). This is not a GTO computation."
+        "note": "Our conventions for €5–20 online MTTs with antes, written hand by hand (open or not). This is not a GTO computation.",
+        "nash": "Push/fold equilibrium computed at {{stack}} BB",
+        "nashNote": "Computed by Poker Coach: shove or fold, chip EV, 0.125 BB antes, equal stacks, one caller at a time (as usual push/fold charts). Heads-up SB vs BB it is the exact equilibrium. See ADR-0009."
       },
       "gap": {
         "title": "Gap · {{position}}",
@@ -873,7 +876,8 @@
         "tooLoose": "{{count}} hand(s) opened outside the reference",
         "tooTight": "{{count}} reference hand(s) you fold",
         "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
-      }
+      },
+      "pushStack": "Stack (push/fold)"
     },
     "training": {
       "title": "Training room",
@@ -883,7 +887,8 @@
       "bands": {
         "short": "15 to 25 BB",
         "mid": "25 to 40 BB",
-        "deep": "40 BB and more"
+        "deep": "40 BB and more",
+        "push": "Under 15 BB (push/fold)"
       },
       "seats": "Positions",
       "allSeats": "All positions",
@@ -901,7 +906,8 @@
       "hiddenCard": "Hidden card",
       "answers": {
         "fold": "Fold",
-        "raise": "Raise"
+        "raise": "Raise",
+        "shove": "All-in"
       },
       "session": "this session",
       "overall": "over {{count}} answers",
@@ -913,13 +919,18 @@
         "explain": {
           "raise": "The reference raises {{hand}} from {{position}} at {{band}}.",
           "fold": "The reference folds {{hand}} from {{position}} at {{band}}."
+        },
+        "explainPush": {
+          "raise": "The equilibrium shoves {{hand}} from {{position}} at {{stack}} BB.",
+          "fold": "The equilibrium folds {{hand}} from {{position}} at {{stack}} BB."
         }
       },
       "gridLabel": "The position's reference range",
       "reference": "Reference v{{version}} (€5–20 MTT). Not GTO: our conventions, to review in Ranges.",
       "next": "Next hand",
       "space": "Space",
-      "hint": "Answer with the buttons or the keyboard (F to fold, R to raise). After answering you will see the position's reference range with your hand outlined."
+      "hint": "Answer with the buttons or the keyboard (F to fold, R to raise). After answering you will see the position's reference range with your hand outlined.",
+      "referencePush": "Push/fold equilibrium computed at {{stack}} BB (equal stacks, 0.125 BB antes)."
     }
   },
   "welcome": {

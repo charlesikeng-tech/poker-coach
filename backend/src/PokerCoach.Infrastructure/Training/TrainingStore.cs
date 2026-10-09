@@ -30,6 +30,9 @@ internal sealed class OpeningAttemptRecord
     /// <summary>Starting hand in text form: "AKs".</summary>
     public string Hand { get; set; } = string.Empty;
 
+    /// <summary>Stack of a push/fold drill, whose answer depends on it; null for the other bands.</summary>
+    public int? PushStack { get; set; }
+
     public DrillAnswer Answer { get; set; }
 
     public bool Correct { get; set; }
@@ -69,6 +72,7 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
             Band = attempt.Item.Band,
             Position = attempt.Item.Position,
             Hand = attempt.Item.Hand.ToString(),
+            PushStack = attempt.Item.PushStack,
             Answer = attempt.Answer,
             Correct = attempt.Correct,
             ReferenceVersion = referenceVersion,
@@ -85,13 +89,13 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
             .Where(a => a.UserId == userId && a.Format == format && a.ReferenceVersion == ReferenceOpeningRanges.Version)
             .OrderByDescending(a => a.CreatedAt)
             .Take(count)
-            .Select(a => new { a.Band, a.Position, a.Hand, a.Answer, a.Correct, a.CreatedAt })
+            .Select(a => new { a.Band, a.Position, a.Hand, a.PushStack, a.Answer, a.Correct, a.CreatedAt })
             .ToListAsync(cancellationToken);
 
         return rows
             .Select(r => (Row: r, Hand: RangeNotation.Parse(r.Hand)))
             .Where(x => x.Hand.Count == 1)
-            .Select(x => new DrillAttempt(new DrillItem(format, x.Row.Band, x.Row.Position, x.Hand.Single()), x.Row.Answer, x.Row.Correct, x.Row.CreatedAt))
+            .Select(x => new DrillAttempt(new DrillItem(format, x.Row.Band, x.Row.Position, x.Hand.Single(), x.Row.PushStack), x.Row.Answer, x.Row.Correct, x.Row.CreatedAt))
             .ToList();
     }
 }

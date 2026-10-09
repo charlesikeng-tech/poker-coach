@@ -21,8 +21,9 @@ public interface ITrainingStore
 /// <param name="Focus">The seat was weighted up because a leak was detected there.</param>
 public sealed record DrillSpot(OpeningSpot Spot, bool Review, bool Focus);
 
+/// <param name="ReferenceNotation">Null for computed push/fold ranges.</param>
 /// <param name="ReferenceHands">The reference range of the seat: shown with the answer.</param>
-public sealed record DrillResult(DrillAnswer Expected, bool Correct, string ReferenceNotation, IReadOnlySet<HandClass> ReferenceHands, int ReferenceVersion);
+public sealed record DrillResult(DrillAnswer Expected, bool Correct, string? ReferenceNotation, IReadOnlySet<HandClass> ReferenceHands, int ReferenceVersion);
 
 public sealed record SeatProgress(PokerPosition Position, int Attempts, int Correct);
 
@@ -88,8 +89,8 @@ public sealed class OpeningTrainingService(ITrainingStore store, LeakService lea
         return new DrillResult(
             expected,
             correct,
-            ReferenceOpeningRanges.NotationFor(item.Band, item.Format, item.Position)!,
-            ReferenceOpeningRanges.For(item.Band, item.Format, item.Position)!,
+            ReferenceOpeningRanges.NotationFor(item.Band, item.Format, item.Position),
+            ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)!,
             ReferenceOpeningRanges.Version);
     }
 

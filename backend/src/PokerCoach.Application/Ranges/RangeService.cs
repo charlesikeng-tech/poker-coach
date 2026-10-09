@@ -50,9 +50,11 @@ public sealed record PositionRange(
 /// <param name="Positions">Every position that opens at that format, from UTG to the small blind, even
 /// without spots (the reference is still worth showing).</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: ranges are partial until 0.</param>
+/// <param name="PushStack">For the push/fold band: the stack the computed reference is for.</param>
 public sealed record OpeningRanges(
     TableFormat Format,
     StackBand Band,
+    int? PushStack,
     IReadOnlyDictionary<TableFormat, int> SpotsByFormat,
     IReadOnlyList<PositionRange> Positions,
     int PendingHands,
@@ -70,22 +72,24 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         Guid userId,
         TableFormat? format,
         StackBand band,
+        int? pushStack,
         DateTimeOffset? from,
         DateTimeOffset? to,
         CancellationToken cancellationToken)
     {
         var (min, max) = ReferenceOpeningRanges.Bounds(band);
-        var counts = await ranges.CountOpeningsAsync(userId, new StatisticsFilter(from, to, min, max), HeroHandFacts.Version, cancellationToken);
+        var counts = await ranges.CountOpeningsAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max), HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
 
         var spots = Enum.GetValues<TableFormat>().ToDictionary(
             f => f,
             f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
-        return new OpeningRanges(shown, band, spots, Build(shown, band, counts), pending, ReferenceOpeningRanges.Version);
+        var stack = band == StackBand.Push ? pushStack ?? ReferenceOpeningRanges.DefaultPushStack : (int?)null;
+        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stack), pending, ReferenceOpeningRanges.Version);
     }
 
-    internal static List<PositionRange> Build(TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts)
+    internal static List<PositionRange> Build(TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts, int? pushStack = null)
     {
         var byPosition = counts
             .Where(c => TableFormats.Of(c.MaxSeats) == format)
@@ -102,7 +106,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     .ToDictionary(
                         h => h.Key,
                         h => (Dealt: h.Sum(x => x.Count.Dealt), Opens: h.Sum(x => x.Count.Opens), Limps: h.Sum(x => x.Count.Limps)));
-                var reference = ReferenceOpeningRanges.For(band, format, position);
+                var reference = ReferenceOpeningRanges.For(band, format, position, pushStack);
                 var cells = HandClass.All
                     .Select(hand =>
                     {

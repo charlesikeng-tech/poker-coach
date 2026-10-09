@@ -849,7 +849,8 @@
       "bands": {
         "short": "15 a 25 BB",
         "mid": "25 a 40 BB",
-        "deep": "40 BB o más"
+        "deep": "40 BB o más",
+        "push": "Menos de 15 BB (push/fold)"
       },
       "view": "Vista",
       "views": {
@@ -865,7 +866,9 @@
       "reference": {
         "title": "Referencia v{{version}} · {{position}}",
         "share": "de las manos iniciales (en combinaciones)",
-        "note": "Nuestras convenciones para MTT online de 5–20 € con antes, escritas mano por mano (abrir o no). No es un cálculo GTO."
+        "note": "Nuestras convenciones para MTT online de 5–20 € con antes, escritas mano por mano (abrir o no). No es un cálculo GTO.",
+        "nash": "Equilibrio push/fold calculado a {{stack}} BB",
+        "nashNote": "Calculado por Poker Coach: all-in o tirar, EV en fichas, antes de 0,125 BB, stacks iguales, un solo pagador a la vez (como las tablas push/fold habituales). En SB contra BB es el equilibrio exacto. Ver ADR-0009."
       },
       "gap": {
         "title": "Diferencia · {{position}}",
@@ -873,7 +876,8 @@
         "tooLoose": "{{count}} mano(s) abiertas fuera de la referencia",
         "tooTight": "{{count}} mano(s) de la referencia que tiras",
         "rule": "Una mano cuenta como «abierta» si la subes al menos la mitad de las veces. Fíjate en el número pequeño: con 1 o 2 ocurrencias solo es un indicio."
-      }
+      },
+      "pushStack": "Stack (push/fold)"
     },
     "training": {
       "title": "Sala de entrenamiento",
@@ -883,7 +887,8 @@
       "bands": {
         "short": "15 a 25 BB",
         "mid": "25 a 40 BB",
-        "deep": "40 BB o más"
+        "deep": "40 BB o más",
+        "push": "Menos de 15 BB (push/fold)"
       },
       "seats": "Posiciones",
       "allSeats": "Todas las posiciones",
@@ -901,7 +906,8 @@
       "hiddenCard": "Carta oculta",
       "answers": {
         "fold": "Tirar",
-        "raise": "Subir"
+        "raise": "Subir",
+        "shove": "All-in"
       },
       "session": "esta sesión",
       "overall": "en {{count}} respuestas",
@@ -913,13 +919,18 @@
         "explain": {
           "raise": "La referencia sube {{hand}} desde {{position}} con {{band}}.",
           "fold": "La referencia tira {{hand}} desde {{position}} con {{band}}."
+        },
+        "explainPush": {
+          "raise": "El equilibrio va all-in con {{hand}} desde {{position}} con {{stack}} BB.",
+          "fold": "El equilibrio tira {{hand}} desde {{position}} con {{stack}} BB."
         }
       },
       "gridLabel": "Rango de referencia de la posición",
       "reference": "Referencia v{{version}} (MTT 5–20 €). No es GTO: nuestras convenciones, para revisar en Rangos.",
       "next": "Mano siguiente",
       "space": "Espacio",
-      "hint": "Responde con los botones o el teclado (F para tirar, R para subir). Después verás el rango de referencia de la posición con tu mano marcada."
+      "hint": "Responde con los botones o el teclado (F para tirar, R para subir). Después verás el rango de referencia de la posición con tu mano marcada.",
+      "referencePush": "Equilibrio push/fold calculado a {{stack}} BB (stacks iguales, antes de 0,125 BB)."
     }
   },
   "welcome": {

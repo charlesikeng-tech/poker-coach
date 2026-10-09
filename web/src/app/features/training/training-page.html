@@ -96,7 +96,7 @@
             [disabled]="answer() !== null"
             (click)="choose('raise')"
           >
-            {{ t('answers.raise') }} <kbd>R</kbd>
+            {{ t(answerKey(s, 'raise')) }} <kbd>R</kbd>
           </button>
         </div>
       </section>
@@ -138,10 +138,11 @@
             </p>
             <p>
               {{
-                t('verdict.explain.' + r.expected, {
+                t((s.band === 'push' ? 'verdict.explainPush.' : 'verdict.explain.') + r.expected, {
                   hand: s.hand,
                   position: short(s.position),
                   band: t('bands.' + s.band),
+                  stack: s.pushStack,
                 })
               }}
             </p>
@@ -152,7 +153,13 @@
                 }}</span>
               }
             </div>
-            <p class="muted">{{ t('reference', { version: r.referenceVersion }) }}</p>
+            <p class="muted">
+              {{
+                s.band === 'push'
+                  ? t('referencePush', { stack: s.pushStack })
+                  : t('reference', { version: r.referenceVersion })
+              }}
+            </p>
             <button appButton variant="primary" class="next" (click)="nextHand()">
               {{ t('next') }} <kbd>{{ t('space') }}</kbd>
             </button>

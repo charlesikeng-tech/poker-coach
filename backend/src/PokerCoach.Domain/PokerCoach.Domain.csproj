@@ -3,4 +3,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="PokerCoach.Application.Tests" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Precomputed starting-hand equities (tools/preflop-equity): data, not a dependency. -->
+    <EmbeddedResource Include="Poker/Ranges/preflop-equity.bin" LogicalName="PokerCoach.Domain.preflop-equity.bin" />
+  </ItemGroup>
 </Project>

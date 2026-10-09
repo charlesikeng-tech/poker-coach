@@ -47,6 +47,16 @@ most) and never mix them. Within a format, seats before the hijack are named by 
 (`OpeningSeat`). References are written for full-ring seats; a 6-max seat uses the full-ring seat at the
 same distance from the button (a 6-max UTG is judged like a full-ring lojack) and keeps its 6-max name.
 
+**Push/fold equilibrium (block 4, delivered).** `PushFoldNash` (Domain) solves, per table format and
+stack (3–15 BB), the shove range of each seat when folded to and the calling range of each seat behind,
+by fictitious play over the 169 hands, in chip EV, with card removal on the shover's hand. Equities come
+from `preflop-equity.bin`, a 169 × 169 table computed once by `tools/preflop-equity` (Monte Carlo,
+standard error about 0.2 %) and embedded in the Domain. Stated assumptions: equal stacks, antes of
+0.125 BB per player, a caller assumes the players after him fold (no multi-way all-ins, as in the usual
+push/fold charts). Heads-up it is the exact equilibrium: at 10 BB without antes it gives the known
+58 % shove / 37 % call. This is the only range the product calls an equilibrium; it is the `push` band
+(below 15 BB) of the ranges page and of the trainer.
+
 ## Consequences
 
 - No licensing risk; every number in the section traces back to the player's hands, our versioned

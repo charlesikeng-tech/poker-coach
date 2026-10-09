@@ -12,7 +12,8 @@ public enum DrillAnswer
 }
 
 /// <summary>One thing to learn: a starting hand from a seat, at a format and stack band.</summary>
-public sealed record DrillItem(TableFormat Format, StackBand Band, PokerPosition Position, HandClass Hand);
+/// <param name="PushStack">Stack in big blinds for the push/fold band (its answer depends on it); null otherwise.</param>
+public sealed record DrillItem(TableFormat Format, StackBand Band, PokerPosition Position, HandClass Hand, int? PushStack = null);
 
 /// <summary>A dealt spot: the item with concrete cards and stack, as shown at the table.</summary>
 public sealed record OpeningSpot(DrillItem Item, Card First, Card Second, decimal StackBigBlinds);
@@ -27,10 +28,15 @@ public static class OpeningDrill
 {
     public const double BoundaryShare = 0.5;
 
+    /// <summary>Push/fold drills deal whole stacks in this range (the chart is computed per big blind).</summary>
+    public const int PushStackMin = 5;
+
+    public const int PushStackMax = 14;
+
     public static DrillAnswer Expected(DrillItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
-        var range = ReferenceOpeningRanges.For(item.Band, item.Format, item.Position)
+        var range = ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)
             ?? throw new ArgumentException("This seat has no opening range.", nameof(item));
         return range.Contains(item.Hand) ? DrillAnswer.Raise : DrillAnswer.Fold;
     }
@@ -53,17 +59,18 @@ public static class OpeningDrill
             }
 
             var position = seats[random.Next(seats.Count)];
-            var range = ReferenceOpeningRanges.For(band, format, position)
+            int? pushStack = band == StackBand.Push ? random.Next(PushStackMin, PushStackMax + 1) : null;
+            var range = ReferenceOpeningRanges.For(band, format, position, pushStack)
                 ?? throw new ArgumentException($"{position} has no opening range.", nameof(seats));
             var boundary = Boundary(range);
             var hand = random.NextDouble() < BoundaryShare && boundary.Count > 0
                 ? boundary[random.Next(boundary.Count)]
                 : ByCombinations(random);
-            item = new DrillItem(format, band, position, hand);
+            item = new DrillItem(format, band, position, hand, pushStack);
         }
 
         var (first, second) = Cards(random, item.Hand);
-        return new OpeningSpot(item, first, second, Stack(random, item.Band));
+        return new OpeningSpot(item, first, second, item.PushStack ?? Stack(random, item.Band));
     }
 
     /// <summary>Hands next to the edge of the range: in it with a neighbour out of it, or the reverse.</summary>

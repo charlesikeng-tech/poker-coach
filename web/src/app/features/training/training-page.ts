@@ -76,7 +76,12 @@ export class TrainingPage {
     this.locale();
     const t = (key: string) => this.transloco.translate(`pages.training.${key}`);
     const answer = this.answer();
-    return spotTable(spot, { you: t('you') }, answer, answer ? t('answers.' + answer) : '');
+    return spotTable(
+      spot,
+      { you: t('you') },
+      answer,
+      answer ? t(this.answerKey(spot, answer)) : '',
+    );
   });
 
   protected readonly chipsFormat = computed(() => {
@@ -135,6 +140,11 @@ export class TrainingPage {
     this.chosen.update((current) =>
       current.includes(seat) ? current.filter((s) => s !== seat) : [...current, seat],
     );
+  }
+
+  /** "Raise" becomes "All-in" in push/fold drills. */
+  protected answerKey(spot: DrillSpot, answer: DrillAnswer): string {
+    return answer === 'raise' && spot.band === 'push' ? 'answers.shove' : 'answers.' + answer;
   }
 
   protected percent(value: number | null): string {

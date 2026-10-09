@@ -24,6 +24,7 @@ import {
   OpeningRanges,
   PositionRange,
   RangeCell,
+  PUSH_STACKS,
   RangesApi,
   STACK_BANDS,
   StackBand,
@@ -80,6 +81,9 @@ export class RangesPage {
   /** Reference ranges are written per stack band; below 15 BB is push/fold (later). */
   protected readonly band = signal<StackBand>('mid');
   protected readonly view = signal<RangeView>('mine');
+  protected readonly pushStacks = PUSH_STACKS;
+  /** Push band: stack of the computed equilibrium. */
+  protected readonly pushStack = signal(10);
   protected readonly state = signal<LoadState>('loading');
   protected readonly data = signal<OpeningRanges | null>(null);
   protected readonly selected = signal<PokerPosition | null>(null);
@@ -123,7 +127,7 @@ export class RangesPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.formatChoice(), this.period(), this.band()] as const;
+      const args = [this.formatChoice(), this.period(), this.band(), this.pushStack()] as const;
       untracked(() => void this.load(...args));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
@@ -137,13 +141,17 @@ export class RangesPage {
     this.band.set(value as StackBand);
   }
 
+  protected setPushStack(value: string): void {
+    this.pushStack.set(Number(value));
+  }
+
   protected setFormat(value: TableFormat): void {
     this.selected.set(null);
     this.formatChoice.set(value);
   }
 
   protected retry(): void {
-    void this.load(this.formatChoice(), this.period(), this.band());
+    void this.load(this.formatChoice(), this.period(), this.band(), this.pushStack());
   }
 
   protected gap(cell: RangeCell): GapKind {
@@ -188,6 +196,7 @@ export class RangesPage {
     format: TableFormat | null,
     period: PeriodFilter,
     band: StackBand,
+    pushStack: number,
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
@@ -198,6 +207,7 @@ export class RangesPage {
       const data = await this.api.opening({
         format: format ?? undefined,
         band,
+        stack: band === 'push' ? pushStack : undefined,
         from: toQuery(period, 'all', 1, 1, new Date()).from,
       });
       if (request !== this.request) {
@@ -207,7 +217,7 @@ export class RangesPage {
       this.state.set('ready');
       if (data.pendingHands > 0) {
         this.refreshTimer = setTimeout(
-          () => void this.load(data.format, period, band),
+          () => void this.load(data.format, period, band, pushStack),
           PENDING_REFRESH_MS,
         );
       }

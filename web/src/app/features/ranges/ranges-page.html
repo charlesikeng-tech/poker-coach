@@ -32,6 +32,16 @@
           }
         </select>
       </label>
+      @if (band() === 'push') {
+        <label>
+          <span>{{ t('pushStack') }}</span>
+          <select [value]="pushStack()" (change)="setPushStack($any($event.target).value)">
+            @for (option of pushStacks; track option) {
+              <option [value]="option">{{ option }} BB</option>
+            }
+          </select>
+        </label>
+      }
       <label>
         <span>{{ t('period') }}</span>
         <select [value]="period()" (change)="setPeriod($any($event.target).value)">
@@ -136,8 +146,11 @@
                 <p class="muted">{{ t('reference.share') }}</p>
                 @if (r.referenceNotation) {
                   <code class="notation">{{ r.referenceNotation }}</code>
+                  <p class="muted">{{ t('reference.note') }}</p>
+                } @else {
+                  <p class="nash">{{ t('reference.nash', { stack: data.pushStack }) }}</p>
+                  <p class="muted">{{ t('reference.nashNote') }}</p>
                 }
-                <p class="muted">{{ t('reference.note') }}</p>
               </section>
             }
             @case ('gap') {

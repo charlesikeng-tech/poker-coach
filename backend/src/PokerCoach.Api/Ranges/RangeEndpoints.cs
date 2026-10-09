@@ -33,9 +33,11 @@ public sealed record PositionRangeResponse(
     IReadOnlyList<RangeCellResponse> Cells);
 
 /// <param name="PendingHands">Hands still being analysed: ranges are partial while above zero.</param>
+/// <param name="PushStack">Push/fold band: the stack the computed reference is for.</param>
 public sealed record OpeningRangesResponse(
     TableFormat Format,
     StackBand Band,
+    int? PushStack,
     FormatCountsResponse Spots,
     IReadOnlyList<PositionRangeResponse> Positions,
     int PendingHands,
@@ -54,7 +56,8 @@ public static class RangeEndpoints
     /// band: counts from his own hands, reference version 1.
     /// </summary>
     /// <param name="format">sixMax or fullRing; omitted: the format with the most spots.</param>
-    /// <param name="band">short (15–25 BB), mid (25–40 BB) or deep (40 BB and more).</param>
+    /// <param name="band">push (below 15 BB, computed equilibrium), short (15–25 BB), mid (25–40 BB) or deep (40 BB and more).</param>
+    /// <param name="stack">Push band only: stack in big blinds for the equilibrium (3–15, default 10).</param>
     /// <param name="to">Exclusive upper bound on the hand start time.</param>
     private static async Task<Results<Ok<OpeningRangesResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetOpeningAsync(
         HttpContext context,
@@ -62,6 +65,7 @@ public static class RangeEndpoints
         CancellationToken cancellationToken,
         string? format = null,
         string band = "mid",
+        int? stack = null,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null)
     {
@@ -72,7 +76,12 @@ public static class RangeEndpoints
 
         if (!Enum.TryParse<StackBand>(band, ignoreCase: true, out var stackBand) || !Enum.IsDefined(stackBand))
         {
-            return ApiProblems.Validation("band", "Must be one of: short, mid, deep.");
+            return ApiProblems.Validation("band", "Must be one of: push, short, mid, deep.");
+        }
+
+        if (stack is not null && stack is < PushFoldNash.MinStack or > PushFoldNash.MaxStack)
+        {
+            return ApiProblems.Validation("stack", $"Must be between {PushFoldNash.MinStack} and {PushFoldNash.MaxStack}.");
         }
 
         if (!TableFormatQuery.TryParse(format, out var tableFormat))
@@ -85,10 +94,11 @@ public static class RangeEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
-        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, from, to, cancellationToken);
+        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, stack, from, to, cancellationToken);
         return TypedResults.Ok(new OpeningRangesResponse(
             result.Format,
             result.Band,
+            result.PushStack,
             new FormatCountsResponse(result.SpotsByFormat[TableFormat.SixMax], result.SpotsByFormat[TableFormat.FullRing]),
             result.Positions.Select(p => new PositionRangeResponse(
                 p.Position,

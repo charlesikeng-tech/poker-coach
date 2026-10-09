@@ -13,6 +13,9 @@ public enum StackBand
 
     /// <summary>40 big blinds and more.</summary>
     Deep,
+
+    /// <summary>Below 15 big blinds: shove or fold, from the computed equilibrium (<see cref="PushFoldNash"/>).</summary>
+    Push,
 }
 
 /// <summary>
@@ -84,20 +87,34 @@ public static class ReferenceOpeningRanges
     public static IReadOnlyList<PokerPosition> Positions(TableFormat format) =>
         format == TableFormat.SixMax ? SixMaxPositions : FullRingPositions;
 
-    /// <summary>
-    /// The range, or null for a position that does not open. Ranges are written by distance to the button,
-    /// so a 6-max UTG gets the full-ring lojack's.
-    /// </summary>
-    public static IReadOnlySet<HandClass>? For(StackBand band, TableFormat format, PokerPosition position) =>
-        Parsed.GetValueOrDefault((band, OpeningSeat.FullRingEquivalent(position, format)));
+    /// <summary>Stack used for the push/fold reference when none is given.</summary>
+    public const int DefaultPushStack = 10;
 
-    /// <summary>The range's notation, as written (shown to the player).</summary>
+    /// <summary>
+    /// The range, or null for a position that does not open. Written ranges go by distance to the button,
+    /// so a 6-max UTG gets the full-ring lojack's; push/fold ranges are computed for the format itself, at
+    /// <paramref name="pushStack"/> big blinds.
+    /// </summary>
+    public static IReadOnlySet<HandClass>? For(StackBand band, TableFormat format, PokerPosition position, int? pushStack = null)
+    {
+        if (band == StackBand.Push)
+        {
+            return Positions(format).Contains(position)
+                ? PushFoldNash.Solve(format, pushStack ?? DefaultPushStack).Shove(position)
+                : null;
+        }
+
+        return Parsed.GetValueOrDefault((band, OpeningSeat.FullRingEquivalent(position, format)));
+    }
+
+    /// <summary>The range's notation, as written (shown to the player); null for computed push/fold ranges.</summary>
     public static string? NotationFor(StackBand band, TableFormat format, PokerPosition position) =>
-        Notation.GetValueOrDefault((band, OpeningSeat.FullRingEquivalent(position, format)));
+        band == StackBand.Push ? null : Notation.GetValueOrDefault((band, OpeningSeat.FullRingEquivalent(position, format)));
 
     /// <summary>Inclusive lower and exclusive upper bound in big blinds; no upper bound for deep.</summary>
     public static (decimal Min, decimal? Max) Bounds(StackBand band) => band switch
     {
+        StackBand.Push => (0m, 15m),
         StackBand.Short => (15m, 25m),
         StackBand.Mid => (25m, 40m),
         _ => (40m, null),

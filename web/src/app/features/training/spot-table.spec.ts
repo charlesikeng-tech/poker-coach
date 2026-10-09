@@ -10,6 +10,7 @@ const spot = (
   position,
   hand: 'AKo',
   cards: ['Ah', 'Kd'],
+  pushStack: null,
   stackInBigBlinds: 30,
   review: false,
   focus: false,
@@ -47,5 +48,19 @@ describe('spotTable', () => {
     expect(raised.seats.find((s) => s.isHero)!.bet).toBe(220);
     expect(raised.bubble?.kind).toBe('raise');
     expect(folded.seats.find((s) => s.isHero)!.cards).toEqual([]);
+  });
+
+  it('shoves the whole stack in push/fold', () => {
+    const view = spotTable(
+      { ...spot('button'), band: 'push', pushStack: 8, stackInBigBlinds: 8 },
+      { you: 'You' },
+      'raise',
+      'All-in',
+    );
+    const hero = view.seats.find((s) => s.isHero)!;
+
+    expect(hero.stack).toBe(0);
+    expect(hero.allIn).toBe(true);
+    expect(view.bubble?.kind).toBe('allIn');
   });
 });

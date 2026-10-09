@@ -6,6 +6,9 @@ namespace PokerCoach.Application.Tests.Ranges;
 
 public sealed class ReferenceOpeningRangesTests
 {
+    /// <summary>Bands written by hand; push/fold is computed and tested in PushFoldNashTests.</summary>
+    private static readonly StackBand[] Written = [StackBand.Short, StackBand.Mid, StackBand.Deep];
+
     [Theory]
     [InlineData("77", new[] { "77" })]
     [InlineData("QQ+", new[] { "QQ", "KK", "AA" })]
@@ -35,7 +38,7 @@ public sealed class ReferenceOpeningRangesTests
     [Fact]
     public void Every_reference_open_rate_stays_inside_the_leak_reference_rate()
     {
-        foreach (var band in Enum.GetValues<StackBand>())
+        foreach (var band in Written)
         {
             foreach (var position in ReferenceOpeningRanges.Positions(TableFormat.FullRing))
             {
@@ -51,7 +54,7 @@ public sealed class ReferenceOpeningRangesTests
     [Fact]
     public void Ranges_widen_from_utg_to_the_button_and_with_depth()
     {
-        foreach (var band in Enum.GetValues<StackBand>())
+        foreach (var band in Written)
         {
             var shares = ReferenceOpeningRanges.Positions(TableFormat.FullRing)
                 .Where(p => p != PokerPosition.SmallBlind)
@@ -60,7 +63,7 @@ public sealed class ReferenceOpeningRangesTests
             Assert.Equal(shares.Order(), shares);
         }
 
-        var button = Enum.GetValues<StackBand>()
+        var button = Written
             .Select(b => ReferenceOpeningRanges.ComboShare(ReferenceOpeningRanges.For(b, TableFormat.FullRing, PokerPosition.Button)!))
             .ToList();
         Assert.Equal(button.Order(), button);

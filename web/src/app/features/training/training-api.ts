@@ -14,6 +14,8 @@ export interface DrillSpot {
   readonly format: TableFormat;
   readonly band: StackBand;
   readonly position: PokerPosition;
+  /** Push/fold drills: the stack the answer is computed for. */
+  readonly pushStack: number | null;
   /** "AKs". */
   readonly hand: string;
   /** The two hole cards ("Ah", "Ks"). */
@@ -28,7 +30,8 @@ export interface DrillSpot {
 export interface DrillResult {
   readonly expected: DrillAnswer;
   readonly correct: boolean;
-  readonly referenceNotation: string;
+  /** Null for the computed push/fold range. */
+  readonly referenceNotation: string | null;
   readonly referenceHands: readonly string[];
   readonly referenceVersion: number;
 }
@@ -67,6 +70,7 @@ export class TrainingApi {
         format: spot.format,
         band: spot.band,
         position: spot.position,
+        pushStack: spot.pushStack,
         hand: spot.hand,
         answer,
       }),

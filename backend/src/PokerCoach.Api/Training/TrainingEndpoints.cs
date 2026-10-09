@@ -13,23 +13,26 @@ namespace PokerCoach.Api.Training;
 /// <param name="Cards">The two hole cards shown ("Ah", "Ks").</param>
 /// <param name="Review">A hand missed before, asked again.</param>
 /// <param name="Focus">The seat is weighted up: an opening leak was detected there.</param>
+/// <param name="PushStack">Push/fold drills: the stack the answer is computed for; send it back with the answer.</param>
 public sealed record DrillSpotResponse(
     TableFormat Format,
     StackBand Band,
     PokerPosition Position,
+    int? PushStack,
     string Hand,
     IReadOnlyList<string> Cards,
     decimal StackInBigBlinds,
     bool Review,
     bool Focus);
 
-public sealed record DrillAnswerRequest(TableFormat? Format, StackBand? Band, PokerPosition? Position, string? Hand, DrillAnswer? Answer);
+public sealed record DrillAnswerRequest(TableFormat? Format, StackBand? Band, PokerPosition? Position, int? PushStack, string? Hand, DrillAnswer? Answer);
 
+/// <param name="ReferenceNotation">Null for computed push/fold ranges.</param>
 /// <param name="ReferenceHands">The seat's reference range ("AA", "AKs"…), shown with the answer.</param>
 public sealed record DrillResultResponse(
     DrillAnswer Expected,
     bool Correct,
-    string ReferenceNotation,
+    string? ReferenceNotation,
     IReadOnlyList<string> ReferenceHands,
     int ReferenceVersion);
 
@@ -52,7 +55,7 @@ public static class TrainingEndpoints
     }
 
     /// <param name="format">sixMax (default) or fullRing.</param>
-    /// <param name="band">short, mid (default) or deep.</param>
+    /// <param name="band">push (below 15 BB), short, mid (default) or deep.</param>
     /// <param name="positions">Seats to train, comma-separated ("button,cutoff"); omitted: all.</param>
     private static async Task<Results<Ok<DrillSpotResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetSpotAsync(
         HttpContext context,
@@ -74,7 +77,7 @@ public static class TrainingEndpoints
 
         if (!TryParseBand(band, out var stackBand))
         {
-            return ApiProblems.Validation("band", "Must be one of: short, mid, deep.");
+            return ApiProblems.Validation("band", "Must be one of: push, short, mid, deep.");
         }
 
         var seats = new List<PokerPosition>();
@@ -94,6 +97,7 @@ public static class TrainingEndpoints
             spot.Item.Format,
             spot.Item.Band,
             spot.Item.Position,
+            spot.Item.PushStack,
             spot.Item.Hand.ToString(),
             [spot.First.ToString(), spot.Second.ToString()],
             spot.StackBigBlinds,
@@ -122,6 +126,17 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("position", "This seat does not open at this format.");
         }
 
+        int? pushStack = null;
+        if (band == StackBand.Push)
+        {
+            if (request.PushStack is not ({ } stack and >= PushFoldNash.MinStack and <= PushFoldNash.MaxStack))
+            {
+                return ApiProblems.Validation("pushStack", $"Required for push/fold, between {PushFoldNash.MinStack} and {PushFoldNash.MaxStack}.");
+            }
+
+            pushStack = stack;
+        }
+
         IReadOnlySet<HandClass> hands;
         try
         {
@@ -137,7 +152,7 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("hand", "Must be one starting hand, like AKs.");
         }
 
-        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single()), answer, cancellationToken);
+        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack), answer, cancellationToken);
         return TypedResults.Ok(new DrillResultResponse(
             result.Expected,
             result.Correct,

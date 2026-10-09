@@ -71,7 +71,8 @@ export function spotTable(
     const isHero = seatNumber === heroSeat;
     const folded = !isHero && actsAt(seatNumber) < heroTurn;
     const blind = position === 'smallBlind' ? 0.5 : position === 'bigBlind' ? 1 : 0;
-    const raised = isHero && answer === 'raise' ? 2.2 : 0;
+    const shove = spot.band === 'push';
+    const raised = isHero && answer === 'raise' ? (shove ? spot.stackInBigBlinds : 2.2) : 0;
     const stackBb = isHero
       ? spot.stackInBigBlinds
       : Math.max(8, spot.stackInBigBlinds * (0.6 + ((seatNumber * 37) % 9) / 10));
@@ -86,7 +87,7 @@ export function spotTable(
       bet: Math.round(bet * CHIPS_PER_BB),
       cards: isHero ? (answer === 'fold' ? [] : spot.cards) : folded ? [] : [null, null],
       folded: folded || (isHero && answer === 'fold'),
-      allIn: false,
+      allIn: isHero && answer === 'raise' && shove,
       acting: isHero && answer === null,
       won: 0,
     };
@@ -105,7 +106,7 @@ export function spotTable(
           key: answer,
           seatNumber: heroSeat,
           text: bubbleText,
-          kind: answer === 'raise' ? 'raise' : 'fold',
+          kind: answer === 'fold' ? 'fold' : spot.band === 'push' ? 'allIn' : 'raise',
         }
       : null,
     payouts: [],
