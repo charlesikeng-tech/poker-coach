@@ -194,7 +194,7 @@ Ranges (ADR-0009):
 - [x] Training room (open or fold): spots dealt from the reference ranges (half near the range edge),
       missed hands come back, seats with an opening leak weighted up, answers stored
       (`training.opening_attempts`), progress per seat; shared `PokerTable` with the replayer
-- [ ] Migration `Training`
+- [x] Migration `Training`
 - [ ] Push/fold equilibrium below 15 BB
 
 MVP-3 — Leaks (ADR-0007):
