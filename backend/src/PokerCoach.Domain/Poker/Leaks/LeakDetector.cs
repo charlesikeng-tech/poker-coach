@@ -102,6 +102,13 @@ public static class LeakDetector
         return new LeakReport(ordered, underSampled);
     }
 
+    /// <summary>What a statistic counts: times done over times it could have been.</summary>
+    public static (int Made, int Opportunities) Measure(LeakStat stat, HeroStatCounts counts)
+    {
+        ArgumentNullException.ThrowIfNull(counts);
+        return Sample(stat, counts);
+    }
+
     private static (int Made, int Opportunities) Sample(LeakStat stat, HeroStatCounts c) => stat switch
     {
         LeakStat.Vpip => (c.Vpip, c.PreflopDecisions),

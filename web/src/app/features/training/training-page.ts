@@ -7,6 +7,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Check, CircleAlert, Flame, RotateCcw, Target, X } from 'lucide';
 
@@ -128,6 +129,7 @@ export class TrainingPage {
   });
 
   constructor() {
+    this.applyLink(inject(ActivatedRoute).snapshot.queryParamMap);
     effect(() => {
       // A new drill whenever the mode, format, band or seats change.
       const args = [this.format(), this.band(), this.chosen(), this.mode()] as const;
@@ -136,6 +138,25 @@ export class TrainingPage {
         void this.loadProgress(args[0], args[3]);
       });
     });
+  }
+
+  /** Links from the weekly plan: ?mode=open&seats=button,cutoff&format=sixMax. Unknown values are ignored. */
+  private applyLink(params: { get(name: string): string | null }): void {
+    const format = params.get('format');
+    if (format === 'sixMax' || format === 'fullRing') {
+      this.format.set(format);
+    }
+    const mode = params.get('mode');
+    if (mode === 'open' || mode === 'defence') {
+      this.mode.set(mode);
+    }
+    const allowed = SEATS[this.format()];
+    const seats = (params.get('seats') ?? '')
+      .split(',')
+      .filter((seat): seat is PokerPosition => (allowed as readonly string[]).includes(seat));
+    if (seats.length > 0) {
+      this.chosen.set(seats);
+    }
   }
 
   protected setFormat(value: TableFormat): void {

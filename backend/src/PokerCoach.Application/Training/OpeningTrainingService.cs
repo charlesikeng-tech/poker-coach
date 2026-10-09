@@ -20,6 +20,9 @@ public interface ITrainingStore
 {
     Task RecordAsync(Guid userId, DrillAttempt attempt, int referenceVersion, CancellationToken cancellationToken);
 
+    /// <summary>Answers given since a moment, every format and drill: the weekly plan's goal.</summary>
+    Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken);
+
     /// <summary>The user's latest attempts for a format and drill, most recent first.</summary>
     Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken);
 }

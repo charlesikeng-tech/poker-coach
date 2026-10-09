@@ -4,6 +4,7 @@ import {
   Dumbbell,
   LayoutDashboard,
   Radar,
+  Target,
   TrendingUp,
   Trophy,
   Upload,
@@ -24,6 +25,7 @@ export interface NavigationItem {
  */
 export const PRIMARY_NAVIGATION: readonly NavigationItem[] = [
   { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
+  { path: '/progress', labelKey: 'nav.progress', icon: Target },
   { path: '/performance', labelKey: 'nav.performance', icon: TrendingUp },
   { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy },
   { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },

@@ -93,6 +93,9 @@ public sealed class OpeningDrillTests
             return Task.CompletedTask;
         }
 
+        public Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken) =>
+            Task.FromResult((Attempts.Count(a => a.AnsweredAt >= since), Attempts.Count(a => a.AnsweredAt >= since && a.Correct)));
+
         public Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<DrillAttempt>>(Attempts.Where(a => a.Item.IsDefence == (mode == DrillMode.Defence)).Take(count).ToList());
     }

@@ -4,6 +4,7 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "progress": "Plan",
     "performance": "Performance",
     "tournaments": "Tournaments",
     "statistics": "Statistics",
@@ -1167,6 +1168,51 @@
       "gridLabelDefence": "Reference call range against this shover",
       "referenceDefence": "Push/fold equilibrium calls at {{stack}} BB (equal stacks, 0.125 BB antes, no ICM): too loose near the money.",
       "hintDefence": "Answer with the buttons or the keyboard (F to fold, C to call). After your answer you will see the call range against this shover with your hand outlined."
+    },
+    "progress": {
+      "title": "Weekly plan",
+      "description": "Your 2 or 3 priorities, drawn from your leaks of the last 90 days, frozen for the week. Progress is measured on this week's hands.",
+      "loading": "Preparing your plan…",
+      "week": "Week of {{date}}",
+      "daysLeft": "{{count}} day(s) left",
+      "rebuild": "Rebuild the plan",
+      "notYet": {
+        "title": "Not enough recent hands yet",
+        "description": "The plan is built on your last 90 days: {{hands}} hands so far, {{needed}} are needed (15 BB and more) so it does not rest on noise.",
+        "action": "Import files"
+      },
+      "status": {
+        "notEnoughSpots": "Not enough spots",
+        "inRange": "On target",
+        "improving": "Improving",
+        "offTrack": "Work on it"
+      },
+      "gaugeLabel": "90 days ago {{baseline}}, this week {{week}}, target {{min}} – {{max}}",
+      "baseline": "Last 90 days",
+      "thisWeek": "This week",
+      "target": "Target",
+      "spots": "{{made}} of {{count}} spots",
+      "notEnough": "Fewer than {{count}} spots this week: the rate is shown, not judged yet.",
+      "train": "Train",
+      "coach": "Understand with the coach",
+      "clean": {
+        "title": "No leak detected",
+        "description": "Nothing falls outside our references over your last 90 days. Keep the volume up and keep your opening ranges sharp in the training room."
+      },
+      "drills": "training-room answers this week",
+      "accuracy": "{{value}} right",
+      "hands": "hands played this week (15 BB and more)",
+      "frozen": "Plan frozen on {{date}}: it does not move with your imports. Rebuild it after a big import.",
+      "history": {
+        "title": "Previous weeks",
+        "empty": "No leak that week",
+        "hands": "{{count}} hands"
+      },
+      "error": {
+        "title": "Could not load your plan",
+        "description": "Poker Coach did not respond. Try again.",
+        "retry": "Try again"
+      }
     }
   },
   "welcome": {

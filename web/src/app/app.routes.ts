@@ -24,6 +24,12 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard-page').then((m) => m.DashboardPage),
       },
       {
+        path: 'progress',
+        title: 'nav.progress',
+        loadComponent: () =>
+          import('./features/progress/progress-page').then((m) => m.ProgressPage),
+      },
+      {
         path: 'performance',
         title: 'nav.performance',
         loadComponent: () =>

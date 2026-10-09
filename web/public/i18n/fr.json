@@ -4,6 +4,7 @@
   },
   "nav": {
     "dashboard": "Tableau de bord",
+    "progress": "Plan",
     "performance": "Performance",
     "tournaments": "Tournois",
     "statistics": "Statistiques",
@@ -1167,6 +1168,51 @@
       "gridLabelDefence": "Range de call de référence contre ce pousseur",
       "referenceDefence": "Calls de l'équilibre push/fold à {{stack}} BB (tapis égaux, antes 0,125 BB, sans ICM) : trop larges près de l'argent.",
       "hintDefence": "Réponds avec les boutons ou au clavier (F pour fold, C pour payer). Après ta réponse, tu verras la range de call contre ce pousseur avec ta main entourée."
+    },
+    "progress": {
+      "title": "Plan de la semaine",
+      "description": "Tes 2 ou 3 priorités, tirées de tes fuites des 90 derniers jours, figées pour la semaine. Ta progression se mesure sur les mains de la semaine.",
+      "loading": "Préparation du plan…",
+      "week": "Semaine du {{date}}",
+      "daysLeft": "Encore {{count}} jour(s)",
+      "rebuild": "Recalculer le plan",
+      "notYet": {
+        "title": "Pas encore assez de mains récentes",
+        "description": "Le plan se construit sur tes 90 derniers jours : {{hands}} mains pour l'instant, il en faut {{needed}} (15 BB et plus) pour qu'il ne repose pas sur du bruit.",
+        "action": "Importer des fichiers"
+      },
+      "status": {
+        "notEnoughSpots": "Pas assez de spots",
+        "inRange": "Dans la cible",
+        "improving": "En progrès",
+        "offTrack": "À travailler"
+      },
+      "gaugeLabel": "Il y a 90 jours {{baseline}}, cette semaine {{week}}, cible {{min}} – {{max}}",
+      "baseline": "90 derniers jours",
+      "thisWeek": "Cette semaine",
+      "target": "Cible",
+      "spots": "{{made}} sur {{count}} spots",
+      "notEnough": "Moins de {{count}} spots cette semaine : le taux est affiché, pas encore jugé.",
+      "train": "S'entraîner",
+      "coach": "Comprendre avec le coach",
+      "clean": {
+        "title": "Aucune fuite détectée",
+        "description": "Rien ne sort de nos repères sur tes 90 derniers jours. Garde le volume et entretiens tes ouvertures en salle d'entraînement."
+      },
+      "drills": "réponses en salle d'entraînement cette semaine",
+      "accuracy": "{{value}} de bonnes réponses",
+      "hands": "mains jouées cette semaine (15 BB et plus)",
+      "frozen": "Plan figé le {{date}} : il ne bouge pas avec tes imports. Recalcule-le après un gros import.",
+      "history": {
+        "title": "Semaines précédentes",
+        "empty": "Aucune fuite cette semaine-là",
+        "hands": "{{count}} mains"
+      },
+      "error": {
+        "title": "Impossible de charger ton plan",
+        "description": "Poker Coach n'a pas pu répondre. Réessaie.",
+        "retry": "Réessayer"
+      }
     }
   },
   "welcome": {

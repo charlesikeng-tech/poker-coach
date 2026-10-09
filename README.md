@@ -233,6 +233,15 @@ Postflop (roadmap step 3):
       statistics (ADR-0007 amendment), example hands for the coach
 - [x] Migration `PostflopStats`
 
+Weekly plan (roadmap step 4, ADR-0010):
+
+- [x] Domain `WeeklyPlanner` (priorities from the leaks of the last 90 days, week assessment, drills)
+- [x] `GET /api/progress` (builds the week's plan on first read), `POST /api/progress/plan/rebuild`;
+      schema `progress`
+- [x] Web: Plan page (priorities with baseline / week / target, drill and coach links, drill goal,
+      previous weeks); training room deep links (`?mode=&seats=&format=`)
+- [ ] Migration `WeeklyPlan`
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

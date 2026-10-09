@@ -1,0 +1,213 @@
+<ng-container *transloco="let tr">
+  <ng-container *transloco="let t; prefix: 'pages.progress'">
+    <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+    @if (state() === 'error') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('error.title')"
+        [description]="t('error.description')"
+      >
+        <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+      </app-empty-state>
+    } @else if (report(); as r) {
+      <div class="week-bar">
+        <div>
+          <p class="week-title">{{ t('week', { date: weekLabel(r.weekStart) }) }}</p>
+          <p class="muted">{{ t('daysLeft', { count: daysLeft() }) }}</p>
+        </div>
+        @if (r.current) {
+          <button appButton variant="ghost" [disabled]="rebuilding()" (click)="rebuild()">
+            <app-icon [icon]="icons.RefreshCw" [class.spin]="rebuilding()" />{{ t('rebuild') }}
+          </button>
+        }
+      </div>
+
+      @if (!r.current) {
+        <app-empty-state
+          [icon]="icons.Upload"
+          [heading]="t('notYet.title')"
+          [description]="
+            t('notYet.description', {
+              hands: integer(r.baselineHands),
+              needed: integer(r.minBaselineHands),
+            })
+          "
+        >
+          <a appButton variant="primary" routerLink="/import">{{ t('notYet.action') }}</a>
+        </app-empty-state>
+      } @else {
+        <div class="layout">
+          <section class="priorities">
+            @for (p of r.current.priorities; track $index; let i = $index) {
+              <article class="priority glass" [attr.data-status]="p.status" animate.enter="rise">
+                <header>
+                  <span class="rank numeric">{{ i + 1 }}</span>
+                  <div>
+                    <h2>
+                      {{
+                        tr(
+                          'pages.leaks.items.' + p.stat + '.' + p.direction + '.title',
+                          itemParams(p)
+                        )
+                      }}
+                    </h2>
+                    <p class="muted">
+                      {{ tr('pages.leaks.stats.' + p.stat) }}
+                      @if (p.position) {
+                        · {{ short(p.position) }}
+                      }
+                    </p>
+                  </div>
+                  <span class="status">{{ t('status.' + p.status) }}</span>
+                </header>
+
+                @let g = gauge(p);
+                <div
+                  class="gauge"
+                  role="img"
+                  [attr.aria-label]="
+                    t('gaugeLabel', {
+                      baseline: share(p.baselineRate),
+                      week: share(p.weekRate),
+                      min: share(p.min),
+                      max: share(p.max),
+                    })
+                  "
+                >
+                  <span
+                    class="gauge-range"
+                    [style.left.%]="g.min"
+                    [style.width.%]="g.max - g.min"
+                  ></span>
+                  <span class="gauge-mark gauge-mark--baseline" [style.left.%]="g.baseline"></span>
+                  @if (g.week !== null) {
+                    <span class="gauge-mark gauge-mark--week" [style.left.%]="g.week"></span>
+                  }
+                </div>
+                <dl class="figures">
+                  <div>
+                    <dt>{{ t('baseline') }}</dt>
+                    <dd class="numeric">{{ share(p.baselineRate) }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('thisWeek') }}</dt>
+                    <dd class="numeric week-value">
+                      {{ share(p.weekRate) }}
+                      <small>{{
+                        t('spots', { made: p.weekMade, count: p.weekOpportunities })
+                      }}</small>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('target') }}</dt>
+                    <dd class="numeric">{{ share(p.min) }} – {{ share(p.max) }}</dd>
+                  </div>
+                </dl>
+                @if (p.status === 'notEnoughSpots') {
+                  <p class="hint">{{ t('notEnough', { count: r.minWeekSpots }) }}</p>
+                }
+
+                <p class="work">
+                  {{
+                    tr('pages.leaks.items.' + p.stat + '.' + p.direction + '.work', itemParams(p))
+                  }}
+                </p>
+
+                <div class="actions">
+                  @if (p.drill) {
+                    <a
+                      appButton
+                      variant="primary"
+                      routerLink="/training"
+                      [queryParams]="drillQuery(p)"
+                    >
+                      <app-icon [icon]="icons.Dumbbell" />{{ t('train') }}
+                    </a>
+                  }
+                  <a appButton variant="secondary" routerLink="/leaks">
+                    <app-icon [icon]="icons.MessageCircle" />{{ t('coach') }}
+                  </a>
+                </div>
+              </article>
+            } @empty {
+              <article class="priority glass clean">
+                <h2>{{ t('clean.title') }}</h2>
+                <p>{{ t('clean.description') }}</p>
+              </article>
+            }
+          </section>
+
+          <aside class="side">
+            <section class="card glass goal">
+              <svg viewBox="0 0 80 80" class="ring" aria-hidden="true">
+                <circle cx="40" cy="40" [attr.r]="ringRadius" class="ring-track" />
+                <circle
+                  cx="40"
+                  cy="40"
+                  [attr.r]="ringRadius"
+                  class="ring-value"
+                  [attr.stroke-dasharray]="ringLength"
+                  [attr.stroke-dashoffset]="ringOffset()"
+                />
+              </svg>
+              <div>
+                <p class="goal-value numeric">{{ r.drillAttempts }} / {{ r.drillGoal }}</p>
+                <p class="muted">{{ t('drills') }}</p>
+                @if (r.drillAttempts > 0) {
+                  <p class="muted">
+                    {{ t('accuracy', { value: share(r.drillCorrect / r.drillAttempts) }) }}
+                  </p>
+                }
+              </div>
+            </section>
+            <section class="card glass">
+              <p class="goal-value numeric">{{ integer(r.current.hands) }}</p>
+              <p class="muted">{{ t('hands') }}</p>
+            </section>
+            <p class="hint">
+              {{ t('frozen', { date: weekLabel(r.current.createdAt.slice(0, 10)) }) }}
+            </p>
+          </aside>
+        </div>
+      }
+
+      @if (r.history.length > 0) {
+        <section class="history glass">
+          <h2>{{ t('history.title') }}</h2>
+          <ul>
+            @for (w of r.history; track w.weekStart) {
+              <li>
+                <span class="history-week">{{ t('week', { date: weekLabel(w.weekStart) }) }}</span>
+                <span class="history-items">
+                  @for (p of w.priorities; track $index) {
+                    <span
+                      class="chip"
+                      [attr.data-status]="p.status"
+                      [attr.title]="t('status.' + p.status)"
+                    >
+                      {{ tr('pages.leaks.stats.' + p.stat) }}
+                      @if (p.position) {
+                        {{ short(p.position) }}
+                      }
+                      <b class="numeric">{{ share(p.weekRate) }}</b>
+                    </span>
+                  } @empty {
+                    <span class="muted">{{ t('history.empty') }}</span>
+                  }
+                </span>
+                <span class="muted numeric">{{
+                  t('history.hands', { count: integer(w.hands) })
+                }}</span>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    } @else {
+      <div class="glass skeleton-block" role="status" [attr.aria-label]="t('loading')">
+        <span class="skeleton"></span>
+      </div>
+    }
+  </ng-container>
+</ng-container>

@@ -87,6 +87,16 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
         db.ChangeTracker.Clear();
     }
 
+    public async Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken)
+    {
+        var counts = await db.Set<OpeningAttemptRecord>().AsNoTracking()
+            .Where(a => a.UserId == userId && a.CreatedAt >= since)
+            .GroupBy(_ => 1)
+            .Select(g => new { Attempts = g.Count(), Correct = g.Count(a => a.Correct) })
+            .SingleOrDefaultAsync(cancellationToken);
+        return counts is null ? (0, 0) : (counts.Attempts, counts.Correct);
+    }
+
     /// <summary>Attempts checked against another reference version are left out: their answer key changed.</summary>
     public async Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken)
     {
