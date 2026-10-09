@@ -256,6 +256,15 @@ Tournament phases and trends:
 - [x] `GET /api/statistics/breakdowns`: statistics by phase and by month, with the overall reference
       ranges; web: phase table and month-by-month chart with the reference band
 
+Quiz on real hands:
+
+- [x] `RealSpots`: the hero's real raise-first-in spots (last 90 days), judged by the drills' answer key
+      (references above 15 BB, push/fold equilibrium below); missed ones are asked again until answered
+      right (`training.opening_attempts.source_hand_id`)
+- [x] `GET /api/training/opening/spot?mode=real` (404 `NO_REAL_SPOT_LEFT`), answers with `sourceHandId`;
+      web: "My hands" mode with the date, what the hero did that day and a link to the replay
+- [ ] Migration `TrainingRealHands`
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

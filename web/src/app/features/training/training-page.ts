@@ -7,9 +7,10 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Check, CircleAlert, Flame, RotateCcw, Target, X } from 'lucide';
+import { Check, CircleAlert, Flame, History, RotateCcw, Sparkles, Target, X } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
@@ -30,7 +31,8 @@ import {
   TrainingApi,
 } from './training-api';
 
-type LoadState = 'loading' | 'ready' | 'error';
+/** done: the quiz on real hands has nothing left to ask. */
+type LoadState = 'loading' | 'ready' | 'error' | 'done';
 
 const SEATS: Record<TableFormat, readonly PokerPosition[]> = {
   sixMax: ['utg', 'hijack', 'cutoff', 'button', 'smallBlind'],
@@ -46,7 +48,16 @@ const RANKS = 'AKQJT98765432';
  */
 @Component({
   selector: 'app-training-page',
-  imports: [TranslocoDirective, PageHeader, EmptyState, Button, Icon, FormatToggle, PokerTable],
+  imports: [
+    TranslocoDirective,
+    RouterLink,
+    PageHeader,
+    EmptyState,
+    Button,
+    Icon,
+    FormatToggle,
+    PokerTable,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter', '(window:keydown)': 'onKey($event)' },
   templateUrl: './training-page.html',
@@ -58,7 +69,7 @@ export class TrainingPage {
   private readonly language = inject(LanguageService);
 
   protected readonly bands = STACK_BANDS;
-  protected readonly modes: readonly DrillMode[] = ['open', 'defence'];
+  protected readonly modes: readonly DrillMode[] = ['open', 'defence', 'real'];
   protected readonly mode = signal<DrillMode>('open');
   protected readonly format = signal<TableFormat>('sixMax');
   protected readonly band = signal<StackBand>('mid');
@@ -73,7 +84,7 @@ export class TrainingPage {
   protected readonly progress = signal<DrillProgress | null>(null);
   protected readonly session = signal({ answered: 0, correct: 0 });
   protected readonly busy = signal(false);
-  protected readonly icons = { Check, CircleAlert, Flame, RotateCcw, Target, X };
+  protected readonly icons = { Check, CircleAlert, Flame, History, RotateCcw, Sparkles, Target, X };
   protected readonly short = positionShort;
   protected readonly ranks = RANKS.split('');
 
@@ -147,7 +158,7 @@ export class TrainingPage {
       this.format.set(format);
     }
     const mode = params.get('mode');
-    if (mode === 'open' || mode === 'defence') {
+    if (mode === 'open' || mode === 'defence' || mode === 'real') {
       this.mode.set(mode);
     }
     const allowed = SEATS[this.format()];
@@ -183,6 +194,12 @@ export class TrainingPage {
   /** "Raise" becomes "All-in" in push/fold drills. */
   protected answerKey(spot: DrillSpot, answer: DrillAnswer): string {
     return answer === 'raise' && spot.band === 'push' ? 'answers.shove' : 'answers.' + answer;
+  }
+
+  protected playedOn(iso: string): string {
+    return new Intl.DateTimeFormat(this.locale(), { day: 'numeric', month: 'long' }).format(
+      new Date(iso),
+    );
   }
 
   protected percent(value: number | null): string {
@@ -231,7 +248,7 @@ export class TrainingPage {
       return;
     }
     const key = event.key.toLowerCase();
-    const play: DrillAnswer = this.mode() === 'defence' ? 'call' : 'raise';
+    const play: DrillAnswer = this.spot()?.shover ? 'call' : 'raise';
     if (this.answer() === null && (key === 'f' || key === 'r' || key === 'c')) {
       event.preventDefault();
       void this.choose(key === 'f' ? 'fold' : play);
@@ -254,8 +271,12 @@ export class TrainingPage {
       this.result.set(null);
       this.spot.set(spot);
       this.state.set('ready');
-    } catch {
-      this.state.set('error');
+    } catch (error) {
+      const code =
+        error instanceof HttpErrorResponse
+          ? (error.error as { code?: string } | null)?.code
+          : undefined;
+      this.state.set(code === 'NO_REAL_SPOT_LEFT' ? 'done' : 'error');
     } finally {
       this.busy.set(false);
     }

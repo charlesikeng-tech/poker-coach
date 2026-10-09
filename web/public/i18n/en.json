@@ -1122,7 +1122,7 @@
     },
     "training": {
       "title": "Training room",
-      "description": "Two drills: open when it is folded to you, or defend your big blind against a shove. Missed hands come back.",
+      "description": "Three drills: open when it is folded to you, defend your big blind against a shove, and replay your real misplayed spots. Missed hands come back.",
       "loading": "Dealing…",
       "band": "Stack",
       "bands": {
@@ -1186,13 +1186,31 @@
         "defence": {
           "name": "Defend the BB",
           "text": "Someone shoves: call or fold?"
+        },
+        "real": {
+          "name": "My hands",
+          "text": "Your real misplayed spots, to replay."
         }
       },
       "shovers": "Shovers",
       "questionDefence": "{{shover}} shoves {{stack}}, everyone folds. You are in the big blind: call?",
       "gridLabelDefence": "Reference call range against this shover",
       "referenceDefence": "Push/fold equilibrium calls at {{stack}} BB (equal stacks, 0.125 BB antes, no ICM): too loose near the money.",
-      "hintDefence": "Answer with the buttons or the keyboard (F to fold, C to call). After your answer you will see the call range against this shover with your hand outlined."
+      "hintDefence": "Answer with the buttons or the keyboard (F to fold, C to call). After your answer you will see the call range against this shover with your hand outlined.",
+      "real": {
+        "tag": "Your hand of {{date}}",
+        "remaining": "{{count}} to review",
+        "then": {
+          "fold": "That day, you folded.",
+          "raise": "That day, you raised.",
+          "limp": "That day, you limped."
+        },
+        "replay": "Replay the hand",
+        "doneTitle": "Nothing to review",
+        "doneDescription": "All your opening spots of the last 90 days follow the references, or you have replayed them right. Import new hands to find more.",
+        "toOpen": "Train opening"
+      },
+      "hintReal": "Answer with the buttons or the keyboard (F to fold, R to raise). These spots come from your real hands, where your decision differed from the references: a right answer takes them off the list."
     },
     "progress": {
       "title": "Weekly plan",

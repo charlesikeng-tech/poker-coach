@@ -36,6 +36,10 @@ internal sealed class OpeningAttemptRecord
     /// <summary>Defence drills: the seat that shoved; null for opening drills.</summary>
     public PokerPosition? Shover { get; set; }
 
+    /// <summary>Quiz on real hands: the hand the spot comes from. Not a foreign key: deleting a hand (or
+    /// re-importing it) must not erase the player's training record.</summary>
+    public Guid? SourceHandId { get; set; }
+
     public DrillAnswer Answer { get; set; }
 
     public bool Correct { get; set; }
@@ -60,6 +64,8 @@ internal sealed class OpeningAttemptConfiguration : IEntityTypeConfiguration<Ope
         builder.Property(a => a.Hand).HasMaxLength(3).IsRequired();
         // Reads are "this user's latest attempts at a format".
         builder.HasIndex(a => new { a.UserId, a.Format, a.CreatedAt });
+        // The quiz asks "which real hands did this user already fix?".
+        builder.HasIndex(a => new { a.UserId, a.SourceHandId }).HasFilter("source_hand_id IS NOT NULL");
         builder.HasOne<User>().WithMany().HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Cascade);
     }
 }
@@ -78,6 +84,7 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
             Hand = attempt.Item.Hand.ToString(),
             PushStack = attempt.Item.PushStack,
             Shover = attempt.Item.Shover,
+            SourceHandId = attempt.SourceHandId,
             Answer = attempt.Answer,
             Correct = attempt.Correct,
             ReferenceVersion = referenceVersion,
@@ -85,6 +92,18 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
         });
         await db.SaveChangesAsync(cancellationToken);
         db.ChangeTracker.Clear();
+    }
+
+    /// <summary>Latest answer per real hand: a hand fixed once stays fixed, a miss brings it back.</summary>
+    public async Task<IReadOnlyDictionary<Guid, bool>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken)
+    {
+        var rows = await db.Set<OpeningAttemptRecord>().AsNoTracking()
+            .Where(a => a.UserId == userId && a.Format == format && a.SourceHandId != null)
+            .Select(a => new { HandId = a.SourceHandId!.Value, a.Correct, a.CreatedAt })
+            .ToListAsync(cancellationToken);
+        return rows
+            .GroupBy(r => r.HandId)
+            .ToDictionary(g => g.Key, g => g.OrderByDescending(r => r.CreatedAt).First().Correct);
     }
 
     public async Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken)

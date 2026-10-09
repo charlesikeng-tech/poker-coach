@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Application.Training;
+using PokerCoach.Domain.Training;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Infrastructure.Persistence;
@@ -11,7 +13,7 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore, IAllInReadStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore
 {
     public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
@@ -203,6 +205,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .Select(r => new OpeningHoldingCount(r.Position!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
             .ToList();
     }
+
+    /// <summary>The hero's raise-first-in spots with known cards: a fifth of the hands at most, read whole.</summary>
+    public async Task<IReadOnlyList<RealOpeningRow>> ListOpeningSpotsAsync(Guid userId, TableFormat format, DateTimeOffset since, int factsVersion, CancellationToken cancellationToken) =>
+        await Filtered(userId, new StatisticsFilter(since, null, null, null, Format: format), factsVersion)
+            .Where(x => x.F.RfiOpportunity && x.F.Position != null && x.HeroCards != null)
+            .Select(x => new RealOpeningRow(
+                x.F.HandId,
+                x.StartedAt,
+                x.F.Position!.Value,
+                x.F.PlayersDealt,
+                x.F.StackInBigBlinds,
+                x.HeroCards!,
+                x.F.Rfi,
+                x.F.Limp))
+            .ToListAsync(cancellationToken);
 
     /// <summary>Only rows with an all-in figure: a few per hundred hands, read whole.</summary>
     public async Task<IReadOnlyList<AllInHand>> ListAllInsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>

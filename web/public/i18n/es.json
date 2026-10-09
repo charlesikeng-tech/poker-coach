@@ -1122,7 +1122,7 @@
     },
     "training": {
       "title": "Sala de entrenamiento",
-      "description": "Dos ejercicios: abrir cuando foldean hasta ti, o defender tu ciega grande contra un all-in. Las manos falladas vuelven.",
+      "description": "Tres ejercicios: abrir cuando foldean hasta ti, defender tu ciega grande contra un all-in, y repetir tus spots reales mal jugados. Las manos falladas vuelven.",
       "loading": "Repartiendo…",
       "band": "Stack",
       "bands": {
@@ -1186,13 +1186,31 @@
         "defence": {
           "name": "Defender la BB",
           "text": "Alguien va all-in: ¿pagas o tiras?"
+        },
+        "real": {
+          "name": "Mis manos",
+          "text": "Tus spots reales mal jugados, para repetir."
         }
       },
       "shovers": "Empujadores",
       "questionDefence": "{{shover}} va all-in {{stack}}, todos foldean. Estás en la ciega grande: ¿pagas?",
       "gridLabelDefence": "Rango de call de referencia contra este jugador",
       "referenceDefence": "Calls del equilibrio push/fold a {{stack}} BB (stacks iguales, antes 0,125 BB, sin ICM): demasiado amplios cerca del dinero.",
-      "hintDefence": "Responde con los botones o el teclado (F para tirar, C para pagar). Tras tu respuesta verás el rango de call contra este jugador con tu mano marcada."
+      "hintDefence": "Responde con los botones o el teclado (F para tirar, C para pagar). Tras tu respuesta verás el rango de call contra este jugador con tu mano marcada.",
+      "real": {
+        "tag": "Tu mano del {{date}}",
+        "remaining": "{{count}} por repasar",
+        "then": {
+          "fold": "Ese día, tiraste.",
+          "raise": "Ese día, subiste.",
+          "limp": "Ese día, hiciste limp."
+        },
+        "replay": "Ver la mano",
+        "doneTitle": "Nada que repasar",
+        "doneDescription": "Todos tus spots de apertura de los últimos 90 días siguen las referencias, o ya los repetiste bien. Importa manos nuevas para encontrar más.",
+        "toOpen": "Entrenar aperturas"
+      },
+      "hintReal": "Responde con los botones o el teclado (F para tirar, R para subir). Estos spots vienen de tus manos reales, donde tu decisión se apartaba de las referencias: una respuesta correcta los quita de la lista."
     },
     "progress": {
       "title": "Plan de la semana",

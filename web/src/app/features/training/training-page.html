@@ -29,32 +29,44 @@
         </select>
       </label>
     }
-    <div
-      class="seats"
-      role="group"
-      [attr.aria-label]="t(mode() === 'defence' ? 'shovers' : 'seats')"
-    >
-      @for (seat of seats(); track seat) {
-        <button
-          type="button"
-          class="seat-chip"
-          [class.active]="chosen().includes(seat)"
-          [attr.aria-pressed]="chosen().includes(seat)"
-          (click)="toggleSeat(seat)"
-        >
-          {{ short(seat) }}
-          @if (seatAccuracy(seat)) {
-            <small class="numeric">{{ seatAccuracy(seat) }}</small>
-          }
-        </button>
-      }
-      @if (chosen().length === 0) {
-        <span class="all">{{ t('allSeats') }}</span>
-      }
-    </div>
+    @if (mode() !== 'real') {
+      <div
+        class="seats"
+        role="group"
+        [attr.aria-label]="t(mode() === 'defence' ? 'shovers' : 'seats')"
+      >
+        @for (seat of seats(); track seat) {
+          <button
+            type="button"
+            class="seat-chip"
+            [class.active]="chosen().includes(seat)"
+            [attr.aria-pressed]="chosen().includes(seat)"
+            (click)="toggleSeat(seat)"
+          >
+            {{ short(seat) }}
+            @if (seatAccuracy(seat)) {
+              <small class="numeric">{{ seatAccuracy(seat) }}</small>
+            }
+          </button>
+        }
+        @if (chosen().length === 0) {
+          <span class="all">{{ t('allSeats') }}</span>
+        }
+      </div>
+    }
   </div>
 
-  @if (state() === 'error') {
+  @if (state() === 'done') {
+    <app-empty-state
+      [icon]="icons.Sparkles"
+      [heading]="t('real.doneTitle')"
+      [description]="t('real.doneDescription')"
+    >
+      <button appButton variant="secondary" (click)="setMode('open')">
+        {{ t('real.toOpen') }}
+      </button>
+    </app-empty-state>
+  } @else if (state() === 'error') {
     <app-empty-state
       [icon]="icons.CircleAlert"
       [heading]="t('error.title')"
@@ -67,6 +79,13 @@
       <section class="table-card glass">
         <div class="spot-head">
           <p class="question">
+            @if (s.real; as real) {
+              <span class="real-tag"
+                ><app-icon [icon]="icons.History" />{{
+                  t('real.tag', { date: playedOn(real.playedAt) })
+                }}</span
+              >
+            }
             {{
               s.shover
                 ? t('questionDefence', {
@@ -84,6 +103,11 @@
               <span class="badge badge--review">
                 <app-icon [icon]="icons.RotateCcw" />{{ t('review') }}
               </span>
+            }
+            @if (s.real; as real) {
+              <span class="badge badge--focus">{{
+                t('real.remaining', { count: real.remaining })
+              }}</span>
             }
             @if (s.focus) {
               <span class="badge badge--focus">
@@ -193,6 +217,12 @@
                 )
               }}
             </p>
+            @if (s.real; as real) {
+              <p class="real-then">
+                {{ t('real.then.' + real.actual) }}
+                <a [routerLink]="['/hands', real.handId]">{{ t('real.replay') }}</a>
+              </p>
+            }
             <div
               class="mini-grid"
               role="img"
@@ -219,7 +249,11 @@
           </section>
         } @else {
           <section class="card glass hint">
-            <p>{{ t(mode() === 'defence' ? 'hintDefence' : 'hint') }}</p>
+            <p>
+              {{
+                t(mode() === 'defence' ? 'hintDefence' : mode() === 'real' ? 'hintReal' : 'hint')
+              }}
+            </p>
           </section>
         }
       </aside>

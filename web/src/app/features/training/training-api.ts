@@ -11,8 +11,17 @@ import { PokerPosition } from '../statistics/statistics-api';
 
 export type DrillAnswer = 'fold' | 'raise' | 'call';
 
-/** Open or fold when folded to; call or fold a shove from the big blind. */
-export type DrillMode = 'open' | 'defence';
+/** Open or fold when folded to; call or fold a shove from the big blind; or the player's own missed spots. */
+export type DrillMode = 'open' | 'defence' | 'real';
+
+/** Quiz on real hands: where the spot comes from and what the hero did that day. */
+export interface RealHand {
+  readonly handId: string;
+  readonly playedAt: string;
+  readonly actual: 'fold' | 'raise' | 'limp';
+  /** Missed real spots left to fix, this one included. */
+  readonly remaining: number;
+}
 
 export interface DrillSpot {
   readonly format: TableFormat;
@@ -31,6 +40,8 @@ export interface DrillSpot {
   readonly review: boolean;
   /** The seat is weighted up: an opening leak was detected there. */
   readonly focus: boolean;
+  /** Set in the quiz on real hands. */
+  readonly real?: RealHand | null;
 }
 
 export interface DrillResult {
@@ -80,6 +91,7 @@ export class TrainingApi {
         position: spot.position,
         pushStack: spot.pushStack,
         shover: spot.shover,
+        sourceHandId: spot.real?.handId ?? null,
         hand: spot.hand,
         answer,
       }),
@@ -88,9 +100,11 @@ export class TrainingApi {
 
   /** In defence, `bySeat` is per shover. */
   progress(format: TableFormat, mode: DrillMode = 'open'): Promise<DrillProgress> {
+    // Real-hand answers are opening answers: their progress is the opening one.
+    const progressMode = mode === 'real' ? 'open' : mode;
     return firstValueFrom(
       this.http.get<DrillProgress>('/api/training/opening/progress', {
-        params: new HttpParams().set('format', format).set('mode', mode),
+        params: new HttpParams().set('format', format).set('mode', progressMode),
       }),
     );
   }

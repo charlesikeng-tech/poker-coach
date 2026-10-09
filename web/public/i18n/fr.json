@@ -1122,7 +1122,7 @@
     },
     "training": {
       "title": "Salle d'entraînement",
-      "description": "Deux exercices : ouvrir quand c'est foldé jusqu'à toi, ou défendre ta grosse blinde contre un tapis. Les mains ratées reviennent.",
+      "description": "Trois exercices : ouvrir quand c'est foldé jusqu'à toi, défendre ta grosse blinde contre un tapis, et refaire tes vrais spots mal joués. Les mains ratées reviennent.",
       "loading": "Distribution…",
       "band": "Tapis",
       "bands": {
@@ -1186,13 +1186,31 @@
         "defence": {
           "name": "Défendre la BB",
           "text": "Un joueur fait tapis : tu payes ou tu couches ?"
+        },
+        "real": {
+          "name": "Mes mains",
+          "text": "Tes vrais spots mal joués, à refaire."
         }
       },
       "shovers": "Pousseurs",
       "questionDefence": "{{shover}} fait tapis {{stack}}, tout le monde couche. Tu es de grosse blinde : tu payes ?",
       "gridLabelDefence": "Range de call de référence contre ce pousseur",
       "referenceDefence": "Calls de l'équilibre push/fold à {{stack}} BB (tapis égaux, antes 0,125 BB, sans ICM) : trop larges près de l'argent.",
-      "hintDefence": "Réponds avec les boutons ou au clavier (F pour fold, C pour payer). Après ta réponse, tu verras la range de call contre ce pousseur avec ta main entourée."
+      "hintDefence": "Réponds avec les boutons ou au clavier (F pour fold, C pour payer). Après ta réponse, tu verras la range de call contre ce pousseur avec ta main entourée.",
+      "real": {
+        "tag": "Ta main du {{date}}",
+        "remaining": "{{count}} à revoir",
+        "then": {
+          "fold": "Ce jour-là, tu avais couché.",
+          "raise": "Ce jour-là, tu avais relancé.",
+          "limp": "Ce jour-là, tu avais limpé."
+        },
+        "replay": "Revoir la main",
+        "doneTitle": "Rien à revoir",
+        "doneDescription": "Tous tes spots d'ouverture des 90 derniers jours suivent les repères, ou tu les as refaits correctement. Importe de nouvelles mains pour en trouver d'autres.",
+        "toOpen": "S'entraîner à ouvrir"
+      },
+      "hintReal": "Réponds avec les boutons ou au clavier (F pour fold, R pour relance). Ces spots viennent de tes vraies mains, là où ta décision s'écartait des repères : une bonne réponse les retire de la liste."
     },
     "progress": {
       "title": "Plan de la semaine",

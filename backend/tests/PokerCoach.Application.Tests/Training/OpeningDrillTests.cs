@@ -93,6 +93,12 @@ public sealed class OpeningDrillTests
             return Task.CompletedTask;
         }
 
+        public Task<IReadOnlyDictionary<Guid, bool>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<Guid, bool>>(Attempts
+                .Where(a => a.SourceHandId is not null)
+                .GroupBy(a => a.SourceHandId!.Value)
+                .ToDictionary(g => g.Key, g => g.First().Correct));
+
         public Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken) =>
             Task.FromResult((Attempts.Count(a => a.AnsweredAt >= since), Attempts.Count(a => a.AnsweredAt >= since && a.Correct)));
 

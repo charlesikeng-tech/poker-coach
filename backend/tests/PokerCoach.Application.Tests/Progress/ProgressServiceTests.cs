@@ -133,6 +133,9 @@ public sealed class ProgressServiceTests
     {
         public Task RecordAsync(Guid userId, DrillAttempt attempt, int referenceVersion, CancellationToken cancellationToken) => Task.CompletedTask;
 
+        public Task<IReadOnlyDictionary<Guid, bool>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<Guid, bool>>(new Dictionary<Guid, bool>());
+
         public Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken) => Task.FromResult((0, 0));
 
         public Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken) =>

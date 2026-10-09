@@ -25,10 +25,16 @@ public sealed record DrillSpotResponse(
     IReadOnlyList<string> Cards,
     decimal StackInBigBlinds,
     bool Review,
-    bool Focus);
+    bool Focus,
+    RealHandResponse? Real = null);
+
+/// <summary>Quiz on real hands: where the spot comes from and what the hero did that day.</summary>
+/// <param name="Remaining">Missed real spots left to fix, this one included.</param>
+public sealed record RealHandResponse(Guid HandId, DateTimeOffset PlayedAt, RealAction Actual, int Remaining);
 
 /// <param name="Shover">Set for a defence drill (answer call or fold); null for an opening drill (raise or fold).</param>
-public sealed record DrillAnswerRequest(TableFormat? Format, StackBand? Band, PokerPosition? Position, int? PushStack, string? Hand, DrillAnswer? Answer, PokerPosition? Shover = null);
+/// <param name="SourceHandId">Quiz on real hands: the hand of the spot (from the spot's <c>real.handId</c>).</param>
+public sealed record DrillAnswerRequest(TableFormat? Format, StackBand? Band, PokerPosition? Position, int? PushStack, string? Hand, DrillAnswer? Answer, PokerPosition? Shover = null, Guid? SourceHandId = null);
 
 /// <param name="ReferenceNotation">Null for computed push/fold ranges.</param>
 /// <param name="ReferenceHands">The seat's reference range ("AA", "AKs"…), shown with the answer.</param>
@@ -51,6 +57,8 @@ public sealed record DrillProgressResponse(int Attempts, int Correct, int Streak
 /// </summary>
 public static class TrainingEndpoints
 {
+    public const string NoRealSpotLeft = "NO_REAL_SPOT_LEFT";
+
     public static IEndpointRouteBuilder MapTrainingEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/training/opening").WithTags("Training");
@@ -63,7 +71,8 @@ public static class TrainingEndpoints
     /// <param name="format">sixMax (default) or fullRing.</param>
     /// <param name="band">push (below 15 BB), short, mid (default) or deep. Ignored in defence (always push).</param>
     /// <param name="positions">Seats to train, comma-separated ("button,cutoff"); omitted: all. In defence: the shovers.</param>
-    /// <param name="mode">open (default) or defence.</param>
+    /// <param name="mode">open (default), defence, or real (spots from the player's own hands he got wrong;
+    /// 404 NO_REAL_SPOT_LEFT when none is left).</param>
     private static async Task<Results<Ok<DrillSpotResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetSpotAsync(
         HttpContext context,
         OpeningTrainingService training,
@@ -83,9 +92,32 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
+        if (string.Equals(mode, "real", StringComparison.OrdinalIgnoreCase))
+        {
+            var real = await training.NextRealAsync(userId, parsedFormat, cancellationToken);
+            if (real is null)
+            {
+                return ApiProblems.WithCode(StatusCodes.Status404NotFound, NoRealSpotLeft, "No missed real spot left to train.");
+            }
+
+            var realSpot = real.Drill.Spot;
+            return TypedResults.Ok(new DrillSpotResponse(
+                realSpot.Item.Format,
+                realSpot.Item.Band,
+                realSpot.Item.Position,
+                realSpot.Item.PushStack,
+                realSpot.Item.Shover,
+                realSpot.Item.Hand.ToString(),
+                [realSpot.First.ToString(), realSpot.Second.ToString()],
+                realSpot.StackBigBlinds,
+                real.Drill.Review,
+                real.Drill.Focus,
+                new RealHandResponse(real.HandId, real.PlayedAt, real.Actual, real.Remaining)));
+        }
+
         if (!TryParseMode(mode, out var drillMode))
         {
-            return ApiProblems.Validation("mode", "Must be open or defence.");
+            return ApiProblems.Validation("mode", "Must be open, defence or real.");
         }
 
         if (!TryParseBand(band, out var stackBand))
@@ -188,7 +220,7 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("hand", "Must be one starting hand, like AKs.");
         }
 
-        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack, request.Shover), answer, cancellationToken);
+        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack, request.Shover), answer, cancellationToken, request.SourceHandId);
         return TypedResults.Ok(new DrillResultResponse(
             result.Expected,
             result.Correct,
