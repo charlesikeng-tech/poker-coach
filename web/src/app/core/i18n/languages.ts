@@ -6,9 +6,9 @@ export const FALLBACK_LANGUAGE: Language = 'en';
 
 /** Endonyms: a language is always offered in its own name, whatever the current UI language. */
 export const LANGUAGE_NAMES: Readonly<Record<Language, string>> = {
-  fr: 'Français',
-  en: 'English',
-  es: 'Español',
+  fr: '🇫🇷',
+  en: '🇬🇧',
+  es: '🇪🇸',
 };
 
 export function isSupportedLanguage(value: unknown): value is Language {
