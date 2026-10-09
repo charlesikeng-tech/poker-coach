@@ -9,7 +9,7 @@
     "tournaments": "Tournois",
     "statistics": "Statistiques",
     "import": "Import",
-    "leaks": "Fuites",
+    "leaks": "Leaks",
     "ranges": "Ranges",
     "training": "Entraînement",
     "bankroll": "Bankroll"
@@ -36,14 +36,14 @@
         "action": "Importer des fichiers"
       },
       "importAction": "Importer des fichiers",
-      "loading": "Chargement de votre tableau de bord…",
+      "loading": "Chargement de ton tableau de bord…",
       "error": {
-        "title": "Impossible de charger votre tableau de bord",
-        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "title": "Impossible de charger ton tableau de bord",
+        "description": "Poker Coach n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
         "retry": "Réessayer"
       },
       "alerts": {
-        "unconfirmed": "Un compte Winamax trouvé dans vos fichiers attend votre confirmation.",
+        "unconfirmed": "Un compte Winamax trouvé dans tes fichiers attend ta confirmation.",
         "missingSummaries": "{{count}} tournoi(s) n'ont pas de fichier de résumé : leur résultat est inconnu."
       },
       "window": "{{days}} derniers jours",
@@ -59,8 +59,8 @@
         "title": "Profit cumulé",
         "more": "Voir les performances",
         "total": "Total :",
-        "aria": "Profit cumulé sur les {{count}} derniers tournois. Utilisez les flèches pour les parcourir.",
-        "notEnough": "Jouez au moins deux tournois avec résumé sur les {{days}} derniers jours pour voir la courbe."
+        "aria": "Profit cumulé sur les {{count}} derniers tournois. Utilise les flèches pour les parcourir.",
+        "notEnough": "Joue au moins deux tournois avec résumé sur les {{days}} derniers jours pour voir la courbe."
       },
       "recent": {
         "title": "Derniers tournois",
@@ -77,10 +77,10 @@
         "description": "Profit, ROI, ABI et ITM s'affichent dès que tes résumés de tournois sont importés.",
         "action": "Importer des fichiers"
       },
-      "loading": "Chargement de vos performances…",
+      "loading": "Chargement de tes performances…",
       "error": {
-        "title": "Impossible de charger vos performances",
-        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "title": "Impossible de charger tes performances",
+        "description": "Poker Coach n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
         "retry": "Réessayer"
       },
       "filters": {
@@ -100,12 +100,12 @@
         "entries": "Entrées",
         "buyIns": "Buy-ins"
       },
-      "excluded": "{{count}} tournoi(s) sans fichier de résumé ne sont pas comptés : importez leur résumé pour les inclure.",
+      "excluded": "{{count}} tournoi(s) sans fichier de résumé ne sont pas comptés : importe leur résumé pour les inclure.",
       "chart": {
         "title": "Profit cumulé",
         "tournament": "Tournoi :",
         "cumulative": "Total :",
-        "aria": "Profit cumulé sur {{count}} tournois, jusqu'à {{profit}}. Utilisez les flèches pour parcourir les tournois.",
+        "aria": "Profit cumulé sur {{count}} tournois, jusqu'à {{profit}}. Utilise les flèches pour parcourir les tournois.",
         "axis": "Axe horizontal : les tournois dans l'ordre joué. Dans l'argent = un gain au classement (les bounties seuls ne comptent pas).",
         "notEnough": "La courbe apparaît à partir de deux tournois au résultat connu."
       },
@@ -153,10 +153,10 @@
       },
       "unconfirmed": "Certains comptes Winamax importés ne sont pas encore confirmés : leurs tournois ne sont pas listés.",
       "unconfirmedAction": "Confirmer sur la page d'import",
-      "loading": "Chargement de vos tournois…",
+      "loading": "Chargement de tes tournois…",
       "error": {
-        "title": "Impossible de charger vos tournois",
-        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "title": "Impossible de charger tes tournois",
+        "description": "Poker Coach n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
         "retry": "Réessayer"
       },
       "filters": {
@@ -184,7 +184,7 @@
         "winnings": "Gains",
         "tournaments": "Tournois",
         "entries": "{{count}} entrées",
-        "excluded": "{{count}} tournoi(s) sans fichier de résumé sont listés mais pas comptés dans ces totaux : importez leur résumé pour les inclure."
+        "excluded": "{{count}} tournoi(s) sans fichier de résumé sont listés mais pas comptés dans ces totaux : importe leur résumé pour les inclure."
       },
       "noMatch": "Aucun tournoi ne correspond à ces filtres.",
       "columns": {
@@ -200,7 +200,7 @@
       },
       "status": {
         "missingSummary": "Sans résumé",
-        "missingSummaryHint": "Seules les mains ont été importées : importez le résumé du tournoi pour obtenir le résultat.",
+        "missingSummaryHint": "Seules les mains ont été importées : importe le résumé du tournoi pour obtenir le résultat.",
         "incomplete": "Incomplet",
         "incompleteHint": "Le résumé ne donne pas tout ce qu'il faut pour calculer le résultat."
       },
@@ -212,7 +212,7 @@
       },
       "coverage": {
         "complete": "Complet",
-        "completeHint": "Toutes les mains, de votre début à votre élimination, sont importées.",
+        "completeHint": "Toutes les mains, de ton début à ton élimination, sont importées.",
         "partial": "Partiel",
         "noHands": "Aucune main",
         "pending": "…",
@@ -221,7 +221,7 @@
         "startMissing": "Le début du tournoi manque",
         "missingHands": "{{count}} main(s) manquante(s) à une table",
         "stackBreaks": "{{count}} variation(s) de tapis inexpliquée(s) : des mains manquent",
-        "endMissing": "Vos dernières mains manquent"
+        "endMissing": "Tes dernières mains manquent"
       },
       "list": {
         "label": "Liste des tournois",
@@ -281,8 +281,8 @@
         },
         "session": {
           "title": "Stats de la session",
-          "sample": "Un seul tournoi, c'est peu de mains : ces chiffres décrivent ta session, ils ne prouvent pas une fuite.",
-          "leaks": "Voir tes fuites sur tout ton historique"
+          "sample": "Un seul tournoi, c'est peu de mains : ces chiffres décrivent ta session, ils ne prouvent pas un leak.",
+          "leaks": "Voir tes leaks sur tout ton historique"
         },
         "stats": {
           "vpip": "VPIP",
@@ -421,10 +421,10 @@
         "description": "VPIP, PFR, 3-bet et tes autres statistiques sont calculés à partir de tes historiques de mains importés.",
         "action": "Importer des fichiers"
       },
-      "loading": "Chargement de vos statistiques…",
+      "loading": "Chargement de tes statistiques…",
       "error": {
-        "title": "Impossible de charger vos statistiques",
-        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "title": "Impossible de charger tes statistiques",
+        "description": "Poker Coach n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
         "retry": "Réessayer"
       },
       "pending": "Analyse de {{count}} main(s) en cours : les chiffres se mettent à jour seuls.",
@@ -457,7 +457,7 @@
         "position": "Position",
         "hands": "Mains"
       },
-      "definitions": "Chaque taux ne compte que les mains où la situation s'est présentée (survolez un chiffre pour le détail). Les définitions suivent les conventions habituelles des trackers.",
+      "definitions": "Chaque taux ne compte que les mains où la situation s'est présentée (survole un chiffre pour le détail). Les définitions suivent les conventions habituelles des trackers.",
       "stats": {
         "vpip": "VPIP",
         "vpipHint": "A mis de l'argent volontairement préflop",
@@ -555,18 +555,18 @@
       "sections": {
         "preflop": "Avant le flop",
         "postflop": "Après le flop",
-        "postflopHint": "Toutes positions confondues. Repères dans Fuites."
+        "postflopHint": "Toutes positions confondues. Repères dans Leaks."
       }
     },
     "import": {
       "title": "Import",
-      "description": "Ajoutez vos historiques de mains et résumés de tournois Winamax.",
+      "description": "Ajoute tes historiques de mains et résumés de tournois Winamax.",
       "drop": {
-        "title": "Déposez vos fichiers Winamax ici",
-        "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Vous pouvez déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
+        "title": "Dépose tes fichiers Winamax ici",
+        "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Tu peux déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
         "chooseFiles": "Choisir des fichiers",
         "chooseFolder": "Choisir un dossier",
-        "where": "Sur Mac, Winamax les enregistre dans ~/Library/Application Support/winamax/documents/accounts/<votre pseudo>/history. Dans la fenêtre de sélection, faites ⌘⇧G et collez ce chemin (le dossier Bibliothèque est masqué par défaut).",
+        "where": "Sur Mac, Winamax les enregistre dans ~/Library/Application Support/winamax/documents/accounts/<ton pseudo>/history. Dans la fenêtre de sélection, fais ⌘⇧G et colle ce chemin (le dossier Bibliothèque est masqué par défaut).",
         "nothing": "Aucun fichier .txt ou .zip dans cette sélection."
       },
       "progress": {
@@ -602,27 +602,27 @@
         "FILE_TOO_LARGE": "Fichier trop volumineux.",
         "EMPTY_FILE": "Fichier vide.",
         "INVALID_ARCHIVE": "Archive .zip endommagée ou illisible.",
-        "UPLOAD_TOO_LARGE": "Trop de données d'un coup. Importez moins de fichiers à la fois.",
-        "TOO_MANY_FILES": "Trop de fichiers d'un coup. Importez moins de fichiers à la fois.",
+        "UPLOAD_TOO_LARGE": "Trop de données d'un coup. Importe moins de fichiers à la fois.",
+        "TOO_MANY_FILES": "Trop de fichiers d'un coup. Importe moins de fichiers à la fois.",
         "INVALID_ENCODING": "Encodage inattendu : ce n'est pas un fichier Winamax d'origine.",
         "UNRECOGNIZED_FORMAT": "Ce n'est ni un historique de mains ni un résumé de tournoi Winamax.",
         "INVALID_SUMMARY": "Résumé de tournoi incomplet ou illisible.",
         "NO_VALID_HAND": "Aucune main complète n'a pu être lue dans ce fichier.",
-        "PROCESSING_FAILED": "Ce fichier n'a pas pu être traité. Il sera retenté si vous l'importez à nouveau.",
-        "network": "Poker Coach est injoignable. Vérifiez votre connexion et réessayez.",
-        "unknown": "Une erreur est survenue. Réessayez."
+        "PROCESSING_FAILED": "Ce fichier n'a pas pu être traité. Il sera retenté si tu l'importes à nouveau.",
+        "network": "Poker Coach est injoignable. Vérifie ta connexion et réessaie.",
+        "unknown": "Une erreur est survenue. Réessaie."
       },
       "accounts": {
-        "title": "Est-ce votre compte Winamax ?",
-        "description": "Nous avons trouvé le pseudo {{name}} dans vos fichiers. Confirmez qu'il s'agit bien de vous pour que ses résultats comptent dans vos statistiques.",
+        "title": "Est-ce ton compte Winamax ?",
+        "description": "Nous avons trouvé le pseudo {{name}} dans tes fichiers. Confirme qu'il s'agit bien de toi pour que ses résultats comptent dans tes statistiques.",
         "confirm": "Oui, c'est moi",
         "reject": "Non, ce n'est pas moi",
         "rejectTitle": "Supprimer {{name}} ?",
-        "rejectDescription": "Tous les tournois et toutes les mains importés sous ce pseudo seront supprimés. Vous pourrez ensuite importer vos propres fichiers.",
+        "rejectDescription": "Tous les tournois et toutes les mains importés sous ce pseudo seront supprimés. Tu pourras ensuite importer tes propres fichiers.",
         "rejectConfirm": "Supprimer",
         "cancel": "Annuler",
         "linked": "Compte Winamax :",
-        "error": "Impossible de charger ou de modifier vos comptes Winamax. Réessayez."
+        "error": "Impossible de charger ou de modifier tes comptes Winamax. Réessaie."
       }
     },
     "notFound": {
@@ -646,7 +646,7 @@
       "launching": "Direction Google…",
       "features": {
         "import": "Importe tes historiques Winamax en un glisser-déposer.",
-        "leaks": "Repère tes fuites, mesurées avec un intervalle de confiance.",
+        "leaks": "Repère tes leaks, mesurés avec un intervalle de confiance.",
         "replay": "Rejoue tes mains clés, expliquées par ton coach IA."
       },
       "promises": {
@@ -655,17 +655,17 @@
       }
     },
     "leaks": {
-      "title": "Fuites",
-      "description": "Les écarts de votre jeu par rapport à des joueurs solides, avec ce qu'il faut travailler.",
-      "loading": "Analyse de vos fuites…",
+      "title": "Leaks",
+      "description": "Les écarts de ton jeu par rapport à des joueurs solides, avec ce qu'il faut travailler.",
+      "loading": "Analyse de tes leaks…",
       "error": {
         "title": "Impossible de charger l'analyse",
-        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "description": "Poker Coach n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
         "retry": "Réessayer"
       },
       "empty": {
         "title": "Pas encore de mains à analyser",
-        "description": "Importez vos historiques de mains : vos fuites sont repérées en comparant vos statistiques à des repères de joueurs solides.",
+        "description": "Importe tes historiques de mains : tes leaks sont repérés en comparant tes statistiques à des repères de joueurs solides.",
         "action": "Importer des fichiers"
       },
       "pending": "Analyse de {{count}} main(s) en cours : le résultat peut encore changer.",
@@ -679,21 +679,21 @@
       },
       "basis": "Sur {{hands}} mains jouées avec 15 BB ou plus, de {{tournaments}} tournoi(s) dont {{complete}} avec un historique complet.",
       "clear": {
-        "title": "Aucune fuite repérée",
-        "description": "Toutes vos statistiques suffisamment fournies sont dans les repères. Continuez à importer : de nouvelles situations seront jugées."
+        "title": "Aucun leak repéré",
+        "description": "Toutes tes statistiques suffisamment fournies sont dans les repères. Continue à importer : de nouvelles situations seront jugées."
       },
       "groups": {
-        "confirmed": "Fuites confirmées",
-        "confirmedHint": "Même en tenant compte de la variance, votre taux sort des repères.",
+        "confirmed": "Leaks confirmés",
+        "confirmedHint": "Même en tenant compte de la variance, ton taux sort des repères.",
         "possible": "À surveiller",
-        "possibleHint": "Votre taux sort des repères, mais l'échantillon permet encore un taux normal."
+        "possibleHint": "Ton taux sort des repères, mais l'échantillon permet encore un taux normal."
       },
       "confidence": {
         "confirmed": "Confirmée",
         "possible": "À surveiller"
       },
       "figures": "{{rate}} sur {{opportunities}} situations · repère {{min}}–{{max}}",
-      "gauge": "Votre taux {{rate}}, repère de {{min}} à {{max}}",
+      "gauge": "Ton taux {{rate}}, repère de {{min}} à {{max}}",
       "workOn": "À travailler :",
       "coach": {
         "action": "Explication du coach",
@@ -703,7 +703,7 @@
         "hand": "{{date}} · niveau {{level}} · {{position}} · {{cards}} · {{stack}} BB",
         "disclaimer": "Texte rédigé par une IA à partir de tes chiffres et de mains anonymisées. Les mesures viennent de Poker Coach, pas de l'IA.",
         "errors": {
-          "LEAK_NOT_FOUND": "Cette fuite n'apparaît plus dans tes dernières données. Recharge la page.",
+          "LEAK_NOT_FOUND": "Ce leak n'apparaît plus dans tes dernières données. Recharge la page.",
           "COACHING_DAILY_LIMIT": "Limite quotidienne d'explications atteinte. Réessaie demain.",
           "COACHING_BUDGET_EXHAUSTED": "Le coach est en pause jusqu'au mois prochain.",
           "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré sur ce serveur.",
@@ -715,7 +715,7 @@
       "under": {
         "title": "{{count}} statistique(s) pas encore jugeable(s) : trop peu de situations"
       },
-      "method": "Repères version {{version}} : MTT en ligne de 5 à 20 €, joueurs réguliers solides, mains à 15 BB ou plus. Une fuite n'est confirmée que si tout l'intervalle de confiance à 95 % sort du repère.",
+      "method": "Repères version {{version}} : MTT en ligne de 5 à 20 €, joueurs réguliers solides, mains à 15 BB ou plus. Un leak n'est confirmé que si tout l'intervalle de confiance à 95 % sort du repère.",
       "positions": {
         "utg": "UTG",
         "utg1": "UTG+1",
@@ -749,57 +749,57 @@
       "items": {
         "vpip": {
           "tooHigh": {
-            "title": "Vous jouez trop de mains",
-            "why": "Vous entrez dans {{rate}} des coups (repère {{min}}–{{max}}). Trop de mains faibles se retrouvent hors de position ou dominées après le flop.",
-            "work": "Resserrez vos ranges d'ouverture et de call, surtout en début de parole et face aux relances."
+            "title": "Tu joues trop de mains",
+            "why": "Tu entres dans {{rate}} des coups (repère {{min}}–{{max}}). Trop de mains faibles se retrouvent hors de position ou dominées après le flop.",
+            "work": "Resserre tes ranges d'ouverture et de call, surtout en début de parole et face aux relances."
           },
           "tooLow": {
-            "title": "Vous jouez trop peu de mains",
-            "why": "Vous entrez dans {{rate}} des coups (repère {{min}}–{{max}}). Vous laissez passer des blindes et des antes faciles à gagner.",
-            "work": "Élargissez vos ouvertures en fin de parole et défendez davantage votre grosse blinde."
+            "title": "Tu joues trop peu de mains",
+            "why": "Tu entres dans {{rate}} des coups (repère {{min}}–{{max}}). Tu laisses passer des blindes et des antes faciles à gagner.",
+            "work": "Élargis tes ouvertures en fin de parole et défends davantage ta grosse blinde."
           }
         },
         "pfr": {
           "tooHigh": {
-            "title": "Vous relancez trop souvent",
-            "why": "Vous relancez {{rate}} des coups (repère {{min}}–{{max}}). Vos relances deviennent faciles à sur-relancer.",
-            "work": "Gardez vos relances pour des mains et des positions qui les justifient."
+            "title": "Tu relances trop souvent",
+            "why": "Tu relances {{rate}} des coups (repère {{min}}–{{max}}). Tes relances deviennent faciles à sur-relancer.",
+            "work": "Garde tes relances pour des mains et des positions qui les justifient."
           },
           "tooLow": {
-            "title": "Vous ne relancez pas assez",
-            "why": "Vous relancez {{rate}} des coups (repère {{min}}–{{max}}). Sans initiative, vous gagnez moins de pots sans abattage.",
-            "work": "Entrez dans le pot en relançant plutôt qu'en payant, surtout quand personne n'a encore misé."
+            "title": "Tu ne relances pas assez",
+            "why": "Tu relances {{rate}} des coups (repère {{min}}–{{max}}). Sans initiative, tu gagnes moins de pots sans abattage.",
+            "work": "Entre dans le pot en relançant plutôt qu'en payant, surtout quand personne n'a encore misé."
           }
         },
         "vpipPfrGap": {
           "tooHigh": {
-            "title": "Vous payez beaucoup plus que vous ne relancez",
+            "title": "Tu payes beaucoup plus que tu ne relances",
             "why": "{{rate}} des coups sont joués en payant seulement (repère jusqu'à {{max}}). Payer sans relancer donne l'initiative aux adversaires.",
-            "work": "Remplacez une partie de vos calls préflop par des relances ou des folds."
+            "work": "Remplace une partie de tes calls préflop par des relances ou des folds."
           },
           "tooLow": {
             "title": "Écart VPIP/PFR inhabituel",
             "why": "L'écart entre mains jouées et mains relancées est de {{rate}} (repère {{min}}–{{max}}).",
-            "work": "Vérifiez que vous défendez assez vos blindes en payant."
+            "work": "Vérifie que tu défends assez tes blindes en payant."
           }
         },
         "rfi": {
           "tooHigh": {
-            "title": "Vous ouvrez trop large en {{position}}",
-            "why": "Vous ouvrez {{rate}} des fois où c'est foldé jusqu'à vous en {{position}} (repère {{min}}–{{max}}).",
-            "work": "Retirez les mains les plus faibles de votre range d'ouverture à cette position."
+            "title": "Tu ouvres trop large en {{position}}",
+            "why": "Tu ouvres {{rate}} des fois où c'est foldé jusqu'à toi en {{position}} (repère {{min}}–{{max}}).",
+            "work": "Retire les mains les plus faibles de ta range d'ouverture à cette position."
           },
           "tooLow": {
-            "title": "Vous ouvrez trop peu en {{position}}",
-            "why": "Vous ouvrez {{rate}} des fois où c'est foldé jusqu'à vous en {{position}} (repère {{min}}–{{max}}). Ce sont des pots rentables que vous laissez.",
-            "work": "Ajoutez des mains jouables (petites paires, assorties, as assortis) à votre range à cette position."
+            "title": "Tu ouvres trop peu en {{position}}",
+            "why": "Tu ouvres {{rate}} des fois où c'est foldé jusqu'à toi en {{position}} (repère {{min}}–{{max}}). Ce sont des pots rentables que tu laisses.",
+            "work": "Ajoute des mains jouables (petites paires, assorties, as assortis) à ta range à cette position."
           }
         },
         "limp": {
           "tooHigh": {
-            "title": "Vous limpez trop",
-            "why": "Vous entrez en payant {{rate}} des fois où c'est foldé jusqu'à vous (repère jusqu'à {{max}}). En MTT, le limp donne des pots multi-joueurs hors de position.",
-            "work": "Quand personne n'est entré, relancez ou passez."
+            "title": "Tu limpes trop",
+            "why": "Tu entres en payant {{rate}} des fois où c'est foldé jusqu'à toi (repère jusqu'à {{max}}). En MTT, le limp donne des pots multi-joueurs hors de position.",
+            "work": "Quand personne n'est entré, relance ou passe."
           },
           "tooLow": {
             "title": "Limp",
@@ -809,134 +809,134 @@
         },
         "steal": {
           "tooHigh": {
-            "title": "Vous volez trop",
-            "why": "Vous ouvrez {{rate}} des fois en cutoff, bouton ou petite blinde quand c'est foldé (repère {{min}}–{{max}}). Les blindes vont finir par vous sur-relancer.",
-            "work": "Gardez une range de vol défendable face à une sur-relance."
+            "title": "Tu voles trop",
+            "why": "Tu ouvres {{rate}} des fois en cutoff, bouton ou petite blinde quand c'est foldé (repère {{min}}–{{max}}). Les blindes vont finir par te sur-relancer.",
+            "work": "Garde une range de vol défendable face à une sur-relance."
           },
           "tooLow": {
-            "title": "Vous ne volez pas assez les blindes",
-            "why": "Vous ouvrez {{rate}} des fois en cutoff, bouton ou petite blinde quand c'est foldé (repère {{min}}–{{max}}). Les antes rendent ces vols très rentables en tournoi.",
-            "work": "Ouvrez plus souvent en fin de parole quand c'est foldé jusqu'à vous."
+            "title": "Tu ne voles pas assez les blindes",
+            "why": "Tu ouvres {{rate}} des fois en cutoff, bouton ou petite blinde quand c'est foldé (repère {{min}}–{{max}}). Les antes rendent ces vols très rentables en tournoi.",
+            "work": "Ouvre plus souvent en fin de parole quand c'est foldé jusqu'à toi."
           }
         },
         "threeBet": {
           "tooHigh": {
-            "title": "Vous sur-relancez trop",
-            "why": "Vous 3-bettez {{rate}} des fois face à une relance (repère {{min}}–{{max}}).",
-            "work": "Gardez vos 3-bets pour vos meilleures mains et quelques bluffs bien choisis."
+            "title": "Tu sur-relances trop",
+            "why": "Tu 3-bettes {{rate}} des fois face à une relance (repère {{min}}–{{max}}).",
+            "work": "Garde tes 3-bets pour tes meilleures mains et quelques bluffs bien choisis."
           },
           "tooLow": {
-            "title": "Vous ne sur-relancez pas assez",
-            "why": "Vous 3-bettez {{rate}} des fois face à une relance (repère {{min}}–{{max}}). Vos adversaires ouvrent sans crainte.",
-            "work": "Sur-relancez vos mains fortes au lieu de payer, et ajoutez quelques bluffs en position."
+            "title": "Tu ne sur-relances pas assez",
+            "why": "Tu 3-bettes {{rate}} des fois face à une relance (repère {{min}}–{{max}}). Tes adversaires ouvrent sans crainte.",
+            "work": "Sur-relance tes mains fortes au lieu de payer, et ajoute quelques bluffs en position."
           }
         },
         "foldToThreeBet": {
           "tooHigh": {
-            "title": "Vous abandonnez trop face aux 3-bets",
-            "why": "Vous couchez {{rate}} de vos ouvertures face à une sur-relance (repère {{min}}–{{max}}). On peut vous sur-relancer avec n'importe quoi.",
-            "work": "Défendez davantage : payez en position ou 4-bettez vos meilleures mains."
+            "title": "Tu abandonnes trop face aux 3-bets",
+            "why": "Tu couches {{rate}} de tes ouvertures face à une sur-relance (repère {{min}}–{{max}}). On peut te sur-relancer avec n'importe quoi.",
+            "work": "Défends davantage : paye en position ou 4-bette tes meilleures mains."
           },
           "tooLow": {
-            "title": "Vous ne lâchez pas assez face aux 3-bets",
-            "why": "Vous ne couchez que {{rate}} de vos ouvertures face à une sur-relance (repère {{min}}–{{max}}).",
-            "work": "Ouvrez des mains capables de continuer, et lâchez les autres face au 3-bet."
+            "title": "Tu ne lâches pas assez face aux 3-bets",
+            "why": "Tu ne couches que {{rate}} de tes ouvertures face à une sur-relance (repère {{min}}–{{max}}).",
+            "work": "Ouvre des mains capables de continuer, et lâche les autres face au 3-bet."
           }
         },
         "cbetFlop": {
           "tooHigh": {
-            "title": "Vous continuez trop au flop",
-            "why": "Vous misez {{rate}} des flops en relanceur préflop (repère {{min}}–{{max}}).",
-            "work": "Checkez davantage sur les flops qui touchent la range de l'adversaire."
+            "title": "Tu continues trop au flop",
+            "why": "Tu mises {{rate}} des flops en relanceur préflop (repère {{min}}–{{max}}).",
+            "work": "Checke davantage sur les flops qui touchent la range de l'adversaire."
           },
           "tooLow": {
-            "title": "Vous ne continuez pas assez au flop",
-            "why": "Vous misez {{rate}} des flops en relanceur préflop (repère {{min}}–{{max}}). Vous rendez l'initiative trop vite.",
-            "work": "Misez petit plus souvent sur les flops favorables à votre range."
+            "title": "Tu ne continues pas assez au flop",
+            "why": "Tu mises {{rate}} des flops en relanceur préflop (repère {{min}}–{{max}}). Tu rends l'initiative trop vite.",
+            "work": "Mise petit plus souvent sur les flops favorables à ta range."
           }
         },
         "wentToShowdown": {
           "tooHigh": {
-            "title": "Vous allez trop souvent à l'abattage",
-            "why": "Vous allez à l'abattage dans {{rate}} des flops vus (repère {{min}}–{{max}}). Vous payez trop de mains moyennes jusqu'au bout.",
-            "work": "Lâchez plus de mains moyennes face à une forte pression sur la turn et la river."
+            "title": "Tu vas trop souvent à l'abattage",
+            "why": "Tu vas à l'abattage dans {{rate}} des flops vus (repère {{min}}–{{max}}). Tu payes trop de mains moyennes jusqu'au bout.",
+            "work": "Lâche plus de mains moyennes face à une forte pression sur la turn et la river."
           },
           "tooLow": {
-            "title": "Vous abandonnez trop souvent après le flop",
-            "why": "Vous allez à l'abattage dans {{rate}} des flops vus (repère {{min}}–{{max}}). On peut vous faire coucher trop facilement.",
-            "work": "Défendez davantage vos mains moyennes face aux mises simples."
+            "title": "Tu abandonnes trop souvent après le flop",
+            "why": "Tu vas à l'abattage dans {{rate}} des flops vus (repère {{min}}–{{max}}). On peut te faire coucher trop facilement.",
+            "work": "Défends davantage tes mains moyennes face aux mises simples."
           }
         },
         "wonAtShowdown": {
           "tooHigh": {
-            "title": "Vous gagnez beaucoup à l'abattage",
-            "why": "Vous gagnez {{rate}} des abattages (repère {{min}}–{{max}}) : souvent le signe que vous n'y allez qu'avec des mains très fortes.",
-            "work": "Vérifiez que vous ne lâchez pas trop de mains moyennes avant."
+            "title": "Tu gagnes beaucoup à l'abattage",
+            "why": "Tu gagnes {{rate}} des abattages (repère {{min}}–{{max}}) : souvent le signe que tu n'y vas qu'avec des mains très fortes.",
+            "work": "Vérifie que tu ne lâches pas trop de mains moyennes avant."
           },
           "tooLow": {
-            "title": "Vous perdez trop à l'abattage",
-            "why": "Vous gagnez {{rate}} des abattages (repère {{min}}–{{max}}). Vous allez trop loin avec des mains battues.",
-            "work": "Revoyez vos calls de river : une main moyenne face à une grosse mise est souvent battue."
+            "title": "Tu perds trop à l'abattage",
+            "why": "Tu gagnes {{rate}} des abattages (repère {{min}}–{{max}}). Tu vas trop loin avec des mains battues.",
+            "work": "Revois tes calls de river : une main moyenne face à une grosse mise est souvent battue."
           }
         },
         "foldToCbetFlop": {
           "tooHigh": {
-            "title": "Vous lâchez trop face aux c-bets",
-            "why": "Vous couchez {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Il mise donc tout son range avec profit.",
-            "work": "Payez plus souvent avec vos tirages et paires faibles sur les flops secs, surtout face aux petites mises."
+            "title": "Tu lâches trop face aux c-bets",
+            "why": "Tu couches {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Il mise donc tout son range avec profit.",
+            "work": "Paye plus souvent avec tes tirages et paires faibles sur les flops secs, surtout face aux petites mises."
           },
           "tooLow": {
-            "title": "Vous ne lâchez pas assez face aux c-bets",
-            "why": "Vous ne couchez que {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Vous payez trop de mains sans avenir.",
-            "work": "Couchez les hauteurs sans tirage quand le flop favorise le relanceur."
+            "title": "Tu ne lâches pas assez face aux c-bets",
+            "why": "Tu ne couches que {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Tu payes trop de mains sans avenir.",
+            "work": "Couche les hauteurs sans tirage quand le flop favorise le relanceur."
           }
         },
         "cbetTurn": {
           "tooHigh": {
-            "title": "Vous tirez trop souvent la deuxième balle",
-            "why": "Vous remisez {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). Vos bluffs coûtent cher face aux joueurs qui paient.",
-            "work": "Gardez la deuxième balle pour vos mains faites, vos tirages et les cartes qui vous favorisent."
+            "title": "Tu tires trop souvent la deuxième balle",
+            "why": "Tu remises {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). Tes bluffs coûtent cher face aux joueurs qui paient.",
+            "work": "Garde la deuxième balle pour tes mains faites, tes tirages et les cartes qui te favorisent."
           },
           "tooLow": {
-            "title": "Vous abandonnez trop vite à la turn",
-            "why": "Vous ne remisez que {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). On peut payer le flop puis vous voler le pot.",
-            "work": "Continuez sur les cartes qui renforcent votre range (as, rois, couleurs qui arrivent) et avec vos tirages."
+            "title": "Tu abandonnes trop vite à la turn",
+            "why": "Tu ne remises que {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). On peut payer le flop puis te voler le pot.",
+            "work": "Continue sur les cartes qui renforcent ta range (as, rois, couleurs qui arrivent) et avec tes tirages."
           }
         },
         "checkRaiseFlop": {
           "tooHigh": {
-            "title": "Vous check-raisez trop",
-            "why": "Vous relancez {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). Vous mettez trop de jetons avec des mains moyennes.",
-            "work": "Réservez le check-raise aux mains fortes et aux bons tirages."
+            "title": "Tu check-raises trop",
+            "why": "Tu relances {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). Tu mets trop de jetons avec des mains moyennes.",
+            "work": "Réserve le check-raise aux mains fortes et aux bons tirages."
           },
           "tooLow": {
-            "title": "Vous ne check-raisez presque jamais",
-            "why": "Vous ne relancez que {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). On peut miser contre vous sans risque.",
-            "work": "Ajoutez des check-raises avec vos brelans, deux paires et tirages forts, surtout de grosse blinde."
+            "title": "Tu ne check-raises presque jamais",
+            "why": "Tu ne relances que {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). On peut miser contre toi sans risque.",
+            "work": "Ajoute des check-raises avec tes brelans, deux paires et tirages forts, surtout de grosse blinde."
           }
         },
         "wonWhenSawFlop": {
           "tooHigh": {
-            "title": "Vous gagnez beaucoup de pots après le flop",
-            "why": "Vous gagnez {{rate}} des pots où vous voyez le flop (repère {{min}}–{{max}}). Si c'est en payant peu de flops, vous jouez peut-être trop serré avant.",
-            "work": "Rien d'urgent : vérifiez que vous ne couchez pas trop de mains jouables préflop."
+            "title": "Tu gagnes beaucoup de pots après le flop",
+            "why": "Tu gagnes {{rate}} des pots où tu vois le flop (repère {{min}}–{{max}}). Si c'est en voyant peu de flops, tu joues peut-être trop serré avant.",
+            "work": "Rien d'urgent : vérifie que tu ne couches pas trop de mains jouables préflop."
           },
           "tooLow": {
-            "title": "Vous gagnez peu de pots après le flop",
-            "why": "Vous ne gagnez que {{rate}} des pots où vous voyez le flop (repère {{min}}–{{max}}). Vous voyez trop de flops avec des mains faibles, ou vous abandonnez trop vite.",
-            "work": "Voyez moins de flops hors de position et misez plus souvent quand on vous montre de la faiblesse."
+            "title": "Tu gagnes peu de pots après le flop",
+            "why": "Tu ne gagnes que {{rate}} des pots où tu vois le flop (repère {{min}}–{{max}}). Tu vois trop de flops avec des mains faibles, ou tu abandonnes trop vite.",
+            "work": "Vois moins de flops hors de position et mise plus souvent quand on te montre de la faiblesse."
           }
         },
         "postflopAggression": {
           "tooHigh": {
-            "title": "Vous êtes très agressif après le flop",
-            "why": "{{rate}} de vos décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Les bons joueurs vous laisseront bluffer.",
-            "work": "Payez davantage avec vos mains moyennes au lieu de les transformer en bluffs."
+            "title": "Tu es très agressif après le flop",
+            "why": "{{rate}} de tes décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Les bons joueurs te laisseront bluffer.",
+            "work": "Paye davantage avec tes mains moyennes au lieu de les transformer en bluffs."
           },
           "tooLow": {
-            "title": "Vous êtes trop passif après le flop",
-            "why": "Seules {{rate}} de vos décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Payer plutôt que miser vous prive de la fold equity.",
-            "work": "Misez vos mains fortes pour la valeur et vos tirages en semi-bluff au lieu de payer."
+            "title": "Tu es trop passif après le flop",
+            "why": "Seules {{rate}} de tes décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Payer plutôt que miser te prive de la fold equity.",
+            "work": "Mise tes mains fortes pour la valeur et tes tirages en semi-bluff au lieu de payer."
           }
         }
       }
@@ -1171,7 +1171,7 @@
     },
     "progress": {
       "title": "Plan de la semaine",
-      "description": "Tes 2 ou 3 priorités, tirées de tes fuites des 90 derniers jours, figées pour la semaine. Ta progression se mesure sur les mains de la semaine.",
+      "description": "Tes 2 ou 3 priorités, tirées de tes leaks des 90 derniers jours, figées pour la semaine. Ta progression se mesure sur les mains de la semaine.",
       "loading": "Préparation du plan…",
       "week": "Semaine du {{date}}",
       "daysLeft": "Encore {{count}} jour(s)",
@@ -1196,7 +1196,7 @@
       "train": "S'entraîner",
       "coach": "Comprendre avec le coach",
       "clean": {
-        "title": "Aucune fuite détectée",
+        "title": "Aucun leak détecté",
         "description": "Rien ne sort de nos repères sur tes 90 derniers jours. Garde le volume et entretiens tes ouvertures en salle d'entraînement."
       },
       "drills": "réponses en salle d'entraînement cette semaine",
@@ -1205,7 +1205,7 @@
       "frozen": "Plan figé le {{date}} : il ne bouge pas avec tes imports. Recalcule-le après un gros import.",
       "history": {
         "title": "Semaines précédentes",
-        "empty": "Aucune fuite cette semaine-là",
+        "empty": "Aucun leak cette semaine-là",
         "hands": "{{count}} mains"
       },
       "error": {

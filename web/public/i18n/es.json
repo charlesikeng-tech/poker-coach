@@ -9,7 +9,7 @@
     "tournaments": "Torneos",
     "statistics": "Estadísticas",
     "import": "Importar",
-    "leaks": "Fugas",
+    "leaks": "Leaks",
     "ranges": "Rangos",
     "training": "Entrenamiento",
     "bankroll": "Bankroll"
@@ -281,8 +281,8 @@
         },
         "session": {
           "title": "Estadísticas de la sesión",
-          "sample": "Un solo torneo son pocas manos: estas cifras describen tu sesión, no prueban una fuga.",
-          "leaks": "Ver tus fugas en todo tu historial"
+          "sample": "Un solo torneo son pocas manos: estas cifras describen tu sesión, no prueban un leak.",
+          "leaks": "Ver tus leaks en todo tu historial"
         },
         "stats": {
           "vpip": "VPIP",
@@ -555,7 +555,7 @@
       "sections": {
         "preflop": "Antes del flop",
         "postflop": "Después del flop",
-        "postflopHint": "Todas las posiciones juntas. Referencias en Fugas."
+        "postflopHint": "Todas las posiciones juntas. Referencias en Leaks."
       }
     },
     "import": {
@@ -646,7 +646,7 @@
       "launching": "Rumbo a Google…",
       "features": {
         "import": "Importa tus historiales de Winamax arrastrando y soltando.",
-        "leaks": "Detecta tus fugas, medidas con un intervalo de confianza.",
+        "leaks": "Detecta tus leaks, medidos con un intervalo de confianza.",
         "replay": "Repite tus manos clave, explicadas por tu coach IA."
       },
       "promises": {
@@ -655,9 +655,9 @@
       }
     },
     "leaks": {
-      "title": "Fugas",
+      "title": "Leaks",
       "description": "En qué se aleja tu juego del de jugadores sólidos y qué trabajar.",
-      "loading": "Analizando tus fugas…",
+      "loading": "Analizando tus leaks…",
       "error": {
         "title": "No se ha podido cargar el análisis",
         "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
@@ -665,7 +665,7 @@
       },
       "empty": {
         "title": "Todavía no hay manos que analizar",
-        "description": "Importa tus historiales de manos: las fugas se detectan comparando tus estadísticas con las de jugadores sólidos.",
+        "description": "Importa tus historiales de manos: los leaks se detectan comparando tus estadísticas con las de jugadores sólidos.",
         "action": "Importar archivos"
       },
       "pending": "Analizando {{count}} mano(s): el resultado aún puede cambiar.",
@@ -679,11 +679,11 @@
       },
       "basis": "Sobre {{hands}} manos jugadas con 15 BB o más, de {{tournaments}} torneo(s), {{complete}} con historial completo.",
       "clear": {
-        "title": "No se ha detectado ninguna fuga",
+        "title": "No se ha detectado ningún leak",
         "description": "Todas tus estadísticas con suficientes situaciones están dentro de las referencias. Sigue importando: se juzgarán nuevas situaciones."
       },
       "groups": {
-        "confirmed": "Fugas confirmadas",
+        "confirmed": "Leaks confirmados",
         "confirmedHint": "Incluso teniendo en cuenta la varianza, tu tasa sale de las referencias.",
         "possible": "A vigilar",
         "possibleHint": "Tu tasa sale de las referencias, pero la muestra aún permite una tasa normal."
@@ -703,7 +703,7 @@
         "hand": "{{date}} · nivel {{level}} · {{position}} · {{cards}} · {{stack}} BB",
         "disclaimer": "Texto escrito por una IA a partir de tus cifras y de manos anonimizadas. Las mediciones vienen de Poker Coach, no de la IA.",
         "errors": {
-          "LEAK_NOT_FOUND": "Esta fuga ya no aparece en tus datos recientes. Recarga la página.",
+          "LEAK_NOT_FOUND": "Este leak ya no aparece en tus datos recientes. Recarga la página.",
           "COACHING_DAILY_LIMIT": "Límite diario de explicaciones alcanzado. Vuelve a intentarlo mañana.",
           "COACHING_BUDGET_EXHAUSTED": "El coach está en pausa hasta el mes que viene.",
           "COACHING_UNAVAILABLE": "El coach IA no está configurado en este servidor.",
@@ -715,7 +715,7 @@
       "under": {
         "title": "{{count}} estadística(s) aún no se puede(n) juzgar: muy pocas situaciones"
       },
-      "method": "Referencias versión {{version}}: MTT online de 5 a 20 €, regulares sólidos, manos con 15 BB o más. Una fuga solo se confirma si todo el intervalo de confianza al 95 % sale de la referencia.",
+      "method": "Referencias versión {{version}}: MTT online de 5 a 20 €, regulares sólidos, manos con 15 BB o más. Un leak solo se confirma si todo el intervalo de confianza al 95 % sale de la referencia.",
       "positions": {
         "utg": "UTG",
         "utg1": "UTG+1",
@@ -1171,7 +1171,7 @@
     },
     "progress": {
       "title": "Plan de la semana",
-      "description": "Tus 2 o 3 prioridades, sacadas de tus fugas de los últimos 90 días, fijadas para la semana. Tu progreso se mide con las manos de la semana.",
+      "description": "Tus 2 o 3 prioridades, sacadas de tus leaks de los últimos 90 días, fijadas para la semana. Tu progreso se mide con las manos de la semana.",
       "loading": "Preparando tu plan…",
       "week": "Semana del {{date}}",
       "daysLeft": "Quedan {{count}} día(s)",
@@ -1196,7 +1196,7 @@
       "train": "Entrenar",
       "coach": "Entender con el coach",
       "clean": {
-        "title": "Ninguna fuga detectada",
+        "title": "Ningún leak detectado",
         "description": "Nada se sale de nuestras referencias en tus últimos 90 días. Mantén el volumen y repasa tus aperturas en la sala de entrenamiento."
       },
       "drills": "respuestas en la sala de entrenamiento esta semana",
@@ -1205,7 +1205,7 @@
       "frozen": "Plan fijado el {{date}}: no cambia con tus importaciones. Recalcúlalo tras una importación grande.",
       "history": {
         "title": "Semanas anteriores",
-        "empty": "Ninguna fuga esa semana",
+        "empty": "Ningún leak esa semana",
         "hands": "{{count}} manos"
       },
       "error": {

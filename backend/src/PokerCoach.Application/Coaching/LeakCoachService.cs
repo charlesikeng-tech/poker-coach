@@ -143,6 +143,13 @@ public sealed class LeakCoachService(
     }
 
     /// <summary>
+    /// Bump when the coach's instructions change in a way the player would see (wording, tone): stored
+    /// explanations written under the old ones are then written again. 2: informal address, English poker
+    /// terms ("leak" never translated).
+    /// </summary>
+    internal const int ExplanationVersion = 2;
+
+    /// <summary>
     /// What makes an explanation still valid: the leak, its confidence and its rate to the percent. A few
     /// more hands that do not move the rate reuse the same explanation instead of paying for a new one.
     /// </summary>
@@ -150,6 +157,7 @@ public sealed class LeakCoachService(
     {
         var key = string.Join(
             '|',
+            ExplanationVersion.ToString(CultureInfo.InvariantCulture),
             format,
             leak.Stat,
             leak.Position?.ToString() ?? "-",

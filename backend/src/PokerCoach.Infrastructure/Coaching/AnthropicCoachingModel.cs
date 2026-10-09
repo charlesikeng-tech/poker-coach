@@ -48,7 +48,10 @@ internal sealed partial class AnthropicCoachingModel(
         - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
         - If the sample is small ("possible"), say so plainly and frame the advice as something to check.
 
-        Write in the language requested in the message. Fill the fields:
+        Write in the language requested in the message, addressing the player informally ("tu" in French,
+        "tú" in Spanish). Keep poker terms in English as players say them in every language: leak, c-bet,
+        3-bet, range, steal, check-raise, all-in, bluff. Never translate "leak" (not "fuite", not "fuga").
+        Fill the fields:
         - summary: one or two sentences, what the leak is for this player.
         - why_it_costs: two or three sentences, why it loses chips or money in these games.
         - actions: two or three short, specific things to do differently.
