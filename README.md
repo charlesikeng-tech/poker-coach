@@ -225,6 +225,14 @@ All-in EV (roadmap step 2):
       progress per shover
 - [x] Migration `TrainingDefence`
 
+Postflop (roadmap step 3):
+
+- [x] Facts version 3: fold to / raise the flop c-bet, turn c-bet, flop check-raise, won when saw flop,
+      postflop aggression frequency (`PostflopPlay`)
+- [x] Statistics: preflop and postflop sections; leaks: references version 2 with five postflop
+      statistics (ADR-0007 amendment), example hands for the coach
+- [ ] Migration `PostflopStats`
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

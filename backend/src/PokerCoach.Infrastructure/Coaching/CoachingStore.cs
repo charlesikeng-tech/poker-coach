@@ -143,6 +143,11 @@ internal sealed class CoachingStore(PokerCoachDbContext db, TimeProvider time) :
             LeakStat.CbetFlop => tooHigh ? f => f.CbetFlop : f => f.CbetFlopOpportunity && !f.CbetFlop,
             LeakStat.WentToShowdown => tooHigh ? f => f.WentToShowdown : f => f.SawFlop && !f.WentToShowdown,
             LeakStat.WonAtShowdown => tooHigh ? f => f.WonAtShowdown : f => f.WentToShowdown && !f.WonAtShowdown,
+            LeakStat.FoldToCbetFlop => tooHigh ? f => f.FoldToCbetFlop : f => f.FoldToCbetFlopOpportunity && !f.FoldToCbetFlop,
+            LeakStat.CbetTurn => tooHigh ? f => f.CbetTurn : f => f.CbetTurnOpportunity && !f.CbetTurn,
+            LeakStat.CheckRaiseFlop => tooHigh ? f => f.CheckRaiseFlop : f => f.CheckRaiseFlopOpportunity && !f.CheckRaiseFlop,
+            LeakStat.WonWhenSawFlop => tooHigh ? f => f.WonWhenSawFlop : f => f.SawFlop && !f.WonWhenSawFlop,
+            LeakStat.PostflopAggression => tooHigh ? f => f.PostflopAggressive > 0 : f => f.PostflopDecisions > 0 && f.PostflopAggressive == 0,
             _ => throw new ArgumentOutOfRangeException(nameof(stat), stat, null),
         };
     }

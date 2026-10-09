@@ -74,6 +74,7 @@
         }}
       </p>
 
+      <h2 class="section-title">{{ t('sections.preflop') }}</h2>
       <div class="tiles">
         <app-stat-tile
           [label]="t('hands')"
@@ -100,6 +101,24 @@
           </app-stat-tile>
         }
       </div>
+
+      <h2 class="section-title">{{ t('sections.postflop') }}</h2>
+      <div class="tiles tiles--postflop">
+        @for (key of postflopRates; track key) {
+          @let r = rate(report.overall, key);
+          <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
+            <small class="sample numeric" [attr.title]="t('stats.' + key + 'Hint')">
+              {{
+                t('sample', {
+                  made: formats().integer(r.made),
+                  opportunities: formats().integer(r.opportunities),
+                })
+              }}
+            </small>
+          </app-stat-tile>
+        }
+      </div>
+      <p class="hint">{{ t('sections.postflopHint') }}</p>
 
       @if (report.overall.hands < 1000 && report.overall.hands > 0) {
         <p class="hint">{{ t('smallSample') }}</p>

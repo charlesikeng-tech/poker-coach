@@ -171,6 +171,14 @@ public sealed class HandAnalyzerTests
             Assert.True(!facts.CbetFlop || facts.CbetFlopOpportunity);
             Assert.True(!facts.WentToShowdown || facts.SawFlop);
             Assert.True(!facts.WonAtShowdown || facts.WentToShowdown);
+            Assert.True(!facts.FoldToCbetFlop || facts.FoldToCbetFlopOpportunity);
+            Assert.True(!facts.RaiseCbetFlop || facts.FoldToCbetFlopOpportunity);
+            Assert.False(facts.FoldToCbetFlop && facts.RaiseCbetFlop);
+            Assert.True(!facts.CbetTurn || (facts.CbetTurnOpportunity && facts.CbetFlop));
+            Assert.True(!facts.CheckRaiseFlop || facts.CheckRaiseFlopOpportunity);
+            Assert.True(!facts.WonWhenSawFlop || facts.SawFlop);
+            Assert.InRange(facts.PostflopAggressive, 0, facts.PostflopDecisions);
+            Assert.True(facts.SawFlop || facts.PostflopDecisions == 0);
         });
 
         // The hero can never win or lose more than the pot.

@@ -18,7 +18,12 @@ export type LeakStat =
   | 'foldToThreeBet'
   | 'cbetFlop'
   | 'wentToShowdown'
-  | 'wonAtShowdown';
+  | 'wonAtShowdown'
+  | 'foldToCbetFlop'
+  | 'cbetTurn'
+  | 'checkRaiseFlop'
+  | 'wonWhenSawFlop'
+  | 'postflopAggression';
 
 export interface Leak {
   readonly stat: LeakStat;

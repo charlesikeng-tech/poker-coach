@@ -9,6 +9,8 @@ namespace PokerCoach.Domain.Poker.Analysis;
 /// <item>3-bet: re-raise when facing exactly one raise. Fold to 3-bet: after opening, fold to the single re-raise.</item>
 /// <item>C-bet flop: as the last preflop raiser, bet the flop when checked to (or first to act).</item>
 /// <item>Went to showdown: saw the flop and was still in when two or more players remained at the end.</item>
+/// <item>Postflop (fold to / raise the flop c-bet, turn c-bet, flop check-raise, won when saw flop, aggression
+/// frequency): see <see cref="PostflopPlayFacts"/>.</item>
 /// </list>
 /// Pure and total: any well-formed hand gives facts.
 /// </summary>
@@ -33,6 +35,7 @@ public static class HandAnalyzer
         var invested = hand.Actions.Where(a => a.Player == hero).Sum(a => a.Amount);
         var net = hand.Collected.GetValueOrDefault(hero) - invested;
         var allIn = AllInExpectation.Compute(hand);
+        var play = PostflopPlay.Analyze(hand, hero, preflop.LastRaiser, postflop.SawFlop, postflop.Cbet);
 
         return new HeroHandFacts(
             position,
@@ -58,7 +61,17 @@ public static class HandAnalyzer
             net,
             hand.BigBlind > 0 ? Math.Round((decimal)net / hand.BigBlind, 2) : 0m,
             allIn?.Equity,
-            allIn?.ExpectedNetChips);
+            allIn?.ExpectedNetChips,
+            play.FoldToCbetFlopOpportunity,
+            play.FoldToCbetFlop,
+            play.RaiseCbetFlop,
+            play.CbetTurnOpportunity,
+            play.CbetTurn,
+            play.CheckRaiseFlopOpportunity,
+            play.CheckRaiseFlop,
+            play.WonWhenSawFlop,
+            play.Aggressive,
+            play.Decisions);
     }
 
     private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position)

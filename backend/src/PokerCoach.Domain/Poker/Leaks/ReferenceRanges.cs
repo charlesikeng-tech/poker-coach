@@ -16,6 +16,11 @@ public enum LeakStat
     CbetFlop,
     WentToShowdown,
     WonAtShowdown,
+    FoldToCbetFlop,
+    CbetTurn,
+    CheckRaiseFlop,
+    WonWhenSawFlop,
+    PostflopAggression,
 }
 
 /// <summary>
@@ -25,13 +30,13 @@ public enum LeakStat
 public sealed record ReferenceRange(LeakStat Stat, PokerPosition? Position, decimal Min, decimal Max);
 
 /// <summary>
-/// Reference ranges, version 1 (ADR-0007): usual figures for solid regulars in low-stakes online MTTs
+/// Reference ranges, version 2 (ADR-0007; 2 adds the postflop statistics): usual figures for solid regulars in low-stakes online MTTs
 /// (€5–20, mostly 6-max), with 15+ big blinds. They are conventions to compare against, not truths;
 /// they will become adjustable, then derived from the platform's players.
 /// </summary>
 public static class ReferenceRanges
 {
-    public const int Version = 1;
+    public const int Version = 2;
 
     /// <summary>Hands with fewer big blinds are push/fold poker: other references would apply.</summary>
     public const decimal MinStackBigBlinds = 15m;
@@ -49,6 +54,15 @@ public static class ReferenceRanges
         new(LeakStat.CbetFlop, null, 0.50m, 0.75m),
         new(LeakStat.WentToShowdown, null, 0.24m, 0.33m),
         new(LeakStat.WonAtShowdown, null, 0.48m, 0.60m),
+
+        // Postflop (version 2). Folding too often to c-bets is the classic exploitable leak at these stakes;
+        // giving up on the turn and never check-raising make a player easy to bluff and easy to play against.
+        new(LeakStat.FoldToCbetFlop, null, 0.35m, 0.55m),
+        new(LeakStat.CbetTurn, null, 0.40m, 0.62m),
+        new(LeakStat.CheckRaiseFlop, null, 0.05m, 0.15m),
+        new(LeakStat.WonWhenSawFlop, null, 0.42m, 0.54m),
+        // Bets and raises over bets, raises, calls and folds after the flop.
+        new(LeakStat.PostflopAggression, null, 0.35m, 0.52m),
 
         // Opening ranges widen towards the button.
         new(LeakStat.Rfi, PokerPosition.Utg, 0.11m, 0.20m),

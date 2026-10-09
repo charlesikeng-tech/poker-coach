@@ -477,7 +477,19 @@
         "wentToShowdown": "Abattage",
         "wentToShowdownHint": "Est allé à l'abattage après avoir vu le flop",
         "wonAtShowdown": "Gagné à l'abattage",
-        "wonAtShowdownHint": "A gagné des jetons en allant à l'abattage"
+        "wonAtShowdownHint": "A gagné des jetons en allant à l'abattage",
+        "foldToCbetFlop": "Fold au c-bet flop",
+        "foldToCbetFlopHint": "A couché face à la mise flop du relanceur préflop",
+        "raiseCbetFlop": "Relance du c-bet flop",
+        "raiseCbetFlopHint": "A relancé la mise flop du relanceur préflop",
+        "cbetTurn": "C-bet turn",
+        "cbetTurnHint": "A remisé la turn après un c-bet flop seulement payé",
+        "checkRaiseFlop": "Check-raise flop",
+        "checkRaiseFlopHint": "A relancé au flop après avoir checké",
+        "wonWhenSawFlop": "Gagné après le flop",
+        "wonWhenSawFlopHint": "A ramassé des jetons après avoir vu le flop, abattage ou non",
+        "postflopAggression": "Agression postflop",
+        "postflopAggressionHint": "Mises et relances sur toutes les décisions après le flop (mises, relances, calls, folds)"
       },
       "short": {
         "vpip": "VPIP",
@@ -490,7 +502,13 @@
         "cbetFlop": "CB",
         "wentToShowdown": "WTSD",
         "wonAtShowdown": "W$SD",
-        "bb100": "BB/100"
+        "bb100": "BB/100",
+        "foldToCbetFlop": "FCB",
+        "raiseCbetFlop": "RCB",
+        "cbetTurn": "CB T",
+        "checkRaiseFlop": "XR",
+        "wonWhenSawFlop": "WWSF",
+        "postflopAggression": "AFq"
       },
       "positions": {
         "utg": "UTG",
@@ -532,6 +550,11 @@
         "none": "Aucun all-in préflop avec les cartes montrées sur cette période.",
         "pending": "Analyse des mains en cours : les chiffres vont encore bouger.",
         "error": "Impossible de charger la chance aux all-in pour le moment."
+      },
+      "sections": {
+        "preflop": "Avant le flop",
+        "postflop": "Après le flop",
+        "postflopHint": "Toutes positions confondues. Repères dans Fuites."
       }
     },
     "import": {
@@ -714,7 +737,13 @@
         "foldToThreeBet": "Fold au 3-bet",
         "cbetFlop": "C-bet flop",
         "wentToShowdown": "Abattage",
-        "wonAtShowdown": "Gagné à l'abattage"
+        "wonAtShowdown": "Gagné à l'abattage",
+        "foldToCbetFlop": "Fold au c-bet flop",
+        "raiseCbetFlop": "Relance du c-bet flop",
+        "cbetTurn": "C-bet turn",
+        "checkRaiseFlop": "Check-raise flop",
+        "wonWhenSawFlop": "Gagné après le flop",
+        "postflopAggression": "Agression postflop"
       },
       "items": {
         "vpip": {
@@ -847,6 +876,66 @@
             "title": "Vous perdez trop à l'abattage",
             "why": "Vous gagnez {{rate}} des abattages (repère {{min}}–{{max}}). Vous allez trop loin avec des mains battues.",
             "work": "Revoyez vos calls de river : une main moyenne face à une grosse mise est souvent battue."
+          }
+        },
+        "foldToCbetFlop": {
+          "tooHigh": {
+            "title": "Vous lâchez trop face aux c-bets",
+            "why": "Vous couchez {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Il mise donc tout son range avec profit.",
+            "work": "Payez plus souvent avec vos tirages et paires faibles sur les flops secs, surtout face aux petites mises."
+          },
+          "tooLow": {
+            "title": "Vous ne lâchez pas assez face aux c-bets",
+            "why": "Vous ne couchez que {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Vous payez trop de mains sans avenir.",
+            "work": "Couchez les hauteurs sans tirage quand le flop favorise le relanceur."
+          }
+        },
+        "cbetTurn": {
+          "tooHigh": {
+            "title": "Vous tirez trop souvent la deuxième balle",
+            "why": "Vous remisez {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). Vos bluffs coûtent cher face aux joueurs qui paient.",
+            "work": "Gardez la deuxième balle pour vos mains faites, vos tirages et les cartes qui vous favorisent."
+          },
+          "tooLow": {
+            "title": "Vous abandonnez trop vite à la turn",
+            "why": "Vous ne remisez que {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). On peut payer le flop puis vous voler le pot.",
+            "work": "Continuez sur les cartes qui renforcent votre range (as, rois, couleurs qui arrivent) et avec vos tirages."
+          }
+        },
+        "checkRaiseFlop": {
+          "tooHigh": {
+            "title": "Vous check-raisez trop",
+            "why": "Vous relancez {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). Vous mettez trop de jetons avec des mains moyennes.",
+            "work": "Réservez le check-raise aux mains fortes et aux bons tirages."
+          },
+          "tooLow": {
+            "title": "Vous ne check-raisez presque jamais",
+            "why": "Vous ne relancez que {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). On peut miser contre vous sans risque.",
+            "work": "Ajoutez des check-raises avec vos brelans, deux paires et tirages forts, surtout de grosse blinde."
+          }
+        },
+        "wonWhenSawFlop": {
+          "tooHigh": {
+            "title": "Vous gagnez beaucoup de pots après le flop",
+            "why": "Vous gagnez {{rate}} des pots où vous voyez le flop (repère {{min}}–{{max}}). Si c'est en payant peu de flops, vous jouez peut-être trop serré avant.",
+            "work": "Rien d'urgent : vérifiez que vous ne couchez pas trop de mains jouables préflop."
+          },
+          "tooLow": {
+            "title": "Vous gagnez peu de pots après le flop",
+            "why": "Vous ne gagnez que {{rate}} des pots où vous voyez le flop (repère {{min}}–{{max}}). Vous voyez trop de flops avec des mains faibles, ou vous abandonnez trop vite.",
+            "work": "Voyez moins de flops hors de position et misez plus souvent quand on vous montre de la faiblesse."
+          }
+        },
+        "postflopAggression": {
+          "tooHigh": {
+            "title": "Vous êtes très agressif après le flop",
+            "why": "{{rate}} de vos décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Les bons joueurs vous laisseront bluffer.",
+            "work": "Payez davantage avec vos mains moyennes au lieu de les transformer en bluffs."
+          },
+          "tooLow": {
+            "title": "Vous êtes trop passif après le flop",
+            "why": "Seules {{rate}} de vos décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Payer plutôt que miser vous prive de la fold equity.",
+            "work": "Misez vos mains fortes pour la valeur et vos tirages en semi-bluff au lieu de payer."
           }
         }
       }

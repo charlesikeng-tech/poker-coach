@@ -43,3 +43,26 @@ pending: ADR to come).
 - Changing a range = code change + `ReferenceRanges.Version` bump (shown to the player).
 - The result depends on stack depth filtering and on coverage; the page states its basis (hands,
   tournaments, complete histories).
+
+## Amendment — references version 2: postflop (2026-10-09)
+
+The hero's facts (version 3) gain postflop play: fold to / raise the flop c-bet (the preflop raiser
+bets first and the hero answers, nobody having raised before him), turn c-bet (after a flop c-bet that
+was only called), flop check-raise (checked, then faced a bet), won when saw flop, and aggression
+frequency (bets + raises over bets, raises, calls and folds after the flop; checks left out, as usual).
+
+Five new references, overall only (per position the samples stay too thin for months):
+
+| Statistic | Range |
+|---|---|
+| Fold to flop c-bet | 35–55 % |
+| Turn c-bet | 40–62 % |
+| Flop check-raise | 5–15 % |
+| Won when saw flop | 42–54 % |
+| Postflop aggression frequency | 35–52 % |
+
+Same guard as version 1 (30 opportunities, 95 % Wilson interval). Raise of the flop c-bet is shown in
+Statistics but not judged: its "normal" rate depends too much on the opponents' c-bet sizing to be a
+fair reference yet. Aggression frequency counts decisions, not hands: the interval treats them as
+independent, which slightly overstates certainty — acceptable for a "to watch" signal, revisited if it
+fires too often.

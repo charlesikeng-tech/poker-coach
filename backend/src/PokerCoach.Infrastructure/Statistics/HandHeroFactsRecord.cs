@@ -63,6 +63,26 @@ internal sealed class HandHeroFactsRecord
 
     public decimal? AllInExpectedNetChips { get; set; }
 
+    public bool FoldToCbetFlopOpportunity { get; set; }
+
+    public bool FoldToCbetFlop { get; set; }
+
+    public bool RaiseCbetFlop { get; set; }
+
+    public bool CbetTurnOpportunity { get; set; }
+
+    public bool CbetTurn { get; set; }
+
+    public bool CheckRaiseFlopOpportunity { get; set; }
+
+    public bool CheckRaiseFlop { get; set; }
+
+    public bool WonWhenSawFlop { get; set; }
+
+    public int PostflopAggressive { get; set; }
+
+    public int PostflopDecisions { get; set; }
+
     public void Apply(HeroHandFacts facts, int version)
     {
         FactsVersion = version;
@@ -90,6 +110,16 @@ internal sealed class HandHeroFactsRecord
         NetBigBlinds = facts.NetBigBlinds;
         AllInEquity = facts.AllInEquity;
         AllInExpectedNetChips = facts.AllInExpectedNetChips;
+        FoldToCbetFlopOpportunity = facts.FoldToCbetFlopOpportunity;
+        FoldToCbetFlop = facts.FoldToCbetFlop;
+        RaiseCbetFlop = facts.RaiseCbetFlop;
+        CbetTurnOpportunity = facts.CbetTurnOpportunity;
+        CbetTurn = facts.CbetTurn;
+        CheckRaiseFlopOpportunity = facts.CheckRaiseFlopOpportunity;
+        CheckRaiseFlop = facts.CheckRaiseFlop;
+        WonWhenSawFlop = facts.WonWhenSawFlop;
+        PostflopAggressive = facts.PostflopAggressive;
+        PostflopDecisions = facts.PostflopDecisions;
     }
 
     public HeroHandFacts ToDomain() => new(
@@ -116,7 +146,17 @@ internal sealed class HandHeroFactsRecord
         NetChips,
         NetBigBlinds,
         AllInEquity,
-        AllInExpectedNetChips);
+        AllInExpectedNetChips,
+        FoldToCbetFlopOpportunity,
+        FoldToCbetFlop,
+        RaiseCbetFlop,
+        CbetTurnOpportunity,
+        CbetTurn,
+        CheckRaiseFlopOpportunity,
+        CheckRaiseFlop,
+        WonWhenSawFlop,
+        PostflopAggressive,
+        PostflopDecisions);
 }
 
 internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<HandHeroFactsRecord>

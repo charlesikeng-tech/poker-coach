@@ -46,6 +46,16 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 WentToShowdown = g.Count(x => x.F.WentToShowdown),
                 WonAtShowdown = g.Count(x => x.F.WonAtShowdown),
                 NetBigBlinds = g.Sum(x => x.F.NetBigBlinds),
+                FoldToCbetFlopOpportunities = g.Count(x => x.F.FoldToCbetFlopOpportunity),
+                FoldToCbetFlop = g.Count(x => x.F.FoldToCbetFlop),
+                RaiseCbetFlop = g.Count(x => x.F.RaiseCbetFlop),
+                CbetTurnOpportunities = g.Count(x => x.F.CbetTurnOpportunity),
+                CbetTurn = g.Count(x => x.F.CbetTurn),
+                CheckRaiseFlopOpportunities = g.Count(x => x.F.CheckRaiseFlopOpportunity),
+                CheckRaiseFlop = g.Count(x => x.F.CheckRaiseFlop),
+                WonWhenSawFlop = g.Count(x => x.F.WonWhenSawFlop),
+                PostflopAggressive = g.Sum(x => x.F.PostflopAggressive),
+                PostflopDecisions = g.Sum(x => x.F.PostflopDecisions),
             })
             .ToListAsync(cancellationToken);
 
@@ -71,7 +81,17 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                     r.CbetFlop,
                     r.WentToShowdown,
                     r.WonAtShowdown,
-                    r.NetBigBlinds)))
+                    r.NetBigBlinds,
+                    r.FoldToCbetFlopOpportunities,
+                    r.FoldToCbetFlop,
+                    r.RaiseCbetFlop,
+                    r.CbetTurnOpportunities,
+                    r.CbetTurn,
+                    r.CheckRaiseFlopOpportunities,
+                    r.CheckRaiseFlop,
+                    r.WonWhenSawFlop,
+                    r.PostflopAggressive,
+                    r.PostflopDecisions)))
             .GroupBy(r => r.Position)
             .Select(g => (g.Key, g.Aggregate(HeroStatCounts.Zero, (total, r) => total.Add(r.Counts))))
             .ToList();

@@ -11,6 +11,8 @@ namespace PokerCoach.Api.Statistics;
 public sealed record StatRateResponse(int Made, int Opportunities, decimal? Rate);
 
 /// <param name="BigBlindsPer100">Big blinds won per 100 hands; null without hands.</param>
+/// <param name="RaiseCbetFlop">Raises of a flop c-bet, over the same spots as <paramref name="FoldToCbetFlop"/>.</param>
+/// <param name="PostflopAggression">Bets and raises over bets, raises, calls and folds after the flop.</param>
 public sealed record StatLineResponse(
     int Hands,
     StatRateResponse Vpip,
@@ -23,7 +25,13 @@ public sealed record StatLineResponse(
     StatRateResponse CbetFlop,
     StatRateResponse WentToShowdown,
     StatRateResponse WonAtShowdown,
-    decimal? BigBlindsPer100)
+    decimal? BigBlindsPer100,
+    StatRateResponse FoldToCbetFlop,
+    StatRateResponse RaiseCbetFlop,
+    StatRateResponse CbetTurn,
+    StatRateResponse CheckRaiseFlop,
+    StatRateResponse WonWhenSawFlop,
+    StatRateResponse PostflopAggression)
 {
     public static StatLineResponse From(StatLine l) => new(
         l.Hands,
@@ -37,7 +45,13 @@ public sealed record StatLineResponse(
         Rate(l.CbetFlop),
         Rate(l.WentToShowdown),
         Rate(l.WonAtShowdown),
-        l.BigBlindsPer100);
+        l.BigBlindsPer100,
+        Rate(l.FoldToCbetFlop),
+        Rate(l.RaiseCbetFlop),
+        Rate(l.CbetTurn),
+        Rate(l.CheckRaiseFlop),
+        Rate(l.WonWhenSawFlop),
+        Rate(l.PostflopAggression));
 
     private static StatRateResponse Rate(StatRate r) => new(r.Made, r.Opportunities, r.Rate);
 }

@@ -25,6 +25,14 @@ export interface StatLine {
   readonly wentToShowdown: StatRate;
   readonly wonAtShowdown: StatRate;
   readonly bigBlindsPer100: number | null;
+  readonly foldToCbetFlop: StatRate;
+  /** Over the same spots as foldToCbetFlop. */
+  readonly raiseCbetFlop: StatRate;
+  readonly cbetTurn: StatRate;
+  readonly checkRaiseFlop: StatRate;
+  readonly wonWhenSawFlop: StatRate;
+  /** Bets and raises over bets, raises, calls and folds after the flop. */
+  readonly postflopAggression: StatRate;
 }
 
 export type PokerPosition =

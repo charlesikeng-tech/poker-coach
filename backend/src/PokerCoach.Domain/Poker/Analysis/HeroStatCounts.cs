@@ -20,7 +20,17 @@ public sealed record HeroStatCounts(
     int CbetFlop,
     int WentToShowdown,
     int WonAtShowdown,
-    decimal NetBigBlinds)
+    decimal NetBigBlinds,
+    int FoldToCbetFlopOpportunities = 0,
+    int FoldToCbetFlop = 0,
+    int RaiseCbetFlop = 0,
+    int CbetTurnOpportunities = 0,
+    int CbetTurn = 0,
+    int CheckRaiseFlopOpportunities = 0,
+    int CheckRaiseFlop = 0,
+    int WonWhenSawFlop = 0,
+    int PostflopAggressive = 0,
+    int PostflopDecisions = 0)
 {
     public static readonly HeroStatCounts Zero = new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0m);
 
@@ -48,7 +58,17 @@ public sealed record HeroStatCounts(
             One(facts.CbetFlop),
             One(facts.WentToShowdown),
             One(facts.WonAtShowdown),
-            facts.NetBigBlinds);
+            facts.NetBigBlinds,
+            One(facts.FoldToCbetFlopOpportunity),
+            One(facts.FoldToCbetFlop),
+            One(facts.RaiseCbetFlop),
+            One(facts.CbetTurnOpportunity),
+            One(facts.CbetTurn),
+            One(facts.CheckRaiseFlopOpportunity),
+            One(facts.CheckRaiseFlop),
+            One(facts.WonWhenSawFlop),
+            facts.PostflopAggressive,
+            facts.PostflopDecisions);
     }
 
     public HeroStatCounts Add(HeroStatCounts other)
@@ -73,6 +93,16 @@ public sealed record HeroStatCounts(
             CbetFlop + other.CbetFlop,
             WentToShowdown + other.WentToShowdown,
             WonAtShowdown + other.WonAtShowdown,
-            NetBigBlinds + other.NetBigBlinds);
+            NetBigBlinds + other.NetBigBlinds,
+            FoldToCbetFlopOpportunities + other.FoldToCbetFlopOpportunities,
+            FoldToCbetFlop + other.FoldToCbetFlop,
+            RaiseCbetFlop + other.RaiseCbetFlop,
+            CbetTurnOpportunities + other.CbetTurnOpportunities,
+            CbetTurn + other.CbetTurn,
+            CheckRaiseFlopOpportunities + other.CheckRaiseFlopOpportunities,
+            CheckRaiseFlop + other.CheckRaiseFlop,
+            WonWhenSawFlop + other.WonWhenSawFlop,
+            PostflopAggressive + other.PostflopAggressive,
+            PostflopDecisions + other.PostflopDecisions);
     }
 }

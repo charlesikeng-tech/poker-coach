@@ -477,7 +477,19 @@
         "wentToShowdown": "Showdown",
         "wentToShowdownHint": "Llegó al showdown tras ver el flop",
         "wonAtShowdown": "Ganado en showdown",
-        "wonAtShowdownHint": "Ganó fichas al llegar al showdown"
+        "wonAtShowdownHint": "Ganó fichas al llegar al showdown",
+        "foldToCbetFlop": "Fold al c-bet del flop",
+        "foldToCbetFlopHint": "Tiró ante la apuesta en el flop del agresor preflop",
+        "raiseCbetFlop": "Subida al c-bet del flop",
+        "raiseCbetFlopHint": "Subió la apuesta en el flop del agresor preflop",
+        "cbetTurn": "C-bet en el turn",
+        "cbetTurnHint": "Volvió a apostar el turn tras un c-bet en el flop solo pagado",
+        "checkRaiseFlop": "Check-raise en el flop",
+        "checkRaiseFlopHint": "Subió en el flop después de pasar",
+        "wonWhenSawFlop": "Ganado tras el flop",
+        "wonWhenSawFlopHint": "Ganó fichas tras ver el flop, con o sin showdown",
+        "postflopAggression": "Agresión postflop",
+        "postflopAggressionHint": "Apuestas y subidas sobre todas las decisiones tras el flop (apuestas, subidas, calls, folds)"
       },
       "short": {
         "vpip": "VPIP",
@@ -490,7 +502,13 @@
         "cbetFlop": "CB",
         "wentToShowdown": "WTSD",
         "wonAtShowdown": "W$SD",
-        "bb100": "BB/100"
+        "bb100": "BB/100",
+        "foldToCbetFlop": "FCB",
+        "raiseCbetFlop": "RCB",
+        "cbetTurn": "CB T",
+        "checkRaiseFlop": "XR",
+        "wonWhenSawFlop": "WWSF",
+        "postflopAggression": "AFq"
       },
       "positions": {
         "utg": "UTG",
@@ -532,6 +550,11 @@
         "none": "Ningún all-in preflop con las cartas mostradas en este periodo.",
         "pending": "Las manos aún se están analizando: las cifras van a cambiar.",
         "error": "No se puede cargar la suerte en los all-in por ahora."
+      },
+      "sections": {
+        "preflop": "Antes del flop",
+        "postflop": "Después del flop",
+        "postflopHint": "Todas las posiciones juntas. Referencias en Fugas."
       }
     },
     "import": {
@@ -714,7 +737,13 @@
         "foldToThreeBet": "Fold al 3-bet",
         "cbetFlop": "C-bet flop",
         "wentToShowdown": "Showdown",
-        "wonAtShowdown": "Ganado en showdown"
+        "wonAtShowdown": "Ganado en showdown",
+        "foldToCbetFlop": "Fold al c-bet del flop",
+        "raiseCbetFlop": "Subida al c-bet del flop",
+        "cbetTurn": "C-bet en el turn",
+        "checkRaiseFlop": "Check-raise en el flop",
+        "wonWhenSawFlop": "Ganado tras el flop",
+        "postflopAggression": "Agresión postflop"
       },
       "items": {
         "vpip": {
@@ -847,6 +876,66 @@
             "title": "Pierdes demasiado en el showdown",
             "why": "Ganas el {{rate}} de los showdowns (referencia {{min}}–{{max}}). Llegas demasiado lejos con manos que van por detrás.",
             "work": "Revisa tus calls de river: una mano media ante una apuesta grande suele ir por detrás."
+          }
+        },
+        "foldToCbetFlop": {
+          "tooHigh": {
+            "title": "Abandonas demasiado ante los c-bets",
+            "why": "Tiras el {{rate}} de las veces ante la apuesta en el flop del agresor (referencia {{min}}–{{max}}). Puede apostar todo su rango con beneficio.",
+            "work": "Paga más a menudo con proyectos y parejas débiles en flops secos, sobre todo ante apuestas pequeñas."
+          },
+          "tooLow": {
+            "title": "No abandonas lo suficiente ante los c-bets",
+            "why": "Solo tiras el {{rate}} de las veces ante la apuesta en el flop del agresor (referencia {{min}}–{{max}}). Pagas con demasiadas manos sin futuro.",
+            "work": "Tira las cartas altas sin proyecto cuando el flop favorece al agresor."
+          }
+        },
+        "cbetTurn": {
+          "tooHigh": {
+            "title": "Disparas la segunda bala demasiado a menudo",
+            "why": "Apuestas el {{rate}} de los turns tras un c-bet pagado (referencia {{min}}–{{max}}). Tus faroles salen caros contra quien paga.",
+            "work": "Guarda la segunda bala para manos hechas, proyectos y cartas que te favorecen."
+          },
+          "tooLow": {
+            "title": "Abandonas demasiado rápido en el turn",
+            "why": "Solo apuestas el {{rate}} de los turns tras un c-bet pagado (referencia {{min}}–{{max}}). Te pueden pagar el flop y quitarte el bote.",
+            "work": "Sigue apostando en cartas que ayudan a tu rango (ases, reyes, cartas de color) y con tus proyectos."
+          }
+        },
+        "checkRaiseFlop": {
+          "tooHigh": {
+            "title": "Haces check-raise demasiado",
+            "why": "Subes el {{rate}} de las apuestas en el flop tras pasar (referencia {{min}}–{{max}}). Metes demasiadas fichas con manos medias.",
+            "work": "Reserva el check-raise para manos fuertes y buenos proyectos."
+          },
+          "tooLow": {
+            "title": "Casi nunca haces check-raise",
+            "why": "Solo subes el {{rate}} de las apuestas en el flop tras pasar (referencia {{min}}–{{max}}). Te pueden apostar sin riesgo.",
+            "work": "Añade check-raises con tríos, dobles parejas y proyectos fuertes, sobre todo desde la ciega grande."
+          }
+        },
+        "wonWhenSawFlop": {
+          "tooHigh": {
+            "title": "Ganas muchos botes tras el flop",
+            "why": "Ganas el {{rate}} de los botes en los que ves el flop (referencia {{min}}–{{max}}). Si ves pocos flops, quizá eres demasiado tight antes.",
+            "work": "Nada urgente: comprueba que no tiras demasiadas manos jugables preflop."
+          },
+          "tooLow": {
+            "title": "Ganas pocos botes tras el flop",
+            "why": "Solo ganas el {{rate}} de los botes en los que ves el flop (referencia {{min}}–{{max}}). Ves demasiados flops con manos débiles o abandonas pronto.",
+            "work": "Ve menos flops fuera de posición y apuesta más cuando te muestran debilidad."
+          }
+        },
+        "postflopAggression": {
+          "tooHigh": {
+            "title": "Eres muy agresivo tras el flop",
+            "why": "El {{rate}} de tus decisiones tras el flop son apuestas o subidas (referencia {{min}}–{{max}}). Los buenos jugadores te dejarán farolear.",
+            "work": "Paga más con manos medias en lugar de convertirlas en faroles."
+          },
+          "tooLow": {
+            "title": "Eres demasiado pasivo tras el flop",
+            "why": "Solo el {{rate}} de tus decisiones tras el flop son apuestas o subidas (referencia {{min}}–{{max}}). Pagar en lugar de apostar te quita fold equity.",
+            "work": "Apuesta tus manos fuertes por valor y tus proyectos como semifarol en lugar de pagar."
           }
         }
       }

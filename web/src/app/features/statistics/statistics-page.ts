@@ -47,7 +47,19 @@ const RATES = [
   'wentToShowdown',
   'wonAtShowdown',
 ] as const;
-type RateKey = (typeof RATES)[number];
+/** After the flop: shown overall only (per position, most samples are too thin). */
+const POSTFLOP_RATES = [
+  'cbetFlop',
+  'cbetTurn',
+  'foldToCbetFlop',
+  'raiseCbetFlop',
+  'checkRaiseFlop',
+  'postflopAggression',
+  'wentToShowdown',
+  'wonAtShowdown',
+  'wonWhenSawFlop',
+] as const;
+type RateKey = (typeof RATES)[number] | (typeof POSTFLOP_RATES)[number];
 
 /** While hands are still being analyzed, refresh this often. */
 const PENDING_REFRESH_MS = 3000;
@@ -77,14 +89,8 @@ export class StatisticsPage {
   protected readonly periods = PERIOD_FILTERS;
   protected readonly stacks = STACK_FILTERS;
   protected readonly rates = RATES;
-  protected readonly tileRates: readonly RateKey[] = [
-    'vpip',
-    'pfr',
-    'threeBet',
-    'steal',
-    'wentToShowdown',
-    'wonAtShowdown',
-  ];
+  protected readonly tileRates: readonly RateKey[] = ['vpip', 'pfr', 'threeBet', 'steal'];
+  protected readonly postflopRates = POSTFLOP_RATES;
   protected readonly period = signal<PeriodFilter>('all');
   /** The period as the API's lower bound, shared with the all-in panel. */
   protected readonly fromQuery = computed(

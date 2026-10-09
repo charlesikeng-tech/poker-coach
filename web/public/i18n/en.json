@@ -477,7 +477,19 @@
         "wentToShowdown": "Went to showdown",
         "wentToShowdownHint": "Reached showdown after seeing the flop",
         "wonAtShowdown": "Won at showdown",
-        "wonAtShowdownHint": "Won chips when reaching showdown"
+        "wonAtShowdownHint": "Won chips when reaching showdown",
+        "foldToCbetFlop": "Fold to flop c-bet",
+        "foldToCbetFlopHint": "Folded to the preflop raiser's flop bet",
+        "raiseCbetFlop": "Raise flop c-bet",
+        "raiseCbetFlopHint": "Raised the preflop raiser's flop bet",
+        "cbetTurn": "Turn c-bet",
+        "cbetTurnHint": "Bet the turn again after a flop c-bet that was only called",
+        "checkRaiseFlop": "Flop check-raise",
+        "checkRaiseFlopHint": "Raised on the flop after checking",
+        "wonWhenSawFlop": "Won when saw flop",
+        "wonWhenSawFlopHint": "Collected chips after seeing the flop, showdown or not",
+        "postflopAggression": "Postflop aggression",
+        "postflopAggressionHint": "Bets and raises over every decision after the flop (bets, raises, calls, folds)"
       },
       "short": {
         "vpip": "VPIP",
@@ -490,7 +502,13 @@
         "cbetFlop": "CB",
         "wentToShowdown": "WTSD",
         "wonAtShowdown": "W$SD",
-        "bb100": "BB/100"
+        "bb100": "BB/100",
+        "foldToCbetFlop": "FCB",
+        "raiseCbetFlop": "RCB",
+        "cbetTurn": "CB T",
+        "checkRaiseFlop": "XR",
+        "wonWhenSawFlop": "WWSF",
+        "postflopAggression": "AFq"
       },
       "positions": {
         "utg": "UTG",
@@ -532,6 +550,11 @@
         "none": "No preflop all-in with the cards shown in this period.",
         "pending": "Hands are still being analysed: figures will move.",
         "error": "All-in luck cannot be loaded right now."
+      },
+      "sections": {
+        "preflop": "Before the flop",
+        "postflop": "After the flop",
+        "postflopHint": "All positions together. References in Leaks."
       }
     },
     "import": {
@@ -714,7 +737,13 @@
         "foldToThreeBet": "Fold to 3-bet",
         "cbetFlop": "Flop c-bet",
         "wentToShowdown": "Went to showdown",
-        "wonAtShowdown": "Won at showdown"
+        "wonAtShowdown": "Won at showdown",
+        "foldToCbetFlop": "Fold to flop c-bet",
+        "raiseCbetFlop": "Raise flop c-bet",
+        "cbetTurn": "Turn c-bet",
+        "checkRaiseFlop": "Flop check-raise",
+        "wonWhenSawFlop": "Won when saw flop",
+        "postflopAggression": "Postflop aggression"
       },
       "items": {
         "vpip": {
@@ -847,6 +876,66 @@
             "title": "You lose too much at showdown",
             "why": "You win {{rate}} of showdowns (reference {{min}}–{{max}}). You go too far with beaten hands.",
             "work": "Review your river calls: a medium hand facing a big bet is often beaten."
+          }
+        },
+        "foldToCbetFlop": {
+          "tooHigh": {
+            "title": "You give up too often to c-bets",
+            "why": "You fold {{rate}} of the time to the preflop raiser's flop bet (reference {{min}}–{{max}}). He can bet his whole range at a profit.",
+            "work": "Call more often with draws and weak pairs on dry flops, especially against small bets."
+          },
+          "tooLow": {
+            "title": "You do not give up enough to c-bets",
+            "why": "You only fold {{rate}} of the time to the preflop raiser's flop bet (reference {{min}}–{{max}}). You call with too many hands going nowhere.",
+            "work": "Fold high cards without a draw when the flop favours the raiser."
+          }
+        },
+        "cbetTurn": {
+          "tooHigh": {
+            "title": "You fire the second barrel too often",
+            "why": "You bet {{rate}} of turns after a called c-bet (reference {{min}}–{{max}}). Your bluffs get expensive against players who call.",
+            "work": "Keep the second barrel for made hands, draws and cards that favour you."
+          },
+          "tooLow": {
+            "title": "You give up on the turn too quickly",
+            "why": "You only bet {{rate}} of turns after a called c-bet (reference {{min}}–{{max}}). Players can call the flop and take the pot from you.",
+            "work": "Keep betting on cards that help your range (aces, kings, flush cards) and with your draws."
+          }
+        },
+        "checkRaiseFlop": {
+          "tooHigh": {
+            "title": "You check-raise too often",
+            "why": "You raise {{rate}} of flop bets after checking (reference {{min}}–{{max}}). Too many chips go in with medium hands.",
+            "work": "Keep the check-raise for strong hands and good draws."
+          },
+          "tooLow": {
+            "title": "You almost never check-raise",
+            "why": "You only raise {{rate}} of flop bets after checking (reference {{min}}–{{max}}). Players can bet into you without risk.",
+            "work": "Add check-raises with sets, two pair and strong draws, especially from the big blind."
+          }
+        },
+        "wonWhenSawFlop": {
+          "tooHigh": {
+            "title": "You win many pots after the flop",
+            "why": "You win {{rate}} of the pots where you see the flop (reference {{min}}–{{max}}). If you see few flops, you may be too tight before.",
+            "work": "Nothing urgent: check you do not fold too many playable hands preflop."
+          },
+          "tooLow": {
+            "title": "You win few pots after the flop",
+            "why": "You only win {{rate}} of the pots where you see the flop (reference {{min}}–{{max}}). You see too many flops with weak hands, or give up too soon.",
+            "work": "See fewer flops out of position and bet more often when shown weakness."
+          }
+        },
+        "postflopAggression": {
+          "tooHigh": {
+            "title": "You are very aggressive after the flop",
+            "why": "{{rate}} of your decisions after the flop are bets or raises (reference {{min}}–{{max}}). Good players will let you bluff.",
+            "work": "Call more with medium hands instead of turning them into bluffs."
+          },
+          "tooLow": {
+            "title": "You are too passive after the flop",
+            "why": "Only {{rate}} of your decisions after the flop are bets or raises (reference {{min}}–{{max}}). Calling instead of betting gives up fold equity.",
+            "work": "Bet strong hands for value and draws as semi-bluffs instead of calling."
           }
         }
       }
