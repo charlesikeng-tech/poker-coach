@@ -1,0 +1,229 @@
+<ng-container *transloco="let t; prefix: 'pages.tournaments'">
+  <a class="back" routerLink="/tournaments">
+    <app-icon [icon]="icons.ArrowLeft" />
+    {{ t('detail.back') }}
+  </a>
+
+  @switch (state()) {
+    @case ('notFound') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('detail.notFound.title')"
+        [description]="t('detail.notFound.description')"
+      />
+    }
+    @case ('error') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('detail.error.title')"
+        [description]="t('error.description')"
+      >
+        <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+      </app-empty-state>
+    }
+    @default {
+      @if (detail(); as d) {
+        @let r = d.tournament.result;
+        <header class="head">
+          <div>
+            <h2>{{ d.tournament.name }}</h2>
+            <p class="head__meta">
+              <span>{{ date(d.tournament.startedAt) }}</span>
+              @if (d.type) {
+                <span class="tag">{{ d.type }}</span>
+              }
+              @if (d.speed) {
+                <span class="tag">{{ d.speed }}</span>
+              }
+              @if (d.tournament.coverage?.status === 'complete') {
+                <span class="tag tag--complete" [attr.title]="t('coverage.completeHint')">
+                  {{ t('coverage.complete') }}
+                </span>
+              } @else if (d.tournament.coverage?.status === 'partial') {
+                <span class="tag tag--partial">{{ t('coverage.partial') }}</span>
+              }
+            </p>
+          </div>
+          <div class="head__result">
+            @if (r.status === 'known') {
+              <span class="head__profit numeric" [attr.data-sign]="sign(r.profit)">
+                {{ signedMoney(r.profit) }}
+              </span>
+              <span class="head__label">{{ t('detail.profit') }}</span>
+            } @else {
+              <span class="chip" [attr.title]="t('status.' + r.status + 'Hint')">
+                {{ t('status.' + r.status) }}
+              </span>
+            }
+          </div>
+        </header>
+
+        @if (d.pendingHands > 0) {
+          <p class="pending glass" role="status">
+            <app-icon class="spin" [icon]="icons.LoaderCircle" />
+            {{ t('detail.pending', { count: d.pendingHands }) }}
+          </p>
+        }
+
+        <!-- Synthesis -->
+        <section class="card glass" appSpotlight [attr.aria-label]="t('detail.synthesis')">
+          <h3 class="card__title">{{ t('detail.synthesis') }}</h3>
+          <dl class="metrics">
+            <div>
+              <dt>{{ t('detail.place') }}</dt>
+              <dd class="numeric">
+                {{ integer(d.tournament.finishPosition) }}
+                <span class="of">/ {{ integer(d.tournament.registeredPlayers) }}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>{{ t('detail.buyIn') }}</dt>
+              <dd class="numeric">
+                {{ money(d.tournament.buyIn) }}
+                @if (r.entries !== null && r.entries > 1) {
+                  <span class="of">× {{ r.entries }}</span>
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ t('detail.winnings') }}</dt>
+              <dd class="numeric">
+                {{ money(winnings()) }}
+                @if (r.bountyWinnings) {
+                  <small>{{ t('detail.bounties', { amount: money(r.bountyWinnings) }) }}</small>
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>{{ t('detail.hands') }}</dt>
+              <dd class="numeric">{{ integer(d.tournament.handCount) }}</dd>
+            </div>
+            <div>
+              <dt>{{ t('detail.duration') }}</dt>
+              <dd class="numeric">{{ duration(d.handsDurationMinutes) }}</dd>
+            </div>
+            @for (stat of sessionStats.slice(0, 3); track stat) {
+              <div>
+                <dt>{{ t('detail.stats.' + stat) }}</dt>
+                <dd class="numeric">{{ rate(d.stats[stat]) }}</dd>
+              </div>
+            }
+          </dl>
+        </section>
+
+        <!-- Stack -->
+        <section class="card glass" [attr.aria-label]="t('detail.stack.title')">
+          <div class="card__head">
+            <div>
+              <h3 class="card__title">{{ t('detail.stack.title') }}</h3>
+              <p class="card__hint">{{ t('detail.stack.hint') }}</p>
+            </div>
+            <div class="segmented" role="group" [attr.aria-label]="t('detail.stack.unit')">
+              <button
+                type="button"
+                [class.active]="unit() === 'bigBlinds'"
+                [attr.aria-pressed]="unit() === 'bigBlinds'"
+                (click)="unit.set('bigBlinds')"
+              >
+                BB
+              </button>
+              <button
+                type="button"
+                [class.active]="unit() === 'chips'"
+                [attr.aria-pressed]="unit() === 'chips'"
+                (click)="unit.set('chips')"
+              >
+                {{ t('detail.stack.chips') }}
+              </button>
+            </div>
+          </div>
+          @if (chart().points.length > 1) {
+            <app-line-chart
+              class="stack-chart"
+              [points]="chart().points"
+              [markers]="chart().markers"
+              [formatY]="formats().stack"
+              [height]="260"
+              [ariaLabel]="t('detail.stack.title')"
+            />
+          } @else {
+            <p class="card__hint">{{ t('detail.stack.empty') }}</p>
+          }
+        </section>
+
+        <!-- Key moments -->
+        <section class="card glass" [attr.aria-label]="t('detail.moments.title')">
+          <h3 class="card__title">{{ t('detail.moments.title') }}</h3>
+          <p class="card__hint">{{ t('detail.moments.hint') }}</p>
+          @if (moments().length === 0) {
+            <p class="empty">{{ t('detail.moments.empty') }}</p>
+          } @else {
+            <ol class="moments">
+              @for (m of moments(); track m.moment.handId) {
+                @let k = m.moment;
+                <li class="moment" [attr.data-sign]="sign(k.netChips)">
+                  <span class="moment__number">{{ m.number }}</span>
+                  <div class="moment__body">
+                    <p class="moment__title">
+                      {{ t('detail.moments.kinds.' + swingKind(k)) }}
+                      <span class="moment__stage"
+                        >· {{ t('detail.moments.stages.' + k.stage) }}</span
+                      >
+                    </p>
+                    <p class="moment__meta numeric">
+                      {{ t('detail.handTitle', { index: k.index, level: k.level }) }}
+                      @if (k.position) {
+                        · {{ t('detail.positions.' + k.position) }}
+                      }
+                      @if (k.heroCards) {
+                        · <span class="cards">{{ k.heroCards }}</span>
+                      }
+                      · {{ t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) }) }}
+                    </p>
+                  </div>
+                  <div class="moment__swing numeric">
+                    <strong>{{ signedBigBlinds(k.netBigBlinds) }}</strong>
+                    <span>{{ t('detail.moments.share', { share: share(k) }) }}</span>
+                  </div>
+                </li>
+              }
+            </ol>
+          }
+        </section>
+
+        <!-- Session stats -->
+        <section class="card glass" [attr.aria-label]="t('detail.session.title')">
+          <h3 class="card__title">{{ t('detail.session.title') }}</h3>
+          <dl class="metrics metrics--stats">
+            @for (stat of sessionStats; track stat) {
+              <div>
+                <dt>{{ t('detail.stats.' + stat) }}</dt>
+                <dd class="numeric">{{ rate(d.stats[stat]) }}</dd>
+                <small class="numeric"
+                  >{{ d.stats[stat].made }} / {{ d.stats[stat].opportunities }}</small
+                >
+              </div>
+            }
+          </dl>
+          <p class="sample">
+            <app-icon [icon]="icons.Radar" />
+            <span>{{ t('detail.session.sample') }}</span>
+            <a routerLink="/leaks">{{ t('detail.session.leaks') }}</a>
+          </p>
+        </section>
+      } @else {
+        <div role="status" [attr.aria-label]="t('loading')" class="skeletons">
+          <div class="glass skeleton-block">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+          <div class="glass skeleton-block skeleton-block--tall">
+            <span class="skeleton"></span>
+          </div>
+          <div class="glass skeleton-block">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        </div>
+      }
+    }
+  }
+</ng-container>

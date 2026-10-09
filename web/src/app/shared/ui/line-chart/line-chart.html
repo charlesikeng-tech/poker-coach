@@ -48,6 +48,16 @@
     <path class="line" [attr.d]="d" pathLength="1" />
   }
 
+  @for (m of placedMarkers(); track m.pointIndex) {
+    <g class="chart-marker" [attr.data-tone]="m.tone">
+      <line [attr.x1]="m.cx" [attr.x2]="m.cx" [attr.y1]="m.cy" [attr.y2]="m.cy - 16" />
+      <circle [attr.cx]="m.cx" [attr.cy]="m.cy - 24" r="9" />
+      <text [attr.x]="m.cx" [attr.y]="m.cy - 24" text-anchor="middle" dominant-baseline="central">
+        {{ m.label }}
+      </text>
+    </g>
+  }
+
   @if (activePoint(); as point) {
     <line
       class="crosshair"

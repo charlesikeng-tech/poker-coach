@@ -110,3 +110,35 @@ svg {
     font-weight: var(--font-weight-medium);
   }
 }
+
+// Numbered pins above the line; the color carries the sign, the number links to the list below.
+.chart-marker {
+  pointer-events: none;
+  animation: area-fade 0.4s var(--easing-standard) 0.9s both;
+
+  line {
+    stroke: var(--marker-color);
+    stroke-width: 1;
+    opacity: 0.6;
+  }
+
+  circle {
+    fill: var(--surface-elevated);
+    stroke: var(--marker-color);
+    stroke-width: 1.5;
+  }
+
+  text {
+    fill: var(--text-primary);
+    font-size: 0.625rem;
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.chart-marker[data-tone='positive'] {
+  --marker-color: var(--success);
+}
+
+.chart-marker[data-tone='negative'] {
+  --marker-color: var(--danger);
+}

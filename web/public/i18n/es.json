@@ -219,6 +219,88 @@
         "missingHands": "Falta(n) {{count}} mano(s) en una mesa",
         "stackBreaks": "{{count}} cambio(s) de stack sin explicar: faltan manos",
         "endMissing": "Faltan tus últimas manos"
+      },
+      "list": {
+        "label": "Lista de torneos",
+        "search": "Buscar un torneo",
+        "count": "{{count}} torneo(s)",
+        "place": "{{place}}.º",
+        "hands": "{{count}} manos"
+      },
+      "overview": {
+        "label": "Totales del periodo",
+        "pickTitle": "Elige un torneo",
+        "pickDescription": "Verás su curva de stack, las manos que lo decidieron y tus estadísticas de la sesión."
+      },
+      "detail": {
+        "back": "Todos los torneos",
+        "profit": "Beneficio",
+        "pending": "{{count}} mano(s) aún en análisis: los momentos clave y las estadísticas se completan.",
+        "notFound": {
+          "title": "Torneo no encontrado",
+          "description": "No existe o no pertenece a una de tus cuentas confirmadas."
+        },
+        "error": {
+          "title": "No se pudo cargar este torneo"
+        },
+        "synthesis": "Resumen",
+        "place": "Puesto",
+        "buyIn": "Buy-in",
+        "winnings": "Ganancias",
+        "bounties": "de ellas {{amount}} en recompensas",
+        "hands": "Manos",
+        "duration": "Duración de las manos",
+        "handTitle": "Mano {{index}} · niv. {{level}}",
+        "stack": {
+          "title": "Evolución del stack",
+          "hint": "Tu stack al inicio de cada mano. Los números remiten a los momentos clave.",
+          "unit": "Unidad",
+          "chips": "Fichas",
+          "empty": "No hay suficientes manos para trazar una curva."
+        },
+        "moments": {
+          "title": "Momentos clave",
+          "hint": "Las manos que hicieron variar tu stack al menos un 25 %, medidas en tus fichas.",
+          "empty": "Ninguna mano hizo variar tu stack un 25 % o más.",
+          "stack": "stack {{stack}}",
+          "share": "{{share}} del stack",
+          "kinds": {
+            "doubleUp": "Doblada",
+            "bust": "Eliminación",
+            "gain": "Bote grande ganado",
+            "loss": "Bote grande perdido"
+          },
+          "stages": {
+            "preflop": "antes del flop",
+            "postflop": "después del flop",
+            "showdown": "en el showdown"
+          }
+        },
+        "session": {
+          "title": "Estadísticas de la sesión",
+          "sample": "Un solo torneo son pocas manos: estas cifras describen tu sesión, no prueban una fuga.",
+          "leaks": "Ver tus fugas en todo tu historial"
+        },
+        "stats": {
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal",
+          "cbetFlop": "C-bet flop",
+          "wentToShowdown": "Showdown"
+        },
+        "positions": {
+          "utg": "UTG",
+          "utg1": "UTG+1",
+          "utg2": "UTG+2",
+          "lojack": "Lojack",
+          "hijack": "Hijack",
+          "cutoff": "Cutoff",
+          "button": "Botón",
+          "smallBlind": "Ciega pequeña",
+          "bigBlind": "Ciega grande",
+          "unknown": "Desconocida"
+        }
       }
     },
     "sessions": {

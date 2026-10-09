@@ -85,6 +85,30 @@ internal sealed class HandHeroFactsRecord
         NetChips = facts.NetChips;
         NetBigBlinds = facts.NetBigBlinds;
     }
+
+    public HeroHandFacts ToDomain() => new(
+        Position,
+        PlayersDealt,
+        StackInBigBlinds,
+        HadPreflopDecision,
+        Vpip,
+        Pfr,
+        RfiOpportunity,
+        Rfi,
+        Limp,
+        StealOpportunity,
+        Steal,
+        ThreeBetOpportunity,
+        ThreeBet,
+        FoldToThreeBetOpportunity,
+        FoldToThreeBet,
+        SawFlop,
+        CbetFlopOpportunity,
+        CbetFlop,
+        WentToShowdown,
+        WonAtShowdown,
+        NetChips,
+        NetBigBlinds);
 }
 
 internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<HandHeroFactsRecord>

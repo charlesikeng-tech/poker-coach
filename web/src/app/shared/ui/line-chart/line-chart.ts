@@ -20,6 +20,14 @@ export interface LinePoint {
   readonly details: readonly string[];
 }
 
+/** A numbered point of interest drawn on the line (e.g. a key hand). */
+export interface ChartMarker {
+  /** Index in `points`. */
+  readonly pointIndex: number;
+  readonly label: string;
+  readonly tone: 'positive' | 'negative';
+}
+
 const MARGIN = { top: 12, right: 16, bottom: 28, left: 72 };
 let nextId = 0;
 
@@ -41,6 +49,7 @@ export class LineChart {
 
   /** Pixel height; the width follows the container. */
   readonly height = input(280);
+  readonly markers = input<readonly ChartMarker[]>([]);
   protected readonly margin = MARGIN;
   protected readonly width = signal(600);
   protected readonly active = signal<number | null>(null);
@@ -78,6 +87,18 @@ export class LineChart {
     const { x, y } = this.scales();
     const zero = y(0).toFixed(1);
     return `${this.path()} L${x(points[points.length - 1].x).toFixed(1)},${zero} L${x(points[0].x).toFixed(1)},${zero} Z`;
+  });
+
+  protected readonly placedMarkers = computed(() => {
+    const { x, y } = this.scales();
+    const points = this.points();
+    return this.markers()
+      .filter((m) => points[m.pointIndex] !== undefined)
+      .map((m) => ({
+        ...m,
+        cx: x(points[m.pointIndex].x),
+        cy: y(points[m.pointIndex].y),
+      }));
   });
 
   protected readonly activePoint = computed(() => {

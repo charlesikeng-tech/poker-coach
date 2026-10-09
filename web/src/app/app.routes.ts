@@ -34,6 +34,17 @@ export const routes: Routes = [
         title: 'nav.tournaments',
         loadComponent: () =>
           import('./features/tournaments/tournaments-page').then((m) => m.TournamentsPage),
+        // Master-detail: the list stays mounted while the detail changes beside it.
+        children: [
+          { path: '', children: [] },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/tournaments/tournament-detail').then(
+                (m) => m.TournamentDetailPage,
+              ),
+          },
+        ],
       },
       {
         path: 'sessions',

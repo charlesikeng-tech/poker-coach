@@ -1,5 +1,5 @@
 <ng-container *transloco="let t; prefix: 'pages.tournaments'">
-  <app-page-header [heading]="t('title')" [description]="t('description')" />
+  <app-page-header class="page-title" [heading]="t('title')" [description]="t('description')" />
 
   @if (unconfirmedAccounts()) {
     <p class="notice" role="status">
@@ -9,7 +9,7 @@
     </p>
   }
 
-  @if (state() === 'error') {
+  @if (state() === 'error' && !data()) {
     <app-empty-state
       [icon]="icons.CircleAlert"
       [heading]="t('error.title')"
@@ -27,198 +27,209 @@
         <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
       </app-empty-state>
     } @else {
-      <div class="filters">
-        <label>
-          <span>{{ t('filters.period') }}</span>
-          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
-            @for (option of periods; track option) {
-              <option [value]="option">{{ t('filters.periods.' + option) }}</option>
-            }
-          </select>
-        </label>
-        <label>
-          <span>{{ t('filters.buyIn') }}</span>
-          <select [value]="buyIn()" (change)="setBuyIn($any($event.target).value)">
-            @for (option of buyIns; track option) {
-              <option [value]="option">{{ t('filters.buyIns.' + option) }}</option>
-            }
-          </select>
-        </label>
-      </div>
+      <div class="workspace">
+        <!-- List pane -->
+        <section class="list glass" [attr.aria-label]="t('list.label')">
+          <div class="list__tools">
+            <label class="search">
+              <app-icon [icon]="icons.Search" />
+              <input
+                type="search"
+                [value]="search()"
+                [placeholder]="t('list.search')"
+                [attr.aria-label]="t('list.search')"
+                (input)="setSearch($any($event.target).value)"
+              />
+            </label>
+            <div class="list__filters">
+              <select
+                [value]="period()"
+                [attr.aria-label]="t('filters.period')"
+                (change)="setPeriod($any($event.target).value)"
+              >
+                @for (option of periods; track option) {
+                  <option [value]="option">{{ t('filters.periods.' + option) }}</option>
+                }
+              </select>
+              <select
+                [value]="buyIn()"
+                [attr.aria-label]="t('filters.buyIn')"
+                (change)="setBuyIn($any($event.target).value)"
+              >
+                @for (option of buyIns; track option) {
+                  <option [value]="option">{{ t('filters.buyIns.' + option) }}</option>
+                }
+              </select>
+            </div>
+            <p class="list__summary numeric">
+              <span>{{ t('list.count', { count: data.totalCount }) }}</span>
+              <span [attr.data-sign]="sign(data.totals.profit)">{{
+                signedMoney(data.totals.profit)
+              }}</span>
+            </p>
+          </div>
 
-      <div class="totals" [class.stale]="state() === 'loading'">
-        <app-stat-tile
-          class="stat-tile--hero"
-          [label]="t('totals.profit')"
-          [value]="data.totals.profit"
-          [format]="formats().signedMoney"
-          [signed]="true"
-        />
-        <app-stat-tile
-          [label]="t('totals.roi')"
-          [value]="data.totals.roi"
-          [format]="formats().percent"
-          [signed]="true"
-        />
-        <app-stat-tile
-          [label]="t('totals.buyIns')"
-          [value]="data.totals.buyIns"
-          [format]="formats().money"
-        />
-        <app-stat-tile
-          [label]="t('totals.winnings')"
-          [value]="data.totals.winnings"
-          [format]="formats().money"
-        />
-        <app-stat-tile
-          [label]="t('totals.tournaments')"
-          [value]="data.totals.tournaments"
-          [format]="formats().integer"
-        >
-          @if (data.totals.entries > data.totals.tournamentsWithResult) {
-            <small class="tile-note">{{
-              t('totals.entries', { count: data.totals.entries })
-            }}</small>
-          }
-        </app-stat-tile>
-      </div>
-      @if (data.totals.tournamentsWithResult < data.totals.tournaments) {
-        <p class="hint">
-          {{
-            t('totals.excluded', {
-              count: data.totals.tournaments - data.totals.tournamentsWithResult,
-            })
-          }}
-        </p>
-      }
-
-      @if (data.totalCount === 0) {
-        <p class="hint">{{ t('noMatch') }}</p>
-      } @else {
-        <div class="table-wrap glass" [class.stale]="state() === 'loading'">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">{{ t('columns.date') }}</th>
-                <th scope="col">{{ t('columns.name') }}</th>
-                <th scope="col" class="num">{{ t('columns.buyIn') }}</th>
-                <th scope="col" class="num optional">{{ t('columns.entries') }}</th>
-                <th scope="col" class="num">{{ t('columns.position') }}</th>
-                <th scope="col" class="num optional">{{ t('columns.winnings') }}</th>
-                <th scope="col" class="num">{{ t('columns.profit') }}</th>
-                <th scope="col" class="num optional">{{ t('columns.hands') }}</th>
-                <th scope="col" class="optional">{{ t('columns.coverage') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (tournament of data.items; track tournament.id) {
-                <tr>
-                  <td class="date">{{ date(tournament.startedAt) }}</td>
-                  <td class="name">{{ tournament.name }}</td>
-                  <td class="num numeric">{{ money(tournament.buyIn) }}</td>
-                  <td class="num numeric optional">{{ integer(tournament.result.entries) }}</td>
-                  <td class="num numeric">
-                    @if (tournament.finishPosition !== null) {
-                      {{ integer(tournament.finishPosition) }}
-                      <span class="of">/ {{ integer(tournament.registeredPlayers) }}</span>
-                    } @else {
-                      —
-                    }
-                  </td>
-                  @if (tournament.result.status === 'known') {
-                    <td class="num numeric optional">{{ money(winnings(tournament)) }}</td>
-                    <td class="num numeric" [attr.data-sign]="sign(tournament.result.profit)">
-                      {{ signedMoney(tournament.result.profit) }}
-                    </td>
-                  } @else {
-                    <td class="num optional"></td>
-                    <td class="num">
-                      <span
-                        class="chip"
-                        [attr.title]="t('status.' + tournament.result.status + 'Hint')"
-                      >
-                        {{ t('status.' + tournament.result.status) }}
-                      </span>
-                    </td>
-                  }
-                  <td class="num numeric optional">{{ integer(tournament.handCount) }}</td>
-                  <td class="optional">
-                    @if (tournament.coverage; as coverage) {
-                      @switch (coverage.status) {
-                        @case ('complete') {
-                          <span
-                            class="coverage coverage--complete"
-                            [attr.title]="t('coverage.completeHint')"
-                          >
-                            {{ t('coverage.complete') }}
-                          </span>
-                        }
-                        @case ('partial') {
-                          <span class="coverage coverage--partial" tabindex="0">
-                            {{ t('coverage.partial') }}
-                            <span class="coverage__details" role="tooltip">
-                              @for (reason of coverageReasons(coverage); track reason.key) {
-                                <span>{{ t('coverage.' + reason.key, reason.params) }}</span>
-                              }
-                            </span>
-                          </span>
-                        }
-                        @default {
-                          <span class="coverage">{{ t('coverage.noHands') }}</span>
-                        }
+          @if (data.totalCount === 0) {
+            <p class="hint list__empty">{{ t('noMatch') }}</p>
+          } @else {
+            <ul class="list__items" [class.stale]="state() === 'loading'">
+              @for (tournament of data.items; track track(tournament)) {
+                <li>
+                  <a
+                    class="item"
+                    [routerLink]="[tournament.id]"
+                    routerLinkActive="item--active"
+                    ariaCurrentWhenActive="page"
+                  >
+                    <span class="item__top">
+                      <span class="item__name">{{ tournament.name }}</span>
+                      @if (tournament.result.status === 'known') {
+                        <span
+                          class="item__profit numeric"
+                          [attr.data-sign]="sign(tournament.result.profit)"
+                        >
+                          {{ signedMoney(tournament.result.profit) }}
+                        </span>
+                      } @else {
+                        <span
+                          class="chip"
+                          [attr.title]="t('status.' + tournament.result.status + 'Hint')"
+                        >
+                          {{ t('status.' + tournament.result.status) }}
+                        </span>
                       }
-                    } @else {
-                      <span class="coverage" [attr.title]="t('coverage.pendingHint')">{{
-                        t('coverage.pending')
-                      }}</span>
-                    }
-                  </td>
-                </tr>
+                    </span>
+                    <span class="item__date">{{ date(tournament.startedAt) }}</span>
+                    <span class="item__meta numeric">
+                      <span>{{ money(tournament.buyIn) }}</span>
+                      @if (tournament.finishPosition !== null) {
+                        <span
+                          >{{ t('list.place', { place: integer(tournament.finishPosition) }) }}
+                          <span class="of"
+                            >/ {{ integer(tournament.registeredPlayers) }}</span
+                          ></span
+                        >
+                      }
+                      <span>{{ t('list.hands', { count: tournament.handCount }) }}</span>
+                      @if (tournament.coverage?.status === 'complete') {
+                        <span
+                          class="dot dot--complete"
+                          [attr.title]="t('coverage.completeHint')"
+                        ></span>
+                      } @else if (tournament.coverage?.status === 'partial') {
+                        <span class="dot dot--partial" [attr.title]="t('coverage.partial')"></span>
+                      }
+                    </span>
+                  </a>
+                </li>
               }
-            </tbody>
-          </table>
-        </div>
+            </ul>
 
-        @if (pageCount() > 1) {
-          <nav class="pager" [attr.aria-label]="t('pager.label')">
-            <button
-              appButton
-              variant="ghost"
-              [disabled]="page() === 1"
-              [attr.aria-label]="t('pager.previous')"
-              (click)="page.set(page() - 1)"
-            >
-              <app-icon [icon]="icons.ChevronLeft" />
-            </button>
-            <span class="numeric">{{
-              t('pager.position', { page: page(), count: pageCount() })
-            }}</span>
-            <button
-              appButton
-              variant="ghost"
-              [disabled]="page() >= pageCount()"
-              [attr.aria-label]="t('pager.next')"
-              (click)="page.set(page() + 1)"
-            >
-              <app-icon [icon]="icons.ChevronRight" />
-            </button>
-          </nav>
-        }
-      }
+            @if (pageCount() > 1) {
+              <nav class="pager" [attr.aria-label]="t('pager.label')">
+                <button
+                  appButton
+                  variant="ghost"
+                  [disabled]="page() === 1"
+                  [attr.aria-label]="t('pager.previous')"
+                  (click)="page.set(page() - 1)"
+                >
+                  <app-icon [icon]="icons.ChevronLeft" />
+                </button>
+                <span class="numeric">{{
+                  t('pager.position', { page: page(), count: pageCount() })
+                }}</span>
+                <button
+                  appButton
+                  variant="ghost"
+                  [disabled]="page() >= pageCount()"
+                  [attr.aria-label]="t('pager.next')"
+                  (click)="page.set(page() + 1)"
+                >
+                  <app-icon [icon]="icons.ChevronRight" />
+                </button>
+              </nav>
+            }
+          }
+        </section>
+
+        <!-- Detail pane -->
+        <div class="detail">
+          <router-outlet />
+          @if (selectedId() === null) {
+            <section class="overview" [attr.aria-label]="t('overview.label')">
+              <div class="totals" [class.stale]="state() === 'loading'">
+                <app-stat-tile
+                  class="stat-tile--hero"
+                  [label]="t('totals.profit')"
+                  [value]="data.totals.profit"
+                  [format]="formats().signedMoney"
+                  [signed]="true"
+                />
+                <app-stat-tile
+                  [label]="t('totals.roi')"
+                  [value]="data.totals.roi"
+                  [format]="formats().percent"
+                  [signed]="true"
+                />
+                <app-stat-tile
+                  [label]="t('totals.buyIns')"
+                  [value]="data.totals.buyIns"
+                  [format]="formats().money"
+                />
+                <app-stat-tile
+                  [label]="t('totals.winnings')"
+                  [value]="data.totals.winnings"
+                  [format]="formats().money"
+                />
+                <app-stat-tile
+                  [label]="t('totals.tournaments')"
+                  [value]="data.totals.tournaments"
+                  [format]="formats().integer"
+                >
+                  @if (data.totals.entries > data.totals.tournamentsWithResult) {
+                    <small class="tile-note">{{
+                      t('totals.entries', { count: data.totals.entries })
+                    }}</small>
+                  }
+                </app-stat-tile>
+              </div>
+              @if (data.totals.tournamentsWithResult < data.totals.tournaments) {
+                <p class="hint">
+                  {{
+                    t('totals.excluded', {
+                      count: data.totals.tournaments - data.totals.tournamentsWithResult,
+                    })
+                  }}
+                </p>
+              }
+              <div class="pick glass">
+                <app-icon [icon]="icons.MousePointerClick" />
+                <div>
+                  <h2>{{ t('overview.pickTitle') }}</h2>
+                  <p>{{ t('overview.pickDescription') }}</p>
+                </div>
+              </div>
+            </section>
+          }
+        </div>
+      </div>
     }
   } @else {
-    <div class="loading" role="status" [attr.aria-label]="t('loading')">
-      <div class="totals">
-        @for (i of [1, 2, 3, 4, 5]; track i) {
-          <div class="glass skeleton-tile">
-            <span class="skeleton"></span><span class="skeleton"></span>
-          </div>
-        }
-      </div>
-      <div class="glass skeleton-table">
+    <div class="workspace" role="status" [attr.aria-label]="t('loading')">
+      <div class="list glass skeleton-list">
         @for (i of [1, 2, 3, 4, 5, 6]; track i) {
           <span class="skeleton"></span>
         }
+      </div>
+      <div class="detail">
+        <div class="totals">
+          @for (i of [1, 2, 3, 4]; track i) {
+            <div class="glass skeleton-tile">
+              <span class="skeleton"></span><span class="skeleton"></span>
+            </div>
+          }
+        </div>
       </div>
     </div>
   }

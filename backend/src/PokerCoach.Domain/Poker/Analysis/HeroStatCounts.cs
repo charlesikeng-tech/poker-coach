@@ -24,6 +24,33 @@ public sealed record HeroStatCounts(
 {
     public static readonly HeroStatCounts Zero = new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0m);
 
+    /// <summary>The counts of a single hand.</summary>
+    public static HeroStatCounts Of(HeroHandFacts facts)
+    {
+        ArgumentNullException.ThrowIfNull(facts);
+        static int One(bool flag) => flag ? 1 : 0;
+        return new HeroStatCounts(
+            1,
+            One(facts.HadPreflopDecision),
+            One(facts.Vpip),
+            One(facts.Pfr),
+            One(facts.RfiOpportunity),
+            One(facts.Rfi),
+            One(facts.Limp),
+            One(facts.StealOpportunity),
+            One(facts.Steal),
+            One(facts.ThreeBetOpportunity),
+            One(facts.ThreeBet),
+            One(facts.FoldToThreeBetOpportunity),
+            One(facts.FoldToThreeBet),
+            One(facts.SawFlop),
+            One(facts.CbetFlopOpportunity),
+            One(facts.CbetFlop),
+            One(facts.WentToShowdown),
+            One(facts.WonAtShowdown),
+            facts.NetBigBlinds);
+    }
+
     public HeroStatCounts Add(HeroStatCounts other)
     {
         ArgumentNullException.ThrowIfNull(other);

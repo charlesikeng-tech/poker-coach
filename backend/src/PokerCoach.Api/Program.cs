@@ -47,6 +47,7 @@ builder.Services.AddScoped<ImportService>();
 builder.Services.AddScoped<ImportProcessor>();
 builder.Services.AddScoped<PokerAccountService>();
 builder.Services.AddScoped<TournamentListService>();
+builder.Services.AddScoped<TournamentDetailService>();
 builder.Services.AddScoped<PerformanceService>();
 builder.Services.AddScoped<HandFactsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();

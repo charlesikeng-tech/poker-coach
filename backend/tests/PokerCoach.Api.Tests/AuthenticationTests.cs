@@ -17,6 +17,7 @@ public sealed class AuthenticationTests
     [InlineData("POST", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000/confirm")]
     [InlineData("DELETE", "/api/poker-accounts/0199c5a8-0000-7000-8000-000000000000")]
     [InlineData("GET", "/api/tournaments")]
+    [InlineData("GET", "/api/tournaments/0199c5a8-0000-7000-8000-000000000000")]
     [InlineData("GET", "/api/performance")]
     [InlineData("GET", "/api/statistics")]
     [InlineData("GET", "/api/leaks")]

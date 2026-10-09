@@ -147,6 +147,9 @@ Phase 3 — Tournaments (MVP-1):
       without a "You won" line but with a finish position means zero; no summary means unknown, excluded
       from totals
 - [x] Web: tournaments page (totals, filters, table, missing-summary marker)
+- [x] Tournament detail (`GET /api/tournaments/{id}`): stack curve, key moments ranked by share of
+      stack (domain `KeyMoments`), session stats labelled as descriptive; master-detail page with
+      name search
 
 Phase 4 — Performance (MVP-1):
 

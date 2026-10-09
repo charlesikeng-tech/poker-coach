@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { PokerPosition, StatLine } from '../statistics/statistics-api';
+
 // Mirrors backend/src/PokerCoach.Api/Tournaments. Amounts are null unless result.status is 'known'.
 
 export type TournamentResultStatus = 'known' | 'missingSummary' | 'incomplete';
@@ -71,6 +73,47 @@ export interface TournamentQuery {
   readonly maxBuyIn?: number;
   readonly page: number;
   readonly pageSize: number;
+  /** Part of the tournament name, case-insensitive. */
+  readonly search?: string;
+}
+
+/** Hero's chips at the start of a hand. */
+export interface StackPoint {
+  readonly index: number;
+  readonly startedAt: string;
+  readonly level: number;
+  readonly stack: number;
+  readonly stackInBigBlinds: number;
+}
+
+/** Where the hand was decided for the hero, from measured facts. */
+export type KeyMomentStage = 'preflop' | 'postflop' | 'showdown';
+
+export interface KeyMoment {
+  readonly index: number;
+  readonly handId: string;
+  readonly startedAt: string;
+  readonly level: number;
+  readonly position: PokerPosition | null;
+  readonly heroCards: string | null;
+  readonly stackInBigBlinds: number;
+  readonly netChips: number;
+  readonly netBigBlinds: number;
+  /** Net chips over the starting stack: 1 = double-up, -1 = bust. */
+  readonly stackShare: number;
+  readonly stage: KeyMomentStage;
+}
+
+export interface TournamentDetail {
+  readonly tournament: Tournament;
+  readonly type: string | null;
+  readonly speed: string | null;
+  readonly handsDurationMinutes: number | null;
+  readonly stack: readonly StackPoint[];
+  readonly keyMoments: readonly KeyMoment[];
+  /** This tournament only: descriptive, too few hands to judge a leak. */
+  readonly stats: StatLine;
+  readonly pendingHands: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -88,6 +131,15 @@ export class TournamentsApi {
     if (query.maxBuyIn !== undefined) {
       params = params.set('maxBuyIn', query.maxBuyIn);
     }
+    if (query.search) {
+      params = params.set('search', query.search);
+    }
     return firstValueFrom(this.http.get<TournamentPage>('/api/tournaments', { params }));
+  }
+
+  get(id: string): Promise<TournamentDetail> {
+    return firstValueFrom(
+      this.http.get<TournamentDetail>(`/api/tournaments/${encodeURIComponent(id)}`),
+    );
   }
 }

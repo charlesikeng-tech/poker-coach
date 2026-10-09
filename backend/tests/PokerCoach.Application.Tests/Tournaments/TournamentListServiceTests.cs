@@ -44,6 +44,22 @@ public sealed class TournamentListServiceTests
         Assert.Equal(50m, page.Totals.Profit);
     }
 
+    [Fact]
+    public async Task Search_matches_part_of_the_name_ignoring_case()
+    {
+        var store = new StubStore(
+            Facts("KILL THE FISH", 4m, 5m, 1m, [new EntryOutcome(1, 100m, null)]),
+            Facts("Thunder Mystery", 4m, 5m, 1m, [new EntryOutcome(2, 50m, null)]));
+
+        var page = await new TournamentListService(store).ListAsync(
+            UserId,
+            Filter() with { Search = " fish " },
+            TestContext.Current.CancellationToken);
+
+        Assert.Equal("KILL THE FISH", Assert.Single(page.Items).Name);
+        Assert.Equal(1, page.Totals.Tournaments);
+    }
+
     private static TournamentFilter Filter() => new(null, null, null, null, 1, 50);
 
     private static TournamentFacts Facts(

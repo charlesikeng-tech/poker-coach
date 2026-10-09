@@ -219,6 +219,88 @@
         "missingHands": "{{count}} hand(s) missing at a table",
         "stackBreaks": "{{count}} unexplained stack change(s): hands missing",
         "endMissing": "Your last hands are missing"
+      },
+      "list": {
+        "label": "Tournament list",
+        "search": "Search a tournament",
+        "count": "{{count}} tournament(s)",
+        "place": "#{{place}}",
+        "hands": "{{count}} hands"
+      },
+      "overview": {
+        "label": "Period totals",
+        "pickTitle": "Pick a tournament",
+        "pickDescription": "You will see its stack curve, the hands that decided it and your session stats."
+      },
+      "detail": {
+        "back": "All tournaments",
+        "profit": "Profit",
+        "pending": "{{count}} hand(s) still being analysed: key moments and stats are filling in.",
+        "notFound": {
+          "title": "Tournament not found",
+          "description": "It does not exist or does not belong to one of your confirmed accounts."
+        },
+        "error": {
+          "title": "Could not load this tournament"
+        },
+        "synthesis": "Summary",
+        "place": "Place",
+        "buyIn": "Buy-in",
+        "winnings": "Winnings",
+        "bounties": "incl. {{amount}} in bounties",
+        "hands": "Hands",
+        "duration": "Hands duration",
+        "handTitle": "Hand {{index}} · lvl {{level}}",
+        "stack": {
+          "title": "Stack over time",
+          "hint": "Your stack at the start of each hand. Numbers point to the key moments.",
+          "unit": "Unit",
+          "chips": "Chips",
+          "empty": "Not enough hands to draw a curve."
+        },
+        "moments": {
+          "title": "Key moments",
+          "hint": "The hands that moved your stack by at least 25 %, measured on your chips.",
+          "empty": "No hand moved your stack by 25 % or more.",
+          "stack": "stack {{stack}}",
+          "share": "{{share}} of stack",
+          "kinds": {
+            "doubleUp": "Double-up",
+            "bust": "Bust",
+            "gain": "Big pot won",
+            "loss": "Big pot lost"
+          },
+          "stages": {
+            "preflop": "before the flop",
+            "postflop": "after the flop",
+            "showdown": "at showdown"
+          }
+        },
+        "session": {
+          "title": "Session stats",
+          "sample": "One tournament is few hands: these figures describe your session, they do not prove a leak.",
+          "leaks": "See your leaks over your whole history"
+        },
+        "stats": {
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal",
+          "cbetFlop": "Flop c-bet",
+          "wentToShowdown": "Showdown"
+        },
+        "positions": {
+          "utg": "UTG",
+          "utg1": "UTG+1",
+          "utg2": "UTG+2",
+          "lojack": "Lojack",
+          "hijack": "Hijack",
+          "cutoff": "Cutoff",
+          "button": "Button",
+          "smallBlind": "Small blind",
+          "bigBlind": "Big blind",
+          "unknown": "Unknown"
+        }
       }
     },
     "sessions": {

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Api.Tournaments;
@@ -43,7 +45,51 @@ public sealed record TournamentResponse(
     int? FinishPosition,
     int HandCount,
     TournamentResultResponse Result,
-    TournamentCoverageResponse? Coverage);
+    TournamentCoverageResponse? Coverage)
+{
+    public static TournamentResponse From(TournamentListItem i) => new(
+        i.Id,
+        i.Name,
+        i.StartedAt,
+        i.Currency,
+        i.BuyIn,
+        i.RegisteredPlayers,
+        i.FinishPosition,
+        i.HandCount,
+        new TournamentResultResponse(i.Result.Status, i.Result.Entries, i.Result.TotalBuyIn, i.Result.PrizeWinnings, i.Result.BountyWinnings, i.Result.Profit),
+        TournamentCoverageResponse.From(i.Coverage));
+}
+
+/// <param name="Index">Position of the hand in the tournament, from 1.</param>
+/// <param name="Stack">Hero's chips at the start of the hand.</param>
+public sealed record StackPointResponse(int Index, DateTimeOffset StartedAt, int Level, long Stack, decimal StackInBigBlinds);
+
+/// <param name="StackShare">Net chips over the starting stack, as a ratio: 1 is a double-up, −1 a bust.</param>
+public sealed record KeyMomentResponse(
+    int Index,
+    Guid HandId,
+    DateTimeOffset StartedAt,
+    int Level,
+    PokerPosition? Position,
+    string? HeroCards,
+    decimal StackInBigBlinds,
+    long NetChips,
+    decimal NetBigBlinds,
+    decimal StackShare,
+    KeyMomentStage Stage);
+
+/// <param name="HandsDurationMinutes">From the first to the last imported hand; null with fewer than two hands.</param>
+/// <param name="Stats">Over this tournament's hands only: descriptive, too few hands to judge a leak.</param>
+/// <param name="PendingHands">Hands whose facts are still being computed: stats and key moments are partial until 0.</param>
+public sealed record TournamentDetailResponse(
+    TournamentResponse Tournament,
+    string? Type,
+    string? Speed,
+    int? HandsDurationMinutes,
+    IReadOnlyList<StackPointResponse> Stack,
+    IReadOnlyList<KeyMomentResponse> KeyMoments,
+    StatLineResponse Stats,
+    int PendingHands);
 
 /// <summary>Money and rates cover tournaments with a known result only.</summary>
 /// <param name="Roi">Ratio: 0.12 means +12 %.</param>
@@ -85,15 +131,19 @@ public sealed record PerformanceResponse(
 public static class TournamentEndpoints
 {
     private const int MaxPageSize = 100;
+    private const int MaxSearchLength = 100;
 
     public static IEndpointRouteBuilder MapTournamentEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGroup("/api/tournaments").WithTags("Tournaments").MapGet("/", ListAsync);
+        var tournaments = endpoints.MapGroup("/api/tournaments").WithTags("Tournaments");
+        tournaments.MapGet("/", ListAsync);
+        tournaments.MapGet("/{id:guid}", GetAsync);
         endpoints.MapGet("/api/performance", GetPerformanceAsync).WithTags("Performance");
         return endpoints;
     }
 
     /// <param name="to">Exclusive upper bound on the start time.</param>
+    /// <param name="search">Part of the tournament name, case-insensitive.</param>
     private static async Task<Results<Ok<TournamentPageResponse>, ProblemHttpResult, UnauthorizedHttpResult>> ListAsync(
         HttpContext context,
         TournamentListService tournaments,
@@ -103,7 +153,8 @@ public static class TournamentEndpoints
         decimal? minBuyIn = null,
         decimal? maxBuyIn = null,
         int page = 1,
-        int pageSize = 50)
+        int pageSize = 50,
+        string? search = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -130,33 +181,63 @@ public static class TournamentEndpoints
             return ApiProblems.Validation("maxBuyIn", "Must not be below 'minBuyIn'.");
         }
 
+        if (search is { Length: > MaxSearchLength })
+        {
+            return ApiProblems.Validation("search", $"At most {MaxSearchLength} characters.");
+        }
+
         var result = await tournaments.ListAsync(
             userId,
-            new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize),
+            new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize, search),
             cancellationToken);
 
         return TypedResults.Ok(new TournamentPageResponse(
-            result.Items.Select(i => new TournamentResponse(
-                i.Id,
-                i.Name,
-                i.StartedAt,
-                i.Currency,
-                i.BuyIn,
-                i.RegisteredPlayers,
-                i.FinishPosition,
-                i.HandCount,
-                new TournamentResultResponse(
-                    i.Result.Status,
-                    i.Result.Entries,
-                    i.Result.TotalBuyIn,
-                    i.Result.PrizeWinnings,
-                    i.Result.BountyWinnings,
-                    i.Result.Profit),
-                TournamentCoverageResponse.From(i.Coverage))).ToList(),
+            result.Items.Select(TournamentResponse.From).ToList(),
             result.Page,
             result.PageSize,
             result.TotalCount,
             PerformanceFiguresResponse.From(result.Totals)));
+    }
+
+    /// <summary>One tournament: result, stack over time, the hands that decided it, session stats.</summary>
+    private static async Task<Results<Ok<TournamentDetailResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
+        Guid id,
+        HttpContext context,
+        TournamentDetailService details,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        // Someone else's tournament answers like a missing one: ids are not an oracle.
+        var detail = await details.GetAsync(userId, id, cancellationToken);
+        if (detail is null)
+        {
+            return ApiProblems.WithCode(StatusCodes.Status404NotFound, "TOURNAMENT_NOT_FOUND", "No such tournament.");
+        }
+
+        return TypedResults.Ok(new TournamentDetailResponse(
+            TournamentResponse.From(detail.Tournament),
+            detail.Type,
+            detail.Speed,
+            detail.HandsDuration is { } duration ? (int)Math.Round(duration.TotalMinutes) : null,
+            detail.Stack.Select(p => new StackPointResponse(p.Index, p.StartedAt, p.Level, p.Stack, p.StackInBigBlinds)).ToList(),
+            detail.KeyMoments.Select(k => new KeyMomentResponse(
+                k.Moment.Index,
+                k.HandId,
+                k.StartedAt,
+                k.Level,
+                k.Position,
+                k.HeroCards,
+                k.StackInBigBlinds,
+                k.Moment.NetChips,
+                k.Moment.NetBigBlinds,
+                k.Moment.StackShare,
+                k.Moment.Stage)).ToList(),
+            StatLineResponse.From(detail.Stats),
+            detail.PendingHands));
     }
 
     /// <param name="to">Exclusive upper bound on the start time.</param>

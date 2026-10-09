@@ -219,6 +219,88 @@
         "missingHands": "{{count}} main(s) manquante(s) à une table",
         "stackBreaks": "{{count}} variation(s) de tapis inexpliquée(s) : des mains manquent",
         "endMissing": "Vos dernières mains manquent"
+      },
+      "list": {
+        "label": "Liste des tournois",
+        "search": "Rechercher un tournoi",
+        "count": "{{count}} tournoi(s)",
+        "place": "{{place}}e",
+        "hands": "{{count}} mains"
+      },
+      "overview": {
+        "label": "Totaux de la période",
+        "pickTitle": "Choisis un tournoi",
+        "pickDescription": "Tu verras sa courbe de stack, les mains qui l'ont décidé et tes stats de la session."
+      },
+      "detail": {
+        "back": "Tous les tournois",
+        "profit": "Profit",
+        "pending": "{{count}} main(s) encore en cours d'analyse : moments clés et stats se complètent.",
+        "notFound": {
+          "title": "Tournoi introuvable",
+          "description": "Il n'existe pas ou n'appartient pas à l'un de tes comptes confirmés."
+        },
+        "error": {
+          "title": "Impossible de charger ce tournoi"
+        },
+        "synthesis": "Synthèse",
+        "place": "Place",
+        "buyIn": "Buy-in",
+        "winnings": "Gains",
+        "bounties": "dont {{amount}} de primes",
+        "hands": "Mains",
+        "duration": "Durée des mains",
+        "handTitle": "Main {{index}} · niv. {{level}}",
+        "stack": {
+          "title": "Évolution du stack",
+          "hint": "Ton tapis au début de chaque main. Les numéros renvoient aux moments clés.",
+          "unit": "Unité",
+          "chips": "Jetons",
+          "empty": "Pas assez de mains pour tracer une courbe."
+        },
+        "moments": {
+          "title": "Moments clés",
+          "hint": "Les mains qui ont fait varier ton tapis d'au moins 25 %, mesurées sur tes jetons.",
+          "empty": "Aucune main n'a fait varier ton tapis d'au moins 25 %.",
+          "stack": "tapis {{stack}}",
+          "share": "{{share}} du tapis",
+          "kinds": {
+            "doubleUp": "Double-up",
+            "bust": "Élimination",
+            "gain": "Gros pot gagné",
+            "loss": "Gros pot perdu"
+          },
+          "stages": {
+            "preflop": "avant le flop",
+            "postflop": "après le flop",
+            "showdown": "à l'abattage"
+          }
+        },
+        "session": {
+          "title": "Stats de la session",
+          "sample": "Un seul tournoi, c'est peu de mains : ces chiffres décrivent ta session, ils ne prouvent pas une fuite.",
+          "leaks": "Voir tes fuites sur tout ton historique"
+        },
+        "stats": {
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal",
+          "cbetFlop": "C-bet flop",
+          "wentToShowdown": "Abattage"
+        },
+        "positions": {
+          "utg": "UTG",
+          "utg1": "UTG+1",
+          "utg2": "UTG+2",
+          "lojack": "Lojack",
+          "hijack": "Hijack",
+          "cutoff": "Cutoff",
+          "button": "Bouton",
+          "smallBlind": "Petite blinde",
+          "bigBlind": "Grosse blinde",
+          "unknown": "Inconnue"
+        }
       }
     },
     "sessions": {

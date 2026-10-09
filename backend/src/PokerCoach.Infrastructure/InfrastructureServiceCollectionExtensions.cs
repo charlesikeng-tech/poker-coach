@@ -40,7 +40,9 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IUserAccountStore, UserAccountStore>();
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
-        services.AddScoped<ITournamentReadStore, TournamentReadStore>();
+        services.AddScoped<TournamentReadStore>();
+        services.AddScoped<ITournamentReadStore>(sp => sp.GetRequiredService<TournamentReadStore>());
+        services.AddScoped<ITournamentDetailStore>(sp => sp.GetRequiredService<TournamentReadStore>());
         services.AddScoped<ICoverageStore, CoverageStore>();
         services.AddScoped<IHandFactsStore, HandFactsStore>();
         services.AddScoped<IStatisticsReadStore, StatisticsReadStore>();

@@ -32,7 +32,8 @@ public interface ITournamentReadStore
 }
 
 /// <param name="To">Exclusive upper bound.</param>
-public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinBuyIn, decimal? MaxBuyIn, int Page, int PageSize);
+/// <param name="Search">Part of the tournament name, case-insensitive; totals follow the search.</param>
+public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinBuyIn, decimal? MaxBuyIn, int Page, int PageSize, string? Search = null);
 
 /// <param name="BuyIn">Price of one entry, fee included; null when unknown.</param>
 /// <param name="FinishPosition">Position of the last entry.</param>
@@ -67,6 +68,7 @@ public sealed class TournamentListService(ITournamentReadStore store)
             .Select(ToItem)
             .Where(i => filter.MinBuyIn is null || (i.BuyIn is { } b && b >= filter.MinBuyIn))
             .Where(i => filter.MaxBuyIn is null || (i.BuyIn is { } b && b <= filter.MaxBuyIn))
+            .Where(i => string.IsNullOrWhiteSpace(filter.Search) || i.Name.Contains(filter.Search.Trim(), StringComparison.OrdinalIgnoreCase))
             .ToList();
 
         var page = items.Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).ToList();
