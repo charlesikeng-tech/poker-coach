@@ -10,7 +10,8 @@
     "statistics": "Statistics",
     "import": "Import",
     "leaks": "Leaks",
-    "ranges": "Ranges"
+    "ranges": "Ranges",
+    "training": "Training"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -873,6 +874,52 @@
         "tooTight": "{{count}} reference hand(s) you fold",
         "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
       }
+    },
+    "training": {
+      "title": "Training room",
+      "description": "Folded to you: raise or fold. Checked against our references v1; missed hands come back.",
+      "loading": "Dealing…",
+      "band": "Stack",
+      "bands": {
+        "short": "15 to 25 BB",
+        "mid": "25 to 40 BB",
+        "deep": "40 BB and more"
+      },
+      "seats": "Positions",
+      "allSeats": "All positions",
+      "error": {
+        "title": "Could not start training",
+        "description": "Poker Coach could not answer. Try again.",
+        "retry": "Retry"
+      },
+      "question": "{{position}} · {{stack}} — everyone folded. Your move?",
+      "review": "Review",
+      "focus": "Position to work on",
+      "you": "You",
+      "pot": "Pot",
+      "button": "Button",
+      "hiddenCard": "Hidden card",
+      "answers": {
+        "fold": "Fold",
+        "raise": "Raise"
+      },
+      "session": "this session",
+      "overall": "over {{count}} answers",
+      "streak": "in a row",
+      "due": "{{count}} missed hand(s) to review",
+      "verdict": {
+        "right": "Well played",
+        "wrong": "Not this time",
+        "explain": {
+          "raise": "The reference raises {{hand}} from {{position}} at {{band}}.",
+          "fold": "The reference folds {{hand}} from {{position}} at {{band}}."
+        }
+      },
+      "gridLabel": "The position's reference range",
+      "reference": "Reference v{{version}} (€5–20 MTT). Not GTO: our conventions, to review in Ranges.",
+      "next": "Next hand",
+      "space": "Space",
+      "hint": "Answer with the buttons or the keyboard (F to fold, R to raise). After answering you will see the position's reference range with your hand outlined."
     }
   },
   "welcome": {

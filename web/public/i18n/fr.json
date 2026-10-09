@@ -10,7 +10,8 @@
     "statistics": "Statistiques",
     "import": "Import",
     "leaks": "Fuites",
-    "ranges": "Ranges"
+    "ranges": "Ranges",
+    "training": "Entraînement"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -873,6 +874,52 @@
         "tooTight": "{{count}} main(s) du repère que tu couches",
         "rule": "Une main compte comme « ouverte » si tu la relances au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
       }
+    },
+    "training": {
+      "title": "Salle d'entraînement",
+      "description": "C'est foldé jusqu'à toi : relance ou couche. Corrigé par nos repères v1, les mains ratées reviennent.",
+      "loading": "Distribution…",
+      "band": "Tapis",
+      "bands": {
+        "short": "15 à 25 BB",
+        "mid": "25 à 40 BB",
+        "deep": "40 BB et plus"
+      },
+      "seats": "Positions",
+      "allSeats": "Toutes les positions",
+      "error": {
+        "title": "Impossible de lancer l'entraînement",
+        "description": "Poker Coach n'a pas pu répondre. Réessaie.",
+        "retry": "Réessayer"
+      },
+      "question": "{{position}} · {{stack}} — tout le monde a couché. Tu fais quoi ?",
+      "review": "Révision",
+      "focus": "Position à travailler",
+      "you": "Toi",
+      "pot": "Pot",
+      "button": "Bouton",
+      "hiddenCard": "Carte cachée",
+      "answers": {
+        "fold": "Fold",
+        "raise": "Relance"
+      },
+      "session": "cette session",
+      "overall": "sur {{count}} réponses",
+      "streak": "d'affilée",
+      "due": "{{count}} main(s) ratée(s) à revoir",
+      "verdict": {
+        "right": "Bien joué",
+        "wrong": "Pas cette fois",
+        "explain": {
+          "raise": "Le repère relance {{hand}} depuis {{position}} à {{band}}.",
+          "fold": "Le repère couche {{hand}} depuis {{position}} à {{band}}."
+        }
+      },
+      "gridLabel": "Range de référence de la position",
+      "reference": "Repère v{{version}} (MTT 5–20 €). Ce n'est pas du GTO : nos conventions, à relire dans Ranges.",
+      "next": "Main suivante",
+      "space": "Espace",
+      "hint": "Réponds avec les boutons ou au clavier (F pour fold, R pour relance). Après ta réponse, tu verras la range de référence de la position avec ta main entourée."
     }
   },
   "welcome": {

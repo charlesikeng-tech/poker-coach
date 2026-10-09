@@ -191,7 +191,11 @@ Ranges (ADR-0009):
       notation parser, seats named by distance to the button), compared hand by hand (gap view)
 - [x] Table formats: statistics, leaks and ranges per format (6-max / full ring), positions named
       within the format, references by distance to the button
-- [ ] Trainer; push/fold equilibrium below 15 BB
+- [x] Training room (open or fold): spots dealt from the reference ranges (half near the range edge),
+      missed hands come back, seats with an opening leak weighted up, answers stored
+      (`training.opening_attempts`), progress per seat; shared `PokerTable` with the replayer
+- [ ] Migration `Training`
+- [ ] Push/fold equilibrium below 15 BB
 
 MVP-3 — Leaks (ADR-0007):
 

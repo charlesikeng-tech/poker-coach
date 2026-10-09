@@ -70,6 +70,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/ranges/ranges-page').then((m) => m.RangesPage),
       },
       {
+        path: 'training',
+        title: 'nav.training',
+        loadComponent: () =>
+          import('./features/training/training-page').then((m) => m.TrainingPage),
+      },
+      {
         path: 'leaks',
         title: 'nav.leaks',
         loadComponent: () => import('./features/leaks/leaks-page').then((m) => m.LeaksPage),

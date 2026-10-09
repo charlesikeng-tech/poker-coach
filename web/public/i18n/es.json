@@ -10,7 +10,8 @@
     "statistics": "Estadísticas",
     "import": "Importar",
     "leaks": "Fugas",
-    "ranges": "Rangos"
+    "ranges": "Rangos",
+    "training": "Entrenamiento"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -873,6 +874,52 @@
         "tooTight": "{{count}} mano(s) de la referencia que tiras",
         "rule": "Una mano cuenta como «abierta» si la subes al menos la mitad de las veces. Fíjate en el número pequeño: con 1 o 2 ocurrencias solo es un indicio."
       }
+    },
+    "training": {
+      "title": "Sala de entrenamiento",
+      "description": "Te llega foldeado: sube o tira. Corregido con nuestras referencias v1; las manos falladas vuelven.",
+      "loading": "Repartiendo…",
+      "band": "Stack",
+      "bands": {
+        "short": "15 a 25 BB",
+        "mid": "25 a 40 BB",
+        "deep": "40 BB o más"
+      },
+      "seats": "Posiciones",
+      "allSeats": "Todas las posiciones",
+      "error": {
+        "title": "No se pudo iniciar el entrenamiento",
+        "description": "Poker Coach no pudo responder. Inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "question": "{{position}} · {{stack}} — todos se han retirado. ¿Qué haces?",
+      "review": "Repaso",
+      "focus": "Posición a trabajar",
+      "you": "Tú",
+      "pot": "Bote",
+      "button": "Botón",
+      "hiddenCard": "Carta oculta",
+      "answers": {
+        "fold": "Tirar",
+        "raise": "Subir"
+      },
+      "session": "esta sesión",
+      "overall": "en {{count}} respuestas",
+      "streak": "seguidas",
+      "due": "{{count}} mano(s) falladas para repasar",
+      "verdict": {
+        "right": "Bien jugado",
+        "wrong": "Esta vez no",
+        "explain": {
+          "raise": "La referencia sube {{hand}} desde {{position}} con {{band}}.",
+          "fold": "La referencia tira {{hand}} desde {{position}} con {{band}}."
+        }
+      },
+      "gridLabel": "Rango de referencia de la posición",
+      "reference": "Referencia v{{version}} (MTT 5–20 €). No es GTO: nuestras convenciones, para revisar en Rangos.",
+      "next": "Mano siguiente",
+      "space": "Espacio",
+      "hint": "Responde con los botones o el teclado (F para tirar, R para subir). Después verás el rango de referencia de la posición con tu mano marcada."
     }
   },
   "welcome": {

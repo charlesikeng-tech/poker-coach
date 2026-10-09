@@ -9,6 +9,7 @@ using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Application.Training;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Infrastructure.Coaching;
 using PokerCoach.Infrastructure.Hands;
@@ -18,6 +19,7 @@ using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Infrastructure.Poker;
 using PokerCoach.Infrastructure.Statistics;
 using PokerCoach.Infrastructure.Tournaments;
+using PokerCoach.Infrastructure.Training;
 
 namespace PokerCoach.Infrastructure;
 
@@ -44,6 +46,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
         services.AddScoped<IHandReplayStore, HandReplayStore>();
+        services.AddScoped<ITrainingStore, TrainingStore>();
         services.AddScoped<TournamentReadStore>();
         services.AddScoped<ITournamentReadStore>(sp => sp.GetRequiredService<TournamentReadStore>());
         services.AddScoped<ITournamentDetailStore>(sp => sp.GetRequiredService<TournamentReadStore>());

@@ -1,0 +1,172 @@
+<ng-container *transloco="let t; prefix: 'pages.training'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="toolbar">
+    <app-format-toggle [value]="format()" (changed)="setFormat($event)" />
+    <label>
+      <span>{{ t('band') }}</span>
+      <select [value]="band()" (change)="setBand($any($event.target).value)">
+        @for (option of bands; track option) {
+          <option [value]="option">{{ t('bands.' + option) }}</option>
+        }
+      </select>
+    </label>
+    <div class="seats" role="group" [attr.aria-label]="t('seats')">
+      @for (seat of seats(); track seat) {
+        <button
+          type="button"
+          class="seat-chip"
+          [class.active]="chosen().includes(seat)"
+          [attr.aria-pressed]="chosen().includes(seat)"
+          (click)="toggleSeat(seat)"
+        >
+          {{ short(seat) }}
+          @if (seatAccuracy(seat)) {
+            <small class="numeric">{{ seatAccuracy(seat) }}</small>
+          }
+        </button>
+      }
+      @if (chosen().length === 0) {
+        <span class="all">{{ t('allSeats') }}</span>
+      }
+    </div>
+  </div>
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="nextHand()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (spot(); as s) {
+    <div class="room">
+      <section class="table-card glass">
+        <div class="spot-head">
+          <p class="question">
+            {{
+              t('question', {
+                position: short(s.position),
+                stack: chipsFormat()(s.stackInBigBlinds * 100),
+              })
+            }}
+          </p>
+          <div class="badges">
+            @if (s.review) {
+              <span class="badge badge--review">
+                <app-icon [icon]="icons.RotateCcw" />{{ t('review') }}
+              </span>
+            }
+            @if (s.focus) {
+              <span class="badge badge--focus">
+                <app-icon [icon]="icons.Target" />{{ t('focus') }}
+              </span>
+            }
+          </div>
+        </div>
+
+        @if (table(); as view) {
+          <app-poker-table
+            [view]="view"
+            [format]="chipsFormat()"
+            [labels]="{
+              pot: t('pot'),
+              button: t('button'),
+              hiddenCard: t('hiddenCard'),
+              allIn: '',
+            }"
+          />
+        }
+
+        <div class="actions">
+          <button
+            type="button"
+            class="action action--fold"
+            [class.chosen]="answer() === 'fold'"
+            [disabled]="answer() !== null"
+            (click)="choose('fold')"
+          >
+            {{ t('answers.fold') }} <kbd>F</kbd>
+          </button>
+          <button
+            type="button"
+            class="action action--raise"
+            [class.chosen]="answer() === 'raise'"
+            [disabled]="answer() !== null"
+            (click)="choose('raise')"
+          >
+            {{ t('answers.raise') }} <kbd>R</kbd>
+          </button>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="card glass score">
+          <div>
+            <p class="score__value numeric">{{ session().correct }} / {{ session().answered }}</p>
+            <p class="muted">{{ t('session') }}</p>
+          </div>
+          @if (progress(); as p) {
+            <div>
+              <p class="score__value numeric">{{ percent(accuracy()) }}</p>
+              <p class="muted">{{ t('overall', { count: p.attempts }) }}</p>
+            </div>
+            <div>
+              <p class="score__value numeric streak">
+                <app-icon [icon]="icons.Flame" />{{ p.streak }}
+              </p>
+              <p class="muted">{{ t('streak') }}</p>
+            </div>
+            @if (p.dueReviews > 0) {
+              <p class="muted due">{{ t('due', { count: p.dueReviews }) }}</p>
+            }
+          }
+        </section>
+
+        @if (result(); as r) {
+          <section
+            class="card glass verdict"
+            [class.verdict--ok]="r.correct"
+            [class.verdict--ko]="!r.correct"
+            animate.enter="verdict-in"
+            aria-live="polite"
+          >
+            <p class="verdict__title">
+              <app-icon [icon]="r.correct ? icons.Check : icons.X" />
+              {{ r.correct ? t('verdict.right') : t('verdict.wrong') }}
+            </p>
+            <p>
+              {{
+                t('verdict.explain.' + r.expected, {
+                  hand: s.hand,
+                  position: short(s.position),
+                  band: t('bands.' + s.band),
+                })
+              }}
+            </p>
+            <div class="mini-grid" role="img" [attr.aria-label]="t('gridLabel')">
+              @for (cell of grid(); track cell.hand) {
+                <span class="mini-cell" [class.in]="cell.inRange" [class.current]="cell.current">{{
+                  cell.current ? cell.hand : ''
+                }}</span>
+              }
+            </div>
+            <p class="muted">{{ t('reference', { version: r.referenceVersion }) }}</p>
+            <button appButton variant="primary" class="next" (click)="nextHand()">
+              {{ t('next') }} <kbd>{{ t('space') }}</kbd>
+            </button>
+          </section>
+        } @else {
+          <section class="card glass hint">
+            <p>{{ t('hint') }}</p>
+          </section>
+        }
+      </aside>
+    </div>
+  } @else {
+    <div class="glass skeleton-room" role="status" [attr.aria-label]="t('loading')">
+      <span class="skeleton"></span>
+    </div>
+  }
+</ng-container>
