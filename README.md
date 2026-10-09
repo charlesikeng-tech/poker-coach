@@ -168,5 +168,5 @@ MVP-2 — Game analysis (ADR-0006):
       seen), computed in the background after facts, shown in the tournaments list
 - [x] Migration `TournamentCoverage`
 - [x] Rebuy/add-on tournaments (second Winamax summary layout), counted in money paid
-- [ ] Migration `Rebuys` (generate with `dotnet ef`)
+- [x] Migration `Rebuys`
 - [ ] Per-entry attribution of hands, postflop statistics
