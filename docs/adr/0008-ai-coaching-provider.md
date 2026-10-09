@@ -1,6 +1,6 @@
 # ADR-0008 — AI explanations: provider, cost, and what leaves the platform
 
-- Status: Proposed (to validate)
+- Status: Accepted
 - Date: 2026-10-09
 
 ## Context
@@ -62,8 +62,9 @@ to a subscription, so quality, not price, should decide.
 - **Self-hosted open model**: GPU cost and operations far above the API cost at our volume.
 - **Mistral first** if EU-only processing becomes a hard requirement.
 
-## Open questions
+## Decision (2026-10-09)
 
-- Provider choice (this ADR's proposal: Anthropic).
-- Monthly budget cap for the beta (proposal: $20, alert at 50 %).
-- An API key for the chosen provider, in user-secrets only.
+- Provider: **Anthropic, Claude Sonnet 5.5** (model id in configuration).
+- Beta budget: **$20 per month**, hard cap; warning logged at 50 %. Per-user daily limit.
+- API key in user-secrets (`Coaching:Anthropic:ApiKey`) locally, a secret store in production; without a
+  key the feature reports itself unavailable instead of failing.
