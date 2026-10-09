@@ -14,6 +14,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
+import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { AllInLuck, StatisticsApi } from './statistics-api';
 
@@ -26,7 +27,7 @@ const FEW_ALL_INS = 30;
  */
 @Component({
   selector: 'app-all-in-luck',
-  imports: [TranslocoDirective, RouterLink, StatTile, LineChart],
+  imports: [TranslocoDirective, RouterLink, StatTile, LineChart, PlayingCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './all-in-luck.html',
   styleUrl: './all-in-luck.scss',
@@ -111,8 +112,9 @@ export class AllInLuckPanel {
     return Math.abs(value) < 0.05 ? 'neutral' : value > 0 ? 'positive' : 'negative';
   }
 
-  protected cards(text: string | null): string {
-    return text ? `${text.slice(0, 2)} ${text.slice(2, 4)}` : '—';
+  /** "AhKd" → ["Ah", "Kd"]; unknown cards are drawn face down. */
+  protected cards(text: string | null): readonly (string | null)[] {
+    return text?.length === 4 ? [text.slice(0, 2), text.slice(2, 4)] : [null, null];
   }
 
   protected date(iso: string): string {

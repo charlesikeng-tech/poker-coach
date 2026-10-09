@@ -70,7 +70,11 @@
           @for (s of luck.swings; track s.handId) {
             <li>
               <a [routerLink]="['/hands', s.handId]" [attr.aria-label]="t('swings.replay')">
-                <span class="swing-cards numeric">{{ cards(s.heroCards) }}</span>
+                <span class="swing-cards">
+                  @for (card of cards(s.heroCards); track $index) {
+                    <app-playing-card [card]="card" size="small" />
+                  }
+                </span>
                 <span class="swing-equity">
                   <span class="equity-bar"><span [style.width.%]="s.equity * 100"></span></span>
                   {{ formats().share(s.equity) }}
