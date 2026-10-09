@@ -121,7 +121,7 @@ public sealed class LeakCoachServiceTests
             6,
             200,
             "Hero",
-            ["P1", "P2", "P3", "P4", "P5", "Hero"].Select((p, i) => new SeatState(i + 1, p, 8_000)).ToList(),
+            new[] { "P1", "P2", "P3", "P4", "P5", "Hero" }.Select((p, i) => new SeatState(i + 1, p, 8_000)).ToList(),
             [
                 new HandAction(Street.Preflop, "P1", ActionKind.PostSmallBlind, 100, false),
                 new HandAction(Street.Preflop, "P2", ActionKind.PostBigBlind, 200, false),
