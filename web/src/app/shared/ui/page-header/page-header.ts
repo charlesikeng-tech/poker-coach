@@ -21,10 +21,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       margin-bottom: var(--space-8);
     }
     h1 {
-      font-size: var(--font-size-2xl);
+      font-size: clamp(1.75rem, 2.4vw, 2.25rem);
       font-weight: var(--font-weight-semibold);
       line-height: var(--line-height-tight);
-      letter-spacing: -0.01em;
+      letter-spacing: -0.025em;
     }
     p {
       margin-top: var(--space-2);

@@ -31,12 +31,50 @@ svg {
   font-variant-numeric: tabular-nums;
 }
 
+// The line draws itself once when data arrives; the glow under it fades in behind.
 .line {
   fill: none;
   stroke: var(--accent-primary);
   stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
+  stroke-dasharray: 1;
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+  animation: line-draw 1.1s var(--easing-emphasized) both;
+}
+
+.area {
+  animation: area-fade 1.1s var(--easing-standard) 0.25s both;
+}
+
+.fill-top {
+  stop-color: var(--accent-primary);
+  stop-opacity: 0.22;
+}
+
+.fill-bottom {
+  stop-color: var(--accent-primary);
+  stop-opacity: 0;
+}
+
+@keyframes line-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes area-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.marker-halo {
+  fill: var(--accent-glow);
+  opacity: 0.5;
 }
 
 .crosshair {

@@ -9,7 +9,7 @@
   min-height: 100dvh;
 }
 
-// The analytical grid is the product's texture: a range matrix seen from afar.
+// The felt under a lamp: a pool of warm light, the range-matrix grid fading into the dark.
 .sign-in__brand {
   position: relative;
   display: flex;
@@ -18,24 +18,41 @@
   gap: var(--space-8);
   padding: var(--space-12);
   overflow: hidden;
-  background-color: var(--surface-navigation);
-  background-image:
-    linear-gradient(var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
-  background-size: 2.5rem 2.5rem;
+  background:
+    radial-gradient(70% 60% at 30% 35%, var(--felt-light), transparent 70%),
+    radial-gradient(40% 30% at 30% 35%, var(--felt-glow), transparent 70%);
   border-right: 1px solid var(--border-subtle);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    mask-image: radial-gradient(70% 70% at 30% 40%, black, transparent);
+    pointer-events: none;
+  }
 }
 
 .sign-in__mark {
   --brand-mark-size: 4.5rem;
+  position: relative;
+  filter: drop-shadow(0 0 24px var(--accent-glow));
+  animation: page-enter var(--motion-slow) var(--easing-emphasized) both;
 }
 
+// The statement is the page's one bold moment: big, display type, rising in after the mark.
 .sign-in__statement {
-  max-width: 22ch;
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  position: relative;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
   font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  animation: page-enter var(--motion-slow) var(--easing-emphasized) 120ms both;
 }
 
 .sign-in__panel {
@@ -52,6 +69,7 @@
 }
 
 .sign-in__card {
+  animation: page-enter var(--motion-slow) var(--easing-emphasized) 240ms both;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -98,6 +116,7 @@ h1 {
 
   .sign-in__brand {
     flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
     gap: var(--space-4);
     padding: var(--space-6) var(--space-4);

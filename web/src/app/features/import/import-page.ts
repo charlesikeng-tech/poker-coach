@@ -29,6 +29,7 @@ const KNOWN_ERRORS = new Set([
   selector: 'app-import-page',
   imports: [TranslocoDirective, PageHeader, Button, Icon, PokerAccounts],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page-enter' },
   templateUrl: './import-page.html',
   styleUrl: './import-page.scss',
 })

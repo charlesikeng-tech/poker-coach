@@ -20,6 +20,7 @@ import {
 } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
+import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi } from '../import/import-api';
@@ -32,8 +33,9 @@ type LoadState = 'loading' | 'ready' | 'error';
 
 @Component({
   selector: 'app-tournaments-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, StatTile],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page-enter' },
   templateUrl: './tournaments-page.html',
   styleUrl: './tournaments-page.scss',
 })
@@ -63,6 +65,19 @@ export class TournamentsPage {
   private readonly currency = computed(
     () => this.data()?.items.find((t) => t.currency)?.currency ?? 'EUR',
   );
+
+  /** Formatters handed to animated figures: rebuilt when the language or currency changes. */
+  protected readonly formats = computed(() => {
+    const locale = this.locale();
+    const currency = this.currency();
+    return {
+      money: (value: number | null) => formatMoney(value, currency, locale),
+      signedMoney: (value: number | null) => formatSignedMoney(value, currency, locale),
+      percent: (value: number | null) => formatSignedPercent(value, locale),
+      integer: (value: number | null) =>
+        formatInteger(value === null ? null : Math.round(value), locale),
+    };
+  });
 
   /** Each load gets a number: a slow response must not overwrite a newer one. */
   private request = 0;

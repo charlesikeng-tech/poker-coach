@@ -46,37 +46,42 @@
         </label>
       </div>
 
-      <dl class="totals" [class.totals--stale]="state() === 'loading'">
-        <div>
-          <dt>{{ t('totals.profit') }}</dt>
-          <dd class="numeric" [attr.data-sign]="sign(data.totals.profit)">
-            {{ signedMoney(data.totals.profit) }}
-          </dd>
-        </div>
-        <div>
-          <dt>{{ t('totals.roi') }}</dt>
-          <dd class="numeric" [attr.data-sign]="sign(data.totals.roi)">
-            {{ percent(data.totals.roi) }}
-          </dd>
-        </div>
-        <div>
-          <dt>{{ t('totals.buyIns') }}</dt>
-          <dd class="numeric">{{ money(data.totals.buyIns) }}</dd>
-        </div>
-        <div>
-          <dt>{{ t('totals.winnings') }}</dt>
-          <dd class="numeric">{{ money(data.totals.winnings) }}</dd>
-        </div>
-        <div>
-          <dt>{{ t('totals.tournaments') }}</dt>
-          <dd class="numeric">
-            {{ integer(data.totals.tournaments) }}
-            @if (data.totals.entries > data.totals.tournamentsWithResult) {
-              <small>{{ t('totals.entries', { count: data.totals.entries }) }}</small>
-            }
-          </dd>
-        </div>
-      </dl>
+      <div class="totals" [class.stale]="state() === 'loading'">
+        <app-stat-tile
+          class="stat-tile--hero"
+          [label]="t('totals.profit')"
+          [value]="data.totals.profit"
+          [format]="formats().signedMoney"
+          [signed]="true"
+        />
+        <app-stat-tile
+          [label]="t('totals.roi')"
+          [value]="data.totals.roi"
+          [format]="formats().percent"
+          [signed]="true"
+        />
+        <app-stat-tile
+          [label]="t('totals.buyIns')"
+          [value]="data.totals.buyIns"
+          [format]="formats().money"
+        />
+        <app-stat-tile
+          [label]="t('totals.winnings')"
+          [value]="data.totals.winnings"
+          [format]="formats().money"
+        />
+        <app-stat-tile
+          [label]="t('totals.tournaments')"
+          [value]="data.totals.tournaments"
+          [format]="formats().integer"
+        >
+          @if (data.totals.entries > data.totals.tournamentsWithResult) {
+            <small class="tile-note">{{
+              t('totals.entries', { count: data.totals.entries })
+            }}</small>
+          }
+        </app-stat-tile>
+      </div>
       @if (data.totals.tournamentsWithResult < data.totals.tournaments) {
         <p class="hint">
           {{
@@ -90,7 +95,7 @@
       @if (data.totalCount === 0) {
         <p class="hint">{{ t('noMatch') }}</p>
       } @else {
-        <div class="table-wrap" [class.table-wrap--stale]="state() === 'loading'">
+        <div class="table-wrap glass" [class.stale]="state() === 'loading'">
           <table>
             <thead>
               <tr>
@@ -170,6 +175,19 @@
       }
     }
   } @else {
-    <p class="hint" role="status">{{ t('loading') }}</p>
+    <div class="loading" role="status" [attr.aria-label]="t('loading')">
+      <div class="totals">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="glass skeleton-tile">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        }
+      </div>
+      <div class="glass skeleton-table">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+          <span class="skeleton"></span>
+        }
+      </div>
+    </div>
   }
 </ng-container>

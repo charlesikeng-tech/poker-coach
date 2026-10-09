@@ -11,6 +11,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
   selector: 'app-statistics-page',
   imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page-enter' },
   template: `
     <ng-container *transloco="let t; prefix: 'pages.statistics'">
       <app-page-header [heading]="t('title')" [description]="t('description')" />

@@ -1,5 +1,7 @@
 @use '@fontsource-variable/ibm-plex-sans';
+@use '@fontsource-variable/sora';
 @use 'styles/tokens';
+@use 'styles/effects';
 
 *,
 *::before,
@@ -14,7 +16,12 @@ body {
 }
 
 body {
-  background: var(--surface-background);
+  // The felt: a pool of light from above, a warm glint of chips, falling off into the room.
+  background:
+    radial-gradient(120% 70% at 50% -10%, var(--felt-light), transparent 60%),
+    radial-gradient(60% 40% at 100% 0%, var(--felt-glow), transparent 70%),
+    var(--surface-background);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: var(--font-size-md);
@@ -28,6 +35,13 @@ h2,
 h3,
 p {
   margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
 }
 
 a {
@@ -49,6 +63,11 @@ input {
 // Metrics, tables and stacks must line up digit by digit.
 .numeric {
   font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--accent-subtle);
+  color: var(--text-primary);
 }
 
 .visually-hidden {

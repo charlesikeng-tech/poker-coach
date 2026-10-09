@@ -36,7 +36,17 @@
     {{ s.xMax }}
   </text>
 
-  <path class="line" [attr.d]="path()" />
+  <defs>
+    <linearGradient [attr.id]="gradientId" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" class="fill-top" />
+      <stop offset="100%" class="fill-bottom" />
+    </linearGradient>
+  </defs>
+  <!-- Keyed on the path: new data redraws the line from its start (CSS draw-in). -->
+  @for (d of [path()]; track d) {
+    <path class="area" [attr.d]="area()" [attr.fill]="'url(#' + gradientId + ')'" />
+    <path class="line" [attr.d]="d" pathLength="1" />
+  }
 
   @if (activePoint(); as point) {
     <line
@@ -46,7 +56,8 @@
       [attr.y1]="margin.top"
       [attr.y2]="height - margin.bottom"
     />
-    <circle class="marker" [attr.cx]="s.x(point.x)" [attr.cy]="s.y(point.y)" r="4" />
+    <circle class="marker-halo" [attr.cx]="s.x(point.x)" [attr.cy]="s.y(point.y)" r="10" />
+    <circle class="marker" [attr.cx]="s.x(point.x)" [attr.cy]="s.y(point.y)" r="4.5" />
   }
 </svg>
 

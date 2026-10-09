@@ -14,13 +14,17 @@ h2 {
   flex-direction: column;
   align-items: flex-start;
   gap: var(--space-3);
-  padding: var(--space-10) var(--space-8);
-  background: var(--surface-secondary);
-  border: 1px dashed var(--border-strong);
+  padding: var(--space-12) var(--space-8);
+  background: var(--glass-fill);
+  border: 1.5px dashed var(--border-strong);
   border-radius: var(--radius-lg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   transition:
-    border-color var(--motion-fast) var(--easing-standard),
-    background-color var(--motion-fast) var(--easing-standard);
+    border-color var(--motion-base) var(--easing-standard),
+    background-color var(--motion-base) var(--easing-standard),
+    box-shadow var(--motion-base) var(--easing-standard),
+    transform var(--motion-base) var(--easing-emphasized);
 
   p {
     color: var(--text-secondary);
@@ -28,18 +32,31 @@ h2 {
   }
 }
 
+// Files hovering over the zone: it lifts and lights up, answering the drag.
 .drop-zone--active {
   border-color: var(--accent-primary);
   background: var(--accent-subtle);
+  box-shadow:
+    0 0 0 4px var(--accent-subtle),
+    0 12px 40px var(--accent-glow);
+  transform: scale(1.01);
+
+  .drop-zone__icon {
+    transform: translateY(-4px);
+  }
 }
 
 .drop-zone__icon {
-  --icon-size: 1.25rem;
+  --icon-size: 1.5rem;
   display: inline-flex;
-  padding: var(--space-2);
+  padding: var(--space-3);
   border-radius: var(--radius-md);
   background: var(--accent-subtle);
   color: var(--accent-primary);
+  box-shadow:
+    0 0 0 1px var(--accent-glow),
+    0 0 32px var(--accent-glow);
+  transition: transform var(--motion-base) var(--easing-emphasized);
 }
 
 .drop-zone__actions {
@@ -61,9 +78,6 @@ h2 {
   flex-direction: column;
   gap: var(--space-5);
   padding: var(--space-6);
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
 }
 
 .progress__header {
@@ -89,7 +103,8 @@ h2 {
   inset: 0 auto 0 0;
   width: 30%;
   border-radius: 2px;
-  background: var(--accent-primary);
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  box-shadow: 0 0 12px var(--accent-glow);
   animation: progress-slide 1.2s var(--easing-standard) infinite;
 }
 
@@ -118,7 +133,7 @@ h2 {
 
   div {
     padding: var(--space-3) var(--space-4);
-    background: var(--surface-primary);
+    background: var(--glass-highlight);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
   }
@@ -130,6 +145,7 @@ h2 {
 
   dd {
     margin: var(--space-1) 0 0;
+    font-family: var(--font-display);
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-semibold);
   }

@@ -7,6 +7,7 @@ import { Icon, IconNode } from '../icon/icon';
   selector: 'app-empty-state',
   imports: [Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'glass' },
   template: `
     @if (icon(); as icon) {
       <span class="empty-state__icon"><app-icon [icon]="icon" /></span>
@@ -22,20 +23,35 @@ import { Icon, IconNode } from '../icon/icon';
       align-items: flex-start;
       gap: var(--space-3);
       padding: var(--space-10) var(--space-8);
-      background: var(--surface-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
+      overflow: hidden;
+      isolation: isolate;
+    }
+    /* A chip of light behind the icon: the one warm spot of an empty screen. */
+    :host::before {
+      content: '';
+      position: absolute;
+      top: -6rem;
+      left: -4rem;
+      width: 18rem;
+      height: 18rem;
+      border-radius: 50%;
+      z-index: -1;
+      background: radial-gradient(circle, var(--accent-subtle), transparent 70%);
+      pointer-events: none;
     }
     .empty-state__icon {
-      --icon-size: 1.25rem;
+      --icon-size: 1.375rem;
       display: inline-flex;
-      padding: var(--space-2);
+      padding: var(--space-3);
       border-radius: var(--radius-md);
       background: var(--accent-subtle);
       color: var(--accent-primary);
+      box-shadow:
+        0 0 0 1px var(--accent-glow),
+        0 0 32px var(--accent-glow);
     }
     h2 {
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-xl);
       font-weight: var(--font-weight-semibold);
     }
     p {

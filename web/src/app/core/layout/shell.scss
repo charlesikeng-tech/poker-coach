@@ -59,6 +59,8 @@ $desktop: 1024px;
   overflow-y: auto;
   background: var(--surface-navigation);
   border-right: 1px solid var(--border-subtle);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
   transition: width var(--motion-base) var(--easing-standard);
 }
 
@@ -72,9 +74,10 @@ $desktop: 1024px;
 }
 
 .sidebar__product {
+  font-family: var(--font-display);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .sidebar__close {
@@ -104,6 +107,7 @@ ul {
 }
 
 .nav-link {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -128,12 +132,26 @@ ul {
   }
 }
 
+// The active page is marked like a chip on the felt: gold bar, warm glow.
 .nav-link--active {
-  background: var(--surface-selected);
+  background: linear-gradient(90deg, var(--surface-selected), transparent);
   color: var(--text-primary);
 
   app-icon {
     color: var(--accent-primary);
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 0;
+    width: 3px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-primary);
+    box-shadow: 0 0 12px var(--accent-glow);
   }
 }
 
@@ -154,8 +172,10 @@ ul {
   gap: var(--space-2);
   height: var(--layout-topbar-height);
   padding: 0 var(--space-6);
-  background: var(--surface-background);
+  background: color-mix(in srgb, var(--surface-background) 60%, transparent);
   border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 .topbar__spacer {
@@ -251,6 +271,7 @@ ul {
       transform: none;
       visibility: visible;
       transition-delay: 0s;
+      background: var(--surface-primary);
       box-shadow: var(--shadow-elevated);
     }
     .backdrop {
@@ -259,6 +280,7 @@ ul {
       inset: 0;
       z-index: 20;
       background: rgb(0 0 0 / 0.45);
+      backdrop-filter: blur(2px);
     }
   }
 

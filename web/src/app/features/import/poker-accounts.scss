@@ -13,9 +13,14 @@
   display: flex;
   gap: var(--space-4);
   padding: var(--space-5);
-  background: var(--surface-secondary);
+  background: var(--glass-fill);
   border: 1px solid var(--accent-primary);
   border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 0 4px var(--accent-subtle),
+    0 12px 40px rgb(0 0 0 / 0.25);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 .account-prompt__icon {

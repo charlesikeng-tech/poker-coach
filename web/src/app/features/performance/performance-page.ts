@@ -20,6 +20,7 @@ import {
 } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
+import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
@@ -33,8 +34,9 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
 
 @Component({
   selector: 'app-performance-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart, StatTile],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page-enter' },
   templateUrl: './performance-page.html',
   styleUrl: './performance-page.scss',
 })
@@ -75,6 +77,24 @@ export class PerformancePage {
         currency: 'EUR',
         maximumFractionDigits: 0,
       }).format(value);
+  });
+
+  /** Formatters handed to animated figures: rebuilt when the language changes. */
+  protected readonly formats = computed(() => {
+    const locale = this.locale();
+    return {
+      money: (value: number | null) => formatMoney(value, 'EUR', locale),
+      signedMoney: (value: number | null) => formatSignedMoney(value, 'EUR', locale),
+      percent: (value: number | null) => formatSignedPercent(value, locale),
+      share: (value: number | null) =>
+        value === null
+          ? '—'
+          : new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 }).format(
+              value,
+            ),
+      integer: (value: number | null) =>
+        formatInteger(value === null ? null : Math.round(value), locale),
+    };
   });
 
   constructor() {

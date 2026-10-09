@@ -21,6 +21,7 @@ export interface LinePoint {
 }
 
 const MARGIN = { top: 12, right: 16, bottom: 28, left: 72 };
+let nextId = 0;
 const HEIGHT = 280;
 
 /**
@@ -43,6 +44,7 @@ export class LineChart {
   protected readonly margin = MARGIN;
   protected readonly width = signal(600);
   protected readonly active = signal<number | null>(null);
+  protected readonly gradientId = `line-chart-fill-${nextId++}`;
 
   protected readonly scales = computed(() => {
     const points = this.points();
@@ -65,6 +67,17 @@ export class LineChart {
     return this.points()
       .map((p, i) => `${i === 0 ? 'M' : 'L'}${x(p.x).toFixed(1)},${y(p.y).toFixed(1)}`)
       .join(' ');
+  });
+
+  /** Same line closed on the zero line: the soft glow under the curve. */
+  protected readonly area = computed(() => {
+    const points = this.points();
+    if (points.length === 0) {
+      return '';
+    }
+    const { x, y } = this.scales();
+    const zero = y(0).toFixed(1);
+    return `${this.path()} L${x(points[points.length - 1].x).toFixed(1)},${zero} L${x(points[0].x).toFixed(1)},${zero} Z`;
   });
 
   protected readonly activePoint = computed(() => {

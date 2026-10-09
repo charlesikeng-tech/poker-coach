@@ -22,8 +22,9 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
     .pc-button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: var(--space-2);
-      height: 2.25rem;
+      height: 2.375rem;
       padding: 0 var(--space-4);
       border: 1px solid transparent;
       border-radius: var(--radius-md);
@@ -34,27 +35,43 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
       cursor: pointer;
       transition:
         background-color var(--motion-fast) var(--easing-standard),
-        border-color var(--motion-fast) var(--easing-standard);
+        border-color var(--motion-fast) var(--easing-standard),
+        box-shadow var(--motion-base) var(--easing-standard),
+        transform var(--motion-fast) var(--easing-standard);
+    }
+    .pc-button:active:not(:disabled) {
+      transform: translateY(1px) scale(0.985);
     }
     .pc-button:disabled,
     .pc-button[aria-disabled='true'] {
       opacity: 0.5;
       cursor: not-allowed;
     }
+    /* Chip gold, lit from above; the glow answers the pointer. */
     .pc-button--primary {
-      background: var(--accent-primary);
+      background: linear-gradient(180deg, var(--accent-primary-hover), var(--accent-primary));
       color: var(--text-on-accent);
+      font-weight: var(--font-weight-semibold);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.3),
+        0 1px 2px rgb(0 0 0 / 0.3);
     }
     .pc-button--primary:hover:not(:disabled) {
-      background: var(--accent-primary-hover);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.3),
+        0 0 0 1px var(--accent-glow),
+        0 6px 24px var(--accent-glow);
     }
     .pc-button--secondary {
-      background: var(--surface-elevated);
+      background: var(--glass-fill);
       border-color: var(--border-default);
       color: var(--text-primary);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
     }
     .pc-button--secondary:hover:not(:disabled) {
-      border-color: var(--border-strong);
+      border-color: var(--accent-glow);
+      background: var(--surface-hover);
     }
     .pc-button--ghost {
       background: transparent;

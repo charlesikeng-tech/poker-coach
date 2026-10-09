@@ -2,78 +2,107 @@
 // Components consume ONLY these semantic custom properties — never raw hex values.
 // Text/background pairs were checked for WCAG AA (≥ 4.5:1 for body text) in both themes.
 
+// "Tapis de nuit": the felt of a card room at night. Green-black surfaces, chip gold as the single
+// accent, frosted-glass panels floating above the felt. Profit and loss keep their own hues and are
+// never conveyed by color alone (signs, labels).
 :root,
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  // Surfaces: five layers, from the page background up to interactive elements.
-  --surface-background: #0c1017;
-  --surface-navigation: #10151e;
-  --surface-primary: #141a24;
-  --surface-secondary: #19202c;
-  --surface-elevated: #202938;
-  --surface-hover: rgb(148 163 184 / 0.08);
-  --surface-selected: rgb(124 156 255 / 0.14);
+  // Surfaces, from the felt up to raised elements.
+  --surface-background: #0b1411;
+  --surface-navigation: rgb(13 24 20 / 0.72);
+  --surface-primary: #0f1a16;
+  --surface-secondary: rgb(22 36 30 / 0.62);
+  --surface-elevated: #1b2b24;
+  --surface-hover: rgb(233 185 73 / 0.06);
+  --surface-selected: rgb(233 185 73 / 0.12);
 
-  --text-primary: #e6eaf2;
-  --text-secondary: #a7b0c0;
-  --text-muted: #8590a2;
-  --text-on-accent: #0c1017;
+  --text-primary: #ecf2ee;
+  --text-secondary: #a9b8b0;
+  --text-muted: #87978e;
+  --text-on-accent: #1a1405;
 
-  --border-subtle: rgb(148 163 184 / 0.1);
-  --border-default: rgb(148 163 184 / 0.18);
-  --border-strong: rgb(148 163 184 / 0.32);
+  --border-subtle: rgb(214 236 224 / 0.07);
+  --border-default: rgb(214 236 224 / 0.13);
+  --border-strong: rgb(214 236 224 / 0.26);
 
-  --accent-primary: #7c9cff;
-  --accent-primary-hover: #94afff;
-  --accent-subtle: rgb(124 156 255 / 0.14);
+  --accent-primary: #e9b949;
+  --accent-primary-hover: #f3ca68;
+  --accent-subtle: rgb(233 185 73 / 0.13);
+  --accent-glow: rgb(233 185 73 / 0.35);
 
-  // Semantic states. Never the only carrier of meaning: pair with a sign, icon or label.
-  --success: #3fbf8f;
-  --warning: #e6b450;
-  --danger: #f07178;
+  --success: #3ddc97;
+  --warning: #f2c14e;
+  --danger: #ff6b6b;
   --info: #5fb3e6;
 
-  --focus-ring: #94afff;
-  --shadow-elevated: 0 8px 24px rgb(0 0 0 / 0.35);
+  --focus-ring: #f3ca68;
+  --shadow-elevated: 0 12px 32px rgb(0 0 0 / 0.45);
+
+  // Glass panels: translucent fill, hairline light edge on top, blur of the felt behind.
+  --glass-fill: rgb(22 36 30 / 0.55);
+  --glass-edge: rgb(255 255 255 / 0.07);
+  --glass-highlight: rgb(255 255 255 / 0.05);
+  --glass-blur: 14px;
+  --spotlight: rgb(233 185 73 / 0.1);
+
+  // The felt: a pool of light at the top of the room, falling off into the dark.
+  --felt-light: rgb(31 77 56 / 0.55);
+  --felt-glow: rgb(233 185 73 / 0.05);
+  --grain-opacity: 0.05;
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --surface-background: #eef1f5;
-  --surface-navigation: #f6f8fa;
-  --surface-primary: #f6f8fa;
-  --surface-secondary: #ffffff;
+  --surface-background: #eef3ef;
+  --surface-navigation: rgb(248 251 249 / 0.78);
+  --surface-primary: #f6f9f7;
+  --surface-secondary: rgb(255 255 255 / 0.72);
   --surface-elevated: #ffffff;
-  --surface-hover: rgb(15 23 42 / 0.05);
-  --surface-selected: rgb(63 91 217 / 0.1);
+  --surface-hover: rgb(138 100 0 / 0.06);
+  --surface-selected: rgb(138 100 0 / 0.1);
 
-  --text-primary: #121826;
-  --text-secondary: #4a5568;
-  --text-muted: #646e80;
+  --text-primary: #10201a;
+  --text-secondary: #43544c;
+  --text-muted: #5d6e66;
   --text-on-accent: #ffffff;
 
-  --border-subtle: rgb(15 23 42 / 0.08);
-  --border-default: rgb(15 23 42 / 0.14);
-  --border-strong: rgb(15 23 42 / 0.26);
+  --border-subtle: rgb(16 32 26 / 0.08);
+  --border-default: rgb(16 32 26 / 0.14);
+  --border-strong: rgb(16 32 26 / 0.26);
 
-  --accent-primary: #3f5bd9;
-  --accent-primary-hover: #3049bf;
-  --accent-subtle: rgb(63 91 217 / 0.1);
+  // Gold darkened until it reads as text on light surfaces (AA).
+  --accent-primary: #8a6400;
+  --accent-primary-hover: #745400;
+  --accent-subtle: rgb(138 100 0 / 0.1);
+  --accent-glow: rgb(138 100 0 / 0.22);
 
-  --success: #17744e;
+  --success: #12764d;
   --warning: #8a6100;
   --danger: #b3303b;
   --info: #1f6fa8;
 
-  --focus-ring: #3f5bd9;
-  --shadow-elevated: 0 8px 24px rgb(15 23 42 / 0.1);
+  --focus-ring: #8a6400;
+  --shadow-elevated: 0 12px 32px rgb(16 32 26 / 0.12);
+
+  --glass-fill: rgb(255 255 255 / 0.62);
+  --glass-edge: rgb(255 255 255 / 0.9);
+  --glass-highlight: rgb(255 255 255 / 0.6);
+  --glass-blur: 14px;
+  --spotlight: rgb(138 100 0 / 0.07);
+
+  --felt-light: rgb(61 220 151 / 0.16);
+  --felt-glow: rgb(233 185 73 / 0.12);
+  --grain-opacity: 0.025;
 }
 
 :root {
   // Typography: one family, scale based on a 1.2 ratio from a 14px base (dense analytics UI).
   --font-sans: 'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // Headings and figures: geometric, wide, confident. Body stays in Plex for dense reading.
+  --font-display: 'Sora Variable', 'IBM Plex Sans Variable', system-ui, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.8125rem;
   --font-size-md: 0.875rem;
@@ -98,17 +127,20 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
 
-  // Radii stay small: a precision tool, not a toy.
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+  // Radii: soft controls, rounder panels; the hierarchy reads in the corners.
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
 
   --layout-sidebar-width: 15rem;
   --layout-sidebar-collapsed-width: 4rem;
   --layout-topbar-height: 3.5rem;
   --layout-content-max-width: 90rem;
 
-  --motion-fast: 120ms;
-  --motion-base: 200ms;
+  --motion-fast: 140ms;
+  --motion-base: 240ms;
+  --motion-slow: 700ms;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --easing-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
 }

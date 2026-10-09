@@ -23,16 +23,6 @@ let nextId = 0;
       </select>
     </ng-container>
   `,
-  styles: `
-    select {
-      height: 2.25rem;
-      padding: 0 var(--space-3);
-      background: var(--surface-secondary);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-    }
-  `,
 })
 export class LanguageSelect {
   protected readonly language = inject(LanguageService);

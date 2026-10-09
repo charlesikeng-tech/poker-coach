@@ -35,59 +35,29 @@
 
   select {
     min-width: 11rem;
-    height: 2.25rem;
-    padding: 0 var(--space-3);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-md);
-    background: var(--surface-elevated);
-    color: var(--text-primary);
   }
 }
 
 .totals {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: var(--space-3);
   margin: 0 0 var(--space-3);
+}
+
+// The profit tile leads: it spans two columns when there is room.
+.stat-tile--hero {
+  grid-column: span 2;
+}
+
+.tile-note {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.stale {
+  opacity: 0.55;
   transition: opacity var(--motion-fast) var(--easing-standard);
-
-  div {
-    padding: var(--space-4);
-    background: var(--surface-secondary);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-  }
-
-  dt {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
-  }
-
-  dd {
-    margin: var(--space-1) 0 0;
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  small {
-    display: block;
-    color: var(--text-muted);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-regular);
-  }
-}
-
-.totals--stale,
-.table-wrap--stale {
-  opacity: 0.6;
-}
-
-[data-sign='positive'] {
-  color: var(--success);
-}
-
-[data-sign='negative'] {
-  color: var(--danger);
 }
 
 .hint {
@@ -99,10 +69,6 @@
 .table-wrap {
   overflow-x: auto;
   margin-top: var(--space-5);
-  background: var(--surface-secondary);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  transition: opacity var(--motion-fast) var(--easing-standard);
 }
 
 table {
@@ -128,8 +94,16 @@ tbody tr:last-child td {
   border-bottom: 0;
 }
 
+tbody tr {
+  transition: background-color var(--motion-fast) var(--easing-standard);
+}
+
 tbody tr:hover {
   background: var(--surface-hover);
+}
+
+tbody tr:hover .name {
+  color: var(--accent-primary);
 }
 
 .num {
@@ -143,13 +117,14 @@ tbody tr:hover {
 
 .name {
   font-weight: var(--font-weight-medium);
+  transition: color var(--motion-fast) var(--easing-standard);
 }
 
 .chip {
   display: inline-block;
   padding: 0 var(--space-2);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-pill);
   color: var(--text-secondary);
   font-size: var(--font-size-xs);
 }
@@ -164,7 +139,44 @@ tbody tr:hover {
   color: var(--text-secondary);
 }
 
+.skeleton-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+
+  .skeleton:first-child {
+    width: 50%;
+    height: 0.75rem;
+  }
+
+  .skeleton:last-child {
+    width: 70%;
+    height: 1.5rem;
+  }
+}
+
+.skeleton-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding: var(--space-5);
+
+  .skeleton {
+    height: 0.875rem;
+  }
+
+  .skeleton:nth-child(odd) {
+    width: 92%;
+  }
+}
+
 @media (max-width: 767px) {
+  .stat-tile--hero {
+    grid-column: 1 / -1;
+  }
+
   .optional {
     display: none;
   }

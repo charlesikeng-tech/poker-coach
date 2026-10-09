@@ -31,32 +31,36 @@
       </div>
 
       <div [class.stale]="state() === 'loading'">
-        <dl class="totals">
-          <div>
-            <dt>{{ t('totals.profit') }}</dt>
-            <dd class="numeric" [attr.data-sign]="sign(report.totals.profit)">
-              {{ signedMoney(report.totals.profit) }}
-            </dd>
-          </div>
-          <div>
-            <dt>{{ t('totals.roi') }}</dt>
-            <dd class="numeric" [attr.data-sign]="sign(report.totals.roi)">
-              {{ percent(report.totals.roi) }}
-            </dd>
-          </div>
-          <div>
-            <dt>{{ t('totals.itm') }}</dt>
-            <dd class="numeric">{{ share(report.totals.itmRate) }}</dd>
-          </div>
-          <div>
-            <dt>{{ t('totals.entries') }}</dt>
-            <dd class="numeric">{{ integer(report.totals.entries) }}</dd>
-          </div>
-          <div>
-            <dt>{{ t('totals.buyIns') }}</dt>
-            <dd class="numeric">{{ money(report.totals.buyIns) }}</dd>
-          </div>
-        </dl>
+        <div class="totals">
+          <app-stat-tile
+            class="stat-tile--hero"
+            [label]="t('totals.profit')"
+            [value]="report.totals.profit"
+            [format]="formats().signedMoney"
+            [signed]="true"
+          />
+          <app-stat-tile
+            [label]="t('totals.roi')"
+            [value]="report.totals.roi"
+            [format]="formats().percent"
+            [signed]="true"
+          />
+          <app-stat-tile
+            [label]="t('totals.itm')"
+            [value]="report.totals.itmRate"
+            [format]="formats().share"
+          />
+          <app-stat-tile
+            [label]="t('totals.entries')"
+            [value]="report.totals.entries"
+            [format]="formats().integer"
+          />
+          <app-stat-tile
+            [label]="t('totals.buyIns')"
+            [value]="report.totals.buyIns"
+            [format]="formats().money"
+          />
+        </div>
         @if (report.totals.tournamentsWithResult < report.totals.tournaments) {
           <p class="hint">
             {{
@@ -67,7 +71,7 @@
           </p>
         }
 
-        <section class="panel">
+        <section class="panel glass">
           <h2>{{ t('chart.title') }}</h2>
           @if (chartPoints().length > 1) {
             <app-line-chart
@@ -94,7 +98,7 @@
           ];
           track section.dimension
         ) {
-          <section class="panel">
+          <section class="panel glass">
             <h2>{{ t('breakdown.' + section.dimension) }}</h2>
             <div class="table-wrap">
               <table>
@@ -139,6 +143,15 @@
       </div>
     }
   } @else {
-    <p class="hint" role="status">{{ t('loading') }}</p>
+    <div role="status" [attr.aria-label]="t('loading')">
+      <div class="totals">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="glass skeleton-tile">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        }
+      </div>
+      <div class="panel glass"><span class="skeleton skeleton-chart"></span></div>
+    </div>
   }
 </ng-container>
