@@ -30,8 +30,15 @@ export interface PerformanceReport {
 export class PerformanceApi {
   private readonly http = inject(HttpClient);
 
-  get(from: string | undefined): Promise<PerformanceReport> {
-    const params = from ? new HttpParams().set('from', from) : new HttpParams();
+  /** `to` is exclusive. */
+  get(from: string | undefined, to?: string): Promise<PerformanceReport> {
+    let params = new HttpParams();
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
     return firstValueFrom(this.http.get<PerformanceReport>('/api/performance', { params }));
   }
 }

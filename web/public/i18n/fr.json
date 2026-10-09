@@ -30,6 +30,39 @@
         "title": "Aucun résultat pour l'instant",
         "description": "Importe tes historiques de mains et tes résumés de tournois Winamax pour voir tes résultats ici.",
         "action": "Importer des fichiers"
+      },
+      "importAction": "Importer des fichiers",
+      "loading": "Chargement de votre tableau de bord…",
+      "error": {
+        "title": "Impossible de charger votre tableau de bord",
+        "description": "Poker Coach n'a pas pu répondre. Vos données ne sont pas perdues : réessayez.",
+        "retry": "Réessayer"
+      },
+      "alerts": {
+        "unconfirmed": "Un compte Winamax trouvé dans vos fichiers attend votre confirmation.",
+        "missingSummaries": "{{count}} tournoi(s) n'ont pas de fichier de résumé : leur résultat est inconnu."
+      },
+      "window": "{{days}} derniers jours",
+      "totals": {
+        "profit": "Profit",
+        "roi": "ROI",
+        "itm": "Dans l'argent",
+        "tournaments": "Tournois",
+        "delta": "{{amount}} par rapport aux {{days}} jours précédents",
+        "noPrevious": "Rien à comparer sur la période précédente"
+      },
+      "chart": {
+        "title": "Profit cumulé",
+        "more": "Voir les performances",
+        "total": "Total :",
+        "aria": "Profit cumulé sur les {{count}} derniers tournois. Utilisez les flèches pour les parcourir.",
+        "notEnough": "Jouez au moins deux tournois avec résumé sur les {{days}} derniers jours pour voir la courbe."
+      },
+      "recent": {
+        "title": "Derniers tournois",
+        "more": "Tous les tournois",
+        "missingSummary": "Sans résumé",
+        "incomplete": "Incomplet"
       }
     },
     "performance": {

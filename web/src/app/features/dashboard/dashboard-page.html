@@ -1,0 +1,146 @@
+<ng-container *transloco="let t; prefix: 'pages.dashboard'">
+  <app-page-header [heading]="t('title')" [description]="t('description')">
+    @if (data()?.recent?.totalCount) {
+      <a appButton variant="primary" routerLink="/import">
+        <app-icon [icon]="icons.Upload" />
+        {{ t('importAction') }}
+      </a>
+    }
+  </app-page-header>
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (data(); as data) {
+    @if (data.recent.totalCount === 0) {
+      @if (data.unconfirmedAccounts > 0) {
+        <a class="alert glass" routerLink="/import" appSpotlight>
+          <app-icon [icon]="icons.UserRound" />
+          <span>{{ t('alerts.unconfirmed') }}</span>
+        </a>
+      }
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      @if (data.unconfirmedAccounts > 0 || missingSummaries() > 0) {
+        <div class="alerts">
+          @if (data.unconfirmedAccounts > 0) {
+            <a class="alert glass" routerLink="/import" appSpotlight>
+              <app-icon [icon]="icons.UserRound" />
+              <span>{{ t('alerts.unconfirmed') }}</span>
+            </a>
+          }
+          @if (missingSummaries() > 0) {
+            <a class="alert glass" routerLink="/tournaments" appSpotlight>
+              <app-icon [icon]="icons.FileWarning" />
+              <span>{{ t('alerts.missingSummaries', { count: missingSummaries() }) }}</span>
+            </a>
+          }
+        </div>
+      }
+
+      <h2 class="section-title">{{ t('window', { days: windowDays }) }}</h2>
+      <div class="totals">
+        <app-stat-tile
+          class="stat-tile--hero"
+          [label]="t('totals.profit')"
+          [value]="data.current.totals.profit"
+          [format]="formats().signedMoney"
+          [signed]="true"
+        >
+          @if (profitDelta(); as delta) {
+            <small class="delta" [attr.data-sign]="sign(delta)">
+              {{ t('totals.delta', { amount: formats().signedMoney(delta), days: windowDays }) }}
+            </small>
+          } @else {
+            <small class="delta">{{ t('totals.noPrevious') }}</small>
+          }
+        </app-stat-tile>
+        <app-stat-tile
+          [label]="t('totals.roi')"
+          [value]="data.current.totals.roi"
+          [format]="formats().percent"
+          [signed]="true"
+        />
+        <app-stat-tile
+          [label]="t('totals.itm')"
+          [value]="data.current.totals.itmRate"
+          [format]="formats().share"
+        />
+        <app-stat-tile
+          [label]="t('totals.tournaments')"
+          [value]="data.current.totals.tournaments"
+          [format]="formats().integer"
+        />
+      </div>
+
+      <div class="columns">
+        <section class="panel glass">
+          <header class="panel__header">
+            <h2>{{ t('chart.title') }}</h2>
+            <a routerLink="/performance">{{ t('chart.more') }}</a>
+          </header>
+          @if (chartPoints().length > 1) {
+            <app-line-chart
+              [points]="chartPoints()"
+              [formatY]="formatAxis()"
+              [height]="200"
+              [ariaLabel]="t('chart.aria', { count: chartPoints().length })"
+            />
+          } @else {
+            <p class="hint">{{ t('chart.notEnough', { days: windowDays }) }}</p>
+          }
+        </section>
+
+        <section class="panel glass">
+          <header class="panel__header">
+            <h2>{{ t('recent.title') }}</h2>
+            <a routerLink="/tournaments">{{ t('recent.more') }}</a>
+          </header>
+          <ul class="recent">
+            @for (tournament of data.recent.items; track tournament.id) {
+              <li>
+                <span class="recent__name">{{ tournament.name }}</span>
+                <span class="recent__date">{{ formats().date(tournament.startedAt) }}</span>
+                @if (tournament.result.status === 'known') {
+                  <span
+                    class="recent__profit numeric"
+                    [attr.data-sign]="sign(tournament.result.profit)"
+                  >
+                    {{ formats().signedMoney(tournament.result.profit) }}
+                  </span>
+                } @else {
+                  <span class="recent__chip">{{ t('recent.' + tournament.result.status) }}</span>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    }
+  } @else {
+    <div role="status" [attr.aria-label]="t('loading')">
+      <div class="totals">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <div class="glass skeleton-tile">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        }
+      </div>
+      <div class="columns">
+        <div class="panel glass"><span class="skeleton skeleton-block"></span></div>
+        <div class="panel glass"><span class="skeleton skeleton-block"></span></div>
+      </div>
+    </div>
+  }
+</ng-container>

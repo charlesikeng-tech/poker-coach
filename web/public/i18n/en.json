@@ -30,6 +30,39 @@
         "title": "No results yet",
         "description": "Import your Winamax hand histories and tournament summaries to see your results here.",
         "action": "Import files"
+      },
+      "importAction": "Import files",
+      "loading": "Loading your dashboard…",
+      "error": {
+        "title": "Your dashboard could not be loaded",
+        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "retry": "Try again"
+      },
+      "alerts": {
+        "unconfirmed": "A Winamax account found in your files is waiting for your confirmation.",
+        "missingSummaries": "{{count}} tournament(s) have no summary file: their result is unknown."
+      },
+      "window": "Last {{days}} days",
+      "totals": {
+        "profit": "Profit",
+        "roi": "ROI",
+        "itm": "In the money",
+        "tournaments": "Tournaments",
+        "delta": "{{amount}} vs the {{days}} days before",
+        "noPrevious": "Nothing to compare with the period before"
+      },
+      "chart": {
+        "title": "Cumulative profit",
+        "more": "See performance",
+        "total": "Total:",
+        "aria": "Cumulative profit over the last {{count}} tournaments. Use the arrow keys to go through them.",
+        "notEnough": "Play at least two tournaments with a summary in the last {{days}} days to see the curve."
+      },
+      "recent": {
+        "title": "Latest tournaments",
+        "more": "All tournaments",
+        "missingSummary": "No summary",
+        "incomplete": "Incomplete"
       }
     },
     "performance": {

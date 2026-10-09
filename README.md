@@ -152,3 +152,7 @@ Phase 4 — Performance (MVP-1):
 - [x] ITM = share of entries that won a prize (bounties alone do not count: the files do not give the
       paid places)
 - [x] Web: performance page (KPIs, accessible line chart with crosshair, breakdown tables)
+- [x] Web: dashboard (last 30 days vs the 30 before, mini curve, latest tournaments, alerts for
+      unconfirmed accounts and missing summaries)
+- [x] Visual identity "Tapis de nuit" (felt, chip gold, glass panels, Sora + Plex, motion that
+      respects reduced-motion)

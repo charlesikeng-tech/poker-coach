@@ -30,6 +30,39 @@
         "title": "Todavía no hay resultados",
         "description": "Importa tus historiales de manos y resúmenes de torneos de Winamax para ver aquí tus resultados.",
         "action": "Importar archivos"
+      },
+      "importAction": "Importar archivos",
+      "loading": "Cargando tu panel…",
+      "error": {
+        "title": "No se ha podido cargar tu panel",
+        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "alerts": {
+        "unconfirmed": "Una cuenta de Winamax encontrada en tus archivos espera tu confirmación.",
+        "missingSummaries": "{{count}} torneo(s) no tienen archivo de resumen: su resultado es desconocido."
+      },
+      "window": "Últimos {{days}} días",
+      "totals": {
+        "profit": "Beneficio",
+        "roi": "ROI",
+        "itm": "En premios",
+        "tournaments": "Torneos",
+        "delta": "{{amount}} frente a los {{days}} días anteriores",
+        "noPrevious": "Nada que comparar con el periodo anterior"
+      },
+      "chart": {
+        "title": "Beneficio acumulado",
+        "more": "Ver rendimiento",
+        "total": "Total:",
+        "aria": "Beneficio acumulado en los últimos {{count}} torneos. Usa las flechas para recorrerlos.",
+        "notEnough": "Juega al menos dos torneos con resumen en los últimos {{days}} días para ver la curva."
+      },
+      "recent": {
+        "title": "Últimos torneos",
+        "more": "Todos los torneos",
+        "missingSummary": "Sin resumen",
+        "incomplete": "Incompleto"
       }
     },
     "performance": {

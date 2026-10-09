@@ -1,0 +1,181 @@
+:host {
+  display: block;
+}
+
+.alerts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.alert {
+  --icon-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-color: color-mix(in srgb, var(--warning) 45%, transparent);
+  color: var(--text-primary);
+  text-decoration: none;
+
+  app-icon {
+    color: var(--warning);
+  }
+
+  .alerts & {
+    margin-bottom: 0;
+  }
+}
+
+.section-title {
+  margin-bottom: var(--space-3);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0;
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-3);
+}
+
+.stat-tile--hero {
+  grid-column: span 2;
+}
+
+.delta {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.panel {
+  padding: var(--space-5);
+}
+
+.panel__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+
+  h2 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  a {
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.recent {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name profit'
+      'date profit';
+    align-items: center;
+    column-gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--border-subtle);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
+.recent__name {
+  grid-area: name;
+  overflow: hidden;
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent__date {
+  grid-area: date;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.recent__profit,
+.recent__chip {
+  grid-area: profit;
+}
+
+.recent__profit {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-semibold);
+}
+
+.recent__chip {
+  padding: 0 var(--space-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.skeleton-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+
+  .skeleton:first-child {
+    width: 50%;
+    height: 0.75rem;
+  }
+
+  .skeleton:last-child {
+    width: 70%;
+    height: 1.5rem;
+  }
+}
+
+.skeleton-block {
+  height: 12rem;
+}
+
+@media (max-width: 1023px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .stat-tile--hero {
+    grid-column: 1 / -1;
+  }
+}

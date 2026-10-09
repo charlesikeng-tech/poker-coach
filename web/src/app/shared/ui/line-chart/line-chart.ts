@@ -22,7 +22,6 @@ export interface LinePoint {
 
 const MARGIN = { top: 12, right: 16, bottom: 28, left: 72 };
 let nextId = 0;
-const HEIGHT = 280;
 
 /**
  * Single-series line chart: one 2px line in the accent color, recessive grid, emphasized zero line,
@@ -33,14 +32,15 @@ const HEIGHT = 280;
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './line-chart.html',
   styleUrl: './line-chart.scss',
-  host: { '[style.height.px]': 'height' },
+  host: { '[style.height.px]': 'height()' },
 })
 export class LineChart {
   readonly points = input.required<readonly LinePoint[]>();
   readonly formatY = input.required<(value: number) => string>();
   readonly ariaLabel = input.required<string>();
 
-  protected readonly height = HEIGHT;
+  /** Pixel height; the width follows the container. */
+  readonly height = input(280);
   protected readonly margin = MARGIN;
   protected readonly width = signal(600);
   protected readonly active = signal<number | null>(null);
@@ -56,7 +56,7 @@ export class LineChart {
     const xMin = points.length > 0 ? points[0].x : 0;
     const xMax = points.length > 1 ? points[points.length - 1].x : xMin + 1;
     const plotWidth = Math.max(width - MARGIN.left - MARGIN.right, 1);
-    const plotHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
+    const plotHeight = this.height() - MARGIN.top - MARGIN.bottom;
     const x = (value: number) => MARGIN.left + ((value - xMin) / (xMax - xMin)) * plotWidth;
     const y = (value: number) => MARGIN.top + (1 - (value - yMin) / (yMax - yMin)) * plotHeight;
     return { x, y, ticks, xMin, xMax, plotWidth, plotHeight };
