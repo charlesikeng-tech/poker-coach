@@ -24,10 +24,12 @@ public sealed record HandAction(Street Street, string Player, ActionKind Kind, l
 /// </summary>
 /// <param name="Seats">Everyone seated; who was dealt in is derived from <paramref name="Actions"/>.</param>
 /// <param name="Collected">Chips collected per player (uncalled bets included, as printed by the room).</param>
+/// <param name="KnownCards">Hole cards known per player: the hero's, and those shown at showdown. Null: none.</param>
 public sealed record HandForAnalysis(
     int ButtonSeat,
     long BigBlind,
     string Hero,
     IReadOnlyList<SeatState> Seats,
     IReadOnlyList<HandAction> Actions,
-    IReadOnlyDictionary<string, long> Collected);
+    IReadOnlyDictionary<string, long> Collected,
+    IReadOnlyDictionary<string, (Card First, Card Second)>? KnownCards = null);

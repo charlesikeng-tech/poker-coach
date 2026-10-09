@@ -59,6 +59,10 @@ internal sealed class HandHeroFactsRecord
 
     public decimal NetBigBlinds { get; set; }
 
+    public decimal? AllInEquity { get; set; }
+
+    public decimal? AllInExpectedNetChips { get; set; }
+
     public void Apply(HeroHandFacts facts, int version)
     {
         FactsVersion = version;
@@ -84,6 +88,8 @@ internal sealed class HandHeroFactsRecord
         WonAtShowdown = facts.WonAtShowdown;
         NetChips = facts.NetChips;
         NetBigBlinds = facts.NetBigBlinds;
+        AllInEquity = facts.AllInEquity;
+        AllInExpectedNetChips = facts.AllInExpectedNetChips;
     }
 
     public HeroHandFacts ToDomain() => new(
@@ -108,7 +114,9 @@ internal sealed class HandHeroFactsRecord
         WentToShowdown,
         WonAtShowdown,
         NetChips,
-        NetBigBlinds);
+        NetBigBlinds,
+        AllInEquity,
+        AllInExpectedNetChips);
 }
 
 internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<HandHeroFactsRecord>
@@ -121,6 +129,8 @@ internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<Hand
         builder.Property(f => f.Position).HasConversion<int?>();
         builder.Property(f => f.StackInBigBlinds).HasPrecision(10, 2);
         builder.Property(f => f.NetBigBlinds).HasPrecision(12, 2);
+        builder.Property(f => f.AllInEquity).HasPrecision(5, 4);
+        builder.Property(f => f.AllInExpectedNetChips).HasPrecision(14, 2);
         builder.HasIndex(f => f.FactsVersion);
         builder.HasOne<HandRecord>().WithOne().HasForeignKey<HandHeroFactsRecord>(f => f.HandId).OnDelete(DeleteBehavior.Cascade);
     }

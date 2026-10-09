@@ -504,7 +504,35 @@
         "bigBlind": "Ciega grande",
         "unknown": "Desconocida"
       },
-      "basis": "Sobre {{hands}} manos de {{tournaments}} torneo(s), {{complete}} con historial completo."
+      "basis": "Sobre {{hands}} manos de {{tournaments}} torneo(s), {{complete}} con historial completo.",
+      "luck": {
+        "title": "Suerte en los all-in",
+        "lead": "Tus all-in preflop con las cartas mostradas: lo que te dieron, frente a lo que deberían haber dado según las manos. La diferencia es suerte — lo que controlas es la curva esperada.",
+        "luck": "Suerte",
+        "actual": "Resultado real",
+        "expected": "Resultado esperado",
+        "verdict": {
+          "positive": "El board te ha sonreído: {{won}} all-in ganados de {{count}} frente a {{expected}} esperados (equity media {{equity}}).",
+          "negative": "El board te ha costado caro: {{won}} all-in ganados de {{count}} frente a {{expected}} esperados (equity media {{equity}}).",
+          "neutral": "Justo en la media: {{won}} all-in ganados de {{count}} frente a {{expected}} esperados (equity media {{equity}})."
+        },
+        "few": "Menos de 30 all-in: la diferencia todavía es ruido.",
+        "chart": {
+          "actual": "Real",
+          "expected": "Esperado",
+          "aria": "Acumulado de all-in: real {{actual}}, esperado {{expected}}"
+        },
+        "swings": {
+          "title": "Las mayores diferencias",
+          "beat": "Bad beat",
+          "suckout": "Outdraw",
+          "replay": "Ver la mano"
+        },
+        "definition": "En ciegas grandes, para comparar niveles. Cuenta los all-in preflop sin acción tras el flop y con todas las manos en juego mostradas; equity exacta sobre todos los boards posibles, side pots incluidos.",
+        "none": "Ningún all-in preflop con las cartas mostradas en este periodo.",
+        "pending": "Las manos aún se están analizando: las cifras van a cambiar.",
+        "error": "No se puede cargar la suerte en los all-in por ahora."
+      }
     },
     "import": {
       "title": "Importar",

@@ -66,6 +66,7 @@ builder.Services.AddScoped<PerformanceService>();
 builder.Services.AddScoped<HandFactsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
+builder.Services.AddScoped<AllInLuckService>();
 builder.Services.AddScoped<LeakService>();
 builder.Services.AddOptions<CoachingOptions>()
     .BindConfiguration(CoachingOptions.SectionName)

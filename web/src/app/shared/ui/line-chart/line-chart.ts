@@ -50,6 +50,11 @@ export class LineChart {
   /** Pixel height; the width follows the container. */
   readonly height = input(280);
   readonly markers = input<readonly ChartMarker[]>([]);
+  /**
+   * Optional second line, one y per point (same x), drawn dashed and recessive: what was expected
+   * against what happened. The surrounding legend names it.
+   */
+  readonly reference = input<readonly number[]>([]);
   protected readonly margin = MARGIN;
   protected readonly width = signal(600);
   protected readonly active = signal<number | null>(null);
@@ -58,7 +63,7 @@ export class LineChart {
   protected readonly scales = computed(() => {
     const points = this.points();
     const width = this.width();
-    const ys = points.map((p) => p.y);
+    const ys = [...points.map((p) => p.y), ...this.reference()];
     const ticks = niceTicks(Math.min(...ys, 0), Math.max(...ys, 0));
     const yMin = ticks[0];
     const yMax = ticks[ticks.length - 1];
@@ -75,6 +80,17 @@ export class LineChart {
     const { x, y } = this.scales();
     return this.points()
       .map((p, i) => `${i === 0 ? 'M' : 'L'}${x(p.x).toFixed(1)},${y(p.y).toFixed(1)}`)
+      .join(' ');
+  });
+
+  protected readonly referencePath = computed(() => {
+    const { x, y } = this.scales();
+    const points = this.points();
+    return this.reference()
+      .slice(0, points.length)
+      .map(
+        (value, i) => `${i === 0 ? 'M' : 'L'}${x(points[i].x).toFixed(1)},${y(value).toFixed(1)}`,
+      )
       .join(' ');
   });
 

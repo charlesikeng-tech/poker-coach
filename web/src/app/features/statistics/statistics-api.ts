@@ -76,6 +76,18 @@ export class StatisticsApi {
     }
     return firstValueFrom(this.http.get<StatisticsReport>('/api/statistics', { params }));
   }
+
+  /** Every table format together: luck does not depend on the table size. */
+  allInLuck(from: string | undefined, completeOnly: boolean): Promise<AllInLuck> {
+    let params = new HttpParams();
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (completeOnly) {
+      params = params.set('completeOnly', true);
+    }
+    return firstValueFrom(this.http.get<AllInLuck>('/api/statistics/all-in', { params }));
+  }
 }
 
 export type StackFilter = 'all' | 'over15' | 'under15' | 'from15To30' | 'from30To50' | 'over50';
@@ -104,4 +116,40 @@ export function stackBounds(filter: StackFilter): { minStackBb?: number; maxStac
     case 'over50':
       return { minStackBb: 50 };
   }
+}
+
+// Mirrors GET /api/statistics/all-in: preflop all-ins with every hand shown, in big blinds.
+
+export interface LuckPoint {
+  readonly index: number;
+  readonly startedAt: string;
+  readonly actualBigBlinds: number;
+  readonly expectedBigBlinds: number;
+}
+
+export interface LuckSwing {
+  readonly handId: string;
+  readonly tournamentId: string;
+  readonly startedAt: string;
+  readonly heroCards: string | null;
+  /** The hero's share of the main pot when the money went in (0–1). */
+  readonly equity: number;
+  readonly netBigBlinds: number;
+  /** Actual minus expected, in big blinds. */
+  readonly luck: number;
+}
+
+export interface AllInLuck {
+  readonly allIns: number;
+  readonly won: number;
+  /** Sum of equities: all-ins the hero "should" have won. */
+  readonly expectedWins: number;
+  readonly averageEquity: number | null;
+  readonly actualBigBlinds: number;
+  readonly expectedBigBlinds: number;
+  /** Actual minus expected: positive when the board was kind. */
+  readonly luck: number;
+  readonly curve: readonly LuckPoint[];
+  readonly swings: readonly LuckSwing[];
+  readonly pendingHands: number;
 }

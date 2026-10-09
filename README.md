@@ -211,6 +211,17 @@ Bankroll (roadmap step 1):
       redirects)
 - [x] Migration `Bankroll`
 
+All-in EV (roadmap step 2):
+
+- [x] Domain `HandEvaluator` (7 cards, bit arithmetic) and `ShowdownEquity` (exact: every board,
+      side pots, splits)
+- [x] `AllInExpectation`: preflop all-ins with every hand shown, unmatched shove given back,
+      side pots; stored in the hero's facts (facts version 2: everything is recomputed once)
+- [x] `GET /api/statistics/all-in` and the "All-in luck" panel in Statistics (actual vs expected
+      in BB, verdict, curve with the expected line, biggest swings linking to the replayer)
+- [ ] Migration `AllInEv`
+- [ ] Big blind defence in the trainer (call or fold against a push, Nash calls)
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

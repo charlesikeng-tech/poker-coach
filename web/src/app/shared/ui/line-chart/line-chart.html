@@ -43,6 +43,9 @@
     </linearGradient>
   </defs>
   <!-- Keyed on the path: new data redraws the line from its start (CSS draw-in). -->
+  @if (referencePath()) {
+    <path class="reference" [attr.d]="referencePath()" />
+  }
   @for (d of [path()]; track d) {
     <path class="area" [attr.d]="area()" [attr.fill]="'url(#' + gradientId + ')'" />
     <path class="line" [attr.d]="d" pathLength="1" />

@@ -504,7 +504,35 @@
         "bigBlind": "Grosse blinde",
         "unknown": "Inconnue"
       },
-      "basis": "Sur {{hands}} mains de {{tournaments}} tournoi(s), dont {{complete}} avec un historique complet."
+      "basis": "Sur {{hands}} mains de {{tournaments}} tournoi(s), dont {{complete}} avec un historique complet.",
+      "luck": {
+        "title": "Chance aux all-in",
+        "lead": "Tes all-in préflop où les cartes ont été montrées : ce qu'ils t'ont rapporté, contre ce qu'ils auraient dû rapporter vu les mains. L'écart, c'est la chance — ce que tu contrôles, c'est la courbe attendue.",
+        "luck": "Chance",
+        "actual": "Résultat réel",
+        "expected": "Résultat attendu",
+        "verdict": {
+          "positive": "Le board t'a souri : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (équité moyenne {{equity}}).",
+          "negative": "Le board t'a coûté cher : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (équité moyenne {{equity}}).",
+          "neutral": "Pile dans la moyenne : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (équité moyenne {{equity}})."
+        },
+        "few": "Moins de 30 all-in : l'écart est encore du bruit.",
+        "chart": {
+          "actual": "Réel",
+          "expected": "Attendu",
+          "aria": "Cumul des all-in : réel {{actual}}, attendu {{expected}}"
+        },
+        "swings": {
+          "title": "Les plus gros écarts",
+          "beat": "Bad beat",
+          "suckout": "Outdraw",
+          "replay": "Revoir la main"
+        },
+        "definition": "En big blinds, pour comparer les niveaux. Compte les all-in préflop sans action après le flop, toutes les mains encore en jeu montrées ; équité exacte sur tous les boards possibles, side pots compris.",
+        "none": "Aucun all-in préflop avec les cartes montrées sur cette période.",
+        "pending": "Analyse des mains en cours : les chiffres vont encore bouger.",
+        "error": "Impossible de charger la chance aux all-in pour le moment."
+      }
     },
     "import": {
       "title": "Import",

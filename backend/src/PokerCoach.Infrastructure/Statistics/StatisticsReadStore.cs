@@ -11,7 +11,7 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore, IAllInReadStore
 {
     public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
@@ -128,6 +128,22 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToList();
     }
 
+    /// <summary>Only rows with an all-in figure: a few per hundred hands, read whole.</summary>
+    public async Task<IReadOnlyList<AllInHand>> ListAllInsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+        await Filtered(userId, filter, factsVersion)
+            .Where(x => x.F.AllInExpectedNetChips != null && x.F.AllInEquity != null)
+            .OrderBy(x => x.StartedAt)
+            .Select(x => new AllInHand(
+                x.F.HandId,
+                x.TournamentId,
+                x.StartedAt,
+                x.BigBlind,
+                x.HeroCards,
+                x.F.AllInEquity!.Value,
+                x.F.AllInExpectedNetChips!.Value,
+                x.F.NetChips))
+            .ToListAsync(cancellationToken);
+
     /// <summary>The user's analyzed hands within the filter, with whether their tournament's history is complete.</summary>
     private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion)
     {
@@ -145,6 +161,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 TournamentId = h.TournamentId,
                 HeroCards = h.HeroCards,
                 MaxSeats = h.MaxSeats,
+                BigBlind = h.BigBlind,
                 Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
             };
 
@@ -205,6 +222,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         public string? HeroCards { get; init; }
 
         public int MaxSeats { get; init; }
+
+        public long BigBlind { get; init; }
 
         public bool Complete { get; init; }
     }

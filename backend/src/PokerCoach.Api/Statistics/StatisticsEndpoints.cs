@@ -60,12 +60,70 @@ public sealed record StatisticsResponse(
     TableFormat Format,
     FormatCountsResponse HandsByFormat);
 
+public sealed record LuckPointResponse(int Index, DateTimeOffset StartedAt, decimal ActualBigBlinds, decimal ExpectedBigBlinds);
+
+/// <param name="Equity">The hero's share of the main pot when the money went in (0–1).</param>
+/// <param name="Luck">Actual minus expected, in big blinds.</param>
+public sealed record LuckSwingResponse(Guid HandId, Guid TournamentId, DateTimeOffset StartedAt, string? HeroCards, decimal Equity, decimal NetBigBlinds, decimal Luck);
+
+/// <summary>Preflop all-ins with every hand shown: actual against expected, in big blinds.</summary>
+/// <param name="ExpectedWins">Sum of the hero's equities: all-ins he "should" have won.</param>
+/// <param name="Luck">Actual minus expected: positive when the board was kind.</param>
+/// <param name="PendingHands">Hands whose facts are still being computed: figures will move.</param>
+public sealed record AllInLuckResponse(
+    int AllIns,
+    int Won,
+    decimal ExpectedWins,
+    decimal? AverageEquity,
+    decimal ActualBigBlinds,
+    decimal ExpectedBigBlinds,
+    decimal Luck,
+    IReadOnlyList<LuckPointResponse> Curve,
+    IReadOnlyList<LuckSwingResponse> Swings,
+    int PendingHands);
+
 public static class StatisticsEndpoints
 {
     public static IEndpointRouteBuilder MapStatisticsEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/api/statistics", GetAsync).WithTags("Statistics");
+        endpoints.MapGet("/api/statistics/all-in", GetAllInLuckAsync).WithTags("Statistics");
         return endpoints;
+    }
+
+    /// <summary>Luck at the all-ins. Every table format together: luck does not depend on the table size.</summary>
+    /// <param name="to">Exclusive upper bound on the hand start time.</param>
+    /// <param name="completeOnly">Only tournaments with a complete hand history.</param>
+    private static async Task<Results<Ok<AllInLuckResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAllInLuckAsync(
+        HttpContext context,
+        AllInLuckService luck,
+        CancellationToken cancellationToken,
+        DateTimeOffset? from = null,
+        DateTimeOffset? to = null,
+        bool completeOnly = false)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (from is not null && to is not null && from >= to)
+        {
+            return ApiProblems.Validation("to", "Must be after 'from'.");
+        }
+
+        var report = await luck.GetAsync(userId, new StatisticsFilter(from, to, null, null, completeOnly), cancellationToken);
+        return TypedResults.Ok(new AllInLuckResponse(
+            report.AllIns,
+            report.Won,
+            report.ExpectedWins,
+            report.AverageEquity,
+            report.ActualBigBlinds,
+            report.ExpectedBigBlinds,
+            report.Luck,
+            report.Curve.Select(p => new LuckPointResponse(p.Index, p.StartedAt, p.ActualBigBlinds, p.ExpectedBigBlinds)).ToList(),
+            report.Swings.Select(s => new LuckSwingResponse(s.HandId, s.TournamentId, s.StartedAt, s.HeroCards, s.Equity, s.NetBigBlinds, s.Luck)).ToList(),
+            report.PendingHands));
     }
 
     /// <param name="to">Exclusive upper bound on the hand start time.</param>

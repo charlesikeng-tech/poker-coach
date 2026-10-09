@@ -21,6 +21,7 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
+import { AllInLuckPanel } from './all-in-luck';
 import {
   STACK_FILTERS,
   StackFilter,
@@ -62,6 +63,7 @@ const PENDING_REFRESH_MS = 3000;
     Button,
     Icon,
     StatTile,
+    AllInLuckPanel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -84,6 +86,10 @@ export class StatisticsPage {
     'wonAtShowdown',
   ];
   protected readonly period = signal<PeriodFilter>('all');
+  /** The period as the API's lower bound, shared with the all-in panel. */
+  protected readonly fromQuery = computed(
+    () => toQuery(this.period(), 'all', 1, 1, new Date()).from,
+  );
   protected readonly stack = signal<StackFilter>('all');
   protected readonly completeOnly = signal(false);
   /** The player's choice; null lets the server pick the format he plays most. */

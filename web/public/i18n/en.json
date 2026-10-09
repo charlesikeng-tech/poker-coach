@@ -504,7 +504,35 @@
         "bigBlind": "Big blind",
         "unknown": "Unknown"
       },
-      "basis": "Based on {{hands}} hands from {{tournaments}} tournament(s), {{complete}} with a complete hand history."
+      "basis": "Based on {{hands}} hands from {{tournaments}} tournament(s), {{complete}} with a complete hand history.",
+      "luck": {
+        "title": "All-in luck",
+        "lead": "Your preflop all-ins where the cards were shown: what they returned, against what they should have given the hands. The gap is luck — what you control is the expected line.",
+        "luck": "Luck",
+        "actual": "Actual result",
+        "expected": "Expected result",
+        "verdict": {
+          "positive": "The board has been kind: {{won}} of {{count}} all-ins won against {{expected}} expected (average equity {{equity}}).",
+          "negative": "The board has cost you: {{won}} of {{count}} all-ins won against {{expected}} expected (average equity {{equity}}).",
+          "neutral": "Right on average: {{won}} of {{count}} all-ins won against {{expected}} expected (average equity {{equity}})."
+        },
+        "few": "Fewer than 30 all-ins: the gap is still noise.",
+        "chart": {
+          "actual": "Actual",
+          "expected": "Expected",
+          "aria": "All-ins over time: actual {{actual}}, expected {{expected}}"
+        },
+        "swings": {
+          "title": "Biggest swings",
+          "beat": "Bad beat",
+          "suckout": "Outdraw",
+          "replay": "Replay the hand"
+        },
+        "definition": "In big blinds, so levels compare. Counts preflop all-ins with no action after the flop and every hand still in shown; exact equity over every possible board, side pots included.",
+        "none": "No preflop all-in with the cards shown in this period.",
+        "pending": "Hands are still being analysed: figures will move.",
+        "error": "All-in luck cannot be loaded right now."
+      }
     },
     "import": {
       "title": "Import",

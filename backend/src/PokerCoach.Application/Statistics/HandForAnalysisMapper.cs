@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.HandHistories;
 
@@ -23,7 +24,36 @@ public static class HandForAnalysisMapper
             hand.Actions.Select(a => new HandAction(a.Street, a.PlayerName, Map(a.Type), a.Amount, a.IsAllIn)).ToList(),
             hand.Collections
                 .GroupBy(c => c.PlayerName, StringComparer.Ordinal)
-                .ToDictionary(g => g.Key, g => g.Sum(c => c.Amount), StringComparer.Ordinal));
+                .ToDictionary(g => g.Key, g => g.Sum(c => c.Amount), StringComparer.Ordinal),
+            KnownCards(hand.HeroName, hand.HeroCards, hand.ShownCards.Select(s => (s.PlayerName, s.Cards))));
+    }
+
+    /// <summary>
+    /// Hole cards known per player: the hero's own, then those shown. Anything but exactly two cards
+    /// (a single card flashed, a garbled line) is left out: an unknown hand stays unknown.
+    /// </summary>
+    public static IReadOnlyDictionary<string, (Card First, Card Second)> KnownCards(
+        string hero,
+        IReadOnlyList<Card> heroCards,
+        IEnumerable<(string Player, IReadOnlyList<Card> Cards)> shown)
+    {
+        ArgumentNullException.ThrowIfNull(heroCards);
+        ArgumentNullException.ThrowIfNull(shown);
+        var known = new Dictionary<string, (Card First, Card Second)>(StringComparer.Ordinal);
+        foreach (var (player, cards) in shown)
+        {
+            if (cards.Count == 2)
+            {
+                known[player] = (cards[0], cards[1]);
+            }
+        }
+
+        if (heroCards.Count == 2)
+        {
+            known[hero] = (heroCards[0], heroCards[1]);
+        }
+
+        return known;
     }
 
     public static ActionKind Map(ParsedActionType type) => type switch

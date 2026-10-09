@@ -31,6 +31,15 @@ svg {
   font-variant-numeric: tabular-nums;
 }
 
+// Expected line: dashed, quieter than the real one, no animation (it is the yardstick).
+.reference {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  opacity: 0.75;
+}
+
 // The line draws itself once when data arrives; the glow under it fades in behind.
 .line {
   fill: none;

@@ -1,0 +1,98 @@
+<ng-container *transloco="let t; prefix: 'pages.statistics.luck'">
+  <section class="panel glass luck">
+    <header>
+      <h2>{{ t('title') }}</h2>
+      <p class="lead">{{ t('lead') }}</p>
+    </header>
+
+    @if (failed()) {
+      <p class="hint">{{ t('error') }}</p>
+    } @else if (luck(); as luck) {
+      @if (luck.allIns === 0) {
+        <p class="hint">{{ t('none') }}</p>
+      } @else {
+        <div class="tiles">
+          <app-stat-tile
+            class="stat-tile--hero"
+            [label]="t('luck')"
+            [value]="luck.luck"
+            [format]="formats().bb"
+            [signed]="true"
+          />
+          <app-stat-tile
+            [label]="t('actual')"
+            [value]="luck.actualBigBlinds"
+            [format]="formats().bb"
+            [signed]="true"
+          />
+          <app-stat-tile
+            [label]="t('expected')"
+            [value]="luck.expectedBigBlinds"
+            [format]="formats().bb"
+            [signed]="true"
+          />
+        </div>
+        <p class="verdict" [attr.data-sign]="sign(luck.luck)">
+          {{
+            t('verdict.' + sign(luck.luck), {
+              count: luck.allIns,
+              won: luck.won,
+              expected: formats().decimal(luck.expectedWins),
+              equity: formats().share(luck.averageEquity),
+            })
+          }}
+        </p>
+        @if (luck.allIns < fewAllIns) {
+          <p class="hint">{{ t('few') }}</p>
+        }
+
+        @if (points().length > 1) {
+          <div class="legend" aria-hidden="true">
+            <span class="legend-actual">{{ t('chart.actual') }}</span>
+            <span class="legend-expected">{{ t('chart.expected') }}</span>
+          </div>
+          <app-line-chart
+            [points]="points()"
+            [reference]="reference()"
+            [formatY]="formatAxis()"
+            [height]="240"
+            [ariaLabel]="
+              t('chart.aria', {
+                actual: bb(luck.actualBigBlinds),
+                expected: bb(luck.expectedBigBlinds),
+              })
+            "
+          />
+        }
+
+        <h3>{{ t('swings.title') }}</h3>
+        <ul class="swings">
+          @for (s of luck.swings; track s.handId) {
+            <li>
+              <a [routerLink]="['/hands', s.handId]" [attr.aria-label]="t('swings.replay')">
+                <span class="swing-cards numeric">{{ cards(s.heroCards) }}</span>
+                <span class="swing-equity">
+                  <span class="equity-bar"><span [style.width.%]="s.equity * 100"></span></span>
+                  {{ formats().share(s.equity) }}
+                </span>
+                <span class="swing-date">{{ date(s.startedAt) }}</span>
+                <span class="swing-kind">{{
+                  t(s.luck < 0 ? 'swings.beat' : 'swings.suckout')
+                }}</span>
+                <span class="numeric swing-luck" [attr.data-sign]="sign(s.luck)">{{
+                  bb(s.luck)
+                }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+        <p class="hint">{{ t('definition') }}</p>
+      }
+      @if (luck.pendingHands > 0) {
+        <p class="hint">{{ t('pending') }}</p>
+      }
+    } @else {
+      <span class="skeleton skeleton-chart"></span>
+    }
+  </section>
+</ng-container>

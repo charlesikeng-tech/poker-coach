@@ -32,6 +32,7 @@ public static class HandAnalyzer
 
         var invested = hand.Actions.Where(a => a.Player == hero).Sum(a => a.Amount);
         var net = hand.Collected.GetValueOrDefault(hero) - invested;
+        var allIn = AllInExpectation.Compute(hand);
 
         return new HeroHandFacts(
             position,
@@ -55,7 +56,9 @@ public static class HandAnalyzer
             postflop.WentToShowdown,
             postflop.WentToShowdown && hand.Collected.GetValueOrDefault(hero) > 0,
             net,
-            hand.BigBlind > 0 ? Math.Round((decimal)net / hand.BigBlind, 2) : 0m);
+            hand.BigBlind > 0 ? Math.Round((decimal)net / hand.BigBlind, 2) : 0m,
+            allIn?.Equity,
+            allIn?.ExpectedNetChips);
     }
 
     private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position)

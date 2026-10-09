@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
@@ -17,11 +18,11 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
                 from f in facts.DefaultIfEmpty()
                 where f == null || f.FactsVersion < version
                 orderby h.Id
-                select new { h.Id, h.ButtonSeat, h.BigBlind, h.Details })
+                select new { h.Id, h.ButtonSeat, h.BigBlind, h.Details, h.HeroCards })
             .Take(batchSize)
             .ToListAsync(cancellationToken);
 
-        return rows.Select(r => new PendingHand(r.Id, ToAnalysis(r.ButtonSeat, r.BigBlind, r.Details))).ToList();
+        return rows.Select(r => new PendingHand(r.Id, ToAnalysis(r.ButtonSeat, r.BigBlind, r.Details, r.HeroCards))).ToList();
     }
 
     public async Task SaveAsync(IReadOnlyList<(Guid HandId, HeroHandFacts Facts)> facts, int version, CancellationToken cancellationToken)
@@ -49,7 +50,7 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
     }
 
     /// <summary>Stored hand document to the analysis input. Imported hands always have a hero.</summary>
-    internal static HandForAnalysis ToAnalysis(int buttonSeat, long bigBlind, string details)
+    internal static HandForAnalysis ToAnalysis(int buttonSeat, long bigBlind, string details, string? heroCards = null)
     {
         var document = HandDetailsDocument.FromJson(details)
             ?? throw new InvalidOperationException("Stored hand details are empty.");
@@ -66,6 +67,27 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
                 .ToList(),
             document.Collections
                 .GroupBy(c => c.Player, StringComparer.Ordinal)
-                .ToDictionary(g => g.Key, g => g.Sum(c => c.Amount), StringComparer.Ordinal));
+                .ToDictionary(g => g.Key, g => g.Sum(c => c.Amount), StringComparer.Ordinal),
+            HandForAnalysisMapper.KnownCards(
+                hero,
+                ParseCards(heroCards is null ? [] : Enumerable.Range(0, heroCards.Length / 2).Select(i => heroCards.Substring(i * 2, 2))),
+                document.ShownCards.Select(s => (s.Player, ParseCards(s.Cards)))));
+    }
+
+    /// <summary>Stored card texts ("Ah"); an unreadable one makes the whole hand unknown (empty).</summary>
+    private static IReadOnlyList<Card> ParseCards(IEnumerable<string> texts)
+    {
+        var cards = new List<Card>();
+        foreach (var text in texts)
+        {
+            if (!Card.TryParse(text, out var card))
+            {
+                return [];
+            }
+
+            cards.Add(card);
+        }
+
+        return cards;
     }
 }
