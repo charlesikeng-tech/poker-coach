@@ -163,5 +163,5 @@ MVP-2 — Game analysis (ADR-0006):
       c-bet, WTSD, W$SD, net chips / big blinds per hand
 - [x] Versioned per-hand facts (`poker.hand_hero_facts`), computed in the background, SQL aggregates
 - [x] `GET /api/statistics` (period, stack depth) and the statistics page (tiles, by position)
-- [ ] Migration `HandHeroFacts` (generate with `dotnet ef`)
+- [x] Migration `HandHeroFacts`
 - [ ] Hand coverage (gaps), per-entry attribution, postflop statistics
