@@ -19,7 +19,8 @@ public enum StackBand
 /// Reference opening ranges, version 1 (ADR-0009): what a solid regular raises first in, by position and
 /// stack band, in low-stakes online MTTs with antes. Our own conventions, written as plain in/out grids
 /// (real strategies mix some hands): references, never "GTO". Below 15 BB play is push/fold, covered
-/// separately. Open rates stay inside the ADR-0007 reference rates for each position.
+/// separately. Written for full-ring seats by distance to the button; 6-max seats map onto them
+/// (<see cref="OpeningSeat.FullRingEquivalent"/>). Open rates stay inside the ADR-0007 reference rates.
 /// </summary>
 public static class ReferenceOpeningRanges
 {
@@ -58,8 +59,7 @@ public static class ReferenceOpeningRanges
     private static readonly Dictionary<(StackBand, PokerPosition), IReadOnlySet<HandClass>> Parsed =
         Notation.ToDictionary(e => e.Key, e => RangeNotation.Parse(e.Value));
 
-    /// <summary>Positions that have an opening range (the big blind never opens).</summary>
-    public static IReadOnlyList<PokerPosition> Positions { get; } =
+    private static readonly PokerPosition[] FullRingPositions =
     [
         PokerPosition.Utg,
         PokerPosition.Utg1,
@@ -71,13 +71,29 @@ public static class ReferenceOpeningRanges
         PokerPosition.SmallBlind,
     ];
 
-    /// <summary>The range, or null for a position that does not open (big blind).</summary>
-    public static IReadOnlySet<HandClass>? For(StackBand band, PokerPosition position) =>
-        Parsed.GetValueOrDefault((band, position));
+    private static readonly PokerPosition[] SixMaxPositions =
+    [
+        PokerPosition.Utg,
+        PokerPosition.Hijack,
+        PokerPosition.Cutoff,
+        PokerPosition.Button,
+        PokerPosition.SmallBlind,
+    ];
+
+    /// <summary>Positions that open at this table format, first to act first (the big blind never opens).</summary>
+    public static IReadOnlyList<PokerPosition> Positions(TableFormat format) =>
+        format == TableFormat.SixMax ? SixMaxPositions : FullRingPositions;
+
+    /// <summary>
+    /// The range, or null for a position that does not open. Ranges are written by distance to the button,
+    /// so a 6-max UTG gets the full-ring lojack's.
+    /// </summary>
+    public static IReadOnlySet<HandClass>? For(StackBand band, TableFormat format, PokerPosition position) =>
+        Parsed.GetValueOrDefault((band, OpeningSeat.FullRingEquivalent(position, format)));
 
     /// <summary>The range's notation, as written (shown to the player).</summary>
-    public static string? NotationFor(StackBand band, PokerPosition position) =>
-        Notation.GetValueOrDefault((band, position));
+    public static string? NotationFor(StackBand band, TableFormat format, PokerPosition position) =>
+        Notation.GetValueOrDefault((band, OpeningSeat.FullRingEquivalent(position, format)));
 
     /// <summary>Inclusive lower and exclusive upper bound in big blinds; no upper bound for deep.</summary>
     public static (decimal Min, decimal? Max) Bounds(StackBand band) => band switch

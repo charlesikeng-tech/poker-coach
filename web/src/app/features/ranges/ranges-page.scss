@@ -70,6 +70,12 @@
   }
 }
 
+.formats .count {
+  margin-left: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
 .hint,
 .method,
 .muted {

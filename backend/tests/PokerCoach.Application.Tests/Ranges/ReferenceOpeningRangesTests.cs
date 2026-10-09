@@ -37,9 +37,9 @@ public sealed class ReferenceOpeningRangesTests
     {
         foreach (var band in Enum.GetValues<StackBand>())
         {
-            foreach (var position in ReferenceOpeningRanges.Positions)
+            foreach (var position in ReferenceOpeningRanges.Positions(TableFormat.FullRing))
             {
-                var range = ReferenceOpeningRanges.For(band, position);
+                var range = ReferenceOpeningRanges.For(band, TableFormat.FullRing, position);
                 Assert.NotNull(range);
                 var share = ReferenceOpeningRanges.ComboShare(range);
                 var rate = ReferenceRanges.LowStakesMtt.Single(r => r.Stat == LeakStat.Rfi && r.Position == position);
@@ -53,31 +53,43 @@ public sealed class ReferenceOpeningRangesTests
     {
         foreach (var band in Enum.GetValues<StackBand>())
         {
-            var shares = ReferenceOpeningRanges.Positions
+            var shares = ReferenceOpeningRanges.Positions(TableFormat.FullRing)
                 .Where(p => p != PokerPosition.SmallBlind)
-                .Select(p => ReferenceOpeningRanges.ComboShare(ReferenceOpeningRanges.For(band, p)!))
+                .Select(p => ReferenceOpeningRanges.ComboShare(ReferenceOpeningRanges.For(band, TableFormat.FullRing, p)!))
                 .ToList();
             Assert.Equal(shares.Order(), shares);
         }
 
         var button = Enum.GetValues<StackBand>()
-            .Select(b => ReferenceOpeningRanges.ComboShare(ReferenceOpeningRanges.For(b, PokerPosition.Button)!))
+            .Select(b => ReferenceOpeningRanges.ComboShare(ReferenceOpeningRanges.For(b, TableFormat.FullRing, PokerPosition.Button)!))
             .ToList();
         Assert.Equal(button.Order(), button);
     }
 
     [Theory]
-    [InlineData(PokerPosition.Utg, 9, PokerPosition.Utg)]
-    [InlineData(PokerPosition.Utg1, 9, PokerPosition.Utg1)]
-    [InlineData(PokerPosition.Utg2, 9, PokerPosition.Utg2)]
-    [InlineData(PokerPosition.Utg, 8, PokerPosition.Utg1)]
-    [InlineData(PokerPosition.Utg1, 8, PokerPosition.Utg2)]
-    [InlineData(PokerPosition.Utg, 6, PokerPosition.Lojack)]
-    [InlineData(PokerPosition.Utg, 5, PokerPosition.Hijack)]
-    [InlineData(PokerPosition.Cutoff, 6, PokerPosition.Cutoff)]
-    [InlineData(PokerPosition.SmallBlind, 6, PokerPosition.SmallBlind)]
-    public void Seats_are_named_by_distance_to_the_button(PokerPosition position, int players, PokerPosition expected)
+    [InlineData(PokerPosition.Utg, 9, TableFormat.FullRing, PokerPosition.Utg)]
+    [InlineData(PokerPosition.Utg1, 9, TableFormat.FullRing, PokerPosition.Utg1)]
+    [InlineData(PokerPosition.Utg2, 9, TableFormat.FullRing, PokerPosition.Utg2)]
+    [InlineData(PokerPosition.Utg, 8, TableFormat.FullRing, PokerPosition.Utg1)]
+    [InlineData(PokerPosition.Utg1, 8, TableFormat.FullRing, PokerPosition.Utg2)]
+    [InlineData(PokerPosition.Utg, 6, TableFormat.FullRing, PokerPosition.Lojack)]
+    [InlineData(PokerPosition.Utg, 6, TableFormat.SixMax, PokerPosition.Utg)]
+    [InlineData(PokerPosition.Utg, 5, TableFormat.SixMax, PokerPosition.Hijack)]
+    [InlineData(PokerPosition.Utg, 4, TableFormat.SixMax, PokerPosition.Cutoff)]
+    [InlineData(PokerPosition.Cutoff, 6, TableFormat.SixMax, PokerPosition.Cutoff)]
+    [InlineData(PokerPosition.SmallBlind, 6, TableFormat.FullRing, PokerPosition.SmallBlind)]
+    public void Seats_are_named_by_distance_to_the_button(PokerPosition position, int players, TableFormat format, PokerPosition expected)
     {
-        Assert.Equal(expected, OpeningSeat.Canonical(position, players));
+        Assert.Equal(expected, OpeningSeat.Canonical(position, players, format));
+    }
+
+    [Theory]
+    [InlineData(6, TableFormat.SixMax)]
+    [InlineData(5, TableFormat.SixMax)]
+    [InlineData(8, TableFormat.FullRing)]
+    [InlineData(9, TableFormat.FullRing)]
+    public void Format_follows_the_seats_of_the_table(int maxSeats, TableFormat expected)
+    {
+        Assert.Equal(expected, TableFormats.Of(maxSeats));
     }
 }

@@ -93,10 +93,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
     {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.RfiOpportunity && x.F.Position != null && x.HeroCards != null)
-            .GroupBy(x => new { x.F.Position, x.F.PlayersDealt, x.HeroCards })
+            .GroupBy(x => new { x.F.Position, x.MaxSeats, x.F.PlayersDealt, x.HeroCards })
             .Select(g => new
             {
                 g.Key.Position,
+                g.Key.MaxSeats,
                 g.Key.PlayersDealt,
                 g.Key.HeroCards,
                 Dealt = g.Count(),
@@ -106,7 +107,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToListAsync(cancellationToken);
 
         return rows
-            .Select(r => new OpeningHoldingCount(r.Position!.Value, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
+            .Select(r => new OpeningHoldingCount(r.Position!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
             .ToList();
     }
 
@@ -126,6 +127,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 StartedAt = h.StartedAt,
                 TournamentId = h.TournamentId,
                 HeroCards = h.HeroCards,
+                MaxSeats = h.MaxSeats,
                 Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
             };
 
@@ -174,6 +176,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         public Guid TournamentId { get; init; }
 
         public string? HeroCards { get; init; }
+
+        public int MaxSeats { get; init; }
 
         public bool Complete { get; init; }
     }

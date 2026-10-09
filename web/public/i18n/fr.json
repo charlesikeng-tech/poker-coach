@@ -843,7 +843,7 @@
         "tooTight": "Couchée, alors que le repère l'ouvre",
         "neverGap": "Jamais reçue (bord or : dans le repère)"
       },
-      "method": "Ta range est comptée sur tes mains réelles, quand tout le monde avant toi s'est couché. Les positions sont nommées par leur distance au bouton : « UTG » à 6 joueurs compte comme LJ. Repère v{{version}} (ADR-0009).",
+      "method": "Ta range est comptée sur tes mains réelles, quand tout le monde avant toi s'est couché, séparément pour les tables 6-max et pleines (le nombre à côté du format = spots d'ouverture). Le repère d'un UTG 6-max est celui du LJ d'une table pleine : même distance au bouton. Repère v{{version}} (ADR-0009).",
       "band": "Tapis",
       "bands": {
         "short": "15 à 25 BB",
@@ -872,6 +872,11 @@
         "tooLoose": "{{count}} main(s) ouvertes hors du repère",
         "tooTight": "{{count}} main(s) du repère que tu couches",
         "rule": "Une main compte comme « ouverte » si tu la relances au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
+      },
+      "format": "Format de table",
+      "formats": {
+        "sixMax": "6-max",
+        "fullRing": "Table pleine (7-9)"
       }
     }
   },

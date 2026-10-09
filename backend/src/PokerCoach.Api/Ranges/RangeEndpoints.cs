@@ -14,7 +14,8 @@ namespace PokerCoach.Api.Ranges;
 /// <param name="InReference">The reference range raises it first in.</param>
 public sealed record RangeCellResponse(string Hand, int Dealt, int Opens, int Limps, bool InReference);
 
-/// <param name="Position">Seat by distance to the button: "utg" is always the seat six before it.</param>
+/// <param name="Position">Seat by distance to the button within the format: "utg" is three before it at
+/// 6-max, six before it at full ring.</param>
 /// <param name="ReferenceRate">The position's reference opening rate (ratios), when one exists.</param>
 /// <param name="ReferenceNotation">The reference range as written ("22+, A2s+, …").</param>
 /// <param name="ReferenceShare">Share of all two-card holdings the reference opens (ratio).</param>
@@ -32,8 +33,13 @@ public sealed record PositionRangeResponse(
     IReadOnlyList<RangeCellResponse> Cells);
 
 /// <param name="PendingHands">Hands still being analysed: ranges are partial while above zero.</param>
+/// <summary>RFI spots per table format for the band and period.</summary>
+public sealed record FormatSpotsResponse(int SixMax, int FullRing);
+
 public sealed record OpeningRangesResponse(
+    TableFormat Format,
     StackBand Band,
+    FormatSpotsResponse Spots,
     IReadOnlyList<PositionRangeResponse> Positions,
     int PendingHands,
     int ReferenceVersion);
@@ -50,12 +56,14 @@ public static class RangeEndpoints
     /// The player's actual opening ranges by position next to the reference ones (ADR-0009), for one stack
     /// band: counts from his own hands, reference version 1.
     /// </summary>
+    /// <param name="format">sixMax or fullRing; omitted: the format with the most spots.</param>
     /// <param name="band">short (15–25 BB), mid (25–40 BB) or deep (40 BB and more).</param>
     /// <param name="to">Exclusive upper bound on the hand start time.</param>
     private static async Task<Results<Ok<OpeningRangesResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetOpeningAsync(
         HttpContext context,
         RangeService ranges,
         CancellationToken cancellationToken,
+        string? format = null,
         string band = "mid",
         DateTimeOffset? from = null,
         DateTimeOffset? to = null)
@@ -70,14 +78,27 @@ public static class RangeEndpoints
             return ApiProblems.Validation("band", "Must be one of: short, mid, deep.");
         }
 
+        TableFormat? tableFormat = null;
+        if (format is not null)
+        {
+            if (!Enum.TryParse<TableFormat>(format, ignoreCase: true, out var parsed) || !Enum.IsDefined(parsed))
+            {
+                return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+            }
+
+            tableFormat = parsed;
+        }
+
         if (from is not null && to is not null && from >= to)
         {
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
-        var result = await ranges.GetOpeningAsync(userId, stackBand, from, to, cancellationToken);
+        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, from, to, cancellationToken);
         return TypedResults.Ok(new OpeningRangesResponse(
+            result.Format,
             result.Band,
+            new FormatSpotsResponse(result.SpotsByFormat[TableFormat.SixMax], result.SpotsByFormat[TableFormat.FullRing]),
             result.Positions.Select(p => new PositionRangeResponse(
                 p.Position,
                 p.Dealt,

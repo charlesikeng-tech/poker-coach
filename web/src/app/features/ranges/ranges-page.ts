@@ -26,6 +26,8 @@ import {
   RangesApi,
   STACK_BANDS,
   StackBand,
+  TABLE_FORMATS,
+  TableFormat,
 } from './ranges-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
@@ -70,6 +72,11 @@ export class RangesPage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly bands = STACK_BANDS;
+  protected readonly formats = TABLE_FORMATS;
+  /** The player's choice; null lets the server pick the format he plays most. */
+  private readonly formatChoice = signal<TableFormat | null>(null);
+  /** The format shown: the one the last answer is for. */
+  protected readonly format = computed(() => this.data()?.format ?? this.formatChoice());
   protected readonly views = VIEWS;
   protected readonly period = signal<PeriodFilter>('all');
   /** Reference ranges are written per stack band; below 15 BB is push/fold (later). */
@@ -118,7 +125,7 @@ export class RangesPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.period(), this.band()] as const;
+      const args = [this.formatChoice(), this.period(), this.band()] as const;
       untracked(() => void this.load(...args));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
@@ -132,8 +139,13 @@ export class RangesPage {
     this.band.set(value as StackBand);
   }
 
+  protected setFormat(value: TableFormat): void {
+    this.selected.set(null);
+    this.formatChoice.set(value);
+  }
+
   protected retry(): void {
-    void this.load(this.period(), this.band());
+    void this.load(this.formatChoice(), this.period(), this.band());
   }
 
   protected gap(cell: RangeCell): GapKind {
@@ -174,7 +186,11 @@ export class RangesPage {
     return (Math.floor(index / 13) + (index % 13)) * 18;
   }
 
-  private async load(period: PeriodFilter, band: StackBand): Promise<void> {
+  private async load(
+    format: TableFormat | null,
+    period: PeriodFilter,
+    band: StackBand,
+  ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
     if (this.data() === null) {
@@ -182,6 +198,7 @@ export class RangesPage {
     }
     try {
       const data = await this.api.opening({
+        format: format ?? undefined,
         band,
         from: toQuery(period, 'all', 1, 1, new Date()).from,
       });
@@ -191,7 +208,10 @@ export class RangesPage {
       this.data.set(data);
       this.state.set('ready');
       if (data.pendingHands > 0) {
-        this.refreshTimer = setTimeout(() => void this.load(period, band), PENDING_REFRESH_MS);
+        this.refreshTimer = setTimeout(
+          () => void this.load(data.format, period, band),
+          PENDING_REFRESH_MS,
+        );
       }
     } catch {
       if (request === this.request) {

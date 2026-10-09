@@ -843,7 +843,7 @@
         "tooTight": "Tirada, aunque la referencia la abre",
         "neverGap": "Nunca recibida (borde dorado: en la referencia)"
       },
-      "method": "Tu rango se cuenta en tus manos reales, cuando todos antes que tú se retiraron. Las posiciones se nombran por su distancia al botón: «UTG» con 6 jugadores cuenta como LJ. Referencia v{{version}} (ADR-0009).",
+      "method": "Tu rango se cuenta en tus manos reales, cuando todos antes que tú se retiraron, por separado para mesas 6-max y completas (el número junto al formato = spots de apertura). Un UTG 6-max usa la referencia del LJ de mesa completa: misma distancia al botón. Referencia v{{version}} (ADR-0009).",
       "band": "Stack",
       "bands": {
         "short": "15 a 25 BB",
@@ -872,6 +872,11 @@
         "tooLoose": "{{count}} mano(s) abiertas fuera de la referencia",
         "tooTight": "{{count}} mano(s) de la referencia que tiras",
         "rule": "Una mano cuenta como «abierta» si la subes al menos la mitad de las veces. Fíjate en el número pequeño: con 1 o 2 ocurrencias solo es un indicio."
+      },
+      "format": "Formato de mesa",
+      "formats": {
+        "sixMax": "6-max",
+        "fullRing": "Mesa completa (7-9)"
       }
     }
   },

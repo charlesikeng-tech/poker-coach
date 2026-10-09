@@ -5,12 +5,13 @@ using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Application.Ranges;
 
-/// <summary>Raise-first-in spots of one position, table size and exact holding ("AhKd").</summary>
+/// <summary>Raise-first-in spots of one position, table and exact holding ("AhKd").</summary>
+/// <param name="MaxSeats">Seats at the table: its format (6-max, full ring).</param>
 /// <param name="PlayersDealt">Players dealt in: with the position, it tells how many are left to act.</param>
 /// <param name="Dealt">Times the hero had this holding when folded to (an RFI opportunity).</param>
 /// <param name="Opens">Times he raised first in.</param>
 /// <param name="Limps">Times he called first in.</param>
-public sealed record OpeningHoldingCount(PokerPosition Position, int PlayersDealt, string HeroCards, int Dealt, int Opens, int Limps);
+public sealed record OpeningHoldingCount(PokerPosition Position, int MaxSeats, int PlayersDealt, string HeroCards, int Dealt, int Opens, int Limps);
 
 public interface IRangeReadStore
 {
@@ -26,7 +27,7 @@ public interface IRangeReadStore
 /// <param name="InReference">The reference range of the position and band raises it first in.</param>
 public sealed record RangeCell(HandClass Hand, int Dealt, int Opens, int Limps, bool InReference);
 
-/// <param name="Position">Seat by distance to the button (see <see cref="OpeningSeat"/>).</param>
+/// <param name="Position">Seat by distance to the button within the format (see <see cref="OpeningSeat"/>).</param>
 /// <param name="OpenRate">Opens over RFI spots: the position's opening frequency.</param>
 /// <param name="ReferenceRate">The position's reference opening rate (ADR-0007), when one exists.</param>
 /// <param name="ReferenceNotation">The reference range as written ("22+, A2s+, …").</param>
@@ -43,10 +44,19 @@ public sealed record PositionRange(
     decimal? ReferenceShare,
     IReadOnlyList<RangeCell> Cells);
 
-/// <param name="Positions">Every position that opens, from UTG to the small blind, even without spots
-/// (the reference is still worth showing).</param>
+/// <param name="Format">The table format shown.</param>
+/// <param name="SpotsByFormat">RFI spots in each format for the band and period: lets the page offer the
+/// other format, and pick the one the player actually plays.</param>
+/// <param name="Positions">Every position that opens at that format, from UTG to the small blind, even
+/// without spots (the reference is still worth showing).</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: ranges are partial until 0.</param>
-public sealed record OpeningRanges(StackBand Band, IReadOnlyList<PositionRange> Positions, int PendingHands, int ReferenceVersion);
+public sealed record OpeningRanges(
+    TableFormat Format,
+    StackBand Band,
+    IReadOnlyDictionary<TableFormat, int> SpotsByFormat,
+    IReadOnlyList<PositionRange> Positions,
+    int PendingHands,
+    int ReferenceVersion);
 
 /// <summary>
 /// The player's actual opening ranges next to the reference ones (ADR-0009, blocks 1 and 2): for each
@@ -55,8 +65,10 @@ public sealed record OpeningRanges(StackBand Band, IReadOnlyList<PositionRange> 
 /// </summary>
 public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore statistics)
 {
+    /// <param name="format">Null: the format with the most spots (6-max on a tie or without hands).</param>
     public async Task<OpeningRanges> GetOpeningAsync(
         Guid userId,
+        TableFormat? format,
         StackBand band,
         DateTimeOffset? from,
         DateTimeOffset? to,
@@ -65,18 +77,24 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         var (min, max) = ReferenceOpeningRanges.Bounds(band);
         var counts = await ranges.CountOpeningsAsync(userId, new StatisticsFilter(from, to, min, max), HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
-        return new OpeningRanges(band, Build(band, counts), pending, ReferenceOpeningRanges.Version);
+
+        var spots = Enum.GetValues<TableFormat>().ToDictionary(
+            f => f,
+            f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
+        var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
+        return new OpeningRanges(shown, band, spots, Build(shown, band, counts), pending, ReferenceOpeningRanges.Version);
     }
 
-    internal static List<PositionRange> Build(StackBand band, IEnumerable<OpeningHoldingCount> counts)
+    internal static List<PositionRange> Build(TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts)
     {
         var byPosition = counts
+            .Where(c => TableFormats.Of(c.MaxSeats) == format)
             .Select(c => (Count: c, Ok: HandClass.TryParseHoldings(c.HeroCards, out var hand), Hand: hand))
             // Unreadable hero cards are left out rather than guessed.
             .Where(x => x.Ok)
-            .ToLookup(x => OpeningSeat.Canonical(x.Count.Position, x.Count.PlayersDealt));
+            .ToLookup(x => OpeningSeat.Canonical(x.Count.Position, x.Count.PlayersDealt, format));
 
-        return ReferenceOpeningRanges.Positions
+        return ReferenceOpeningRanges.Positions(format)
             .Select(position =>
             {
                 var perHand = byPosition[position]
@@ -84,7 +102,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     .ToDictionary(
                         h => h.Key,
                         h => (Dealt: h.Sum(x => x.Count.Dealt), Opens: h.Sum(x => x.Count.Opens), Limps: h.Sum(x => x.Count.Limps)));
-                var reference = ReferenceOpeningRanges.For(band, position);
+                var reference = ReferenceOpeningRanges.For(band, format, position);
                 var cells = HandClass.All
                     .Select(hand =>
                     {
@@ -100,8 +118,9 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     opens,
                     cells.Sum(c => c.Limps),
                     StatRate.Of(opens, dealt),
-                    ReferenceRanges.LowStakesMtt.FirstOrDefault(r => r.Stat == LeakStat.Rfi && r.Position == position),
-                    ReferenceOpeningRanges.NotationFor(band, position),
+                    ReferenceRanges.LowStakesMtt.FirstOrDefault(
+                        r => r.Stat == LeakStat.Rfi && r.Position == OpeningSeat.FullRingEquivalent(position, format)),
+                    ReferenceOpeningRanges.NotationFor(band, format, position),
                     reference is null ? null : ReferenceOpeningRanges.ComboShare(reference),
                     cells);
             })

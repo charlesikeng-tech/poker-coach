@@ -843,7 +843,7 @@
         "tooTight": "Folded, though the reference opens it",
         "neverGap": "Never dealt (gold edge: in the reference)"
       },
-      "method": "Your range is counted on your real hands, when everyone before you folded. Positions are named by distance to the button: \"UTG\" 6-handed counts as LJ. Reference v{{version}} (ADR-0009).",
+      "method": "Your range is counted on your real hands, when everyone before you folded, separately for 6-max and full-ring tables (the number next to the format = opening spots). A 6-max UTG uses the full-ring LJ reference: same distance to the button. Reference v{{version}} (ADR-0009).",
       "band": "Stack",
       "bands": {
         "short": "15 to 25 BB",
@@ -872,6 +872,11 @@
         "tooLoose": "{{count}} hand(s) opened outside the reference",
         "tooTight": "{{count}} reference hand(s) you fold",
         "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
+      },
+      "format": "Table format",
+      "formats": {
+        "sixMax": "6-max",
+        "fullRing": "Full ring (7-9)"
       }
     }
   },

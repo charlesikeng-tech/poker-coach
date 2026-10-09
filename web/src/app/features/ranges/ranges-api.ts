@@ -17,6 +17,9 @@ export interface RangeCell {
   readonly inReference: boolean;
 }
 
+export type TableFormat = 'sixMax' | 'fullRing';
+export const TABLE_FORMATS: readonly TableFormat[] = ['sixMax', 'fullRing'];
+
 export type StackBand = 'short' | 'mid' | 'deep';
 export const STACK_BANDS: readonly StackBand[] = ['short', 'mid', 'deep'];
 
@@ -37,13 +40,18 @@ export interface PositionRange {
 }
 
 export interface OpeningRanges {
+  readonly format: TableFormat;
   readonly band: StackBand;
+  /** RFI spots per table format for the band and period. */
+  readonly spots: { readonly sixMax: number; readonly fullRing: number };
   readonly positions: readonly PositionRange[];
   readonly pendingHands: number;
   readonly referenceVersion: number;
 }
 
 export interface RangeQuery {
+  /** Omitted: the format with the most spots. */
+  readonly format?: TableFormat;
   readonly band: StackBand;
   readonly from?: string;
 }
