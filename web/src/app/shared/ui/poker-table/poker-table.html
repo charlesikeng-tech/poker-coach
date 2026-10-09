@@ -1,0 +1,116 @@
+@let v = view();
+@let l = labels();
+<div class="felt" #felt>
+  <div class="felt__rail" aria-hidden="true"></div>
+  <div class="felt__glow" aria-hidden="true"></div>
+
+  <!-- Keyed on the hand: a new hand is dealt again from the middle. -->
+  @for (dealt of [v.dealKey]; track dealt) {
+    <div class="middle">
+      <div class="board">
+        @for (card of v.board; track $index) {
+          <app-playing-card
+            [card]="card"
+            animate.enter="board-in"
+            [style.animation-delay.ms]="$index < 3 ? $index * 140 : 0"
+          />
+        }
+      </div>
+      <p class="pot numeric" [class.pot--empty]="v.pot === 0">
+        <span class="pot__chips" aria-hidden="true"><i></i><i></i><i></i></span>
+        {{ l.pot }}
+        <app-animated-number [value]="v.pot" [format]="format()" [countFromZero]="false" />
+      </p>
+    </div>
+
+    @if (dealer(); as d) {
+      <span class="dealer" [style.left.%]="d.x" [style.top.%]="d.y" [attr.title]="l.button">D</span>
+    }
+
+    @for (p of placed(); track p.seat.seatNumber) {
+      @let s = p.seat;
+      @if (s.bet > 0) {
+        <span
+          class="bet numeric"
+          [style.left.%]="p.betX"
+          [style.top.%]="p.betY"
+          [style.--seat-x.%]="p.x"
+          [style.--seat-y.%]="p.y"
+          animate.enter="bet-in"
+          animate.leave="bet-sweep"
+        >
+          <span class="bet__chip" aria-hidden="true"></span>
+          <app-animated-number [value]="s.bet" [format]="format()" [countFromZero]="false" />
+        </span>
+      }
+      <div
+        class="seat"
+        [style.left.%]="p.x"
+        [style.top.%]="p.y"
+        [style.--cx.px]="p.toCenterX"
+        [style.--cy.px]="p.toCenterY"
+        [class.seat--hero]="s.isHero"
+        [class.seat--folded]="s.folded"
+        [class.seat--out]="s.out"
+        [class.seat--acting]="s.acting"
+        [class.seat--winner]="s.won > 0"
+        [class.seat--allin]="s.allIn"
+      >
+        <div class="seat__cards">
+          @for (card of s.cards; track $index) {
+            <app-playing-card
+              size="small"
+              [card]="card"
+              [hiddenLabel]="l.hiddenCard"
+              animate.enter="deal-in"
+              animate.leave="muck"
+              [style.animation-delay.ms]="($index * placed().length + p.dealOrder) * 70"
+            />
+          }
+        </div>
+        <div class="seat__plate">
+          <span class="seat__name">
+            {{ s.label }}
+            @if (s.sublabel) {
+              <small>{{ s.sublabel }}</small>
+            }
+          </span>
+          <span class="seat__stack numeric">
+            @if (s.allIn && s.stack === 0) {
+              <span class="allin">{{ l.allIn }}</span>
+            } @else {
+              <app-animated-number [value]="s.stack" [format]="format()" [countFromZero]="false" />
+            }
+          </span>
+        </div>
+        @if (s.won > 0) {
+          <span class="seat__won numeric" animate.enter="rise">+{{ format()(s.won) }}</span>
+        }
+      </div>
+    }
+
+    @for (b of bubble(); track b.key) {
+      <span
+        class="bubble"
+        [attr.data-kind]="b.kind"
+        [style.left.%]="b.x"
+        [style.top.%]="b.y"
+        animate.enter="pop"
+        animate.leave="pop-out"
+      >
+        {{ b.text }}
+      </span>
+    }
+
+    @for (p of payouts(); track p.seat.seatNumber) {
+      <span
+        class="payout"
+        [style.left.%]="p.x"
+        [style.top.%]="p.y"
+        animate.enter="payout-in"
+        aria-hidden="true"
+        ><i></i><i></i><i></i
+      ></span>
+    }
+  }
+</div>

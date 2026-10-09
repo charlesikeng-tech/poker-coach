@@ -2,18 +2,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  ElementRef,
   computed,
   effect,
   inject,
   input,
   signal,
   untracked,
-  viewChild,
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import {
   ArrowLeft,
   ChevronFirst,
@@ -30,10 +28,9 @@ import {
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
-import { AnimatedNumber } from '../../shared/ui/effects/animated-number';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
-import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
+import { PokerTable, TableSeat, TableView } from '../../shared/ui/poker-table/poker-table';
 import { PokerPosition } from '../statistics/statistics-api';
 import { TournamentsApi } from '../tournaments/tournaments-api';
 import { HandReplay, HandsApi, ReplayAction, ReplaySeat, Street } from './hands-api';
@@ -68,23 +65,9 @@ const STREET_BUTTONS: readonly (Street | 'showdown')[] = [
   'showdown',
 ];
 
-interface PlacedSeat {
-  readonly seat: ReplaySeat;
-  /** Order around the table from the small blind: the dealing order. */
-  readonly dealOrder: number;
-  readonly x: number;
-  readonly y: number;
-  /** From the seat to the middle of the table, in pixels: where cards come from and are mucked to. */
-  readonly toCenterX: number;
-  readonly toCenterY: number;
-  /** Where the seat's bet sits, between the seat and the middle. */
-  readonly betX: number;
-  readonly betY: number;
-}
-
 @Component({
   selector: 'app-hand-replay-page',
-  imports: [TranslocoDirective, RouterLink, AnimatedNumber, Button, EmptyState, Icon, PlayingCard],
+  imports: [TranslocoDirective, RouterLink, Button, EmptyState, Icon, PokerTable],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter', '(window:keydown)': 'onKey($event)' },
   templateUrl: './hand-replay-page.html',
@@ -94,6 +77,7 @@ export class HandReplayPage {
   private readonly api = inject(HandsApi);
   private readonly tournaments = inject(TournamentsApi);
   private readonly language = inject(LanguageService);
+  private readonly transloco = inject(TranslocoService);
 
   /** Route parameter (component input binding). */
   readonly id = input.required<string>();
@@ -105,8 +89,6 @@ export class HandReplayPage {
   protected readonly unit = signal<Unit>('bigBlinds');
   protected readonly speed = signal<Speed>(1);
   protected readonly speeds = SPEEDS;
-  private readonly feltRef = viewChild<ElementRef<HTMLElement>>('felt');
-  private readonly feltSize = signal({ width: 800, height: 500 });
   /** Key moments of the hand's tournament, in play order. */
   private readonly keyMoments = signal<readonly { handId: string; index: number }[]>([]);
   private keyMomentsTournament: string | null = null;
@@ -128,7 +110,6 @@ export class HandReplayPage {
   private readonly locale = computed(() => this.language.current());
   private request = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
-  private resize: ResizeObserver | undefined;
 
   protected readonly frames = computed(() => {
     const hand = this.hand();
@@ -147,51 +128,6 @@ export class HandReplayPage {
     () => this.hand()?.seats.find((s) => s.isHero)?.seatNumber ?? 1,
   );
 
-  /** Seats around an ellipse, the hero always at the bottom. */
-  protected readonly placed = computed<PlacedSeat[]>(() => {
-    const hand = this.hand();
-    if (!hand) {
-      return [];
-    }
-    const count = Math.max(hand.maxSeats, ...hand.seats.map((s) => s.seatNumber));
-    const hero = this.heroSeat();
-    const { width, height } = this.feltSize();
-    return hand.seats.map((seat) => {
-      const step = (((seat.seatNumber - hero) % count) + count) % count;
-      const angle = Math.PI / 2 + (step * 2 * Math.PI) / count;
-      const x = 50 + 41 * Math.cos(angle);
-      const y = 50 + 37 * Math.sin(angle);
-      const fromButton = (((seat.seatNumber - hand.buttonSeat - 1) % count) + count) % count;
-      return {
-        seat,
-        dealOrder: fromButton,
-        x,
-        y,
-        toCenterX: ((50 - x) / 100) * width,
-        toCenterY: ((50 - y) / 100) * height,
-        betX: 50 + (x - 50) * 0.55,
-        betY: 50 + (y - 50) * 0.5,
-      };
-    });
-  });
-
-  /** The action just played, as a bubble over its seat; keyed so each action pops anew. */
-  protected readonly bubble = computed(() => {
-    const hand = this.hand();
-    const index = this.frame()?.actionIndex;
-    if (!hand || index === null || index === undefined) {
-      return [];
-    }
-    const action = hand.actions[index];
-    const seat = this.placed().find((p) => p.seat.seatNumber === action.seatNumber);
-    return seat ? [{ key: index, action, index, x: seat.x, y: seat.y }] : [];
-  });
-
-  /** On the result, the pot slides to each seat that collected chips. */
-  protected readonly payouts = computed(() =>
-    this.frame()?.isResult ? this.placed().filter((p) => p.seat.collected > 0) : [],
-  );
-
   /** Frames where a street starts: marks on the timeline. */
   protected readonly streetMarks = computed(() =>
     this.frames()
@@ -200,17 +136,67 @@ export class HandReplayPage {
       .map(({ f, i }) => ({ index: i, street: f.street })),
   );
 
-  protected readonly dealer = computed(() => {
-    const hand = this.hand();
-    const seat = this.placed().find((p) => p.seat.seatNumber === hand?.buttonSeat);
-    return seat ? { x: 50 + (seat.x - 50) * 0.72 + 4, y: 50 + (seat.y - 50) * 0.7 } : null;
-  });
-
   /** The seat whose action is shown: highlighted at the table. */
   protected readonly actingSeat = computed(() => {
     const hand = this.hand();
     const index = this.frame()?.actionIndex;
     return hand && index !== null && index !== undefined ? hand.actions[index].seatNumber : null;
+  });
+
+  /** What the felt draws for the current frame. */
+  protected readonly tableView = computed<TableView>(() => {
+    const hand = this.hand()!;
+    const frame = this.frame();
+    const table = this.table();
+    this.locale(); // labels follow the language
+    const t = (key: string, params?: Record<string, unknown>) =>
+      this.transloco.translate(`pages.hand.${key}`, params);
+    const acting = this.actingSeat();
+    const isResult = frame?.isResult ?? false;
+    const seats: TableSeat[] = hand.seats.map((seat) => {
+      const state = table?.seats.get(seat.seatNumber);
+      const folded = state?.folded ?? false;
+      return {
+        seatNumber: seat.seatNumber,
+        label: seat.isHero
+          ? t('you')
+          : seat.isDealt
+            ? this.positionLabel(seat) || t('player')
+            : t('sittingOut'),
+        sublabel: seat.isHero ? this.positionLabel(seat) : '',
+        isHero: seat.isHero,
+        out: !seat.isDealt,
+        stack: state?.stack ?? seat.stack,
+        bet: state?.bet ?? 0,
+        cards: this.cardsOf(seat, folded),
+        folded,
+        allIn: (state?.allIn ?? false) && !isResult,
+        acting: acting === seat.seatNumber,
+        won: isResult ? seat.collected : 0,
+      };
+    });
+    const index = frame?.actionIndex;
+    const action = index !== null && index !== undefined ? hand.actions[index] : null;
+    return {
+      dealKey: hand.handId,
+      maxSeats: hand.maxSeats,
+      heroSeat: this.heroSeat(),
+      buttonSeat: hand.buttonSeat,
+      seats,
+      board: hand.board.slice(0, frame?.boardCount ?? 0),
+      pot: table?.pot ?? 0,
+      bubble: action
+        ? {
+            key: index!,
+            seatNumber: action.seatNumber,
+            text:
+              t('actions.' + action.kind, { amount: this.actionAmount(index!) }) +
+              (action.isAllIn ? ` · ${t('allIn')}` : ''),
+            kind: action.isAllIn ? 'allIn' : action.kind,
+          }
+        : null,
+      payouts: isResult ? hand.seats.filter((s) => s.collected > 0).map((s) => s.seatNumber) : [],
+    };
   });
 
   /** The log: voluntary actions grouped by street, with their index in the hand. */
@@ -267,22 +253,7 @@ export class HandReplayPage {
       const id = this.id();
       untracked(() => void this.load(id));
     });
-    // Card and chip flights are measured in pixels: follow the felt's size.
-    effect(() => {
-      const felt = this.feltRef()?.nativeElement;
-      this.resize?.disconnect();
-      if (!felt) {
-        return;
-      }
-      this.resize = new ResizeObserver(([entry]) =>
-        this.feltSize.set({ width: entry.contentRect.width, height: entry.contentRect.height }),
-      );
-      this.resize.observe(felt);
-    });
-    inject(DestroyRef).onDestroy(() => {
-      this.stop();
-      this.resize?.disconnect();
-    });
+    inject(DestroyRef).onDestroy(() => this.stop());
   }
 
   /** Formatter for animated figures; rebuilt when the unit or language changes. */
