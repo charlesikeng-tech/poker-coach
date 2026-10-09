@@ -138,9 +138,23 @@ Hand histories contain opponents' pseudonyms. Golden test files must be anonymiz
 - Out of the money with one bounty: `You won Bounty 1€` — a third shape of the `You won` line, with
   no prize part. Prize stays `UNKNOWN` at parse time (same rule as a missing line); bounty is 1 €.
 
+## Fifth sample: ASTEROID — re-entry (summary only, 2026-10-03)
+
+- **A re-entry appends a complete second block to the same summary file**: header, player, buy-in,
+  levels, prize pool, start time, played time, finish position. One block per entry, in the order
+  played (registered players 1527 → 1795, prize pool 3728 → 4594 €: each block is a snapshot taken at
+  that elimination).
+- Both blocks carry ` - Late Registration`. Finish positions 1151 then 978; `1151th` (Winamax always
+  writes `th`).
+- Whether `You played` of the second block is cumulative is unknown (50 min, then 1 h 18 min).
+- Modelled as **tournament entries** (`poker.tournament_entries`): results per entry, tournament-level
+  figures from the last block. All blocks must agree on tournament, player and buy-in, otherwise the
+  summary is rejected. ROI must count one buy-in per entry.
+
 ## Samples still needed
 
-1. A tournament where the hero **re-entered** (how the summary and the files show it).
+1. ~~Re-entry in the summary~~ — covered by ASTEROID. Still needed: its **hand-history** file (how
+   the second entry appears in hands).
 2. ~~KO out of the money, with and without bounties~~ — covered by ARCTURUS and QUANTUM.
 3. A **non-KO** tournament and a **Mystery KO**.
 4. A **9-max** or final-table hand (positions beyond 6-max).

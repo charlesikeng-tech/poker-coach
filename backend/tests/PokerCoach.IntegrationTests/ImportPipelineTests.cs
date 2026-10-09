@@ -16,6 +16,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
     private const string CassiopeiaHands = "20260905_CASSIOPEIA_1161415333__real_holdem_no-limit.txt";
     private const string CassiopeiaSummary = "20260905_CASSIOPEIA_1161415333__real_holdem_no-limit_summary.txt";
     private const string AcceleratorHands = "20260916_ACCELERATOR_1169257027__real_holdem_no-limit.txt";
+    private const string AsteroidSummary = "20261003_ASTEROID_1178140542__real_holdem_no-limit_summary.txt";
 
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
 
@@ -99,10 +100,39 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
             where a.UserId == userId
             select t).SingleAsync(Ct);
         Assert.Equal("1161415333", tournament.ExternalTournamentId);
-        Assert.Equal(108, tournament.FinishPosition);
         Assert.NotNull(tournament.SummaryImportedAt);
+        var entry = await db.Set<TournamentEntryRecord>().SingleAsync(e => e.TournamentId == tournament.Id, Ct);
+        Assert.Equal(108, entry.FinishPosition);
         Assert.NotNull(tournament.FirstHandAt);
         Assert.NotNull(tournament.BuyInExcludingFee);
+    }
+
+    [Fact]
+    public async Task A_summary_grown_by_a_re_entry_replaces_the_entries()
+    {
+        var userId = await CreateUserAsync();
+        var full = Encoding.UTF8.GetString(Golden(AsteroidSummary));
+        var firstEntryOnly = full[..full.IndexOf("Winamax Poker", 10, StringComparison.Ordinal)];
+
+        await UploadAsync(userId, (AsteroidSummary, Encoding.UTF8.GetBytes(firstEntryOnly)));
+        await ProcessQueueAsync();
+        await UploadAsync(userId, (AsteroidSummary, Golden(AsteroidSummary)));
+        await ProcessQueueAsync();
+
+        await using var scope = fixture.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<PokerCoachDbContext>();
+        var tournament = await (
+            from t in db.Set<TournamentRecord>()
+            join a in db.Set<PokerAccountRecord>() on t.PokerAccountId equals a.Id
+            where a.UserId == userId
+            select t).SingleAsync(Ct);
+        Assert.Equal(1795, tournament.RegisteredPlayers);
+        var entries = await db.Set<TournamentEntryRecord>()
+            .Where(e => e.TournamentId == tournament.Id)
+            .OrderBy(e => e.EntryNumber)
+            .Select(e => e.FinishPosition)
+            .ToListAsync(Ct);
+        Assert.Equal(new int?[] { 1151, 978 }, entries);
     }
 
     [Fact]

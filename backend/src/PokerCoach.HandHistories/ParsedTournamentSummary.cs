@@ -4,8 +4,8 @@ namespace PokerCoach.HandHistories;
 
 /// <summary>
 /// A provider tournament summary as printed. Nullable fields are null when the line is absent from the
-/// file: that means UNKNOWN, never zero. Interpreting them (ROI, re-entries, bounty winnings when the
-/// line is missing) is the job of the import and performance modules, not of the parser.
+/// file: that means UNKNOWN, never zero. Interpreting them (ROI, bounty winnings when the line is
+/// missing) is the job of the import and performance modules, not of the parser.
 /// </summary>
 public sealed record ParsedTournamentSummary
 {
@@ -43,18 +43,26 @@ public sealed record ParsedTournamentSummary
 
     public required DateTimeOffset StartedAt { get; init; }
 
-    public required TimeSpan? PlayedDuration { get; init; }
-
-    public required int? FinishPosition { get; init; }
-
-    public required decimal? PrizeWinnings { get; init; }
-
-    /// <summary>Bounty cash won. Null when the summary does not print a bounty amount.</summary>
-    public required decimal? BountyWinnings { get; init; }
-
     /// <summary>
-    /// The player registered during late registration (header suffix " - Late Registration"): he started
-    /// with the starting stack at a later level, i.e. fewer big blinds.
+    /// One per buy-in of the player, in the order played: a re-entry adds an entry. Never empty.
+    /// Tournament-level values above (registered players, prize pool) come from the last entry's block:
+    /// they are a snapshot taken when the player was last eliminated, not necessarily final.
     /// </summary>
-    public required bool LateRegistration { get; init; }
+    public required IReadOnlyList<ParsedTournamentEntry> Entries { get; init; }
 }
+
+/// <param name="EntryNumber">1-based, in file order (first buy-in first).</param>
+/// <param name="LateRegistration">
+/// Registered during late registration (header suffix " - Late Registration"): started with the starting
+/// stack at a later level, i.e. fewer big blinds.
+/// </param>
+/// <param name="PlayedDuration">As printed for this entry; whether it is cumulative across entries is unknown.</param>
+/// <param name="PrizeWinnings">Null when not printed (out of the money, or bounties only): unknown, not zero.</param>
+/// <param name="BountyWinnings">Null when the summary does not print a bounty amount.</param>
+public sealed record ParsedTournamentEntry(
+    int EntryNumber,
+    bool LateRegistration,
+    TimeSpan? PlayedDuration,
+    int? FinishPosition,
+    decimal? PrizeWinnings,
+    decimal? BountyWinnings);

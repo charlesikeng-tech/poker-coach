@@ -21,9 +21,10 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
     {
         ArgumentNullException.ThrowIfNull(content);
 
+        // A re-entry appends a complete block (header included) to the same file: one block per entry.
         var lines = WinamaxValues.SplitLines(content);
-        var fields = new SummaryFields();
-        var headerRead = false;
+        var blocks = new List<SummaryFields>();
+        SummaryFields? current = null;
 
         for (var index = 0; index < lines.Length; index++)
         {
@@ -39,63 +40,85 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
                 return Failure(ParseErrorCodes.LineTooLong, lineNumber);
             }
 
-            if (!headerRead)
+            var header = WinamaxPatterns.SummaryHeader().Match(text);
+            if (header.Success)
             {
-                var header = WinamaxPatterns.SummaryHeader().Match(text);
-                if (!header.Success)
+                current = new SummaryFields
                 {
-                    return Failure(ParseErrorCodes.UnrecognizedFormat, lineNumber);
-                }
-
-                fields.TournamentName = header.Groups["name"].Value;
-                fields.TournamentId = header.Groups["id"].Value;
-                fields.LateRegistration = header.Groups["late"].Success;
-                headerRead = true;
+                    HeaderLine = lineNumber,
+                    TournamentName = header.Groups["name"].Value,
+                    TournamentId = header.Groups["id"].Value,
+                    LateRegistration = header.Groups["late"].Success,
+                };
+                blocks.Add(current);
                 continue;
             }
 
-            var code = ReadLine(text, fields);
+            if (current is null)
+            {
+                return Failure(ParseErrorCodes.UnrecognizedFormat, lineNumber);
+            }
+
+            var code = ReadLine(text, current);
             if (code is not null)
             {
                 return Failure(code, lineNumber);
             }
         }
 
-        if (!headerRead)
+        if (blocks.Count == 0)
         {
             return Failure(ParseErrorCodes.EmptyFile, 1);
         }
 
-        if (fields.TournamentId is null || fields.TournamentName is null || fields.PlayerName is null
-            || fields.PrizePoolBuyIn is not { } prizePoolBuyIn || fields.Fee is not { } fee
-            || fields.RegisteredPlayers is not { } registeredPlayers || fields.PrizePool is not { } prizePool
-            || fields.StartedAt is not { } startedAt)
+        foreach (var block in blocks)
         {
-            return Failure(ParseErrorCodes.MissingField, lines.Length);
+            if (!block.HasMandatoryFields)
+            {
+                return Failure(ParseErrorCodes.MissingField, block.HeaderLine);
+            }
         }
 
+        // Every block must describe the same tournament, player and buy-in: anything else is not a
+        // re-entry we understand, and mixing it would corrupt ROI.
+        var first = blocks[0];
+        foreach (var block in blocks.Skip(1))
+        {
+            if (block.TournamentId != first.TournamentId || block.TournamentName != first.TournamentName
+                || block.PlayerName != first.PlayerName || block.PrizePoolBuyIn != first.PrizePoolBuyIn
+                || block.BountyBuyIn != first.BountyBuyIn || block.Fee != first.Fee)
+            {
+                return Failure(ParseErrorCodes.UnexpectedSection, block.HeaderLine);
+            }
+        }
+
+        var last = blocks[^1];
         var summary = new ParsedTournamentSummary
         {
             Room = PokerRoom.Winamax,
-            ExternalTournamentId = fields.TournamentId,
-            TournamentName = fields.TournamentName,
-            PlayerName = fields.PlayerName,
-            PrizePoolBuyIn = prizePoolBuyIn,
-            BountyBuyIn = fields.BountyBuyIn,
-            Fee = fee,
+            ExternalTournamentId = last.TournamentId!,
+            TournamentName = last.TournamentName!,
+            PlayerName = last.PlayerName!,
+            PrizePoolBuyIn = last.PrizePoolBuyIn!.Value,
+            BountyBuyIn = last.BountyBuyIn,
+            Fee = last.Fee!.Value,
             Currency = WinamaxValues.Currency,
-            RegisteredPlayers = registeredPlayers,
-            Mode = fields.Mode,
-            Type = fields.Type,
-            Speed = fields.Speed,
-            FlightId = fields.FlightId,
-            PrizePool = prizePool,
-            StartedAt = startedAt,
-            PlayedDuration = fields.PlayedDuration,
-            FinishPosition = fields.FinishPosition,
-            PrizeWinnings = fields.PrizeWinnings,
-            BountyWinnings = fields.BountyWinnings,
-            LateRegistration = fields.LateRegistration,
+            RegisteredPlayers = last.RegisteredPlayers!.Value,
+            Mode = last.Mode,
+            Type = last.Type,
+            Speed = last.Speed,
+            FlightId = last.FlightId,
+            PrizePool = last.PrizePool!.Value,
+            StartedAt = last.StartedAt!.Value,
+            Entries = blocks
+                .Select((block, index) => new ParsedTournamentEntry(
+                    index + 1,
+                    block.LateRegistration,
+                    block.PlayedDuration,
+                    block.FinishPosition,
+                    block.PrizeWinnings,
+                    block.BountyWinnings))
+                .ToList(),
         };
         return new TournamentSummaryParseResult(summary, []);
     }
@@ -265,6 +288,13 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
 
     private sealed class SummaryFields
     {
+        public int HeaderLine { get; init; }
+
+        public bool HasMandatoryFields =>
+            TournamentId is not null && TournamentName is not null && PlayerName is not null
+            && PrizePoolBuyIn is not null && Fee is not null && RegisteredPlayers is not null
+            && PrizePool is not null && StartedAt is not null;
+
         public string? TournamentId { get; set; }
 
         public string? TournamentName { get; set; }

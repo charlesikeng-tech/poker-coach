@@ -25,6 +25,12 @@ internal static class GoldenFiles
     /// <summary>10 € PKO, hero 185th / 550: out of the money with one bounty ("You won Bounty 1€").</summary>
     public const string ArcturusSummary = "20261002_ARCTURUS_1177277971__real_holdem_no-limit_summary.txt";
 
+    /// <summary>
+    /// 5 € PKO with a re-entry: two complete blocks in one file (1151st after 50 min, then 978th),
+    /// both late registration. Registered players and prize pool grow from the first block to the second.
+    /// </summary>
+    public const string AsteroidSummary = "20261003_ASTEROID_1178140542__real_holdem_no-limit_summary.txt";
+
     public static string Read(string fileName) =>
         File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Winamax", fileName));
 

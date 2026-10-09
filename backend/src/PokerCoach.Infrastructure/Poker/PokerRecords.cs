@@ -66,17 +66,34 @@ internal sealed class TournamentRecord
 
     public DateTimeOffset? StartedAt { get; set; }
 
+    public DateTimeOffset? SummaryImportedAt { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
+}
+
+/// <summary>
+/// One buy-in of the player in a tournament (a re-entry is a second entry), from the summary file.
+/// Results are per entry: ROI counts every buy-in. Replaced as a whole when a newer summary is imported.
+/// </summary>
+internal sealed class TournamentEntryRecord
+{
+    public Guid Id { get; set; }
+
+    public Guid TournamentId { get; set; }
+
+    /// <summary>1-based, in the order played.</summary>
+    public int EntryNumber { get; set; }
+
+    public bool LateRegistration { get; set; }
+
     public TimeSpan? PlayedDuration { get; set; }
 
     public int? FinishPosition { get; set; }
 
+    /// <summary>Null when the summary prints no prize: unknown at import, interpreted by the performance module.</summary>
     public decimal? PrizeWinnings { get; set; }
 
     public decimal? BountyWinnings { get; set; }
-
-    public DateTimeOffset? SummaryImportedAt { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
 }
 
 /// <summary>
@@ -158,14 +175,28 @@ internal sealed class TournamentConfiguration : IEntityTypeConfiguration<Tournam
         builder.Property(t => t.TournamentType).HasMaxLength(32);
         builder.Property(t => t.Speed).HasMaxLength(32);
         builder.Property(t => t.FlightId).HasMaxLength(64);
-        foreach (var money in new[] { nameof(TournamentRecord.BuyInExcludingFee), nameof(TournamentRecord.Fee), nameof(TournamentRecord.PrizePoolBuyIn), nameof(TournamentRecord.BountyBuyIn), nameof(TournamentRecord.PrizeWinnings), nameof(TournamentRecord.BountyWinnings) })
-        {
-            builder.Property(money).HasPrecision(12, 2);
-        }
+        builder.Property(t => t.BuyInExcludingFee).HasPrecision(12, 2);
+        builder.Property(t => t.Fee).HasPrecision(12, 2);
+        builder.Property(t => t.PrizePoolBuyIn).HasPrecision(12, 2);
+        builder.Property(t => t.BountyBuyIn).HasPrecision(12, 2);
 
         builder.Property(t => t.PrizePool).HasPrecision(14, 2);
         builder.HasIndex(t => new { t.PokerAccountId, t.ExternalTournamentId }).IsUnique();
         builder.HasOne<PokerAccountRecord>().WithMany().HasForeignKey(t => t.PokerAccountId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+internal sealed class TournamentEntryConfiguration : IEntityTypeConfiguration<TournamentEntryRecord>
+{
+    public void Configure(EntityTypeBuilder<TournamentEntryRecord> builder)
+    {
+        builder.ToTable("tournament_entries", PokerSchema.Name);
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id).ValueGeneratedNever();
+        builder.Property(e => e.PrizeWinnings).HasPrecision(12, 2);
+        builder.Property(e => e.BountyWinnings).HasPrecision(12, 2);
+        builder.HasIndex(e => new { e.TournamentId, e.EntryNumber }).IsUnique();
+        builder.HasOne<TournamentRecord>().WithMany().HasForeignKey(e => e.TournamentId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 

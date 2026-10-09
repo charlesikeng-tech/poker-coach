@@ -64,7 +64,7 @@ public sealed class ImportProcessorTests
         Assert.Equal(ImportFileKind.TournamentSummary, store.Outcomes[summaryId].Kind);
         Assert.Single(store.Accounts);
         Assert.Single(store.Tournaments);
-        Assert.Equal(108, Assert.Single(store.Summaries).Value.FinishPosition);
+        Assert.Equal(108, Assert.Single(Assert.Single(store.Summaries).Value.Entries).FinishPosition);
     }
 
     [Fact]

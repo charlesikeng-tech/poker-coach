@@ -311,47 +311,73 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
     public async Task UpsertTournamentSummaryAsync(Guid pokerAccountId, ParsedTournamentSummary summary, CancellationToken cancellationToken)
     {
         // The summary is the authoritative record of the tournament: its values replace earlier ones.
-        const string Sql = """
+        // The tournament row lock taken here also serializes concurrent imports of the same summary.
+        const string TournamentSql = """
             INSERT INTO poker.tournaments
                 (id, poker_account_id, external_tournament_id, name, currency, fee, prize_pool_buy_in, bounty_buy_in,
-                 registered_players, mode, tournament_type, speed, flight_id, prize_pool, started_at, played_duration,
-                 finish_position, prize_winnings, bounty_winnings, summary_imported_at, created_at)
+                 registered_players, mode, tournament_type, speed, flight_id, prize_pool, started_at,
+                 summary_imported_at, created_at)
             VALUES (@id, @poker_account_id, @external_id, @name, @currency, @fee, @prize_pool_buy_in, @bounty_buy_in,
-                 @registered_players, @mode, @tournament_type, @speed, @flight_id, @prize_pool, @started_at, @played_duration,
-                 @finish_position, @prize_winnings, @bounty_winnings, @now, @now)
+                 @registered_players, @mode, @tournament_type, @speed, @flight_id, @prize_pool, @started_at, @now, @now)
             ON CONFLICT (poker_account_id, external_tournament_id) DO UPDATE
                 SET name = EXCLUDED.name, currency = EXCLUDED.currency, fee = EXCLUDED.fee,
                     prize_pool_buy_in = EXCLUDED.prize_pool_buy_in, bounty_buy_in = EXCLUDED.bounty_buy_in,
                     registered_players = EXCLUDED.registered_players, mode = EXCLUDED.mode,
                     tournament_type = EXCLUDED.tournament_type, speed = EXCLUDED.speed, flight_id = EXCLUDED.flight_id,
                     prize_pool = EXCLUDED.prize_pool, started_at = EXCLUDED.started_at,
-                    played_duration = EXCLUDED.played_duration, finish_position = EXCLUDED.finish_position,
-                    prize_winnings = EXCLUDED.prize_winnings, bounty_winnings = EXCLUDED.bounty_winnings,
                     summary_imported_at = EXCLUDED.summary_imported_at
+            RETURNING id
             """;
 
-        await using var command = await CommandAsync(Sql, cancellationToken);
-        Add(command, "id", NpgsqlDbType.Uuid, Guid.CreateVersion7(time.GetUtcNow()));
-        Add(command, "poker_account_id", NpgsqlDbType.Uuid, pokerAccountId);
-        Add(command, "external_id", NpgsqlDbType.Text, summary.ExternalTournamentId);
-        Add(command, "name", NpgsqlDbType.Text, summary.TournamentName);
-        Add(command, "currency", NpgsqlDbType.Text, summary.Currency);
-        Add(command, "fee", NpgsqlDbType.Numeric, summary.Fee);
-        Add(command, "prize_pool_buy_in", NpgsqlDbType.Numeric, summary.PrizePoolBuyIn);
-        Add(command, "bounty_buy_in", NpgsqlDbType.Numeric, summary.BountyBuyIn);
-        Add(command, "registered_players", NpgsqlDbType.Integer, summary.RegisteredPlayers);
-        Add(command, "mode", NpgsqlDbType.Text, summary.Mode);
-        Add(command, "tournament_type", NpgsqlDbType.Text, summary.Type);
-        Add(command, "speed", NpgsqlDbType.Text, summary.Speed);
-        Add(command, "flight_id", NpgsqlDbType.Text, summary.FlightId);
-        Add(command, "prize_pool", NpgsqlDbType.Numeric, summary.PrizePool);
-        Add(command, "started_at", NpgsqlDbType.TimestampTz, summary.StartedAt.ToUniversalTime());
-        Add(command, "played_duration", NpgsqlDbType.Interval, summary.PlayedDuration);
-        Add(command, "finish_position", NpgsqlDbType.Integer, summary.FinishPosition);
-        Add(command, "prize_winnings", NpgsqlDbType.Numeric, summary.PrizeWinnings);
-        Add(command, "bounty_winnings", NpgsqlDbType.Numeric, summary.BountyWinnings);
-        Add(command, "now", NpgsqlDbType.TimestampTz, time.GetUtcNow());
-        await command.ExecuteNonQueryAsync(cancellationToken);
+        // A summary file grows with each re-entry: the newest file lists every entry, so entries are
+        // replaced as a whole rather than merged.
+        const string EntrySql = """
+            INSERT INTO poker.tournament_entries
+                (id, tournament_id, entry_number, late_registration, played_duration, finish_position, prize_winnings, bounty_winnings)
+            VALUES (@id, @tournament_id, @entry_number, @late_registration, @played_duration, @finish_position, @prize_winnings, @bounty_winnings)
+            """;
+
+        Guid tournamentId;
+        await using (var command = await CommandAsync(TournamentSql, cancellationToken))
+        {
+            Add(command, "id", NpgsqlDbType.Uuid, Guid.CreateVersion7(time.GetUtcNow()));
+            Add(command, "poker_account_id", NpgsqlDbType.Uuid, pokerAccountId);
+            Add(command, "external_id", NpgsqlDbType.Text, summary.ExternalTournamentId);
+            Add(command, "name", NpgsqlDbType.Text, summary.TournamentName);
+            Add(command, "currency", NpgsqlDbType.Text, summary.Currency);
+            Add(command, "fee", NpgsqlDbType.Numeric, summary.Fee);
+            Add(command, "prize_pool_buy_in", NpgsqlDbType.Numeric, summary.PrizePoolBuyIn);
+            Add(command, "bounty_buy_in", NpgsqlDbType.Numeric, summary.BountyBuyIn);
+            Add(command, "registered_players", NpgsqlDbType.Integer, summary.RegisteredPlayers);
+            Add(command, "mode", NpgsqlDbType.Text, summary.Mode);
+            Add(command, "tournament_type", NpgsqlDbType.Text, summary.Type);
+            Add(command, "speed", NpgsqlDbType.Text, summary.Speed);
+            Add(command, "flight_id", NpgsqlDbType.Text, summary.FlightId);
+            Add(command, "prize_pool", NpgsqlDbType.Numeric, summary.PrizePool);
+            Add(command, "started_at", NpgsqlDbType.TimestampTz, summary.StartedAt.ToUniversalTime());
+            Add(command, "now", NpgsqlDbType.TimestampTz, time.GetUtcNow());
+            tournamentId = (Guid)(await command.ExecuteScalarAsync(cancellationToken))!;
+        }
+
+        await using (var delete = await CommandAsync("DELETE FROM poker.tournament_entries WHERE tournament_id = @tournament_id", cancellationToken))
+        {
+            Add(delete, "tournament_id", NpgsqlDbType.Uuid, tournamentId);
+            await delete.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        foreach (var entry in summary.Entries)
+        {
+            await using var insert = await CommandAsync(EntrySql, cancellationToken);
+            Add(insert, "id", NpgsqlDbType.Uuid, Guid.CreateVersion7(time.GetUtcNow()));
+            Add(insert, "tournament_id", NpgsqlDbType.Uuid, tournamentId);
+            Add(insert, "entry_number", NpgsqlDbType.Integer, entry.EntryNumber);
+            Add(insert, "late_registration", NpgsqlDbType.Boolean, entry.LateRegistration);
+            Add(insert, "played_duration", NpgsqlDbType.Interval, entry.PlayedDuration);
+            Add(insert, "finish_position", NpgsqlDbType.Integer, entry.FinishPosition);
+            Add(insert, "prize_winnings", NpgsqlDbType.Numeric, entry.PrizeWinnings);
+            Add(insert, "bounty_winnings", NpgsqlDbType.Numeric, entry.BountyWinnings);
+            await insert.ExecuteNonQueryAsync(cancellationToken);
+        }
     }
 
     public async Task<bool> TryInsertHandAsync(Guid pokerAccountId, Guid tournamentId, Guid importedFileId, ParsedHand hand, CancellationToken cancellationToken)
