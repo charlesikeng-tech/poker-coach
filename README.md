@@ -231,7 +231,7 @@ Postflop (roadmap step 3):
       postflop aggression frequency (`PostflopPlay`)
 - [x] Statistics: preflop and postflop sections; leaks: references version 2 with five postflop
       statistics (ADR-0007 amendment), example hands for the coach
-- [ ] Migration `PostflopStats`
+- [x] Migration `PostflopStats`
 
 MVP-3 — Leaks (ADR-0007):
 
