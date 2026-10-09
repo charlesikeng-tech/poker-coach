@@ -32,6 +32,12 @@
       }
 
       <div class="filters">
+        <app-format-toggle
+          class="format"
+          [value]="report.format"
+          [counts]="report.handsByFormat"
+          (changed)="setFormat($event)"
+        />
         <label>
           <span>{{ t('filters.period') }}</span>
           <select [value]="period()" (change)="setPeriod($any($event.target).value)">

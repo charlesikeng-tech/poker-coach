@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { TableFormat } from '../../shared/ui/format-toggle/format-toggle';
+
 // Mirrors backend/src/PokerCoach.Api/Statistics. Rates are ratios; null means no opportunity (unknown).
 
 export interface StatRate {
@@ -37,9 +39,14 @@ export interface StatisticsReport {
   readonly pendingHands: number;
   /** Tournaments behind the figures, and how many have a complete hand history. */
   readonly sample: { readonly tournaments: number; readonly completeTournaments: number };
+  /** Table format of the figures; positions are named within it. */
+  readonly format: TableFormat;
+  readonly handsByFormat: Readonly<Record<TableFormat, number>>;
 }
 
 export interface StatisticsQuery {
+  /** Omitted: the format with the most hands. */
+  readonly format?: TableFormat;
   readonly from?: string;
   readonly minStackBb?: number;
   readonly maxStackBb?: number;
@@ -60,6 +67,9 @@ export class StatisticsApi {
     }
     if (query.maxStackBb !== undefined) {
       params = params.set('maxStackBb', query.maxStackBb);
+    }
+    if (query.format) {
+      params = params.set('format', query.format);
     }
     if (query.completeOnly) {
       params = params.set('completeOnly', true);

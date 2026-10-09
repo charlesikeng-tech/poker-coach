@@ -15,6 +15,7 @@ import { CircleAlert, LoaderCircle, Upload } from 'lucide';
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
+import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -52,7 +53,16 @@ const PENDING_REFRESH_MS = 3000;
 
 @Component({
   selector: 'app-statistics-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, StatTile],
+  imports: [
+    FormatToggle,
+    TranslocoDirective,
+    RouterLink,
+    PageHeader,
+    EmptyState,
+    Button,
+    Icon,
+    StatTile,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './statistics-page.html',
@@ -76,6 +86,8 @@ export class StatisticsPage {
   protected readonly period = signal<PeriodFilter>('all');
   protected readonly stack = signal<StackFilter>('all');
   protected readonly completeOnly = signal(false);
+  /** The player's choice; null lets the server pick the format he plays most. */
+  private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<StatisticsReport | null>(null);
   protected readonly icons = { CircleAlert, LoaderCircle, Upload };
@@ -110,7 +122,7 @@ export class StatisticsPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.period(), this.stack(), this.completeOnly()] as const;
+      const args = [this.formatChoice(), this.period(), this.stack(), this.completeOnly()] as const;
       untracked(() => void this.load(...args));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
@@ -120,12 +132,16 @@ export class StatisticsPage {
     this.period.set(value as PeriodFilter);
   }
 
+  protected setFormat(value: TableFormat): void {
+    this.formatChoice.set(value);
+  }
+
   protected setStack(value: string): void {
     this.stack.set(value as StackFilter);
   }
 
   protected retry(): void {
-    void this.load(this.period(), this.stack(), this.completeOnly());
+    void this.load(this.formatChoice(), this.period(), this.stack(), this.completeOnly());
   }
 
   protected rate(line: StatLine, key: RateKey): StatRate {
@@ -137,6 +153,7 @@ export class StatisticsPage {
   }
 
   private async load(
+    format: TableFormat | null,
     period: PeriodFilter,
     stack: StackFilter,
     completeOnly: boolean,
@@ -148,8 +165,10 @@ export class StatisticsPage {
     }
     try {
       const report = await this.api.get({
+        format: format ?? undefined,
         from: toQuery(period, 'all', 1, 1, new Date()).from,
         ...stackBounds(stack),
+        completeOnly,
       });
       if (request !== this.request) {
         return;
@@ -158,7 +177,7 @@ export class StatisticsPage {
       this.state.set('ready');
       if (report.pendingHands > 0) {
         this.refreshTimer = setTimeout(
-          () => void this.load(period, stack, completeOnly),
+          () => void this.load(report.format, period, stack, completeOnly),
           PENDING_REFRESH_MS,
         );
       }

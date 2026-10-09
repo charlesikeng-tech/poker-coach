@@ -18,19 +18,12 @@
     }
 
     <div class="toolbar">
-      <div class="views formats" role="group" [attr.aria-label]="t('format')">
-        @for (f of formats; track f) {
-          <button
-            type="button"
-            [class.active]="format() === f"
-            [attr.aria-pressed]="format() === f"
-            (click)="setFormat(f)"
-          >
-            {{ t('formats.' + f) }}
-            <span class="count numeric">{{ data.spots[f] }}</span>
-          </button>
-        }
-      </div>
+      <app-format-toggle
+        class="format"
+        [value]="format()"
+        [counts]="data.spots"
+        (changed)="setFormat($event)"
+      />
       <label>
         <span>{{ t('band') }}</span>
         <select [value]="band()" (change)="setBand($any($event.target).value)">

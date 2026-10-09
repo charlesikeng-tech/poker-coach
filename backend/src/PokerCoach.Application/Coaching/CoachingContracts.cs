@@ -1,6 +1,7 @@
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
+using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Application.Coaching;
 
@@ -91,7 +92,8 @@ public sealed record ExampleHand(
     string? HeroCards);
 
 /// <summary>The spot a leak is about: hands where it happened (too high) or could have and did not (too low).</summary>
-public sealed record LeakSituation(LeakStat Stat, PokerPosition? Position, LeakDirection Direction, decimal MinStackBigBlinds);
+/// <param name="Position">Seat named within <paramref name="Format"/> (see OpeningSeat).</param>
+public sealed record LeakSituation(LeakStat Stat, PokerPosition? Position, LeakDirection Direction, decimal MinStackBigBlinds, TableFormat Format);
 
 public sealed record StoredExplanation(LeakExplanation Explanation, IReadOnlyList<ExampleHandLabel> Hands, string Model, DateTimeOffset CreatedAt);
 

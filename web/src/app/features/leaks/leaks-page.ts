@@ -16,6 +16,7 @@ import { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload } from 'lucide
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
+import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -37,6 +38,7 @@ const PENDING_REFRESH_MS = 3000;
   selector: 'app-leaks-page',
   imports: [
     TranslocoDirective,
+    FormatToggle,
     RouterLink,
     PageHeader,
     EmptyState,
@@ -56,6 +58,8 @@ export class LeaksPage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
+  /** The player's choice; null lets the server pick the format he plays most. */
+  private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
   protected readonly analysis = signal<LeakAnalysis | null>(null);
   protected readonly icons = { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload };
@@ -85,8 +89,8 @@ export class LeaksPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const period = this.period();
-      untracked(() => void this.load(period));
+      const args = [this.period(), this.formatChoice()] as const;
+      untracked(() => void this.load(...args));
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }
@@ -94,6 +98,11 @@ export class LeaksPage {
   protected setPeriod(value: string): void {
     this.coach.set({});
     this.period.set(value as PeriodFilter);
+  }
+
+  protected setFormat(value: TableFormat): void {
+    this.coach.set({});
+    this.formatChoice.set(value);
   }
 
   protected key(leak: Leak): string {
@@ -108,7 +117,8 @@ export class LeaksPage {
     this.setCoach(key, { status: 'loading' });
     try {
       const from = toQuery(this.period(), 'all', 1, 1, new Date()).from;
-      const explanation = await this.api.explain(leak, from, this.language.current());
+      const format = this.analysis()?.format ?? 'sixMax';
+      const explanation = await this.api.explain(leak, format, from, this.language.current());
       this.setCoach(key, { status: 'ready', explanation });
     } catch (error) {
       this.setCoach(key, { status: 'error', code: coachErrorCode(error) });
@@ -138,7 +148,7 @@ export class LeaksPage {
   }
 
   protected retry(): void {
-    void this.load(this.period());
+    void this.load(this.period(), this.formatChoice());
   }
 
   /** Translation params shared by a leak's title and texts. */
@@ -154,21 +164,24 @@ export class LeaksPage {
     };
   }
 
-  private async load(period: PeriodFilter): Promise<void> {
+  private async load(period: PeriodFilter, format: TableFormat | null): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
     if (this.analysis() === null) {
       this.state.set('loading');
     }
     try {
-      const analysis = await this.api.get(toQuery(period, 'all', 1, 1, new Date()).from);
+      const analysis = await this.api.get(toQuery(period, 'all', 1, 1, new Date()).from, format);
       if (request !== this.request) {
         return;
       }
       this.analysis.set(analysis);
       this.state.set('ready');
       if (analysis.pendingHands > 0) {
-        this.refreshTimer = setTimeout(() => void this.load(period), PENDING_REFRESH_MS);
+        this.refreshTimer = setTimeout(
+          () => void this.load(period, analysis.format),
+          PENDING_REFRESH_MS,
+        );
       }
     } catch {
       if (request === this.request) {

@@ -872,11 +872,6 @@
         "tooLoose": "{{count}} mano(s) abiertas fuera de la referencia",
         "tooTight": "{{count}} mano(s) de la referencia que tiras",
         "rule": "Una mano cuenta como «abierta» si la subes al menos la mitad de las veces. Fíjate en el número pequeño: con 1 o 2 ocurrencias solo es un indicio."
-      },
-      "format": "Formato de mesa",
-      "formats": {
-        "sixMax": "6-max",
-        "fullRing": "Mesa completa (7-9)"
       }
     }
   },
@@ -884,5 +879,12 @@
     "hello": "Buena sesión",
     "helloName": "Buena sesión, {{name}}",
     "line": "Tus mesas te esperan."
+  },
+  "formats": {
+    "label": "Formato de mesa",
+    "sixMax": "6-max",
+    "fullRing": "Mesa completa",
+    "sixMaxHint": "Mesas de 6 plazas o menos",
+    "fullRingHint": "Mesas de 7 a 9 plazas"
   }
 }

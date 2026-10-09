@@ -4,6 +4,7 @@ using System.Text;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
+using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Application.Coaching;
 
@@ -50,18 +51,19 @@ public sealed class LeakCoachService(
         LeakStat stat,
         PokerPosition? position,
         LeakDirection direction,
+        TableFormat? format,
         DateTimeOffset? from,
         string language,
         CancellationToken cancellationToken)
     {
-        var analysis = await leaks.GetAsync(userId, from, null, cancellationToken);
+        var analysis = await leaks.GetAsync(userId, format, from, null, cancellationToken);
         var leak = analysis.Report.Leaks.FirstOrDefault(l => l.Stat == stat && l.Position == position && l.Direction == direction);
         if (leak is null)
         {
             return CoachingOutcome.Fail(CoachingFailure.NotALeak);
         }
 
-        var fingerprint = Fingerprint(leak, language, analysis.ReferenceVersion);
+        var fingerprint = Fingerprint(leak, analysis.Format, language, analysis.ReferenceVersion);
         var cached = await store.FindExplanationAsync(userId, fingerprint, cancellationToken);
         if (cached is not null)
         {
@@ -87,7 +89,7 @@ public sealed class LeakCoachService(
             return CoachingOutcome.Fail(CoachingFailure.BudgetExhausted);
         }
 
-        var situation = new LeakSituation(stat, position, direction, ReferenceRanges.MinStackBigBlinds);
+        var situation = new LeakSituation(stat, position, direction, ReferenceRanges.MinStackBigBlinds, analysis.Format);
         var examples = await store.FindExampleHandsAsync(userId, situation, options.ExampleHands, HeroHandFacts.Version, cancellationToken);
         var labels = examples
             .Select((e, i) =>
@@ -98,7 +100,7 @@ public sealed class LeakCoachService(
             .ToList();
         var prompt = new ExplanationPrompt(
             language,
-            Facts(leak),
+            Facts(leak, analysis.Format),
             examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList());
 
         ModelExplanation answer;
@@ -127,11 +129,11 @@ public sealed class LeakCoachService(
     }
 
     /// <summary>The leak in plain facts, all computed by us.</summary>
-    internal static string Facts(Leak leak)
+    internal static string Facts(Leak leak, TableFormat format)
     {
         string Pct(decimal ratio) => (ratio * 100m).ToString("0.#", CultureInfo.InvariantCulture) + " %";
         var where = leak.Position is { } p ? $" from {HandNarrator.Label(p)}" : string.Empty;
-        return $"Statistic: {leak.Stat}{where}. "
+        return $"Statistic: {leak.Stat}{where}, {(format == TableFormat.SixMax ? "6-max" : "full-ring")} tables. "
             + $"Player's rate: {Pct(leak.Rate)} over {leak.Opportunities} situations "
             + $"(95 % interval {Pct(leak.IntervalLow)}–{Pct(leak.IntervalHigh)}). "
             + $"Reference for solid low-stakes MTT regulars: {Pct(leak.Range.Min)}–{Pct(leak.Range.Max)}. "
@@ -144,10 +146,11 @@ public sealed class LeakCoachService(
     /// What makes an explanation still valid: the leak, its confidence and its rate to the percent. A few
     /// more hands that do not move the rate reuse the same explanation instead of paying for a new one.
     /// </summary>
-    internal static string Fingerprint(Leak leak, string language, int referenceVersion)
+    internal static string Fingerprint(Leak leak, TableFormat format, string language, int referenceVersion)
     {
         var key = string.Join(
             '|',
+            format,
             leak.Stat,
             leak.Position?.ToString() ?? "-",
             leak.Direction,

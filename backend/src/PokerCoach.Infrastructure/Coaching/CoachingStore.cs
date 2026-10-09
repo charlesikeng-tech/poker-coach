@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Leaks;
+using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Infrastructure.Poker;
@@ -60,19 +61,30 @@ internal sealed class CoachingStore(PokerCoachDbContext db, TimeProvider time) :
         var facts = db.Set<HandHeroFactsRecord>().AsNoTracking()
             .Where(f => f.FactsVersion == factsVersion && f.StackInBigBlinds >= situation.MinStackBigBlinds)
             .Where(Spot(situation.Stat, situation.Direction));
-        if (situation.Position is { } position)
-        {
-            facts = facts.Where(f => f.Position == position);
-        }
+        var sixMax = situation.Format == TableFormat.SixMax;
 
-        var rows = await (
+        // Positions are named within the format (OpeningSeat), which SQL does not know: recent candidates
+        // are read with what the renaming needs, then filtered here. Recent spots are plentiful.
+        var candidates = await (
                 from f in facts
                 join h in db.Set<HandRecord>() on f.HandId equals h.Id
                 join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
-                where a.UserId == userId && a.ConfirmedAt != null
+                where a.UserId == userId && a.ConfirmedAt != null && (h.MaxSeats <= 6) == sixMax
                 orderby h.StartedAt descending
-                select new { h.Id, h.StartedAt, h.Level, h.Ante, h.ButtonSeat, h.BigBlind, h.HeroCards, h.Details })
+                select new { f.Position, f.PlayersDealt, h.Id })
+            .Take(situation.Position is null ? count : count * 40)
+            .ToListAsync(cancellationToken);
+        var ids = candidates
+            .Where(c => situation.Position is not { } wanted
+                || (c.Position is { } p && OpeningSeat.Canonical(p, c.PlayersDealt, situation.Format) == wanted))
             .Take(count)
+            .Select(c => c.Id)
+            .ToList();
+
+        var rows = await db.Set<HandRecord>().AsNoTracking()
+            .Where(h => ids.Contains(h.Id))
+            .OrderByDescending(h => h.StartedAt)
+            .Select(h => new { h.Id, h.StartedAt, h.Level, h.Ante, h.ButtonSeat, h.BigBlind, h.HeroCards, h.Details })
             .ToListAsync(cancellationToken);
 
         return rows

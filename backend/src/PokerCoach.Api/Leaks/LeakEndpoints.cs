@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
+using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Api.Leaks;
 
@@ -31,6 +33,8 @@ public sealed record UnderSampledResponse(LeakStat Stat, PokerPosition? Position
 /// <param name="Hands">Hands looked at: only those with 15+ big blinds (push/fold play is judged differently).</param>
 /// <param name="PendingHands">Hands still being analyzed.</param>
 /// <param name="ReferenceVersion">Version of the reference ranges used.</param>
+/// <param name="Format">Table format analysed; positions are named within it.</param>
+/// <param name="HandsByFormat">Hands (15+ BB) per format.</param>
 public sealed record LeakAnalysisResponse(
     IReadOnlyList<LeakResponse> Leaks,
     IReadOnlyList<UnderSampledResponse> UnderSampled,
@@ -38,11 +42,20 @@ public sealed record LeakAnalysisResponse(
     int Tournaments,
     int CompleteTournaments,
     int PendingHands,
-    int ReferenceVersion);
+    int ReferenceVersion,
+    TableFormat Format,
+    FormatCountsResponse HandsByFormat);
 
+/// <param name="Format">The table format the leak was shown for, as returned by GET /api/leaks.</param>
 /// <param name="From">The period the leak was shown for, as in GET /api/leaks.</param>
 /// <param name="Language">fr, en or es; defaults to the account's language.</param>
-public sealed record ExplainLeakRequest(LeakStat? Stat, PokerPosition? Position, LeakDirection? Direction, DateTimeOffset? From, string? Language);
+public sealed record ExplainLeakRequest(
+    LeakStat? Stat,
+    PokerPosition? Position,
+    LeakDirection? Direction,
+    TableFormat? Format,
+    DateTimeOffset? From,
+    string? Language);
 
 /// <summary>An example hand as Poker Coach knows it (facts), next to the coach's note about it.</summary>
 public sealed record ExampleHandResponse(string Ref, Guid HandId, DateTimeOffset StartedAt, int Level, PokerPosition? Position, string? HeroCards, decimal StackInBigBlinds, string Note);
@@ -70,7 +83,8 @@ public static class LeakEndpoints
         LeakService leaks,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
-        DateTimeOffset? to = null)
+        DateTimeOffset? to = null,
+        string? format = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -82,7 +96,12 @@ public static class LeakEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
-        var analysis = await leaks.GetAsync(userId, from, to, cancellationToken);
+        if (!TableFormatQuery.TryParse(format, out var tableFormat))
+        {
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        var analysis = await leaks.GetAsync(userId, tableFormat, from, to, cancellationToken);
         return TypedResults.Ok(new LeakAnalysisResponse(
             analysis.Report.Leaks.Select(l => new LeakResponse(
                 l.Stat,
@@ -100,7 +119,9 @@ public static class LeakEndpoints
             analysis.Sample.Tournaments,
             analysis.Sample.CompleteTournaments,
             analysis.PendingHands,
-            analysis.ReferenceVersion));
+            analysis.ReferenceVersion,
+            analysis.Format,
+            new FormatCountsResponse(analysis.HandsByFormat.SixMax, analysis.HandsByFormat.FullRing)));
     }
 
     /// <summary>
@@ -137,7 +158,7 @@ public static class LeakEndpoints
         var answerLanguage = request.Language
             ?? (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage
             ?? UserLanguages.Default;
-        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.From, answerLanguage, cancellationToken);
+        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, request.From, answerLanguage, cancellationToken);
         if (outcome.Explanation is { } explanation)
         {
             var notes = explanation.Explanation.Hands.ToDictionary(h => h.Ref, h => h.Note, StringComparer.Ordinal);

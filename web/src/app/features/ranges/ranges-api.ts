@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { PokerPosition, StatRate } from '../statistics/statistics-api';
 
 // Mirrors backend/src/PokerCoach.Api/Ranges. Counts only: nothing is extrapolated.
@@ -16,9 +17,6 @@ export interface RangeCell {
   /** The reference range raises it first in. */
   readonly inReference: boolean;
 }
-
-export type TableFormat = 'sixMax' | 'fullRing';
-export const TABLE_FORMATS: readonly TableFormat[] = ['sixMax', 'fullRing'];
 
 export type StackBand = 'short' | 'mid' | 'deep';
 export const STACK_BANDS: readonly StackBand[] = ['short', 'mid', 'deep'];

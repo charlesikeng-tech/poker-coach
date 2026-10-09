@@ -33,13 +33,10 @@ public sealed record PositionRangeResponse(
     IReadOnlyList<RangeCellResponse> Cells);
 
 /// <param name="PendingHands">Hands still being analysed: ranges are partial while above zero.</param>
-/// <summary>RFI spots per table format for the band and period.</summary>
-public sealed record FormatSpotsResponse(int SixMax, int FullRing);
-
 public sealed record OpeningRangesResponse(
     TableFormat Format,
     StackBand Band,
-    FormatSpotsResponse Spots,
+    FormatCountsResponse Spots,
     IReadOnlyList<PositionRangeResponse> Positions,
     int PendingHands,
     int ReferenceVersion);
@@ -78,15 +75,9 @@ public static class RangeEndpoints
             return ApiProblems.Validation("band", "Must be one of: short, mid, deep.");
         }
 
-        TableFormat? tableFormat = null;
-        if (format is not null)
+        if (!TableFormatQuery.TryParse(format, out var tableFormat))
         {
-            if (!Enum.TryParse<TableFormat>(format, ignoreCase: true, out var parsed) || !Enum.IsDefined(parsed))
-            {
-                return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
-            }
-
-            tableFormat = parsed;
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
         if (from is not null && to is not null && from >= to)
@@ -98,7 +89,7 @@ public static class RangeEndpoints
         return TypedResults.Ok(new OpeningRangesResponse(
             result.Format,
             result.Band,
-            new FormatSpotsResponse(result.SpotsByFormat[TableFormat.SixMax], result.SpotsByFormat[TableFormat.FullRing]),
+            new FormatCountsResponse(result.SpotsByFormat[TableFormat.SixMax], result.SpotsByFormat[TableFormat.FullRing]),
             result.Positions.Select(p => new PositionRangeResponse(
                 p.Position,
                 p.Dealt,

@@ -872,11 +872,6 @@
         "tooLoose": "{{count}} hand(s) opened outside the reference",
         "tooTight": "{{count}} reference hand(s) you fold",
         "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
-      },
-      "format": "Table format",
-      "formats": {
-        "sixMax": "6-max",
-        "fullRing": "Full ring (7-9)"
       }
     }
   },
@@ -884,5 +879,12 @@
     "hello": "Good session",
     "helloName": "Good session, {{name}}",
     "line": "Your tables are waiting."
+  },
+  "formats": {
+    "label": "Table format",
+    "sixMax": "6-max",
+    "fullRing": "Full ring",
+    "sixMaxHint": "Tables of 6 seats or fewer",
+    "fullRingHint": "Tables of 7 to 9 seats"
   }
 }

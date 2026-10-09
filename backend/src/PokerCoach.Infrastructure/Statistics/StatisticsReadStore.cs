@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
+using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Domain.Tournaments;
 using PokerCoach.Infrastructure.Poker;
@@ -18,13 +19,14 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         int factsVersion,
         CancellationToken cancellationToken)
     {
-        var query = Filtered(userId, filter, factsVersion);
-
-        var rows = await query
-            .GroupBy(x => x.F.Position)
+        // Within a format, positions are named by distance to the button (OpeningSeat): grouped with the
+        // number of players dealt, then renamed and summed.
+        var rows = await Filtered(userId, filter, factsVersion)
+            .GroupBy(x => new { x.F.Position, x.F.PlayersDealt })
             .Select(g => new
             {
-                Position = g.Key,
+                g.Key.Position,
+                g.Key.PlayersDealt,
                 Hands = g.Count(),
                 PreflopDecisions = g.Count(x => x.F.HadPreflopDecision),
                 Vpip = g.Count(x => x.F.Vpip),
@@ -48,27 +50,42 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToListAsync(cancellationToken);
 
         return rows
-            .Select(r => (r.Position, new HeroStatCounts(
-                r.Hands,
-                r.PreflopDecisions,
-                r.Vpip,
-                r.Pfr,
-                r.RfiOpportunities,
-                r.Rfi,
-                r.Limp,
-                r.StealOpportunities,
-                r.Steal,
-                r.ThreeBetOpportunities,
-                r.ThreeBet,
-                r.FoldToThreeBetOpportunities,
-                r.FoldToThreeBet,
-                r.SawFlop,
-                r.CbetFlopOpportunities,
-                r.CbetFlop,
-                r.WentToShowdown,
-                r.WonAtShowdown,
-                r.NetBigBlinds)))
+            .Select(r => (
+                Position: r.Position is { } p && filter.Format is { } format ? OpeningSeat.Canonical(p, r.PlayersDealt, format) : r.Position,
+                Counts: new HeroStatCounts(
+                    r.Hands,
+                    r.PreflopDecisions,
+                    r.Vpip,
+                    r.Pfr,
+                    r.RfiOpportunities,
+                    r.Rfi,
+                    r.Limp,
+                    r.StealOpportunities,
+                    r.Steal,
+                    r.ThreeBetOpportunities,
+                    r.ThreeBet,
+                    r.FoldToThreeBetOpportunities,
+                    r.FoldToThreeBet,
+                    r.SawFlop,
+                    r.CbetFlopOpportunities,
+                    r.CbetFlop,
+                    r.WentToShowdown,
+                    r.WonAtShowdown,
+                    r.NetBigBlinds)))
+            .GroupBy(r => r.Position)
+            .Select(g => (g.Key, g.Aggregate(HeroStatCounts.Zero, (total, r) => total.Add(r.Counts))))
             .ToList();
+    }
+
+    public async Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
+    {
+        var counts = await Filtered(userId, filter with { Format = null }, factsVersion)
+            .GroupBy(x => x.MaxSeats <= 6)
+            .Select(g => new { SixMax = g.Key, Hands = g.Count() })
+            .ToListAsync(cancellationToken);
+        return new FormatCounts(
+            counts.Where(c => c.SixMax).Sum(c => c.Hands),
+            counts.Where(c => !c.SixMax).Sum(c => c.Hands));
     }
 
     public async Task<StatisticsSample> CountTournamentsAsync(
@@ -154,6 +171,16 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         if (filter.CompleteHistoryOnly)
         {
             query = query.Where(x => x.Complete);
+        }
+
+        // Same threshold as TableFormats.Of, written out so it translates to SQL.
+        if (filter.Format == TableFormat.SixMax)
+        {
+            query = query.Where(x => x.MaxSeats <= 6);
+        }
+        else if (filter.Format == TableFormat.FullRing)
+        {
+            query = query.Where(x => x.MaxSeats > 6);
         }
 
         return query;

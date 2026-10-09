@@ -872,11 +872,6 @@
         "tooLoose": "{{count}} main(s) ouvertes hors du repère",
         "tooTight": "{{count}} main(s) du repère que tu couches",
         "rule": "Une main compte comme « ouverte » si tu la relances au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
-      },
-      "format": "Format de table",
-      "formats": {
-        "sixMax": "6-max",
-        "fullRing": "Table pleine (7-9)"
       }
     }
   },
@@ -884,5 +879,12 @@
     "hello": "Bonne session",
     "helloName": "Bonne session, {{name}}",
     "line": "Tes tables t'attendent."
+  },
+  "formats": {
+    "label": "Format de table",
+    "sixMax": "6-max",
+    "fullRing": "Table pleine",
+    "sixMaxHint": "Tables de 6 places au plus",
+    "fullRingHint": "Tables de 7 à 9 places"
   }
 }

@@ -50,7 +50,7 @@ public sealed class LeakCoachServiceTests
     [Fact]
     public async Task A_statistic_that_is_not_a_leak_is_refused()
     {
-        var outcome = await Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Utg, LeakDirection.TooHigh, null, "fr", Ct);
+        var outcome = await Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Utg, LeakDirection.TooHigh, null, null, "fr", Ct);
 
         Assert.Equal(CoachingFailure.NotALeak, outcome.Failure);
         Assert.Equal(0, model.Calls);
@@ -110,7 +110,7 @@ public sealed class LeakCoachServiceTests
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
 
     private Task<CoachingOutcome> ExplainButtonAsync() =>
-        Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, "fr", Ct);
+        Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, null, "fr", Ct);
 
     private LeakCoachService Service() =>
         new(new LeakService(new StatsStub()), store, model, options, time);
@@ -142,6 +142,9 @@ public sealed class LeakCoachServiceTests
 
         public Task<StatisticsSample> CountTournamentsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             Task.FromResult(new StatisticsSample(10, 5));
+
+        public Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+            Task.FromResult(new FormatCounts(500, 0));
 
         public Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) => Task.FromResult(0);
     }

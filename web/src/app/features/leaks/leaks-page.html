@@ -27,6 +27,12 @@
       }
 
       <div class="toolbar">
+        <app-format-toggle
+          class="format"
+          [value]="analysis.format"
+          [counts]="analysis.handsByFormat"
+          (changed)="setFormat($event)"
+        />
         <label>
           <span>{{ t('period') }}</span>
           <select [value]="period()" (change)="setPeriod($any($event.target).value)">

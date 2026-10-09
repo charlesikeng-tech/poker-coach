@@ -13,6 +13,7 @@ import { CircleAlert, LoaderCircle } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
+import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
@@ -26,8 +27,6 @@ import {
   RangesApi,
   STACK_BANDS,
   StackBand,
-  TABLE_FORMATS,
-  TableFormat,
 } from './ranges-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
@@ -60,7 +59,7 @@ export const POSITION_SHORT: Record<PokerPosition, string> = {
 
 @Component({
   selector: 'app-ranges-page',
-  imports: [TranslocoDirective, PageHeader, EmptyState, Button, Icon, RangeGauge],
+  imports: [TranslocoDirective, FormatToggle, PageHeader, EmptyState, Button, Icon, RangeGauge],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './ranges-page.html',
@@ -72,7 +71,6 @@ export class RangesPage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly bands = STACK_BANDS;
-  protected readonly formats = TABLE_FORMATS;
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
   /** The format shown: the one the last answer is for. */

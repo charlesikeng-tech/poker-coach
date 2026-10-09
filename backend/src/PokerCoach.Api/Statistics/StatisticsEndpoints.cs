@@ -3,6 +3,7 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
+using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Api.Statistics;
 
@@ -49,11 +50,15 @@ public sealed record PositionStatLineResponse(PokerPosition? Position, StatLineR
 public sealed record StatisticsSampleResponse(int Tournaments, int CompleteTournaments);
 
 /// <param name="PendingHands">Hands still being analyzed: figures are partial while above zero.</param>
+/// <param name="Format">Table format of the figures; positions are named within it.</param>
+/// <param name="HandsByFormat">Hands per format with the other filters.</param>
 public sealed record StatisticsResponse(
     StatLineResponse Overall,
     IReadOnlyList<PositionStatLineResponse> ByPosition,
     int PendingHands,
-    StatisticsSampleResponse Sample);
+    StatisticsSampleResponse Sample,
+    TableFormat Format,
+    FormatCountsResponse HandsByFormat);
 
 public static class StatisticsEndpoints
 {
@@ -66,6 +71,7 @@ public static class StatisticsEndpoints
     /// <param name="to">Exclusive upper bound on the hand start time.</param>
     /// <param name="maxStackBb">Exclusive upper bound on the hero's stack in big blinds.</param>
     /// <param name="completeOnly">Only tournaments with a complete hand history.</param>
+    /// <param name="format">sixMax or fullRing; omitted: the format with the most hands.</param>
     private static async Task<Results<Ok<StatisticsResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         StatisticsService statistics,
@@ -74,7 +80,8 @@ public static class StatisticsEndpoints
         DateTimeOffset? to = null,
         decimal? minStackBb = null,
         decimal? maxStackBb = null,
-        bool completeOnly = false)
+        bool completeOnly = false,
+        string? format = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -91,11 +98,18 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("maxStackBb", "Must be above 'minStackBb'.");
         }
 
-        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly), cancellationToken);
+        if (!TableFormatQuery.TryParse(format, out var tableFormat))
+        {
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat), cancellationToken);
         return TypedResults.Ok(new StatisticsResponse(
             StatLineResponse.From(report.Overall),
             report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
             report.PendingHands,
-            new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments)));
+            new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
+            report.Format,
+            new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing)));
     }
 }

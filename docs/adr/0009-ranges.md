@@ -40,6 +40,13 @@ pairs on the diagonal, suited above, offsuit below. Frequencies are opens / time
 a cell with few occurrences is shown as such (count visible), never extrapolated. Aggregation is done in
 SQL per position and exact two-card holding, then classified in memory (at most 1,326 × 9 rows).
 
+**Table formats (added the same day).** Positions are named within a table format, taken from the
+number of seats at the table (6-max: up to 6; full ring: 7 and more), not from the players dealt in.
+Statistics, leaks and ranges are computed for one format at a time (default: the one the player plays
+most) and never mix them. Within a format, seats before the hijack are named by distance to the button
+(`OpeningSeat`). References are written for full-ring seats; a 6-max seat uses the full-ring seat at the
+same distance from the button (a 6-max UTG is judged like a full-ring lojack) and keeps its 6-max name.
+
 ## Consequences
 
 - No licensing risk; every number in the section traces back to the player's hands, our versioned

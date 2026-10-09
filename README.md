@@ -189,6 +189,8 @@ Ranges (ADR-0009):
 - [x] Web: Ranges page (position tabs, animated 13×13 grid with raise/limp shares and counts)
 - [x] Reference opening ranges v1 per position and stack band (`ReferenceOpeningRanges`, range
       notation parser, seats named by distance to the button), compared hand by hand (gap view)
+- [x] Table formats: statistics, leaks and ranges per format (6-max / full ring), positions named
+      within the format, references by distance to the button
 - [ ] Trainer; push/fold equilibrium below 15 BB
 
 MVP-3 — Leaks (ADR-0007):
