@@ -219,7 +219,7 @@ All-in EV (roadmap step 2):
       side pots; stored in the hero's facts (facts version 2: everything is recomputed once)
 - [x] `GET /api/statistics/all-in` and the "All-in luck" panel in Statistics (actual vs expected
       in BB, verdict, curve with the expected line, biggest swings linking to the replayer)
-- [ ] Migration `AllInEv`
+- [x] Migration `AllInEv`
 - [ ] Big blind defence in the trainer (call or fold against a push, Nash calls)
 
 MVP-3 — Leaks (ADR-0007):
