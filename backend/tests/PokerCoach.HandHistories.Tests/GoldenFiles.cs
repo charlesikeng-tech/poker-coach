@@ -35,6 +35,12 @@ internal static class GoldenFiles
     /// </summary>
     public const string AsteroidHands = "20261003_ASTEROID_1178140542__real_holdem_no-limit.txt";
 
+    /// <summary>
+    /// Rebuy/add-on knockout ("mtt" mode), another summary variant: space before the id, rebuy and add-on
+    /// prices and counts, a single "Levels :" prefix, no speed or flight lines, prize pool with cents.
+    /// </summary>
+    public const string CassiopeiaRebuySummary = "20261006_CASSIOPEIA__1180179656__real_holdem_no-limit_summary.txt";
+
     public const string AsteroidSummary = "20261003_ASTEROID_1178140542__real_holdem_no-limit_summary.txt";
 
     public static string Read(string fileName) =>

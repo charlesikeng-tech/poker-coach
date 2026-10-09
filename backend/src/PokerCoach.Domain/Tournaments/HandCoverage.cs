@@ -8,7 +8,8 @@ namespace PokerCoach.Domain.Tournaments;
 public sealed record HandPoint(DateTimeOffset StartedAt, int Level, string? TableKey, long? HandNumber, long HeroStack, long NetChips);
 
 /// <summary>What the summary file says that coverage can check against; all null without a summary.</summary>
-public sealed record SummaryFacts(int? Entries, bool? FirstEntryLateRegistration, int? LastFinishPosition);
+/// <param name="ChipPurchases">Rebuys and add-ons bought: chips that arrive between hands.</param>
+public sealed record SummaryFacts(int? Entries, bool? FirstEntryLateRegistration, int? LastFinishPosition, int ChipPurchases = 0);
 
 public enum CoverageStatus
 {
@@ -42,7 +43,7 @@ public sealed record TournamentCoverage(
     bool EndSeen)
 {
     /// <summary>Bump when a rule below changes: stored coverage is recomputed.</summary>
-    public const int Version = 1;
+    public const int Version = 2;
 
     public static TournamentCoverage Analyze(IReadOnlyList<HandPoint> hands, SummaryFacts summary)
     {
@@ -57,6 +58,7 @@ public sealed record TournamentCoverage(
         var ordered = hands.OrderBy(h => h.StartedAt).ThenBy(h => h.HandNumber).ToList();
         var entries = 1;
         var stackBreaks = 0;
+        var purchasesLeft = summary.ChipPurchases;
         for (var i = 1; i < ordered.Count; i++)
         {
             var previousEnd = ordered[i - 1].HeroStack + ordered[i - 1].NetChips;
@@ -65,7 +67,13 @@ public sealed record TournamentCoverage(
                 continue;
             }
 
-            if (previousEnd == 0)
+            if (ordered[i].HeroStack > previousEnd && purchasesLeft > 0)
+            {
+                // Chips that arrived between hands: a rebuy or an add-on the summary accounts for
+                // (a rebuy after busting included: it is not a new entry).
+                purchasesLeft--;
+            }
+            else if (previousEnd == 0)
             {
                 // Busted, then back with a new stack: a re-entry.
                 entries++;

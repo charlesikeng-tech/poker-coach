@@ -157,6 +157,20 @@ Hand histories contain opponents' pseudonyms. Golden test files must be anonymiz
   figures from the last block. All blocks must agree on tournament, player and buy-in, otherwise the
   summary is rejected. ROI must count one buy-in per entry.
 
+## Sixth sample: CASSIOPEIA rebuy (summary only, 2026-10-06) — a second summary layout
+
+Rebuy/add-on knockout tournaments ("Mode : mtt") print a different summary:
+
+- header with a **space before the id**: `CASSIOPEIA (1180179656)` (name trimmed);
+- extra lines: `Rebuy cost : 4€ + 1€`, `Addon cost : 4€ + 1€` (prize pool part + fee, no bounty part),
+  `Your rebuys : 0`, `Your addons : 0`, `Total rebuys : 203`, `Total addons : 0`;
+- a single `Levels : [...]` prefix (not `Levels : Levels :`), no `Speed` and no `Flight ID` lines;
+- prize pool with cents (`7678.38€`): not a whole number of prize-pool buy-ins (rebuys add to it).
+
+Money paid = buy-in × entries + rebuys × rebuy price + add-ons × add-on price. Rebuys and add-ons are
+stored per entry; without their price the result is incomplete, never guessed. Coverage treats a stack
+increase between hands as a rebuy/add-on while the summary still accounts for one.
+
 ## Samples still needed
 
 1. ~~Re-entry~~ — covered by ASTEROID (summary and hands).

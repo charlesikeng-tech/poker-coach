@@ -36,6 +36,23 @@ public sealed class TournamentResultTests
     }
 
     [Fact]
+    public void Rebuys_and_addons_are_money_paid()
+    {
+        var result = TournamentResult.Compute(10m, [new EntryOutcome(50, 30m, null, Rebuys: 2, Addons: 1)], rebuyCost: 5m, addonCost: 5m);
+
+        Assert.Equal(25m, result.TotalBuyIn);
+        Assert.Equal(5m, result.Profit);
+    }
+
+    [Fact]
+    public void Rebuys_with_an_unknown_price_make_the_result_incomplete()
+    {
+        var result = TournamentResult.Compute(10m, [new EntryOutcome(50, null, null, Rebuys: 1)]);
+
+        Assert.Equal(TournamentResultStatus.Incomplete, result.Status);
+    }
+
+    [Fact]
     public void Without_a_summary_the_result_is_unknown_not_zero()
     {
         var result = TournamentResult.Compute(10m, []);

@@ -49,6 +49,17 @@ public sealed record ParsedTournamentSummary
     /// they are a snapshot taken when the player was last eliminated, not necessarily final.
     /// </summary>
     public required IReadOnlyList<ParsedTournamentEntry> Entries { get; init; }
+
+    /// <summary>Full price of one rebuy (prize pool part + fee); null in tournaments without rebuys.</summary>
+    public decimal? RebuyCost { get; init; }
+
+    /// <summary>Full price of one add-on; null in tournaments without add-ons.</summary>
+    public decimal? AddonCost { get; init; }
+
+    /// <summary>Rebuys by all players (prize pool information); null when not printed.</summary>
+    public int? TotalRebuys { get; init; }
+
+    public int? TotalAddons { get; init; }
 }
 
 /// <param name="EntryNumber">1-based, in file order (first buy-in first).</param>
@@ -59,10 +70,14 @@ public sealed record ParsedTournamentSummary
 /// <param name="PlayedDuration">As printed for this entry; whether it is cumulative across entries is unknown.</param>
 /// <param name="PrizeWinnings">Null when not printed (out of the money, or bounties only): unknown, not zero.</param>
 /// <param name="BountyWinnings">Null when the summary does not print a bounty amount.</param>
+/// <param name="Rebuys">Rebuys of the player in this entry; 0 when the format has no rebuy line (freezeout).</param>
+/// <param name="Addons">Add-ons of the player in this entry; 0 when not printed.</param>
 public sealed record ParsedTournamentEntry(
     int EntryNumber,
     bool LateRegistration,
     TimeSpan? PlayedDuration,
     int? FinishPosition,
     decimal? PrizeWinnings,
-    decimal? BountyWinnings);
+    decimal? BountyWinnings,
+    int Rebuys = 0,
+    int Addons = 0);

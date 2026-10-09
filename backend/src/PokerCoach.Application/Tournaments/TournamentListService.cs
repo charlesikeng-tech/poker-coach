@@ -18,7 +18,9 @@ public sealed record TournamentFacts(
     IReadOnlyList<EntryOutcome> Entries,
     string? Type = null,
     string? Speed = null,
-    TournamentCoverage? Coverage = null);
+    TournamentCoverage? Coverage = null,
+    decimal? RebuyCost = null,
+    decimal? AddonCost = null);
 
 public interface ITournamentReadStore
 {
@@ -83,7 +85,7 @@ public sealed class TournamentListService(ITournamentReadStore store)
             facts.RegisteredPlayers,
             facts.Entries.Count == 0 ? null : facts.Entries[^1].FinishPosition,
             facts.HandCount,
-            TournamentResult.Compute(buyIn, facts.Entries),
+            TournamentResult.Compute(buyIn, facts.Entries, facts.RebuyCost, facts.AddonCost),
             facts.Coverage);
     }
 

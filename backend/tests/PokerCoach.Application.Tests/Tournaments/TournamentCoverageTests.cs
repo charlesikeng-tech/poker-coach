@@ -49,6 +49,18 @@ public sealed class TournamentCoverageTests
     }
 
     [Fact]
+    public void Chips_bought_between_hands_are_not_breaks_nor_entries()
+    {
+        var coverage = TournamentCoverage.Analyze(
+            [Point(0, 1, 1, 20_000, -20_000), Point(1, 1, 2, 20_000, 0), Point(2, 2, 3, 40_000, -40_000)],
+            new SummaryFacts(1, false, 300, ChipPurchases: 2));
+
+        Assert.Equal(1, coverage.EntriesSeen);
+        Assert.Equal(0, coverage.StackBreaks);
+        Assert.Equal(CoverageStatus.Complete, coverage.Status);
+    }
+
+    [Fact]
     public void On_time_registration_with_a_first_hand_past_level_one_means_the_start_is_missing()
     {
         var coverage = TournamentCoverage.Analyze([Point(0, 12, 82, 57_120, -57_120)], new SummaryFacts(1, false, 108));

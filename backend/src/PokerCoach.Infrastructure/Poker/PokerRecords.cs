@@ -52,6 +52,11 @@ internal sealed class TournamentRecord
 
     public decimal? BountyBuyIn { get; set; }
 
+    /// <summary>Full price of one rebuy / add-on (prize pool part + fee); null when the tournament has none.</summary>
+    public decimal? RebuyCost { get; set; }
+
+    public decimal? AddonCost { get; set; }
+
     public int? RegisteredPlayers { get; set; }
 
     public string? Mode { get; set; }
@@ -94,6 +99,10 @@ internal sealed class TournamentEntryRecord
     public decimal? PrizeWinnings { get; set; }
 
     public decimal? BountyWinnings { get; set; }
+
+    public int Rebuys { get; set; }
+
+    public int Addons { get; set; }
 }
 
 /// <summary>
@@ -179,6 +188,8 @@ internal sealed class TournamentConfiguration : IEntityTypeConfiguration<Tournam
         builder.Property(t => t.Fee).HasPrecision(12, 2);
         builder.Property(t => t.PrizePoolBuyIn).HasPrecision(12, 2);
         builder.Property(t => t.BountyBuyIn).HasPrecision(12, 2);
+        builder.Property(t => t.RebuyCost).HasPrecision(12, 2);
+        builder.Property(t => t.AddonCost).HasPrecision(12, 2);
 
         builder.Property(t => t.PrizePool).HasPrecision(14, 2);
         builder.HasIndex(t => new { t.PokerAccountId, t.ExternalTournamentId }).IsUnique();

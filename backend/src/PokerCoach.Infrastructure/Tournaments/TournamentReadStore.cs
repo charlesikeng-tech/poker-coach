@@ -27,6 +27,8 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.Currency,
                 t.PrizePoolBuyIn,
                 t.BountyBuyIn,
+                t.RebuyCost,
+                t.AddonCost,
                 t.BuyInExcludingFee,
                 t.Fee,
                 t.RegisteredPlayers,
@@ -55,9 +57,11 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
         var entries = (await db.Set<TournamentEntryRecord>().AsNoTracking()
                 .Where(e => ids.Contains(e.TournamentId))
                 .OrderBy(e => e.EntryNumber)
-                .Select(e => new { e.TournamentId, e.FinishPosition, e.PrizeWinnings, e.BountyWinnings })
+                .Select(e => new { e.TournamentId, e.FinishPosition, e.PrizeWinnings, e.BountyWinnings, e.Rebuys, e.Addons })
                 .ToListAsync(cancellationToken))
-            .ToLookup(e => e.TournamentId, e => new EntryOutcome(e.FinishPosition, e.PrizeWinnings, e.BountyWinnings));
+            .ToLookup(
+                e => e.TournamentId,
+                e => new EntryOutcome(e.FinishPosition, e.PrizeWinnings, e.BountyWinnings, e.Rebuys, e.Addons));
 
         var handCounts = await db.Set<HandRecord>().AsNoTracking()
             .Where(h => ids.Contains(h.TournamentId))
@@ -81,7 +85,9 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.TournamentType,
                 t.Speed,
                 // Outdated coverage is not shown: it is being recomputed.
-                t.Coverage is { } stored && stored.CoverageVersion == TournamentCoverage.Version ? stored.ToDomain() : null))
+                t.Coverage is { } stored && stored.CoverageVersion == TournamentCoverage.Version ? stored.ToDomain() : null,
+                t.RebuyCost,
+                t.AddonCost))
             .ToList();
     }
 }

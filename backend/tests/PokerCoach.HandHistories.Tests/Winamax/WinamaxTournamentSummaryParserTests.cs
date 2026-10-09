@@ -124,6 +124,31 @@ public sealed class WinamaxTournamentSummaryParserTests
     }
 
     [Fact]
+    public void Reads_a_rebuy_tournament_summary()
+    {
+        var result = parser.Parse(GoldenFiles.Read(GoldenFiles.CassiopeiaRebuySummary));
+
+        Assert.Empty(result.Errors);
+        var summary = Assert.IsType<ParsedTournamentSummary>(result.Summary);
+        Assert.Equal("CASSIOPEIA", summary.TournamentName);
+        Assert.Equal("1180179656", summary.ExternalTournamentId);
+        Assert.Equal(4m, summary.PrizePoolBuyIn);
+        Assert.Equal(5m, summary.BountyBuyIn);
+        Assert.Equal(1m, summary.Fee);
+        Assert.Equal(5m, summary.RebuyCost);
+        Assert.Equal(5m, summary.AddonCost);
+        Assert.Equal(203, summary.TotalRebuys);
+        Assert.Equal(0, summary.TotalAddons);
+        Assert.Equal("mtt", summary.Mode);
+        Assert.Null(summary.Speed);
+        Assert.Equal(7678.38m, summary.PrizePool);
+        var entry = Assert.Single(summary.Entries);
+        Assert.Equal((0, 0), (entry.Rebuys, entry.Addons));
+        Assert.Equal(386, entry.FinishPosition);
+        Assert.Equal(new TimeSpan(1, 12, 16), entry.PlayedDuration);
+    }
+
+    [Fact]
     public void A_summary_without_late_registration_says_so()
     {
         var summary = parser.Parse(GoldenFiles.Read(GoldenFiles.CassiopeiaSummary)).Summary;

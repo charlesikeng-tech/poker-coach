@@ -315,13 +315,15 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         const string TournamentSql = """
             INSERT INTO poker.tournaments
                 (id, poker_account_id, external_tournament_id, name, currency, fee, prize_pool_buy_in, bounty_buy_in,
-                 registered_players, mode, tournament_type, speed, flight_id, prize_pool, started_at,
+                 rebuy_cost, addon_cost, registered_players, mode, tournament_type, speed, flight_id, prize_pool, started_at,
                  summary_imported_at, created_at)
             VALUES (@id, @poker_account_id, @external_id, @name, @currency, @fee, @prize_pool_buy_in, @bounty_buy_in,
-                 @registered_players, @mode, @tournament_type, @speed, @flight_id, @prize_pool, @started_at, @now, @now)
+                 @rebuy_cost, @addon_cost, @registered_players, @mode, @tournament_type, @speed, @flight_id, @prize_pool,
+                 @started_at, @now, @now)
             ON CONFLICT (poker_account_id, external_tournament_id) DO UPDATE
                 SET name = EXCLUDED.name, currency = EXCLUDED.currency, fee = EXCLUDED.fee,
                     prize_pool_buy_in = EXCLUDED.prize_pool_buy_in, bounty_buy_in = EXCLUDED.bounty_buy_in,
+                    rebuy_cost = EXCLUDED.rebuy_cost, addon_cost = EXCLUDED.addon_cost,
                     registered_players = EXCLUDED.registered_players, mode = EXCLUDED.mode,
                     tournament_type = EXCLUDED.tournament_type, speed = EXCLUDED.speed, flight_id = EXCLUDED.flight_id,
                     prize_pool = EXCLUDED.prize_pool, started_at = EXCLUDED.started_at,
@@ -333,8 +335,10 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         // replaced as a whole rather than merged.
         const string EntrySql = """
             INSERT INTO poker.tournament_entries
-                (id, tournament_id, entry_number, late_registration, played_duration, finish_position, prize_winnings, bounty_winnings)
-            VALUES (@id, @tournament_id, @entry_number, @late_registration, @played_duration, @finish_position, @prize_winnings, @bounty_winnings)
+                (id, tournament_id, entry_number, late_registration, played_duration, finish_position, prize_winnings,
+                 bounty_winnings, rebuys, addons)
+            VALUES (@id, @tournament_id, @entry_number, @late_registration, @played_duration, @finish_position,
+                 @prize_winnings, @bounty_winnings, @rebuys, @addons)
             """;
 
         Guid tournamentId;
@@ -348,6 +352,8 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
             Add(command, "fee", NpgsqlDbType.Numeric, summary.Fee);
             Add(command, "prize_pool_buy_in", NpgsqlDbType.Numeric, summary.PrizePoolBuyIn);
             Add(command, "bounty_buy_in", NpgsqlDbType.Numeric, summary.BountyBuyIn);
+            Add(command, "rebuy_cost", NpgsqlDbType.Numeric, summary.RebuyCost);
+            Add(command, "addon_cost", NpgsqlDbType.Numeric, summary.AddonCost);
             Add(command, "registered_players", NpgsqlDbType.Integer, summary.RegisteredPlayers);
             Add(command, "mode", NpgsqlDbType.Text, summary.Mode);
             Add(command, "tournament_type", NpgsqlDbType.Text, summary.Type);
@@ -376,6 +382,8 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
             Add(insert, "finish_position", NpgsqlDbType.Integer, entry.FinishPosition);
             Add(insert, "prize_winnings", NpgsqlDbType.Numeric, entry.PrizeWinnings);
             Add(insert, "bounty_winnings", NpgsqlDbType.Numeric, entry.BountyWinnings);
+            Add(insert, "rebuys", NpgsqlDbType.Integer, entry.Rebuys);
+            Add(insert, "addons", NpgsqlDbType.Integer, entry.Addons);
             await insert.ExecuteNonQueryAsync(cancellationToken);
         }
     }

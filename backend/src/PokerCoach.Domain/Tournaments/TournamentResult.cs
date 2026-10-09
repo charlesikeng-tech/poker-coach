@@ -3,7 +3,9 @@ namespace PokerCoach.Domain.Tournaments;
 /// <summary>One buy-in of the player in a tournament, as the summary reports it.</summary>
 /// <param name="PrizeWinnings">Null when the summary prints no prize.</param>
 /// <param name="BountyWinnings">Null when the summary prints no bounty.</param>
-public sealed record EntryOutcome(int? FinishPosition, decimal? PrizeWinnings, decimal? BountyWinnings);
+/// <param name="Rebuys">Rebuys bought during this entry (each costs the tournament's rebuy price).</param>
+/// <param name="Addons">Add-ons bought during this entry.</param>
+public sealed record EntryOutcome(int? FinishPosition, decimal? PrizeWinnings, decimal? BountyWinnings, int Rebuys = 0, int Addons = 0);
 
 public enum TournamentResultStatus
 {
@@ -32,13 +34,20 @@ public sealed record TournamentResult(
     int? PaidEntries = null)
 {
     /// <summary>
-    /// Profit = prize + bounties − buy-in × entries (fee included: it is money the player paid).
+    /// Profit = prize + bounties − money paid: buy-in × entries + rebuys × rebuy price + add-ons × add-on
+    /// price (fees included: it is money the player paid).
     /// A summary that gives the finish position but prints no prize or bounty means none was won: zero.
     /// Without a summary nothing is assumed: the result is unknown, never zero.
     /// </summary>
     /// <param name="buyInPerEntry">Full price of one entry, fee included; null when unknown.</param>
     /// <param name="entries">Entries from the summary; empty when no summary was imported.</param>
-    public static TournamentResult Compute(decimal? buyInPerEntry, IReadOnlyList<EntryOutcome> entries)
+    /// <param name="rebuyCost">Full price of one rebuy; null when the tournament has none (or unknown).</param>
+    /// <param name="addonCost">Full price of one add-on; null when the tournament has none (or unknown).</param>
+    public static TournamentResult Compute(
+        decimal? buyInPerEntry,
+        IReadOnlyList<EntryOutcome> entries,
+        decimal? rebuyCost = null,
+        decimal? addonCost = null)
     {
         ArgumentNullException.ThrowIfNull(entries);
 
@@ -47,14 +56,19 @@ public sealed record TournamentResult(
             return Unknown(TournamentResultStatus.MissingSummary, null);
         }
 
-        if (buyInPerEntry is not { } buyIn || entries.Any(e => e.FinishPosition is null && e.PrizeWinnings is null))
+        var rebuys = entries.Sum(e => e.Rebuys);
+        var addons = entries.Sum(e => e.Addons);
+        if (buyInPerEntry is not { } buyIn
+            || entries.Any(e => e.FinishPosition is null && e.PrizeWinnings is null)
+            || (rebuys > 0 && rebuyCost is null)
+            || (addons > 0 && addonCost is null))
         {
             return Unknown(TournamentResultStatus.Incomplete, entries.Count);
         }
 
         var prize = entries.Sum(e => e.PrizeWinnings ?? 0m);
         var bounty = entries.Sum(e => e.BountyWinnings ?? 0m);
-        var totalBuyIn = buyIn * entries.Count;
+        var totalBuyIn = (buyIn * entries.Count) + (rebuys * (rebuyCost ?? 0m)) + (addons * (addonCost ?? 0m));
         return new TournamentResult(
             TournamentResultStatus.Known,
             entries.Count,

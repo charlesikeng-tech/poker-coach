@@ -62,12 +62,15 @@ internal static partial class WinamaxPatterns
     // Tournament summary file.
 
     // Known suffixes only: an unknown one rejects the summary rather than being silently ignored.
+    // Rebuy tournaments print a space before the id: "CASSIOPEIA (1180179656)".
     [GeneratedRegex(
-        @"^Winamax Poker - Tournament summary : (?<name>.+)\((?<id>[0-9]+)\)(?<late> - Late Registration)?$",
+        @"^Winamax Poker - Tournament summary : (?<name>.+?) ?\((?<id>[0-9]+)\)(?<late> - Late Registration)?$",
         Options)]
     internal static partial Regex SummaryHeader();
 
-    [GeneratedRegex(@"^(?<key>Player|Buy-In|Registered players|Mode|Type|Speed|Flight ID|Prizepool) : (?<value>.+)$", Options)]
+    [GeneratedRegex(
+        @"^(?<key>Player|Buy-In|Registered players|Mode|Type|Speed|Flight ID|Prizepool|Rebuy cost|Addon cost|Your rebuys|Your addons|Total rebuys|Total addons) : (?<value>.+)$",
+        Options)]
     internal static partial Regex SummaryField();
 
     [GeneratedRegex(@"^Tournament started (?<date>[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) UTC$", Options)]

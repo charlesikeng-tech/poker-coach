@@ -46,7 +46,7 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
                 current = new SummaryFields
                 {
                     HeaderLine = lineNumber,
-                    TournamentName = header.Groups["name"].Value,
+                    TournamentName = header.Groups["name"].Value.Trim(),
                     TournamentId = header.Groups["id"].Value,
                     LateRegistration = header.Groups["late"].Success,
                 };
@@ -110,6 +110,10 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
             FlightId = last.FlightId,
             PrizePool = last.PrizePool!.Value,
             StartedAt = last.StartedAt!.Value,
+            RebuyCost = last.RebuyCost,
+            AddonCost = last.AddonCost,
+            TotalRebuys = last.TotalRebuys,
+            TotalAddons = last.TotalAddons,
             Entries = blocks
                 .Select((block, index) => new ParsedTournamentEntry(
                     index + 1,
@@ -117,7 +121,9 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
                     block.PlayedDuration,
                     block.FinishPosition,
                     block.PrizeWinnings,
-                    block.BountyWinnings))
+                    block.BountyWinnings,
+                    block.Rebuys ?? 0,
+                    block.Addons ?? 0))
                 .ToList(),
         };
         return new TournamentSummaryParseResult(summary, []);
@@ -246,6 +252,18 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
             case "Flight ID":
                 fields.FlightId = value;
                 return null;
+            case "Rebuy cost":
+                return ReadCost(value, cost => fields.RebuyCost = cost);
+            case "Addon cost":
+                return ReadCost(value, cost => fields.AddonCost = cost);
+            case "Your rebuys":
+                return ReadCount(value, count => fields.Rebuys = count);
+            case "Your addons":
+                return ReadCount(value, count => fields.Addons = count);
+            case "Total rebuys":
+                return ReadCount(value, count => fields.TotalRebuys = count);
+            case "Total addons":
+                return ReadCount(value, count => fields.TotalAddons = count);
             default:
                 return ParseErrorCodes.UnrecognizedLine;
         }
@@ -281,6 +299,35 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
             default:
                 return ParseErrorCodes.UnsupportedBuyIn;
         }
+    }
+
+    /// <summary>"4€ + 1€": the full price of one rebuy or add-on (prize pool part + fee).</summary>
+    private static string? ReadCost(string value, Action<decimal> set)
+    {
+        var total = 0m;
+        foreach (var part in value.Split(" + "))
+        {
+            if (!WinamaxValues.TryParseEurosWithSign(part, out var amount))
+            {
+                return ParseErrorCodes.UnsupportedBuyIn;
+            }
+
+            total += amount;
+        }
+
+        set(total);
+        return null;
+    }
+
+    private static string? ReadCount(string value, Action<int> set)
+    {
+        if (!WinamaxValues.TryParseInt(value, out var count))
+        {
+            return ParseErrorCodes.InvalidNumber;
+        }
+
+        set(count);
+        return null;
     }
 
     private static TournamentSummaryParseResult Failure(string code, int lineNumber) =>
@@ -330,5 +377,17 @@ public sealed class WinamaxTournamentSummaryParser : ITournamentSummaryParser
         public decimal? BountyWinnings { get; set; }
 
         public bool LateRegistration { get; set; }
+
+        public decimal? RebuyCost { get; set; }
+
+        public decimal? AddonCost { get; set; }
+
+        public int? Rebuys { get; set; }
+
+        public int? Addons { get; set; }
+
+        public int? TotalRebuys { get; set; }
+
+        public int? TotalAddons { get; set; }
     }
 }

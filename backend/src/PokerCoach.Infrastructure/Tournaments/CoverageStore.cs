@@ -92,7 +92,7 @@ internal sealed class CoverageStore(PokerCoachDbContext db, TimeProvider time) :
         var entries = (await db.Set<TournamentEntryRecord>().AsNoTracking()
                 .Where(e => ids.Contains(e.TournamentId))
                 .OrderBy(e => e.EntryNumber)
-                .Select(e => new { e.TournamentId, e.LateRegistration, e.FinishPosition })
+                .Select(e => new { e.TournamentId, e.LateRegistration, e.FinishPosition, e.Rebuys, e.Addons })
                 .ToListAsync(cancellationToken))
             .ToLookup(e => e.TournamentId);
 
@@ -102,7 +102,11 @@ internal sealed class CoverageStore(PokerCoachDbContext db, TimeProvider time) :
                 var tournamentEntries = entries[t.Id].ToList();
                 var summary = tournamentEntries.Count == 0
                     ? new SummaryFacts(null, null, null)
-                    : new SummaryFacts(tournamentEntries.Count, tournamentEntries[0].LateRegistration, tournamentEntries[^1].FinishPosition);
+                    : new SummaryFacts(
+                        tournamentEntries.Count,
+                        tournamentEntries[0].LateRegistration,
+                        tournamentEntries[^1].FinishPosition,
+                        tournamentEntries.Sum(e => e.Rebuys + e.Addons));
                 return new StaleTournament(t.Id, t.Room, summary, points[t.Id].ToList());
             })
             .ToList();
