@@ -242,6 +242,13 @@ Weekly plan (roadmap step 4, ADR-0010):
       previous weeks); training room deep links (`?mode=&seats=&format=`)
 - [x] Migration `WeeklyPlan`
 
+Data rights (before opening to other players):
+
+- [x] `GET /api/me/export`: zip with the uploads as sent, tournaments.csv, account.json
+- [x] `DELETE /api/me` (confirmation word, anti-forgery): cascade delete of everything the user owns,
+      AI usage rows kept without the user for the spending cap
+- [x] Web: My account page (link on the name in the top bar)
+
 MVP-3 — Leaks (ADR-0007):
 
 - [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,

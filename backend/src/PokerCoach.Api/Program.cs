@@ -44,6 +44,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<ExternalSignInService>();
 builder.Services.AddScoped<UserProfileService>();
+builder.Services.AddScoped<AccountDataService>();
 
 builder.Services.AddOptions<ImportOptions>()
     .BindConfiguration(ImportOptions.SectionName)

@@ -192,8 +192,13 @@ ul {
   overflow: hidden;
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
+  text-decoration: none;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &:hover {
+    color: var(--text-primary);
+  }
 }
 
 .content {

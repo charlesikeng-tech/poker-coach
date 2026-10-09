@@ -1,0 +1,58 @@
+<ng-container *transloco="let t; prefix: 'pages.account'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (session.user(); as user) {
+    <section class="card glass profile">
+      <dl>
+        <div>
+          <dt>{{ t('name') }}</dt>
+          <dd>{{ user.displayName }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('email') }}</dt>
+          <dd>{{ user.email ?? '—' }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('signIn') }}</dt>
+          <dd>Google</dd>
+        </div>
+      </dl>
+    </section>
+  }
+
+  <section class="card glass">
+    <h2>{{ t('export.title') }}</h2>
+    <p>{{ t('export.description') }}</p>
+    <ul class="contents">
+      <li>{{ t('export.uploads') }}</li>
+      <li>{{ t('export.tournaments') }}</li>
+      <li>{{ t('export.account') }}</li>
+    </ul>
+    <a appButton variant="primary" href="/api/me/export" download>
+      <app-icon [icon]="icons.Download" />{{ t('export.action') }}
+    </a>
+    <p class="hint">{{ t('export.hint') }}</p>
+  </section>
+
+  <section class="card glass danger">
+    <h2><app-icon [icon]="icons.ShieldAlert" />{{ t('delete.title') }}</h2>
+    <p>{{ t('delete.description') }}</p>
+    <p class="hint">{{ t('delete.advice') }}</p>
+    <label class="field">
+      <span>{{ t('delete.type', { word: word() }) }}</span>
+      <input
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        [value]="confirmation()"
+        (input)="confirmation.set(value($event))"
+      />
+    </label>
+    @if (failed()) {
+      <p class="error" role="alert">{{ t('delete.error') }}</p>
+    }
+    <button type="button" class="delete-button" [disabled]="!canDelete()" (click)="delete()">
+      <app-icon [icon]="icons.Trash2" />{{ t(deleting() ? 'delete.deleting' : 'delete.action') }}
+    </button>
+  </section>
+</ng-container>

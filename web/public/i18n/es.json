@@ -24,7 +24,8 @@
     "language": "Idioma",
     "themeToLight": "Cambiar al tema claro",
     "themeToDark": "Cambiar al tema oscuro",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "account": "Mi cuenta"
   },
   "pages": {
     "dashboard": {
@@ -1212,6 +1213,32 @@
         "title": "No se pudo cargar tu plan",
         "description": "Poker Coach no respondió. Inténtalo de nuevo.",
         "retry": "Reintentar"
+      }
+    },
+    "account": {
+      "title": "Mi cuenta",
+      "description": "Tu cuenta y tus datos: puedes recuperarlo todo, o borrarlo todo, en cualquier momento.",
+      "name": "Nombre",
+      "email": "Correo",
+      "signIn": "Inicio de sesión",
+      "export": {
+        "title": "Exportar mis datos",
+        "description": "Un archivo .zip con todo lo que Poker Coach guarda sobre ti:",
+        "uploads": "tus archivos importados, tal como los enviaste (historiales y resúmenes);",
+        "tournaments": "tus torneos y sus resultados, en tabla (tournaments.csv);",
+        "account": "tu cuenta, tu bankroll, tus planes, tus respuestas de entrenamiento y las explicaciones del coach (account.json).",
+        "action": "Descargar el archivo",
+        "hint": "Las estadísticas, leaks y rangos no se incluyen: se recalculan a partir de tus manos."
+      },
+      "delete": {
+        "title": "Eliminar mi cuenta",
+        "description": "Tu cuenta y todos tus datos se eliminan para siempre: archivos importados, manos, torneos, bankroll, planes, entrenamiento, explicaciones del coach. No se puede recuperar nada.",
+        "advice": "Exporta tus datos antes si quieres conservarlos.",
+        "word": "ELIMINAR",
+        "type": "Para confirmar, escribe {{word}}",
+        "action": "Eliminar definitivamente",
+        "deleting": "Eliminando…",
+        "error": "No se pudo eliminar. Inténtalo de nuevo."
       }
     }
   },

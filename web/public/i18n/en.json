@@ -24,7 +24,8 @@
     "language": "Language",
     "themeToLight": "Switch to light theme",
     "themeToDark": "Switch to dark theme",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "account": "My account"
   },
   "pages": {
     "dashboard": {
@@ -1212,6 +1213,32 @@
         "title": "Could not load your plan",
         "description": "Poker Coach did not respond. Try again.",
         "retry": "Try again"
+      }
+    },
+    "account": {
+      "title": "My account",
+      "description": "Your account and your data: you can take everything back, or delete everything, at any time.",
+      "name": "Name",
+      "email": "Email",
+      "signIn": "Sign-in",
+      "export": {
+        "title": "Export my data",
+        "description": "A .zip archive with everything Poker Coach keeps about you:",
+        "uploads": "your imported files, exactly as you sent them (hand histories and summaries);",
+        "tournaments": "your tournaments and their results, as a spreadsheet (tournaments.csv);",
+        "account": "your account, bankroll, plans, training answers and the coach's explanations (account.json).",
+        "action": "Download the archive",
+        "hint": "Statistics, leaks and ranges are not included: they are recomputed from your hands."
+      },
+      "delete": {
+        "title": "Delete my account",
+        "description": "Your account and all your data are deleted for good: imported files, hands, tournaments, bankroll, plans, training, coach explanations. Nothing can be recovered.",
+        "advice": "Export your data first if you want to keep it.",
+        "word": "DELETE",
+        "type": "To confirm, type {{word}}",
+        "action": "Delete for good",
+        "deleting": "Deleting…",
+        "error": "The deletion did not go through. Try again."
       }
     }
   },

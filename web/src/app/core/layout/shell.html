@@ -106,7 +106,9 @@
         </button>
 
         @if (session.user(); as user) {
-          <span class="topbar__user" [attr.title]="user.email">{{ user.displayName }}</span>
+          <a class="topbar__user" routerLink="/account" [attr.title]="t('shell.account')">{{
+            user.displayName
+          }}</a>
         }
         <button
           type="button"

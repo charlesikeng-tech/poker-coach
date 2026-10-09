@@ -47,6 +47,7 @@ public static class InfrastructureServiceCollectionExtensions
         });
 
         services.AddScoped<IUserAccountStore, UserAccountStore>();
+        services.AddScoped<IAccountDataStore, AccountDataStore>();
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
         services.AddScoped<IHandReplayStore, HandReplayStore>();

@@ -89,6 +89,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/leaks/leaks-page').then((m) => m.LeaksPage),
       },
       {
+        path: 'account',
+        title: 'pages.account.title',
+        loadComponent: () => import('./features/account/account-page').then((m) => m.AccountPage),
+      },
+      {
         path: 'import',
         title: 'nav.import',
         loadComponent: () => import('./features/import/import-page').then((m) => m.ImportPage),

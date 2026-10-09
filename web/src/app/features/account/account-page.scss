@@ -1,0 +1,114 @@
+:host {
+  display: block;
+  max-width: 46rem;
+}
+
+.card {
+  margin-bottom: var(--space-5);
+  padding: var(--space-5);
+
+  h2 {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    margin-bottom: var(--space-2);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+}
+
+.profile dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+
+  dt {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  dd {
+    margin: var(--space-1) 0 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.contents {
+  margin: var(--space-3) 0 var(--space-4);
+  padding-left: var(--space-5);
+  color: var(--text-secondary);
+
+  li + li {
+    margin-top: var(--space-1);
+  }
+}
+
+.hint {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.danger {
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+
+  h2 {
+    color: var(--danger);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 20rem;
+  margin: var(--space-4) 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+
+  input {
+    height: 2.375rem;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    background: var(--glass-fill);
+    color: var(--text-primary);
+    font-family: var(--font-mono, monospace);
+    letter-spacing: 0.08em;
+  }
+}
+
+.error {
+  margin-bottom: var(--space-3);
+  color: var(--danger) !important;
+  font-size: var(--font-size-sm);
+}
+
+.delete-button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  height: 2.375rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: var(--danger);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--easing-standard);
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--danger) 24%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
