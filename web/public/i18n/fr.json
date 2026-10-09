@@ -76,7 +76,7 @@
         "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Vous pouvez déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
         "chooseFiles": "Choisir des fichiers",
         "chooseFolder": "Choisir un dossier",
-        "where": "Winamax enregistre un fichier d'historique et un fichier de résumé par tournoi dans le dossier « history » de votre compte Winamax.",
+        "where": "Sur Mac, Winamax les enregistre dans ~/Library/Application Support/winamax/documents/accounts/<votre pseudo>/history. Dans la fenêtre de sélection, faites ⌘⇧G et collez ce chemin (le dossier Bibliothèque est masqué par défaut).",
         "nothing": "Aucun fichier .txt ou .zip dans cette sélection."
       },
       "progress": {

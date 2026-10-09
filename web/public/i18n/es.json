@@ -76,7 +76,7 @@
         "hint": "Historiales de manos y resúmenes de torneos (.txt), o un archivo .zip. Puedes soltar una carpeta entera: importar dos veces el mismo archivo nunca crea duplicados.",
         "chooseFiles": "Elegir archivos",
         "chooseFolder": "Elegir una carpeta",
-        "where": "Winamax guarda un archivo de historial y un archivo de resumen por torneo en la carpeta «history» de tu cuenta de Winamax.",
+        "where": "En Mac, Winamax los guarda en ~/Library/Application Support/winamax/documents/accounts/<tu seudónimo>/history. En la ventana de selección, pulsa ⌘⇧G y pega esta ruta (la carpeta Biblioteca está oculta por defecto).",
         "nothing": "No hay ningún archivo .txt o .zip en esta selección."
       },
       "progress": {

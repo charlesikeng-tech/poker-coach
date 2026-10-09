@@ -76,7 +76,7 @@
         "hint": "Hand histories and tournament summaries (.txt), or a .zip archive. You can drop a whole folder: importing the same file twice never creates duplicates.",
         "chooseFiles": "Choose files",
         "chooseFolder": "Choose a folder",
-        "where": "Winamax saves one hand-history file and one summary file per tournament in the \"history\" folder of your Winamax account.",
+        "where": "On a Mac, Winamax saves them in ~/Library/Application Support/winamax/documents/accounts/<your pseudonym>/history. In the file picker, press ⌘⇧G and paste this path (the Library folder is hidden by default).",
         "nothing": "No .txt or .zip file in this selection."
       },
       "progress": {
