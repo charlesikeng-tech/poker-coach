@@ -263,7 +263,7 @@ Quiz on real hands:
       right (`training.opening_attempts.source_hand_id`)
 - [x] `GET /api/training/opening/spot?mode=real` (404 `NO_REAL_SPOT_LEFT`), answers with `sourceHandId`;
       web: "My hands" mode with the date, what the hero did that day and a link to the replay
-- [ ] Migration `TrainingRealHands`
+- [x] Migration `TrainingRealHands`
 
 MVP-3 — Leaks (ADR-0007):
 

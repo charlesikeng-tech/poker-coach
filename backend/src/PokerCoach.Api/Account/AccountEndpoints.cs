@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Identity;
@@ -121,7 +122,8 @@ public static class AccountEndpoints
 
     /// <summary>Deletes the account and everything it owns (GDPR erasure), then ends the session.</summary>
     private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> DeleteAsync(
-        DeleteAccountRequest request,
+        // Explicit: minimal APIs never infer a body on DELETE.
+        [FromBody] DeleteAccountRequest request,
         HttpContext context,
         AccountDataService accountData,
         CancellationToken cancellationToken)

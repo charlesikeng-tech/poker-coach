@@ -19,17 +19,16 @@ namespace PokerCoach.IntegrationTests;
 
 /// <summary>
 /// One PostgreSQL container for the whole run, schema created by the real migrations (they are tested
-/// too). Tests isolate their data by creating their own user.
+/// too). Tests isolate their data by creating their own user. Where Docker is unavailable, set
+/// POKERCOACH_TEST_CONNECTION to an empty database on a running PostgreSQL instead.
 /// </summary>
 public sealed class PostgresFixture : IAsyncLifetime
 {
     // Same image as docker-compose.yml. The parameterless builder is obsolete in recent Testcontainers
     // versions in favour of a constructor taking the image; WithImage works with both.
-#pragma warning disable CS0618
-    private readonly PostgreSqlContainer container = new PostgreSqlBuilder()
-        .WithImage("postgres:18-alpine")
-        .Build();
-#pragma warning restore CS0618
+private const string ConnectionVariable = "POKERCOACH_TEST_CONNECTION";
+
+    private PostgreSqlContainer? container;
 
     private ServiceProvider? services;
 
@@ -37,10 +36,18 @@ public sealed class PostgresFixture : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
-        await container.StartAsync();
+        var connectionString = Environment.GetEnvironmentVariable(ConnectionVariable);
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+#pragma warning disable CS0618
+            container = new PostgreSqlBuilder().WithImage("postgres:18-alpine").Build();
+#pragma warning restore CS0618
+            await container.StartAsync();
+            connectionString = container.GetConnectionString();
+        }
 
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:PokerCoach"] = container.GetConnectionString() })
+            .AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:PokerCoach"] = connectionString })
             .Build();
 
         // Same registrations as the API host (Program.cs), minus HTTP.
@@ -72,6 +79,9 @@ public sealed class PostgresFixture : IAsyncLifetime
             await services.DisposeAsync();
         }
 
-        await container.DisposeAsync();
+        if (container is not null)
+        {
+            await container.DisposeAsync();
+        }
     }
 }

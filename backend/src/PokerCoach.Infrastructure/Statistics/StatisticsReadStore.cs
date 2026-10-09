@@ -281,10 +281,10 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
 
         if (filter.Phase is { } phase)
         {
-            var (min, max) = TournamentPhases.Levels(phase);
-            query = max is { } top
-                ? query.Where(x => x.Level >= min && x.Level <= top)
-                : query.Where(x => x.Level >= min);
+            var (firstLevel, lastLevel) = TournamentPhases.Levels(phase);
+            query = lastLevel is { } top
+                ? query.Where(x => x.Level >= firstLevel && x.Level <= top)
+                : query.Where(x => x.Level >= firstLevel);
         }
 
         if (filter.CompleteHistoryOnly)

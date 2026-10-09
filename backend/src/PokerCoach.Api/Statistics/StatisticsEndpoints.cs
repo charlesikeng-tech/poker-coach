@@ -80,7 +80,7 @@ public sealed record PhaseStatLineResponse(TournamentPhase Phase, StatLineRespon
 /// <param name="Month">First day of the month (UTC), "2026-10-01".</param>
 public sealed record MonthStatLineResponse(DateOnly Month, StatLineResponse Line);
 
-public sealed record ReferenceRangeResponse(LeakStat Stat, decimal Min, decimal Max);
+public sealed record StatisticReferenceResponse(LeakStat Stat, decimal Min, decimal Max);
 
 /// <param name="ByPhase">Early (levels 1–6), middle (7–12), late (13+).</param>
 /// <param name="ByMonth">Months with hands, oldest first.</param>
@@ -89,7 +89,7 @@ public sealed record StatisticsBreakdownsResponse(
     TableFormat Format,
     IReadOnlyList<PhaseStatLineResponse> ByPhase,
     IReadOnlyList<MonthStatLineResponse> ByMonth,
-    IReadOnlyList<ReferenceRangeResponse> References);
+    IReadOnlyList<StatisticReferenceResponse> References);
 
 public sealed record LuckPointResponse(int Index, DateTimeOffset StartedAt, decimal ActualBigBlinds, decimal ExpectedBigBlinds);
 
@@ -250,7 +250,7 @@ public static class StatisticsEndpoints
             b.Format,
             b.ByPhase.Select(p => new PhaseStatLineResponse(p.Phase, StatLineResponse.From(p.Line))).ToList(),
             b.ByMonth.Select(m => new MonthStatLineResponse(m.Month, StatLineResponse.From(m.Line))).ToList(),
-            b.References.Select(r => new ReferenceRangeResponse(r.Stat, r.Min, r.Max)).ToList()));
+            b.References.Select(r => new StatisticReferenceResponse(r.Stat, r.Min, r.Max)).ToList()));
     }
 
     private static bool TryParsePhase(string? value, out TournamentPhase? phase)
