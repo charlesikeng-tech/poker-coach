@@ -1,0 +1,134 @@
+<ng-container *transloco="let t; prefix: 'pages.leaks'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (analysis(); as analysis) {
+    @if (analysis.hands === 0 && analysis.pendingHands === 0 && period() === 'all') {
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      @if (analysis.pendingHands > 0) {
+        <p class="pending glass" role="status">
+          <app-icon class="spin" [icon]="icons.LoaderCircle" />
+          {{ t('pending', { count: analysis.pendingHands }) }}
+        </p>
+      }
+
+      <div class="toolbar">
+        <label>
+          <span>{{ t('period') }}</span>
+          <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+            @for (option of periods; track option) {
+              <option [value]="option">{{ t('periods.' + option) }}</option>
+            }
+          </select>
+        </label>
+        <p class="basis">
+          {{
+            t('basis', {
+              hands: formats().integer(analysis.hands),
+              tournaments: formats().integer(analysis.tournaments),
+              complete: formats().integer(analysis.completeTournaments),
+            })
+          }}
+        </p>
+      </div>
+
+      @if (analysis.leaks.length === 0) {
+        <section class="all-clear glass">
+          <app-icon [icon]="icons.CircleCheck" />
+          <div>
+            <h2>{{ t('clear.title') }}</h2>
+            <p>{{ t('clear.description') }}</p>
+          </div>
+        </section>
+      }
+
+      @for (
+        group of [
+          { key: 'confirmed', leaks: confirmed() },
+          { key: 'possible', leaks: possible() },
+        ];
+        track group.key
+      ) {
+        @if (group.leaks.length > 0) {
+          <h2 class="group-title">{{ t('groups.' + group.key) }}</h2>
+          <p class="group-hint">{{ t('groups.' + group.key + 'Hint') }}</p>
+          <div class="leaks">
+            @for (leak of group.leaks; track leak.stat + (leak.position ?? '')) {
+              @let p = params(leak, t);
+              <article
+                class="leak glass"
+                appSpotlight
+                [class.leak--confirmed]="leak.confidence === 'confirmed'"
+              >
+                <header>
+                  <h3>{{ t('items.' + leak.stat + '.' + leak.direction + '.title', p) }}</h3>
+                  <span class="badge" [class.badge--confirmed]="leak.confidence === 'confirmed'">
+                    {{ t('confidence.' + leak.confidence) }}
+                  </span>
+                </header>
+                <p class="figures numeric">{{ t('figures', p) }}</p>
+                <app-range-gauge
+                  [rate]="leak.rate"
+                  [low]="leak.intervalLow"
+                  [high]="leak.intervalHigh"
+                  [min]="leak.range.min"
+                  [max]="leak.range.max"
+                  [format]="formats().share"
+                  [label]="t('gauge', p)"
+                />
+                <p class="why">{{ t('items.' + leak.stat + '.' + leak.direction + '.why', p) }}</p>
+                <p class="work">
+                  <strong>{{ t('workOn') }}</strong>
+                  {{ t('items.' + leak.stat + '.' + leak.direction + '.work', p) }}
+                </p>
+              </article>
+            }
+          </div>
+        }
+      }
+
+      @if (analysis.underSampled.length > 0) {
+        <details class="under glass">
+          <summary>{{ t('under.title', { count: analysis.underSampled.length }) }}</summary>
+          <ul>
+            @for (u of analysis.underSampled; track u.stat + (u.position ?? '')) {
+              <li>
+                <span>
+                  {{ t('stats.' + u.stat) }}
+                  @if (u.position) {
+                    · {{ t('positions.' + u.position) }}
+                  }
+                </span>
+                <span class="numeric">{{ u.opportunities }} / {{ u.needed }}</span>
+              </li>
+            }
+          </ul>
+        </details>
+      }
+
+      <p class="method">{{ t('method', { version: analysis.referenceVersion }) }}</p>
+    }
+  } @else {
+    <div role="status" [attr.aria-label]="t('loading')" class="leaks">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="glass skeleton-card">
+          <span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span>
+        </div>
+      }
+    </div>
+  }
+</ng-container>

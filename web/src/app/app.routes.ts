@@ -48,6 +48,11 @@ export const routes: Routes = [
           import('./features/statistics/statistics-page').then((m) => m.StatisticsPage),
       },
       {
+        path: 'leaks',
+        title: 'nav.leaks',
+        loadComponent: () => import('./features/leaks/leaks-page').then((m) => m.LeaksPage),
+      },
+      {
         path: 'import',
         title: 'nav.import',
         loadComponent: () => import('./features/import/import-page').then((m) => m.ImportPage),

@@ -8,7 +8,8 @@
     "tournaments": "Tournaments",
     "sessions": "Sessions",
     "statistics": "Statistics",
-    "import": "Import"
+    "import": "Import",
+    "leaks": "Leaks"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -405,6 +406,210 @@
       "errors": {
         "google": "Signing in with Google did not complete. Try again.",
         "unavailable": "Poker Coach cannot be reached right now. Try again in a moment."
+      }
+    },
+    "leaks": {
+      "title": "Leaks",
+      "description": "Where your game differs from solid players, and what to work on.",
+      "loading": "Analyzing your leaks…",
+      "error": {
+        "title": "The analysis could not be loaded",
+        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "retry": "Try again"
+      },
+      "empty": {
+        "title": "No hands to analyze yet",
+        "description": "Import your hand histories: leaks are found by comparing your statistics to the figures of solid players.",
+        "action": "Import files"
+      },
+      "pending": "Analyzing {{count}} hand(s): the result may still change.",
+      "period": "Period",
+      "periods": {
+        "all": "All time",
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "year": "This year"
+      },
+      "basis": "Based on {{hands}} hands played with 15 BB or more, from {{tournaments}} tournament(s), {{complete}} with a complete hand history.",
+      "clear": {
+        "title": "No leak found",
+        "description": "Every statistic with enough situations is within the references. Keep importing: new situations will be judged."
+      },
+      "groups": {
+        "confirmed": "Confirmed leaks",
+        "confirmedHint": "Even allowing for variance, your rate is outside the references.",
+        "possible": "To watch",
+        "possibleHint": "Your rate is outside the references, but the sample still allows a normal rate."
+      },
+      "confidence": {
+        "confirmed": "Confirmed",
+        "possible": "To watch"
+      },
+      "figures": "{{rate}} over {{opportunities}} situations · reference {{min}}–{{max}}",
+      "gauge": "Your rate {{rate}}, reference from {{min}} to {{max}}",
+      "workOn": "Work on:",
+      "under": {
+        "title": "{{count}} statistic(s) cannot be judged yet: too few situations"
+      },
+      "method": "References version {{version}}: online MTTs from €5 to €20, solid regulars, hands with 15 BB or more. A leak is confirmed only when the whole 95 % confidence interval is outside the reference.",
+      "positions": {
+        "utg": "UTG",
+        "utg1": "UTG+1",
+        "utg2": "UTG+2",
+        "lojack": "the lojack",
+        "hijack": "the hijack",
+        "cutoff": "the cutoff",
+        "button": "the button",
+        "smallBlind": "the small blind",
+        "bigBlind": "the big blind"
+      },
+      "stats": {
+        "vpip": "VPIP",
+        "pfr": "PFR",
+        "vpipPfrGap": "VPIP/PFR gap",
+        "rfi": "Open",
+        "limp": "Limp",
+        "steal": "Steal",
+        "threeBet": "3-bet",
+        "foldToThreeBet": "Fold to 3-bet",
+        "cbetFlop": "Flop c-bet",
+        "wentToShowdown": "Went to showdown",
+        "wonAtShowdown": "Won at showdown"
+      },
+      "items": {
+        "vpip": {
+          "tooHigh": {
+            "title": "You play too many hands",
+            "why": "You enter {{rate}} of pots (reference {{min}}–{{max}}). Too many weak hands end up out of position or dominated after the flop.",
+            "work": "Tighten your opening and calling ranges, especially early and against raises."
+          },
+          "tooLow": {
+            "title": "You play too few hands",
+            "why": "You enter {{rate}} of pots (reference {{min}}–{{max}}). You give up blinds and antes that are easy to win.",
+            "work": "Open wider in late position and defend your big blind more."
+          }
+        },
+        "pfr": {
+          "tooHigh": {
+            "title": "You raise too often",
+            "why": "You raise {{rate}} of hands (reference {{min}}–{{max}}). Your raises become easy to re-raise.",
+            "work": "Keep raises for hands and positions that justify them."
+          },
+          "tooLow": {
+            "title": "You do not raise enough",
+            "why": "You raise {{rate}} of hands (reference {{min}}–{{max}}). Without the initiative you win fewer pots without a showdown.",
+            "work": "Enter pots by raising rather than calling, especially when nobody has bet yet."
+          }
+        },
+        "vpipPfrGap": {
+          "tooHigh": {
+            "title": "You call much more than you raise",
+            "why": "{{rate}} of hands are played by calling only (reference up to {{max}}). Calling hands the initiative to opponents.",
+            "work": "Turn some of your preflop calls into raises or folds."
+          },
+          "tooLow": {
+            "title": "Unusual VPIP/PFR gap",
+            "why": "The gap between hands played and hands raised is {{rate}} (reference {{min}}–{{max}}).",
+            "work": "Check that you defend your blinds enough by calling."
+          }
+        },
+        "rfi": {
+          "tooHigh": {
+            "title": "You open too wide from {{position}}",
+            "why": "You open {{rate}} of the times it is folded to you in {{position}} (reference {{min}}–{{max}}).",
+            "work": "Drop the weakest hands from your opening range in that position."
+          },
+          "tooLow": {
+            "title": "You open too little from {{position}}",
+            "why": "You open {{rate}} of the times it is folded to you in {{position}} (reference {{min}}–{{max}}). These are profitable pots you leave.",
+            "work": "Add playable hands (small pairs, suited connectors, suited aces) to your range in that position."
+          }
+        },
+        "limp": {
+          "tooHigh": {
+            "title": "You limp too much",
+            "why": "You enter by calling {{rate}} of the times it is folded to you (reference up to {{max}}). In MTTs, limping leads to multiway pots out of position.",
+            "work": "When nobody has entered, raise or fold."
+          },
+          "tooLow": {
+            "title": "Limp",
+            "why": "Limp rate {{rate}} (reference {{min}}–{{max}}).",
+            "work": "Nothing to change."
+          }
+        },
+        "steal": {
+          "tooHigh": {
+            "title": "You steal too much",
+            "why": "You open {{rate}} of the times it is folded to you in the cutoff, button or small blind (reference {{min}}–{{max}}). The blinds will start re-raising you.",
+            "work": "Keep a stealing range you can defend against a re-raise."
+          },
+          "tooLow": {
+            "title": "You do not steal the blinds enough",
+            "why": "You open {{rate}} of the times it is folded to you in the cutoff, button or small blind (reference {{min}}–{{max}}). Antes make these steals very profitable in tournaments.",
+            "work": "Open more often in late position when it is folded to you."
+          }
+        },
+        "threeBet": {
+          "tooHigh": {
+            "title": "You 3-bet too much",
+            "why": "You 3-bet {{rate}} of the times you face a raise (reference {{min}}–{{max}}).",
+            "work": "Keep 3-bets for your best hands and a few well-chosen bluffs."
+          },
+          "tooLow": {
+            "title": "You do not 3-bet enough",
+            "why": "You 3-bet {{rate}} of the times you face a raise (reference {{min}}–{{max}}). Opponents open without fear.",
+            "work": "Re-raise your strong hands instead of calling, and add a few bluffs in position."
+          }
+        },
+        "foldToThreeBet": {
+          "tooHigh": {
+            "title": "You fold too much to 3-bets",
+            "why": "You fold {{rate}} of your opens to a re-raise (reference {{min}}–{{max}}). You can be re-raised with anything.",
+            "work": "Defend more: call in position or 4-bet your best hands."
+          },
+          "tooLow": {
+            "title": "You do not fold enough to 3-bets",
+            "why": "You fold only {{rate}} of your opens to a re-raise (reference {{min}}–{{max}}).",
+            "work": "Open hands that can continue, and let the others go against a 3-bet."
+          }
+        },
+        "cbetFlop": {
+          "tooHigh": {
+            "title": "You c-bet the flop too much",
+            "why": "You bet {{rate}} of flops as the preflop raiser (reference {{min}}–{{max}}).",
+            "work": "Check more on flops that hit your opponent's range."
+          },
+          "tooLow": {
+            "title": "You do not c-bet the flop enough",
+            "why": "You bet {{rate}} of flops as the preflop raiser (reference {{min}}–{{max}}). You give up the initiative too soon.",
+            "work": "Bet small more often on flops that favour your range."
+          }
+        },
+        "wentToShowdown": {
+          "tooHigh": {
+            "title": "You go to showdown too often",
+            "why": "You reach showdown in {{rate}} of the flops you see (reference {{min}}–{{max}}). You call down too many medium hands.",
+            "work": "Let go of more medium hands against strong turn and river pressure."
+          },
+          "tooLow": {
+            "title": "You give up too often after the flop",
+            "why": "You reach showdown in {{rate}} of the flops you see (reference {{min}}–{{max}}). You are too easy to push off a hand.",
+            "work": "Defend your medium hands more against single bets."
+          }
+        },
+        "wonAtShowdown": {
+          "tooHigh": {
+            "title": "You win a lot at showdown",
+            "why": "You win {{rate}} of showdowns (reference {{min}}–{{max}}): often a sign you only get there with very strong hands.",
+            "work": "Check you are not folding too many medium hands earlier."
+          },
+          "tooLow": {
+            "title": "You lose too much at showdown",
+            "why": "You win {{rate}} of showdowns (reference {{min}}–{{max}}). You go too far with beaten hands.",
+            "work": "Review your river calls: a medium hand facing a big bet is often beaten."
+          }
+        }
       }
     }
   }

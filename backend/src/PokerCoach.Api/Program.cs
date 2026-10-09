@@ -6,11 +6,13 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Health;
 using PokerCoach.Api.Import;
+using PokerCoach.Api.Leaks;
 using PokerCoach.Api.Poker;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Api.Tournaments;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
+using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Poker;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
@@ -48,6 +50,7 @@ builder.Services.AddScoped<PerformanceService>();
 builder.Services.AddScoped<HandFactsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
+builder.Services.AddScoped<LeakService>();
 
 var app = builder.Build();
 
@@ -84,6 +87,7 @@ app.MapImportEndpoints();
 app.MapPokerAccountEndpoints();
 app.MapTournamentEndpoints();
 app.MapStatisticsEndpoints();
+app.MapLeakEndpoints();
 
 app.Run();
 

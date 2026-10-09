@@ -8,7 +8,8 @@
     "tournaments": "Torneos",
     "sessions": "Sesiones",
     "statistics": "Estadísticas",
-    "import": "Importar"
+    "import": "Importar",
+    "leaks": "Fugas"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -405,6 +406,210 @@
       "errors": {
         "google": "El inicio de sesión con Google no se completó. Inténtalo de nuevo.",
         "unavailable": "No se puede acceder a Poker Coach en este momento. Inténtalo de nuevo en un instante."
+      }
+    },
+    "leaks": {
+      "title": "Fugas",
+      "description": "En qué se aleja tu juego del de jugadores sólidos y qué trabajar.",
+      "loading": "Analizando tus fugas…",
+      "error": {
+        "title": "No se ha podido cargar el análisis",
+        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "retry": "Reintentar"
+      },
+      "empty": {
+        "title": "Todavía no hay manos que analizar",
+        "description": "Importa tus historiales de manos: las fugas se detectan comparando tus estadísticas con las de jugadores sólidos.",
+        "action": "Importar archivos"
+      },
+      "pending": "Analizando {{count}} mano(s): el resultado aún puede cambiar.",
+      "period": "Periodo",
+      "periods": {
+        "all": "Desde el principio",
+        "7d": "Últimos 7 días",
+        "30d": "Últimos 30 días",
+        "90d": "Últimos 90 días",
+        "year": "Este año"
+      },
+      "basis": "Sobre {{hands}} manos jugadas con 15 BB o más, de {{tournaments}} torneo(s), {{complete}} con historial completo.",
+      "clear": {
+        "title": "No se ha detectado ninguna fuga",
+        "description": "Todas tus estadísticas con suficientes situaciones están dentro de las referencias. Sigue importando: se juzgarán nuevas situaciones."
+      },
+      "groups": {
+        "confirmed": "Fugas confirmadas",
+        "confirmedHint": "Incluso teniendo en cuenta la varianza, tu tasa sale de las referencias.",
+        "possible": "A vigilar",
+        "possibleHint": "Tu tasa sale de las referencias, pero la muestra aún permite una tasa normal."
+      },
+      "confidence": {
+        "confirmed": "Confirmada",
+        "possible": "A vigilar"
+      },
+      "figures": "{{rate}} en {{opportunities}} situaciones · referencia {{min}}–{{max}}",
+      "gauge": "Tu tasa {{rate}}, referencia de {{min}} a {{max}}",
+      "workOn": "A trabajar:",
+      "under": {
+        "title": "{{count}} estadística(s) aún no se puede(n) juzgar: muy pocas situaciones"
+      },
+      "method": "Referencias versión {{version}}: MTT online de 5 a 20 €, regulares sólidos, manos con 15 BB o más. Una fuga solo se confirma si todo el intervalo de confianza al 95 % sale de la referencia.",
+      "positions": {
+        "utg": "UTG",
+        "utg1": "UTG+1",
+        "utg2": "UTG+2",
+        "lojack": "lojack",
+        "hijack": "hijack",
+        "cutoff": "cutoff",
+        "button": "botón",
+        "smallBlind": "ciega pequeña",
+        "bigBlind": "ciega grande"
+      },
+      "stats": {
+        "vpip": "VPIP",
+        "pfr": "PFR",
+        "vpipPfrGap": "Diferencia VPIP/PFR",
+        "rfi": "Apertura",
+        "limp": "Limp",
+        "steal": "Robo",
+        "threeBet": "3-bet",
+        "foldToThreeBet": "Fold al 3-bet",
+        "cbetFlop": "C-bet flop",
+        "wentToShowdown": "Showdown",
+        "wonAtShowdown": "Ganado en showdown"
+      },
+      "items": {
+        "vpip": {
+          "tooHigh": {
+            "title": "Juegas demasiadas manos",
+            "why": "Entras en el {{rate}} de los botes (referencia {{min}}–{{max}}). Demasiadas manos débiles acaban fuera de posición o dominadas tras el flop.",
+            "work": "Ajusta tus rangos de apertura y de call, sobre todo en primeras posiciones y frente a subidas."
+          },
+          "tooLow": {
+            "title": "Juegas muy pocas manos",
+            "why": "Entras en el {{rate}} de los botes (referencia {{min}}–{{max}}). Dejas pasar ciegas y antes fáciles de ganar.",
+            "work": "Abre más en posiciones tardías y defiende más tu ciega grande."
+          }
+        },
+        "pfr": {
+          "tooHigh": {
+            "title": "Subes demasiado a menudo",
+            "why": "Subes el {{rate}} de las manos (referencia {{min}}–{{max}}). Tus subidas se vuelven fáciles de resubir.",
+            "work": "Reserva las subidas para manos y posiciones que las justifiquen."
+          },
+          "tooLow": {
+            "title": "No subes lo suficiente",
+            "why": "Subes el {{rate}} de las manos (referencia {{min}}–{{max}}). Sin iniciativa ganas menos botes sin showdown.",
+            "work": "Entra en el bote subiendo en lugar de pagando, sobre todo si nadie ha apostado aún."
+          }
+        },
+        "vpipPfrGap": {
+          "tooHigh": {
+            "title": "Pagas mucho más de lo que subes",
+            "why": "El {{rate}} de las manos se juega solo pagando (referencia hasta {{max}}). Pagar cede la iniciativa a los rivales.",
+            "work": "Convierte parte de tus calls preflop en subidas o folds."
+          },
+          "tooLow": {
+            "title": "Diferencia VPIP/PFR inusual",
+            "why": "La diferencia entre manos jugadas y manos subidas es {{rate}} (referencia {{min}}–{{max}}).",
+            "work": "Comprueba que defiendes lo suficiente tus ciegas pagando."
+          }
+        },
+        "rfi": {
+          "tooHigh": {
+            "title": "Abres demasiado desde {{position}}",
+            "why": "Abres el {{rate}} de las veces que te llega foldeado en {{position}} (referencia {{min}}–{{max}}).",
+            "work": "Quita las manos más débiles de tu rango de apertura en esa posición."
+          },
+          "tooLow": {
+            "title": "Abres muy poco desde {{position}}",
+            "why": "Abres el {{rate}} de las veces que te llega foldeado en {{position}} (referencia {{min}}–{{max}}). Son botes rentables que dejas escapar.",
+            "work": "Añade manos jugables (parejas pequeñas, conectores y ases del mismo palo) a tu rango en esa posición."
+          }
+        },
+        "limp": {
+          "tooHigh": {
+            "title": "Haces demasiado limp",
+            "why": "Entras pagando el {{rate}} de las veces que te llega foldeado (referencia hasta {{max}}). En MTT, el limp lleva a botes multijugador fuera de posición.",
+            "work": "Si nadie ha entrado, sube o tira."
+          },
+          "tooLow": {
+            "title": "Limp",
+            "why": "Tasa de limp de {{rate}} (referencia {{min}}–{{max}}).",
+            "work": "Nada que cambiar."
+          }
+        },
+        "steal": {
+          "tooHigh": {
+            "title": "Robas demasiado",
+            "why": "Abres el {{rate}} de las veces que te llega foldeado en cutoff, botón o ciega pequeña (referencia {{min}}–{{max}}). Las ciegas acabarán resubiéndote.",
+            "work": "Mantén un rango de robo que puedas defender frente a una resubida."
+          },
+          "tooLow": {
+            "title": "No robas suficientes ciegas",
+            "why": "Abres el {{rate}} de las veces que te llega foldeado en cutoff, botón o ciega pequeña (referencia {{min}}–{{max}}). Los antes hacen muy rentables estos robos en torneo.",
+            "work": "Abre más a menudo en posiciones tardías cuando te llegue foldeado."
+          }
+        },
+        "threeBet": {
+          "tooHigh": {
+            "title": "Haces demasiado 3-bet",
+            "why": "Haces 3-bet el {{rate}} de las veces que te enfrentas a una subida (referencia {{min}}–{{max}}).",
+            "work": "Reserva los 3-bets para tus mejores manos y algunos faroles bien elegidos."
+          },
+          "tooLow": {
+            "title": "No haces suficiente 3-bet",
+            "why": "Haces 3-bet el {{rate}} de las veces que te enfrentas a una subida (referencia {{min}}–{{max}}). Los rivales abren sin miedo.",
+            "work": "Resube tus manos fuertes en lugar de pagar y añade algún farol en posición."
+          }
+        },
+        "foldToThreeBet": {
+          "tooHigh": {
+            "title": "Te retiras demasiado ante el 3-bet",
+            "why": "Tiras el {{rate}} de tus aperturas ante una resubida (referencia {{min}}–{{max}}). Te pueden resubir con cualquier cosa.",
+            "work": "Defiende más: paga en posición o haz 4-bet con tus mejores manos."
+          },
+          "tooLow": {
+            "title": "No te retiras lo suficiente ante el 3-bet",
+            "why": "Solo tiras el {{rate}} de tus aperturas ante una resubida (referencia {{min}}–{{max}}).",
+            "work": "Abre manos que puedan continuar y suelta las demás ante el 3-bet."
+          }
+        },
+        "cbetFlop": {
+          "tooHigh": {
+            "title": "Haces demasiada c-bet en el flop",
+            "why": "Apuestas el {{rate}} de los flops como agresor preflop (referencia {{min}}–{{max}}).",
+            "work": "Pasa más en flops que conectan con el rango del rival."
+          },
+          "tooLow": {
+            "title": "No haces suficiente c-bet en el flop",
+            "why": "Apuestas el {{rate}} de los flops como agresor preflop (referencia {{min}}–{{max}}). Cedes la iniciativa demasiado pronto.",
+            "work": "Apuesta pequeño más a menudo en flops favorables a tu rango."
+          }
+        },
+        "wentToShowdown": {
+          "tooHigh": {
+            "title": "Vas al showdown demasiado a menudo",
+            "why": "Llegas al showdown en el {{rate}} de los flops que ves (referencia {{min}}–{{max}}). Pagas hasta el final con demasiadas manos medias.",
+            "work": "Suelta más manos medias ante una fuerte presión en turn y river."
+          },
+          "tooLow": {
+            "title": "Abandonas demasiado tras el flop",
+            "why": "Llegas al showdown en el {{rate}} de los flops que ves (referencia {{min}}–{{max}}). Es demasiado fácil hacerte tirar.",
+            "work": "Defiende más tus manos medias frente a apuestas sencillas."
+          }
+        },
+        "wonAtShowdown": {
+          "tooHigh": {
+            "title": "Ganas mucho en el showdown",
+            "why": "Ganas el {{rate}} de los showdowns (referencia {{min}}–{{max}}): a menudo señal de que solo llegas con manos muy fuertes.",
+            "work": "Comprueba que no tiras demasiadas manos medias antes."
+          },
+          "tooLow": {
+            "title": "Pierdes demasiado en el showdown",
+            "why": "Ganas el {{rate}} de los showdowns (referencia {{min}}–{{max}}). Llegas demasiado lejos con manos que van por detrás.",
+            "work": "Revisa tus calls de river: una mano media ante una apuesta grande suele ir por detrás."
+          }
+        }
       }
     }
   }

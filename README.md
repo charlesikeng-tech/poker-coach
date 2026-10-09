@@ -172,3 +172,10 @@ MVP-2 — Game analysis (ADR-0006):
 - [x] Statistics say what they rest on (hands, tournaments, complete histories) and can be
       restricted to complete histories
 - [ ] Per-entry attribution of hands, postflop statistics
+
+MVP-3 — Leaks (ADR-0007):
+
+- [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,
+      confirmed / to watch / not judgeable yet
+- [x] `GET /api/leaks` and the leaks page (range gauge, why it costs, what to work on)
+- [ ] Adjustable references; AI explanations with example hands (provider ADR first)

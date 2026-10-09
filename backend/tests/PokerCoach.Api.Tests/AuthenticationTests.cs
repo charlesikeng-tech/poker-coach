@@ -19,6 +19,7 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/tournaments")]
     [InlineData("GET", "/api/performance")]
     [InlineData("GET", "/api/statistics")]
+    [InlineData("GET", "/api/leaks")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
     {
         await using var factory = new ApiFactory();
