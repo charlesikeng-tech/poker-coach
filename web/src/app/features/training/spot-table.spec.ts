@@ -11,6 +11,7 @@ const spot = (
   hand: 'AKo',
   cards: ['Ah', 'Kd'],
   pushStack: null,
+  shover: null,
   stackInBigBlinds: 30,
   review: false,
   focus: false,
@@ -62,5 +63,29 @@ describe('spotTable', () => {
     expect(hero.stack).toBe(0);
     expect(hero.allIn).toBe(true);
     expect(view.bubble?.kind).toBe('allIn');
+  });
+
+  it('defends the big blind against a lone shove, every stack equal', () => {
+    const defence: DrillSpot = {
+      ...spot('bigBlind'),
+      band: 'push',
+      pushStack: 9,
+      stackInBigBlinds: 9,
+      shover: 'button',
+    };
+
+    const before = spotTable(defence, { you: 'You' }, null, '', 'All-in');
+    const shover = before.seats.find((s) => s.label === 'BTN')!;
+    const called = spotTable(defence, { you: 'You' }, 'call', 'Call', 'All-in');
+
+    expect(before.seats.find((s) => s.isHero)!.sublabel).toBe('BB');
+    expect(shover.allIn).toBe(true);
+    expect(shover.bet).toBe(900);
+    expect(before.seats.filter((s) => s.folded)).toHaveLength(4);
+    expect(before.bubble).toEqual(
+      expect.objectContaining({ seatNumber: shover.seatNumber, kind: 'allIn' }),
+    );
+    expect(called.seats.find((s) => s.isHero)!.allIn).toBe(true);
+    expect(called.bubble?.kind).toBe('call');
   });
 });

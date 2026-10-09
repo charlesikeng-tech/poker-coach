@@ -1,17 +1,39 @@
 <ng-container *transloco="let t; prefix: 'pages.training'">
   <app-page-header [heading]="t('title')" [description]="t('description')" />
 
+  <div class="modes" role="tablist" [attr.aria-label]="t('modes.label')">
+    @for (m of modes; track m) {
+      <button
+        type="button"
+        role="tab"
+        class="mode"
+        [class.active]="mode() === m"
+        [attr.aria-selected]="mode() === m"
+        (click)="setMode(m)"
+      >
+        <strong>{{ t('modes.' + m + '.name') }}</strong>
+        <span>{{ t('modes.' + m + '.text') }}</span>
+      </button>
+    }
+  </div>
+
   <div class="toolbar">
     <app-format-toggle [value]="format()" (changed)="setFormat($event)" />
-    <label>
-      <span>{{ t('band') }}</span>
-      <select [value]="band()" (change)="setBand($any($event.target).value)">
-        @for (option of bands; track option) {
-          <option [value]="option">{{ t('bands.' + option) }}</option>
-        }
-      </select>
-    </label>
-    <div class="seats" role="group" [attr.aria-label]="t('seats')">
+    @if (mode() === 'open') {
+      <label>
+        <span>{{ t('band') }}</span>
+        <select [value]="band()" (change)="setBand($any($event.target).value)">
+          @for (option of bands; track option) {
+            <option [value]="option">{{ t('bands.' + option) }}</option>
+          }
+        </select>
+      </label>
+    }
+    <div
+      class="seats"
+      role="group"
+      [attr.aria-label]="t(mode() === 'defence' ? 'shovers' : 'seats')"
+    >
       @for (seat of seats(); track seat) {
         <button
           type="button"
@@ -46,10 +68,15 @@
         <div class="spot-head">
           <p class="question">
             {{
-              t('question', {
-                position: short(s.position),
-                stack: chipsFormat()(s.stackInBigBlinds * 100),
-              })
+              s.shover
+                ? t('questionDefence', {
+                    shover: short(s.shover),
+                    stack: chipsFormat()(s.stackInBigBlinds * 100),
+                  })
+                : t('question', {
+                    position: short(s.position),
+                    stack: chipsFormat()(s.stackInBigBlinds * 100),
+                  })
             }}
           </p>
           <div class="badges">
@@ -89,15 +116,27 @@
           >
             {{ t('answers.fold') }} <kbd>F</kbd>
           </button>
-          <button
-            type="button"
-            class="action action--raise"
-            [class.chosen]="answer() === 'raise'"
-            [disabled]="answer() !== null"
-            (click)="choose('raise')"
-          >
-            {{ t(answerKey(s, 'raise')) }} <kbd>R</kbd>
-          </button>
+          @if (s.shover) {
+            <button
+              type="button"
+              class="action action--raise"
+              [class.chosen]="answer() === 'call'"
+              [disabled]="answer() !== null"
+              (click)="choose('call')"
+            >
+              {{ t('answers.call') }} <kbd>C</kbd>
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="action action--raise"
+              [class.chosen]="answer() === 'raise'"
+              [disabled]="answer() !== null"
+              (click)="choose('raise')"
+            >
+              {{ t(answerKey(s, 'raise')) }} <kbd>R</kbd>
+            </button>
+          }
         </div>
       </section>
 
@@ -138,15 +177,27 @@
             </p>
             <p>
               {{
-                t((s.band === 'push' ? 'verdict.explainPush.' : 'verdict.explain.') + r.expected, {
-                  hand: s.hand,
-                  position: short(s.position),
-                  band: t('bands.' + s.band),
-                  stack: s.pushStack,
-                })
+                t(
+                  (s.shover
+                    ? 'verdict.explainDefence.'
+                    : s.band === 'push'
+                      ? 'verdict.explainPush.'
+                      : 'verdict.explain.') + r.expected,
+                  {
+                    hand: s.hand,
+                    position: short(s.position),
+                    shover: s.shover ? short(s.shover) : '',
+                    band: t('bands.' + s.band),
+                    stack: s.pushStack,
+                  }
+                )
               }}
             </p>
-            <div class="mini-grid" role="img" [attr.aria-label]="t('gridLabel')">
+            <div
+              class="mini-grid"
+              role="img"
+              [attr.aria-label]="t(s.shover ? 'gridLabelDefence' : 'gridLabel')"
+            >
               @for (cell of grid(); track cell.hand) {
                 <span class="mini-cell" [class.in]="cell.inRange" [class.current]="cell.current">{{
                   cell.current ? cell.hand : ''
@@ -155,9 +206,11 @@
             </div>
             <p class="muted">
               {{
-                s.band === 'push'
-                  ? t('referencePush', { stack: s.pushStack })
-                  : t('reference', { version: r.referenceVersion })
+                s.shover
+                  ? t('referenceDefence', { stack: s.pushStack })
+                  : s.band === 'push'
+                    ? t('referencePush', { stack: s.pushStack })
+                    : t('reference', { version: r.referenceVersion })
               }}
             </p>
             <button appButton variant="primary" class="next" (click)="nextHand()">
@@ -166,7 +219,7 @@
           </section>
         } @else {
           <section class="card glass hint">
-            <p>{{ t('hint') }}</p>
+            <p>{{ t(mode() === 'defence' ? 'hintDefence' : 'hint') }}</p>
           </section>
         }
       </aside>

@@ -1007,7 +1007,7 @@
     },
     "training": {
       "title": "Salle d'entraînement",
-      "description": "C'est foldé jusqu'à toi : relance ou couche. Corrigé par nos repères v1, les mains ratées reviennent.",
+      "description": "Deux exercices : ouvrir quand c'est foldé jusqu'à toi, ou défendre ta grosse blinde contre un tapis. Les mains ratées reviennent.",
       "loading": "Distribution…",
       "band": "Tapis",
       "bands": {
@@ -1033,7 +1033,8 @@
       "answers": {
         "fold": "Fold",
         "raise": "Relance",
-        "shove": "Tapis"
+        "shove": "Tapis",
+        "call": "Payer"
       },
       "session": "cette session",
       "overall": "sur {{count}} réponses",
@@ -1049,6 +1050,10 @@
         "explainPush": {
           "raise": "L'équilibre envoie tapis avec {{hand}} depuis {{position}} à {{stack}} BB.",
           "fold": "L'équilibre couche {{hand}} depuis {{position}} à {{stack}} BB."
+        },
+        "explainDefence": {
+          "call": "L'équilibre paye avec {{hand}} de grosse blinde contre un tapis de {{shover}} à {{stack}} BB.",
+          "fold": "L'équilibre couche {{hand}} de grosse blinde contre un tapis de {{shover}} à {{stack}} BB."
         }
       },
       "gridLabel": "Range de référence de la position",
@@ -1056,7 +1061,23 @@
       "next": "Main suivante",
       "space": "Espace",
       "hint": "Réponds avec les boutons ou au clavier (F pour fold, R pour relance). Après ta réponse, tu verras la range de référence de la position avec ta main entourée.",
-      "referencePush": "Équilibre push/fold calculé à {{stack}} BB (tapis égaux, antes 0,125 BB)."
+      "referencePush": "Équilibre push/fold calculé à {{stack}} BB (tapis égaux, antes 0,125 BB).",
+      "modes": {
+        "label": "Exercice",
+        "open": {
+          "name": "Ouvrir",
+          "text": "Foldé jusqu'à toi : relance ou couche."
+        },
+        "defence": {
+          "name": "Défendre la BB",
+          "text": "Un joueur fait tapis : tu payes ou tu couches ?"
+        }
+      },
+      "shovers": "Pousseurs",
+      "questionDefence": "{{shover}} fait tapis {{stack}}, tout le monde couche. Tu es de grosse blinde : tu payes ?",
+      "gridLabelDefence": "Range de call de référence contre ce pousseur",
+      "referenceDefence": "Calls de l'équilibre push/fold à {{stack}} BB (tapis égaux, antes 0,125 BB, sans ICM) : trop larges près de l'argent.",
+      "hintDefence": "Réponds avec les boutons ou au clavier (F pour fold, C pour payer). Après ta réponse, tu verras la range de call contre ce pousseur avec ta main entourée."
     }
   },
   "welcome": {

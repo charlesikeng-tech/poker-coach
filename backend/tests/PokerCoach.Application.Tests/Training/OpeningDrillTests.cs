@@ -83,7 +83,7 @@ public sealed class OpeningDrillTests
         Assert.False(Assert.Single(store.Attempts).Correct);
     }
 
-    private sealed class MemoryStore : ITrainingStore
+    internal sealed class MemoryStore : ITrainingStore
     {
         public List<DrillAttempt> Attempts { get; } = [];
 
@@ -93,11 +93,11 @@ public sealed class OpeningDrillTests
             return Task.CompletedTask;
         }
 
-        public Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, int count, CancellationToken cancellationToken) =>
-            Task.FromResult<IReadOnlyList<DrillAttempt>>(Attempts.Take(count).ToList());
+        public Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<DrillAttempt>>(Attempts.Where(a => a.Item.IsDefence == (mode == DrillMode.Defence)).Take(count).ToList());
     }
 
-    private sealed class NoStats : IStatisticsReadStore
+    internal sealed class NoStats : IStatisticsReadStore
     {
         public Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<(PokerPosition?, HeroStatCounts)>>([]);

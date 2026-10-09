@@ -4,16 +4,32 @@ using PokerCoach.Domain.Poker.Ranges;
 
 namespace PokerCoach.Domain.Training;
 
-/// <summary>What the player answers in an open-or-fold drill. Values travel in the API and are stored.</summary>
+/// <summary>What the player answers in a drill. Values travel in the API and are stored.</summary>
 public enum DrillAnswer
 {
     Fold = 0,
+
+    /// <summary>Open (raise first in, or shove in push/fold).</summary>
     Raise = 1,
+
+    /// <summary>Call a shove (defence drills).</summary>
+    Call = 2,
 }
 
 /// <summary>One thing to learn: a starting hand from a seat, at a format and stack band.</summary>
 /// <param name="PushStack">Stack in big blinds for the push/fold band (its answer depends on it); null otherwise.</param>
-public sealed record DrillItem(TableFormat Format, StackBand Band, PokerPosition Position, HandClass Hand, int? PushStack = null);
+/// <param name="Shover">Defence drills: the seat that shoved, everyone else having folded to the hero. Null:
+/// an opening drill (folded to the hero).</param>
+public sealed record DrillItem(
+    TableFormat Format,
+    StackBand Band,
+    PokerPosition Position,
+    HandClass Hand,
+    int? PushStack = null,
+    PokerPosition? Shover = null)
+{
+    public bool IsDefence => Shover is not null;
+}
 
 /// <summary>A dealt spot: the item with concrete cards and stack, as shown at the table.</summary>
 public sealed record OpeningSpot(DrillItem Item, Card First, Card Second, decimal StackBigBlinds);
@@ -36,6 +52,11 @@ public static class OpeningDrill
     public static DrillAnswer Expected(DrillItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
+        if (item.IsDefence)
+        {
+            return DefenceDrill.Range(item).Contains(item.Hand) ? DrillAnswer.Call : DrillAnswer.Fold;
+        }
+
         var range = ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)
             ?? throw new ArgumentException("This seat has no opening range.", nameof(item));
         return range.Contains(item.Hand) ? DrillAnswer.Raise : DrillAnswer.Fold;
@@ -96,7 +117,7 @@ public static class OpeningDrill
         return boundary;
     }
 
-    private static HandClass ByCombinations(Random random)
+    internal static HandClass ByCombinations(Random random)
     {
         var pick = random.Next(1326);
         foreach (var hand in HandClass.All)
@@ -111,7 +132,7 @@ public static class OpeningDrill
         return HandClass.All[^1];
     }
 
-    private static (Card, Card) Cards(Random random, HandClass hand)
+    internal static (Card, Card) Cards(Random random, HandClass hand)
     {
         var first = (Suit)random.Next(4);
         var second = hand.Suited ? first : (Suit)((((int)first) + 1 + random.Next(3)) % 4);

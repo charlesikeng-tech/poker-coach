@@ -33,6 +33,9 @@ internal sealed class OpeningAttemptRecord
     /// <summary>Stack of a push/fold drill, whose answer depends on it; null for the other bands.</summary>
     public int? PushStack { get; set; }
 
+    /// <summary>Defence drills: the seat that shoved; null for opening drills.</summary>
+    public PokerPosition? Shover { get; set; }
+
     public DrillAnswer Answer { get; set; }
 
     public bool Correct { get; set; }
@@ -52,6 +55,7 @@ internal sealed class OpeningAttemptConfiguration : IEntityTypeConfiguration<Ope
         builder.Property(a => a.Format).HasConversion<int>();
         builder.Property(a => a.Band).HasConversion<int>();
         builder.Property(a => a.Position).HasConversion<int>();
+        builder.Property(a => a.Shover).HasConversion<int?>();
         builder.Property(a => a.Answer).HasConversion<int>();
         builder.Property(a => a.Hand).HasMaxLength(3).IsRequired();
         // Reads are "this user's latest attempts at a format".
@@ -73,6 +77,7 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
             Position = attempt.Item.Position,
             Hand = attempt.Item.Hand.ToString(),
             PushStack = attempt.Item.PushStack,
+            Shover = attempt.Item.Shover,
             Answer = attempt.Answer,
             Correct = attempt.Correct,
             ReferenceVersion = referenceVersion,
@@ -83,19 +88,21 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
     }
 
     /// <summary>Attempts checked against another reference version are left out: their answer key changed.</summary>
-    public async Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, int count, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken)
     {
+        var defence = mode == DrillMode.Defence;
         var rows = await db.Set<OpeningAttemptRecord>().AsNoTracking()
             .Where(a => a.UserId == userId && a.Format == format && a.ReferenceVersion == ReferenceOpeningRanges.Version)
+            .Where(a => (a.Shover != null) == defence)
             .OrderByDescending(a => a.CreatedAt)
             .Take(count)
-            .Select(a => new { a.Band, a.Position, a.Hand, a.PushStack, a.Answer, a.Correct, a.CreatedAt })
+            .Select(a => new { a.Band, a.Position, a.Hand, a.PushStack, a.Shover, a.Answer, a.Correct, a.CreatedAt })
             .ToListAsync(cancellationToken);
 
         return rows
             .Select(r => (Row: r, Hand: RangeNotation.Parse(r.Hand)))
             .Where(x => x.Hand.Count == 1)
-            .Select(x => new DrillAttempt(new DrillItem(format, x.Row.Band, x.Row.Position, x.Hand.Single(), x.Row.PushStack), x.Row.Answer, x.Row.Correct, x.Row.CreatedAt))
+            .Select(x => new DrillAttempt(new DrillItem(format, x.Row.Band, x.Row.Position, x.Hand.Single(), x.Row.PushStack, x.Row.Shover), x.Row.Answer, x.Row.Correct, x.Row.CreatedAt))
             .ToList();
     }
 }

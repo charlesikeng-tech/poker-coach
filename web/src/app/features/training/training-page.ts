@@ -20,7 +20,14 @@ import { PokerTable, TableView } from '../../shared/ui/poker-table/poker-table';
 import { STACK_BANDS, StackBand } from '../ranges/ranges-api';
 import { PokerPosition } from '../statistics/statistics-api';
 import { CHIPS_PER_BB, positionShort, spotTable } from './spot-table';
-import { DrillAnswer, DrillProgress, DrillResult, DrillSpot, TrainingApi } from './training-api';
+import {
+  DrillAnswer,
+  DrillMode,
+  DrillProgress,
+  DrillResult,
+  DrillSpot,
+  TrainingApi,
+} from './training-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
 
@@ -31,9 +38,10 @@ const SEATS: Record<TableFormat, readonly PokerPosition[]> = {
 const RANKS = 'AKQJT98765432';
 
 /**
- * The training room (ADR-0009, block 3): folded to you, raise or fold. Answers are checked against the
- * reference ranges v1 and shown on the grid; missed hands come back; seats with a detected opening leak
- * come more often. F / R to answer, Space or Enter for the next hand.
+ * The training room (ADR-0009, block 3). Opening: folded to you, raise or fold, checked against the
+ * reference ranges v1; seats with a detected opening leak come more often. Defence: a seat shoves, you
+ * are in the big blind, call or fold, checked against the push/fold equilibrium. Missed hands come back.
+ * F / R (or C) to answer, Space or Enter for the next hand.
  */
 @Component({
   selector: 'app-training-page',
@@ -49,6 +57,8 @@ export class TrainingPage {
   private readonly language = inject(LanguageService);
 
   protected readonly bands = STACK_BANDS;
+  protected readonly modes: readonly DrillMode[] = ['open', 'defence'];
+  protected readonly mode = signal<DrillMode>('open');
   protected readonly format = signal<TableFormat>('sixMax');
   protected readonly band = signal<StackBand>('mid');
   /** Seats to train; empty: all. */
@@ -81,6 +91,7 @@ export class TrainingPage {
       { you: t('you') },
       answer,
       answer ? t(this.answerKey(spot, answer)) : '',
+      t('answers.shove'),
     );
   });
 
@@ -118,11 +129,11 @@ export class TrainingPage {
 
   constructor() {
     effect(() => {
-      // A new drill whenever the format, band or seats change.
-      const args = [this.format(), this.band(), this.chosen()] as const;
+      // A new drill whenever the mode, format, band or seats change.
+      const args = [this.format(), this.band(), this.chosen(), this.mode()] as const;
       untracked(() => {
         void this.next(...args);
-        void this.loadProgress(args[0]);
+        void this.loadProgress(args[0], args[3]);
       });
     });
   }
@@ -130,6 +141,12 @@ export class TrainingPage {
   protected setFormat(value: TableFormat): void {
     this.chosen.set([]);
     this.format.set(value);
+  }
+
+  protected setMode(value: DrillMode): void {
+    this.chosen.set([]);
+    this.session.set({ answered: 0, correct: 0 });
+    this.mode.set(value);
   }
 
   protected setBand(value: string): void {
@@ -174,7 +191,7 @@ export class TrainingPage {
         answered: s.answered + 1,
         correct: s.correct + (result.correct ? 1 : 0),
       }));
-      void this.loadProgress(spot.format);
+      void this.loadProgress(spot.format, spot.shover ? 'defence' : 'open');
     } catch {
       this.answer.set(null);
       this.state.set('error');
@@ -184,7 +201,7 @@ export class TrainingPage {
   }
 
   protected nextHand(): void {
-    void this.next(this.format(), this.band(), this.chosen());
+    void this.next(this.format(), this.band(), this.chosen(), this.mode());
   }
 
   protected onKey(event: KeyboardEvent): void {
@@ -193,9 +210,10 @@ export class TrainingPage {
       return;
     }
     const key = event.key.toLowerCase();
-    if (this.answer() === null && (key === 'f' || key === 'r')) {
+    const play: DrillAnswer = this.mode() === 'defence' ? 'call' : 'raise';
+    if (this.answer() === null && (key === 'f' || key === 'r' || key === 'c')) {
       event.preventDefault();
-      void this.choose(key === 'f' ? 'fold' : 'raise');
+      void this.choose(key === 'f' ? 'fold' : play);
     } else if (this.result() && (key === ' ' || key === 'enter') && !target?.closest('button')) {
       event.preventDefault();
       this.nextHand();
@@ -206,10 +224,11 @@ export class TrainingPage {
     format: TableFormat,
     band: StackBand,
     seats: readonly PokerPosition[],
+    mode: DrillMode,
   ): Promise<void> {
     this.busy.set(true);
     try {
-      const spot = await this.api.spot(format, band, seats);
+      const spot = await this.api.spot(format, band, seats, mode);
       this.answer.set(null);
       this.result.set(null);
       this.spot.set(spot);
@@ -221,9 +240,9 @@ export class TrainingPage {
     }
   }
 
-  private async loadProgress(format: TableFormat): Promise<void> {
+  private async loadProgress(format: TableFormat, mode: DrillMode): Promise<void> {
     try {
-      this.progress.set(await this.api.progress(format));
+      this.progress.set(await this.api.progress(format, mode));
     } catch {
       // Progress is a bonus: the drill works without it.
     }

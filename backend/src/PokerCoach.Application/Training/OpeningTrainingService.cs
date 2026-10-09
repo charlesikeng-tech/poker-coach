@@ -9,12 +9,19 @@ namespace PokerCoach.Application.Training;
 /// <summary>One answer given in an open-or-fold drill, as stored.</summary>
 public sealed record DrillAttempt(DrillItem Item, DrillAnswer Answer, bool Correct, DateTimeOffset AnsweredAt);
 
+/// <summary>Which drill: open or fold when folded to, or call or fold a shove from the big blind.</summary>
+public enum DrillMode
+{
+    Open,
+    Defence,
+}
+
 public interface ITrainingStore
 {
     Task RecordAsync(Guid userId, DrillAttempt attempt, int referenceVersion, CancellationToken cancellationToken);
 
-    /// <summary>The user's latest attempts for a format, most recent first.</summary>
-    Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, int count, CancellationToken cancellationToken);
+    /// <summary>The user's latest attempts for a format and drill, most recent first.</summary>
+    Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken);
 }
 
 /// <param name="Review">The hand was missed before and is asked again.</param>
@@ -22,9 +29,10 @@ public interface ITrainingStore
 public sealed record DrillSpot(OpeningSpot Spot, bool Review, bool Focus);
 
 /// <param name="ReferenceNotation">Null for computed push/fold ranges.</param>
-/// <param name="ReferenceHands">The reference range of the seat: shown with the answer.</param>
+/// <param name="ReferenceHands">The reference range of the seat (its call range in defence drills): shown with the answer.</param>
 public sealed record DrillResult(DrillAnswer Expected, bool Correct, string? ReferenceNotation, IReadOnlySet<HandClass> ReferenceHands, int ReferenceVersion);
 
+/// <param name="Position">The hero's seat in opening drills; the shover's in defence drills.</param>
 public sealed record SeatProgress(PokerPosition Position, int Attempts, int Correct);
 
 /// <param name="Streak">Correct answers in a row, latest first.</param>
@@ -63,7 +71,7 @@ public sealed class OpeningTrainingService(ITrainingStore store, LeakService lea
             allowed = [.. ReferenceOpeningRanges.Positions(format)];
         }
 
-        var recent = await store.RecentAsync(userId, format, History, cancellationToken);
+        var recent = await store.RecentAsync(userId, format, DrillMode.Open, History, cancellationToken);
         var due = Due(recent).Where(i => i.Band == band && allowed.Contains(i.Position)).ToList();
         if (due.Count > 0 && random.NextDouble() < ReviewShare)
         {
@@ -80,26 +88,56 @@ public sealed class OpeningTrainingService(ITrainingStore store, LeakService lea
         return new DrillSpot(spot, Review: false, Focus: leaking.Contains(spot.Item.Position));
     }
 
+    /// <param name="shovers">Seats to defend against; empty: every seat that can shove into the big blind.</param>
+    public async Task<DrillSpot> NextDefenceAsync(
+        Guid userId,
+        TableFormat format,
+        IReadOnlyCollection<PokerPosition> shovers,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(shovers);
+        var allowed = DefenceDrill.Shovers(format).Where(p => shovers.Count == 0 || shovers.Contains(p)).ToList();
+        if (allowed.Count == 0)
+        {
+            allowed = [.. DefenceDrill.Shovers(format)];
+        }
+
+        var recent = await store.RecentAsync(userId, format, DrillMode.Defence, History, cancellationToken);
+        var due = Due(recent).Where(i => i.Shover is { } s && allowed.Contains(s)).ToList();
+        if (due.Count > 0 && random.NextDouble() < ReviewShare)
+        {
+            return new DrillSpot(DefenceDrill.Deal(random, format, allowed, due[random.Next(due.Count)]), Review: true, Focus: false);
+        }
+
+        return new DrillSpot(DefenceDrill.Deal(random, format, allowed), Review: false, Focus: false);
+    }
+
     public async Task<DrillResult> AnswerAsync(Guid userId, DrillItem item, DrillAnswer answer, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(item);
         var expected = OpeningDrill.Expected(item);
         var correct = expected == answer;
         await store.RecordAsync(userId, new DrillAttempt(item, answer, correct, time.GetUtcNow()), ReferenceOpeningRanges.Version, cancellationToken);
-        return new DrillResult(
-            expected,
-            correct,
-            ReferenceOpeningRanges.NotationFor(item.Band, item.Format, item.Position),
-            ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)!,
-            ReferenceOpeningRanges.Version);
+        return item.IsDefence
+            ? new DrillResult(expected, correct, null, DefenceDrill.Range(item), ReferenceOpeningRanges.Version)
+            : new DrillResult(
+                expected,
+                correct,
+                ReferenceOpeningRanges.NotationFor(item.Band, item.Format, item.Position),
+                ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)!,
+                ReferenceOpeningRanges.Version);
     }
 
-    public async Task<DrillProgress> ProgressAsync(Guid userId, TableFormat format, CancellationToken cancellationToken)
+    public async Task<DrillProgress> ProgressAsync(Guid userId, TableFormat format, DrillMode mode, CancellationToken cancellationToken)
     {
-        var recent = await store.RecentAsync(userId, format, History, cancellationToken);
+        var recent = await store.RecentAsync(userId, format, mode, History, cancellationToken);
         var streak = recent.TakeWhile(a => a.Correct).Count();
-        var bySeat = ReferenceOpeningRanges.Positions(format)
-            .Select(p => new SeatProgress(p, recent.Count(a => a.Item.Position == p), recent.Count(a => a.Item.Position == p && a.Correct)))
+
+        // Opening drills are told apart by the hero's seat, defence drills by the shover's.
+        Func<DrillAttempt, PokerPosition?> seat = mode == DrillMode.Defence ? a => a.Item.Shover : a => a.Item.Position;
+        var seats = mode == DrillMode.Defence ? DefenceDrill.Shovers(format) : ReferenceOpeningRanges.Positions(format);
+        var bySeat = seats
+            .Select(p => new SeatProgress(p, recent.Count(a => seat(a) == p), recent.Count(a => seat(a) == p && a.Correct)))
             .ToList();
         return new DrillProgress(recent.Count, recent.Count(a => a.Correct), streak, Due(recent).Count, bySeat);
     }

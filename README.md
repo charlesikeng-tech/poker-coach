@@ -220,7 +220,10 @@ All-in EV (roadmap step 2):
 - [x] `GET /api/statistics/all-in` and the "All-in luck" panel in Statistics (actual vs expected
       in BB, verdict, curve with the expected line, biggest swings linking to the replayer)
 - [x] Migration `AllInEv`
-- [ ] Big blind defence in the trainer (call or fold against a push, Nash calls)
+- [x] Big blind defence in the trainer: a seat shoves (below 15 BB), call or fold from the big blind,
+      checked against the push/fold equilibrium's call ranges; attempts stored with the shover,
+      progress per shover
+- [ ] Migration `TrainingDefence`
 
 MVP-3 — Leaks (ADR-0007):
 

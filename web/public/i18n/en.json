@@ -1007,7 +1007,7 @@
     },
     "training": {
       "title": "Training room",
-      "description": "Folded to you: raise or fold. Checked against our references v1; missed hands come back.",
+      "description": "Two drills: open when it is folded to you, or defend your big blind against a shove. Missed hands come back.",
       "loading": "Dealing…",
       "band": "Stack",
       "bands": {
@@ -1033,7 +1033,8 @@
       "answers": {
         "fold": "Fold",
         "raise": "Raise",
-        "shove": "All-in"
+        "shove": "All-in",
+        "call": "Call"
       },
       "session": "this session",
       "overall": "over {{count}} answers",
@@ -1049,6 +1050,10 @@
         "explainPush": {
           "raise": "The equilibrium shoves {{hand}} from {{position}} at {{stack}} BB.",
           "fold": "The equilibrium folds {{hand}} from {{position}} at {{stack}} BB."
+        },
+        "explainDefence": {
+          "call": "The equilibrium calls {{hand}} in the big blind against a {{shover}} shove at {{stack}} BB.",
+          "fold": "The equilibrium folds {{hand}} in the big blind against a {{shover}} shove at {{stack}} BB."
         }
       },
       "gridLabel": "The position's reference range",
@@ -1056,7 +1061,23 @@
       "next": "Next hand",
       "space": "Space",
       "hint": "Answer with the buttons or the keyboard (F to fold, R to raise). After answering you will see the position's reference range with your hand outlined.",
-      "referencePush": "Push/fold equilibrium computed at {{stack}} BB (equal stacks, 0.125 BB antes)."
+      "referencePush": "Push/fold equilibrium computed at {{stack}} BB (equal stacks, 0.125 BB antes).",
+      "modes": {
+        "label": "Drill",
+        "open": {
+          "name": "Open",
+          "text": "Folded to you: raise or fold."
+        },
+        "defence": {
+          "name": "Defend the BB",
+          "text": "Someone shoves: call or fold?"
+        }
+      },
+      "shovers": "Shovers",
+      "questionDefence": "{{shover}} shoves {{stack}}, everyone folds. You are in the big blind: call?",
+      "gridLabelDefence": "Reference call range against this shover",
+      "referenceDefence": "Push/fold equilibrium calls at {{stack}} BB (equal stacks, 0.125 BB antes, no ICM): too loose near the money.",
+      "hintDefence": "Answer with the buttons or the keyboard (F to fold, C to call). After your answer you will see the call range against this shover with your hand outlined."
     }
   },
   "welcome": {

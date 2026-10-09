@@ -14,18 +14,21 @@ namespace PokerCoach.Api.Training;
 /// <param name="Review">A hand missed before, asked again.</param>
 /// <param name="Focus">The seat is weighted up: an opening leak was detected there.</param>
 /// <param name="PushStack">Push/fold drills: the stack the answer is computed for; send it back with the answer.</param>
+/// <param name="Shover">Defence drills: the seat that shoved (send it back with the answer); null for opening drills.</param>
 public sealed record DrillSpotResponse(
     TableFormat Format,
     StackBand Band,
     PokerPosition Position,
     int? PushStack,
+    PokerPosition? Shover,
     string Hand,
     IReadOnlyList<string> Cards,
     decimal StackInBigBlinds,
     bool Review,
     bool Focus);
 
-public sealed record DrillAnswerRequest(TableFormat? Format, StackBand? Band, PokerPosition? Position, int? PushStack, string? Hand, DrillAnswer? Answer);
+/// <param name="Shover">Set for a defence drill (answer call or fold); null for an opening drill (raise or fold).</param>
+public sealed record DrillAnswerRequest(TableFormat? Format, StackBand? Band, PokerPosition? Position, int? PushStack, string? Hand, DrillAnswer? Answer, PokerPosition? Shover = null);
 
 /// <param name="ReferenceNotation">Null for computed push/fold ranges.</param>
 /// <param name="ReferenceHands">The seat's reference range ("AA", "AKs"…), shown with the answer.</param>
@@ -42,7 +45,10 @@ public sealed record SeatProgressResponse(PokerPosition Position, int Attempts, 
 /// <param name="DueReviews">Missed hands not yet answered right since.</param>
 public sealed record DrillProgressResponse(int Attempts, int Correct, int Streak, int DueReviews, IReadOnlyList<SeatProgressResponse> BySeat);
 
-/// <summary>The open-or-fold trainer (ADR-0009, block 3). The answer key is the reference ranges v1.</summary>
+/// <summary>
+/// The trainer (ADR-0009, block 3): open or fold (answer key: the reference ranges v1), and big blind
+/// defence against a shove (answer key: the push/fold equilibrium's call ranges).
+/// </summary>
 public static class TrainingEndpoints
 {
     public static IEndpointRouteBuilder MapTrainingEndpoints(this IEndpointRouteBuilder endpoints)
@@ -55,15 +61,17 @@ public static class TrainingEndpoints
     }
 
     /// <param name="format">sixMax (default) or fullRing.</param>
-    /// <param name="band">push (below 15 BB), short, mid (default) or deep.</param>
-    /// <param name="positions">Seats to train, comma-separated ("button,cutoff"); omitted: all.</param>
+    /// <param name="band">push (below 15 BB), short, mid (default) or deep. Ignored in defence (always push).</param>
+    /// <param name="positions">Seats to train, comma-separated ("button,cutoff"); omitted: all. In defence: the shovers.</param>
+    /// <param name="mode">open (default) or defence.</param>
     private static async Task<Results<Ok<DrillSpotResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetSpotAsync(
         HttpContext context,
         OpeningTrainingService training,
         CancellationToken cancellationToken,
         string format = "sixMax",
         string band = "mid",
-        string? positions = null)
+        string? positions = null,
+        string mode = "open")
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -73,6 +81,11 @@ public static class TrainingEndpoints
         if (!TableFormatQuery.TryParse(format, out var tableFormat) || tableFormat is not { } parsedFormat)
         {
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        if (!TryParseMode(mode, out var drillMode))
+        {
+            return ApiProblems.Validation("mode", "Must be open or defence.");
         }
 
         if (!TryParseBand(band, out var stackBand))
@@ -91,13 +104,16 @@ public static class TrainingEndpoints
             seats.Add(seat);
         }
 
-        var drill = await training.NextAsync(userId, parsedFormat, stackBand, seats, cancellationToken);
+        var drill = drillMode == DrillMode.Defence
+            ? await training.NextDefenceAsync(userId, parsedFormat, seats, cancellationToken)
+            : await training.NextAsync(userId, parsedFormat, stackBand, seats, cancellationToken);
         var spot = drill.Spot;
         return TypedResults.Ok(new DrillSpotResponse(
             spot.Item.Format,
             spot.Item.Band,
             spot.Item.Position,
             spot.Item.PushStack,
+            spot.Item.Shover,
             spot.Item.Hand.ToString(),
             [spot.First.ToString(), spot.Second.ToString()],
             spot.StackBigBlinds,
@@ -121,9 +137,29 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("request", "format, band, position and answer are required.");
         }
 
-        if (!ReferenceOpeningRanges.Positions(format).Contains(position))
+        if (request.Shover is { } shover)
         {
-            return ApiProblems.Validation("position", "This seat does not open at this format.");
+            if (band != StackBand.Push || position != DefenceDrill.Defender || !DefenceDrill.Shovers(format).Contains(shover))
+            {
+                return ApiProblems.Validation("shover", "Defence drills are push/fold, from the big blind, against a seat that can shove.");
+            }
+
+            if (answer is not (DrillAnswer.Call or DrillAnswer.Fold))
+            {
+                return ApiProblems.Validation("answer", "Must be call or fold against a shove.");
+            }
+        }
+        else
+        {
+            if (!ReferenceOpeningRanges.Positions(format).Contains(position))
+            {
+                return ApiProblems.Validation("position", "This seat does not open at this format.");
+            }
+
+            if (answer is not (DrillAnswer.Raise or DrillAnswer.Fold))
+            {
+                return ApiProblems.Validation("answer", "Must be raise or fold when folded to.");
+            }
         }
 
         int? pushStack = null;
@@ -152,7 +188,7 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("hand", "Must be one starting hand, like AKs.");
         }
 
-        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack), answer, cancellationToken);
+        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack, request.Shover), answer, cancellationToken);
         return TypedResults.Ok(new DrillResultResponse(
             result.Expected,
             result.Correct,
@@ -162,11 +198,13 @@ public static class TrainingEndpoints
     }
 
     /// <param name="format">sixMax (default) or fullRing.</param>
+    /// <param name="mode">open (default) or defence: by seat is the hero's seat, or the shover's.</param>
     private static async Task<Results<Ok<DrillProgressResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetProgressAsync(
         HttpContext context,
         OpeningTrainingService training,
         CancellationToken cancellationToken,
-        string format = "sixMax")
+        string format = "sixMax",
+        string mode = "open")
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -178,7 +216,12 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
-        var progress = await training.ProgressAsync(userId, parsedFormat, cancellationToken);
+        if (!TryParseMode(mode, out var drillMode))
+        {
+            return ApiProblems.Validation("mode", "Must be open or defence.");
+        }
+
+        var progress = await training.ProgressAsync(userId, parsedFormat, drillMode, cancellationToken);
         return TypedResults.Ok(new DrillProgressResponse(
             progress.Attempts,
             progress.Correct,
@@ -186,6 +229,9 @@ public static class TrainingEndpoints
             progress.DueReviews,
             progress.BySeat.Select(s => new SeatProgressResponse(s.Position, s.Attempts, s.Correct)).ToList()));
     }
+
+    private static bool TryParseMode(string value, out DrillMode mode) =>
+        Enum.TryParse(value, ignoreCase: true, out mode) && Enum.IsDefined(mode) && !int.TryParse(value, out _);
 
     private static bool TryParseBand(string value, out StackBand band) =>
         Enum.TryParse(value, ignoreCase: true, out band) && Enum.IsDefined(band) && !int.TryParse(value, out _);

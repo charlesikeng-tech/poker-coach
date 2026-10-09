@@ -1007,7 +1007,7 @@
     },
     "training": {
       "title": "Sala de entrenamiento",
-      "description": "Te llega foldeado: sube o tira. Corregido con nuestras referencias v1; las manos falladas vuelven.",
+      "description": "Dos ejercicios: abrir cuando foldean hasta ti, o defender tu ciega grande contra un all-in. Las manos falladas vuelven.",
       "loading": "Repartiendo…",
       "band": "Stack",
       "bands": {
@@ -1033,7 +1033,8 @@
       "answers": {
         "fold": "Tirar",
         "raise": "Subir",
-        "shove": "All-in"
+        "shove": "All-in",
+        "call": "Pagar"
       },
       "session": "esta sesión",
       "overall": "en {{count}} respuestas",
@@ -1049,6 +1050,10 @@
         "explainPush": {
           "raise": "El equilibrio va all-in con {{hand}} desde {{position}} con {{stack}} BB.",
           "fold": "El equilibrio tira {{hand}} desde {{position}} con {{stack}} BB."
+        },
+        "explainDefence": {
+          "call": "El equilibrio paga con {{hand}} en la ciega grande contra un all-in de {{shover}} a {{stack}} BB.",
+          "fold": "El equilibrio tira {{hand}} en la ciega grande contra un all-in de {{shover}} a {{stack}} BB."
         }
       },
       "gridLabel": "Rango de referencia de la posición",
@@ -1056,7 +1061,23 @@
       "next": "Mano siguiente",
       "space": "Espacio",
       "hint": "Responde con los botones o el teclado (F para tirar, R para subir). Después verás el rango de referencia de la posición con tu mano marcada.",
-      "referencePush": "Equilibrio push/fold calculado a {{stack}} BB (stacks iguales, antes de 0,125 BB)."
+      "referencePush": "Equilibrio push/fold calculado a {{stack}} BB (stacks iguales, antes de 0,125 BB).",
+      "modes": {
+        "label": "Ejercicio",
+        "open": {
+          "name": "Abrir",
+          "text": "Foldean hasta ti: subes o tiras."
+        },
+        "defence": {
+          "name": "Defender la BB",
+          "text": "Alguien va all-in: ¿pagas o tiras?"
+        }
+      },
+      "shovers": "Empujadores",
+      "questionDefence": "{{shover}} va all-in {{stack}}, todos foldean. Estás en la ciega grande: ¿pagas?",
+      "gridLabelDefence": "Rango de call de referencia contra este jugador",
+      "referenceDefence": "Calls del equilibrio push/fold a {{stack}} BB (stacks iguales, antes 0,125 BB, sin ICM): demasiado amplios cerca del dinero.",
+      "hintDefence": "Responde con los botones o el teclado (F para tirar, C para pagar). Tras tu respuesta verás el rango de call contra este jugador con tu mano marcada."
     }
   },
   "welcome": {
