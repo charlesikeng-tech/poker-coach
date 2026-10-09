@@ -223,7 +223,7 @@ All-in EV (roadmap step 2):
 - [x] Big blind defence in the trainer: a seat shoves (below 15 BB), call or fold from the big blind,
       checked against the push/fold equilibrium's call ranges; attempts stored with the shover,
       progress per shover
-- [ ] Migration `TrainingDefence`
+- [x] Migration `TrainingDefence`
 
 MVP-3 — Leaks (ADR-0007):
 
