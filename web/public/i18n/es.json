@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Poker Coach"
+    "name": "NutsIQ"
   },
   "nav": {
     "dashboard": "Panel",
@@ -40,7 +40,7 @@
       "loading": "Cargando tu panel…",
       "error": {
         "title": "No se ha podido cargar tu panel",
-        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "description": "NutsIQ no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "alerts": {
@@ -81,7 +81,7 @@
       "loading": "Cargando tu rendimiento…",
       "error": {
         "title": "No se ha podido cargar tu rendimiento",
-        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "description": "NutsIQ no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "filters": {
@@ -157,7 +157,7 @@
       "loading": "Cargando tus torneos…",
       "error": {
         "title": "No se han podido cargar tus torneos",
-        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "description": "NutsIQ no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "filters": {
@@ -406,11 +406,11 @@
       "errors": {
         "validation": "Revisa los valores: la fecha debe ser posterior al inicio del bankroll y no futura.",
         "notFound": "Este movimiento ya no existe.",
-        "unknown": "Poker Coach no pudo guardar. Inténtalo de nuevo."
+        "unknown": "NutsIQ no pudo guardar. Inténtalo de nuevo."
       },
       "error": {
         "title": "No se pudo cargar tu bankroll",
-        "description": "Poker Coach no respondió. Tus datos no se han perdido: inténtalo de nuevo.",
+        "description": "NutsIQ no respondió. Tus datos no se han perdido: inténtalo de nuevo.",
         "retry": "Reintentar"
       }
     },
@@ -425,7 +425,7 @@
       "loading": "Cargando tus estadísticas…",
       "error": {
         "title": "No se han podido cargar tus estadísticas",
-        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "description": "NutsIQ no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "pending": "Analizando {{count}} mano(s): las cifras se actualizan solas.",
@@ -634,7 +634,7 @@
         "INVALID_SUMMARY": "Resumen de torneo incompleto o ilegible.",
         "NO_VALID_HAND": "No se pudo leer ninguna mano completa en este archivo.",
         "PROCESSING_FAILED": "No se pudo procesar este archivo. Se volverá a intentar si lo importas de nuevo.",
-        "network": "No se puede conectar con Poker Coach. Comprueba tu conexión e inténtalo de nuevo.",
+        "network": "No se puede conectar con NutsIQ. Comprueba tu conexión e inténtalo de nuevo.",
         "unknown": "Algo ha fallado. Inténtalo de nuevo."
       },
       "accounts": {
@@ -657,15 +657,15 @@
     },
     "signIn": {
       "title": "Iniciar sesión",
-      "heading": "Inicia sesión en Poker Coach",
+      "heading": "Inicia sesión en NutsIQ",
       "description": "Encuentra tus torneos, tus estadísticas y tu coaching.",
       "action": "Continuar con Google",
-      "privacy": "Tu dirección o tu cuenta de Google solo sirven para identificarte. Poker Coach nunca publica nada.",
+      "privacy": "Tu dirección o tu cuenta de Google solo sirven para identificarte. NutsIQ nunca publica nada.",
       "statement": "Entiende tu juego. Corrige tus leaks. Mide tu progreso.",
       "retry": "Reintentar",
       "errors": {
         "google": "El inicio de sesión con Google no se completó. Inténtalo de nuevo.",
-        "unavailable": "No se puede acceder a Poker Coach en este momento. Inténtalo de nuevo en un instante.",
+        "unavailable": "No se puede acceder a NutsIQ en este momento. Inténtalo de nuevo en un instante.",
         "INVALID_EMAIL": "Esta dirección de correo no es válida.",
         "WEAK_PASSWORD": "Elige una contraseña de al menos {{count}} caracteres, distinta de tu dirección.",
         "INVALID_CREDENTIALS": "Correo o contraseña incorrectos.",
@@ -678,7 +678,7 @@
         "network": "No hay conexión. Revisa tu red.",
         "unknown": "Ha ocurrido un error inesperado."
       },
-      "product": "Poker Coach",
+      "product": "NutsIQ",
       "launching": "Rumbo a Google…",
       "features": {
         "import": "Importa tus historiales de Winamax arrastrando y soltando.",
@@ -702,7 +702,7 @@
       "resend": "Reenviar el enlace",
       "resent": "Enlace reenviado",
       "signUp": {
-        "heading": "Crea tu cuenta de Poker Coach",
+        "heading": "Crea tu cuenta de NutsIQ",
         "description": "Con Google, o con tu correo y una contraseña.",
         "action": "Crear mi cuenta",
         "passwordHint": "Al menos {{count}} caracteres. Una frase fácil de recordar es una buena contraseña.",
@@ -715,7 +715,7 @@
       "loading": "Analizando tus leaks…",
       "error": {
         "title": "No se ha podido cargar el análisis",
-        "description": "Poker Coach no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
+        "description": "NutsIQ no ha podido responder. Tus datos no se han perdido: inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "empty": {
@@ -756,7 +756,7 @@
         "label": "Explicación IA",
         "hands": "En tus manos",
         "hand": "{{date}} · nivel {{level}} · {{position}} · {{cards}} · {{stack}} BB",
-        "disclaimer": "Texto escrito por una IA a partir de tus cifras y de manos anonimizadas. Las mediciones vienen de Poker Coach, no de la IA.",
+        "disclaimer": "Texto escrito por una IA a partir de tus cifras y de manos anonimizadas. Las mediciones vienen de NutsIQ, no de la IA.",
         "errors": {
           "LEAK_NOT_FOUND": "Este leak ya no aparece en tus datos recientes. Recarga la página.",
           "COACHING_DAILY_LIMIT": "Límite diario de explicaciones alcanzado. Vuelve a intentarlo mañana.",
@@ -1015,7 +1015,7 @@
       },
       "error": {
         "title": "No se pudo cargar esta mano",
-        "description": "Poker Coach no pudo responder. Inténtalo de nuevo.",
+        "description": "NutsIQ no pudo responder. Inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "table": "Mesa",
@@ -1065,7 +1065,7 @@
       "pending": "{{count}} mano(s) aún en análisis: las cuadrículas se completan.",
       "error": {
         "title": "No se pudieron cargar tus rangos",
-        "description": "Poker Coach no pudo responder. Inténtalo de nuevo.",
+        "description": "NutsIQ no pudo responder. Inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "empty": {
@@ -1139,7 +1139,7 @@
         "share": "de las manos iniciales (en combinaciones)",
         "note": "Nuestras convenciones para MTT online de 5–20 € con antes, escritas mano por mano (abrir o no). No es un cálculo GTO.",
         "nash": "Equilibrio push/fold calculado a {{stack}} BB",
-        "nashNote": "Calculado por Poker Coach: all-in o tirar, EV en fichas, antes de 0,125 BB, stacks iguales, un solo pagador a la vez (como las tablas push/fold habituales). En SB contra BB es el equilibrio exacto. Ver ADR-0009."
+        "nashNote": "Calculado por NutsIQ: all-in o tirar, EV en fichas, antes de 0,125 BB, stacks iguales, un solo pagador a la vez (como las tablas push/fold habituales). En SB contra BB es el equilibrio exacto. Ver ADR-0009."
       },
       "gap": {
         "title": "Diferencia · {{position}}",
@@ -1165,7 +1165,7 @@
       "allSeats": "Todas las posiciones",
       "error": {
         "title": "No se pudo iniciar el entrenamiento",
-        "description": "Poker Coach no pudo responder. Inténtalo de nuevo.",
+        "description": "NutsIQ no pudo responder. Inténtalo de nuevo.",
         "retry": "Reintentar"
       },
       "question": "{{position}} · {{stack}} — todos se han retirado. ¿Qué haces?",
@@ -1283,7 +1283,7 @@
       },
       "error": {
         "title": "No se pudo cargar tu plan",
-        "description": "Poker Coach no respondió. Inténtalo de nuevo.",
+        "description": "NutsIQ no respondió. Inténtalo de nuevo.",
         "retry": "Reintentar"
       }
     },
@@ -1295,7 +1295,7 @@
       "signIn": "Inicio de sesión",
       "export": {
         "title": "Exportar mis datos",
-        "description": "Un archivo .zip con todo lo que Poker Coach guarda sobre ti:",
+        "description": "Un archivo .zip con todo lo que NutsIQ guarda sobre ti:",
         "uploads": "tus archivos importados, tal como los enviaste (historiales y resúmenes);",
         "tournaments": "tus torneos y sus resultados, en tabla (tournaments.csv);",
         "account": "tu cuenta, tu bankroll, tus planes, tus respuestas de entrenamiento y las explicaciones del coach (account.json).",
@@ -1317,12 +1317,12 @@
     "privacy": {
       "title": "Privacidad",
       "heading": "Privacidad",
-      "intro": "Lo que Poker Coach guarda sobre ti, por qué y cómo borrarlo todo.",
+      "intro": "Lo que NutsIQ guarda sobre ti, por qué y cómo borrarlo todo.",
       "updated": "Actualizado el 10 de octubre de 2026",
       "sections": {
         "controller": {
           "title": "Quién es responsable",
-          "body": "Poker Coach es un proyecto independiente, en pruebas con un pequeño grupo de jugadores. Su editor es el responsable del tratamiento de tus datos."
+          "body": "NutsIQ es un proyecto independiente, en pruebas con un pequeño grupo de jugadores. Su editor es el responsable del tratamiento de tus datos."
         },
         "data": {
           "title": "Qué guardamos",
@@ -1334,7 +1334,7 @@
         },
         "ai": {
           "title": "Coach IA",
-          "body": "Cuando pides la explicación de un leak, el análisis de un torneo o el balance de una semana, las cifras calculadas por Poker Coach y, si hace falta, manos de ejemplo se envían a Anthropic, nuestro proveedor de IA, de forma anonimizada: posiciones, acciones e importes, sin tu alias, los de tus rivales ni el nombre del torneo. Anthropic trata estos datos en Estados Unidos por cuenta nuestra. Los textos escritos se guardan con tu cuenta y se incluyen en tu exportación."
+          "body": "Cuando pides la explicación de un leak, el análisis de un torneo o el balance de una semana, las cifras calculadas por NutsIQ y, si hace falta, manos de ejemplo se envían a Anthropic, nuestro proveedor de IA, de forma anonimizada: posiciones, acciones e importes, sin tu alias, los de tus rivales ni el nombre del torneo. Anthropic trata estos datos en Estados Unidos por cuenta nuestra. Los textos escritos se guardan con tu cuenta y se incluyen en tu exportación."
         },
         "cookies": {
           "title": "Cookies",
@@ -1416,7 +1416,7 @@
     "loading": "Cargando el texto del coach…",
     "loadFailed": "No se pudo cargar el texto del coach.",
     "update": "Actualizar",
-    "disclaimer": "Escrito por una IA el {{date}} a partir de tus cifras y de manos anonimizadas. Las mediciones vienen de Poker Coach, no de la IA.",
+    "disclaimer": "Escrito por una IA el {{date}} a partir de tus cifras y de manos anonimizadas. Las mediciones vienen de NutsIQ, no de la IA.",
     "verdicts": {
       "wellPlayed": "Bien jugado",
       "mistake": "A revisar",

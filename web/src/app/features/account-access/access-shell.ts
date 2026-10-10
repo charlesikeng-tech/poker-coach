@@ -11,7 +11,7 @@ import { BrandMark } from '../../shared/ui/brand-mark/brand-mark';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="top">
-      <a class="brand" routerLink="/sign-in"><app-brand-mark /><span>Poker Coach</span></a>
+      <a class="brand" routerLink="/sign-in"><app-brand-mark /><span>NutsIQ</span></a>
       <app-language-select />
     </header>
     <main class="card glass"><ng-content /></main>

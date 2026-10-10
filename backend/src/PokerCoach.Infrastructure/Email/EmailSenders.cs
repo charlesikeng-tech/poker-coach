@@ -15,7 +15,7 @@ public sealed class EmailOptions
     /// <summary>A sender verified in Brevo (domain authenticated with SPF/DKIM), e.g. no-reply@your-domain.</summary>
     public string FromAddress { get; set; } = "no-reply@poker-coach.local";
 
-    public string FromName { get; set; } = "Poker Coach";
+    public string FromName { get; set; } = "NutsIQ";
 
     public string? BrevoApiKey { get; set; }
 

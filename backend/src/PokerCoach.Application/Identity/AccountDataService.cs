@@ -174,10 +174,10 @@ public sealed class AccountDataService(
     }
 
     private static string Readme(DateTimeOffset now) => $"""
-        Poker Coach — export of your data ({now.UtcDateTime:yyyy-MM-dd HH:mm} UTC)
+        NutsIQ — export of your data ({now.UtcDateTime:yyyy-MM-dd HH:mm} UTC)
 
         uploads/          The files you uploaded, exactly as you sent them (hand histories, summaries).
-                          Everything else in Poker Coach was computed from them.
+                          Everything else in NutsIQ was computed from them.
         tournaments.csv   Your tournaments and their results. Empty cells mean unknown (a missing
                           summary file), never zero.
         account.json      Your account, linked sign-in, poker accounts, bankroll, weekly plans,

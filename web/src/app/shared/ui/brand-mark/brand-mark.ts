@@ -7,7 +7,7 @@ interface Cell {
 }
 
 /**
- * Poker Coach mark: a 3×3 cell grid, the language of a range matrix, filled as a rising staircase
+ * NutsIQ mark: a 3×3 cell grid, the language of a range matrix, filled as a rising staircase
  * — progress. Poker is present in the structure, not in decoration.
  */
 @Component({

@@ -43,7 +43,7 @@ internal sealed partial class AnthropicCoachingModel(
     ILogger<AnthropicCoachingModel> logger) : ICoachingModel
 {
     private const string Context = """
-        You are the coach inside Poker Coach, an analysis tool for online tournament (MTT) players at low
+        You are the coach inside NutsIQ, an analysis tool for online tournament (MTT) players at low
         stakes (5 to 20 euros), mostly 6-max, with antes and bounties.
 
         """;

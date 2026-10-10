@@ -1,4 +1,6 @@
-# Poker Coach
+# NutsIQ
+
+Product name NutsIQ (nutsiq.com); the codebase keeps its original name, Poker Coach (`PokerCoach.*`).
 
 Poker analytics and AI coaching platform. Initial target: Winamax No-Limit Hold'em MTT players.
 

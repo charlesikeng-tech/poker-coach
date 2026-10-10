@@ -31,7 +31,7 @@ public sealed partial class LocalAccountServiceTests
         Assert.Equal(LocalSignInFailure.EmailNotConfirmed, (await Service().SignInAsync("jo@example.com", Password, Ct)).Failure);
 
         var mail = Assert.Single(emails.Sent);
-        Assert.Equal("Confirme ton adresse Poker Coach", mail.Subject);
+        Assert.Equal("Confirme ton adresse NutsIQ", mail.Subject);
         var token = TokenIn(mail);
 
         Assert.Equal(LocalSignInFailure.InvalidCredentials, (await Service().ConfirmEmailAsync(token, "someone else's guess", Ct)).Failure);
@@ -50,7 +50,7 @@ public sealed partial class LocalAccountServiceTests
 
         Assert.Empty(accounts.Credentials);
         Assert.Single(users.Users);
-        Assert.Equal("You already have a Poker Coach account", Assert.Single(emails.Sent).Subject);
+        Assert.Equal("You already have a NutsIQ account", Assert.Single(emails.Sent).Subject);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public sealed partial class LocalAccountServiceTests
 
         await Service().ForgotPasswordAsync("jo@example.com", "fr", Links, Ct);
         var mail = Assert.Single(emails.Sent);
-        Assert.Equal("Tu contraseña de Poker Coach", mail.Subject);
+        Assert.Equal("Tu contraseña de NutsIQ", mail.Subject);
 
         var outcome = await Service().ResetPasswordAsync(TokenIn(mail), Password, Ct);
 

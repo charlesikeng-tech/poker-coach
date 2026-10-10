@@ -6,7 +6,7 @@ import { LeakStat } from '../leaks/leaks-api';
 import { PriorityStatus } from '../progress/progress-api';
 import { PokerPosition } from '../statistics/statistics-api';
 
-// Mirrors backend/src/PokerCoach.Api/Coaching (ADR-0012). Figures are Poker Coach's; texts are AI-written.
+// Mirrors backend/src/PokerCoach.Api/Coaching (ADR-0012). Figures are NutsIQ's; texts are AI-written.
 
 export type MomentVerdict = 'wellPlayed' | 'mistake' | 'variance' | 'standard';
 

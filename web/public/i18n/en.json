@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Poker Coach"
+    "name": "NutsIQ"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -40,7 +40,7 @@
       "loading": "Loading your dashboard…",
       "error": {
         "title": "Your dashboard could not be loaded",
-        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "description": "NutsIQ could not answer. Your data is safe: try again.",
         "retry": "Try again"
       },
       "alerts": {
@@ -81,7 +81,7 @@
       "loading": "Loading your performance…",
       "error": {
         "title": "Your performance could not be loaded",
-        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "description": "NutsIQ could not answer. Your data is safe: try again.",
         "retry": "Try again"
       },
       "filters": {
@@ -157,7 +157,7 @@
       "loading": "Loading your tournaments…",
       "error": {
         "title": "Your tournaments could not be loaded",
-        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "description": "NutsIQ could not answer. Your data is safe: try again.",
         "retry": "Try again"
       },
       "filters": {
@@ -406,11 +406,11 @@
       "errors": {
         "validation": "Check the values: the date must be after the bankroll's start and not in the future.",
         "notFound": "This movement no longer exists.",
-        "unknown": "Poker Coach could not save. Try again."
+        "unknown": "NutsIQ could not save. Try again."
       },
       "error": {
         "title": "Could not load your bankroll",
-        "description": "Poker Coach did not respond. Your data is not lost: try again.",
+        "description": "NutsIQ did not respond. Your data is not lost: try again.",
         "retry": "Try again"
       }
     },
@@ -425,7 +425,7 @@
       "loading": "Loading your statistics…",
       "error": {
         "title": "Your statistics could not be loaded",
-        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "description": "NutsIQ could not answer. Your data is safe: try again.",
         "retry": "Try again"
       },
       "pending": "Analyzing {{count}} hand(s): figures update by themselves.",
@@ -634,7 +634,7 @@
         "INVALID_SUMMARY": "Tournament summary incomplete or unreadable.",
         "NO_VALID_HAND": "No complete hand could be read in this file.",
         "PROCESSING_FAILED": "This file could not be processed. It will be retried if you import it again.",
-        "network": "Poker Coach cannot be reached. Check your connection and try again.",
+        "network": "NutsIQ cannot be reached. Check your connection and try again.",
         "unknown": "Something went wrong. Try again."
       },
       "accounts": {
@@ -657,15 +657,15 @@
     },
     "signIn": {
       "title": "Sign in",
-      "heading": "Sign in to Poker Coach",
+      "heading": "Sign in to NutsIQ",
       "description": "Find your tournaments, your statistics and your coaching.",
       "action": "Continue with Google",
-      "privacy": "Your address or Google account is only used to identify you. Poker Coach never posts anything.",
+      "privacy": "Your address or Google account is only used to identify you. NutsIQ never posts anything.",
       "statement": "Understand your game. Fix your leaks. Measure your progress.",
       "retry": "Try again",
       "errors": {
         "google": "Signing in with Google did not complete. Try again.",
-        "unavailable": "Poker Coach cannot be reached right now. Try again in a moment.",
+        "unavailable": "NutsIQ cannot be reached right now. Try again in a moment.",
         "INVALID_EMAIL": "This email address is not valid.",
         "WEAK_PASSWORD": "Choose a password of at least {{count}} characters, different from your address.",
         "INVALID_CREDENTIALS": "Wrong email or password.",
@@ -678,7 +678,7 @@
         "network": "Cannot connect. Check your network.",
         "unknown": "An unexpected error occurred."
       },
-      "product": "Poker Coach",
+      "product": "NutsIQ",
       "launching": "Off to Google…",
       "features": {
         "import": "Import your Winamax histories with a drag and drop.",
@@ -702,7 +702,7 @@
       "resend": "Send the link again",
       "resent": "Link sent again",
       "signUp": {
-        "heading": "Create your Poker Coach account",
+        "heading": "Create your NutsIQ account",
         "description": "With Google, or your email and a password.",
         "action": "Create my account",
         "passwordHint": "At least {{count}} characters. A sentence you remember makes a good password.",
@@ -715,7 +715,7 @@
       "loading": "Analyzing your leaks…",
       "error": {
         "title": "The analysis could not be loaded",
-        "description": "Poker Coach could not answer. Your data is safe: try again.",
+        "description": "NutsIQ could not answer. Your data is safe: try again.",
         "retry": "Try again"
       },
       "empty": {
@@ -756,7 +756,7 @@
         "label": "AI explanation",
         "hands": "In your hands",
         "hand": "{{date}} · level {{level}} · {{position}} · {{cards}} · {{stack}} BB",
-        "disclaimer": "Written by an AI from your figures and anonymised hands. Measurements come from Poker Coach, not from the AI.",
+        "disclaimer": "Written by an AI from your figures and anonymised hands. Measurements come from NutsIQ, not from the AI.",
         "errors": {
           "LEAK_NOT_FOUND": "This leak no longer shows in your latest data. Reload the page.",
           "COACHING_DAILY_LIMIT": "Daily limit of explanations reached. Try again tomorrow.",
@@ -1015,7 +1015,7 @@
       },
       "error": {
         "title": "Could not load this hand",
-        "description": "Poker Coach could not answer. Try again.",
+        "description": "NutsIQ could not answer. Try again.",
         "retry": "Retry"
       },
       "table": "Table",
@@ -1065,7 +1065,7 @@
       "pending": "{{count}} hand(s) still being analysed: the grids are filling in.",
       "error": {
         "title": "Could not load your ranges",
-        "description": "Poker Coach could not answer. Try again.",
+        "description": "NutsIQ could not answer. Try again.",
         "retry": "Retry"
       },
       "empty": {
@@ -1139,7 +1139,7 @@
         "share": "of starting hands (in combinations)",
         "note": "Our conventions for €5–20 online MTTs with antes, written hand by hand (open or not). This is not a GTO computation.",
         "nash": "Push/fold equilibrium computed at {{stack}} BB",
-        "nashNote": "Computed by Poker Coach: shove or fold, chip EV, 0.125 BB antes, equal stacks, one caller at a time (as usual push/fold charts). Heads-up SB vs BB it is the exact equilibrium. See ADR-0009."
+        "nashNote": "Computed by NutsIQ: shove or fold, chip EV, 0.125 BB antes, equal stacks, one caller at a time (as usual push/fold charts). Heads-up SB vs BB it is the exact equilibrium. See ADR-0009."
       },
       "gap": {
         "title": "Gap · {{position}}",
@@ -1165,7 +1165,7 @@
       "allSeats": "All positions",
       "error": {
         "title": "Could not start training",
-        "description": "Poker Coach could not answer. Try again.",
+        "description": "NutsIQ could not answer. Try again.",
         "retry": "Retry"
       },
       "question": "{{position}} · {{stack}} — everyone folded. Your move?",
@@ -1283,7 +1283,7 @@
       },
       "error": {
         "title": "Could not load your plan",
-        "description": "Poker Coach did not respond. Try again.",
+        "description": "NutsIQ did not respond. Try again.",
         "retry": "Try again"
       }
     },
@@ -1295,7 +1295,7 @@
       "signIn": "Sign-in",
       "export": {
         "title": "Export my data",
-        "description": "A .zip archive with everything Poker Coach keeps about you:",
+        "description": "A .zip archive with everything NutsIQ keeps about you:",
         "uploads": "your imported files, exactly as you sent them (hand histories and summaries);",
         "tournaments": "your tournaments and their results, as a spreadsheet (tournaments.csv);",
         "account": "your account, bankroll, plans, training answers and the coach's explanations (account.json).",
@@ -1317,12 +1317,12 @@
     "privacy": {
       "title": "Privacy",
       "heading": "Privacy",
-      "intro": "What Poker Coach keeps about you, why, and how to erase all of it.",
+      "intro": "What NutsIQ keeps about you, why, and how to erase all of it.",
       "updated": "Updated on 10 October 2026",
       "sections": {
         "controller": {
           "title": "Who is responsible",
-          "body": "Poker Coach is an independent project, being tested by a small group of players. Its publisher is the controller of your data."
+          "body": "NutsIQ is an independent project, being tested by a small group of players. Its publisher is the controller of your data."
         },
         "data": {
           "title": "What we keep",
@@ -1334,7 +1334,7 @@
         },
         "ai": {
           "title": "AI coach",
-          "body": "When you ask for a leak explanation, a tournament debrief or a weekly review, the figures computed by Poker Coach and, when needed, example hands are sent to Anthropic, our AI provider, in anonymised form: positions, actions and amounts, without your screen name, your opponents' or the tournament's name. Anthropic processes this data in the United States on our behalf. The texts written are kept with your account and included in your export."
+          "body": "When you ask for a leak explanation, a tournament debrief or a weekly review, the figures computed by NutsIQ and, when needed, example hands are sent to Anthropic, our AI provider, in anonymised form: positions, actions and amounts, without your screen name, your opponents' or the tournament's name. Anthropic processes this data in the United States on our behalf. The texts written are kept with your account and included in your export."
         },
         "cookies": {
           "title": "Cookies",
@@ -1416,7 +1416,7 @@
     "loading": "Loading the coach's text…",
     "loadFailed": "The coach's text could not be loaded.",
     "update": "Update",
-    "disclaimer": "Written by an AI on {{date}} from your figures and anonymised hands. The measurements come from Poker Coach, not from the AI.",
+    "disclaimer": "Written by an AI on {{date}} from your figures and anonymised hands. The measurements come from NutsIQ, not from the AI.",
     "verdicts": {
       "wellPlayed": "Well played",
       "mistake": "To review",
