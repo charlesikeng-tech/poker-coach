@@ -288,6 +288,18 @@ Email and password accounts (ADR-0013):
 - [x] Web: sign-in / sign-up on the sign-in page, `/forgot-password`, `/reset-password`, `/confirm-email`
 - [ ] Brevo account and authenticated sending domain; cleanup of never-confirmed accounts
 
+Subscriptions (ADR-0014):
+
+- [x] Free (30 days of history in statistics, leaks, ranges and tournament lists; 3 leak explanations a
+      month; no debrief or weekly review) and Pro (9 €/month, 79 €/year); plan derived from Stripe's status
+- [x] Stripe over plain HTTP: Checkout, customer portal, webhooks re-reading the customer's subscriptions
+      (`POST /api/billing/webhook`, signature checked); `GET /api/billing`, `POST /api/billing/checkout|portal`
+- [x] `subscriptions.subscriptions` (migration `Subscriptions`); the Stripe customer is deleted before the
+      account; without `Billing:Stripe:SecretKey` billing is off and every account has Pro
+- [x] Web: `/subscription` page, history-window notice on analysis pages, Pro prompts in the coach panels
+- [ ] Stripe account: Pro product with two prices, customer portal, webhook endpoint, secrets; CGV and
+      legal notice (lawyer)
+
 Coach reports (ADR-0012):
 
 - [x] Tournament debrief: story, verdict per key moment (variance checked against computed equity),

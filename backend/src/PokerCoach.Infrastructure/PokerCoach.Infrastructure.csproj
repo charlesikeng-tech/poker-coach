@@ -11,6 +11,8 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="PokerCoach.IntegrationTests" />
+    <!-- Pure adapter code (Stripe signatures and parsing) is tested without the database fixture. -->
+    <InternalsVisibleTo Include="PokerCoach.Api.Tests" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PokerCoach.Application\PokerCoach.Application.csproj" />

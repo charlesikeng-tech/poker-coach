@@ -12,7 +12,8 @@
     "leaks": "Leaks",
     "ranges": "Ranges",
     "training": "Entraînement",
-    "bankroll": "Bankroll"
+    "bankroll": "Bankroll",
+    "subscription": "Abonnement"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -25,7 +26,9 @@
     "themeToLight": "Passer au thème clair",
     "themeToDark": "Passer au thème sombre",
     "signOut": "Se déconnecter",
-    "account": "Mon compte"
+    "account": "Mon compte",
+    "planWindow": "Version gratuite : tu vois les {{days}} derniers jours. Tout ton historique est conservé.",
+    "planWindowAction": "Tout voir avec Pro"
   },
   "pages": {
     "dashboard": {
@@ -764,8 +767,11 @@
           "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré sur ce serveur.",
           "COACHING_FAILED": "Le coach n'a pas pu répondre. Réessaie.",
           "network": "Connexion impossible. Vérifie ton réseau.",
-          "unknown": "Une erreur inattendue est survenue."
-        }
+          "unknown": "Une erreur inattendue est survenue.",
+          "PLAN_REQUIRED": "Cette fonction est incluse dans Pro.",
+          "PLAN_LIMIT_REACHED": "Tes 3 explications gratuites du mois sont utilisées."
+        },
+        "upgrade": "Passer Pro"
       },
       "under": {
         "title": "{{count}} statistique(s) pas encore jugeable(s) : trop peu de situations"
@@ -1397,6 +1403,68 @@
         "network": "Connexion impossible. Vérifie ton réseau.",
         "unknown": "Une erreur inattendue est survenue."
       }
+    },
+    "subscription": {
+      "title": "Abonnement",
+      "description": "Ton offre, ce qu’elle comprend, et ta facturation.",
+      "activating": "Paiement reçu. Ton accès Pro s’active, ça prend quelques secondes…",
+      "cancelled": "Paiement annulé : rien n’a été débité.",
+      "interval": {
+        "month": "Mensuel",
+        "year": "Annuel"
+      },
+      "beta": {
+        "title": "Tout est ouvert",
+        "description": "Les abonnements ne sont pas activés sur ce serveur : tu as accès à toutes les fonctions de NutsIQ."
+      },
+      "free": {
+        "badge": "Ton offre",
+        "title": "Gratuit",
+        "import": "Import de mains illimité",
+        "history": "Stats, leaks, ranges et tournois sur les {{days}} derniers jours",
+        "explanations": "{{count}} explications de leak par l’IA chaque mois",
+        "used": "{{used}} explication(s) utilisée(s) sur {{count}} ce mois-ci",
+        "invoices": "Voir mes factures"
+      },
+      "offer": {
+        "badge": "Recommandé",
+        "title": "Pro",
+        "intervalLabel": "Rythme de facturation",
+        "saving": "−{{amount}} €",
+        "per": {
+          "month": "/ mois",
+          "year": "/ an"
+        },
+        "history": "Tout ton historique, sans limite de date",
+        "debrief": "Débrief IA après chaque tournoi",
+        "review": "Bilan IA de ta semaine et de ton plan",
+        "explanations": "Explications de leak à volonté (dans la limite du jour)",
+        "action": "Passer Pro",
+        "hint": "Paiement sécurisé par Stripe. Résiliable à tout moment, en un clic."
+      },
+      "pro": {
+        "badge": "Pro",
+        "title": "Tu es Pro",
+        "renewsOn": {
+          "month": "Abonnement mensuel, renouvelé le {{date}}.",
+          "year": "Abonnement annuel, renouvelé le {{date}}."
+        },
+        "endsOn": {
+          "month": "Abonnement mensuel résilié : ton accès Pro reste ouvert jusqu’au {{date}}.",
+          "year": "Abonnement annuel résilié : ton accès Pro reste ouvert jusqu’au {{date}}."
+        },
+        "pastDue": "Ton dernier paiement n’est pas passé. Mets à jour ta carte pour garder Pro.",
+        "manage": "Gérer mon abonnement",
+        "manageHint": "Carte, factures, passage mensuel ↔ annuel ou résiliation, sur la page sécurisée de Stripe."
+      },
+      "errors": {
+        "ALREADY_SUBSCRIBED": "Tu es déjà Pro. Gère ton abonnement depuis le bouton ci-dessus.",
+        "NO_SUBSCRIPTION": "Aucun abonnement à gérer pour ce compte.",
+        "BILLING_UNAVAILABLE": "Les abonnements ne sont pas activés sur ce serveur.",
+        "BILLING_FAILED": "Le service de paiement ne répond pas. Réessaie dans un instant.",
+        "network": "Connexion impossible. Vérifie ton réseau.",
+        "unknown": "Une erreur inattendue est survenue."
+      }
     }
   },
   "welcome": {
@@ -1460,7 +1528,11 @@
       "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré sur ce serveur.",
       "COACHING_FAILED": "Le coach n'a pas pu répondre. Réessaie.",
       "network": "Connexion impossible. Vérifie ton réseau.",
-      "unknown": "Une erreur inattendue est survenue."
-    }
+      "unknown": "Une erreur inattendue est survenue.",
+      "PLAN_REQUIRED": "Cette fonction est incluse dans Pro.",
+      "PLAN_LIMIT_REACHED": "Tes explications gratuites du mois sont utilisées."
+    },
+    "upgrade": "Passer Pro",
+    "planRequired": "Le débrief de tournoi et le bilan de la semaine sont inclus dans Pro."
   }
 }

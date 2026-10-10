@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Leaks;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Ranges;
@@ -61,6 +62,7 @@ public static class RangeEndpoints
     /// <param name="to">Exclusive upper bound on the hand start time.</param>
     private static async Task<Results<Ok<OpeningRangesResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetOpeningAsync(
         HttpContext context,
+        PlanAccess plans,
         RangeService ranges,
         CancellationToken cancellationToken,
         string? format = null,
@@ -94,6 +96,8 @@ public static class RangeEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, stack, from, to, cancellationToken);
         return TypedResults.Ok(new OpeningRangesResponse(
             result.Format,

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
@@ -80,6 +81,7 @@ public static class LeakEndpoints
 
     private static async Task<Results<Ok<LeakAnalysisResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
+        PlanAccess plans,
         LeakService leaks,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
@@ -101,6 +103,8 @@ public static class LeakEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var analysis = await leaks.GetAsync(userId, tableFormat, from, to, cancellationToken);
         return TypedResults.Ok(new LeakAnalysisResponse(
             analysis.Report.Leaks.Select(l => new LeakResponse(
@@ -133,6 +137,7 @@ public static class LeakEndpoints
         HttpContext context,
         LeakCoachService coach,
         UserProfileService profiles,
+        PlanAccess plans,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -158,7 +163,9 @@ public static class LeakEndpoints
         var answerLanguage = request.Language
             ?? (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage
             ?? UserLanguages.Default;
-        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, request.From, answerLanguage, cancellationToken);
+        // The leak is the one the page shows: same history window (ADR-0014).
+        var from = await plans.ClampFromAsync(userId, request.From, cancellationToken);
+        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, from, answerLanguage, cancellationToken);
         if (outcome.Explanation is { } explanation)
         {
             var notes = explanation.Explanation.Hands.ToDictionary(h => h.Ref, h => h.Note, StringComparer.Ordinal);

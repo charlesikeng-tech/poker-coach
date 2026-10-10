@@ -120,6 +120,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/account/account-page').then((m) => m.AccountPage),
       },
       {
+        path: 'subscription',
+        title: 'pages.subscription.title',
+        loadComponent: () =>
+          import('./features/subscription/subscription-page').then((m) => m.SubscriptionPage),
+      },
+      {
         path: 'import',
         title: 'nav.import',
         loadComponent: () => import('./features/import/import-page').then((m) => m.ImportPage),

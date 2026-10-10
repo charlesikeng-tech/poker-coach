@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Poker.Analysis;
@@ -146,6 +147,7 @@ public static class TournamentEndpoints
     /// <param name="search">Part of the tournament name, case-insensitive.</param>
     private static async Task<Results<Ok<TournamentPageResponse>, ProblemHttpResult, UnauthorizedHttpResult>> ListAsync(
         HttpContext context,
+        PlanAccess plans,
         TournamentListService tournaments,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
@@ -186,6 +188,8 @@ public static class TournamentEndpoints
             return ApiProblems.Validation("search", $"At most {MaxSearchLength} characters.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var result = await tournaments.ListAsync(
             userId,
             new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize, search),
@@ -243,6 +247,7 @@ public static class TournamentEndpoints
     /// <param name="to">Exclusive upper bound on the start time.</param>
     private static async Task<Results<Ok<PerformanceResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetPerformanceAsync(
         HttpContext context,
+        PlanAccess plans,
         PerformanceService performance,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
@@ -258,6 +263,8 @@ public static class TournamentEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var report = await performance.GetAsync(userId, from, to, cancellationToken);
         return TypedResults.Ok(new PerformanceResponse(
             PerformanceFiguresResponse.From(report.Totals),

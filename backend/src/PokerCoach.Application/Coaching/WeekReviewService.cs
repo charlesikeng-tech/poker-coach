@@ -1,3 +1,4 @@
+using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -49,6 +50,7 @@ public sealed class WeekReviewService(
     ICoachingStore ledger,
     ICoachingModel model,
     CoachingOptions options,
+    PlanAccess plans,
     TimeProvider time)
 {
     internal const string Kind = "week-review";
@@ -58,7 +60,7 @@ public sealed class WeekReviewService(
 
     internal const int Version = 1;
 
-    private readonly CoachingGate gate = new(ledger, model, options, time);
+    private readonly CoachingGate gate = new(ledger, model, options, plans, time);
 
     /// <summary>The stored review of the week (this week when null), and whether the week moved since. Free.</summary>
     public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
@@ -94,7 +96,7 @@ public sealed class WeekReviewService(
             return ReportOutcome<WeekReviewReport>.Of(View(stored, fingerprint));
         }
 
-        if (await gate.CheckAsync(userId, Kind, options.DailyWeekReviewsPerUser, cancellationToken) is { } refused)
+        if (await gate.CheckAsync(userId, Kind, options.DailyWeekReviewsPerUser, freeMonthlyAllowance: 0, cancellationToken) is { } refused)
         {
             return ReportOutcome<WeekReviewReport>.Fail(refused);
         }

@@ -32,6 +32,10 @@ services:
       Coaching__Anthropic__ApiKey: ${ANTHROPIC_API_KEY:-}
       Email__BrevoApiKey: ${BREVO_API_KEY:-}
       Email__FromAddress: ${EMAIL_FROM:-no-reply@poker-coach.local}
+      Billing__Stripe__SecretKey: ${STRIPE_SECRET_KEY:-}
+      Billing__Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET:-}
+      Billing__Stripe__Prices__Monthly: ${STRIPE_PRICE_MONTHLY:-}
+      Billing__Stripe__Prices__Yearly: ${STRIPE_PRICE_YEARLY:-}
       App__PublicUrl: http://localhost:8080
     depends_on:
       postgres:

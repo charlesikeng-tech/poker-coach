@@ -1,3 +1,4 @@
+using PokerCoach.Application.Tests.Subscriptions;
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Leaks;
@@ -105,7 +106,7 @@ public sealed class TournamentDebriefServiceTests
     }
 
     private TournamentDebriefService Service() =>
-        new(new TournamentDetailService(new Store(this)), new LeakService(new NoLeakStats()), reports, ledger, model, new CoachingOptions(), time);
+        new(new TournamentDetailService(new Store(this)), new LeakService(new NoLeakStats()), reports, ledger, model, new CoachingOptions(), BillingFakes.Unbilled(time), time);
 
     /// <summary>Hands at 100 BB; a double-up and a bust where asked (1-based indexes among the new hands).</summary>
     private void PlayHands(int count, int? doubleUpAt, int? bustAt)

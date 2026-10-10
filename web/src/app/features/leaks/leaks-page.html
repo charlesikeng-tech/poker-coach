@@ -142,6 +142,9 @@
                   @if (c?.status === 'error') {
                     <p class="coach-error" role="alert">
                       {{ t('coach.errors.' + $any(c).code) }}
+                      @if ($any(c).code === 'PLAN_LIMIT_REACHED') {
+                        <a routerLink="/subscription">{{ t('coach.upgrade') }}</a>
+                      }
                     </p>
                   }
                   <button

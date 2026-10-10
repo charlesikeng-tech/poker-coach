@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -128,6 +129,7 @@ public static class StatisticsEndpoints
     /// <param name="completeOnly">Only tournaments with a complete hand history.</param>
     private static async Task<Results<Ok<AllInLuckResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAllInLuckAsync(
         HttpContext context,
+        PlanAccess plans,
         AllInLuckService luck,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
@@ -144,6 +146,8 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var report = await luck.GetAsync(userId, new StatisticsFilter(from, to, null, null, completeOnly), cancellationToken);
         return TypedResults.Ok(new AllInLuckResponse(
             report.AllIns,
@@ -165,6 +169,7 @@ public static class StatisticsEndpoints
     /// <param name="phase">early, middle or late (by blind level); omitted: all.</param>
     private static async Task<Results<Ok<StatisticsResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
+        PlanAccess plans,
         StatisticsService statistics,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
@@ -200,6 +205,8 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("phase", "Must be early, middle or late.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase), cancellationToken);
         return TypedResults.Ok(new StatisticsResponse(
             StatLineResponse.From(report.Overall),
@@ -215,6 +222,7 @@ public static class StatisticsEndpoints
     /// <param name="format">sixMax or fullRing; omitted: the format with the most hands.</param>
     private static async Task<Results<Ok<StatisticsBreakdownsResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetBreakdownsAsync(
         HttpContext context,
+        PlanAccess plans,
         StatisticsService statistics,
         TimeProvider time,
         CancellationToken cancellationToken,
@@ -245,6 +253,8 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
+        // Free plan: history window (ADR-0014). Data is kept, only not shown.
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat), time.GetUtcNow(), cancellationToken);
         return TypedResults.Ok(new StatisticsBreakdownsResponse(
             b.Format,

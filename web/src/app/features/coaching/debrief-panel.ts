@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LoaderCircle, RefreshCw, Sparkles } from 'lucide';
 
+import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
@@ -42,6 +43,7 @@ type PanelState =
 export class DebriefPanel {
   private readonly api = inject(CoachingApi);
   private readonly language = inject(LanguageService);
+  protected readonly billing = inject(BillingService);
 
   readonly tournamentId = input.required<string>();
   /** Hands the hero was dealt (the stack curve's length). */

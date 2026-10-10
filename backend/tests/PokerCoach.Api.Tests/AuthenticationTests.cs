@@ -41,6 +41,9 @@ public sealed class AuthenticationTests
     [InlineData("POST", "/api/tournaments/0199c5a8-0000-7000-8000-000000000000/debrief")]
     [InlineData("GET", "/api/progress/review")]
     [InlineData("POST", "/api/progress/review")]
+    [InlineData("GET", "/api/billing")]
+    [InlineData("POST", "/api/billing/checkout")]
+    [InlineData("POST", "/api/billing/portal")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
     {
         await using var factory = new ApiFactory();
@@ -68,6 +71,8 @@ public sealed class AuthenticationTests
     [InlineData("POST", "/api/progress/plan/rebuild")]
     [InlineData("POST", "/api/tournaments/0199c5a8-0000-7000-8000-000000000000/debrief")]
     [InlineData("POST", "/api/progress/review")]
+    [InlineData("POST", "/api/billing/checkout")]
+    [InlineData("POST", "/api/billing/portal")]
     public async Task Unsafe_requests_without_an_anti_forgery_token_are_rejected(string method, string path)
     {
         await using var factory = new ApiFactory(signedIn: true);
@@ -150,6 +155,20 @@ public sealed class AuthenticationTests
 
         Assert.NotNull(exception);
         Assert.Contains("Authentication:Google:ClientId", exception.ToString(), StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task The_stripe_webhook_needs_no_session_or_csrf_token_but_a_valid_signature()
+    {
+        await using var factory = new ApiFactory();
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("https://localhost") });
+        using var content = new StringContent("""{"id":"evt_1","type":"customer.subscription.updated","data":{"object":{"customer":"cus_1"}}}""");
+        content.Headers.Add("Stripe-Signature", "t=1,v1=forged");
+
+        var response = await client.PostAsync(new Uri("/api/billing/webhook", UriKind.Relative), content, TestContext.Current.CancellationToken);
+
+        // Billing is off in tests (no Stripe key): the event is refused, never processed, and not a 401.
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     private static async Task<string?> ErrorCodeAsync(HttpResponseMessage response)

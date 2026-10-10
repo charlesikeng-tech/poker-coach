@@ -8,9 +8,11 @@ import {
   signal,
   untracked,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LoaderCircle, RefreshCw, Sparkles } from 'lucide';
 
+import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
@@ -46,7 +48,7 @@ export interface ReviewableWeek {
  */
 @Component({
   selector: 'app-week-review-panel',
-  imports: [TranslocoDirective, Button, Icon],
+  imports: [TranslocoDirective, RouterLink, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './week-review-panel.html',
   styleUrls: ['./coach-panel.scss', './week-review-panel.scss'],
@@ -54,6 +56,7 @@ export interface ReviewableWeek {
 export class WeekReviewPanel {
   private readonly api = inject(CoachingApi);
   private readonly language = inject(LanguageService);
+  protected readonly billing = inject(BillingService);
 
   /** This week first, then the most recent finished week when there is one. */
   readonly weeks = input.required<readonly ReviewableWeek[]>();

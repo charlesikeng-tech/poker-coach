@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.Api.Account;
@@ -131,6 +132,7 @@ public static class AccountEndpoints
         [FromBody] DeleteAccountRequest request,
         HttpContext context,
         AccountDataService accountData,
+        SubscriptionService subscriptions,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -141,6 +143,12 @@ public static class AccountEndpoints
         if (!string.Equals(request.Confirm, "DELETE", StringComparison.Ordinal))
         {
             return ApiProblems.Validation("confirm", "Must be \"DELETE\".");
+        }
+
+        // Stop charging first: a paying subscription must never outlive its account (ADR-0014).
+        if (!await subscriptions.CloseAsync(userId, cancellationToken))
+        {
+            return ApiProblems.WithCode(StatusCodes.Status502BadGateway, "BILLING_FAILED", "The subscription could not be canceled. Try again; nothing was deleted.");
         }
 
         await accountData.DeleteAsync(userId, cancellationToken);

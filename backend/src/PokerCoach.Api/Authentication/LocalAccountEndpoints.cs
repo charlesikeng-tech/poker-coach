@@ -20,6 +20,21 @@ public sealed class AppOptions
     /// pointing to their own site.
     /// </summary>
     public Uri? PublicUrl { get; set; }
+
+    /// <summary>The configured address; in Development only, the request's (the Angular dev server forwards it).</summary>
+    public Uri BaseUrl(HttpContext context, IHostEnvironment environment)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(environment);
+        if (PublicUrl is { } configured)
+        {
+            return configured.AbsoluteUri.EndsWith('/') ? configured : new Uri(configured.AbsoluteUri + "/");
+        }
+
+        return environment.IsDevelopment()
+            ? new Uri($"{context.Request.Scheme}://{context.Request.Host}/")
+            : throw new InvalidOperationException("App:PublicUrl is required outside Development.");
+    }
 }
 
 public sealed record RegisterRequest(string? Email, string? Password, string? DisplayName, string? Language);
@@ -167,16 +182,6 @@ public static class LocalAccountEndpoints
 
     private static string Language(string? language) => UserLanguages.IsSupported(language) ? language! : UserLanguages.Default;
 
-    private static AccountLinks Links(HttpContext context, AppOptions app, IHostEnvironment environment)
-    {
-        if (app.PublicUrl is { } configured)
-        {
-            return new AccountLinks(configured.ToString());
-        }
-
-        // Development only (enforced at startup): the Angular dev server forwards the browser's Host.
-        return environment.IsDevelopment()
-            ? new AccountLinks($"{context.Request.Scheme}://{context.Request.Host}")
-            : throw new InvalidOperationException("App:PublicUrl is required outside Development.");
-    }
+    private static AccountLinks Links(HttpContext context, AppOptions app, IHostEnvironment environment) =>
+        new(app.BaseUrl(context, environment).ToString());
 }

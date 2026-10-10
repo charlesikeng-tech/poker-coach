@@ -93,6 +93,8 @@ public static class CoachingEndpoints
         CoachingFailure.HandsPending => ApiProblems.WithCode(StatusCodes.Status409Conflict, "HANDS_PENDING", "Hands are still being analysed. Try again in a moment."),
         CoachingFailure.NotEnoughData => ApiProblems.WithCode(StatusCodes.Status422UnprocessableEntity, "NOT_ENOUGH_HANDS", "Too few hands for the coach to comment on."),
         CoachingFailure.NotALeak => ApiProblems.WithCode(StatusCodes.Status404NotFound, "LEAK_NOT_FOUND", "This statistic is not a current leak."),
+        CoachingFailure.PlanRequired => ApiProblems.WithCode(StatusCodes.Status403Forbidden, "PLAN_REQUIRED", "This feature is in the Pro plan."),
+        CoachingFailure.PlanLimitReached => ApiProblems.WithCode(StatusCodes.Status429TooManyRequests, "PLAN_LIMIT_REACHED", "The Free plan's monthly allowance is used up."),
         CoachingFailure.DailyLimitReached => ApiProblems.WithCode(StatusCodes.Status429TooManyRequests, "COACHING_DAILY_LIMIT", "Daily limit of new coach texts reached."),
         CoachingFailure.BudgetExhausted => ApiProblems.WithCode(StatusCodes.Status503ServiceUnavailable, "COACHING_BUDGET_EXHAUSTED", "The coach is paused until next month."),
         CoachingFailure.Unavailable => ApiProblems.WithCode(StatusCodes.Status503ServiceUnavailable, "COACHING_UNAVAILABLE", "The coach is not configured."),

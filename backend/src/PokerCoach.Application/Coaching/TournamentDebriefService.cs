@@ -1,3 +1,4 @@
+using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -63,6 +64,7 @@ public sealed class TournamentDebriefService(
     ICoachingStore ledger,
     ICoachingModel model,
     CoachingOptions options,
+    PlanAccess plans,
     TimeProvider time)
 {
     internal const string Kind = "tournament-debrief";
@@ -78,7 +80,7 @@ public sealed class TournamentDebriefService(
 
     private const int MinOpportunitiesShown = 5;
 
-    private readonly CoachingGate gate = new(ledger, model, options, time);
+    private readonly CoachingGate gate = new(ledger, model, options, plans, time);
 
     /// <summary>The stored debrief, if any, and whether the tournament's facts changed since. Free.</summary>
     public async Task<ReportView<DebriefReport>?> GetAsync(Guid userId, Guid tournamentId, string language, CancellationToken cancellationToken)
@@ -119,7 +121,7 @@ public sealed class TournamentDebriefService(
             return ReportOutcome<DebriefReport>.Of(View(stored, fingerprint));
         }
 
-        if (await gate.CheckAsync(userId, Kind, options.DailyDebriefsPerUser, cancellationToken) is { } refused)
+        if (await gate.CheckAsync(userId, Kind, options.DailyDebriefsPerUser, freeMonthlyAllowance: 0, cancellationToken) is { } refused)
         {
             return ReportOutcome<DebriefReport>.Fail(refused);
         }

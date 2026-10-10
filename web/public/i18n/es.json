@@ -12,7 +12,8 @@
     "leaks": "Leaks",
     "ranges": "Rangos",
     "training": "Entrenamiento",
-    "bankroll": "Bankroll"
+    "bankroll": "Bankroll",
+    "subscription": "Suscripción"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -25,7 +26,9 @@
     "themeToLight": "Cambiar al tema claro",
     "themeToDark": "Cambiar al tema oscuro",
     "signOut": "Cerrar sesión",
-    "account": "Mi cuenta"
+    "account": "Mi cuenta",
+    "planWindow": "Plan gratuito: ves los últimos {{days}} días. Todo tu historial se conserva.",
+    "planWindowAction": "Verlo todo con Pro"
   },
   "pages": {
     "dashboard": {
@@ -764,8 +767,11 @@
           "COACHING_UNAVAILABLE": "El coach IA no está configurado en este servidor.",
           "COACHING_FAILED": "El coach no pudo responder. Inténtalo de nuevo.",
           "network": "No se puede conectar. Revisa tu red.",
-          "unknown": "Se produjo un error inesperado."
-        }
+          "unknown": "Se produjo un error inesperado.",
+          "PLAN_REQUIRED": "Esta función está incluida en Pro.",
+          "PLAN_LIMIT_REACHED": "Ya has usado tus 3 explicaciones gratuitas de este mes."
+        },
+        "upgrade": "Hazte Pro"
       },
       "under": {
         "title": "{{count}} estadística(s) aún no se puede(n) juzgar: muy pocas situaciones"
@@ -1397,6 +1403,68 @@
         "network": "No hay conexión. Revisa tu red.",
         "unknown": "Ha ocurrido un error inesperado."
       }
+    },
+    "subscription": {
+      "title": "Suscripción",
+      "description": "Tu plan, lo que incluye y tu facturación.",
+      "activating": "Pago recibido. Tu acceso Pro se está activando, tarda unos segundos…",
+      "cancelled": "Pago cancelado: no se te ha cobrado nada.",
+      "interval": {
+        "month": "Mensual",
+        "year": "Anual"
+      },
+      "beta": {
+        "title": "Todo está abierto",
+        "description": "Las suscripciones no están activadas en este servidor: tienes todas las funciones de NutsIQ."
+      },
+      "free": {
+        "badge": "Tu plan",
+        "title": "Gratis",
+        "import": "Importación de manos ilimitada",
+        "history": "Stats, leaks, rangos y torneos de los últimos {{days}} días",
+        "explanations": "{{count}} explicaciones de leaks por IA cada mes",
+        "used": "{{used}} de {{count}} explicaciones usadas este mes",
+        "invoices": "Ver mis facturas"
+      },
+      "offer": {
+        "badge": "Recomendado",
+        "title": "Pro",
+        "intervalLabel": "Periodo de facturación",
+        "saving": "−{{amount}} €",
+        "per": {
+          "month": "/ mes",
+          "year": "/ año"
+        },
+        "history": "Todo tu historial, sin límite de fecha",
+        "debrief": "Análisis IA después de cada torneo",
+        "review": "Balance IA de tu semana y de tu plan",
+        "explanations": "Explicaciones de leaks cuando quieras (dentro del límite diario)",
+        "action": "Hazte Pro",
+        "hint": "Pago seguro con Stripe. Cancela cuando quieras, en un clic."
+      },
+      "pro": {
+        "badge": "Pro",
+        "title": "Eres Pro",
+        "renewsOn": {
+          "month": "Suscripción mensual, se renueva el {{date}}.",
+          "year": "Suscripción anual, se renueva el {{date}}."
+        },
+        "endsOn": {
+          "month": "Suscripción mensual cancelada: tu acceso Pro sigue abierto hasta el {{date}}.",
+          "year": "Suscripción anual cancelada: tu acceso Pro sigue abierto hasta el {{date}}."
+        },
+        "pastDue": "Tu último pago no se ha completado. Actualiza tu tarjeta para seguir en Pro.",
+        "manage": "Gestionar mi suscripción",
+        "manageHint": "Tarjeta, facturas, cambio mensual ↔ anual o cancelación, en la página segura de Stripe."
+      },
+      "errors": {
+        "ALREADY_SUBSCRIBED": "Ya eres Pro. Gestiona tu suscripción con el botón de arriba.",
+        "NO_SUBSCRIPTION": "Esta cuenta no tiene ninguna suscripción que gestionar.",
+        "BILLING_UNAVAILABLE": "Las suscripciones no están activadas en este servidor.",
+        "BILLING_FAILED": "El servicio de pago no responde. Inténtalo de nuevo en un momento.",
+        "network": "No hay conexión. Revisa tu red.",
+        "unknown": "Ha ocurrido un error inesperado."
+      }
     }
   },
   "welcome": {
@@ -1460,7 +1528,11 @@
       "COACHING_UNAVAILABLE": "El coach IA no está configurado en este servidor.",
       "COACHING_FAILED": "El coach no pudo responder. Inténtalo de nuevo.",
       "network": "No hay conexión. Revisa tu red.",
-      "unknown": "Ha ocurrido un error inesperado."
-    }
+      "unknown": "Ha ocurrido un error inesperado.",
+      "PLAN_REQUIRED": "Esta función está incluida en Pro.",
+      "PLAN_LIMIT_REACHED": "Ya has usado tus explicaciones gratuitas de este mes."
+    },
+    "upgrade": "Hazte Pro",
+    "planRequired": "El análisis del torneo y el balance semanal están incluidos en Pro."
   }
 }

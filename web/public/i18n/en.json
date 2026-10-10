@@ -12,7 +12,8 @@
     "leaks": "Leaks",
     "ranges": "Ranges",
     "training": "Training",
-    "bankroll": "Bankroll"
+    "bankroll": "Bankroll",
+    "subscription": "Subscription"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -25,7 +26,9 @@
     "themeToLight": "Switch to light theme",
     "themeToDark": "Switch to dark theme",
     "signOut": "Sign out",
-    "account": "My account"
+    "account": "My account",
+    "planWindow": "Free plan: you see the last {{days}} days. Your whole history is kept.",
+    "planWindowAction": "See it all with Pro"
   },
   "pages": {
     "dashboard": {
@@ -764,8 +767,11 @@
           "COACHING_UNAVAILABLE": "The AI coach is not configured on this server.",
           "COACHING_FAILED": "The coach could not answer. Try again.",
           "network": "Cannot connect. Check your network.",
-          "unknown": "An unexpected error occurred."
-        }
+          "unknown": "An unexpected error occurred.",
+          "PLAN_REQUIRED": "This feature is part of Pro.",
+          "PLAN_LIMIT_REACHED": "Your 3 free explanations for this month are used up."
+        },
+        "upgrade": "Go Pro"
       },
       "under": {
         "title": "{{count}} statistic(s) cannot be judged yet: too few situations"
@@ -1397,6 +1403,68 @@
         "network": "Cannot connect. Check your network.",
         "unknown": "An unexpected error occurred."
       }
+    },
+    "subscription": {
+      "title": "Subscription",
+      "description": "Your plan, what it includes, and your billing.",
+      "activating": "Payment received. Your Pro access is being switched on, this takes a few seconds…",
+      "cancelled": "Payment cancelled: you were not charged.",
+      "interval": {
+        "month": "Monthly",
+        "year": "Yearly"
+      },
+      "beta": {
+        "title": "Everything is open",
+        "description": "Subscriptions are not enabled on this server: you have every NutsIQ feature."
+      },
+      "free": {
+        "badge": "Your plan",
+        "title": "Free",
+        "import": "Unlimited hand imports",
+        "history": "Stats, leaks, ranges and tournaments over the last {{days}} days",
+        "explanations": "{{count}} AI leak explanations every month",
+        "used": "{{used}} of {{count}} explanations used this month",
+        "invoices": "See my invoices"
+      },
+      "offer": {
+        "badge": "Recommended",
+        "title": "Pro",
+        "intervalLabel": "Billing period",
+        "saving": "−€{{amount}}",
+        "per": {
+          "month": "/ month",
+          "year": "/ year"
+        },
+        "history": "Your whole history, no date limit",
+        "debrief": "AI debrief after every tournament",
+        "review": "AI review of your week and your plan",
+        "explanations": "Leak explanations as you need them (within the daily limit)",
+        "action": "Go Pro",
+        "hint": "Secure payment by Stripe. Cancel any time, in one click."
+      },
+      "pro": {
+        "badge": "Pro",
+        "title": "You are Pro",
+        "renewsOn": {
+          "month": "Monthly subscription, renews on {{date}}.",
+          "year": "Yearly subscription, renews on {{date}}."
+        },
+        "endsOn": {
+          "month": "Monthly subscription cancelled: your Pro access stays open until {{date}}.",
+          "year": "Yearly subscription cancelled: your Pro access stays open until {{date}}."
+        },
+        "pastDue": "Your last payment did not go through. Update your card to keep Pro.",
+        "manage": "Manage my subscription",
+        "manageHint": "Card, invoices, monthly ↔ yearly or cancellation, on Stripe’s secure page."
+      },
+      "errors": {
+        "ALREADY_SUBSCRIBED": "You are already Pro. Manage your subscription with the button above.",
+        "NO_SUBSCRIPTION": "This account has no subscription to manage.",
+        "BILLING_UNAVAILABLE": "Subscriptions are not enabled on this server.",
+        "BILLING_FAILED": "The payment service is not answering. Try again in a moment.",
+        "network": "Cannot connect. Check your network.",
+        "unknown": "Something unexpected went wrong."
+      }
     }
   },
   "welcome": {
@@ -1460,7 +1528,11 @@
       "COACHING_UNAVAILABLE": "The AI coach is not configured on this server.",
       "COACHING_FAILED": "The coach could not answer. Try again.",
       "network": "Cannot connect. Check your network.",
-      "unknown": "An unexpected error occurred."
-    }
+      "unknown": "An unexpected error occurred.",
+      "PLAN_REQUIRED": "This feature is part of Pro.",
+      "PLAN_LIMIT_REACHED": "Your free explanations for this month are used up."
+    },
+    "upgrade": "Go Pro",
+    "planRequired": "The tournament debrief and the weekly review are part of Pro."
   }
 }

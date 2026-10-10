@@ -123,6 +123,13 @@
 
       <main id="main-content" class="content" tabindex="-1">
         <div class="content__inner">
+          @if (windowed()) {
+            <p class="plan-window" role="note">
+              <app-icon [icon]="icons.History" />
+              <span>{{ t('shell.planWindow', { days: billing.historyDays() }) }}</span>
+              <a routerLink="/subscription">{{ t('shell.planWindowAction') }}</a>
+            </p>
+          }
           <router-outlet />
         </div>
       </main>

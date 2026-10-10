@@ -14,9 +14,11 @@ using PokerCoach.Application.Poker;
 using PokerCoach.Application.Progress;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
 using PokerCoach.Infrastructure.Bankroll;
+using PokerCoach.Infrastructure.Billing;
 using PokerCoach.Infrastructure.Coaching;
 using PokerCoach.Infrastructure.Email;
 using PokerCoach.Infrastructure.Hands;
@@ -78,6 +80,11 @@ public static class InfrastructureServiceCollectionExtensions
         // No API key = coaching unavailable, not a startup failure (ADR-0008).
         services.AddOptions<AnthropicOptions>().BindConfiguration(AnthropicOptions.SectionName);
         services.AddHttpClient<ICoachingModel, AnthropicCoachingModel>(client => client.Timeout = TimeSpan.FromSeconds(90));
+
+        // Stripe (ADR-0014); without a secret key billing is off and every account has Pro.
+        services.AddScoped<ISubscriptionStore, SubscriptionStore>();
+        services.AddOptions<StripeOptions>().BindConfiguration(StripeOptions.SectionName);
+        services.AddHttpClient<IBillingGateway, StripeBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(20));
 
         // Brevo when a key is configured; otherwise the log (links shown in Development only).
         services.AddOptions<EmailOptions>().BindConfiguration(EmailOptions.SectionName);

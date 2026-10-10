@@ -1,6 +1,7 @@
 import {
   Grid3x3,
   ChartColumn,
+  Crown,
   Dumbbell,
   LayoutDashboard,
   Radar,
@@ -37,4 +38,5 @@ export const PRIMARY_NAVIGATION: readonly NavigationItem[] = [
 
 export const SECONDARY_NAVIGATION: readonly NavigationItem[] = [
   { path: '/import', labelKey: 'nav.import', icon: Upload },
+  { path: '/subscription', labelKey: 'nav.subscription', icon: Crown },
 ];

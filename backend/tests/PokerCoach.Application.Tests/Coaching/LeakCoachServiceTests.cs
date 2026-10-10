@@ -1,3 +1,4 @@
+using PokerCoach.Application.Tests.Subscriptions;
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Leaks;
@@ -113,7 +114,7 @@ public sealed class LeakCoachServiceTests
         Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, null, "fr", Ct);
 
     private LeakCoachService Service() =>
-        new(new LeakService(new StatsStub()), store, model, options, time);
+        new(new LeakService(new StatsStub()), store, model, options, BillingFakes.Unbilled(time), time);
 
     private static ExampleHand Example()
     {

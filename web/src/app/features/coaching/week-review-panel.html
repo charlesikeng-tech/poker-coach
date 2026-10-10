@@ -82,28 +82,42 @@
           <p class="intro">
             {{ state().kind === 'failed' ? t('loadFailed') : t('review.intro') }}
           </p>
-          <div class="write">
-            <button
-              appButton
-              variant="secondary"
-              [disabled]="writing() || tooFewHands()"
-              (click)="write()"
-            >
-              <app-icon
-                [class.spin]="writing()"
-                [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
-              />
-              {{ writing() ? t('review.writing') : t('review.action') }}
-            </button>
-            @if (tooFewHands()) {
-              <span class="hint">{{ t('review.tooFew', { count: minHands }) }}</span>
-            }
-          </div>
+          @if (billing.isFree()) {
+            <div class="write">
+              <a appButton variant="primary" routerLink="/subscription">
+                <app-icon [icon]="icons.Sparkles" />{{ t('upgrade') }}
+              </a>
+              <span class="hint">{{ t('planRequired') }}</span>
+            </div>
+          } @else {
+            <div class="write">
+              <button
+                appButton
+                variant="secondary"
+                [disabled]="writing() || tooFewHands()"
+                (click)="write()"
+              >
+                <app-icon
+                  [class.spin]="writing()"
+                  [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+                />
+                {{ writing() ? t('review.writing') : t('review.action') }}
+              </button>
+              @if (tooFewHands()) {
+                <span class="hint">{{ t('review.tooFew', { count: minHands }) }}</span>
+              }
+            </div>
+          }
         }
       }
 
       @if (writeError(); as code) {
-        <p class="coach-error" role="alert">{{ t('errors.' + code) }}</p>
+        <p class="coach-error" role="alert">
+          {{ t('errors.' + code) }}
+          @if (code === 'PLAN_REQUIRED') {
+            <a routerLink="/subscription">{{ t('upgrade') }}</a>
+          }
+        </p>
       }
     </section>
   </ng-container>

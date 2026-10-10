@@ -6,6 +6,7 @@ using PokerCoach.Api.Account;
 using PokerCoach.Api.Analytics;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Bankroll;
+using PokerCoach.Api.Billing;
 using PokerCoach.Api.Coaching;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Hands;
@@ -29,6 +30,7 @@ using PokerCoach.Application.Poker;
 using PokerCoach.Application.Progress;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
 using PokerCoach.HandHistories;
@@ -98,6 +100,13 @@ builder.Services.AddOptions<CoachingOptions>()
     .Validate(o => o.MonthlyBudgetUsd >= 0 && o.DailyExplanationsPerUser >= 0 && o.ExampleHands is > 0 and <= 10, "Invalid coaching limits.")
     .ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<CoachingOptions>>().Value);
+builder.Services.AddOptions<FreePlanOptions>()
+    .BindConfiguration(FreePlanOptions.SectionName)
+    .Validate(o => o.HistoryDays > 0 && o.MonthlyExplanations >= 0, "Invalid free plan limits.")
+    .ValidateOnStart();
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<FreePlanOptions>>().Value);
+builder.Services.AddScoped<PlanAccess>();
+builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<LeakCoachService>();
 builder.Services.AddScoped<TournamentDebriefService>();
 builder.Services.AddScoped<WeekReviewService>();
@@ -165,6 +174,7 @@ app.MapBankrollEndpoints();
 app.MapProgressEndpoints();
 app.MapLeakEndpoints();
 app.MapCoachingEndpoints();
+app.MapBillingEndpoints();
 if (servesWebApp)
 {
     app.MapWebAppFallback();

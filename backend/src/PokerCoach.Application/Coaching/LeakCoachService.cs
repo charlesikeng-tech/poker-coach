@@ -1,3 +1,4 @@
+using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,6 +19,12 @@ public enum CoachingFailure
 
     /// <summary>The user reached the daily number of new explanations.</summary>
     DailyLimitReached,
+
+    /// <summary>The feature is in the Pro plan only (ADR-0014).</summary>
+    PlanRequired,
+
+    /// <summary>The Free plan's monthly allowance is used up (ADR-0014).</summary>
+    PlanLimitReached,
 
     /// <summary>The monthly spend cap is reached, for everyone.</summary>
     BudgetExhausted,
@@ -51,11 +58,12 @@ public sealed class LeakCoachService(
     ICoachingStore store,
     ICoachingModel model,
     CoachingOptions options,
+    PlanAccess plans,
     TimeProvider time)
 {
     internal const string Purpose = "leak-explanation";
 
-    private readonly CoachingGate gate = new(store, model, options, time);
+    private readonly CoachingGate gate = new(store, model, options, plans, time);
 
     public async Task<CoachingOutcome> ExplainAsync(
         Guid userId,
@@ -81,7 +89,7 @@ public sealed class LeakCoachService(
             return CoachingOutcome.Of(cached);
         }
 
-        if (await gate.CheckAsync(userId, Purpose, options.DailyExplanationsPerUser, cancellationToken) is { } refused)
+        if (await gate.CheckAsync(userId, Purpose, options.DailyExplanationsPerUser, plans.FreeLimits.MonthlyExplanations, cancellationToken) is { } refused)
         {
             return CoachingOutcome.Fail(refused);
         }

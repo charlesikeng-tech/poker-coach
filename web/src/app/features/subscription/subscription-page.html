@@ -1,0 +1,121 @@
+<ng-container *transloco="let t; prefix: 'pages.subscription'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  @if (activating()) {
+    <p class="notice notice--info" role="status">
+      <app-icon class="spin" [icon]="icons.LoaderCircle" />{{ t('activating') }}
+    </p>
+  } @else if (cancelled) {
+    <p class="notice" role="status">{{ t('cancelled') }}</p>
+  }
+
+  @if (summary(); as s) {
+    @if (!s.billingEnabled) {
+      <section class="card glass">
+        <h2><app-icon [icon]="icons.Sparkles" />{{ t('beta.title') }}</h2>
+        <p>{{ t('beta.description') }}</p>
+      </section>
+    } @else if (s.plan === 'pro') {
+      <section class="card glass current">
+        <span class="badge">{{ t('pro.badge') }}</span>
+        <h2>{{ t('pro.title') }}</h2>
+        @if (s.status === 'pastDue') {
+          <p class="notice notice--warning" role="alert">{{ t('pro.pastDue') }}</p>
+        }
+        @if (s.currentPeriodEnd; as end) {
+          <p>
+            {{
+              t((s.cancelAtPeriodEnd ? 'pro.endsOn.' : 'pro.renewsOn.') + (s.interval ?? 'month'), {
+                date: longDate(end),
+              })
+            }}
+          </p>
+        }
+        <button appButton variant="secondary" [disabled]="busy()" (click)="manage()">
+          <app-icon [icon]="icons.CreditCard" />{{ t('pro.manage') }}
+        </button>
+        <p class="hint">{{ t('pro.manageHint') }}</p>
+      </section>
+    } @else {
+      <div class="plans">
+        <section class="card glass plan">
+          <span class="badge badge--muted">{{ t('free.badge') }}</span>
+          <h2>{{ t('free.title') }}</h2>
+          <p class="price"><span class="numeric">0 €</span></p>
+          <ul class="features">
+            <li><app-icon [icon]="icons.Check" />{{ t('free.import') }}</li>
+            <li>
+              <app-icon [icon]="icons.Check" />{{ t('free.history', { days: s.free.historyDays }) }}
+            </li>
+            <li>
+              <app-icon [icon]="icons.Check" />{{
+                t('free.explanations', { count: s.free.monthlyExplanations })
+              }}
+            </li>
+          </ul>
+          <p class="usage">
+            {{
+              t('free.used', {
+                used: s.explanationsUsedThisMonth,
+                count: s.free.monthlyExplanations,
+              })
+            }}
+          </p>
+        </section>
+
+        <section class="card glass plan plan--pro">
+          <span class="badge">{{ t('offer.badge') }}</span>
+          <h2>{{ t('offer.title') }}</h2>
+          <div class="toggle" role="group" [attr.aria-label]="t('offer.intervalLabel')">
+            <button
+              type="button"
+              [attr.aria-pressed]="interval() === 'month'"
+              (click)="interval.set('month')"
+            >
+              {{ t('interval.month') }}
+            </button>
+            <button
+              type="button"
+              [attr.aria-pressed]="interval() === 'year'"
+              (click)="interval.set('year')"
+            >
+              {{ t('interval.year') }}
+              <span class="saving">{{ t('offer.saving', { amount: yearlySaving }) }}</span>
+            </button>
+          </div>
+          <p class="price">
+            <span class="numeric">{{ prices[interval()] }} €</span>
+            <span class="per">{{ t('offer.per.' + interval()) }}</span>
+          </p>
+          <ul class="features">
+            <li><app-icon [icon]="icons.Check" />{{ t('offer.history') }}</li>
+            <li><app-icon [icon]="icons.Check" />{{ t('offer.debrief') }}</li>
+            <li><app-icon [icon]="icons.Check" />{{ t('offer.review') }}</li>
+            <li><app-icon [icon]="icons.Check" />{{ t('offer.explanations') }}</li>
+          </ul>
+          <button appButton variant="primary" [disabled]="busy()" (click)="subscribe()">
+            <app-icon
+              [class.spin]="busy()"
+              [icon]="busy() ? icons.LoaderCircle : icons.Sparkles"
+            />{{ t('offer.action') }}
+          </button>
+          <p class="hint">{{ t('offer.hint') }}</p>
+        </section>
+      </div>
+
+      @if (s.canManage) {
+        <p class="hint">
+          <button type="button" class="link-button" [disabled]="busy()" (click)="manage()">
+            {{ t('free.invoices') }}
+          </button>
+        </p>
+      }
+    }
+
+    @if (error(); as code) {
+      <p class="notice notice--danger" role="alert">{{ t('errors.' + code) }}</p>
+    }
+  } @else {
+    <span class="skeleton" style="height: 14rem"></span>
+  }
+</ng-container>
