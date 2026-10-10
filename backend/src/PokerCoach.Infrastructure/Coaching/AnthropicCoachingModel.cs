@@ -19,7 +19,7 @@ public sealed class AnthropicOptions
 
     public Uri BaseUrl { get; set; } = new("https://api.anthropic.com/");
 
-    public int MaxOutputTokens { get; set; } = 1_500;
+    public int MaxOutputTokens { get; set; } = 2_000;
 }
 
 /// <summary>
@@ -205,9 +205,9 @@ internal sealed partial class AnthropicCoachingModel(
     };
 
     /// <summary>A debrief comments up to eight hands: more room than a leak explanation.</summary>
-    private const int DebriefMaxOutputTokens = 2_500;
+    private const int DebriefMaxOutputTokens = 4_000;
 
-    private const int ReviewMaxOutputTokens = 1_500;
+    private const int ReviewMaxOutputTokens = 2_000;
 
     private static readonly Dictionary<string, MomentVerdict> Verdicts = new(StringComparer.Ordinal)
     {
@@ -219,7 +219,30 @@ internal sealed partial class AnthropicCoachingModel(
 
     public bool IsAvailable => !string.IsNullOrWhiteSpace(options.Value.ApiKey);
 
-    public async Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
+    public Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("leak-explanation", () => ExplainCoreAsync(prompt, cancellationToken));
+
+    public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(prompt, cancellationToken));
+
+    public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("week-review", () => ReviewCoreAsync(prompt, cancellationToken));
+
+    /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
+    private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
+    {
+        try
+        {
+            return await call();
+        }
+        catch (CoachingModelException exception)
+        {
+            LogRejected(logger, task, exception.Message);
+            throw;
+        }
+    }
+
+    private async Task<ModelExplanation> ExplainCoreAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\nLeak:\n{prompt.Facts}\n\n"
@@ -239,7 +262,7 @@ internal sealed partial class AnthropicCoachingModel(
             usage);
     }
 
-    public async Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<TournamentDebrief>> DebriefCoreAsync(DebriefPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}\n\n"
@@ -260,7 +283,7 @@ internal sealed partial class AnthropicCoachingModel(
             usage);
     }
 
-    public async Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<WeekReview>> ReviewCoreAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
@@ -385,6 +408,9 @@ internal sealed partial class AnthropicCoachingModel(
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "Coaching model call failed with HTTP {Status}: {ErrorType}: {ErrorMessage} (request {RequestId}).")]
     private static partial void LogFailure(ILogger logger, int status, string errorType, string errorMessage, string requestId);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Coaching {Task} answer rejected: {Reason}")]
+    private static partial void LogRejected(ILogger logger, string task, string reason);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Coaching model {Model}: {InputTokens} in, {OutputTokens} out, {CacheReadTokens} cached, {ElapsedMs} ms.")]
     private static partial void LogCall(ILogger logger, string model, int inputTokens, int outputTokens, int cacheReadTokens, double elapsedMs);
