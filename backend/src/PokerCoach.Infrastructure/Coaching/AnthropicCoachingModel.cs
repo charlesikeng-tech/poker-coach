@@ -51,7 +51,9 @@ internal sealed partial class AnthropicCoachingModel(
     /// <summary>Same voice for every task: the player reads one coach.</summary>
     private const string Voice = """
 
-        Write in the language requested in the message, addressing the player informally ("tu" in French,
+        Write in the language requested in the message, with its accents written as plain characters
+        (é, è, ê, à, ç, ô, û, ñ, á), never as escape sequences or mis-encoded characters. Address the
+        player informally ("tu" in French,
         "tú" in Spanish). Keep poker terms in English as players say them in every language: leak, c-bet,
         3-bet, range, steal, check-raise, all-in, bluff. Never translate "leak" (not "fuite", not "fuga").
         """;
@@ -404,11 +406,50 @@ internal sealed partial class AnthropicCoachingModel(
             ?? throw new CoachingModelException("No text in the model answer.");
         try
         {
-            return (JsonSerializer.Deserialize<T>(text, JsonOptions) ?? throw new CoachingModelException("Empty model answer."), usage);
+            var answer = JsonNode.Parse(text) ?? throw new CoachingModelException("Empty model answer.");
+            return (Repaired(answer).Deserialize<T>(JsonOptions) ?? throw new CoachingModelException("Empty model answer."), usage);
         }
         catch (JsonException exception)
         {
             throw new CoachingModelException("The model answer is not valid JSON.", exception);
+        }
+    }
+
+    /// <summary>
+    /// Every string of the answer through <see cref="ModelText"/>: mojibake that maps back to UTF-8 is
+    /// repaired; what remains garbled rejects the answer rather than showing it to the player.
+    /// </summary>
+    private static JsonNode Repaired(JsonNode node)
+    {
+        switch (node)
+        {
+            case JsonObject obj:
+                foreach (var (key, value) in obj.ToList())
+                {
+                    if (value is not null)
+                    {
+                        obj[key] = Repaired(value.DeepClone());
+                    }
+                }
+
+                return obj;
+            case JsonArray array:
+                for (var i = 0; i < array.Count; i++)
+                {
+                    if (array[i] is { } item)
+                    {
+                        array[i] = Repaired(item.DeepClone());
+                    }
+                }
+
+                return array;
+            case JsonValue value when value.TryGetValue<string>(out var text):
+                var repaired = ModelText.Repair(text);
+                return ModelText.IsGarbled(repaired)
+                    ? throw new CoachingModelException("The model answer has garbled characters (mojibake).")
+                    : JsonValue.Create(repaired);
+            default:
+                return node;
         }
     }
 

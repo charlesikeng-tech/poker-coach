@@ -75,33 +75,38 @@
           <div class="leaks">
             @for (leak of group.leaks; track leak.stat + (leak.position ?? '')) {
               @let p = params(leak, t);
+              @let c = coach()[key(leak)];
               <article
                 class="leak glass"
                 appSpotlight
                 [class.leak--confirmed]="leak.confidence === 'confirmed'"
+                [class.leak--open]="c?.status === 'ready'"
               >
-                <header>
-                  <h3>{{ t('items.' + leak.stat + '.' + leak.direction + '.title', p) }}</h3>
-                  <span class="badge" [class.badge--confirmed]="leak.confidence === 'confirmed'">
-                    {{ t('confidence.' + leak.confidence) }}
-                  </span>
-                </header>
-                <p class="figures numeric">{{ t('figures', p) }}</p>
-                <app-range-gauge
-                  [rate]="leak.rate"
-                  [low]="leak.intervalLow"
-                  [high]="leak.intervalHigh"
-                  [min]="leak.range.min"
-                  [max]="leak.range.max"
-                  [format]="formats().share"
-                  [label]="t('gauge', p)"
-                />
-                <p class="why">{{ t('items.' + leak.stat + '.' + leak.direction + '.why', p) }}</p>
-                <p class="work">
-                  <strong>{{ t('workOn') }}</strong>
-                  {{ t('items.' + leak.stat + '.' + leak.direction + '.work', p) }}
-                </p>
-                @let c = coach()[key(leak)];
+                <div class="leak-main">
+                  <header>
+                    <h3>{{ t('items.' + leak.stat + '.' + leak.direction + '.title', p) }}</h3>
+                    <span class="badge" [class.badge--confirmed]="leak.confidence === 'confirmed'">
+                      {{ t('confidence.' + leak.confidence) }}
+                    </span>
+                  </header>
+                  <p class="figures numeric">{{ t('figures', p) }}</p>
+                  <app-range-gauge
+                    [rate]="leak.rate"
+                    [low]="leak.intervalLow"
+                    [high]="leak.intervalHigh"
+                    [min]="leak.range.min"
+                    [max]="leak.range.max"
+                    [format]="formats().share"
+                    [label]="t('gauge', p)"
+                  />
+                  <p class="why">
+                    {{ t('items.' + leak.stat + '.' + leak.direction + '.why', p) }}
+                  </p>
+                  <p class="work">
+                    <strong>{{ t('workOn') }}</strong>
+                    {{ t('items.' + leak.stat + '.' + leak.direction + '.work', p) }}
+                  </p>
+                </div>
                 @if (c?.status === 'ready') {
                   @let e = $any(c).explanation;
                   <section class="coach" aria-live="polite">

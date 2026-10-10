@@ -23,13 +23,13 @@
   }
 }
 
+// Filters and what they cover, side by side on the left: no gap the width of the screen.
 .toolbar {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
+  gap: var(--space-3) var(--space-6);
+  margin-bottom: var(--space-5);
 
   label {
     display: flex;
@@ -45,7 +45,9 @@
 }
 
 .basis {
-  max-width: 48ch;
+  flex: 1 1 18rem;
+  max-width: 60ch;
+  padding-bottom: var(--space-2);
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
@@ -81,16 +83,20 @@
   font-size: var(--font-size-sm);
 }
 
+// Flex, not a grid of fixed tracks: a card alone on its row (or the open one) takes the whole row
+// instead of a third of it.
 .leaks {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 
 .leak {
   display: flex;
+  flex: 1 1 22rem;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  min-width: 0;
   padding: var(--space-5);
 
   header {
@@ -104,6 +110,77 @@
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
+  }
+}
+
+.leak-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+// A wide closed card reads in two columns: the measure on the left, what it means and what to do on the
+// right. Not the open card: its left column is already narrow.
+.leak:not(.leak--open) {
+  container-type: inline-size;
+}
+
+@container (min-width: 46rem) {
+  .leak-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'head why'
+      'figures why'
+      'gauge work';
+    align-content: start;
+    gap: var(--space-2) var(--space-6);
+
+    > header {
+      grid-area: head;
+    }
+
+    .figures {
+      grid-area: figures;
+    }
+
+    app-range-gauge {
+      grid-area: gauge;
+    }
+
+    .why {
+      grid-area: why;
+    }
+
+    .work {
+      grid-area: work;
+    }
+  }
+}
+
+// With the coach's explanation open, the card takes the whole row: figures on the left, the
+// explanation beside them, instead of one long narrow column.
+.leak--open {
+  flex-basis: 100%;
+
+  @media (min-width: 64rem) {
+    display: grid;
+    grid-template-columns: minmax(18rem, 2fr) minmax(0, 3fr);
+    align-items: start;
+    gap: var(--space-6);
+
+    .leak-main {
+      position: sticky;
+      top: var(--space-4);
+    }
+
+    .coach {
+      margin-top: 0;
+      padding-top: 0;
+      padding-left: var(--space-6);
+      border-top: 0;
+      border-left: 1px solid var(--border-subtle);
+    }
   }
 }
 
@@ -167,6 +244,7 @@
   font-size: var(--font-size-sm);
 
   h4 {
+    margin: var(--space-1) 0 0;
     color: var(--text-primary);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);

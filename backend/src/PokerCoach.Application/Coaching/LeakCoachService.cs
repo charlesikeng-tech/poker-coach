@@ -141,9 +141,9 @@ public sealed class LeakCoachService(
     /// <summary>
     /// Bump when the coach's instructions change in a way the player would see (wording, tone): stored
     /// explanations written under the old ones are then written again. 2: informal address, English poker
-    /// terms ("leak" never translated).
+    /// terms ("leak" never translated). 3: accents checked (mojibake repaired or rejected, ModelText).
     /// </summary>
-    internal const int ExplanationVersion = 2;
+    internal const int ExplanationVersion = 3;
 
     /// <summary>
     /// What makes an explanation still valid: the leak, its confidence and its rate to the percent. A few
