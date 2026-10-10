@@ -1,0 +1,110 @@
+<ng-container *transloco="let tr">
+  <ng-container *transloco="let t; prefix: 'coach'">
+    <section class="coach-panel glass" aria-live="polite" [attr.aria-busy]="writing()">
+      <header class="coach-head">
+        <h3><app-icon [icon]="icons.Sparkles" />{{ t('review.title') }}</h3>
+        @if (weeks().length > 1) {
+          <div class="segmented" role="group" [attr.aria-label]="t('review.which')">
+            @for (w of weeks(); track w.weekStart; let i = $index) {
+              <button
+                type="button"
+                [class.active]="selected() === i"
+                [attr.aria-pressed]="selected() === i"
+                (click)="select(i)"
+              >
+                {{ t(i === 0 ? 'review.thisWeek' : 'review.lastWeek') }}
+              </button>
+            }
+          </div>
+        } @else {
+          <span class="ai-tag">{{ t('aiTag') }}</span>
+        }
+      </header>
+
+      @switch (state().kind) {
+        @case ('loading') {
+          <span class="skeleton" role="status" [attr.aria-label]="t('loading')"></span>
+        }
+        @case ('ready') {
+          @let r = $any(state()).review;
+          @if (r.stale) {
+            <p class="stale">
+              <span>{{ t('review.stale') }}</span>
+              <button
+                appButton
+                variant="ghost"
+                [disabled]="writing() || tooFewHands()"
+                (click)="write()"
+              >
+                <app-icon [icon]="icons.RefreshCw" [class.spin]="writing()" />{{ t('update') }}
+              </button>
+            </p>
+          }
+          @if (!r.weekOver) {
+            <p class="hint">{{ t('review.midWeek') }}</p>
+          }
+          <p class="headline">{{ r.headline }}</p>
+          <p class="story">{{ r.summary }}</p>
+
+          @if (commented(r).length > 0) {
+            <ul class="priority-notes">
+              @for (p of commented(r); track p.ref) {
+                <li [attr.data-status]="p.status">
+                  <p class="priority-name">
+                    {{ tr('pages.leaks.stats.' + p.stat) }}
+                    @if (p.position) {
+                      · {{ short(p.position) }}
+                    }
+                    <span class="numeric">{{ rate(p.rate) }}</span>
+                    <span class="status">{{ tr('pages.progress.status.' + p.status) }}</span>
+                  </p>
+                  <p>{{ p.note }}</p>
+                </li>
+              }
+            </ul>
+          }
+
+          @if (r.nextSteps.length > 0) {
+            <div class="columns">
+              <div>
+                <h4>{{ t('review.nextSteps') }}</h4>
+                <ul>
+                  @for (step of r.nextSteps; track $index) {
+                    <li>{{ step }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+          <p class="disclaimer">{{ t('disclaimer', { date: date(r.createdAt) }) }}</p>
+        }
+        @default {
+          <p class="intro">
+            {{ state().kind === 'failed' ? t('loadFailed') : t('review.intro') }}
+          </p>
+          <div class="write">
+            <button
+              appButton
+              variant="secondary"
+              [disabled]="writing() || tooFewHands()"
+              (click)="write()"
+            >
+              <app-icon
+                [class.spin]="writing()"
+                [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+              />
+              {{ writing() ? t('review.writing') : t('review.action') }}
+            </button>
+            @if (tooFewHands()) {
+              <span class="hint">{{ t('review.tooFew', { count: minHands }) }}</span>
+            }
+          </div>
+        }
+      }
+
+      @if (writeError(); as code) {
+        <p class="coach-error" role="alert">{{ t('errors.' + code) }}</p>
+      }
+    </section>
+  </ng-container>
+</ng-container>

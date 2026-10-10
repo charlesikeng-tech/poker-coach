@@ -276,6 +276,15 @@ Quiz on real hands:
       web: "My hands" mode with the date, what the hero did that day and a link to the replay
 - [x] Migration `TrainingRealHands`
 
+Coach reports (ADR-0012):
+
+- [x] Tournament debrief: story, verdict per key moment (variance checked against computed equity),
+      strengths, things to work on — `GET|POST /api/tournaments/{id}/debrief`, panel on the tournament page
+- [x] Weekly review: plan priorities against the week's measured progress, drills, next steps —
+      `GET|POST /api/progress/review`, panel on the Progress page (this week / last week)
+- [x] Stored per subject and language (`coaching.reports`), `stale` when the facts moved, regenerated on
+      demand only; shared gate (daily limits per feature, monthly budget); exported and deleted with the account
+
 Deployment readiness (roadmap step 5, ADR-0011):
 
 - [x] Data-protection keys in PostgreSQL (`platform.data_protection_keys`): sessions survive redeploys

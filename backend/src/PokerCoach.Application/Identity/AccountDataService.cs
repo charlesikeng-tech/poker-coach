@@ -18,6 +18,9 @@ public sealed record ExportedDrillAttempt(DateTimeOffset AnsweredAt, string Form
 /// <param name="Payload">The explanation as the model wrote it (JSON).</param>
 public sealed record ExportedExplanation(DateTimeOffset CreatedAt, string Language, string Model, string Payload);
 
+/// <param name="Payload">The debrief or review as stored (JSON).</param>
+public sealed record ExportedReport(string Kind, string Subject, DateTimeOffset CreatedAt, string Language, string Model, string Payload);
+
 /// <summary>Everything stored about a user except tournaments and uploaded files, which are exported apart.</summary>
 public sealed record AccountSnapshot(
     string DisplayName,
@@ -27,7 +30,8 @@ public sealed record AccountSnapshot(
     IReadOnlyList<ExportedIdentity> Identities,
     IReadOnlyList<ExportedPokerAccount> PokerAccounts,
     IReadOnlyList<ExportedDrillAttempt> DrillAttempts,
-    IReadOnlyList<ExportedExplanation> Explanations);
+    IReadOnlyList<ExportedExplanation> Explanations,
+    IReadOnlyList<ExportedReport>? Reports = null);
 
 /// <summary>One uploaded file as stored (gzip), with its original name.</summary>
 public sealed record ExportedUpload(string FileName, DateTimeOffset UploadedAt, byte[] ContentGzip);
@@ -91,6 +95,7 @@ public sealed class AccountDataService(
                 WeeklyPlans = weeklyPlans,
                 snapshot.DrillAttempts,
                 CoachExplanations = snapshot.Explanations.Select(e => new { e.CreatedAt, e.Language, e.Model, Content = JsonDocument.Parse(e.Payload).RootElement }),
+                CoachReports = (snapshot.Reports ?? []).Select(r => new { r.Kind, r.Subject, r.CreatedAt, r.Language, r.Model, Content = JsonDocument.Parse(r.Payload).RootElement }),
             },
             Json));
         WriteText(zip, "tournaments.csv", TournamentsCsv(page.Items));

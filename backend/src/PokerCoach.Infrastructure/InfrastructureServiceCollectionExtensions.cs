@@ -69,6 +69,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IAllInReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IRealSpotStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<ICoachingStore, CoachingStore>();
+        services.AddScoped<ICoachingReportStore, CoachingReportStore>();
         services.AddScoped<IFeatureUsageStore, FeatureUsageStore>();
 
         // No API key = coaching unavailable, not a startup failure (ADR-0008).

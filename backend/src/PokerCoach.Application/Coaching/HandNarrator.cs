@@ -87,6 +87,16 @@ public static class HandNarrator
             text.AppendLine(".");
         }
 
+        // Cards opponents showed are facts of the hand; anything not shown stays unknown.
+        var shown = (hand.KnownCards ?? new Dictionary<string, (Card First, Card Second)>())
+            .Where(k => k.Key != hand.Hero)
+            .Select(k => $"{Name(k.Key)} {k.Value.First}{k.Value.Second}")
+            .ToList();
+        if (shown.Count > 0)
+        {
+            text.Append("Shown: ").AppendJoin(", ", shown).AppendLine(".");
+        }
+
         var won = hand.Collected.GetValueOrDefault(hand.Hero);
         var invested = hand.Actions.Where(a => a.Player == hand.Hero).Sum(a => a.Amount);
         text.Append(CultureInfo.InvariantCulture, $"Result for Hero: {(won - invested >= 0 ? "+" : string.Empty)}{Bb(won - invested)}.");

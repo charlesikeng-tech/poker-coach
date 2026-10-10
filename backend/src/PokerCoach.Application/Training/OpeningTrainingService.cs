@@ -34,8 +34,8 @@ public interface ITrainingStore
     /// <summary>Real hands already asked in the quiz, with whether the latest answer was right.</summary>
     Task<IReadOnlyDictionary<Guid, bool>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken);
 
-    /// <summary>Answers given since a moment, every format and drill: the weekly plan's goal.</summary>
-    Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken);
+    /// <summary>Answers given from a moment (until another, exclusive, when set), every format and drill: the weekly plan's goal.</summary>
+    Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, DateTimeOffset? until, CancellationToken cancellationToken);
 
     /// <summary>The user's latest attempts for a format and drill, most recent first.</summary>
     Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken);

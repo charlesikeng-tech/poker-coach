@@ -30,6 +30,7 @@ public interface ITournamentDetailStore
 public sealed record StackPoint(int Index, DateTimeOffset StartedAt, int Level, long Stack, decimal StackInBigBlinds);
 
 /// <summary>A key moment with what the page needs to name the hand.</summary>
+/// <param name="AllInEquity">Preflop all-in with every hand shown: the hero's computed share of the main pot.</param>
 public sealed record KeyMomentDetail(
     KeyMoment Moment,
     Guid HandId,
@@ -37,7 +38,8 @@ public sealed record KeyMomentDetail(
     int Level,
     PokerPosition? Position,
     string? HeroCards,
-    decimal StackInBigBlinds);
+    decimal StackInBigBlinds,
+    decimal? AllInEquity = null);
 
 /// <param name="HandsDuration">From the first to the last imported hand; null with fewer than two hands.</param>
 /// <param name="Stats">Over hands with computed facts only. One tournament is a small sample: rates are descriptive, never leaks.</param>
@@ -87,7 +89,7 @@ public sealed class TournamentDetailService(ITournamentDetailStore store)
             .Select(m =>
             {
                 var (_, hand, _) = byIndex[m.Index];
-                return new KeyMomentDetail(m, hand.HandId, hand.StartedAt, hand.Level, hand.Facts!.Position, hand.HeroCards, hand.Facts.StackInBigBlinds);
+                return new KeyMomentDetail(m, hand.HandId, hand.StartedAt, hand.Level, hand.Facts!.Position, hand.HeroCards, hand.Facts.StackInBigBlinds, hand.Facts.AllInEquity);
             })
             .ToList();
 

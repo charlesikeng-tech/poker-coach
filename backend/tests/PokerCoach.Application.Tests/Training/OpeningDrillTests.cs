@@ -99,7 +99,7 @@ public sealed class OpeningDrillTests
                 .GroupBy(a => a.SourceHandId!.Value)
                 .ToDictionary(g => g.Key, g => g.First().Correct));
 
-        public Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken) =>
+        public Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, DateTimeOffset? until, CancellationToken cancellationToken) =>
             Task.FromResult((Attempts.Count(a => a.AnsweredAt >= since), Attempts.Count(a => a.AnsweredAt >= since && a.Correct)));
 
         public Task<IReadOnlyList<DrillAttempt>> RecentAsync(Guid userId, TableFormat format, DrillMode mode, int count, CancellationToken cancellationToken) =>

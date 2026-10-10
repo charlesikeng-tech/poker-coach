@@ -24,6 +24,15 @@ public enum CoachingFailure
 
     /// <summary>The provider failed or answered outside the schema.</summary>
     ModelFailed,
+
+    /// <summary>The subject (tournament, week) does not exist for this user.</summary>
+    NotFound,
+
+    /// <summary>Hand facts are still being computed: figures would be partial.</summary>
+    HandsPending,
+
+    /// <summary>Too little played to say anything worth paying for.</summary>
+    NotEnoughData,
 }
 
 public sealed record CoachingOutcome(StoredExplanation? Explanation, CoachingFailure? Failure)
@@ -45,6 +54,8 @@ public sealed class LeakCoachService(
     TimeProvider time)
 {
     internal const string Purpose = "leak-explanation";
+
+    private readonly CoachingGate gate = new(store, model, options, time);
 
     public async Task<CoachingOutcome> ExplainAsync(
         Guid userId,
@@ -70,23 +81,9 @@ public sealed class LeakCoachService(
             return CoachingOutcome.Of(cached);
         }
 
-        if (!model.IsAvailable)
+        if (await gate.CheckAsync(userId, Purpose, options.DailyExplanationsPerUser, cancellationToken) is { } refused)
         {
-            return CoachingOutcome.Fail(CoachingFailure.Unavailable);
-        }
-
-        var now = time.GetUtcNow();
-        var today = new DateTimeOffset(now.Date, TimeSpan.Zero);
-        if (await store.CountCallsSinceAsync(userId, Purpose, today, cancellationToken) >= options.DailyExplanationsPerUser)
-        {
-            return CoachingOutcome.Fail(CoachingFailure.DailyLimitReached);
-        }
-
-        // Soft by at most the calls in flight: acceptable for a beta cap (ADR-0008).
-        var monthStart = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero);
-        if (await store.SpendSinceAsync(monthStart, cancellationToken) >= options.MonthlyBudgetUsd)
-        {
-            return CoachingOutcome.Fail(CoachingFailure.BudgetExhausted);
+            return CoachingOutcome.Fail(refused);
         }
 
         var situation = new LeakSituation(stat, position, direction, ReferenceRanges.MinStackBigBlinds, analysis.Format);
@@ -113,8 +110,7 @@ public sealed class LeakCoachService(
             return CoachingOutcome.Fail(CoachingFailure.ModelFailed);
         }
 
-        // Spend is recorded even if the answer is then rejected: it was billed.
-        await store.RecordUsageAsync(userId, Purpose, answer.Usage, options.CostOf(answer.Usage), cancellationToken);
+        await gate.RecordAsync(userId, Purpose, answer.Usage, cancellationToken);
 
         // The model may only cite hands we gave it.
         var known = labels.Select(l => l.Ref).ToHashSet(StringComparer.Ordinal);
@@ -123,7 +119,7 @@ public sealed class LeakCoachService(
             Hands = answer.Explanation.Hands.Where(h => known.Contains(h.Ref)).ToList(),
         };
         var cited = explanation.Hands.Select(h => h.Ref).ToHashSet(StringComparer.Ordinal);
-        var stored = new StoredExplanation(explanation, labels.Where(l => cited.Contains(l.Ref)).ToList(), answer.Usage.Model, now);
+        var stored = new StoredExplanation(explanation, labels.Where(l => cited.Contains(l.Ref)).ToList(), answer.Usage.Model, time.GetUtcNow());
         await store.SaveExplanationAsync(userId, fingerprint, language, stored, cancellationToken);
         return CoachingOutcome.Of(stored);
     }

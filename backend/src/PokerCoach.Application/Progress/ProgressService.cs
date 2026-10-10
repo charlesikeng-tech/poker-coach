@@ -71,7 +71,7 @@ public sealed class ProgressService(IWeeklyPlanStore plans, LeakService leaks, I
         }
 
         var current = plan is null ? null : await MeasureAsync(userId, plan, cancellationToken);
-        var (attempts, correct) = await training.CountSinceAsync(userId, WeeklyPlanner.Start(week), cancellationToken);
+        var (attempts, correct) = await training.CountSinceAsync(userId, WeeklyPlanner.Start(week), null, cancellationToken);
 
         var history = new List<WeekReport>();
         foreach (var past in await plans.ListBeforeAsync(userId, week, HistoryWeeks, cancellationToken))

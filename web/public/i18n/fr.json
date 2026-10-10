@@ -1305,7 +1305,7 @@
         },
         "ai": {
           "title": "Coach IA",
-          "body": "Quand tu demandes une explication, des mains d'exemple sont envoyées à Anthropic, notre prestataire d'IA, sous forme de récit anonymisé : positions et actions, sans ton pseudo ni ceux de tes adversaires. Anthropic traite ces données aux États-Unis pour notre compte."
+          "body": "Quand tu demandes une explication de leak, un débrief de tournoi ou un bilan de semaine, les chiffres calculés par Poker Coach et, si besoin, des mains d'exemple sont envoyés à Anthropic, notre prestataire d'IA, sous forme anonymisée : positions, actions et montants, sans ton pseudo, ceux de tes adversaires ni le nom du tournoi. Anthropic traite ces données aux États-Unis pour notre compte. Les textes écrits sont gardés avec ton compte et inclus dans ton export."
         },
         "cookies": {
           "title": "Cookies",
@@ -1343,5 +1343,57 @@
     "fullRing": "Table pleine",
     "sixMaxHint": "Tables de 6 places au plus",
     "fullRingHint": "Tables de 7 à 9 places"
+  },
+  "coach": {
+    "aiTag": "IA",
+    "loading": "Chargement du texte du coach…",
+    "loadFailed": "Le texte du coach n'a pas pu être chargé.",
+    "update": "Mettre à jour",
+    "disclaimer": "Écrit par une IA le {{date}} à partir de tes chiffres et de mains anonymisées. Les mesures viennent de Poker Coach, pas de l'IA.",
+    "verdicts": {
+      "wellPlayed": "Bien joué",
+      "mistake": "À revoir",
+      "variance": "Variance",
+      "standard": "Standard"
+    },
+    "debrief": {
+      "title": "Débrief du coach",
+      "intro": "Le coach raconte ton tournoi à partir de tes moments clés et de tes stats, et te dit quoi travailler.",
+      "action": "Écrire le débrief",
+      "writing": "Le coach analyse ton tournoi…",
+      "stale": "De nouvelles mains ou le résumé ont été importés depuis ce débrief.",
+      "equity": "équité {{value}}",
+      "strengths": "Ce qui a marché",
+      "workOn": "À travailler",
+      "blocked": {
+        "pending": "Attends la fin de l'analyse des mains.",
+        "tooShort": "Il faut au moins {{count}} mains jouées dans le tournoi."
+      }
+    },
+    "review": {
+      "title": "Bilan du coach",
+      "which": "Semaine à commenter",
+      "thisWeek": "Cette semaine",
+      "lastWeek": "Semaine dernière",
+      "intro": "Le coach commente ta semaine : tes priorités, tes exercices et la suite.",
+      "action": "Écrire le bilan",
+      "writing": "Le coach fait le point…",
+      "stale": "Ta semaine a avancé depuis ce bilan.",
+      "midWeek": "Point d'étape : la semaine n'est pas finie.",
+      "nextSteps": "Pour la suite",
+      "tooFew": "Il faut au moins {{count}} mains jouées dans la semaine."
+    },
+    "errors": {
+      "HANDS_PENDING": "Tes mains sont encore en cours d'analyse. Réessaie dans un instant.",
+      "NOT_ENOUGH_HANDS": "Pas assez de mains pour que le coach ait quelque chose à dire.",
+      "TOURNAMENT_NOT_FOUND": "Ce tournoi est introuvable.",
+      "WEEK_NOT_FOUND": "Pas de plan pour cette semaine.",
+      "COACHING_DAILY_LIMIT": "Limite quotidienne atteinte pour le coach. Réessaie demain.",
+      "COACHING_BUDGET_EXHAUSTED": "Le coach est en pause jusqu'au mois prochain.",
+      "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré sur ce serveur.",
+      "COACHING_FAILED": "Le coach n'a pas pu répondre. Réessaie.",
+      "network": "Connexion impossible. Vérifie ton réseau.",
+      "unknown": "Une erreur inattendue est survenue."
+    }
   }
 }

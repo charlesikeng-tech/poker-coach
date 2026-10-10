@@ -181,6 +181,12 @@ public sealed class LeakCoachServiceTests
                 new LeakExplanation("summary", "why", ["act"], Cite.Select(c => new HandNote(c, "note " + c)).ToList()),
                 new ModelUsage("test-model", 6_000, 1_000, 0, 0)));
         }
+
+        public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class FakeStore : ICoachingStore

@@ -38,6 +38,11 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
             .OrderBy(e => e.CreatedAt)
             .Select(e => new ExportedExplanation(e.CreatedAt, e.Language, e.Model, e.Payload))
             .ToListAsync(cancellationToken);
+        var reports = await db.Set<CoachingReportRecord>().AsNoTracking()
+            .Where(r => r.UserId == userId)
+            .OrderBy(r => r.CreatedAt)
+            .Select(r => new ExportedReport(r.Kind, r.Subject, r.CreatedAt, r.Language, r.Model, r.Payload))
+            .ToListAsync(cancellationToken);
 
         return new AccountSnapshot(
             user.DisplayName,
@@ -56,7 +61,8 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
                 a.Hand,
                 a.Answer.ToString(),
                 a.Correct)).ToList(),
-            explanations);
+            explanations,
+            reports);
     }
 
     public async IAsyncEnumerable<ExportedUpload> StreamUploadsAsync(Guid userId, [EnumeratorCancellation] CancellationToken cancellationToken)

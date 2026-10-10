@@ -174,13 +174,6 @@ public static class LeakEndpoints
                 explanation.CreatedAt));
         }
 
-        return outcome.Failure switch
-        {
-            CoachingFailure.NotALeak => ApiProblems.WithCode(StatusCodes.Status404NotFound, "LEAK_NOT_FOUND", "This statistic is not a current leak."),
-            CoachingFailure.DailyLimitReached => ApiProblems.WithCode(StatusCodes.Status429TooManyRequests, "COACHING_DAILY_LIMIT", "Daily limit of new explanations reached."),
-            CoachingFailure.BudgetExhausted => ApiProblems.WithCode(StatusCodes.Status503ServiceUnavailable, "COACHING_BUDGET_EXHAUSTED", "The coach is paused until next month."),
-            CoachingFailure.Unavailable => ApiProblems.WithCode(StatusCodes.Status503ServiceUnavailable, "COACHING_UNAVAILABLE", "The coach is not configured."),
-            _ => ApiProblems.WithCode(StatusCodes.Status502BadGateway, "COACHING_FAILED", "The coach could not answer. Try again."),
-        };
+        return Coaching.CoachingEndpoints.Problem(outcome.Failure!.Value, "LEAK_NOT_FOUND");
     }
 }

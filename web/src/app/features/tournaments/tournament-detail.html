@@ -197,6 +197,12 @@
           }
         </section>
 
+        <app-debrief-panel
+          [tournamentId]="d.tournament.id"
+          [handsDealt]="d.stack.length"
+          [pendingHands]="d.pendingHands"
+        />
+
         <!-- Session stats -->
         <section class="card glass" [attr.aria-label]="t('detail.session.title')">
           <h3 class="card__title">{{ t('detail.session.title') }}</h3>

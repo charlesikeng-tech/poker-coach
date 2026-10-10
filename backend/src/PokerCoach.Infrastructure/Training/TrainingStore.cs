@@ -106,10 +106,10 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
             .ToDictionary(g => g.Key, g => g.OrderByDescending(r => r.CreatedAt).First().Correct);
     }
 
-    public async Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, CancellationToken cancellationToken)
+    public async Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, DateTimeOffset? until, CancellationToken cancellationToken)
     {
         var counts = await db.Set<OpeningAttemptRecord>().AsNoTracking()
-            .Where(a => a.UserId == userId && a.CreatedAt >= since)
+            .Where(a => a.UserId == userId && a.CreatedAt >= since && (until == null || a.CreatedAt < until))
             .GroupBy(_ => 1)
             .Select(g => new { Attempts = g.Count(), Correct = g.Count(a => a.Correct) })
             .SingleOrDefaultAsync(cancellationToken);

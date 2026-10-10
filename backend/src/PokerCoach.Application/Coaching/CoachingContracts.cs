@@ -16,6 +16,12 @@ public sealed class CoachingOptions
     /// <summary>New explanations a user can generate per UTC day (cached ones are free).</summary>
     public int DailyExplanationsPerUser { get; set; } = 20;
 
+    /// <summary>New tournament debriefs a user can generate per UTC day.</summary>
+    public int DailyDebriefsPerUser { get; set; } = 10;
+
+    /// <summary>New weekly reviews a user can generate per UTC day.</summary>
+    public int DailyWeekReviewsPerUser { get; set; } = 5;
+
     /// <summary>Example hands given to the model per explanation.</summary>
     public int ExampleHands { get; set; } = 5;
 
@@ -53,6 +59,9 @@ public sealed record ModelUsage(string Model, int InputTokens, int OutputTokens,
 
 public sealed record ModelExplanation(LeakExplanation Explanation, ModelUsage Usage);
 
+/// <summary>A validated answer of the model and what it cost.</summary>
+public sealed record ModelAnswer<T>(T Value, ModelUsage Usage);
+
 /// <summary>Port to the language model (Infrastructure adapter per provider).</summary>
 public interface ICoachingModel
 {
@@ -61,6 +70,12 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken);
 }
 
 public sealed class CoachingModelException : Exception

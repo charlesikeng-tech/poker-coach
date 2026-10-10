@@ -5,6 +5,7 @@ using PokerCoach.Api.Account;
 using PokerCoach.Api.Analytics;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Bankroll;
+using PokerCoach.Api.Coaching;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Hands;
 using PokerCoach.Api.Health;
@@ -80,6 +81,8 @@ builder.Services.AddOptions<CoachingOptions>()
     .ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<CoachingOptions>>().Value);
 builder.Services.AddScoped<LeakCoachService>();
+builder.Services.AddScoped<TournamentDebriefService>();
+builder.Services.AddScoped<WeekReviewService>();
 builder.Services.AddSingleton<FeatureUsageTracker>();
 
 // Behind the platform's TLS-terminating proxy, ASPNETCORE_FORWARDEDHEADERS_ENABLED=true makes the app see
@@ -141,6 +144,7 @@ app.MapTrainingEndpoints();
 app.MapBankrollEndpoints();
 app.MapProgressEndpoints();
 app.MapLeakEndpoints();
+app.MapCoachingEndpoints();
 if (servesWebApp)
 {
     app.MapWebAppFallback();

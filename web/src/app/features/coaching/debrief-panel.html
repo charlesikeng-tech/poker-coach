@@ -1,0 +1,111 @@
+<ng-container *transloco="let t; prefix: 'coach'">
+  <section class="coach-panel glass" aria-live="polite" [attr.aria-busy]="writing()">
+    <header class="coach-head">
+      <h3><app-icon [icon]="icons.Sparkles" />{{ t('debrief.title') }}</h3>
+      <span class="ai-tag">{{ t('aiTag') }}</span>
+    </header>
+
+    @switch (state().kind) {
+      @case ('loading') {
+        <span class="skeleton" role="status" [attr.aria-label]="t('loading')"></span>
+      }
+      @case ('ready') {
+        @let d = $any(state()).debrief;
+        @if (d.stale) {
+          <p class="stale">
+            <span>{{ t('debrief.stale') }}</span>
+            <button
+              appButton
+              variant="ghost"
+              [disabled]="writing() || blocked() !== null"
+              (click)="write()"
+            >
+              <app-icon [icon]="icons.RefreshCw" [class.spin]="writing()" />{{ t('update') }}
+            </button>
+          </p>
+        }
+        <p class="headline">{{ d.headline }}</p>
+        <p class="story">{{ d.story }}</p>
+
+        @if (comments().length > 0) {
+          <ol class="moment-notes">
+            @for (m of comments(); track m.ref) {
+              <li [attr.data-verdict]="m.verdict">
+                <a class="moment-note" [routerLink]="['/hands', m.handId]">
+                  <span class="moment-number numeric">{{ number(m) }}</span>
+                  <span class="moment-cards">
+                    @for (card of cards(m.heroCards); track $index) {
+                      <app-playing-card [card]="card" size="small" />
+                    }
+                  </span>
+                  <span class="moment-text">
+                    <span class="moment-meta">
+                      <span class="verdict">{{ t('verdicts.' + m.verdict) }}</span>
+                      <span class="numeric">{{ swing(m) }}</span>
+                      @if (m.allInEquity !== null) {
+                        <span class="numeric">{{
+                          t('debrief.equity', { value: equity(m.allInEquity) })
+                        }}</span>
+                      }
+                    </span>
+                    <span>{{ m.note }}</span>
+                  </span>
+                </a>
+              </li>
+            }
+          </ol>
+        }
+
+        <div class="columns">
+          @if (d.strengths.length > 0) {
+            <div>
+              <h4>{{ t('debrief.strengths') }}</h4>
+              <ul>
+                @for (item of d.strengths; track $index) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          }
+          @if (d.workOn.length > 0) {
+            <div>
+              <h4>{{ t('debrief.workOn') }}</h4>
+              <ul>
+                @for (item of d.workOn; track $index) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+        <p class="disclaimer">{{ t('disclaimer', { date: date(d.createdAt) }) }}</p>
+      }
+      @default {
+        <p class="intro">
+          {{ state().kind === 'failed' ? t('loadFailed') : t('debrief.intro') }}
+        </p>
+        <div class="write">
+          <button
+            appButton
+            variant="secondary"
+            [disabled]="writing() || blocked() !== null"
+            (click)="write()"
+          >
+            <app-icon
+              [class.spin]="writing()"
+              [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+            />
+            {{ writing() ? t('debrief.writing') : t('debrief.action') }}
+          </button>
+          @if (blocked(); as reason) {
+            <span class="hint">{{ t('debrief.blocked.' + reason, { count: minHands }) }}</span>
+          }
+        </div>
+      }
+    }
+
+    @if (writeError(); as code) {
+      <p class="coach-error" role="alert">{{ t('errors.' + code) }}</p>
+    }
+  </section>
+</ng-container>

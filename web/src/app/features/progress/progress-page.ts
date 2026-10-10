@@ -9,6 +9,7 @@ import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
 import { positionShort } from '../training/spot-table';
 import { Priority, ProgressApi, ProgressReport } from './progress-api';
 
@@ -24,7 +25,7 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
  */
 @Component({
   selector: 'app-progress-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, WeekReviewPanel],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './progress-page.html',
@@ -63,6 +64,20 @@ export class ProgressPage {
   constructor() {
     void this.load();
   }
+
+  /** This week, then last week when it had a plan: what the coach can review. */
+  protected readonly reviewWeeks = computed<readonly ReviewableWeek[]>(() => {
+    const report = this.report();
+    if (!report?.current) {
+      return [];
+    }
+    const weeks: ReviewableWeek[] = [{ weekStart: report.weekStart, hands: report.current.hands }];
+    const last = report.history[0];
+    if (last) {
+      weeks.push({ weekStart: last.weekStart, hands: last.hands });
+    }
+    return weeks;
+  });
 
   protected retry(): void {
     void this.load();

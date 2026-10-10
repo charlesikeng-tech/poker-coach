@@ -172,6 +172,10 @@
         </div>
       }
 
+      @if (r.current) {
+        <app-week-review-panel class="review" [weeks]="reviewWeeks()" />
+      }
+
       @if (r.history.length > 0) {
         <section class="history glass">
           <h2>{{ t('history.title') }}</h2>

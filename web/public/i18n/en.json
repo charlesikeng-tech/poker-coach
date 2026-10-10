@@ -1305,7 +1305,7 @@
         },
         "ai": {
           "title": "AI coach",
-          "body": "When you ask for an explanation, example hands are sent to Anthropic, our AI provider, as an anonymised story: positions and actions, without your screen name or your opponents'. Anthropic processes this data in the United States on our behalf."
+          "body": "When you ask for a leak explanation, a tournament debrief or a weekly review, the figures computed by Poker Coach and, when needed, example hands are sent to Anthropic, our AI provider, in anonymised form: positions, actions and amounts, without your screen name, your opponents' or the tournament's name. Anthropic processes this data in the United States on our behalf. The texts written are kept with your account and included in your export."
         },
         "cookies": {
           "title": "Cookies",
@@ -1343,5 +1343,57 @@
     "fullRing": "Full ring",
     "sixMaxHint": "Tables of 6 seats or fewer",
     "fullRingHint": "Tables of 7 to 9 seats"
+  },
+  "coach": {
+    "aiTag": "AI",
+    "loading": "Loading the coach's text…",
+    "loadFailed": "The coach's text could not be loaded.",
+    "update": "Update",
+    "disclaimer": "Written by an AI on {{date}} from your figures and anonymised hands. The measurements come from Poker Coach, not from the AI.",
+    "verdicts": {
+      "wellPlayed": "Well played",
+      "mistake": "To review",
+      "variance": "Variance",
+      "standard": "Standard"
+    },
+    "debrief": {
+      "title": "Coach's debrief",
+      "intro": "The coach tells the story of your tournament from its key moments and your stats, and says what to work on.",
+      "action": "Write the debrief",
+      "writing": "The coach is going through your tournament…",
+      "stale": "New hands or the summary were imported since this debrief.",
+      "equity": "equity {{value}}",
+      "strengths": "What went well",
+      "workOn": "To work on",
+      "blocked": {
+        "pending": "Wait until your hands are analysed.",
+        "tooShort": "At least {{count}} hands played in the tournament are needed."
+      }
+    },
+    "review": {
+      "title": "Coach's review",
+      "which": "Week to review",
+      "thisWeek": "This week",
+      "lastWeek": "Last week",
+      "intro": "The coach comments on your week: your priorities, your drills and what comes next.",
+      "action": "Write the review",
+      "writing": "The coach is taking stock…",
+      "stale": "Your week has moved on since this review.",
+      "midWeek": "Mid-week check: the week is not over.",
+      "nextSteps": "Next steps",
+      "tooFew": "At least {{count}} hands played in the week are needed."
+    },
+    "errors": {
+      "HANDS_PENDING": "Your hands are still being analysed. Try again in a moment.",
+      "NOT_ENOUGH_HANDS": "Too few hands for the coach to have something to say.",
+      "TOURNAMENT_NOT_FOUND": "This tournament cannot be found.",
+      "WEEK_NOT_FOUND": "No plan for this week.",
+      "COACHING_DAILY_LIMIT": "Daily coach limit reached. Try again tomorrow.",
+      "COACHING_BUDGET_EXHAUSTED": "The coach is paused until next month.",
+      "COACHING_UNAVAILABLE": "The AI coach is not configured on this server.",
+      "COACHING_FAILED": "The coach could not answer. Try again.",
+      "network": "Cannot connect. Check your network.",
+      "unknown": "An unexpected error occurred."
+    }
   }
 }

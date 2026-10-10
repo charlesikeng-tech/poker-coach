@@ -6,5 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="PokerCoach.Application.Tests" />
+    <InternalsVisibleTo Include="PokerCoach.IntegrationTests" />
   </ItemGroup>
 </Project>

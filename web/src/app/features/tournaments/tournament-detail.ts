@@ -26,6 +26,7 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
 import { Icon } from '../../shared/ui/icon/icon';
 import { ChartMarker, LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
+import { DebriefPanel } from '../coaching/debrief-panel';
 import { StatRate } from '../statistics/statistics-api';
 import { KeyMoment, TournamentDetail, TournamentsApi } from './tournaments-api';
 
@@ -39,7 +40,16 @@ const SESSION_STATS = ['vpip', 'pfr', 'threeBet', 'steal', 'cbetFlop', 'wentToSh
 
 @Component({
   selector: 'app-tournament-detail',
-  imports: [TranslocoDirective, RouterLink, Button, EmptyState, Icon, LineChart, Spotlight],
+  imports: [
+    TranslocoDirective,
+    RouterLink,
+    Button,
+    EmptyState,
+    Icon,
+    LineChart,
+    Spotlight,
+    DebriefPanel,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './tournament-detail.html',
