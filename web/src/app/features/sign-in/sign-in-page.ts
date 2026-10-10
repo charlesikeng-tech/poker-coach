@@ -8,10 +8,16 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 
-import { SessionService } from '../../core/auth/session.service';
+import {
+  AccountsApi,
+  MIN_PASSWORD_LENGTH,
+  accountErrorCode,
+  retryWithToken,
+} from '../../core/auth/accounts-api';
+import { SessionService, isLocalPath } from '../../core/auth/session.service';
 import { WelcomeService } from '../../core/auth/welcome';
 import { LanguageSelect } from '../../core/i18n/language-select';
 import { LanguageService } from '../../core/i18n/language.service';
@@ -21,6 +27,8 @@ import { PokerChip } from '../../shared/ui/poker-chip/poker-chip';
 
 /** Time for the button's chip to spin up before the browser leaves for Google. */
 const LAUNCH_MS = 650;
+
+type Mode = 'signIn' | 'signUp';
 
 @Component({
   selector: 'app-sign-in-page',
@@ -35,12 +43,25 @@ export class SignInPage {
   readonly error = input<string>();
 
   private readonly session = inject(SessionService);
+  private readonly accounts = inject(AccountsApi);
+  private readonly router = inject(Router);
   private readonly language = inject(LanguageService);
   private readonly welcome = inject(WelcomeService);
   private readonly window = inject(DOCUMENT).defaultView;
   private timer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly launching = signal(false);
+
+  // Email and password (ADR-0013).
+  protected readonly mode = signal<Mode>('signIn');
+  protected readonly email = signal('');
+  protected readonly password = signal('');
+  protected readonly busy = signal(false);
+  protected readonly formError = signal<string | null>(null);
+  /** Address a confirmation link was sent to (sign-up done, or an unconfirmed sign-in). */
+  protected readonly sentTo = signal<string | null>(null);
+  protected readonly resent = signal(false);
+  protected readonly minPassword = MIN_PASSWORD_LENGTH;
   protected readonly features = [
     { key: 'import', suit: '♠' },
     { key: 'leaks', suit: '♦' },
@@ -77,5 +98,63 @@ export class SignInPage {
 
   protected retry(): void {
     location.reload();
+  }
+
+  protected switchMode(mode: Mode): void {
+    this.mode.set(mode);
+    this.formError.set(null);
+    this.sentTo.set(null);
+  }
+
+  protected async submit(event: Event): Promise<void> {
+    event.preventDefault();
+    if (this.busy()) {
+      return;
+    }
+    this.busy.set(true);
+    this.formError.set(null);
+    this.resent.set(false);
+    try {
+      await retryWithToken(this.session, () =>
+        this.mode() === 'signUp'
+          ? this.accounts.register(this.email(), this.password(), this.language.current())
+          : this.accounts.signIn(this.email(), this.password()),
+      );
+      if (this.mode() === 'signUp') {
+        this.sentTo.set(this.email().trim());
+        this.password.set('');
+        return;
+      }
+      this.welcome.arm();
+      await this.session.load();
+      const target = this.returnUrl();
+      await this.router.navigateByUrl(isLocalPath(target) ? target : '/');
+    } catch (error) {
+      const code = accountErrorCode(error);
+      if (code === 'EMAIL_NOT_CONFIRMED') {
+        this.sentTo.set(this.email().trim());
+      }
+      this.formError.set(code);
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  protected async resend(): Promise<void> {
+    const address = this.sentTo();
+    if (!address || this.busy()) {
+      return;
+    }
+    this.busy.set(true);
+    try {
+      await retryWithToken(this.session, () =>
+        this.accounts.resendConfirmation(address, this.language.current()),
+      );
+      this.resent.set(true);
+    } catch (error) {
+      this.formError.set(accountErrorCode(error));
+    } finally {
+      this.busy.set(false);
+    }
   }
 }

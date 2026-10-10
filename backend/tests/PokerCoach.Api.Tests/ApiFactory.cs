@@ -17,7 +17,8 @@ internal sealed class ApiFactory(
     string? connectionString = "Host=localhost;Database=unused",
     string googleClientId = "test-client-id",
     bool signedIn = false,
-    string? webRoot = null) : WebApplicationFactory<Program>
+    string? webRoot = null,
+    string? publicUrl = "https://poker-coach.test") : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -32,6 +33,7 @@ internal sealed class ApiFactory(
                 ["Authentication:Google:ClientId"] = googleClientId,
                 ["Authentication:Google:ClientSecret"] = "test-client-secret",
                 ["Import:WorkerEnabled"] = "false",
+                ["App:PublicUrl"] = publicUrl,
             }));
 
         // Keys in memory: the database-backed key store would open the unused database.

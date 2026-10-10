@@ -660,12 +660,23 @@
       "heading": "Sign in to Poker Coach",
       "description": "Find your tournaments, your statistics and your coaching.",
       "action": "Continue with Google",
-      "privacy": "Your Google account is only used to identify you. Poker Coach never posts anything.",
+      "privacy": "Your address or Google account is only used to identify you. Poker Coach never posts anything.",
       "statement": "Understand your game. Fix your leaks. Measure your progress.",
       "retry": "Try again",
       "errors": {
         "google": "Signing in with Google did not complete. Try again.",
-        "unavailable": "Poker Coach cannot be reached right now. Try again in a moment."
+        "unavailable": "Poker Coach cannot be reached right now. Try again in a moment.",
+        "INVALID_EMAIL": "This email address is not valid.",
+        "WEAK_PASSWORD": "Choose a password of at least {{count}} characters, different from your address.",
+        "INVALID_CREDENTIALS": "Wrong email or password.",
+        "EMAIL_NOT_CONFIRMED": "Confirm your address first with the link we emailed you.",
+        "ACCOUNT_LOCKED": "Too many attempts. Try again in 15 minutes, or choose a new password.",
+        "INVALID_TOKEN": "This link no longer works (already used or expired).",
+        "RATE_LIMITED": "Too many attempts. Wait a minute.",
+        "INVALID_ANTIFORGERY_TOKEN": "The page has expired. Reload it and try again.",
+        "MISMATCH": "The two passwords do not match.",
+        "network": "Cannot connect. Check your network.",
+        "unknown": "An unexpected error occurred."
       },
       "product": "Poker Coach",
       "launching": "Off to Google…",
@@ -678,7 +689,25 @@
         "readOnly": "No posting, no access to your email",
         "private": "Your hands stay private, so do opponents' names"
       },
-      "privacyLink": "Privacy"
+      "privacyLink": "Privacy",
+      "or": "or",
+      "email": "Email",
+      "password": "Password",
+      "passwordAction": "Sign in",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "createAccount": "Create an account",
+      "haveAccount": "Already have an account?",
+      "signInInstead": "Sign in",
+      "resend": "Send the link again",
+      "resent": "Link sent again",
+      "signUp": {
+        "heading": "Create your Poker Coach account",
+        "description": "With Google, or your email and a password.",
+        "action": "Create my account",
+        "passwordHint": "At least {{count}} characters. A sentence you remember makes a good password.",
+        "sent": "Almost done: open the link sent to {{email}} to activate your account. Check your spam folder too."
+      }
     },
     "leaks": {
       "title": "Leaks",
@@ -1297,7 +1326,7 @@
         },
         "data": {
           "title": "What we keep",
-          "body": "Your Google identifier, email address, display name and language. The hand histories and tournament summaries you import, as they are (they contain the screen names of the players at your tables), and everything we compute from them: statistics, leaks, weekly plans. The bankroll movements you enter and your training answers."
+          "body": "Your Google identifier, or your email address and password (stored only as an irreversible hash, never in clear), your display name and language. The hand histories and tournament summaries you import, as they are (they contain the screen names of the players at your tables), and everything we compute from them: statistics, leaks, weekly plans. The bankroll movements you enter and your training answers."
         },
         "purposes": {
           "title": "Why",
@@ -1313,7 +1342,7 @@
         },
         "hosting": {
           "title": "Hosting",
-          "body": "The app and its database are hosted in the European Union. Opponents' screen names in your files never leave our servers."
+          "body": "The app and its database are hosted in the European Union. Opponents' screen names in your files never leave our servers. Account emails (confirmation, password) are sent by Brevo, a provider hosted in the European Union."
         },
         "retention": {
           "title": "How long we keep it",
@@ -1329,6 +1358,44 @@
         "email": "For any question about your data, write to",
         "account": "To export or delete your data, use the Account page once signed in.",
         "authority": "You may also lodge a complaint with your data protection authority (in France, the CNIL: cnil.fr)."
+      }
+    },
+    "access": {
+      "email": "Email",
+      "password": "Your password",
+      "newPassword": "New password",
+      "repeatPassword": "Repeat the password",
+      "backToSignIn": "Back to sign-in",
+      "forgot": {
+        "title": "Forgot your password",
+        "lead": "Enter your address: we'll send you a link to choose a new password. It also works if you used to sign in with Google.",
+        "action": "Send the link",
+        "sent": "If an account exists for {{email}}, an email is on its way. The link is valid for 1 hour."
+      },
+      "reset": {
+        "title": "New password",
+        "lead": "Choose a password of at least {{count}} characters.",
+        "action": "Save and sign in",
+        "newLink": "Ask for a new link"
+      },
+      "confirm": {
+        "title": "Confirm your address",
+        "lead": "Enter the password you chose when signing up to activate your account.",
+        "action": "Activate my account",
+        "newLink": "Sign in to get a new link"
+      },
+      "errors": {
+        "INVALID_EMAIL": "This email address is not valid.",
+        "WEAK_PASSWORD": "Choose a password of at least {{count}} characters, different from your address.",
+        "INVALID_CREDENTIALS": "Wrong email or password.",
+        "EMAIL_NOT_CONFIRMED": "Confirm your address first with the link we emailed you.",
+        "ACCOUNT_LOCKED": "Too many attempts. Try again in 15 minutes, or choose a new password.",
+        "INVALID_TOKEN": "This link no longer works (already used or expired).",
+        "RATE_LIMITED": "Too many attempts. Wait a minute.",
+        "INVALID_ANTIFORGERY_TOKEN": "The page has expired. Reload it and try again.",
+        "MISMATCH": "The two passwords do not match.",
+        "network": "Cannot connect. Check your network.",
+        "unknown": "An unexpected error occurred."
       }
     }
   },

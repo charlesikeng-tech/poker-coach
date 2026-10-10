@@ -28,6 +28,14 @@ public static class AntiforgeryTokens
     /// <summary>Tokens are bound to the signed-in user: issue them once the session is known.</summary>
     public static void IssueRequestToken(HttpContext context, IAntiforgery antiforgery)
     {
+        // Secure-only cookies outside Development: on plain HTTP (a misrouted request) the antiforgery system
+        // throws rather than issue them. Nothing to hand out then; forms will be rejected, safely.
+        var options = context.RequestServices.GetRequiredService<Microsoft.Extensions.Options.IOptions<AntiforgeryOptions>>().Value;
+        if (!context.Request.IsHttps && options.Cookie.SecurePolicy == CookieSecurePolicy.Always)
+        {
+            return;
+        }
+
         var tokens = antiforgery.GetAndStoreTokens(context);
         if (tokens.RequestToken is null)
         {

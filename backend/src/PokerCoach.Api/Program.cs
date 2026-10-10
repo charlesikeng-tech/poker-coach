@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Microsoft.Extensions.Options;
 using PokerCoach.Api.Account;
 using PokerCoach.Api.Analytics;
@@ -46,6 +47,23 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<ExternalSignInService>();
+builder.Services.AddScoped<LocalAccountService>();
+builder.Services.AddOptions<AppOptions>()
+    .BindConfiguration(AppOptions.SectionName)
+    .Validate(
+        o => builder.Environment.IsDevelopment() || o.PublicUrl is { IsAbsoluteUri: true },
+        "App:PublicUrl (the web app's public address) is required outside Development: emailed links use it.")
+    .ValidateOnStart();
+
+// Sign-in, sign-up and recovery: 10 requests a minute per client address (behind the proxy, the forwarded
+// address). Password guessing is also capped per account (lockout).
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy(LocalAccountEndpoints.RateLimitPolicy, context => RateLimitPartition.GetFixedWindowLimiter(
+        context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
+});
 builder.Services.AddScoped<UserProfileService>();
 builder.Services.AddScoped<AccountDataService>();
 
@@ -108,6 +126,7 @@ app.UseSecurityHeaders();
 var servesWebApp = app.UseWebApp();
 
 app.UseAuthentication();
+app.UseRateLimiter();
 
 // The fallback authorization policy also applies to requests matching no endpoint: answer 404, not 401.
 // Placed after UseAuthentication on purpose: the Google callback (/signin-google) has no endpoint and is
@@ -133,6 +152,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapHealthEndpoints();
 app.MapAuthEndpoints();
+app.MapLocalAccountEndpoints();
 app.MapAccountEndpoints();
 app.MapImportEndpoints();
 app.MapPokerAccountEndpoints();

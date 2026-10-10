@@ -276,6 +276,16 @@ Quiz on real hands:
       web: "My hands" mode with the date, what the hero did that day and a link to the replay
 - [x] Migration `TrainingRealHands`
 
+Email and password accounts (ADR-0013):
+
+- [x] Sign-up with confirmation link (password required to confirm), sign-in with lockout, forgotten
+      password (also adds a password to a Google account), resend; no account enumeration
+- [x] `identity.password_credentials`, `identity.email_tokens` (hashed, single use); PBKDF2 hashing
+- [x] Brevo sender (`Email:BrevoApiKey`, `Email:FromAddress`); without a key, emails go to the log in
+      Development; `App:PublicUrl` required outside Development; rate limit 10/min per address on `/api/auth`
+- [x] Web: sign-in / sign-up on the sign-in page, `/forgot-password`, `/reset-password`, `/confirm-email`
+- [ ] Brevo account and authenticated sending domain; cleanup of never-confirmed accounts
+
 Coach reports (ADR-0012):
 
 - [x] Tournament debrief: story, verdict per key moment (variance checked against computed equity),

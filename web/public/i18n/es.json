@@ -660,12 +660,23 @@
       "heading": "Inicia sesión en Poker Coach",
       "description": "Encuentra tus torneos, tus estadísticas y tu coaching.",
       "action": "Continuar con Google",
-      "privacy": "Tu cuenta de Google solo sirve para identificarte. Poker Coach nunca publica nada.",
+      "privacy": "Tu dirección o tu cuenta de Google solo sirven para identificarte. Poker Coach nunca publica nada.",
       "statement": "Entiende tu juego. Corrige tus leaks. Mide tu progreso.",
       "retry": "Reintentar",
       "errors": {
         "google": "El inicio de sesión con Google no se completó. Inténtalo de nuevo.",
-        "unavailable": "No se puede acceder a Poker Coach en este momento. Inténtalo de nuevo en un instante."
+        "unavailable": "No se puede acceder a Poker Coach en este momento. Inténtalo de nuevo en un instante.",
+        "INVALID_EMAIL": "Esta dirección de correo no es válida.",
+        "WEAK_PASSWORD": "Elige una contraseña de al menos {{count}} caracteres, distinta de tu dirección.",
+        "INVALID_CREDENTIALS": "Correo o contraseña incorrectos.",
+        "EMAIL_NOT_CONFIRMED": "Confirma primero tu dirección con el enlace que te enviamos.",
+        "ACCOUNT_LOCKED": "Demasiados intentos. Inténtalo de nuevo en 15 minutos o elige una contraseña nueva.",
+        "INVALID_TOKEN": "Este enlace ya no es válido (usado o caducado).",
+        "RATE_LIMITED": "Demasiados intentos. Espera un minuto.",
+        "INVALID_ANTIFORGERY_TOKEN": "La página ha caducado. Recárgala e inténtalo de nuevo.",
+        "MISMATCH": "Las dos contraseñas no coinciden.",
+        "network": "No hay conexión. Revisa tu red.",
+        "unknown": "Ha ocurrido un error inesperado."
       },
       "product": "Poker Coach",
       "launching": "Rumbo a Google…",
@@ -678,7 +689,25 @@
         "readOnly": "Sin publicaciones, sin acceso a tu correo",
         "private": "Tus manos son privadas, y los nombres rivales también"
       },
-      "privacyLink": "Privacidad"
+      "privacyLink": "Privacidad",
+      "or": "o",
+      "email": "Correo",
+      "password": "Contraseña",
+      "passwordAction": "Iniciar sesión",
+      "forgot": "¿Olvidaste tu contraseña?",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "createAccount": "Crear una cuenta",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "signInInstead": "Iniciar sesión",
+      "resend": "Reenviar el enlace",
+      "resent": "Enlace reenviado",
+      "signUp": {
+        "heading": "Crea tu cuenta de Poker Coach",
+        "description": "Con Google, o con tu correo y una contraseña.",
+        "action": "Crear mi cuenta",
+        "passwordHint": "Al menos {{count}} caracteres. Una frase fácil de recordar es una buena contraseña.",
+        "sent": "Casi listo: abre el enlace enviado a {{email}} para activar tu cuenta. Mira también en spam."
+      }
     },
     "leaks": {
       "title": "Leaks",
@@ -1297,7 +1326,7 @@
         },
         "data": {
           "title": "Qué guardamos",
-          "body": "Tu identificador de Google, tu correo, tu nombre visible y tu idioma. Los historiales de manos y resúmenes de torneos que importas, tal cual (contienen los alias de los jugadores de tus mesas), y todo lo que calculamos a partir de ellos: estadísticas, leaks, planes semanales. Los movimientos de bankroll que introduces y tus respuestas en el entrenamiento."
+          "body": "Tu identificador de Google, o tu correo y tu contraseña (guardada solo como un hash irreversible, nunca en claro), tu nombre visible y tu idioma. Los historiales de manos y resúmenes de torneos que importas, tal cual (contienen los alias de los jugadores de tus mesas), y todo lo que calculamos a partir de ellos: estadísticas, leaks, planes semanales. Los movimientos de bankroll que introduces y tus respuestas en el entrenamiento."
         },
         "purposes": {
           "title": "Para qué",
@@ -1313,7 +1342,7 @@
         },
         "hosting": {
           "title": "Alojamiento",
-          "body": "La aplicación y su base de datos están alojadas en la Unión Europea. Los alias de tus rivales presentes en tus archivos nunca salen de nuestros servidores."
+          "body": "La aplicación y su base de datos están alojadas en la Unión Europea. Los alias de tus rivales presentes en tus archivos nunca salen de nuestros servidores. Los correos de cuenta (confirmación, contraseña) los envía Brevo, un proveedor alojado en la Unión Europea."
         },
         "retention": {
           "title": "Cuánto tiempo",
@@ -1329,6 +1358,44 @@
         "email": "Para cualquier pregunta sobre tus datos, escribe a",
         "account": "Para exportar o eliminar tus datos, usa la página Cuenta una vez conectado.",
         "authority": "También puedes presentar una reclamación ante tu autoridad de protección de datos (en Francia, la CNIL: cnil.fr)."
+      }
+    },
+    "access": {
+      "email": "Correo",
+      "password": "Tu contraseña",
+      "newPassword": "Contraseña nueva",
+      "repeatPassword": "Repite la contraseña",
+      "backToSignIn": "Volver al inicio de sesión",
+      "forgot": {
+        "title": "Contraseña olvidada",
+        "lead": "Indica tu dirección: te enviamos un enlace para elegir una contraseña nueva. También sirve si entrabas con Google.",
+        "action": "Enviar el enlace",
+        "sent": "Si existe una cuenta para {{email}}, acabamos de enviar un correo. El enlace es válido 1 hora."
+      },
+      "reset": {
+        "title": "Contraseña nueva",
+        "lead": "Elige una contraseña de al menos {{count}} caracteres.",
+        "action": "Guardar e iniciar sesión",
+        "newLink": "Pedir un enlace nuevo"
+      },
+      "confirm": {
+        "title": "Confirma tu dirección",
+        "lead": "Introduce la contraseña que elegiste al registrarte para activar tu cuenta.",
+        "action": "Activar mi cuenta",
+        "newLink": "Inicia sesión para recibir un enlace nuevo"
+      },
+      "errors": {
+        "INVALID_EMAIL": "Esta dirección de correo no es válida.",
+        "WEAK_PASSWORD": "Elige una contraseña de al menos {{count}} caracteres, distinta de tu dirección.",
+        "INVALID_CREDENTIALS": "Correo o contraseña incorrectos.",
+        "EMAIL_NOT_CONFIRMED": "Confirma primero tu dirección con el enlace que te enviamos.",
+        "ACCOUNT_LOCKED": "Demasiados intentos. Inténtalo de nuevo en 15 minutos o elige una contraseña nueva.",
+        "INVALID_TOKEN": "Este enlace ya no es válido (usado o caducado).",
+        "RATE_LIMITED": "Demasiados intentos. Espera un minuto.",
+        "INVALID_ANTIFORGERY_TOKEN": "La página ha caducado. Recárgala e inténtalo de nuevo.",
+        "MISMATCH": "Las dos contraseñas no coinciden.",
+        "network": "No hay conexión. Revisa tu red.",
+        "unknown": "Ha ocurrido un error inesperado."
       }
     }
   },

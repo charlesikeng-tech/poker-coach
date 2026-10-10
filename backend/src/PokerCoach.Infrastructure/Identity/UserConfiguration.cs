@@ -43,3 +43,35 @@ internal static class IdentitySchema
 {
     public const string Name = "identity";
 }
+
+internal sealed class PasswordCredentialConfiguration : IEntityTypeConfiguration<PasswordCredential>
+{
+    public void Configure(EntityTypeBuilder<PasswordCredential> builder)
+    {
+        builder.ToTable("password_credentials", IdentitySchema.Name);
+        builder.HasKey(c => c.UserId);
+        builder.Property(c => c.Email).HasMaxLength(EmailAddresses.MaxLength).IsRequired();
+        builder.Property(c => c.PasswordHash).HasMaxLength(512).IsRequired();
+
+        // One login per email, enforced by the database: concurrent sign-ups end with one account.
+        builder.HasIndex(c => c.Email).IsUnique();
+        builder.HasOne<User>().WithOne().HasForeignKey<PasswordCredential>(c => c.UserId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+internal sealed class EmailTokenConfiguration : IEntityTypeConfiguration<EmailToken>
+{
+    public void Configure(EntityTypeBuilder<EmailToken> builder)
+    {
+        builder.ToTable("email_tokens", IdentitySchema.Name);
+        builder.HasKey(t => t.Id);
+        builder.Property(t => t.Id).ValueGeneratedNever();
+        builder.Property(t => t.Purpose).HasConversion<int>();
+        builder.Property(t => t.TokenHash).HasMaxLength(64).IsFixedLength().IsRequired();
+        builder.HasIndex(t => t.TokenHash).IsUnique();
+
+        // The per-hour email limit counts a user's recent tokens of one purpose.
+        builder.HasIndex(t => new { t.UserId, t.Purpose, t.CreatedAt });
+        builder.HasOne<User>().WithMany().HasForeignKey(t => t.UserId).OnDelete(DeleteBehavior.Cascade);
+    }
+}

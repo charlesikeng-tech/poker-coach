@@ -48,6 +48,20 @@ internal sealed class InMemoryUserAccountStore : IUserAccountStore
         return Task.FromResult(true);
     }
 
+    public Task<bool> TryLinkAsync(ExternalIdentity identity, CancellationToken cancellationToken)
+    {
+        if (identities.Exists(i => i.Provider == identity.Provider && i.ProviderSubjectId == identity.ProviderSubjectId))
+        {
+            return Task.FromResult(false);
+        }
+
+        identities.Add(identity);
+        return Task.FromResult(true);
+    }
+
+    /// <summary>For the local-account fake, which shares this store's users.</summary>
+    public void AddUser(User user) => users.Add(user);
+
     public Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         SaveCount++;

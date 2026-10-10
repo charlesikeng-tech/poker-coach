@@ -660,12 +660,23 @@
       "heading": "Connexion à Poker Coach",
       "description": "Retrouve tes tournois, tes statistiques et ton coaching.",
       "action": "Continuer avec Google",
-      "privacy": "Ton compte Google sert uniquement à t'identifier. Poker Coach ne publie jamais rien.",
+      "privacy": "Ton adresse ou ton compte Google servent uniquement à t'identifier. Poker Coach ne publie jamais rien.",
       "statement": "Comprends ton jeu. Corrige tes leaks. Mesure tes progrès.",
       "retry": "Réessayer",
       "errors": {
         "google": "La connexion avec Google n'a pas abouti. Réessaie.",
-        "unavailable": "Poker Coach est momentanément injoignable. Réessaie dans un instant."
+        "unavailable": "Poker Coach est momentanément injoignable. Réessaie dans un instant.",
+        "INVALID_EMAIL": "Cette adresse e-mail n'est pas valide.",
+        "WEAK_PASSWORD": "Choisis un mot de passe d'au moins {{count}} caractères, différent de ton adresse.",
+        "INVALID_CREDENTIALS": "E-mail ou mot de passe incorrect.",
+        "EMAIL_NOT_CONFIRMED": "Confirme d'abord ton adresse avec le lien reçu par e-mail.",
+        "ACCOUNT_LOCKED": "Trop d'essais. Réessaie dans 15 minutes, ou choisis un nouveau mot de passe.",
+        "INVALID_TOKEN": "Ce lien n'est plus valable (déjà utilisé ou expiré).",
+        "RATE_LIMITED": "Trop de tentatives. Patiente une minute.",
+        "INVALID_ANTIFORGERY_TOKEN": "La page a expiré. Recharge-la et réessaie.",
+        "MISMATCH": "Les deux mots de passe ne sont pas identiques.",
+        "network": "Connexion impossible. Vérifie ton réseau.",
+        "unknown": "Une erreur inattendue est survenue."
       },
       "product": "Poker Coach",
       "launching": "Direction Google…",
@@ -678,7 +689,25 @@
         "readOnly": "Aucune publication, aucun accès à tes mails",
         "private": "Tes mains restent privées, les pseudos adverses aussi"
       },
-      "privacyLink": "Confidentialité"
+      "privacyLink": "Confidentialité",
+      "or": "ou",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "passwordAction": "Se connecter",
+      "forgot": "Mot de passe oublié ?",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte",
+      "haveAccount": "Déjà un compte ?",
+      "signInInstead": "Se connecter",
+      "resend": "Renvoyer le lien",
+      "resent": "Lien renvoyé",
+      "signUp": {
+        "heading": "Crée ton compte Poker Coach",
+        "description": "Avec Google, ou ton e-mail et un mot de passe.",
+        "action": "Créer mon compte",
+        "passwordHint": "Au moins {{count}} caractères. Une phrase facile à retenir fait un bon mot de passe.",
+        "sent": "C'est presque fini : ouvre le lien envoyé à {{email}} pour activer ton compte. Pense à regarder dans les spams."
+      }
     },
     "leaks": {
       "title": "Leaks",
@@ -1297,7 +1326,7 @@
         },
         "data": {
           "title": "Ce que nous gardons",
-          "body": "Ton identifiant Google, ton adresse e-mail, ton nom affiché et ta langue. Les historiques de mains et résumés de tournois que tu importes, tels quels (ils contiennent les pseudos des joueurs de tes tables), et tout ce que nous en calculons : statistiques, leaks, plans de la semaine. Les mouvements de bankroll que tu saisis et tes réponses à l'entraînement."
+          "body": "Ton identifiant Google ou ton adresse e-mail et ton mot de passe (stocké uniquement sous forme chiffrée irréversible, jamais en clair), ton nom affiché et ta langue. Les historiques de mains et résumés de tournois que tu importes, tels quels (ils contiennent les pseudos des joueurs de tes tables), et tout ce que nous en calculons : statistiques, leaks, plans de la semaine. Les mouvements de bankroll que tu saisis et tes réponses à l'entraînement."
         },
         "purposes": {
           "title": "Pourquoi",
@@ -1313,7 +1342,7 @@
         },
         "hosting": {
           "title": "Hébergement",
-          "body": "L'application et sa base de données sont hébergées dans l'Union européenne. Les pseudos adverses présents dans tes fichiers ne quittent jamais nos serveurs."
+          "body": "L'application et sa base de données sont hébergées dans l'Union européenne. Les pseudos adverses présents dans tes fichiers ne quittent jamais nos serveurs. Les e-mails de compte (confirmation, mot de passe) sont envoyés par Brevo, prestataire hébergé dans l'Union européenne."
         },
         "retention": {
           "title": "Durée de conservation",
@@ -1329,6 +1358,44 @@
         "email": "Pour toute question sur tes données, écris à",
         "account": "Pour exporter ou supprimer tes données, passe par la page Compte une fois connecté.",
         "authority": "Tu peux aussi saisir la CNIL (cnil.fr)."
+      }
+    },
+    "access": {
+      "email": "E-mail",
+      "password": "Ton mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "repeatPassword": "Répète le mot de passe",
+      "backToSignIn": "Retour à la connexion",
+      "forgot": {
+        "title": "Mot de passe oublié",
+        "lead": "Indique ton adresse : on t'envoie un lien pour choisir un nouveau mot de passe. Ça marche aussi si tu te connectais avec Google.",
+        "action": "Envoyer le lien",
+        "sent": "Si un compte existe pour {{email}}, un e-mail vient de partir. Le lien est valable 1 heure."
+      },
+      "reset": {
+        "title": "Nouveau mot de passe",
+        "lead": "Choisis un mot de passe d'au moins {{count}} caractères.",
+        "action": "Enregistrer et me connecter",
+        "newLink": "Demander un nouveau lien"
+      },
+      "confirm": {
+        "title": "Confirme ton adresse",
+        "lead": "Entre le mot de passe choisi à l'inscription pour activer ton compte.",
+        "action": "Activer mon compte",
+        "newLink": "Se connecter pour recevoir un nouveau lien"
+      },
+      "errors": {
+        "INVALID_EMAIL": "Cette adresse e-mail n'est pas valide.",
+        "WEAK_PASSWORD": "Choisis un mot de passe d'au moins {{count}} caractères, différent de ton adresse.",
+        "INVALID_CREDENTIALS": "E-mail ou mot de passe incorrect.",
+        "EMAIL_NOT_CONFIRMED": "Confirme d'abord ton adresse avec le lien reçu par e-mail.",
+        "ACCOUNT_LOCKED": "Trop d'essais. Réessaie dans 15 minutes, ou choisis un nouveau mot de passe.",
+        "INVALID_TOKEN": "Ce lien n'est plus valable (déjà utilisé ou expiré).",
+        "RATE_LIMITED": "Trop de tentatives. Patiente une minute.",
+        "INVALID_ANTIFORGERY_TOKEN": "La page a expiré. Recharge-la et réessaie.",
+        "MISMATCH": "Les deux mots de passe ne sont pas identiques.",
+        "network": "Connexion impossible. Vérifie ton réseau.",
+        "unknown": "Une erreur inattendue est survenue."
       }
     }
   },

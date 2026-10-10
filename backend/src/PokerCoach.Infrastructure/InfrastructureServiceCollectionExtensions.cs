@@ -18,6 +18,7 @@ using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
 using PokerCoach.Infrastructure.Bankroll;
 using PokerCoach.Infrastructure.Coaching;
+using PokerCoach.Infrastructure.Email;
 using PokerCoach.Infrastructure.Hands;
 using PokerCoach.Infrastructure.Identity;
 using PokerCoach.Infrastructure.Import;
@@ -52,6 +53,8 @@ public static class InfrastructureServiceCollectionExtensions
 
         services.AddScoped<IUserAccountStore, UserAccountStore>();
         services.AddScoped<IAccountDataStore, AccountDataStore>();
+        services.AddScoped<ILocalAccountStore, LocalAccountStore>();
+        services.AddSingleton<IPasswordHasher, AspNetPasswordHasher>();
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
         services.AddScoped<IHandReplayStore, HandReplayStore>();
@@ -75,6 +78,17 @@ public static class InfrastructureServiceCollectionExtensions
         // No API key = coaching unavailable, not a startup failure (ADR-0008).
         services.AddOptions<AnthropicOptions>().BindConfiguration(AnthropicOptions.SectionName);
         services.AddHttpClient<ICoachingModel, AnthropicCoachingModel>(client => client.Timeout = TimeSpan.FromSeconds(90));
+
+        // Brevo when a key is configured; otherwise the log (links shown in Development only).
+        services.AddOptions<EmailOptions>().BindConfiguration(EmailOptions.SectionName);
+        if (!string.IsNullOrWhiteSpace(configuration[$"{EmailOptions.SectionName}:{nameof(EmailOptions.BrevoApiKey)}"]))
+        {
+            services.AddHttpClient<IEmailSender, BrevoEmailSender>(client => client.Timeout = TimeSpan.FromSeconds(15));
+        }
+        else
+        {
+            services.AddSingleton<IEmailSender, LogEmailSender>();
+        }
 
         // Starts only when Import:WorkerEnabled is true (default); needs ImportProcessor and ImportOptions
         // registered by the host.

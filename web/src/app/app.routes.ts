@@ -11,6 +11,27 @@ export const routes: Routes = [
     canActivate: [anonymousOnlyGuard],
     loadComponent: () => import('./features/sign-in/sign-in-page').then((m) => m.SignInPage),
   },
+  // Reached from account emails (ADR-0013): open whether signed in or not.
+  {
+    path: 'forgot-password',
+    title: 'pages.access.forgot.title',
+    loadComponent: () =>
+      import('./features/account-access/forgot-password-page').then((m) => m.ForgotPasswordPage),
+  },
+  {
+    path: 'reset-password',
+    title: 'pages.access.reset.title',
+    data: { purpose: 'reset' },
+    loadComponent: () =>
+      import('./features/account-access/token-password-page').then((m) => m.TokenPasswordPage),
+  },
+  {
+    path: 'confirm-email',
+    title: 'pages.access.confirm.title',
+    data: { purpose: 'confirm' },
+    loadComponent: () =>
+      import('./features/account-access/token-password-page').then((m) => m.TokenPasswordPage),
+  },
   {
     path: 'privacy',
     title: 'pages.privacy.title',

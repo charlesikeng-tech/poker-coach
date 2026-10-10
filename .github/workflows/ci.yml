@@ -97,6 +97,7 @@ jobs:
           app_env=(
             -e "ConnectionStrings__PokerCoach=Host=localhost;Database=poker_coach;Username=poker_coach;Password=ci-only"
             -e Authentication__Google__ClientId=ci -e Authentication__Google__ClientSecret=ci
+            -e App__PublicUrl=http://localhost:8080
           )
           docker run --rm --network host "${app_env[@]}" poker-coach:ci migrate
           docker run -d --name app --network host "${app_env[@]}" poker-coach:ci

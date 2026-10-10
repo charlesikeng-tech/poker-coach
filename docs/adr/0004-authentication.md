@@ -1,5 +1,7 @@
 # ADR-0004 — Authentication: Google sign-in handled by the backend, cookie session
 
+> Extended by ADR-0013 (email and password accounts, same cookie session).
+
 - Status: Accepted
 - Date: 2026-10-08
 

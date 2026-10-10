@@ -23,7 +23,8 @@ public static class AccountEndpoints
     {
         var group = endpoints.MapGroup("/api/me").WithTags("Account");
 
-        group.MapGet("/", GetMeAsync);
+        // Anonymous allowed: it answers 401 itself, after issuing the anti-forgery token the sign-in forms need.
+        group.MapGet("/", GetMeAsync).AllowAnonymous();
         group.MapPut("/preferences", UpdatePreferencesAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapGet("/export", ExportAsync);
         group.MapDelete("/", DeleteAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
@@ -40,6 +41,8 @@ public static class AccountEndpoints
     {
         if (!context.User.TryGetUserId(out var userId))
         {
+            // Anonymous visitors get a token too: the sign-in and sign-up forms post with it.
+            AntiforgeryTokens.IssueRequestToken(context, antiforgery);
             return TypedResults.Unauthorized();
         }
 
@@ -48,6 +51,8 @@ public static class AccountEndpoints
         {
             // Valid cookie for an account that no longer exists: end the session.
             await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            context.User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity());
+            AntiforgeryTokens.IssueRequestToken(context, antiforgery);
             return TypedResults.Unauthorized();
         }
 

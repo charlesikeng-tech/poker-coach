@@ -35,5 +35,20 @@ internal sealed class UserAccountStore(PokerCoachDbContext db) : IUserAccountSto
         }
     }
 
+    public async Task<bool> TryLinkAsync(ExternalIdentity identity, CancellationToken cancellationToken)
+    {
+        db.Add(identity);
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+            return true;
+        }
+        catch (DbUpdateException exception) when (exception.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            db.Entry(identity).State = EntityState.Detached;
+            return false;
+        }
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken) => db.SaveChangesAsync(cancellationToken);
 }

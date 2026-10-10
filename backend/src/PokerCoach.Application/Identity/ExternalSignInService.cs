@@ -14,16 +14,19 @@ public sealed record ExternalSignIn(
 /// <summary>
 /// Finds or creates the account behind an external sign-in. Safe under concurrency: two simultaneous
 /// first sign-ins of the same person end with one account, guarded by the database unique constraint
-/// on (provider, subject).
+/// on (provider, subject). A first Google sign-in with the email of a confirmed email-and-password account
+/// joins that account (ADR-0013): both prove the same mailbox. An unconfirmed one proves nothing and is
+/// not joined.
 /// </summary>
-public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider timeProvider)
+public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider timeProvider, ILocalAccountStore? localAccounts = null)
 {
     public async Task<User> SignInAsync(ExternalSignIn signIn, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(signIn);
         var now = timeProvider.GetUtcNow();
 
-        var user = await store.FindByExternalIdentityAsync(signIn.Provider, signIn.ProviderSubjectId, cancellationToken);
+        var user = await store.FindByExternalIdentityAsync(signIn.Provider, signIn.ProviderSubjectId, cancellationToken)
+            ?? await JoinConfirmedLocalAccountAsync(signIn, now, cancellationToken);
         if (user is null)
         {
             var newUser = User.Register(
@@ -46,6 +49,30 @@ public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider 
         user.RecordLogin(now, signIn.Email);
         await store.SaveChangesAsync(cancellationToken);
         return user;
+    }
+
+    private async Task<User?> JoinConfirmedLocalAccountAsync(ExternalSignIn signIn, DateTimeOffset now, CancellationToken cancellationToken)
+    {
+        if (localAccounts is null || !EmailAddresses.IsValid(signIn.Email))
+        {
+            return null;
+        }
+
+        var credential = await localAccounts.FindCredentialByEmailAsync(EmailAddresses.Normalize(signIn.Email!), cancellationToken);
+        if (credential is not { IsConfirmed: true })
+        {
+            return null;
+        }
+
+        var user = await store.FindByIdAsync(credential.UserId, cancellationToken);
+        if (user is null)
+        {
+            return null;
+        }
+
+        // Losing a race against a parallel first sign-in leaves the identity linked anyway.
+        await store.TryLinkAsync(ExternalIdentity.Link(user, signIn.Provider, signIn.ProviderSubjectId, signIn.Email, now), cancellationToken);
+        return await store.FindByExternalIdentityAsync(signIn.Provider, signIn.ProviderSubjectId, cancellationToken) ?? user;
     }
 
     // Providers do not always send a name; never store an empty display name.

@@ -15,6 +15,9 @@ public interface IUserAccountStore
     /// </summary>
     Task<bool> TryAddAsync(User user, ExternalIdentity identity, CancellationToken cancellationToken);
 
+    /// <summary>Links an external identity to an existing user; false when that identity is already linked.</summary>
+    Task<bool> TryLinkAsync(ExternalIdentity identity, CancellationToken cancellationToken);
+
     /// <summary>Persists changes made to users loaded through this store.</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }

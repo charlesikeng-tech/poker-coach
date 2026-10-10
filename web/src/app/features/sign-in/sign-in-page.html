@@ -30,8 +30,10 @@
       <div class="panel__language"><app-language-select /></div>
 
       <div class="card">
-        <h1>{{ t('heading') }}</h1>
-        <p class="card__description">{{ t('description') }}</p>
+        <h1>{{ t(mode() === 'signUp' ? 'signUp.heading' : 'heading') }}</h1>
+        <p class="card__description">
+          {{ t(mode() === 'signUp' ? 'signUp.description' : 'description') }}
+        </p>
 
         @if (providerFailed()) {
           <p class="card__alert" role="alert">{{ t('errors.google') }}</p>
@@ -75,6 +77,96 @@
             }
           </a>
         }
+
+        <p class="or" aria-hidden="true">
+          <span>{{ t('or') }}</span>
+        </p>
+
+        @if (sentTo() && mode() === 'signUp' && !formError()) {
+          <div class="form-success" role="status">
+            <p>{{ t('signUp.sent', { email: sentTo() }) }}</p>
+            <button
+              type="button"
+              class="link-button"
+              [disabled]="busy() || resent()"
+              (click)="resend()"
+            >
+              {{ t(resent() ? 'resent' : 'resend') }}
+            </button>
+          </div>
+        } @else {
+          <form class="auth-form" (submit)="submit($event)" novalidate>
+            <label class="field">
+              <span>{{ t('email') }}</span>
+              <input
+                type="email"
+                name="email"
+                autocomplete="email"
+                required
+                [value]="email()"
+                (input)="email.set($any($event.target).value)"
+                [attr.aria-invalid]="formError() === 'INVALID_EMAIL'"
+              />
+            </label>
+            <label class="field">
+              <span>{{ t('password') }}</span>
+              <input
+                type="password"
+                name="password"
+                [attr.autocomplete]="mode() === 'signUp' ? 'new-password' : 'current-password'"
+                required
+                [attr.minlength]="mode() === 'signUp' ? minPassword : null"
+                [value]="password()"
+                (input)="password.set($any($event.target).value)"
+                [attr.aria-invalid]="
+                  formError() === 'WEAK_PASSWORD' || formError() === 'INVALID_CREDENTIALS'
+                "
+              />
+              @if (mode() === 'signUp') {
+                <small>{{ t('signUp.passwordHint', { count: minPassword }) }}</small>
+              }
+            </label>
+
+            @if (formError(); as code) {
+              <div class="form-error" role="alert">
+                {{ t('errors.' + code, { count: minPassword }) }}
+                @if (code === 'EMAIL_NOT_CONFIRMED') {
+                  <button
+                    type="button"
+                    class="link-button"
+                    [disabled]="busy() || resent()"
+                    (click)="resend()"
+                  >
+                    {{ t(resent() ? 'resent' : 'resend') }}
+                  </button>
+                }
+              </div>
+            }
+
+            <button appButton variant="primary" type="submit" [disabled]="busy()">
+              {{ t(mode() === 'signUp' ? 'signUp.action' : 'passwordAction') }}
+            </button>
+          </form>
+        }
+
+        <div class="form-links">
+          @if (mode() === 'signIn') {
+            <a routerLink="/forgot-password">{{ t('forgot') }}</a>
+            <span
+              >{{ t('noAccount') }}
+              <button type="button" class="link-button" (click)="switchMode('signUp')">
+                {{ t('createAccount') }}
+              </button></span
+            >
+          } @else {
+            <span
+              >{{ t('haveAccount') }}
+              <button type="button" class="link-button" (click)="switchMode('signIn')">
+                {{ t('signInInstead') }}
+              </button></span
+            >
+          }
+        </div>
 
         <div class="card__divider" aria-hidden="true"><span></span></div>
 
