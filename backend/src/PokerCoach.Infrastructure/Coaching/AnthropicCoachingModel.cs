@@ -318,8 +318,11 @@ internal sealed partial class AnthropicCoachingModel(
             using var httpResponse = await http.SendAsync(request, cancellationToken);
             if (!httpResponse.IsSuccessStatusCode)
             {
-                // The body may echo the request: log the status only.
-                LogFailure(logger, (int)httpResponse.StatusCode);
+                // The provider's error type and message say what to fix (bad schema, no credit, unknown
+                // model…). Never the request body: it holds the player's hands.
+                var (type, message) = await ReadErrorAsync(httpResponse, cancellationToken);
+                httpResponse.Headers.TryGetValues("request-id", out var requestIds);
+                LogFailure(logger, (int)httpResponse.StatusCode, type, message, requestIds?.FirstOrDefault() ?? "-");
                 throw new CoachingModelException($"The model provider answered {(int)httpResponse.StatusCode}.");
             }
 
@@ -360,8 +363,28 @@ internal sealed partial class AnthropicCoachingModel(
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Warning, Message = "Coaching model call failed with HTTP {Status}.")]
-    private static partial void LogFailure(ILogger logger, int status);
+    /// <summary>Anthropic errors are <c>{"type":"error","error":{"type":"…","message":"…"}}</c>; anything else is reported as unknown.</summary>
+    private static async Task<(string Type, string Message)> ReadErrorAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        const int MaxMessageLength = 500;
+        try
+        {
+            var error = (await response.Content.ReadFromJsonAsync<ErrorResponse>(JsonOptions, cancellationToken))?.Error;
+            var message = error?.Message ?? "-";
+            return (error?.Type ?? "unknown", message.Length > MaxMessageLength ? message[..MaxMessageLength] : message);
+        }
+        catch (JsonException)
+        {
+            return ("unknown", "-");
+        }
+        catch (NotSupportedException)
+        {
+            return ("unknown", "-");
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Coaching model call failed with HTTP {Status}: {ErrorType}: {ErrorMessage} (request {RequestId}).")]
+    private static partial void LogFailure(ILogger logger, int status, string errorType, string errorMessage, string requestId);
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Coaching model {Model}: {InputTokens} in, {OutputTokens} out, {CacheReadTokens} cached, {ElapsedMs} ms.")]
     private static partial void LogCall(ILogger logger, string model, int inputTokens, int outputTokens, int cacheReadTokens, double elapsedMs);
@@ -369,6 +392,10 @@ internal sealed partial class AnthropicCoachingModel(
     private sealed record MessagesResponse(string? Model, string? StopReason, IReadOnlyList<ContentBlock>? Content, UsageBlock? Usage);
 
     private sealed record ContentBlock(string Type, string? Text);
+
+    private sealed record ErrorResponse(ErrorDetail? Error);
+
+    private sealed record ErrorDetail(string? Type, string? Message);
 
     private sealed record UsageBlock(
         [property: JsonPropertyName("input_tokens")] int InputTokens,
