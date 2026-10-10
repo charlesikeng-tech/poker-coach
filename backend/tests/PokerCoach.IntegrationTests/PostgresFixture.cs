@@ -24,9 +24,7 @@ namespace PokerCoach.IntegrationTests;
 /// </summary>
 public sealed class PostgresFixture : IAsyncLifetime
 {
-    // Same image as docker-compose.yml. The parameterless builder is obsolete in recent Testcontainers
-    // versions in favour of a constructor taking the image; WithImage works with both.
-private const string ConnectionVariable = "POKERCOACH_TEST_CONNECTION";
+    private const string ConnectionVariable = "POKERCOACH_TEST_CONNECTION";
 
     private PostgreSqlContainer? container;
 
@@ -39,6 +37,8 @@ private const string ConnectionVariable = "POKERCOACH_TEST_CONNECTION";
         var connectionString = Environment.GetEnvironmentVariable(ConnectionVariable);
         if (string.IsNullOrWhiteSpace(connectionString))
         {
+            // Same image as docker-compose.yml. The parameterless builder is obsolete in recent Testcontainers
+            // versions in favour of a constructor taking the image; WithImage works with both.
 #pragma warning disable CS0618
             container = new PostgreSqlBuilder().WithImage("postgres:18-alpine").Build();
 #pragma warning restore CS0618

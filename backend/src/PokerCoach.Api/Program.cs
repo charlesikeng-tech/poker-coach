@@ -2,11 +2,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using PokerCoach.Api.Account;
+using PokerCoach.Api.Analytics;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Bankroll;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Hands;
 using PokerCoach.Api.Health;
+using PokerCoach.Api.Hosting;
 using PokerCoach.Api.Import;
 using PokerCoach.Api.Leaks;
 using PokerCoach.Api.Poker;
@@ -78,11 +80,29 @@ builder.Services.AddOptions<CoachingOptions>()
     .ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<CoachingOptions>>().Value);
 builder.Services.AddScoped<LeakCoachService>();
+builder.Services.AddSingleton<FeatureUsageTracker>();
+
+// Behind the platform's TLS-terminating proxy, ASPNETCORE_FORWARDEDHEADERS_ENABLED=true makes the app see
+// the original scheme (Secure cookies, Google redirect URI) and client address (ADR-0011).
+builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 
 var app = builder.Build();
 
+if (args is ["migrate"])
+{
+    await app.MigrateDatabaseAsync();
+    return;
+}
+
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
+app.UseSecurityHeaders();
+var servesWebApp = app.UseWebApp();
 
 app.UseAuthentication();
 
@@ -101,6 +121,7 @@ app.Use(async (context, next) =>
 });
 
 app.UseAuthorization();
+app.UseFeatureUsageTracking();
 
 if (app.Environment.IsDevelopment())
 {
@@ -120,8 +141,12 @@ app.MapTrainingEndpoints();
 app.MapBankrollEndpoints();
 app.MapProgressEndpoints();
 app.MapLeakEndpoints();
+if (servesWebApp)
+{
+    app.MapWebAppFallback();
+}
 
-app.Run();
+await app.RunAsync();
 
 // Exposes the entry point to WebApplicationFactory in tests.
 public partial class Program;

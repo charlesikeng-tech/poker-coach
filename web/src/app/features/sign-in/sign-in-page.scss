@@ -273,6 +273,10 @@
 .card__privacy {
   color: var(--text-muted);
   font-size: var(--font-size-xs);
+
+  a {
+    color: var(--text-secondary);
+  }
 }
 
 // Leaving for Google: the brand chips speed up and lift, the card recedes.

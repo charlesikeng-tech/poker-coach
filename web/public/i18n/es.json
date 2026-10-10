@@ -677,7 +677,8 @@
       "promises": {
         "readOnly": "Sin publicaciones, sin acceso a tu correo",
         "private": "Tus manos son privadas, y los nombres rivales también"
-      }
+      },
+      "privacyLink": "Privacidad"
     },
     "leaks": {
       "title": "Leaks",
@@ -1270,7 +1271,8 @@
         "tournaments": "tus torneos y sus resultados, en tabla (tournaments.csv);",
         "account": "tu cuenta, tu bankroll, tus planes, tus respuestas de entrenamiento y las explicaciones del coach (account.json).",
         "action": "Descargar el archivo",
-        "hint": "Las estadísticas, leaks y rangos no se incluyen: se recalculan a partir de tus manos."
+        "hint": "Las estadísticas, leaks y rangos no se incluyen: se recalculan a partir de tus manos.",
+        "privacy": "Qué guardamos y por qué: la página de Privacidad"
       },
       "delete": {
         "title": "Eliminar mi cuenta",
@@ -1281,6 +1283,52 @@
         "action": "Eliminar definitivamente",
         "deleting": "Eliminando…",
         "error": "No se pudo eliminar. Inténtalo de nuevo."
+      }
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "heading": "Privacidad",
+      "intro": "Lo que Poker Coach guarda sobre ti, por qué y cómo borrarlo todo.",
+      "updated": "Actualizado el 10 de octubre de 2026",
+      "sections": {
+        "controller": {
+          "title": "Quién es responsable",
+          "body": "Poker Coach es un proyecto independiente, en pruebas con un pequeño grupo de jugadores. Su editor es el responsable del tratamiento de tus datos."
+        },
+        "data": {
+          "title": "Qué guardamos",
+          "body": "Tu identificador de Google, tu correo, tu nombre visible y tu idioma. Los historiales de manos y resúmenes de torneos que importas, tal cual (contienen los alias de los jugadores de tus mesas), y todo lo que calculamos a partir de ellos: estadísticas, leaks, planes semanales. Los movimientos de bankroll que introduces y tus respuestas en el entrenamiento."
+        },
+        "purposes": {
+          "title": "Para qué",
+          "body": "Solo para prestarte el servicio: analizar tu juego y seguir tu progreso. También contamos qué funciones abre cada cuenta cada día, para saber qué resulta útil de verdad. Nada se vende, se comparte con fines publicitarios ni se usa para enviarte ofertas."
+        },
+        "ai": {
+          "title": "Coach IA",
+          "body": "Cuando pides una explicación, se envían manos de ejemplo a Anthropic, nuestro proveedor de IA, como un relato anonimizado: posiciones y acciones, sin tu alias ni los de tus rivales. Anthropic trata estos datos en Estados Unidos por cuenta nuestra."
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": "Solo las cookies necesarias para que la aplicación funcione: tu sesión, la protección de formularios y el paso por Google al iniciar sesión. Ninguna cookie publicitaria ni de analítica de terceros, por eso no hay banner."
+        },
+        "hosting": {
+          "title": "Alojamiento",
+          "body": "La aplicación y su base de datos están alojadas en la Unión Europea. Los alias de tus rivales presentes en tus archivos nunca salen de nuestros servidores."
+        },
+        "retention": {
+          "title": "Cuánto tiempo",
+          "body": "Tus datos se conservan mientras exista tu cuenta. El uso de las funciones se borra a los 13 meses. Cuando eliminas tu cuenta, todo se borra de inmediato; las copias de seguridad que la contengan caducan solas en 30 días como máximo."
+        },
+        "rights": {
+          "title": "Tus derechos",
+          "body": "Desde la página Cuenta puedes descargar todos tus datos (incluidos tus archivos originales) y eliminar tu cuenta, sin pedírselo a nadie. También puedes pedir que se corrija un dato inexacto u oponerte a un tratamiento."
+        }
+      },
+      "contact": {
+        "title": "Contacto",
+        "email": "Para cualquier pregunta sobre tus datos, escribe a",
+        "account": "Para exportar o eliminar tus datos, usa la página Cuenta una vez conectado.",
+        "authority": "También puedes presentar una reclamación ante tu autoridad de protección de datos (en Francia, la CNIL: cnil.fr)."
       }
     }
   },

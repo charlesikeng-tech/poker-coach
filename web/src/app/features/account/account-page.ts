@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Download, ShieldAlert, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
@@ -16,7 +17,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
  */
 @Component({
   selector: 'app-account-page',
-  imports: [TranslocoDirective, PageHeader, Button, Icon],
+  imports: [TranslocoDirective, RouterLink, PageHeader, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './account-page.html',

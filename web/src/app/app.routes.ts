@@ -12,6 +12,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/sign-in/sign-in-page').then((m) => m.SignInPage),
   },
   {
+    path: 'privacy',
+    title: 'pages.privacy.title',
+    loadComponent: () => import('./features/privacy/privacy-page').then((m) => m.PrivacyPage),
+  },
+  {
     path: '',
     component: Shell,
     canActivate: [authenticatedGuard],

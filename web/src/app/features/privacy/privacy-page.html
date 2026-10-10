@@ -1,0 +1,37 @@
+<ng-container *transloco="let t; prefix: 'pages.privacy'">
+  <div class="privacy">
+    <header class="top">
+      <a class="top__brand" routerLink="/">
+        <app-brand-mark />
+        <span>Poker Coach</span>
+      </a>
+      <app-language-select />
+    </header>
+
+    <article class="sheet">
+      <h1>{{ t('heading') }}</h1>
+      <p class="sheet__intro">{{ t('intro') }}</p>
+      <p class="sheet__updated">{{ t('updated') }}</p>
+
+      @for (section of sections; track section) {
+        <section>
+          <h2>{{ t('sections.' + section + '.title') }}</h2>
+          <p>{{ t('sections.' + section + '.body') }}</p>
+        </section>
+      }
+
+      <section>
+        <h2>{{ t('contact.title') }}</h2>
+        <p>
+          @if (contactEmail) {
+            {{ t('contact.email') }} <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a
+            >.
+          } @else {
+            {{ t('contact.account') }}
+          }
+          {{ t('contact.authority') }}
+        </p>
+      </section>
+    </article>
+  </div>
+</ng-container>

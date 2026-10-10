@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -15,11 +16,15 @@ namespace PokerCoach.Api.Tests;
 internal sealed class ApiFactory(
     string? connectionString = "Host=localhost;Database=unused",
     string googleClientId = "test-client-id",
-    bool signedIn = false) : WebApplicationFactory<Program>
+    bool signedIn = false,
+    string? webRoot = null) : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Production");
+
+        // No compiled web app unless a test provides one (the container image ships it in wwwroot).
+        builder.UseWebRoot(webRoot ?? Path.Combine(Path.GetTempPath(), "poker-coach-no-web-app"));
         builder.ConfigureAppConfiguration(configuration => configuration.AddInMemoryCollection(
             new Dictionary<string, string?>
             {
@@ -28,6 +33,9 @@ internal sealed class ApiFactory(
                 ["Authentication:Google:ClientSecret"] = "test-client-secret",
                 ["Import:WorkerEnabled"] = "false",
             }));
+
+        // Keys in memory: the database-backed key store would open the unused database.
+        builder.ConfigureTestServices(services => services.AddDataProtection().UseEphemeralDataProtectionProvider());
 
         if (signedIn)
         {

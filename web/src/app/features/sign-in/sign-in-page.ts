@@ -8,6 +8,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 import { SessionService } from '../../core/auth/session.service';
@@ -23,7 +24,7 @@ const LAUNCH_MS = 650;
 
 @Component({
   selector: 'app-sign-in-page',
-  imports: [TranslocoDirective, BrandMark, Button, LanguageSelect, PokerChip],
+  imports: [TranslocoDirective, RouterLink, BrandMark, Button, LanguageSelect, PokerChip],
   templateUrl: './sign-in-page.html',
   styleUrl: './sign-in-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

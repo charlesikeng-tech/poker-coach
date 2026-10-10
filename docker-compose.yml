@@ -1,4 +1,6 @@
-# Local development dependencies only. The API and the web app run from your IDE / CLI.
+# Local development: only PostgreSQL by default (the API and the web app run from your IDE / CLI).
+# `docker compose --profile app up --build` also runs the production image against it, to try the
+# container before a release (http://localhost:8080; Google sign-in needs that redirect URI too).
 services:
   postgres:
     image: postgres:18-alpine
@@ -18,6 +20,32 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  migrate:
+    profiles: [app]
+    build: .
+    command: ["migrate"]
+    environment: &app-environment
+      ConnectionStrings__PokerCoach: Host=postgres;Database=poker_coach;Username=${POSTGRES_USER:-poker_coach};Password=${POSTGRES_PASSWORD}
+      Authentication__Google__ClientId: ${GOOGLE_CLIENT_ID:-}
+      Authentication__Google__ClientSecret: ${GOOGLE_CLIENT_SECRET:-}
+      Coaching__Anthropic__ApiKey: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    profiles: [app]
+    build: .
+    environment:
+      <<: *app-environment
+      # Plain http on localhost: no Secure-only cookies.
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   postgres-data:

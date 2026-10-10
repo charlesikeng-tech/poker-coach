@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.angular/
+**/TestResults/
+**/*.user
+.git/
+.github/
+.env
+docs/
+tools/
+hand-histories/
+backend/tests/
+backend/nuget.config
+**/.DS_Store

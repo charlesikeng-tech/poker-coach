@@ -677,7 +677,8 @@
       "promises": {
         "readOnly": "Aucune publication, aucun accès à tes mails",
         "private": "Tes mains restent privées, les pseudos adverses aussi"
-      }
+      },
+      "privacyLink": "Confidentialité"
     },
     "leaks": {
       "title": "Leaks",
@@ -1270,7 +1271,8 @@
         "tournaments": "tes tournois et leurs résultats, en tableau (tournaments.csv) ;",
         "account": "ton compte, ta bankroll, tes plans, tes réponses d'entraînement et les explications du coach (account.json).",
         "action": "Télécharger l'archive",
-        "hint": "Les statistiques, leaks et ranges ne sont pas inclus : ils se recalculent à partir de tes mains."
+        "hint": "Les statistiques, leaks et ranges ne sont pas inclus : ils se recalculent à partir de tes mains.",
+        "privacy": "Ce que nous gardons et pourquoi : la page Confidentialité"
       },
       "delete": {
         "title": "Supprimer mon compte",
@@ -1281,6 +1283,52 @@
         "action": "Supprimer définitivement",
         "deleting": "Suppression…",
         "error": "La suppression n'a pas abouti. Réessaie."
+      }
+    },
+    "privacy": {
+      "title": "Confidentialité",
+      "heading": "Confidentialité",
+      "intro": "Ce que Poker Coach garde sur toi, pourquoi, et comment tout effacer.",
+      "updated": "Mis à jour le 10 octobre 2026",
+      "sections": {
+        "controller": {
+          "title": "Qui est responsable",
+          "body": "Poker Coach est un projet indépendant, en test auprès d'un petit groupe de joueurs. Son éditeur est responsable du traitement de tes données."
+        },
+        "data": {
+          "title": "Ce que nous gardons",
+          "body": "Ton identifiant Google, ton adresse e-mail, ton nom affiché et ta langue. Les historiques de mains et résumés de tournois que tu importes, tels quels (ils contiennent les pseudos des joueurs de tes tables), et tout ce que nous en calculons : statistiques, leaks, plans de la semaine. Les mouvements de bankroll que tu saisis et tes réponses à l'entraînement."
+        },
+        "purposes": {
+          "title": "Pourquoi",
+          "body": "Uniquement pour te rendre le service : analyser ton jeu et suivre tes progrès. Nous comptons aussi quelles fonctions sont ouvertes chaque jour, par compte, pour savoir ce qui sert vraiment. Rien n'est vendu, partagé à des fins publicitaires ni utilisé pour te démarcher."
+        },
+        "ai": {
+          "title": "Coach IA",
+          "body": "Quand tu demandes une explication, des mains d'exemple sont envoyées à Anthropic, notre prestataire d'IA, sous forme de récit anonymisé : positions et actions, sans ton pseudo ni ceux de tes adversaires. Anthropic traite ces données aux États-Unis pour notre compte."
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": "Seulement les cookies nécessaires au fonctionnement : ta session, la protection des formulaires et le passage par Google à la connexion. Aucun cookie publicitaire ni de mesure d'audience tierce, d'où l'absence de bandeau."
+        },
+        "hosting": {
+          "title": "Hébergement",
+          "body": "L'application et sa base de données sont hébergées dans l'Union européenne. Les pseudos adverses présents dans tes fichiers ne quittent jamais nos serveurs."
+        },
+        "retention": {
+          "title": "Durée de conservation",
+          "body": "Tes données sont gardées tant que ton compte existe. L'utilisation des fonctions est effacée au bout de 13 mois. Quand tu supprimes ton compte, tout est effacé immédiatement ; les sauvegardes qui en contiennent une copie disparaissent d'elles-mêmes sous 30 jours."
+        },
+        "rights": {
+          "title": "Tes droits",
+          "body": "Depuis la page Compte, tu peux télécharger toutes tes données (tes fichiers d'origine compris) et supprimer ton compte, sans rien demander à personne. Tu peux aussi demander la correction d'une donnée inexacte ou t'opposer à un traitement."
+        }
+      },
+      "contact": {
+        "title": "Contact",
+        "email": "Pour toute question sur tes données, écris à",
+        "account": "Pour exporter ou supprimer tes données, passe par la page Compte une fois connecté.",
+        "authority": "Tu peux aussi saisir la CNIL (cnil.fr)."
       }
     }
   },

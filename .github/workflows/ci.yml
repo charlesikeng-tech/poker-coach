@@ -58,3 +58,64 @@ jobs:
         run: npm test -- --watch=false
       - name: Audit (production dependencies)
         run: npm audit --omit=dev --audit-level=high
+
+  # The production image (ADR-0011): built on every run, smoke-tested against a real PostgreSQL
+  # (migrations + readiness), published to GHCR from main only.
+  image:
+    runs-on: ubuntu-latest
+    needs: [backend, web]
+    permissions:
+      contents: read
+      packages: write
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: poker_coach
+          POSTGRES_USER: poker_coach
+          POSTGRES_PASSWORD: ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U poker_coach -d poker_coach"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      IMAGE: ghcr.io/${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: poker-coach:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke test (migrate, then ready)
+        run: |
+          app_env=(
+            -e "ConnectionStrings__PokerCoach=Host=localhost;Database=poker_coach;Username=poker_coach;Password=ci-only"
+            -e Authentication__Google__ClientId=ci -e Authentication__Google__ClientSecret=ci
+          )
+          docker run --rm --network host "${app_env[@]}" poker-coach:ci migrate
+          docker run -d --name app --network host "${app_env[@]}" poker-coach:ci
+          for i in $(seq 1 30); do
+            curl -fsS http://localhost:8080/health/ready && break
+            sleep 2
+          done
+          curl -fsS http://localhost:8080/health/ready
+          curl -fsS http://localhost:8080/sign-in | grep -q "<app-root>"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/api/me)" = 401
+      - name: Container logs
+        if: failure()
+        run: docker logs app || true
+      - name: Publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          image="${IMAGE,,}"
+          docker tag poker-coach:ci "$image:${{ github.sha }}"
+          docker tag poker-coach:ci "$image:main"
+          docker push "$image:${{ github.sha }}"
+          docker push "$image:main"

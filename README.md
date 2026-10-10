@@ -84,6 +84,17 @@ cd backend && dotnet format PokerCoach.slnx --verify-no-changes && dotnet build 
 cd web && npx prettier --check "src/**/*.{ts,html,scss}" "public/i18n/*.json" && npm run build && npm test -- --watch=false
 ```
 
+Integration tests start PostgreSQL with Testcontainers (Docker). Without Docker, point them at an
+empty database: `POKERCOACH_TEST_CONNECTION="Host=…;Database=…" dotnet test --project tests/PokerCoach.IntegrationTests`.
+
+Production image (ADR-0011) — the API serves the compiled web app on one origin:
+
+```bash
+docker compose --profile app up --build   # PostgreSQL + migrate + app on http://localhost:8080
+# Release order anywhere: build → `docker run <image> migrate` → roll out the new version.
+# Behind the host's TLS proxy only (forwarded headers are trusted); probes: /health/live, /health/ready.
+```
+
 ## Conventions
 
 - **Errors**: every API error is RFC 9457 problem details with a stable `code`
@@ -264,6 +275,17 @@ Quiz on real hands:
 - [x] `GET /api/training/opening/spot?mode=real` (404 `NO_REAL_SPOT_LEFT`), answers with `sourceHandId`;
       web: "My hands" mode with the date, what the hero did that day and a link to the replay
 - [x] Migration `TrainingRealHands`
+
+Deployment readiness (roadmap step 5, ADR-0011):
+
+- [x] Data-protection keys in PostgreSQL (`platform.data_protection_keys`): sessions survive redeploys
+- [x] API serves the web app (SPA fallback, cache policy), security headers (CSP, HSTS…), forwarded headers
+- [x] `migrate` command (release step), chiseled non-root Dockerfile, compose `app` profile
+- [x] First-party feature usage (`platform.feature_usage`, 13 months, deleted with the account)
+- [x] Privacy page `/privacy` (FR/EN/ES), linked from sign-in and account
+- [x] CI: image built, smoke-tested on PostgreSQL, pushed to GHCR from `main`
+- [ ] Hosting decision (EU, backups ≤ 30 days), domain, Google production redirect URI, privacy contact
+- [ ] Telemetry exporter (Azure Monitor or OTLP) with the hosting decision
 
 MVP-3 — Leaks (ADR-0007):
 

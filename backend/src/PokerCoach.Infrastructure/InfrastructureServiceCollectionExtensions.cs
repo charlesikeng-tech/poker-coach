@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PokerCoach.Application.Analytics;
 using PokerCoach.Application.Bankroll;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Hands;
@@ -19,6 +22,7 @@ using PokerCoach.Infrastructure.Hands;
 using PokerCoach.Infrastructure.Identity;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
+using PokerCoach.Infrastructure.Platform;
 using PokerCoach.Infrastructure.Poker;
 using PokerCoach.Infrastructure.Progress;
 using PokerCoach.Infrastructure.Statistics;
@@ -65,6 +69,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IAllInReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IRealSpotStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<ICoachingStore, CoachingStore>();
+        services.AddScoped<IFeatureUsageStore, FeatureUsageStore>();
 
         // No API key = coaching unavailable, not a startup failure (ADR-0008).
         services.AddOptions<AnthropicOptions>().BindConfiguration(AnthropicOptions.SectionName);
@@ -73,6 +78,11 @@ public static class InfrastructureServiceCollectionExtensions
         // Starts only when Import:WorkerEnabled is true (default); needs ImportProcessor and ImportOptions
         // registered by the host.
         services.AddHostedService<ImportWorker>();
+
+        // Session cookie and anti-forgery keys survive restarts and are shared by every instance (ADR-0011).
+        services.AddDataProtection().SetApplicationName("poker-coach");
+        services.AddOptions<KeyManagementOptions>()
+            .Configure<IServiceScopeFactory>((options, scopes) => options.XmlRepository = new DataProtectionKeyStore(scopes));
 
         services.AddHealthChecks()
             .AddDbContextCheck<PokerCoachDbContext>("database", tags: [HealthCheckTags.Ready]);

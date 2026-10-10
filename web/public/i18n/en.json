@@ -677,7 +677,8 @@
       "promises": {
         "readOnly": "No posting, no access to your email",
         "private": "Your hands stay private, so do opponents' names"
-      }
+      },
+      "privacyLink": "Privacy"
     },
     "leaks": {
       "title": "Leaks",
@@ -1270,7 +1271,8 @@
         "tournaments": "your tournaments and their results, as a spreadsheet (tournaments.csv);",
         "account": "your account, bankroll, plans, training answers and the coach's explanations (account.json).",
         "action": "Download the archive",
-        "hint": "Statistics, leaks and ranges are not included: they are recomputed from your hands."
+        "hint": "Statistics, leaks and ranges are not included: they are recomputed from your hands.",
+        "privacy": "What we keep and why: the Privacy page"
       },
       "delete": {
         "title": "Delete my account",
@@ -1281,6 +1283,52 @@
         "action": "Delete for good",
         "deleting": "Deleting…",
         "error": "The deletion did not go through. Try again."
+      }
+    },
+    "privacy": {
+      "title": "Privacy",
+      "heading": "Privacy",
+      "intro": "What Poker Coach keeps about you, why, and how to erase all of it.",
+      "updated": "Updated on 10 October 2026",
+      "sections": {
+        "controller": {
+          "title": "Who is responsible",
+          "body": "Poker Coach is an independent project, being tested by a small group of players. Its publisher is the controller of your data."
+        },
+        "data": {
+          "title": "What we keep",
+          "body": "Your Google identifier, email address, display name and language. The hand histories and tournament summaries you import, as they are (they contain the screen names of the players at your tables), and everything we compute from them: statistics, leaks, weekly plans. The bankroll movements you enter and your training answers."
+        },
+        "purposes": {
+          "title": "Why",
+          "body": "Only to provide the service: analyse your game and follow your progress. We also count which features each account opens every day, to learn what is actually useful. Nothing is sold, shared for advertising or used for marketing."
+        },
+        "ai": {
+          "title": "AI coach",
+          "body": "When you ask for an explanation, example hands are sent to Anthropic, our AI provider, as an anonymised story: positions and actions, without your screen name or your opponents'. Anthropic processes this data in the United States on our behalf."
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": "Only the cookies the app needs to work: your session, form protection and the round trip through Google at sign-in. No advertising cookies and no third-party analytics, hence no banner."
+        },
+        "hosting": {
+          "title": "Hosting",
+          "body": "The app and its database are hosted in the European Union. Opponents' screen names in your files never leave our servers."
+        },
+        "retention": {
+          "title": "How long we keep it",
+          "body": "Your data is kept as long as your account exists. Feature usage is erased after 13 months. When you delete your account, everything is erased at once; backups holding a copy expire on their own within 30 days."
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": "From the Account page you can download all your data (your original files included) and delete your account, without asking anyone. You can also ask for inaccurate data to be corrected or object to a processing."
+        }
+      },
+      "contact": {
+        "title": "Contact",
+        "email": "For any question about your data, write to",
+        "account": "To export or delete your data, use the Account page once signed in.",
+        "authority": "You may also lodge a complaint with your data protection authority (in France, the CNIL: cnil.fr)."
       }
     }
   },
