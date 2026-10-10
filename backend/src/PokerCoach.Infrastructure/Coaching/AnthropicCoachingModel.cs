@@ -20,6 +20,17 @@ public sealed class AnthropicOptions
     public Uri BaseUrl { get; set; } = new("https://api.anthropic.com/");
 
     public int MaxOutputTokens { get; set; } = 2_000;
+
+    /// <summary>
+    /// Thinking setting for tasks that only write from given facts (leak explanation, weekly review).
+    /// Sonnet 5.5 thinks by default, and thinking tokens count toward max_tokens: "between_tools" is its
+    /// lowest setting (no up-front thinking without tools). Null sends nothing (models that do not think
+    /// by default). Model-specific: change it with <see cref="Model"/>.
+    /// </summary>
+    public string? WritingThinking { get; set; } = "between_tools";
+
+    /// <summary>Effort for the debrief, which judges decisions and keeps thinking ("low", "medium", "high"; null: model default).</summary>
+    public string? DebriefEffort { get; set; } = "medium";
 }
 
 /// <summary>
@@ -204,10 +215,17 @@ internal sealed partial class AnthropicCoachingModel(
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
     };
 
-    /// <summary>A debrief comments up to eight hands: more room than a leak explanation.</summary>
-    private const int DebriefMaxOutputTokens = 4_000;
+    /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
+    private const int DebriefMaxOutputTokens = 12_000;
 
     private const int ReviewMaxOutputTokens = 2_000;
+
+    /// <summary>Writing from given facts needs no up-front thinking; judging decisions benefits from it.</summary>
+    private enum Reasoning
+    {
+        Writing,
+        Judging,
+    }
 
     private static readonly Dictionary<string, MomentVerdict> Verdicts = new(StringComparer.Ordinal)
     {
@@ -247,7 +265,7 @@ internal sealed partial class AnthropicCoachingModel(
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\nLeak:\n{prompt.Facts}\n\n"
             + string.Join("\n\n", prompt.Hands.Select(h => $"Hand {h.Ref}:\n{h.Story}"));
-        var (answer, usage) = await CallAsync<Answer>(Instructions, Schema, user, options.Value.MaxOutputTokens, cancellationToken);
+        var (answer, usage) = await CallAsync<Answer>(Instructions, Schema, user, options.Value.MaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Summary) || string.IsNullOrWhiteSpace(answer.WhyItCosts))
         {
             throw new CoachingModelException("The model answer misses required fields.");
@@ -267,7 +285,7 @@ internal sealed partial class AnthropicCoachingModel(
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}\n\n"
             + string.Join("\n\n", prompt.Moments.Select(m => $"Key moment {m.Ref}:\n{m.Story}"));
-        var (answer, usage) = await CallAsync<DebriefAnswer>(DebriefInstructions, DebriefSchema, user, DebriefMaxOutputTokens, cancellationToken);
+        var (answer, usage) = await CallAsync<DebriefAnswer>(DebriefInstructions, DebriefSchema, user, DebriefMaxOutputTokens, Reasoning.Judging, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Story))
         {
             throw new CoachingModelException("The model answer misses required fields.");
@@ -287,7 +305,7 @@ internal sealed partial class AnthropicCoachingModel(
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
-        var (answer, usage) = await CallAsync<ReviewAnswer>(ReviewInstructions, ReviewSchema, user, ReviewMaxOutputTokens, cancellationToken);
+        var (answer, usage) = await CallAsync<ReviewAnswer>(ReviewInstructions, ReviewSchema, user, ReviewMaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
         {
             throw new CoachingModelException("The model answer misses required fields.");
@@ -306,7 +324,7 @@ internal sealed partial class AnthropicCoachingModel(
         (items ?? []).Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()).Take(max).ToList();
 
     /// <summary>One Messages API call: cached instructions, the user's facts, an answer bound to the schema.</summary>
-    private async Task<(T Answer, ModelUsage Usage)> CallAsync<T>(string instructions, JsonObject schema, string user, int maxTokens, CancellationToken cancellationToken)
+    private async Task<(T Answer, ModelUsage Usage)> CallAsync<T>(string instructions, JsonObject schema, string user, int maxTokens, Reasoning reasoning, CancellationToken cancellationToken)
         where T : class
     {
         var settings = options.Value;
@@ -326,6 +344,14 @@ internal sealed partial class AnthropicCoachingModel(
                 ["format"] = new JsonObject { ["type"] = "json_schema", ["schema"] = schema.DeepClone() },
             },
         };
+        if (reasoning == Reasoning.Writing && settings.WritingThinking is { Length: > 0 } thinking)
+        {
+            body["thinking"] = new JsonObject { ["type"] = thinking };
+        }
+        else if (reasoning == Reasoning.Judging && settings.DebriefEffort is { Length: > 0 } effort)
+        {
+            ((JsonObject)body["output_config"]!)["effort"] = effort;
+        }
 
         using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(settings.BaseUrl, "v1/messages"))
         {

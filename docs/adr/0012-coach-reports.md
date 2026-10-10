@@ -50,6 +50,14 @@ with its own instructions and schema in the adapter; a shared voice block keeps 
 (informal address, English poker terms, "leak" never translated). One method per task rather than a
 generic "prompt in, JSON out": each task's validation stays typed and explicit.
 
+**Thinking (amended 2026-10-10).** Sonnet 5.5 thinks by default, and thinking tokens count toward
+`max_tokens`: the first real call stopped at `max_tokens` before writing a word. Writing tasks (leak
+explanation, weekly review) send `thinking: {type: "between_tools"}`, the model's lowest setting (no
+up-front thinking without tools): cheaper, faster, the facts are already computed. The debrief judges
+decisions and keeps adaptive thinking at effort `medium`, with a 12k-token cap shared by thinking and
+text. Both are configuration (`Coaching:Anthropic:WritingThinking`, `DebriefEffort`): model-specific
+values, to revisit when the model changes. Cost estimate for a debrief rises to ≈ $0.05–0.08.
+
 **Privacy.** Nothing new identifies anyone: no tournament name, no date, no pseudonym; opponents by
 position. Reports are exported with the account and deleted with it (FK cascade). The privacy page says
 so.
