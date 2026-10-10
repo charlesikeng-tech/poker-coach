@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <title>Conditions de vente — NutsIQ</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      /* fonts:start — self-hosted: no third-party font request (GDPR). */
+      @font-face {
+        font-family: 'Sora Variable';
+        src: url('/fonts/sora-latin-wght-normal.woff2') format('woff2');
+        font-weight: 100 800;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'IBM Plex Sans Variable';
+        src: url('/fonts/ibm-plex-sans-latin-wght-normal.woff2') format('woff2');
+        font-weight: 100 700;
+        font-display: swap;
+      }
+      /* fonts:end */
+
+      /* Layout: one dark "card room" page; the hero pairs the promise with a real product moment,
+         sections alternate full-width statements and two-column detail; the range grid is the only motif. */
+      :root {
+        color-scheme: dark;
+        --felt: #0b1411;
+        --felt-raised: #0f1a16;
+        --felt-high: #1b2b24;
+        --ink: #ecf2ee;
+        --ink-2: #a9b8b0;
+        --ink-3: #87978e;
+        --gold: #e9b949;
+        --gold-hi: #f3ca68;
+        --on-gold: #1a1405;
+        --line: rgb(214 236 224 / 0.1);
+        --line-strong: rgb(214 236 224 / 0.18);
+        --gold-wash: rgb(233 185 73 / 0.12);
+        --gold-glow: rgb(233 185 73 / 0.35);
+        --good: #3ddc97;
+        --bad: #ff6b6b;
+        --felt-light: rgb(31 77 56 / 0.55);
+        --display: 'Sora Variable', 'Sora', 'IBM Plex Sans Variable', system-ui, sans-serif;
+        --body: 'IBM Plex Sans Variable', 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 16px;
+        --measure: 64ch;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(900px 520px at 70% -120px, var(--felt-light), transparent 70%),
+          var(--felt);
+        color: var(--ink);
+        font: 400 1.0625rem/1.6 var(--body);
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--gold-hi);
+        outline-offset: 3px;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: var(--display);
+        line-height: 1.08;
+        letter-spacing: -0.025em;
+        text-wrap: balance;
+      }
+      p {
+        margin: 0;
+      }
+      .wrap {
+        width: 100%;
+        max-width: 72rem;
+        margin-inline: auto;
+        padding-inline: max(16px, 4vw);
+      }
+      .numeric {
+        font-variant-numeric: tabular-nums;
+      }
+      .eyebrow {
+        color: var(--gold);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* Buttons: chip gold for the one next step, glass for the rest. */
+      .btn {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.75rem;
+        padding: 0 1.25rem;
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        font: 600 0.95rem/1 var(--body);
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        transition:
+          box-shadow 240ms cubic-bezier(0.2, 0, 0, 1),
+          border-color 140ms,
+          background-color 140ms;
+      }
+      .btn--gold {
+        background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+        color: var(--on-gold);
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 1px 2px rgb(0 0 0 / 0.3);
+      }
+      .btn--gold:hover {
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 0 0 1px var(--gold-glow), 0 8px 28px var(--gold-glow);
+      }
+      .btn--ghost {
+        border-color: var(--line-strong);
+        background: rgb(22 36 30 / 0.55);
+        color: var(--ink);
+      }
+      .btn--ghost:hover {
+        border-color: var(--gold-glow);
+      }
+
+      /* Header */
+      .top {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgb(11 20 17 / 0.78);
+        backdrop-filter: blur(14px);
+      }
+      .top .wrap {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        min-height: 4rem;
+      }
+      .brand {
+        display: inline-flex;
+        gap: 0.55rem;
+        align-items: center;
+        font: 700 1.35rem/1 var(--display);
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+      .brand b {
+        color: var(--gold);
+        font-weight: inherit;
+      }
+      .brand svg {
+        width: 1.35rem;
+        height: 1.35rem;
+      }
+      .top nav {
+        display: flex;
+        gap: 1.5rem;
+        margin-left: auto;
+        font-size: 0.95rem;
+      }
+      .top nav a {
+        color: var(--ink-2);
+        text-decoration: none;
+      }
+      .top nav a:hover {
+        color: var(--ink);
+      }
+      .top .actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      .signin {
+        color: var(--ink-2);
+        font-size: 0.95rem;
+        text-decoration: none;
+      }
+
+      /* Hero */
+      .hero {
+        padding-block: clamp(3rem, 8vw, 6rem) clamp(3rem, 7vw, 5rem);
+      }
+      .hero .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+        gap: clamp(2rem, 5vw, 4rem);
+        align-items: center;
+      }
+      .hero h1 {
+        font-size: clamp(2.6rem, 6.2vw, 4.6rem);
+        font-weight: 700;
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+      }
+      .hero h1 em {
+        color: var(--gold);
+        font-style: normal;
+      }
+      .hero .lede {
+        max-width: 34rem;
+        margin-top: 1.4rem;
+        color: var(--ink-2);
+        font-size: 1.15rem;
+      }
+      .hero .ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 2rem;
+      }
+      .hero .reassure {
+        margin-top: 1rem;
+        color: var(--ink-3);
+        font-size: 0.88rem;
+      }
+
+      /* Product moment: a leak as the app shows it. */
+      .stage {
+        position: relative;
+        min-width: 0;
+      }
+      .range {
+        position: absolute;
+        inset: -2.5rem -1rem auto auto;
+        display: grid;
+        grid-template-columns: repeat(13, 1fr);
+        gap: 5px;
+        width: min(26rem, 100%);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+      .range i {
+        aspect-ratio: 1;
+        border-radius: 3px;
+        background: rgb(236 242 238 / 0.06);
+      }
+      .range i.on {
+        background: var(--gold);
+        opacity: 0.85;
+      }
+      .window {
+        position: relative;
+        margin-top: 4.5rem;
+        padding: 1.4rem;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-lg);
+        background: rgb(15 26 22 / 0.86);
+        box-shadow: 0 30px 80px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.05);
+        backdrop-filter: blur(14px);
+      }
+      .window .tag {
+        position: absolute;
+        top: -0.7rem;
+        right: 1rem;
+        padding: 2px 0.6rem;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        background: var(--felt-high);
+        color: var(--ink-3);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .leak-head {
+        display: flex;
+        gap: 1rem;
+        align-items: baseline;
+        justify-content: space-between;
+      }
+      .leak-head h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+      .sev {
+        flex: none;
+        padding: 2px 0.6rem;
+        border-radius: 999px;
+        background: rgb(255 107 107 / 0.14);
+        color: var(--bad);
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .gauge {
+        margin-top: 1.1rem;
+      }
+      .gauge-track {
+        position: relative;
+        height: 0.6rem;
+        border-radius: 999px;
+        background: rgb(236 242 238 / 0.08);
+      }
+      .gauge-band {
+        position: absolute;
+        inset: 0 auto 0 calc(var(--from) * 1%);
+        width: calc((var(--to) - var(--from)) * 1%);
+        border-radius: 999px;
+        background: rgb(61 220 151 / 0.28);
+        outline: 1px solid rgb(61 220 151 / 0.5);
+      }
+      .gauge-dot {
+        position: absolute;
+        top: 50%;
+        left: calc(var(--at) * 1%);
+        width: 0.95rem;
+        height: 0.95rem;
+        border: 2px solid var(--felt-raised);
+        border-radius: 50%;
+        background: var(--bad);
+        transform: translate(-50%, -50%);
+      }
+      .gauge-legend {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.6rem;
+        color: var(--ink-3);
+        font-size: 0.82rem;
+      }
+      .gauge-legend strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .coach {
+        margin-top: 1.2rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--line);
+      }
+      .coach .who {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        color: var(--gold);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .coach p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+        font-size: 0.95rem;
+      }
+      .cards {
+        display: flex;
+        gap: 0.4rem;
+        margin-top: 0.9rem;
+        align-items: center;
+        color: var(--ink-3);
+        font-size: 0.85rem;
+      }
+      .card {
+        display: inline-grid;
+        place-items: center;
+        width: 2rem;
+        height: 2.8rem;
+        border-radius: var(--radius-sm);
+        background: #fffdf6;
+        box-shadow: 0 4px 10px rgb(0 0 0 / 0.35);
+        font: 600 0.95rem/1 var(--display);
+      }
+      .card.s {
+        color: #1d2421;
+      }
+      .card.d {
+        color: #2364c4;
+      }
+
+      /* Sections */
+      section {
+        padding-block: clamp(3.5rem, 8vw, 6rem);
+      }
+      .section-head {
+        max-width: 44rem;
+      }
+      .section-head h2 {
+        margin-top: 0.6rem;
+        font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+        font-weight: 700;
+      }
+      .section-head p {
+        margin-top: 1rem;
+        color: var(--ink-2);
+      }
+
+      /* How it works: a real sequence, so it is numbered. */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.25rem;
+        margin: 2.5rem 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: step;
+      }
+      .steps li {
+        position: relative;
+        padding: 1.5rem;
+        border-top: 2px solid var(--line-strong);
+        counter-increment: step;
+      }
+      .steps li::before {
+        content: counter(step);
+        display: block;
+        margin-bottom: 0.9rem;
+        color: var(--gold);
+        font: 700 2.2rem/1 var(--display);
+      }
+      .steps h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+      .steps p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+        font-size: 0.98rem;
+      }
+      .steps code {
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: var(--felt-high);
+        color: var(--ink);
+        font-size: 0.85em;
+      }
+
+      /* Features: two columns of short, specific claims. */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2.5rem 3rem;
+        margin-top: 3rem;
+      }
+      .feature h3 {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .feature h3 svg {
+        flex: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        color: var(--gold);
+      }
+      .feature p {
+        max-width: var(--measure);
+        margin-top: 0.55rem;
+        color: var(--ink-2);
+      }
+      .feature .pro {
+        margin-left: 0.25rem;
+        padding: 1px 0.5rem;
+        border-radius: 999px;
+        background: var(--gold-wash);
+        color: var(--gold);
+        font: 600 0.7rem/1.6 var(--body);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* The promise on figures: one full-width statement. */
+      .truth {
+        border-block: 1px solid var(--line);
+        background: var(--felt-raised);
+      }
+      .truth .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 3rem;
+        align-items: center;
+      }
+      .truth blockquote {
+        margin: 0;
+        font: 600 clamp(1.5rem, 3vw, 2.15rem)/1.25 var(--display);
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+      .truth blockquote span {
+        color: var(--gold);
+      }
+      .truth ul {
+        display: grid;
+        gap: 0.9rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--ink-2);
+      }
+      .truth li {
+        padding-left: 1.4rem;
+        background: linear-gradient(var(--gold), var(--gold)) 0 0.62em / 0.55rem 0.55rem no-repeat;
+      }
+
+      /* Pricing */
+      .billing-toggle {
+        display: inline-flex;
+        margin-top: 1.75rem;
+        padding: 3px;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+      }
+      .billing-toggle button {
+        display: inline-flex;
+        gap: 0.4rem;
+        align-items: center;
+        padding: 0.4rem 1rem;
+        border: 0;
+        border-radius: 999px;
+        background: none;
+        color: var(--ink-2);
+        font: 500 0.92rem/1.4 var(--body);
+        cursor: pointer;
+      }
+      .billing-toggle button[aria-pressed='true'] {
+        background: var(--gold-wash);
+        color: var(--gold);
+      }
+      .billing-toggle small {
+        color: var(--good);
+        font-weight: 600;
+      }
+      .plans {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+        max-width: 52rem;
+        margin-top: 2rem;
+      }
+      .plan {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.75rem;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-lg);
+        background: rgb(22 36 30 / 0.5);
+      }
+      .plan--pro {
+        border-color: var(--gold-glow);
+        box-shadow: 0 0 0 1px var(--gold-glow), 0 20px 60px rgb(233 185 73 / 0.1);
+      }
+      .plan h3 {
+        font-size: 1.35rem;
+        font-weight: 600;
+      }
+      .price {
+        display: flex;
+        gap: 0.4rem;
+        align-items: baseline;
+      }
+      .price strong {
+        font: 700 2.6rem/1 var(--display);
+        letter-spacing: -0.03em;
+      }
+      .price span {
+        color: var(--ink-3);
+      }
+      .plan .note {
+        min-height: 1.3em;
+        color: var(--ink-3);
+        font-size: 0.88rem;
+      }
+      .plan ul {
+        display: grid;
+        gap: 0.6rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--ink-2);
+        font-size: 0.98rem;
+      }
+      .plan li {
+        display: flex;
+        gap: 0.6rem;
+      }
+      .plan li svg {
+        flex: none;
+        width: 1.1rem;
+        height: 1.1rem;
+        margin-top: 0.25rem;
+        color: var(--gold);
+      }
+      .plan .btn {
+        margin-top: auto;
+      }
+      .fineprint {
+        max-width: 52rem;
+        margin-top: 1.25rem;
+        color: var(--ink-3);
+        font-size: 0.88rem;
+      }
+
+      /* Coaches and streamers */
+      .partners .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 3rem;
+        align-items: start;
+      }
+      .partners ul {
+        display: grid;
+        gap: 0.8rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--ink-2);
+      }
+      .partners li strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .contact {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-md);
+        font-size: 0.95rem;
+      }
+      .contact code {
+        color: var(--gold);
+        font: 500 0.95rem/1 var(--body);
+        user-select: all;
+      }
+
+      /* FAQ */
+      .faq {
+        display: grid;
+        gap: 0.75rem;
+        max-width: 48rem;
+        margin-top: 2rem;
+      }
+      details {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: rgb(22 36 30 / 0.4);
+      }
+      summary {
+        padding: 1rem 1.25rem;
+        font-weight: 600;
+        cursor: pointer;
+        list-style: none;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      summary::after {
+        content: '+';
+        float: right;
+        color: var(--gold);
+        font-weight: 400;
+      }
+      details[open] summary::after {
+        content: '–';
+      }
+      details p {
+        padding: 0 1.25rem 1.1rem;
+        color: var(--ink-2);
+      }
+
+      /* Final call */
+      .final {
+        text-align: left;
+      }
+      .final .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem 3rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .final h2 {
+        font-size: clamp(1.9rem, 4vw, 3rem);
+        font-weight: 700;
+      }
+      .final h2 em {
+        color: var(--gold);
+        font-style: normal;
+      }
+
+      /* Footer */
+      footer {
+        padding-block: 2.5rem 3rem;
+        border-top: 1px solid var(--line);
+        color: var(--ink-3);
+        font-size: 0.88rem;
+      }
+      footer .wrap {
+        display: grid;
+        gap: 1.25rem;
+      }
+      footer .links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+      }
+      footer a {
+        color: var(--ink-2);
+        text-decoration: none;
+      }
+      footer a:hover {
+        color: var(--ink);
+      }
+      .responsible {
+        max-width: 60rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+      }
+
+      @media (max-width: 900px) {
+        .hero .wrap,
+        .truth .wrap,
+        .partners .wrap {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .top nav {
+          display: none;
+        }
+        .top .actions {
+          margin-left: auto;
+        }
+        .window {
+          margin-top: 3rem;
+        }
+      }
+      @media (max-width: 720px) {
+        .steps,
+        .features,
+        .plans {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .signin {
+          display: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+    <style>
+      .legal { max-width: 46rem; padding-block: 3rem 5rem; }
+      .legal h1 { font-size: 2.2rem; }
+      .legal h2 { margin-top: 2.2rem; font-size: 1.3rem; }
+      .legal p, .legal li { margin-top: 0.8rem; color: var(--ink-2); }
+      .draft { margin-top: 1.5rem; padding: 0.9rem 1rem; border: 1px solid var(--bad); border-radius: var(--radius-md); color: var(--ink); }
+      mark { background: var(--gold-wash); color: var(--gold); padding: 0 0.25rem; border-radius: 3px; }
+    </style>
+  </head>
+  <body>
+    <main class="wrap legal">
+      <p><a class="brand" href="/">Nuts<b>IQ</b></a></p>
+      <h1>Conditions générales de vente</h1>
+      <p class="draft">Brouillon de structure, à rédiger ou faire valider par un professionnel du droit avant d'activer les paiements. Les points listés sont ceux qu'un abonnement en ligne vendu à des consommateurs en France doit couvrir.</p>
+      <h2>1. Objet et services</h2>
+      <p>Description de NutsIQ, des offres Gratuit et Pro et de leur contenu (voir la page Tarifs).</p>
+      <h2>2. Prix et paiement</h2>
+      <p>Pro : 9 € TTC par mois ou 79 € TTC par an, payés par carte via Stripe ; renouvellement automatique ; <mark>[régime de TVA applicable]</mark>.</p>
+      <h2>3. Durée, renouvellement et résiliation</h2>
+      <p>Résiliation à tout moment depuis le compte, effective à la fin de la période payée ; rappel avant renouvellement de l'abonnement annuel ; <mark>[conditions de remboursement]</mark>.</p>
+      <h2>4. Droit de rétractation</h2>
+      <p>Délai de 14 jours (articles L221-18 et suivants du Code de la consommation) et cas où l'utilisateur demande l'exécution immédiate du service et renonce à ce droit : <mark>[mécanisme de recueil du consentement au paiement]</mark>.</p>
+      <h2>5. Limites du service</h2>
+      <p>Outil d'analyse de mains déjà jouées ; aucune garantie de résultats ; textes du coach rédigés par une IA à partir des statistiques calculées ; limites d'usage de l'IA.</p>
+      <h2>6. Données personnelles</h2>
+      <p>Renvoi vers la <a href="https://app.nutsiq.com/privacy">politique de confidentialité</a>.</p>
+      <h2>7. Médiation et litiges</h2>
+      <p>Médiateur de la consommation : <mark>[nom et coordonnées]</mark> ; droit applicable et juridiction.</p>
+      <h2>8. Éditeur</h2>
+      <p>Voir les <a href="/mentions-legales.html">mentions légales</a>.</p>
+    </main>
+  </body>
+</html>
