@@ -57,8 +57,6 @@ public sealed record LeakExplanation(string Summary, string WhyItCosts, IReadOnl
 
 public sealed record ModelUsage(string Model, int InputTokens, int OutputTokens, int CacheWriteTokens, int CacheReadTokens);
 
-public sealed record ModelExplanation(LeakExplanation Explanation, ModelUsage Usage);
-
 /// <summary>A validated answer of the model and what it cost.</summary>
 public sealed record ModelAnswer<T>(T Value, ModelUsage Usage);
 
@@ -68,8 +66,14 @@ public interface ICoachingModel
     /// <summary>False when not configured (no API key): the feature reports itself unavailable.</summary>
     bool IsAvailable { get; }
 
+    /// <summary>
+    /// The most a call of this task can be billed, correction attempts included: reserved against the budget
+    /// before the call (ADR-0017).
+    /// </summary>
+    ModelUsage Ceiling(AiTask task);
+
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
-    Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken);
+    Task<ModelAnswer<LeakExplanation>> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken);
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken);
@@ -78,6 +82,7 @@ public interface ICoachingModel
     Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken);
 }
 
+/// <summary>The provider failed or answered outside the schema.</summary>
 public sealed class CoachingModelException : Exception
 {
     public CoachingModelException(string message)
@@ -93,6 +98,19 @@ public sealed class CoachingModelException : Exception
     public CoachingModelException()
     {
     }
+
+    /// <param name="usage">What the provider billed before the answer was rejected.</param>
+    public CoachingModelException(string message, ModelUsage usage)
+        : base(message)
+    {
+        Usage = usage;
+    }
+
+    /// <summary>
+    /// Tokens billed by the provider for the failed call; null when unknown (the provider was not reached or did
+    /// not answer). An error status is not billed: its usage is zero, not null.
+    /// </summary>
+    public ModelUsage? Usage { get; init; }
 }
 
 /// <summary>A hand that illustrates a leak, with what the story needs beyond the analysis input.</summary>
@@ -122,10 +140,4 @@ public interface ICoachingStore
     Task SaveExplanationAsync(Guid userId, string fingerprint, string language, StoredExplanation explanation, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ExampleHand>> FindExampleHandsAsync(Guid userId, LeakSituation situation, int count, int factsVersion, CancellationToken cancellationToken);
-
-    Task RecordUsageAsync(Guid? userId, string purpose, ModelUsage usage, decimal costUsd, CancellationToken cancellationToken);
-
-    Task<decimal> SpendSinceAsync(DateTimeOffset since, CancellationToken cancellationToken);
-
-    Task<int> CountCallsSinceAsync(Guid userId, string purpose, DateTimeOffset since, CancellationToken cancellationToken);
 }

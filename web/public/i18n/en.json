@@ -1587,6 +1587,30 @@
       "plans": {
         "pro": "Pro",
         "elite": "Elite"
+      },
+      "ai": {
+        "title": "AI usage — {{month}}",
+        "description": "This month's real spend against the global budget (Coaching:MonthlyBudgetUsd). Failed calls count: the provider bills them.",
+        "spend": "{{spend}} spent of {{budget}}",
+        "meter": "This month's AI budget",
+        "open": "Including {{amount}} reserved for calls in progress.",
+        "alert": "Over 80% of the budget used: raise it or AI calls will be refused to everyone.",
+        "failed": "{{count}} failed",
+        "unknown": "{{count}} call(s) with unknown cost (provider unreachable), counted at the maximum cost.",
+        "topUsers": "Heaviest users",
+        "deleted": "Deleted account",
+        "columns": {
+          "task": "Type",
+          "calls": "Succeeded",
+          "credits": "Credits",
+          "cost": "Real cost",
+          "perCredit": "Cost per credit"
+        },
+        "tasks": {
+          "leakExplanation": "Leak explanation",
+          "weekReview": "Weekly review",
+          "tournamentDebrief": "Tournament debrief"
+        }
       }
     }
   },

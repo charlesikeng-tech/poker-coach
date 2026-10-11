@@ -308,6 +308,14 @@ Subscriptions (ADR-0014):
       webhook endpoint, secrets; raise `Coaching:MonthlyBudgetUsd` with subscribers; CGV and legal notice
       (lawyer)
 
+AI usage guard (ADR-0017):
+
+- [x] `AiUsageGuard`, the only way to the AI provider: atomic reservation (PostgreSQL advisory lock) of credits
+      and worst-case cost, then settlement at the real cost, failed calls included (credits given back);
+      unknown billing counted at the ceiling; abandoned reservations expire after 10 minutes
+- [x] Ledger `coaching.model_usage` with status and credits (migration `AiUsageGuard`); warning at 80 % of the
+      monthly budget; `GET /api/admin/ai-usage` and the admin page (spend vs budget, cost per credit, top users)
+
 Coach reports (ADR-0012):
 
 - [x] Tournament debrief: story, verdict per key moment (variance checked against computed equity),

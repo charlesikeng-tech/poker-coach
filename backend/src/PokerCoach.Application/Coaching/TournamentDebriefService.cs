@@ -1,5 +1,3 @@
-using PokerCoach.Domain.Subscriptions;
-using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -62,10 +60,7 @@ public sealed class TournamentDebriefService(
     TournamentDetailService tournaments,
     LeakService leaks,
     ICoachingReportStore reports,
-    ICoachingStore ledger,
-    ICoachingModel model,
-    CoachingOptions options,
-    PlanAccess plans,
+    AiUsageGuard guard,
     TimeProvider time)
 {
     internal const string Kind = "tournament-debrief";
@@ -80,8 +75,6 @@ public sealed class TournamentDebriefService(
     private const int LeakDays = 90;
 
     private const int MinOpportunitiesShown = 5;
-
-    private readonly CoachingGate gate = new(ledger, model, options, plans, time);
 
     /// <summary>The stored debrief, if any, and whether the tournament's facts changed since. Free.</summary>
     public async Task<ReportView<DebriefReport>?> GetAsync(Guid userId, Guid tournamentId, string language, CancellationToken cancellationToken)
@@ -122,12 +115,6 @@ public sealed class TournamentDebriefService(
             return ReportOutcome<DebriefReport>.Of(View(stored, fingerprint));
         }
 
-        if (await gate.CheckAsync(userId, Kind, options.DailyDebriefsPerUser, Feature.TournamentDebrief, cancellationToken) is { } refused)
-        {
-            return ReportOutcome<DebriefReport>.Fail(refused);
-        }
-
-        var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, cancellationToken);
         var moments = detail.KeyMoments
             .Select((m, i) => new DebriefMoment(
                 $"M{i + 1}",
@@ -141,24 +128,25 @@ public sealed class TournamentDebriefService(
                 m.Moment.Stage,
                 m.AllInEquity))
             .ToList();
-        var hands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), cancellationToken))
-            .ToDictionary(h => h.HandId);
-        var prompt = new DebriefPrompt(
-            language,
-            Facts(detail, moments, analysis.Report.Leaks),
-            moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(hands[m.HandId]))).ToList());
-
-        ModelAnswer<TournamentDebrief> answer;
-        try
+        var outcome = await guard.RunAsync(
+            userId,
+            AiTask.TournamentDebrief,
+            async (model, ct) =>
+            {
+                var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, ct);
+                var hands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct))
+                    .ToDictionary(h => h.HandId);
+                var prompt = new DebriefPrompt(
+                    language,
+                    Facts(detail, moments, analysis.Report.Leaks),
+                    moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(hands[m.HandId]))).ToList());
+                return await model.DebriefTournamentAsync(prompt, ct);
+            },
+            cancellationToken);
+        if (outcome.Answer is not { } answer)
         {
-            answer = await model.DebriefTournamentAsync(prompt, cancellationToken);
+            return ReportOutcome<DebriefReport>.Fail(outcome.Failure!.Value);
         }
-        catch (CoachingModelException)
-        {
-            return ReportOutcome<DebriefReport>.Fail(CoachingFailure.ModelFailed);
-        }
-
-        await gate.RecordAsync(userId, Kind, answer.Usage, cancellationToken);
 
         var report = new StoredReport<DebriefReport>(
             new DebriefReport(Checked(answer.Value, moments), moments),

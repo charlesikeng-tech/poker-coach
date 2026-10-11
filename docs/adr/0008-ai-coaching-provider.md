@@ -2,6 +2,8 @@
 
 - Status: Accepted
 - Date: 2026-10-09
+- Amended: 2026-10-12 — limits and budget are enforced by the AI usage guard (ADR-0017): reservation
+  before the call, real cost recorded after it, failed calls included.
 
 ## Context
 

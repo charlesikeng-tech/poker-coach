@@ -45,6 +45,7 @@ public sealed class AuthenticationTests
     [InlineData("POST", "/api/billing/checkout")]
     [InlineData("POST", "/api/billing/portal")]
     [InlineData("GET", "/api/admin")]
+    [InlineData("GET", "/api/admin/ai-usage")]
     [InlineData("PUT", "/api/admin/grants")]
     [InlineData("DELETE", "/api/admin/grants/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
@@ -162,6 +163,7 @@ public sealed class AuthenticationTests
 
     [Theory]
     [InlineData("GET", "/api/admin")]
+    [InlineData("GET", "/api/admin/ai-usage")]
     [InlineData("PUT", "/api/admin/grants")]
     [InlineData("DELETE", "/api/admin/grants/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Administration_is_refused_to_accounts_that_are_not_administrators(string method, string path)

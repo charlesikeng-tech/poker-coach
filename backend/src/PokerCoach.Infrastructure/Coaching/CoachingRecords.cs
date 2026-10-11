@@ -51,7 +51,19 @@ internal sealed class CoachingReportRecord
     public DateTimeOffset CreatedAt { get; set; }
 }
 
-/// <summary>One billed model call: the ledger behind the budget cap and the per-user limit.</summary>
+internal enum AiUsageStatus
+{
+    /// <summary>Checked and reserved; the provider call is in flight (or was abandoned, see ADR-0017).</summary>
+    Reserved,
+
+    /// <summary>The call succeeded: real cost recorded, credits charged.</summary>
+    Billed,
+
+    /// <summary>The call failed: what the provider billed is recorded (the reserved ceiling when unknown), no credits.</summary>
+    Failed,
+}
+
+/// <summary>One model call, from its reservation to its settlement: the ledger behind credits, limits and the budget.</summary>
 internal sealed class ModelUsageRecord
 {
     public Guid Id { get; set; }
@@ -61,6 +73,15 @@ internal sealed class ModelUsageRecord
 
     public string Purpose { get; set; } = string.Empty;
 
+    public AiUsageStatus Status { get; set; }
+
+    /// <summary>Credits charged: the task's price while reserved or billed, zero once failed.</summary>
+    public int Credits { get; set; }
+
+    /// <summary>Worst-case cost reserved before the call; counted in the budget until settled.</summary>
+    public decimal ReservedCostUsd { get; set; }
+
+    /// <summary>Empty while reserved.</summary>
     public string Model { get; set; } = string.Empty;
 
     public int InputTokens { get; set; }
@@ -71,9 +92,15 @@ internal sealed class ModelUsageRecord
 
     public int CacheReadTokens { get; set; }
 
+    /// <summary>Real cost once settled; the reserved ceiling when the provider's billing is unknown.</summary>
     public decimal CostUsd { get; set; }
 
+    /// <summary>False when the call failed without the provider saying what it billed.</summary>
+    public bool UsageKnown { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
+
+    public DateTimeOffset? SettledAt { get; set; }
 }
 
 internal sealed class LeakExplanationConfiguration : IEntityTypeConfiguration<LeakExplanationRecord>
@@ -121,7 +148,9 @@ internal sealed class ModelUsageConfiguration : IEntityTypeConfiguration<ModelUs
         builder.Property(u => u.Id).ValueGeneratedNever();
         builder.Property(u => u.Purpose).HasMaxLength(32).IsRequired();
         builder.Property(u => u.Model).HasMaxLength(64).IsRequired();
+        builder.Property(u => u.Status).HasConversion<string>().HasMaxLength(16);
         builder.Property(u => u.CostUsd).HasPrecision(12, 6);
+        builder.Property(u => u.ReservedCostUsd).HasPrecision(12, 6);
         builder.HasIndex(u => u.CreatedAt);
         builder.HasIndex(u => new { u.UserId, u.Purpose, u.CreatedAt });
         builder.HasOne<User>().WithMany().HasForeignKey(u => u.UserId).OnDelete(DeleteBehavior.SetNull);

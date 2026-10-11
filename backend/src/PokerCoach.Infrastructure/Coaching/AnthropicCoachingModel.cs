@@ -32,6 +32,12 @@ public sealed class AnthropicOptions
 
     /// <summary>Effort for the debrief, which judges decisions and keeps thinking ("low", "medium", "high"; null: model default).</summary>
     public string? DebriefEffort { get; set; } = "medium";
+
+    /// <summary>
+    /// Upper bound of one request's input (instructions + facts + hands), for the cost reserved before a call
+    /// (ADR-0017). Our prompts stay well below; a larger one is still billed and recorded at its real cost.
+    /// </summary>
+    public int CeilingInputTokens { get; set; } = 30_000;
 }
 
 /// <summary>
@@ -277,7 +283,29 @@ internal sealed partial class AnthropicCoachingModel(
 
     public bool IsAvailable => !string.IsNullOrWhiteSpace(options.Value.ApiKey);
 
-    public Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
+    /// <summary>
+    /// Every attempt at full output, and every input at the cache-write rate (the dearest): a correction resends the
+    /// prompt plus the rejected answer.
+    /// </summary>
+    public ModelUsage Ceiling(AiTask task)
+    {
+        var settings = options.Value;
+        var output = task switch
+        {
+            AiTask.TournamentDebrief => DebriefMaxOutputTokens,
+            AiTask.WeekReview => ReviewMaxOutputTokens,
+            _ => settings.MaxOutputTokens,
+        };
+        const int attempts = 1 + MaxCorrectionAttempts;
+        return new ModelUsage(
+            settings.Model,
+            InputTokens: 0,
+            OutputTokens: attempts * output,
+            CacheWriteTokens: (attempts * settings.CeilingInputTokens) + (MaxCorrectionAttempts * output),
+            CacheReadTokens: 0);
+    }
+
+    public Task<ModelAnswer<LeakExplanation>> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("leak-explanation", () => ExplainCoreAsync(prompt, cancellationToken));
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
@@ -300,7 +328,7 @@ internal sealed partial class AnthropicCoachingModel(
         }
     }
 
-    private async Task<ModelExplanation> ExplainCoreAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<LeakExplanation>> ExplainCoreAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\nLeak:\n{prompt.Facts}\n\n"
@@ -308,10 +336,10 @@ internal sealed partial class AnthropicCoachingModel(
         var (answer, usage) = await CallAsync<Answer>(Instructions, Schema, user, options.Value.MaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Summary) || string.IsNullOrWhiteSpace(answer.WhyItCosts))
         {
-            throw new CoachingModelException("The model answer misses required fields.");
+            throw new CoachingModelException("The model answer misses required fields.", usage);
         }
 
-        return new ModelExplanation(
+        return new ModelAnswer<LeakExplanation>(
             new LeakExplanation(
                 answer.Summary.Trim(),
                 answer.WhyItCosts.Trim(),
@@ -328,7 +356,7 @@ internal sealed partial class AnthropicCoachingModel(
         var (answer, usage) = await CallAsync<DebriefAnswer>(DebriefInstructions, DebriefSchema, user, DebriefMaxOutputTokens, Reasoning.Judging, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Story))
         {
-            throw new CoachingModelException("The model answer misses required fields.");
+            throw new CoachingModelException("The model answer misses required fields.", usage);
         }
 
         var moments = (answer.Moments ?? [])
@@ -348,7 +376,7 @@ internal sealed partial class AnthropicCoachingModel(
         var (answer, usage) = await CallAsync<ReviewAnswer>(ReviewInstructions, ReviewSchema, user, ReviewMaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
         {
-            throw new CoachingModelException("The model answer misses required fields.");
+            throw new CoachingModelException("The model answer misses required fields.", usage);
         }
 
         return new ModelAnswer<WeekReview>(
@@ -419,7 +447,8 @@ internal sealed partial class AnthropicCoachingModel(
                 var (type, message) = await ReadErrorAsync(httpResponse, cancellationToken);
                 httpResponse.Headers.TryGetValues("request-id", out var requestIds);
                 LogFailure(logger, (int)httpResponse.StatusCode, type, message, requestIds?.FirstOrDefault() ?? "-");
-                throw new CoachingModelException($"The model provider answered {(int)httpResponse.StatusCode}.");
+                // An error status is not billed by the provider.
+                throw new CoachingModelException($"The model provider answered {(int)httpResponse.StatusCode}.", new ModelUsage(settings.Model, 0, 0, 0, 0));
             }
 
             response = await httpResponse.Content.ReadFromJsonAsync<MessagesResponse>(JsonOptions, cancellationToken)
@@ -433,6 +462,10 @@ internal sealed partial class AnthropicCoachingModel(
         {
             throw new CoachingModelException("The model provider timed out.", exception);
         }
+        catch (JsonException exception)
+        {
+            throw new CoachingModelException("The model provider's answer is not readable.", exception);
+        }
 
         var usage = new ModelUsage(
             response.Model ?? settings.Model,
@@ -444,15 +477,15 @@ internal sealed partial class AnthropicCoachingModel(
 
         if (response.StopReason is not "end_turn")
         {
-            throw new CoachingModelException($"The model stopped with '{response.StopReason}'.");
+            throw new CoachingModelException($"The model stopped with '{response.StopReason}'.", usage);
         }
 
         var text = response.Content?.FirstOrDefault(c => c.Type == "text")?.Text
-            ?? throw new CoachingModelException("No text in the model answer.");
+            ?? throw new CoachingModelException("No text in the model answer.", usage);
         try
         {
-            var answer = JsonNode.Parse(text) ?? throw new CoachingModelException("Empty model answer.");
-            return (Repaired(answer).Deserialize<T>(JsonOptions) ?? throw new CoachingModelException("Empty model answer."), usage);
+            var answer = JsonNode.Parse(text) ?? throw new CoachingModelException("Empty model answer.", usage);
+            return (Repaired(answer).Deserialize<T>(JsonOptions) ?? throw new CoachingModelException("Empty model answer.", usage), usage);
         }
         catch (AnswerRejectedException exception) when (correctionAttempts < MaxCorrectionAttempts)
         {
@@ -463,23 +496,31 @@ internal sealed partial class AnthropicCoachingModel(
                 + "Do not repeat any detected translated term. Rewrite the complete answer in valid UTF-8. "
                 + "Preserve the meaning and facts; do not introduce new facts. Return only the corrected JSON."
                 + "\nPrevious answer to correct:\n" + text;
-            var (correctedAnswer, correctionUsage) = await CallAsync<T>(
-                instructions,
-                schema,
-                correction,
-                maxTokens,
-                reasoning,
-                cancellationToken,
-                correctionAttempts + 1);
-            return (correctedAnswer, CombineUsage(usage, correctionUsage));
+            try
+            {
+                var (correctedAnswer, correctionUsage) = await CallAsync<T>(
+                    instructions,
+                    schema,
+                    correction,
+                    maxTokens,
+                    reasoning,
+                    cancellationToken,
+                    correctionAttempts + 1);
+                return (correctedAnswer, CombineUsage(usage, correctionUsage));
+            }
+            catch (CoachingModelException failed)
+            {
+                // Both attempts were billed; if the second one's billing is unknown, so is the total.
+                throw new CoachingModelException(failed.Message, failed) { Usage = failed.Usage is { } second ? CombineUsage(usage, second) : null };
+            }
         }
         catch (AnswerRejectedException exception)
         {
-            throw new CoachingModelException(exception.Message);
+            throw new CoachingModelException(exception.Message, usage);
         }
         catch (JsonException exception)
         {
-            throw new CoachingModelException("The model answer is not valid JSON.", exception);
+            throw new CoachingModelException("The model answer is not valid JSON.", exception) { Usage = usage };
         }
     }
 

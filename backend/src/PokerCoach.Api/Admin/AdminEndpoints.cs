@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Domain.Subscriptions;
 
@@ -24,6 +25,19 @@ public sealed record SubscriberResponse(
     bool CancelAtPeriodEnd,
     Uri StripeUrl);
 
+public sealed record AiTaskUsageResponse(AiTask Task, int Billed, int Failed, int UnknownCost, int Credits, decimal CostUsd, decimal? CostPerCreditUsd);
+
+public sealed record AiUserUsageResponse(Guid? UserId, string? Email, int Credits, decimal CostUsd);
+
+/// <param name="SpendUsd">Settled calls at their real cost plus the ceilings still reserved (ADR-0017).</param>
+public sealed record AiUsageResponse(
+    DateTimeOffset MonthStart,
+    decimal BudgetUsd,
+    decimal SpendUsd,
+    decimal OpenReservationsUsd,
+    IReadOnlyList<AiTaskUsageResponse> Tasks,
+    IReadOnlyList<AiUserUsageResponse> TopUsers);
+
 public sealed record AdminOverviewResponse(IReadOnlyList<GrantResponse> Grants, IReadOnlyList<SubscriberResponse> Subscribers);
 
 /// <summary>
@@ -32,10 +46,13 @@ public sealed record AdminOverviewResponse(IReadOnlyList<GrantResponse> Grants, 
 /// </summary>
 public static class AdminEndpoints
 {
+    private const int TopAiUsers = 10;
+
     public static IEndpointRouteBuilder MapAdminEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/admin").WithTags("Admin").AddEndpointFilter<AdminOnlyFilter>();
         group.MapGet("", GetAsync);
+        group.MapGet("/ai-usage", GetAiUsageAsync);
         group.MapPut("/grants", GrantAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapDelete("/grants/{userId:guid}", RevokeAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         return endpoints;
@@ -57,6 +74,20 @@ public static class AdminEndpoints
                 s.CurrentPeriodEnd,
                 s.CancelAtPeriodEnd,
                 new Uri($"https://dashboard.stripe.com/customers/{Uri.EscapeDataString(s.CustomerId)}")))]));
+    }
+
+    /// <summary>The month's AI spend against the budget, cost per credit by task, the heaviest users.</summary>
+    private static async Task<Ok<AiUsageResponse>> GetAiUsageAsync(AiUsageGuard guard, CancellationToken cancellationToken)
+    {
+        var overview = await guard.MonthOverviewAsync(TopAiUsers, cancellationToken);
+        var report = overview.Report;
+        return TypedResults.Ok(new AiUsageResponse(
+            overview.MonthStart,
+            overview.BudgetUsd,
+            report.SpendUsd,
+            report.OpenReservationsUsd,
+            [.. report.Tasks.Select(t => new AiTaskUsageResponse(t.Task, t.Billed, t.Failed, t.UnknownCost, t.Credits, t.CostUsd, t.CostPerCreditUsd))],
+            [.. report.TopUsers.Select(u => new AiUserUsageResponse(u.UserId, u.Email, u.Credits, u.CostUsd))]));
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> GrantAsync(

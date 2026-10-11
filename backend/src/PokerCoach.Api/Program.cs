@@ -113,6 +113,7 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AdminOptions>
 builder.Services.AddScoped<PlanAccess>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<AiUsageGuard>();
 builder.Services.AddScoped<LeakCoachService>();
 builder.Services.AddScoped<TournamentDebriefService>();
 builder.Services.AddScoped<WeekReviewService>();

@@ -171,3 +171,50 @@ table {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
 }
+
+.ai-usage h3 {
+  margin-top: var(--space-3);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  small {
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+  }
+
+  .alert {
+    color: var(--warning);
+  }
+}
+
+.meter__label {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.meter__track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--border-default);
+
+  span {
+    display: block;
+    height: 100%;
+    max-width: 100%;
+    border-radius: inherit;
+    background: var(--accent-primary);
+  }
+}
+
+.meter--alert .meter__track span {
+  background: var(--warning);
+}

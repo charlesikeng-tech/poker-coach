@@ -1587,6 +1587,30 @@
       "plans": {
         "pro": "Pro",
         "elite": "Elite"
+      },
+      "ai": {
+        "title": "Uso de IA — {{month}}",
+        "description": "Gasto real del mes frente al presupuesto global (Coaching:MonthlyBudgetUsd). Las llamadas fallidas cuentan: el proveedor las factura.",
+        "spend": "{{spend}} gastados de {{budget}}",
+        "meter": "Presupuesto de IA del mes",
+        "open": "De los cuales {{amount}} reservados para llamadas en curso.",
+        "alert": "Más del 80 % del presupuesto consumido: auméntalo o las llamadas de IA se rechazarán para todos.",
+        "failed": "{{count}} fallida(s)",
+        "unknown": "{{count}} llamada(s) con coste desconocido (proveedor inaccesible), contadas al coste máximo.",
+        "topUsers": "Mayores consumidores",
+        "deleted": "Cuenta eliminada",
+        "columns": {
+          "task": "Tipo",
+          "calls": "Correctas",
+          "credits": "Créditos",
+          "cost": "Coste real",
+          "perCredit": "Coste por crédito"
+        },
+        "tasks": {
+          "leakExplanation": "Explicación de leak",
+          "weekReview": "Revisión semanal",
+          "tournamentDebrief": "Debrief de torneo"
+        }
       }
     }
   },

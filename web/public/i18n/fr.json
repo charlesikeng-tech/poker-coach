@@ -1587,6 +1587,30 @@
       "plans": {
         "pro": "Pro",
         "elite": "Elite"
+      },
+      "ai": {
+        "title": "Usage IA — {{month}}",
+        "description": "Dépense réelle du mois face au budget global (Coaching:MonthlyBudgetUsd). Les appels échoués sont comptés : le fournisseur les facture.",
+        "spend": "{{spend}} dépensés sur {{budget}}",
+        "meter": "Budget IA du mois",
+        "open": "Dont {{amount}} réservés pour des appels en cours.",
+        "alert": "Plus de 80 % du budget consommé : augmente-le ou les appels IA seront refusés à tout le monde.",
+        "failed": "{{count}} échec(s)",
+        "unknown": "{{count}} appel(s) au coût inconnu (fournisseur injoignable), comptés au coût maximal.",
+        "topUsers": "Plus gros consommateurs",
+        "deleted": "Compte supprimé",
+        "columns": {
+          "task": "Type",
+          "calls": "Réussis",
+          "credits": "Crédits",
+          "cost": "Coût réel",
+          "perCredit": "Coût par crédit"
+        },
+        "tasks": {
+          "leakExplanation": "Explication de leak",
+          "weekReview": "Revue de la semaine",
+          "tournamentDebrief": "Débrief de tournoi"
+        }
       }
     }
   },

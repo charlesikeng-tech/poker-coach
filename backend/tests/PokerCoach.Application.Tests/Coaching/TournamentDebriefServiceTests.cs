@@ -16,7 +16,7 @@ public sealed class TournamentDebriefServiceTests
 
     private readonly FakeTimeProvider time = new(new DateTimeOffset(2026, 10, 9, 12, 0, 0, TimeSpan.Zero));
     private readonly ScriptedModel model = new();
-    private readonly LedgerStore ledger = new();
+    private readonly InMemoryAiUsageLedger ledger = new();
     private readonly InMemoryReportStore reports = new();
     private readonly List<TournamentHandRow> hands = [];
     private TournamentFacts? tournament = Tournament();
@@ -34,7 +34,7 @@ public sealed class TournamentDebriefServiceTests
         Assert.NotNull(first.View);
         Assert.False(second.View!.Stale);
         Assert.Equal(1, model.Calls);
-        Assert.Equal(TournamentDebriefService.Kind, Assert.Single(ledger.Usage).Purpose);
+        Assert.Equal(AiTask.TournamentDebrief, Assert.Single(ledger.Billed).Task);
         var facts = model.LastDebrief!.Facts;
         Assert.DoesNotContain("CASSIOPEIA", facts, StringComparison.Ordinal);
         Assert.Contains("Played 30 hands", facts, StringComparison.Ordinal);
@@ -74,7 +74,7 @@ public sealed class TournamentDebriefServiceTests
     public async Task Daily_limit_applies_to_new_debriefs()
     {
         PlayHands(30, doubleUpAt: 10, bustAt: null);
-        ledger.CallsToday = new CoachingOptions().DailyDebriefsPerUser;
+        ledger.Seed(UserId, AiTask.TournamentDebrief, new CoachingOptions().DailyDebriefsPerUser, time.GetUtcNow());
 
         Assert.Equal(CoachingFailure.DailyLimitReached, (await Service().GenerateAsync(UserId, TournamentId, "fr", Ct)).Failure);
     }
@@ -106,7 +106,7 @@ public sealed class TournamentDebriefServiceTests
     }
 
     private TournamentDebriefService Service() =>
-        new(new TournamentDetailService(new Store(this)), new LeakService(new NoLeakStats()), reports, ledger, model, new CoachingOptions(), BillingFakes.Unbilled(time), time);
+        new(new TournamentDetailService(new Store(this)), new LeakService(new NoLeakStats()), reports, new AiUsageGuard(ledger, model, new CoachingOptions(), BillingFakes.Unbilled(time), time), time);
 
     /// <summary>Hands at 100 BB; a double-up and a bust where asked (1-based indexes among the new hands).</summary>
     private void PlayHands(int count, int? doubleUpAt, int? bustAt)

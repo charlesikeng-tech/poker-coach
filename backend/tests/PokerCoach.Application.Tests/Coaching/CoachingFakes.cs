@@ -19,7 +19,12 @@ internal sealed class ScriptedModel : ICoachingModel
 
     public WeekReview Review { get; set; } = new("headline", "summary", [], ["step"]);
 
-    public Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
+    /// <summary>What a call can cost at most; small by default so the budget is not what tests hit.</summary>
+    public ModelUsage CeilingUsage { get; set; } = new("test-model", 0, 1_000, 0, 0);
+
+    public ModelUsage Ceiling(AiTask task) => CeilingUsage;
+
+    public Task<ModelAnswer<LeakExplanation>> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
         throw new NotSupportedException();
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken)
@@ -37,28 +42,88 @@ internal sealed class ScriptedModel : ICoachingModel
     }
 }
 
-/// <summary>The usage ledger only: what the gate reads and writes.</summary>
-internal sealed class LedgerStore : ICoachingStore
+/// <summary>The AI usage ledger in memory, with the same counting rules as the PostgreSQL one (ADR-0017).</summary>
+internal sealed class InMemoryAiUsageLedger : IAiUsageLedger
 {
-    public List<(string Purpose, ModelUsage Usage)> Usage { get; } = [];
+    private readonly SemaphoreSlim gate = new(1, 1);
 
-    public int CallsToday { get; set; }
+    public List<Entry> Entries { get; } = [];
 
-    public Task<StoredExplanation?> FindExplanationAsync(Guid userId, string fingerprint, CancellationToken cancellationToken) => throw new NotSupportedException();
+    public IEnumerable<Entry> Billed => Entries.Where(e => e.Status == "Billed");
 
-    public Task SaveExplanationAsync(Guid userId, string fingerprint, string language, StoredExplanation explanation, CancellationToken cancellationToken) => throw new NotSupportedException();
-
-    public Task<IReadOnlyList<ExampleHand>> FindExampleHandsAsync(Guid userId, LeakSituation situation, int count, int factsVersion, CancellationToken cancellationToken) => throw new NotSupportedException();
-
-    public Task RecordUsageAsync(Guid? userId, string purpose, ModelUsage usage, decimal costUsd, CancellationToken cancellationToken)
+    /// <summary>Billed calls made before the test, at <paramref name="at"/>, costing nothing.</summary>
+    public void Seed(Guid userId, AiTask task, int times, DateTimeOffset at)
     {
-        Usage.Add((purpose, usage));
+        for (var i = 0; i < times; i++)
+        {
+            Entries.Add(new Entry(Guid.NewGuid(), userId, task, at) { Status = "Billed", Credits = task.Credits(), Known = true });
+        }
+    }
+
+    public async Task<CoachingFailure?> ReserveAsync(AiReservationRequest request, Func<AiUsageSnapshot, CoachingFailure?> decide, CancellationToken cancellationToken)
+    {
+        await gate.WaitAsync(cancellationToken);
+        try
+        {
+            var month = Entries.Where(e => e.CreatedAt >= request.MonthStart).ToList();
+            var counted = month.Where(e => e.Status != "Reserved" || e.CreatedAt >= request.LiveAfter).ToList();
+            var mine = counted.Where(e => e.UserId == request.UserId).ToList();
+            var snapshot = new AiUsageSnapshot(
+                mine.Where(e => e.Status != "Failed").Sum(e => e.Credits),
+                mine.Count(e => e.Task == request.Task && e.CreatedAt >= request.DayStart),
+                mine.Count(e => e.Task == request.Task && e.Status != "Failed"),
+                month.Sum(e => e.Status == "Reserved" ? e.ReservedUsd : e.CostUsd));
+            if (decide(snapshot) is { } refused)
+            {
+                return refused;
+            }
+
+            Entries.Add(new Entry(request.Id, request.UserId, request.Task, request.Now) { Credits = request.Credits, ReservedUsd = request.CeilingUsd, Known = true });
+            return null;
+        }
+        finally
+        {
+            gate.Release();
+        }
+    }
+
+    public Task SettleAsync(Guid reservationId, AiSettlement settlement, CancellationToken cancellationToken)
+    {
+        var entry = Entries.Single(e => e.Id == reservationId);
+        if (entry.Status == "Reserved")
+        {
+            entry.Status = settlement.Succeeded ? "Billed" : "Failed";
+            entry.Credits = settlement.Credits;
+            entry.Usage = settlement.Usage;
+            entry.Known = settlement.Usage is not null;
+            entry.CostUsd = settlement.CostUsd ?? entry.ReservedUsd;
+        }
+
         return Task.CompletedTask;
     }
 
-    public Task<decimal> SpendSinceAsync(DateTimeOffset since, CancellationToken cancellationToken) => Task.FromResult(0m);
+    public Task<int> CreditsUsedAsync(Guid userId, DateTimeOffset since, DateTimeOffset liveAfter, CancellationToken cancellationToken) =>
+        Task.FromResult(Entries
+            .Where(e => e.UserId == userId && e.CreatedAt >= since)
+            .Where(e => e.Status == "Billed" || (e.Status == "Reserved" && e.CreatedAt >= liveAfter))
+            .Sum(e => e.Credits));
 
-    public Task<int> CountCallsSinceAsync(Guid userId, string purpose, DateTimeOffset since, CancellationToken cancellationToken) => Task.FromResult(CallsToday);
+    public Task<AiUsageReport> ReportAsync(DateTimeOffset since, int topUsers, CancellationToken cancellationToken) => throw new NotSupportedException();
+
+    internal sealed record Entry(Guid Id, Guid UserId, AiTask Task, DateTimeOffset CreatedAt)
+    {
+        public string Status { get; set; } = "Reserved";
+
+        public int Credits { get; set; }
+
+        public decimal ReservedUsd { get; set; }
+
+        public decimal CostUsd { get; set; }
+
+        public bool Known { get; set; }
+
+        public ModelUsage? Usage { get; set; }
+    }
 }
 
 internal sealed class InMemoryReportStore : ICoachingReportStore

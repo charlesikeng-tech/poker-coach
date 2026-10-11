@@ -1,6 +1,94 @@
 <ng-container *transloco="let t; prefix: 'pages.admin'">
   <app-page-header [heading]="t('title')" [description]="t('description')" />
 
+  @if (aiUsage(); as ai) {
+    <section class="card glass ai-usage">
+      <h2><app-icon [icon]="icons.Cpu" />{{ t('ai.title', { month: month(ai.monthStart) }) }}</h2>
+      <p>{{ t('ai.description') }}</p>
+      <div class="meter" [class.meter--alert]="aiAlert()">
+        <div class="meter__label">
+          <span class="numeric">{{
+            t('ai.spend', { spend: usd(ai.spendUsd), budget: usd(ai.budgetUsd, 0) })
+          }}</span>
+          <span class="numeric">{{ (aiShare() * 100).toFixed(0) }} %</span>
+        </div>
+        <div
+          class="meter__track"
+          role="meter"
+          aria-valuemin="0"
+          [attr.aria-valuemax]="ai.budgetUsd"
+          [attr.aria-valuenow]="ai.spendUsd"
+          [attr.aria-label]="t('ai.meter')"
+        >
+          <span [style.width.%]="aiShare() * 100"></span>
+        </div>
+        @if (ai.openReservationsUsd > 0) {
+          <small>{{ t('ai.open', { amount: usd(ai.openReservationsUsd) }) }}</small>
+        }
+        @if (aiAlert()) {
+          <small class="alert" role="status">{{ t('ai.alert') }}</small>
+        }
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ t('ai.columns.task') }}</th>
+              <th>{{ t('ai.columns.calls') }}</th>
+              <th>{{ t('ai.columns.credits') }}</th>
+              <th>{{ t('ai.columns.cost') }}</th>
+              <th>{{ t('ai.columns.perCredit') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (task of ai.tasks; track task.task) {
+              <tr>
+                <td>{{ t('ai.tasks.' + task.task) }}</td>
+                <td class="numeric">
+                  {{ task.billed }}
+                  @if (task.failed > 0) {
+                    <span class="muted">{{ t('ai.failed', { count: task.failed }) }}</span>
+                  }
+                </td>
+                <td class="numeric">{{ task.credits }}</td>
+                <td class="numeric">{{ usd(task.costUsd) }}</td>
+                <td class="numeric">{{ usd(task.costPerCreditUsd, 4) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (aiUnknown() > 0) {
+        <p class="muted">{{ t('ai.unknown', { count: aiUnknown() }) }}</p>
+      }
+
+      @if (ai.topUsers.length > 0) {
+        <h3>{{ t('ai.topUsers') }}</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ t('columns.account') }}</th>
+                <th>{{ t('ai.columns.credits') }}</th>
+                <th>{{ t('ai.columns.cost') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (u of ai.topUsers; track u.userId) {
+                <tr>
+                  <td>{{ u.email ?? t('ai.deleted') }}</td>
+                  <td class="numeric">{{ u.credits }}</td>
+                  <td class="numeric">{{ usd(u.costUsd) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+
   <section class="card glass">
     <h2><app-icon [icon]="icons.Gift" />{{ t('grant.title') }}</h2>
     <p>{{ t('grant.description') }}</p>

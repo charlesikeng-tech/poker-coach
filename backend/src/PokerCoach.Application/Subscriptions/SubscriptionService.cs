@@ -60,7 +60,7 @@ public sealed class SubscriptionService(
     IBillingGateway gateway,
     PlanAccess plans,
     UserProfileService profiles,
-    ICoachingStore coachingLedger,
+    AiUsageGuard aiUsage,
     TimeProvider time)
 {
     /// <summary>A record older than this is re-read from Stripe when shown: repairs a missed webhook.</summary>
@@ -74,7 +74,7 @@ public sealed class SubscriptionService(
             await TrySyncAsync(subscription, cancellationToken);
         }
 
-        var used = await CoachingCredits.UsedSinceAsync(coachingLedger, userId, CoachingCredits.MonthStart(time.GetUtcNow()), cancellationToken);
+        var used = await aiUsage.CreditsUsedThisMonthAsync(userId, cancellationToken);
         var access = await plans.GetAccessAsync(userId, cancellationToken);
         return new BillingSummary(
             gateway.IsConfigured,

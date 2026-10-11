@@ -170,59 +170,55 @@ public sealed class SubscriptionServiceTests
     [Fact]
     public async Task Starter_gets_three_credits_a_month_and_neither_review_nor_debrief()
     {
-        var ledger = new MonthLedger(time);
-        var gate = Gate(ledger);
+        var guard = Guard(new InMemoryAiUsageLedger());
 
-        Assert.Equal(CoachingFailure.PlanRequired, await gate.CheckAsync(jo.Id, TournamentDebriefService.Kind, 10, Feature.TournamentDebrief, Ct));
-        Assert.Equal(CoachingFailure.PlanRequired, await gate.CheckAsync(jo.Id, WeekReviewService.Kind, 10, Feature.WeekReview, Ct));
+        Assert.Equal(CoachingFailure.PlanRequired, await RunAsync(guard, AiTask.TournamentDebrief));
+        Assert.Equal(CoachingFailure.PlanRequired, await RunAsync(guard, AiTask.WeekReview));
         for (var i = 0; i < 3; i++)
         {
-            Assert.Null(await gate.CheckAsync(jo.Id, LeakCoachService.Purpose, 20, null, Ct));
-            ledger.Add(LeakCoachService.Purpose);
+            Assert.Null(await RunAsync(guard, AiTask.LeakExplanation));
             time.Advance(TimeSpan.FromDays(1));
         }
 
-        Assert.Equal(CoachingFailure.PlanLimitReached, await gate.CheckAsync(jo.Id, LeakCoachService.Purpose, 20, null, Ct));
+        Assert.Equal(CoachingFailure.PlanLimitReached, await RunAsync(guard, AiTask.LeakExplanation));
 
         time.SetUtcNow(new DateTimeOffset(2026, 11, 1, 0, 0, 0, TimeSpan.Zero));
-        Assert.Null(await gate.CheckAsync(jo.Id, LeakCoachService.Purpose, 20, null, Ct));
+        Assert.Null(await RunAsync(guard, AiTask.LeakExplanation));
     }
 
     [Fact]
     public async Task Pro_has_one_review_a_month_and_no_debrief_and_credits_weigh_what_texts_cost()
     {
         await SubscribeAsync(SubscriptionStatus.Active, Plan.Pro);
-        var ledger = new MonthLedger(time);
-        var gate = Gate(ledger);
+        var ledger = new InMemoryAiUsageLedger();
+        var guard = Guard(ledger);
 
-        Assert.Equal(CoachingFailure.PlanRequired, await gate.CheckAsync(jo.Id, TournamentDebriefService.Kind, 10, Feature.TournamentDebrief, Ct));
-        Assert.Null(await gate.CheckAsync(jo.Id, WeekReviewService.Kind, 10, Feature.WeekReview, Ct));
-        ledger.Add(WeekReviewService.Kind);
-        Assert.Equal(CoachingFailure.PlanLimitReached, await gate.CheckAsync(jo.Id, WeekReviewService.Kind, 10, Feature.WeekReview, Ct));
+        Assert.Equal(CoachingFailure.PlanRequired, await RunAsync(guard, AiTask.TournamentDebrief));
+        Assert.Null(await RunAsync(guard, AiTask.WeekReview));
+        Assert.Equal(CoachingFailure.PlanLimitReached, await RunAsync(guard, AiTask.WeekReview));
 
         // 2 credits used by the review: 98 explanations left of 100.
-        ledger.Add(LeakCoachService.Purpose, 97);
-        Assert.Null(await gate.CheckAsync(jo.Id, LeakCoachService.Purpose, 200, null, Ct));
-        ledger.Add(LeakCoachService.Purpose);
-        Assert.Equal(CoachingFailure.PlanLimitReached, await gate.CheckAsync(jo.Id, LeakCoachService.Purpose, 200, null, Ct));
-        Assert.Equal(100, (await Service(ledger: ledger).GetAsync(jo.Id, Ct)).CreditsUsedThisMonth);
+        ledger.Seed(jo.Id, AiTask.LeakExplanation, 97, time.GetUtcNow());
+        Assert.Null(await RunAsync(guard, AiTask.LeakExplanation));
+        Assert.Equal(CoachingFailure.PlanLimitReached, await RunAsync(guard, AiTask.LeakExplanation));
+        Assert.Equal(100, (await Service(guard: guard).GetAsync(jo.Id, Ct)).CreditsUsedThisMonth);
     }
 
     [Fact]
     public async Task Elite_has_debriefs_at_five_credits_and_weekly_reviews()
     {
         await SubscribeAsync(SubscriptionStatus.Active, Plan.Elite);
-        var ledger = new MonthLedger(time);
-        var gate = Gate(ledger);
+        var ledger = new InMemoryAiUsageLedger();
+        var guard = Guard(ledger);
 
         Assert.Equal(Plan.Elite, await Plans().GetPlanAsync(jo.Id, Ct));
-        ledger.Add(WeekReviewService.Kind, 2);
-        Assert.Null(await gate.CheckAsync(jo.Id, WeekReviewService.Kind, 10, Feature.WeekReview, Ct));
+        ledger.Seed(jo.Id, AiTask.WeekReview, 2, time.GetUtcNow());
+        Assert.Null(await RunAsync(guard, AiTask.WeekReview));
 
-        // 4 credits used: 79 debriefs (395) fit in 400, the 80th does not.
-        ledger.Add(TournamentDebriefService.Kind, 79);
-        Assert.Equal(CoachingFailure.PlanLimitReached, await gate.CheckAsync(jo.Id, TournamentDebriefService.Kind, 1000, Feature.TournamentDebrief, Ct));
-        Assert.Null(await gate.CheckAsync(jo.Id, LeakCoachService.Purpose, 1000, null, Ct));
+        // 6 credits used: 78 debriefs (390) fit in 400, the 79th does not; an explanation still does.
+        ledger.Seed(jo.Id, AiTask.TournamentDebrief, 78, time.GetUtcNow());
+        Assert.Equal(CoachingFailure.PlanLimitReached, await RunAsync(guard, AiTask.TournamentDebrief));
+        Assert.Null(await RunAsync(guard, AiTask.LeakExplanation));
     }
 
     [Fact]
@@ -348,36 +344,13 @@ public sealed class SubscriptionServiceTests
 
     private PlanAccess Plans(FakeBillingGateway? gateway = null) => new(store, gateway ?? stripe, users, admins, new PlanOptions(), time);
 
-    private SubscriptionService Service(FakeBillingGateway? gateway = null, ICoachingStore? ledger = null) =>
-        new(store, gateway ?? stripe, Plans(gateway), new UserProfileService(users), ledger ?? new LedgerStore(), time);
+    private SubscriptionService Service(FakeBillingGateway? gateway = null, AiUsageGuard? guard = null) =>
+        new(store, gateway ?? stripe, Plans(gateway), new UserProfileService(users), guard ?? Guard(new InMemoryAiUsageLedger()), time);
 
-    private CoachingGate Gate(ICoachingStore ledger) =>
-        new(ledger, new ScriptedModel(), new CoachingOptions { DailyDebriefsPerUser = 1000 }, Plans(), time);
+    private AiUsageGuard Guard(IAiUsageLedger ledger) =>
+        new(ledger, new ScriptedModel(), new CoachingOptions { DailyExplanationsPerUser = 1000, DailyDebriefsPerUser = 1000, DailyWeekReviewsPerUser = 1000 }, Plans(), time);
 
-    /// <summary>Billed calls with their purpose and time: counts depend on the window asked.</summary>
-    private sealed class MonthLedger(TimeProvider time) : ICoachingStore
-    {
-        private readonly List<(string Purpose, DateTimeOffset At)> calls = [];
-
-        public void Add(string purpose, int times = 1)
-        {
-            for (var i = 0; i < times; i++)
-            {
-                calls.Add((purpose, time.GetUtcNow()));
-            }
-        }
-
-        public Task<int> CountCallsSinceAsync(Guid userId, string purpose, DateTimeOffset since, CancellationToken cancellationToken) =>
-            Task.FromResult(calls.Count(c => c.Purpose == purpose && c.At >= since && c.At <= time.GetUtcNow()));
-
-        public Task<decimal> SpendSinceAsync(DateTimeOffset since, CancellationToken cancellationToken) => Task.FromResult(0m);
-
-        public Task RecordUsageAsync(Guid? userId, string purpose, ModelUsage usage, decimal costUsd, CancellationToken cancellationToken) => Task.CompletedTask;
-
-        public Task<StoredExplanation?> FindExplanationAsync(Guid userId, string fingerprint, CancellationToken cancellationToken) => throw new NotSupportedException();
-
-        public Task SaveExplanationAsync(Guid userId, string fingerprint, string language, StoredExplanation explanation, CancellationToken cancellationToken) => throw new NotSupportedException();
-
-        public Task<IReadOnlyList<ExampleHand>> FindExampleHandsAsync(Guid userId, LeakSituation situation, int count, int factsVersion, CancellationToken cancellationToken) => throw new NotSupportedException();
-    }
+    /// <summary>A guarded call that succeeds when allowed; returns the refusal otherwise.</summary>
+    private async Task<CoachingFailure?> RunAsync(AiUsageGuard guard, AiTask task) =>
+        (await guard.RunAsync(jo.Id, task, (_, _) => Task.FromResult(new ModelAnswer<string>("ok", new ModelUsage("m", 100, 100, 0, 0))), Ct)).Failure;
 }

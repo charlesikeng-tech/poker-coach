@@ -49,7 +49,7 @@ public sealed class CoachingVocabularyTests
 
         Assert.Equal(2, handler.RequestBodies.Count);
         Assert.Contains("previous answer was rejected", handler.RequestBodies[1], StringComparison.OrdinalIgnoreCase);
-        Assert.Equal("Le leak est confirmé.", result.Explanation.Summary);
+        Assert.Equal("Le leak est confirmé.", result.Value.Summary);
         Assert.Equal(20, result.Usage.InputTokens);
         Assert.Equal(10, result.Usage.OutputTokens);
     }
@@ -70,7 +70,7 @@ public sealed class CoachingVocabularyTests
 
         Assert.Contains("fuite", handler.RequestBodies[1], StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Do not repeat any detected translated term", handler.RequestBodies[1], StringComparison.Ordinal);
-        Assert.Equal("Ce leak coûte des jetons.", result.Explanation.Summary);
+        Assert.Equal("Ce leak coûte des jetons.", result.Value.Summary);
     }
 
     [Fact]
@@ -89,6 +89,48 @@ public sealed class CoachingVocabularyTests
 
         Assert.Contains("garbled characters", exception.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(2, handler.RequestBodies.Count);
+
+        // Both attempts were billed: the guard records them (ADR-0017).
+        Assert.Equal((20, 10), (exception.Usage!.InputTokens, exception.Usage.OutputTokens));
+    }
+
+    [Fact]
+    public async Task An_error_status_is_unbilled_and_an_unreachable_provider_is_unknown()
+    {
+        using var refusing = new HttpClient(new StatusHandler());
+        var refused = await Assert.ThrowsAsync<CoachingModelException>(() =>
+            Model(refusing).ExplainAsync(new ExplanationPrompt("fr", "facts", []), CancellationToken.None));
+        Assert.Equal(0, refused.Usage!.InputTokens + refused.Usage.OutputTokens);
+
+        using var unreachable = new HttpClient(new UnreachableHandler());
+        var lost = await Assert.ThrowsAsync<CoachingModelException>(() =>
+            Model(unreachable).ExplainAsync(new ExplanationPrompt("fr", "facts", []), CancellationToken.None));
+        Assert.Null(lost.Usage);
+    }
+
+    [Fact]
+    public void The_ceiling_covers_every_attempt_at_full_output()
+    {
+        using var http = new HttpClient(new StatusHandler());
+        var ceiling = Model(http).Ceiling(AiTask.TournamentDebrief);
+
+        Assert.Equal(2 * 12_000, ceiling.OutputTokens);
+        Assert.Equal((2 * 30_000) + 12_000, ceiling.CacheWriteTokens);
+    }
+
+    private static AnthropicCoachingModel Model(HttpClient http) =>
+        new(http, Options.Create(new AnthropicOptions { ApiKey = "test", BaseUrl = new Uri("https://example.test/") }), NullLogger<AnthropicCoachingModel>.Instance);
+
+    private sealed class StatusHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = new StringContent("{}") });
+    }
+
+    private sealed class UnreachableHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+            throw new HttpRequestException("no route");
     }
 
     private sealed class SequenceHandler(params string[] answers) : HttpMessageHandler

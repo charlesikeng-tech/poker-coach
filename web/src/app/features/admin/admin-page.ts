@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { ExternalLink, Gift, Trash2 } from 'lucide';
+import { Cpu, ExternalLink, Gift, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
 import { BillingInterval, PaidPlan, SubscriptionStatus } from '../../core/billing/billing.service';
@@ -34,6 +34,36 @@ interface Subscriber {
   readonly stripeUrl: string;
 }
 
+type AiTask = 'leakExplanation' | 'weekReview' | 'tournamentDebrief';
+
+interface AiTaskUsage {
+  readonly task: AiTask;
+  readonly billed: number;
+  readonly failed: number;
+  readonly unknownCost: number;
+  readonly credits: number;
+  readonly costUsd: number;
+  readonly costPerCreditUsd: number | null;
+}
+
+/** The month's AI spend against the budget (ADR-0017). */
+interface AiUsage {
+  readonly monthStart: string;
+  readonly budgetUsd: number;
+  readonly spendUsd: number;
+  readonly openReservationsUsd: number;
+  readonly tasks: readonly AiTaskUsage[];
+  readonly topUsers: readonly {
+    readonly userId: string | null;
+    readonly email: string | null;
+    readonly credits: number;
+    readonly costUsd: number;
+  }[];
+}
+
+/** Share of the budget from which the meter turns to a warning, as the server's log alert. */
+const AI_ALERT_SHARE = 0.8;
+
 interface Overview {
   readonly grants: readonly Grant[];
   readonly subscribers: readonly Subscriber[];
@@ -59,7 +89,16 @@ export class AdminPage {
     initialValue: inject(TranslocoService).getActiveLang(),
   });
 
-  protected readonly icons = { ExternalLink, Gift, Trash2 };
+  protected readonly icons = { Cpu, ExternalLink, Gift, Trash2 };
+  protected readonly aiUsage = signal<AiUsage | null>(null);
+  protected readonly aiShare = computed(() => {
+    const usage = this.aiUsage();
+    return usage && usage.budgetUsd > 0 ? usage.spendUsd / usage.budgetUsd : 0;
+  });
+  protected readonly aiAlert = computed(() => this.aiShare() >= AI_ALERT_SHARE);
+  protected readonly aiUnknown = computed(
+    () => this.aiUsage()?.tasks.reduce((sum, t) => sum + t.unknownCost, 0) ?? 0,
+  );
   protected readonly overview = signal<Overview | null>(null);
   protected readonly loadFailed = signal(false);
 
@@ -86,6 +125,25 @@ export class AdminPage {
     return iso
       ? new Intl.DateTimeFormat(this.language(), { dateStyle: 'medium' }).format(new Date(iso))
       : '—';
+  }
+
+  protected usd(amount: number | null, digits = 2): string {
+    return amount === null
+      ? '—'
+      : new Intl.NumberFormat(this.language(), {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits,
+        }).format(amount);
+  }
+
+  protected month(iso: string): string {
+    return new Intl.DateTimeFormat(this.language(), {
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(new Date(iso));
   }
 
   protected async grant(event: Event): Promise<void> {
@@ -135,7 +193,13 @@ export class AdminPage {
 
   private async load(): Promise<void> {
     try {
-      this.overview.set(await firstValueFrom(this.http.get<Overview>('/api/admin')));
+      // The AI usage is a bonus: its failure must not hide the grants and subscribers.
+      const [overview, aiUsage] = await Promise.all([
+        firstValueFrom(this.http.get<Overview>('/api/admin')),
+        firstValueFrom(this.http.get<AiUsage>('/api/admin/ai-usage')).catch(() => null),
+      ]);
+      this.overview.set(overview);
+      this.aiUsage.set(aiUsage);
       this.loadFailed.set(false);
     } catch {
       this.loadFailed.set(true);

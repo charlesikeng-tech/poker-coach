@@ -101,31 +101,6 @@ internal sealed class CoachingStore(PokerCoachDbContext db, TimeProvider time) :
             .ToList();
     }
 
-    public async Task RecordUsageAsync(Guid? userId, string purpose, ModelUsage usage, decimal costUsd, CancellationToken cancellationToken)
-    {
-        db.Add(new ModelUsageRecord
-        {
-            Id = Guid.CreateVersion7(time.GetUtcNow()),
-            UserId = userId,
-            Purpose = purpose,
-            Model = usage.Model,
-            InputTokens = usage.InputTokens,
-            OutputTokens = usage.OutputTokens,
-            CacheWriteTokens = usage.CacheWriteTokens,
-            CacheReadTokens = usage.CacheReadTokens,
-            CostUsd = costUsd,
-            CreatedAt = time.GetUtcNow(),
-        });
-        await db.SaveChangesAsync(cancellationToken);
-        db.ChangeTracker.Clear();
-    }
-
-    public async Task<decimal> SpendSinceAsync(DateTimeOffset since, CancellationToken cancellationToken) =>
-        await db.Set<ModelUsageRecord>().Where(u => u.CreatedAt >= since).SumAsync(u => u.CostUsd, cancellationToken);
-
-    public Task<int> CountCallsSinceAsync(Guid userId, string purpose, DateTimeOffset since, CancellationToken cancellationToken) =>
-        db.Set<ModelUsageRecord>().CountAsync(u => u.UserId == userId && u.Purpose == purpose && u.CreatedAt >= since, cancellationToken);
-
     /// <summary>Too high: hands where the player did it. Too low: hands where he could have and did not.</summary>
     private static Expression<Func<HandHeroFactsRecord, bool>> Spot(LeakStat stat, LeakDirection direction)
     {

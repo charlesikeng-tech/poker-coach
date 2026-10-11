@@ -498,6 +498,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<int>("Credits")
+                        .HasColumnType("integer")
+                        .HasColumnName("credits");
+
                     b.Property<int>("InputTokens")
                         .HasColumnType("integer")
                         .HasColumnName("input_tokens");
@@ -517,6 +521,25 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)")
                         .HasColumnName("purpose");
+
+                    b.Property<decimal>("ReservedCostUsd")
+                        .HasPrecision(12, 6)
+                        .HasColumnType("numeric(12,6)")
+                        .HasColumnName("reserved_cost_usd");
+
+                    b.Property<DateTimeOffset?>("SettledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("settled_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasColumnName("status");
+
+                    b.Property<bool>("UsageKnown")
+                        .HasColumnType("boolean")
+                        .HasColumnName("usage_known");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid")

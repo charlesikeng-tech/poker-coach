@@ -1,5 +1,3 @@
-using PokerCoach.Domain.Subscriptions;
-using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -57,14 +55,10 @@ public sealed record CoachingOutcome(StoredExplanation? Explanation, CoachingFai
 public sealed class LeakCoachService(
     LeakService leaks,
     ICoachingStore store,
-    ICoachingModel model,
+    AiUsageGuard guard,
     CoachingOptions options,
-    PlanAccess plans,
     TimeProvider time)
 {
-    internal const string Purpose = "leak-explanation";
-
-    private readonly CoachingGate gate = new(store, model, options, plans, time);
 
     public async Task<CoachingOutcome> ExplainAsync(
         Guid userId,
@@ -90,42 +84,38 @@ public sealed class LeakCoachService(
             return CoachingOutcome.Of(cached);
         }
 
-        if (await gate.CheckAsync(userId, Purpose, options.DailyExplanationsPerUser, feature: null, cancellationToken) is { } refused)
-        {
-            return CoachingOutcome.Fail(refused);
-        }
-
         var situation = new LeakSituation(stat, position, direction, ReferenceRanges.MinStackBigBlinds, analysis.Format);
-        var examples = await store.FindExampleHandsAsync(userId, situation, options.ExampleHands, HeroHandFacts.Version, cancellationToken);
-        var labels = examples
-            .Select((e, i) =>
+        IReadOnlyList<ExampleHandLabel> labels = [];
+        var outcome = await guard.RunAsync(
+            userId,
+            AiTask.LeakExplanation,
+            async (model, ct) =>
             {
-                var facts = HandAnalyzer.Analyze(e.Hand);
-                return new ExampleHandLabel($"H{i + 1}", e.HandId, e.StartedAt, e.Level, facts.Position, e.HeroCards, facts.StackInBigBlinds);
-            })
-            .ToList();
-        var prompt = new ExplanationPrompt(
-            language,
-            Facts(leak, analysis.Format),
-            examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList());
-
-        ModelExplanation answer;
-        try
+                var examples = await store.FindExampleHandsAsync(userId, situation, options.ExampleHands, HeroHandFacts.Version, ct);
+                labels = examples
+                    .Select((e, i) =>
+                    {
+                        var facts = HandAnalyzer.Analyze(e.Hand);
+                        return new ExampleHandLabel($"H{i + 1}", e.HandId, e.StartedAt, e.Level, facts.Position, e.HeroCards, facts.StackInBigBlinds);
+                    })
+                    .ToList();
+                var prompt = new ExplanationPrompt(
+                    language,
+                    Facts(leak, analysis.Format),
+                    examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList());
+                return await model.ExplainAsync(prompt, ct);
+            },
+            cancellationToken);
+        if (outcome.Answer is not { } answer)
         {
-            answer = await model.ExplainAsync(prompt, cancellationToken);
+            return CoachingOutcome.Fail(outcome.Failure!.Value);
         }
-        catch (CoachingModelException)
-        {
-            return CoachingOutcome.Fail(CoachingFailure.ModelFailed);
-        }
-
-        await gate.RecordAsync(userId, Purpose, answer.Usage, cancellationToken);
 
         // The model may only cite hands we gave it.
         var known = labels.Select(l => l.Ref).ToHashSet(StringComparer.Ordinal);
-        var explanation = answer.Explanation with
+        var explanation = answer.Value with
         {
-            Hands = answer.Explanation.Hands.Where(h => known.Contains(h.Ref)).ToList(),
+            Hands = answer.Value.Hands.Where(h => known.Contains(h.Ref)).ToList(),
         };
         var cited = explanation.Hands.Select(h => h.Ref).ToHashSet(StringComparer.Ordinal);
         var stored = new StoredExplanation(explanation, labels.Where(l => cited.Contains(l.Ref)).ToList(), answer.Usage.Model, time.GetUtcNow());

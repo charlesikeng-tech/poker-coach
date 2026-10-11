@@ -16,6 +16,7 @@ public sealed class LeakCoachServiceTests
     private readonly FakeTimeProvider time = new(new DateTimeOffset(2026, 10, 9, 12, 0, 0, TimeSpan.Zero));
     private readonly FakeStore store = new();
     private readonly FakeModel model = new();
+    private readonly InMemoryAiUsageLedger ledger = new();
     private readonly CoachingOptions options = new() { MonthlyBudgetUsd = 20m, DailyExplanationsPerUser = 2 };
 
     // Button opens 20 % (reference 35–52 %): a confirmed "too low" leak.
@@ -30,7 +31,7 @@ public sealed class LeakCoachServiceTests
         Assert.NotNull(first.Explanation);
         Assert.Equal(first.Explanation, second.Explanation);
         Assert.Equal(1, model.Calls);
-        Assert.Single(store.Usage);
+        Assert.Single(ledger.Billed);
         Assert.Contains("Rfi from BTN", model.LastPrompt!.Facts, StringComparison.Ordinal);
         Assert.Contains("20 %", model.LastPrompt.Facts, StringComparison.Ordinal);
     }
@@ -68,11 +69,11 @@ public sealed class LeakCoachServiceTests
     [Fact]
     public async Task Daily_limit_and_monthly_budget_are_enforced()
     {
-        store.CallsToday = 2;
+        ledger.Seed(UserId, AiTask.LeakExplanation, 2, time.GetUtcNow());
         Assert.Equal(CoachingFailure.DailyLimitReached, (await ExplainButtonAsync()).Failure);
 
-        store.CallsToday = 0;
-        store.Spend = 20m;
+        time.Advance(TimeSpan.FromDays(1));
+        ledger.Entries.Add(new InMemoryAiUsageLedger.Entry(Guid.NewGuid(), Guid.NewGuid(), AiTask.TournamentDebrief, time.GetUtcNow()) { Status = "Billed", CostUsd = 19.99m });
         Assert.Equal(CoachingFailure.BudgetExhausted, (await ExplainButtonAsync()).Failure);
         Assert.Equal(0, model.Calls);
     }
@@ -83,6 +84,8 @@ public sealed class LeakCoachServiceTests
         model.Fail = true;
 
         Assert.Equal(CoachingFailure.ModelFailed, (await ExplainButtonAsync()).Failure);
+        var failed = Assert.Single(ledger.Entries);
+        Assert.Equal(("Failed", 0), (failed.Status, failed.Credits));
     }
 
     [Fact]
@@ -114,7 +117,7 @@ public sealed class LeakCoachServiceTests
         Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, null, "fr", Ct);
 
     private LeakCoachService Service() =>
-        new(new LeakService(new StatsStub()), store, model, options, BillingFakes.Unbilled(time), time);
+        new(new LeakService(new StatsStub()), store, new AiUsageGuard(ledger, model, options, BillingFakes.Unbilled(time), time), options, time);
 
     private static ExampleHand Example()
     {
@@ -169,7 +172,9 @@ public sealed class LeakCoachServiceTests
 
         public bool IsAvailable => Available;
 
-        public Task<ModelExplanation> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
+        public ModelUsage Ceiling(AiTask task) => new("test-model", 30_000, 4_000, 0, 0);
+
+        public Task<ModelAnswer<LeakExplanation>> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
         {
             Calls++;
             LastPrompt = prompt;
@@ -178,7 +183,7 @@ public sealed class LeakCoachServiceTests
                 throw new CoachingModelException("down");
             }
 
-            return Task.FromResult(new ModelExplanation(
+            return Task.FromResult(new ModelAnswer<LeakExplanation>(
                 new LeakExplanation("summary", "why", ["act"], Cite.Select(c => new HandNote(c, "note " + c)).ToList()),
                 new ModelUsage("test-model", 6_000, 1_000, 0, 0)));
         }
@@ -196,12 +201,6 @@ public sealed class LeakCoachServiceTests
 
         public List<ExampleHand> Examples { get; } = [];
 
-        public List<ModelUsage> Usage { get; } = [];
-
-        public int CallsToday { get; set; }
-
-        public decimal Spend { get; set; }
-
         public Task<StoredExplanation?> FindExplanationAsync(Guid userId, string fingerprint, CancellationToken cancellationToken) =>
             Task.FromResult(explanations.GetValueOrDefault(fingerprint));
 
@@ -213,15 +212,5 @@ public sealed class LeakCoachServiceTests
 
         public Task<IReadOnlyList<ExampleHand>> FindExampleHandsAsync(Guid userId, LeakSituation situation, int count, int factsVersion, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<ExampleHand>>(Examples);
-
-        public Task RecordUsageAsync(Guid? userId, string purpose, ModelUsage usage, decimal costUsd, CancellationToken cancellationToken)
-        {
-            Usage.Add(usage);
-            return Task.CompletedTask;
-        }
-
-        public Task<decimal> SpendSinceAsync(DateTimeOffset since, CancellationToken cancellationToken) => Task.FromResult(Spend);
-
-        public Task<int> CountCallsSinceAsync(Guid userId, string purpose, DateTimeOffset since, CancellationToken cancellationToken) => Task.FromResult(CallsToday);
     }
 }
