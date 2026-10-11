@@ -57,12 +57,27 @@ internal sealed partial class AnthropicCoachingModel(
         player informally ("tu" in French,
         "tú" in Spanish).
 
-        Poker rule: never translate poker vocabulary. Keep these terms exactly in English in every language,
-        including in French and Spanish: leak, c-bet, 3-bet, range, steal, check-raise, all-in, bluff,
-        limp, raise, fold, call, bet, shove, preflop, flop, turn, river, showdown, value bet, overbet,
-        float, continuation bet, double barrel, donk bet. Do not rewrite them as French/Spanish words or
-        local equivalents. For example, never write "fuite" for leak, "relance" for 3-bet, or "all-in" as a
-        translated phrase; keep the English term exactly as written here.
+        Poker terminology rule: use standard English poker terms in every answer, whatever the requested
+        natural language. Translate the explanations, not the poker vocabulary. Keep the standard term
+        exactly in English; do not replace it with a translation, a literal equivalent, or a generic
+        description. This applies to all poker terms, including terms not listed below.
+
+        Core actions and lines: bet, check, call, raise, fold, limp, open, open-raise, iso-raise, squeeze,
+        cold-call, flat, limp-call, limp-reraise, 3-bet, 4-bet, shove, all-in, check-raise,
+        continuation bet, c-bet, delayed c-bet, probe bet, donk bet, float, double barrel, triple barrel,
+        overbet, value bet, thin value, bluff, semi-bluff, bluff-catcher, hero call, slowplay, trap.
+        Strategy and hand terms: range, combo, blocker, equity, fold equity, pot odds, implied odds, outs,
+        SPR, nuts, top pair, overpair, underpair, two pair, set, trips, straight, flush, full house,
+        flush draw, straight draw, backdoor draw, gutshot, open-ended straight draw, kicker, showdown,
+        board texture, dry board, wet board, rainbow, paired board, range advantage, nut advantage,
+        capped range, polarized range, merged range, value range, bluff range.
+        Streets, positions, and tournament terms: preflop, flop, turn, river, button, cutoff, hijack,
+        under the gun, small blind, big blind, MTT, tournament, bubble, ITM, bounty, re-entry, late reg,
+        add-on, pay jump, stack, big blind (BB), ante, level, chip EV, ICM, cash game, sit-and-go,
+        heads-up, 6-max, full ring, knockout, progressive knockout, mystery bounty, final table.
+        Keep abbreviations and established forms exactly as written when they appear in the facts
+        (for example VPIP, PFR, RFI, WTSD, W$SD, 3-bet, c-bet, BB). Use the precise poker term that fits
+        the spot; do not invent terminology or substitute an inaccurate term.
         """;
 
     private const string Instructions = Context + """
@@ -227,10 +242,14 @@ internal sealed partial class AnthropicCoachingModel(
     private static readonly string[] TranslatedPokerTerms =
     [
         "fuite", "fuga",
-        "mise de continuation", "apuesta de continuación",
-        "sur-relance", "surrelance", "resubida",
-        "éventail", "rango",
-        "tapis", "farol",
+        "mise de continuation", "mise de continuación", "apuesta de continuación", "apuesta continuada",
+        "sur-relance", "surrelance", "re-relance", "resubida",
+        "éventail de mains", "rango de manos",
+        "tapis", "farol", "semi-farol",
+        "mise de valeur", "apuesta de valor",
+        "carte gratuite", "carta gratis",
+        "grosse blinde", "gran ciega", "petite blinde", "ciega pequeña",
+        "hors position", "fuera de posición",
         "limper", "limpear",
     ];
 
@@ -439,8 +458,9 @@ internal sealed partial class AnthropicCoachingModel(
         {
             LogCorrectionAttempt(logger, exception.Message);
             var correction = user
-                + "\n\nYour previous answer was rejected: " + exception.Message
-                + "\nRewrite the complete answer in valid UTF-8, keeping poker vocabulary in English. "
+                + "\n\nYour previous answer was rejected. " + exception.Message
+                + "\nReplace every detected translated poker term with the correct standard English poker term. "
+                + "Do not repeat any detected translated term. Rewrite the complete answer in valid UTF-8. "
                 + "Preserve the meaning and facts; do not introduce new facts. Return only the corrected JSON."
                 + "\nPrevious answer to correct:\n" + text;
             var (correctedAnswer, correctionUsage) = await CallAsync<T>(
@@ -498,9 +518,12 @@ internal sealed partial class AnthropicCoachingModel(
                     throw new AnswerRejectedException("The model answer has garbled characters (mojibake).");
                 }
 
-                if (ContainsTranslatedPokerTerm(repaired))
+                var translatedTerms = FindTranslatedPokerTerms(repaired);
+                if (translatedTerms.Count > 0)
                 {
-                    throw new AnswerRejectedException("The model answer translated poker vocabulary.");
+                    throw new AnswerRejectedException(
+                        $"Translated poker term(s) detected: {string.Join(", ", translatedTerms)}. "
+                        + "Use the standard English poker term(s) instead.");
                 }
 
                 return JsonValue.Create(repaired);
@@ -509,9 +532,15 @@ internal sealed partial class AnthropicCoachingModel(
         }
     }
 
-    internal static bool ContainsTranslatedPokerTerm(string text) =>
-        TranslatedPokerTerms.Any(term =>
-            Regex.IsMatch(text, $@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(term)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+    internal static bool ContainsTranslatedPokerTerm(string text) => FindTranslatedPokerTerms(text).Count > 0;
+
+    private static List<string> FindTranslatedPokerTerms(string text) =>
+        TranslatedPokerTerms
+            .Where(term => Regex.IsMatch(
+                text,
+                $@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(term)}(?![\p{{L}}\p{{N}}])",
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+            .ToList();
 
     private static ModelUsage CombineUsage(ModelUsage first, ModelUsage second) =>
         new(

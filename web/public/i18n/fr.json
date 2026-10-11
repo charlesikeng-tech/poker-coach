@@ -55,7 +55,7 @@
       "totals": {
         "profit": "Profit",
         "roi": "ROI",
-        "itm": "Dans l'argent",
+        "itm": "ITM",
         "tournaments": "Tournois",
         "delta": "{{amount}} par rapport aux {{days}} jours précédents",
         "noPrevious": "Rien à comparer sur la période précédente"
@@ -101,7 +101,7 @@
       "totals": {
         "profit": "Profit",
         "roi": "ROI",
-        "itm": "Dans l'argent",
+        "itm": "ITM",
         "entries": "Entrées",
         "buyIns": "Buy-ins"
       },
@@ -111,7 +111,7 @@
         "tournament": "Tournoi :",
         "cumulative": "Total :",
         "aria": "Profit cumulé sur {{count}} tournois, jusqu'à {{profit}}. Utilise les flèches pour parcourir les tournois.",
-        "axis": "Axe horizontal : les tournois dans l'ordre joué. Dans l'argent = un gain au classement (les bounties seuls ne comptent pas).",
+        "axis": "Axe horizontal : les tournois dans l'ordre joué. ITM = un gain au classement (les bounties seuls ne comptent pas).",
         "notEnough": "La courbe apparaît à partir de deux tournois au résultat connu."
       },
       "breakdown": {
@@ -225,7 +225,7 @@
         "levels": "Niveaux {{first}} à {{last}} importés",
         "startMissing": "Le début du tournoi manque",
         "missingHands": "{{count}} main(s) manquante(s) à une table",
-        "stackBreaks": "{{count}} variation(s) de tapis inexpliquée(s) : des mains manquent",
+        "stackBreaks": "{{count}} variation(s) de stack inexpliquée(s) : des mains manquent",
         "endMissing": "Tes dernières mains manquent"
       },
       "list": {
@@ -255,33 +255,33 @@
         "place": "Place",
         "buyIn": "Buy-in",
         "winnings": "Gains",
-        "bounties": "dont {{amount}} de primes",
+        "bounties": "dont {{amount}} de bounties",
         "hands": "Mains",
         "duration": "Durée des mains",
         "handTitle": "Main {{index}} · niv. {{level}}",
         "stack": {
           "title": "Évolution du stack",
-          "hint": "Ton tapis au début de chaque main. Les numéros renvoient aux moments clés.",
+          "hint": "Ton stack au début de chaque main. Les numéros renvoient aux moments clés.",
           "unit": "Unité",
-          "chips": "Jetons",
+          "chips": "Chips",
           "empty": "Pas assez de mains pour tracer une courbe."
         },
         "moments": {
           "title": "Moments clés",
-          "hint": "Les mains qui ont fait varier ton tapis d'au moins 25 %, mesurées sur tes jetons.",
-          "empty": "Aucune main n'a fait varier ton tapis d'au moins 25 %.",
-          "stack": "tapis {{stack}}",
-          "share": "{{share}} du tapis",
+          "hint": "Les mains qui ont fait varier ton stack d'au moins 25 %, mesurées sur tes chips.",
+          "empty": "Aucune main n'a fait varier ton stack d'au moins 25 %.",
+          "stack": "stack {{stack}}",
+          "share": "{{share}} du stack",
           "kinds": {
             "doubleUp": "Double-up",
-            "bust": "Élimination",
+            "bust": "Bust",
             "gain": "Gros pot gagné",
             "loss": "Gros pot perdu"
           },
           "stages": {
-            "preflop": "avant le flop",
-            "postflop": "après le flop",
-            "showdown": "à l'abattage"
+            "preflop": "preflop",
+            "postflop": "postflop",
+            "showdown": "au showdown"
           }
         },
         "session": {
@@ -295,7 +295,7 @@
           "threeBet": "3-bet",
           "steal": "Steal",
           "cbetFlop": "C-bet flop",
-          "wentToShowdown": "Abattage"
+          "wentToShowdown": "Went to showdown"
         },
         "positions": {
           "utg": "UTG",
@@ -304,9 +304,9 @@
           "lojack": "Lojack",
           "hijack": "Hijack",
           "cutoff": "Cutoff",
-          "button": "Bouton",
-          "smallBlind": "Petite blinde",
-          "bigBlind": "Grosse blinde",
+          "button": "Button",
+          "smallBlind": "Small blind",
+          "bigBlind": "Big blind",
           "unknown": "Inconnue"
         }
       }
@@ -334,11 +334,11 @@
       "rules": {
         "conservative": {
           "name": "Prudente",
-          "text": "200 buy-ins. Le conseil habituel en MTT : les gros champs font des downswings très longs."
+          "text": "200 buy-ins. Le conseil habituel en MTT : les gros fields font des downswings très longs."
         },
         "standard": {
           "name": "Standard",
-          "text": "100 buy-ins. Correct pour des champs réduits ou un joueur gagnant confirmé."
+          "text": "100 buy-ins. Correct pour des fields réduits ou un joueur gagnant confirmé."
         },
         "aggressive": {
           "name": "Agressive",
@@ -420,7 +420,7 @@
     },
     "statistics": {
       "title": "Statistiques",
-      "description": "Ta façon de jouer, du préflop à la river.",
+      "description": "Ta façon de jouer, du preflop à la river.",
       "empty": {
         "title": "Aucune main à analyser pour l'instant",
         "description": "VPIP, PFR, 3-bet et tes autres statistiques sont calculés à partir de tes historiques de mains importés.",
@@ -435,7 +435,7 @@
       "pending": "Analyse de {{count}} main(s) en cours : les chiffres se mettent à jour seuls.",
       "filters": {
         "period": "Période",
-        "stack": "Tapis",
+        "stack": "Stack",
         "periods": {
           "all": "Depuis le début",
           "7d": "7 derniers jours",
@@ -444,7 +444,7 @@
           "year": "Cette année"
         },
         "stacks": {
-          "all": "Tous les tapis",
+          "all": "Tous les stacks",
           "under15": "Moins de 15 BB",
           "from15To30": "15 à 30 BB",
           "from30To50": "30 à 50 BB",
@@ -466,37 +466,37 @@
       "definitions": "Chaque taux ne compte que les mains où la situation s'est présentée (survole un chiffre pour le détail). Les définitions suivent les conventions habituelles des trackers.",
       "stats": {
         "vpip": "VPIP",
-        "vpipHint": "A mis de l'argent volontairement préflop",
+        "vpipHint": "A mis de l'argent volontairement preflop",
         "pfr": "PFR",
-        "pfrHint": "A relancé préflop",
+        "pfrHint": "A raise preflop",
         "threeBet": "3-bet",
-        "threeBetHint": "A sur-relancé face à une relance",
+        "threeBetHint": "A 3-bet face à un raise",
         "steal": "Steal",
-        "stealHint": "A ouvert depuis le cutoff, le bouton ou la petite blinde quand c'était foldé",
+        "stealHint": "A open depuis le cutoff, le button ou la small blind quand tout le monde avait fold avant",
         "rfi": "Open",
-        "rfiHint": "Premier à entrer, en relançant, quand c'était foldé",
+        "rfiHint": "Premier à entrer, en faisant un raise, quand c'était fold",
         "limp": "Limp",
-        "limpHint": "Premier à entrer, en payant, quand c'était foldé",
-        "foldToThreeBet": "Fold au 3-bet",
-        "foldToThreeBetHint": "A couché après avoir ouvert et subi une sur-relance",
+        "limpHint": "Premier à entrer, en faisant un call, quand c'était fold",
+        "foldToThreeBet": "Fold to 3-bet",
+        "foldToThreeBetHint": "A fold après avoir open et subi un 3-bet",
         "cbetFlop": "C-bet flop",
-        "cbetFlopHint": "A misé le flop en relanceur préflop quand c'était checké",
-        "wentToShowdown": "Abattage",
-        "wentToShowdownHint": "Est allé à l'abattage après avoir vu le flop",
-        "wonAtShowdown": "Gagné à l'abattage",
-        "wonAtShowdownHint": "A gagné des jetons en allant à l'abattage",
-        "foldToCbetFlop": "Fold au c-bet flop",
-        "foldToCbetFlopHint": "A couché face à la mise flop du relanceur préflop",
-        "raiseCbetFlop": "Relance du c-bet flop",
-        "raiseCbetFlopHint": "A relancé la mise flop du relanceur préflop",
+        "cbetFlopHint": "A bet le flop en preflop raiser quand c'était check",
+        "wentToShowdown": "Went to showdown",
+        "wentToShowdownHint": "Est allé au showdown après avoir vu le flop",
+        "wonAtShowdown": "Won at showdown",
+        "wonAtShowdownHint": "A gagné des chips en allant au showdown",
+        "foldToCbetFlop": "Fold to c-bet flop",
+        "foldToCbetFlopHint": "A fold face au bet flop du preflop raiser",
+        "raiseCbetFlop": "Raise c-bet flop",
+        "raiseCbetFlopHint": "A raise le bet flop du preflop raiser",
         "cbetTurn": "C-bet turn",
-        "cbetTurnHint": "A remisé la turn après un c-bet flop seulement payé",
+        "cbetTurnHint": "A 2-barrel la turn après un c-bet flop seulement call",
         "checkRaiseFlop": "Check-raise flop",
-        "checkRaiseFlopHint": "A relancé au flop après avoir checké",
-        "wonWhenSawFlop": "Gagné après le flop",
-        "wonWhenSawFlopHint": "A ramassé des jetons après avoir vu le flop, abattage ou non",
-        "postflopAggression": "Agression postflop",
-        "postflopAggressionHint": "Mises et relances sur toutes les décisions après le flop (mises, relances, calls, folds)"
+        "checkRaiseFlopHint": "A raise au flop après avoir check",
+        "wonWhenSawFlop": "Won when saw flop",
+        "wonWhenSawFlopHint": "A ramassé des chips après avoir vu le flop, showdown ou non",
+        "postflopAggression": "Postflop aggression",
+        "postflopAggressionHint": "Bets et raises sur toutes les décisions postflop (bets, raises, calls, folds)"
       },
       "short": {
         "vpip": "VPIP",
@@ -524,22 +524,22 @@
         "lojack": "Lojack",
         "hijack": "Hijack",
         "cutoff": "Cutoff",
-        "button": "Bouton",
-        "smallBlind": "Petite blinde",
-        "bigBlind": "Grosse blinde",
+        "button": "Button",
+        "smallBlind": "Small blind",
+        "bigBlind": "Big blind",
         "unknown": "Inconnue"
       },
       "basis": "Sur {{hands}} mains de {{tournaments}} tournoi(s), dont {{complete}} avec un historique complet.",
       "luck": {
         "title": "Chance aux all-in",
-        "lead": "Tes all-in préflop où les cartes ont été montrées : ce qu'ils t'ont rapporté, contre ce qu'ils auraient dû rapporter vu les mains. L'écart, c'est la chance — ce que tu contrôles, c'est la courbe attendue.",
+        "lead": "Tes all-in preflop où les cartes ont été montrées : ce qu'ils t'ont rapporté, contre ce qu'ils auraient dû rapporter vu les mains. L'écart, c'est la chance — ce que tu contrôles, c'est la courbe attendue.",
         "luck": "Chance",
         "actual": "Résultat réel",
         "expected": "Résultat attendu",
         "verdict": {
-          "positive": "Le board t'a souri : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (équité moyenne {{equity}}).",
-          "negative": "Le board t'a coûté cher : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (équité moyenne {{equity}}).",
-          "neutral": "Pile dans la moyenne : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (équité moyenne {{equity}})."
+          "positive": "Le board t'a souri : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (equity moyenne {{equity}}).",
+          "negative": "Le board t'a coûté cher : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (equity moyenne {{equity}}).",
+          "neutral": "Pile dans la moyenne : {{won}} all-in gagnés sur {{count}} pour {{expected}} attendus (equity moyenne {{equity}})."
         },
         "few": "Moins de 30 all-in : l'écart est encore du bruit.",
         "chart": {
@@ -553,14 +553,14 @@
           "suckout": "Outdraw",
           "replay": "Revoir la main"
         },
-        "definition": "En big blinds, pour comparer les niveaux. Compte les all-in préflop sans action après le flop, toutes les mains encore en jeu montrées ; équité exacte sur tous les boards possibles, side pots compris.",
-        "none": "Aucun all-in préflop avec les cartes montrées sur cette période.",
+        "definition": "En big blinds, pour comparer les niveaux. Compte les all-in preflop sans action postflop, toutes les mains encore en jeu montrées ; equity exacte sur tous les boards possibles, side pots compris.",
+        "none": "Aucun all-in preflop avec les cartes montrées sur cette période.",
         "pending": "Analyse des mains en cours : les chiffres vont encore bouger.",
         "error": "Impossible de charger la chance aux all-in pour le moment."
       },
       "sections": {
-        "preflop": "Avant le flop",
-        "postflop": "Après le flop",
+        "preflop": "Preflop",
+        "postflop": "Postflop",
         "postflopHint": "Toutes positions confondues. Repères dans Leaks."
       },
       "phases": {
@@ -574,9 +574,9 @@
       },
       "breakdowns": {
         "phasesTitle": "Par phase de tournoi",
-        "phasesLead": "Ton jeu selon le moment du tournoi. Le style doit changer quand les tapis raccourcissent : plus de vols, moins de calls.",
+        "phasesLead": "Ton jeu selon le moment du tournoi. Le style doit changer quand les stacks raccourcissent : plus de steals, moins de calls.",
         "phase": "Phase",
-        "phasesHint": "Phases par niveau de blindes : les historiques Winamax ne disent pas combien de joueurs restent, donc la bulle, l'entrée dans l'argent et la table finale ne peuvent pas être repérées sans deviner.",
+        "phasesHint": "Phases par niveau de blinds : les historiques Winamax ne disent pas combien de joueurs restent, donc la bubble, le passage ITM et la final table ne peuvent pas être repérées sans deviner.",
         "trendTitle": "Évolution mois par mois",
         "trendLead": "Tes statistiques mois par mois, avec la zone de référence en vert : tes leaks se referment-ils ?",
         "trendPick": "Statistique suivie",
@@ -785,9 +785,9 @@
         "lojack": "lojack",
         "hijack": "hijack",
         "cutoff": "cutoff",
-        "button": "bouton",
-        "smallBlind": "petite blinde",
-        "bigBlind": "grosse blinde"
+        "button": "button",
+        "smallBlind": "small blind",
+        "bigBlind": "big blind"
       },
       "stats": {
         "vpip": "VPIP",
@@ -797,71 +797,71 @@
         "limp": "Limp",
         "steal": "Steal",
         "threeBet": "3-bet",
-        "foldToThreeBet": "Fold au 3-bet",
+        "foldToThreeBet": "Fold to 3-bet",
         "cbetFlop": "C-bet flop",
-        "wentToShowdown": "Abattage",
-        "wonAtShowdown": "Gagné à l'abattage",
-        "foldToCbetFlop": "Fold au c-bet flop",
-        "raiseCbetFlop": "Relance du c-bet flop",
+        "wentToShowdown": "Went to showdown",
+        "wonAtShowdown": "Won at showdown",
+        "foldToCbetFlop": "Fold to c-bet flop",
+        "raiseCbetFlop": "Raise c-bet flop",
         "cbetTurn": "C-bet turn",
         "checkRaiseFlop": "Check-raise flop",
-        "wonWhenSawFlop": "Gagné après le flop",
-        "postflopAggression": "Agression postflop"
+        "wonWhenSawFlop": "Won when saw flop",
+        "postflopAggression": "Postflop aggression"
       },
       "items": {
         "vpip": {
           "tooHigh": {
             "title": "Tu joues trop de mains",
-            "why": "Tu entres dans {{rate}} des coups (repère {{min}}–{{max}}). Trop de mains faibles se retrouvent hors de position ou dominées après le flop.",
-            "work": "Resserre tes ranges d'ouverture et de call, surtout en début de parole et face aux relances."
+            "why": "Tu entres dans {{rate}} des coups (repère {{min}}–{{max}}). Trop de mains faibles se retrouvent out of position ou dominées postflop.",
+            "work": "Resserre tes ranges d'open et de call, surtout en early position et face aux raises."
           },
           "tooLow": {
             "title": "Tu joues trop peu de mains",
-            "why": "Tu entres dans {{rate}} des coups (repère {{min}}–{{max}}). Tu laisses passer des blindes et des antes faciles à gagner.",
-            "work": "Élargis tes ouvertures en fin de parole et défends davantage ta grosse blinde."
+            "why": "Tu entres dans {{rate}} des coups (repère {{min}}–{{max}}). Tu laisses passer des blinds et des antes faciles à gagner.",
+            "work": "Élargis tes opens en late position et défends davantage ta big blind."
           }
         },
         "pfr": {
           "tooHigh": {
-            "title": "Tu relances trop souvent",
-            "why": "Tu relances {{rate}} des coups (repère {{min}}–{{max}}). Tes relances deviennent faciles à sur-relancer.",
-            "work": "Garde tes relances pour des mains et des positions qui les justifient."
+            "title": "Tu raise trop souvent",
+            "why": "Tu raise {{rate}} des coups (repère {{min}}–{{max}}). Tes raises deviennent faciles à 3-bet.",
+            "work": "Garde tes raises pour des mains et des positions qui les justifient."
           },
           "tooLow": {
-            "title": "Tu ne relances pas assez",
-            "why": "Tu relances {{rate}} des coups (repère {{min}}–{{max}}). Sans initiative, tu gagnes moins de pots sans abattage.",
-            "work": "Entre dans le pot en relançant plutôt qu'en payant, surtout quand personne n'a encore misé."
+            "title": "Tu ne raise pas assez",
+            "why": "Tu raise {{rate}} des coups (repère {{min}}–{{max}}). Sans initiative, tu gagnes moins de pots sans showdown.",
+            "work": "Entre dans le pot en faisant un raise plutôt qu'en faisant un call, surtout quand personne n'a encore bet."
           }
         },
         "vpipPfrGap": {
           "tooHigh": {
-            "title": "Tu payes beaucoup plus que tu ne relances",
-            "why": "{{rate}} des coups sont joués en payant seulement (repère jusqu'à {{max}}). Payer sans relancer donne l'initiative aux adversaires.",
-            "work": "Remplace une partie de tes calls préflop par des relances ou des folds."
+            "title": "Tu call beaucoup plus que tu ne raise",
+            "why": "{{rate}} des coups sont joués en faisant un call seulement (repère jusqu'à {{max}}). Call sans raise donne l'initiative aux adversaires.",
+            "work": "Remplace une partie de tes calls preflop par des raises ou des folds."
           },
           "tooLow": {
             "title": "Écart VPIP/PFR inhabituel",
-            "why": "L'écart entre mains jouées et mains relancées est de {{rate}} (repère {{min}}–{{max}}).",
-            "work": "Vérifie que tu défends assez tes blindes en payant."
+            "why": "L'écart entre mains jouées et mains jouées en raise est de {{rate}} (repère {{min}}–{{max}}).",
+            "work": "Vérifie que tu défends assez tes blinds en faisant un call."
           }
         },
         "rfi": {
           "tooHigh": {
-            "title": "Tu ouvres trop large en {{position}}",
-            "why": "Tu ouvres {{rate}} des fois où c'est foldé jusqu'à toi en {{position}} (repère {{min}}–{{max}}).",
-            "work": "Retire les mains les plus faibles de ta range d'ouverture à cette position."
+            "title": "Tu open trop large en {{position}}",
+            "why": "Tu open {{rate}} des fois où c'est fold jusqu'à toi en {{position}} (repère {{min}}–{{max}}).",
+            "work": "Retire les mains les plus faibles de ta range d'open à cette position."
           },
           "tooLow": {
-            "title": "Tu ouvres trop peu en {{position}}",
-            "why": "Tu ouvres {{rate}} des fois où c'est foldé jusqu'à toi en {{position}} (repère {{min}}–{{max}}). Ce sont des pots rentables que tu laisses.",
-            "work": "Ajoute des mains jouables (petites paires, assorties, as assortis) à ta range à cette position."
+            "title": "Tu open trop peu en {{position}}",
+            "why": "Tu open {{rate}} des fois où c'est fold jusqu'à toi en {{position}} (repère {{min}}–{{max}}). Ce sont des pots rentables que tu laisses.",
+            "work": "Ajoute des mains jouables (petites pocket pairs, mains suited, suited aces) à ta range à cette position."
           }
         },
         "limp": {
           "tooHigh": {
-            "title": "Tu limpes trop",
-            "why": "Tu entres en payant {{rate}} des fois où c'est foldé jusqu'à toi (repère jusqu'à {{max}}). En MTT, le limp donne des pots multi-joueurs hors de position.",
-            "work": "Quand personne n'est entré, relance ou passe."
+            "title": "Tu limp trop",
+            "why": "Tu entres en faisant un call {{rate}} des fois où c'est fold jusqu'à toi (repère jusqu'à {{max}}). En MTT, le limp donne des pots multiway out of position.",
+            "work": "Quand personne n'est entré, raise ou fold."
           },
           "tooLow": {
             "title": "Limp",
@@ -871,134 +871,134 @@
         },
         "steal": {
           "tooHigh": {
-            "title": "Tu voles trop",
-            "why": "Tu ouvres {{rate}} des fois en cutoff, bouton ou petite blinde quand c'est foldé (repère {{min}}–{{max}}). Les blindes vont finir par te sur-relancer.",
-            "work": "Garde une range de vol défendable face à une sur-relance."
+            "title": "Tu steal trop",
+            "why": "Tu open {{rate}} des fois en cutoff, button ou small blind quand c'est fold (repère {{min}}–{{max}}). Les blinds vont finir par te 3-bet.",
+            "work": "Garde une range de steal défendable face à un 3-bet."
           },
           "tooLow": {
-            "title": "Tu ne voles pas assez les blindes",
-            "why": "Tu ouvres {{rate}} des fois en cutoff, bouton ou petite blinde quand c'est foldé (repère {{min}}–{{max}}). Les antes rendent ces vols très rentables en tournoi.",
-            "work": "Ouvre plus souvent en fin de parole quand c'est foldé jusqu'à toi."
+            "title": "Tu ne steal pas assez les blinds",
+            "why": "Tu open {{rate}} des fois en cutoff, button ou small blind quand c'est fold (repère {{min}}–{{max}}). Les antes rendent ces steals très rentables en tournoi.",
+            "work": "Open plus souvent en late position quand c'est fold jusqu'à toi."
           }
         },
         "threeBet": {
           "tooHigh": {
-            "title": "Tu sur-relances trop",
-            "why": "Tu 3-bettes {{rate}} des fois face à une relance (repère {{min}}–{{max}}).",
+            "title": "Tu 3-bet trop",
+            "why": "Tu 3-bet {{rate}} des fois face à un raise (repère {{min}}–{{max}}).",
             "work": "Garde tes 3-bets pour tes meilleures mains et quelques bluffs bien choisis."
           },
           "tooLow": {
-            "title": "Tu ne sur-relances pas assez",
-            "why": "Tu 3-bettes {{rate}} des fois face à une relance (repère {{min}}–{{max}}). Tes adversaires ouvrent sans crainte.",
-            "work": "Sur-relance tes mains fortes au lieu de payer, et ajoute quelques bluffs en position."
+            "title": "Tu ne 3-bet pas assez",
+            "why": "Tu 3-bet {{rate}} des fois face à un raise (repère {{min}}–{{max}}). Tes adversaires open sans crainte.",
+            "work": "3-bet tes mains fortes au lieu de call, et ajoute quelques bluffs en position."
           }
         },
         "foldToThreeBet": {
           "tooHigh": {
-            "title": "Tu abandonnes trop face aux 3-bets",
-            "why": "Tu couches {{rate}} de tes ouvertures face à une sur-relance (repère {{min}}–{{max}}). On peut te sur-relancer avec n'importe quoi.",
-            "work": "Défends davantage : paye en position ou 4-bette tes meilleures mains."
+            "title": "Tu fold trop face aux 3-bets",
+            "why": "Tu fold {{rate}} de tes opens face à un 3-bet (repère {{min}}–{{max}}). On peut te 3-bet avec n'importe quoi.",
+            "work": "Défends davantage : call en position ou 4-bet tes meilleures mains."
           },
           "tooLow": {
-            "title": "Tu ne lâches pas assez face aux 3-bets",
-            "why": "Tu ne couches que {{rate}} de tes ouvertures face à une sur-relance (repère {{min}}–{{max}}).",
-            "work": "Ouvre des mains capables de continuer, et lâche les autres face au 3-bet."
+            "title": "Tu ne fold pas assez face aux 3-bets",
+            "why": "Tu ne fold que {{rate}} de tes opens face à un 3-bet (repère {{min}}–{{max}}).",
+            "work": "Open des mains capables de continuer, et fold les autres face au 3-bet."
           }
         },
         "cbetFlop": {
           "tooHigh": {
-            "title": "Tu continues trop au flop",
-            "why": "Tu mises {{rate}} des flops en relanceur préflop (repère {{min}}–{{max}}).",
-            "work": "Checke davantage sur les flops qui touchent la range de l'adversaire."
+            "title": "Tu c-bet trop au flop",
+            "why": "Tu bet {{rate}} des flops en preflop raiser (repère {{min}}–{{max}}).",
+            "work": "Check davantage sur les flops qui touchent la range de l'adversaire."
           },
           "tooLow": {
-            "title": "Tu ne continues pas assez au flop",
-            "why": "Tu mises {{rate}} des flops en relanceur préflop (repère {{min}}–{{max}}). Tu rends l'initiative trop vite.",
-            "work": "Mise petit plus souvent sur les flops favorables à ta range."
+            "title": "Tu ne c-bet pas assez au flop",
+            "why": "Tu bet {{rate}} des flops en preflop raiser (repère {{min}}–{{max}}). Tu rends l'initiative trop vite.",
+            "work": "Bet petit plus souvent sur les flops favorables à ta range."
           }
         },
         "wentToShowdown": {
           "tooHigh": {
-            "title": "Tu vas trop souvent à l'abattage",
-            "why": "Tu vas à l'abattage dans {{rate}} des flops vus (repère {{min}}–{{max}}). Tu payes trop de mains moyennes jusqu'au bout.",
-            "work": "Lâche plus de mains moyennes face à une forte pression sur la turn et la river."
+            "title": "Tu vas trop souvent au showdown",
+            "why": "Tu vas au showdown dans {{rate}} des flops vus (repère {{min}}–{{max}}). Tu call trop de mains moyennes jusqu'au bout.",
+            "work": "Fold davantage de mains moyennes face à une forte pression sur la turn et la river."
           },
           "tooLow": {
-            "title": "Tu abandonnes trop souvent après le flop",
-            "why": "Tu vas à l'abattage dans {{rate}} des flops vus (repère {{min}}–{{max}}). On peut te faire coucher trop facilement.",
-            "work": "Défends davantage tes mains moyennes face aux mises simples."
+            "title": "Tu fold trop souvent postflop",
+            "why": "Tu vas au showdown dans {{rate}} des flops vus (repère {{min}}–{{max}}). On peut te faire fold trop facilement.",
+            "work": "Défends davantage tes mains moyennes face aux bets simples."
           }
         },
         "wonAtShowdown": {
           "tooHigh": {
-            "title": "Tu gagnes beaucoup à l'abattage",
-            "why": "Tu gagnes {{rate}} des abattages (repère {{min}}–{{max}}) : souvent le signe que tu n'y vas qu'avec des mains très fortes.",
-            "work": "Vérifie que tu ne lâches pas trop de mains moyennes avant."
+            "title": "Tu gagnes beaucoup au showdown",
+            "why": "Tu gagnes {{rate}} des showdowns (repère {{min}}–{{max}}) : souvent le signe que tu n'y vas qu'avec des mains très fortes.",
+            "work": "Vérifie que tu ne fold pas trop de mains moyennes avant."
           },
           "tooLow": {
-            "title": "Tu perds trop à l'abattage",
-            "why": "Tu gagnes {{rate}} des abattages (repère {{min}}–{{max}}). Tu vas trop loin avec des mains battues.",
-            "work": "Revois tes calls de river : une main moyenne face à une grosse mise est souvent battue."
+            "title": "Tu perds trop au showdown",
+            "why": "Tu gagnes {{rate}} des showdowns (repère {{min}}–{{max}}). Tu vas trop loin avec des mains battues.",
+            "work": "Revois tes calls de river : une main moyenne face à un gros bet est souvent battue."
           }
         },
         "foldToCbetFlop": {
           "tooHigh": {
-            "title": "Tu lâches trop face aux c-bets",
-            "why": "Tu couches {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Il mise donc tout son range avec profit.",
-            "work": "Paye plus souvent avec tes tirages et paires faibles sur les flops secs, surtout face aux petites mises."
+            "title": "Tu fold trop face aux c-bets",
+            "why": "Tu fold {{rate}} du temps face au bet flop du preflop raiser (repère {{min}}–{{max}}). Il bet donc toute sa range avec profit.",
+            "work": "Call plus souvent avec tes draws et weak pairs sur les flops dry, surtout face aux petits bets."
           },
           "tooLow": {
-            "title": "Tu ne lâches pas assez face aux c-bets",
-            "why": "Tu ne couches que {{rate}} du temps face à la mise flop du relanceur (repère {{min}}–{{max}}). Tu payes trop de mains sans avenir.",
-            "work": "Couche les hauteurs sans tirage quand le flop favorise le relanceur."
+            "title": "Tu ne fold pas assez face aux c-bets",
+            "why": "Tu ne fold que {{rate}} du temps face au bet flop du preflop raiser (repère {{min}}–{{max}}). Tu call trop de mains sans avenir.",
+            "work": "Fold les mains high card sans draw quand le flop favorise le preflop raiser."
           }
         },
         "cbetTurn": {
           "tooHigh": {
-            "title": "Tu tires trop souvent la deuxième balle",
-            "why": "Tu remises {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). Tes bluffs coûtent cher face aux joueurs qui paient.",
-            "work": "Garde la deuxième balle pour tes mains faites, tes tirages et les cartes qui te favorisent."
+            "title": "Tu c-bet trop à la turn",
+            "why": "Tu 2-barrel {{rate}} des turns après un c-bet call (repère {{min}}–{{max}}). Tes bluffs coûtent cher face aux joueurs qui call.",
+            "work": "Garde le second barrel pour tes made hands, tes draws et les cartes qui te favorisent."
           },
           "tooLow": {
-            "title": "Tu abandonnes trop vite à la turn",
-            "why": "Tu ne remises que {{rate}} des turns après un c-bet payé (repère {{min}}–{{max}}). On peut payer le flop puis te voler le pot.",
-            "work": "Continue sur les cartes qui renforcent ta range (as, rois, couleurs qui arrivent) et avec tes tirages."
+            "title": "Tu ne 2-barrel pas assez à la turn",
+            "why": "Tu ne 2-barrel que {{rate}} des turns après un c-bet call (repère {{min}}–{{max}}). On peut call le flop puis te steal le pot.",
+            "work": "Continue sur les cartes qui renforcent ta range (as, rois, flushes qui rentrent) et avec tes draws."
           }
         },
         "checkRaiseFlop": {
           "tooHigh": {
-            "title": "Tu check-raises trop",
-            "why": "Tu relances {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). Tu mets trop de jetons avec des mains moyennes.",
-            "work": "Réserve le check-raise aux mains fortes et aux bons tirages."
+            "title": "Tu check-raise trop",
+            "why": "Tu raise {{rate}} des bets flop après avoir check (repère {{min}}–{{max}}). Tu mets trop de chips avec des mains moyennes.",
+            "work": "Réserve le check-raise aux mains fortes et aux bons draws."
           },
           "tooLow": {
-            "title": "Tu ne check-raises presque jamais",
-            "why": "Tu ne relances que {{rate}} des mises flop après avoir checké (repère {{min}}–{{max}}). On peut miser contre toi sans risque.",
-            "work": "Ajoute des check-raises avec tes brelans, deux paires et tirages forts, surtout de grosse blinde."
+            "title": "Tu ne check-raise presque jamais",
+            "why": "Tu ne raise que {{rate}} des bets flop après avoir check (repère {{min}}–{{max}}). On peut bet contre toi sans risque.",
+            "work": "Ajoute des check-raise avec tes sets, two pair et draws forts, surtout en big blind."
           }
         },
         "wonWhenSawFlop": {
           "tooHigh": {
-            "title": "Tu gagnes beaucoup de pots après le flop",
-            "why": "Tu gagnes {{rate}} des pots où tu vois le flop (repère {{min}}–{{max}}). Si c'est en voyant peu de flops, tu joues peut-être trop serré avant.",
-            "work": "Rien d'urgent : vérifie que tu ne couches pas trop de mains jouables préflop."
+            "title": "Tu gagnes beaucoup de pots postflop",
+            "why": "Tu gagnes {{rate}} des pots où tu vois le flop (repère {{min}}–{{max}}). Si c'est en voyant peu de flops, tu joues peut-être trop tight avant.",
+            "work": "Rien d'urgent : vérifie que tu ne fold pas trop de mains jouables preflop."
           },
           "tooLow": {
-            "title": "Tu gagnes peu de pots après le flop",
+            "title": "Tu gagnes peu de pots postflop",
             "why": "Tu ne gagnes que {{rate}} des pots où tu vois le flop (repère {{min}}–{{max}}). Tu vois trop de flops avec des mains faibles, ou tu abandonnes trop vite.",
-            "work": "Vois moins de flops hors de position et mise plus souvent quand on te montre de la faiblesse."
+            "work": "Vois moins de flops out of position et bet plus souvent quand on te montre de la faiblesse."
           }
         },
         "postflopAggression": {
           "tooHigh": {
-            "title": "Tu es très agressif après le flop",
-            "why": "{{rate}} de tes décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Les bons joueurs te laisseront bluffer.",
-            "work": "Paye davantage avec tes mains moyennes au lieu de les transformer en bluffs."
+            "title": "Tu es très agressif postflop",
+            "why": "{{rate}} de tes décisions postflop sont des bets ou des raises (repère {{min}}–{{max}}). Les bons joueurs te laisseront bluffer.",
+            "work": "Call davantage avec tes mains moyennes au lieu de les transformer en bluffs."
           },
           "tooLow": {
-            "title": "Tu es trop passif après le flop",
-            "why": "Seules {{rate}} de tes décisions après le flop sont des mises ou relances (repère {{min}}–{{max}}). Payer plutôt que miser te prive de la fold equity.",
-            "work": "Mise tes mains fortes pour la valeur et tes tirages en semi-bluff au lieu de payer."
+            "title": "Tu es trop passif postflop",
+            "why": "Seules {{rate}} de tes décisions postflop sont des bets ou des raises (repère {{min}}–{{max}}). Call plutôt que bet te prive de la fold equity.",
+            "work": "Bet tes mains fortes pour value et tes draws en semi-bluff au lieu de call."
           }
         }
       }
@@ -1026,19 +1026,19 @@
         "retry": "Réessayer"
       },
       "table": "Table",
-      "button": "Bouton",
+      "button": "Button",
       "you": "Toi",
       "player": "Joueur",
-      "sittingOut": "Absent",
+      "sittingOut": "Sit out",
       "hiddenCard": "Carte cachée",
-      "allIn": "Tapis",
+      "allIn": "All-in",
       "streets": {
         "label": "Streets",
-        "preflop": "Préflop",
+        "preflop": "Preflop",
         "flop": "Flop",
         "turn": "Turn",
         "river": "River",
-        "showdown": "Résultat"
+        "showdown": "Showdown"
       },
       "first": "Début de la main",
       "back": "Action précédente",
@@ -1047,19 +1047,19 @@
       "play": "Lecture",
       "pause": "Pause",
       "unit": "Unité",
-      "chips": "Jetons",
+      "chips": "Chips",
       "keys": "Clavier : ← → pour avancer, espace pour la lecture, Début / Fin.",
       "log": "Actions",
       "result": "Ton résultat : {{amount}}",
       "actions": {
-        "fold": "se couche",
-        "check": "checke",
-        "call": "suit {{amount}}",
-        "bet": "mise {{amount}}",
-        "raise": "relance à {{amount}}",
+        "fold": "fold",
+        "check": "check",
+        "call": "call {{amount}}",
+        "bet": "bet {{amount}}",
+        "raise": "raise à {{amount}}",
         "postAnte": "ante {{amount}}",
-        "postSmallBlind": "petite blinde {{amount}}",
-        "postBigBlind": "grosse blinde {{amount}}"
+        "postSmallBlind": "small blind {{amount}}",
+        "postBigBlind": "big blind {{amount}}"
       },
       "potLabel": "Pot",
       "timeline": "Avancement dans la main",
@@ -1067,7 +1067,7 @@
     },
     "ranges": {
       "title": "Ranges",
-      "description": "Ce que tu ouvres vraiment depuis chaque position quand c'est foldé jusqu'à toi, main par main.",
+      "description": "Ce que tu open vraiment depuis chaque position quand c'est fold jusqu'à toi, main par main.",
       "loading": "Chargement de tes ranges…",
       "pending": "{{count}} main(s) encore en cours d'analyse : les grilles se complètent.",
       "error": {
@@ -1089,41 +1089,41 @@
         "year": "Cette année"
       },
       "positions": "Positions",
-      "cellLabel": "{{hand}} : reçue {{dealt}} fois, relancée {{opens}}, limpée {{limps}}",
+      "cellLabel": "{{hand}} : reçue {{dealt}} fois, open {{opens}}, limp {{limps}}",
       "summary": {
-        "title": "Ouverture depuis {{position}}",
-        "counts": "{{opens}} relances sur {{dealt}} spots",
+        "title": "Open depuis {{position}}",
+        "counts": "{{opens}} raises sur {{dealt}} spots",
         "limps": "{{count}} limp(s)",
         "gauge": "Repère {{min}} à {{max}}",
-        "none": "Aucun spot d'ouverture à cette position pour ces filtres.",
+        "none": "Aucun spot d'open à cette position pour ces filtres.",
         "reference": "Taux de référence : {{min}} à {{max}}."
       },
       "detail": {
         "hint": "Survole une case pour voir combien de fois tu as reçu cette main et ce que tu en as fait.",
         "never": "Jamais reçue dans ce spot pour ces filtres.",
         "dealt": "Reçue",
-        "opens": "Relancée",
-        "limps": "Limpée",
-        "folds": "Couchée",
+        "opens": "Raise",
+        "limps": "Limp",
+        "folds": "Fold",
         "thin": "Trop peu d'occurrences pour en tirer une conclusion.",
         "inReference": "Dans le repère",
         "outReference": "Hors repère"
       },
       "legend": {
-        "open": "Part relancée",
-        "limp": "Part limpée",
-        "fold": "Couchée",
+        "open": "Part jouée en raise",
+        "limp": "Part jouée en limp",
+        "fold": "Fold",
         "never": "Jamais reçue",
         "sample": "Le petit chiffre indique combien de fois tu as reçu la main. Une case pâle repose sur moins de 3 occurrences.",
-        "refOpen": "Ouverte par le repère",
-        "refFold": "Couchée par le repère",
+        "refOpen": "Open recommandé",
+        "refFold": "Fold recommandé",
         "match": "Comme le repère",
-        "tooLoose": "Ouverte, hors repère",
-        "tooTight": "Couchée, alors que le repère l'ouvre",
+        "tooLoose": "Open, hors repère",
+        "tooTight": "Fold, alors que le repère recommande un open",
         "neverGap": "Jamais reçue (bord or : dans le repère)"
       },
-      "method": "Ta range est comptée sur tes mains réelles, quand tout le monde avant toi s'est couché, séparément pour les tables 6-max et pleines (le nombre à côté du format = spots d'ouverture). Le repère d'un UTG 6-max est celui du LJ d'une table pleine : même distance au bouton. Repère v{{version}} (ADR-0009).",
-      "band": "Tapis",
+      "method": "Ta range est comptée sur tes mains réelles, quand tout le monde avant toi a fold, séparément pour les tables 6-max et full ring (le nombre à côté du format = spots d'open). Le repère d'un UTG 6-max est celui du LJ d'une table full ring : même distance au button. Repère v{{version}} (ADR-0009).",
+      "band": "Stack",
       "bands": {
         "short": "15 à 25 BB",
         "mid": "25 à 40 BB",
@@ -1144,24 +1144,24 @@
       "reference": {
         "title": "Repère v{{version}} · {{position}}",
         "share": "des mains de départ (en combinaisons)",
-        "note": "Nos conventions pour des MTT en ligne à 5–20 € avec antes, écrites main par main (ouvre ou non). Ce n'est pas un calcul GTO.",
+        "note": "Nos conventions pour des MTT en ligne à 5–20 € avec antes, écrites main par main (open ou non). Ce n'est pas un calcul GTO.",
         "nash": "Équilibre push/fold calculé à {{stack}} BB",
-        "nashNote": "Calculé par NutsIQ : tapis ou fold, gains en jetons, antes de 0,125 BB, tapis égaux, un seul payeur à la fois (comme les tableaux push/fold usuels). En tête-à-tête SB contre BB, c'est l'équilibre exact. Voir ADR-0009."
+        "nashNote": "Calculé par NutsIQ : shove ou fold, gains en chips, antes de 0,125 BB, stacks égaux, un seul caller à la fois (comme les tableaux push/fold usuels). En heads-up SB contre BB, c'est l'équilibre exact. Voir ADR-0009."
       },
       "gap": {
         "title": "Écart · {{position}}",
         "none": "Aucune main jouée dans ce spot pour ces filtres.",
-        "tooLoose": "{{count}} main(s) ouvertes hors du repère",
-        "tooTight": "{{count}} main(s) du repère que tu couches",
-        "rule": "Une main compte comme « ouverte » si tu la relances au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
+        "tooLoose": "{{count}} main(s) jouées en open hors du repère",
+        "tooTight": "{{count}} main(s) du repère que tu fold",
+        "rule": "Une main compte comme jouée en open si tu fais un raise au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
       },
-      "pushStack": "Tapis (push/fold)"
+      "pushStack": "Stack (push/fold)"
     },
     "training": {
       "title": "Salle d'entraînement",
-      "description": "Trois exercices : ouvrir quand c'est foldé jusqu'à toi, défendre ta grosse blinde contre un tapis, et refaire tes vrais spots mal joués. Les mains ratées reviennent.",
+      "description": "Trois exercices : open quand c'est fold jusqu'à toi, défendre ta big blind contre un shove, et refaire tes vrais spots mal joués. Les mains ratées reviennent.",
       "loading": "Distribution…",
-      "band": "Tapis",
+      "band": "Stack",
       "bands": {
         "short": "15 à 25 BB",
         "mid": "25 à 40 BB",
@@ -1175,18 +1175,18 @@
         "description": "NutsIQ n'a pas pu répondre. Réessaie.",
         "retry": "Réessayer"
       },
-      "question": "{{position}} · {{stack}} — tout le monde a couché. Tu fais quoi ?",
+      "question": "{{position}} · {{stack}} — tout le monde a fold. Tu fais quoi ?",
       "review": "Révision",
       "focus": "Position à travailler",
       "you": "Toi",
       "pot": "Pot",
-      "button": "Bouton",
+      "button": "Button",
       "hiddenCard": "Carte cachée",
       "answers": {
         "fold": "Fold",
-        "raise": "Relance",
-        "shove": "Tapis",
-        "call": "Payer"
+        "raise": "Raise",
+        "shove": "Shove",
+        "call": "Call"
       },
       "session": "cette session",
       "overall": "sur {{count}} réponses",
@@ -1196,58 +1196,58 @@
         "right": "Bien joué",
         "wrong": "Pas cette fois",
         "explain": {
-          "raise": "Le repère relance {{hand}} depuis {{position}} à {{band}}.",
-          "fold": "Le repère couche {{hand}} depuis {{position}} à {{band}}."
+          "raise": "Le repère raise {{hand}} depuis {{position}} à {{band}}.",
+          "fold": "Le repère fold {{hand}} depuis {{position}} à {{band}}."
         },
         "explainPush": {
-          "raise": "L'équilibre envoie tapis avec {{hand}} depuis {{position}} à {{stack}} BB.",
-          "fold": "L'équilibre couche {{hand}} depuis {{position}} à {{stack}} BB."
+          "raise": "L'équilibre shove avec {{hand}} depuis {{position}} à {{stack}} BB.",
+          "fold": "L'équilibre fold {{hand}} depuis {{position}} à {{stack}} BB."
         },
         "explainDefence": {
-          "call": "L'équilibre paye avec {{hand}} de grosse blinde contre un tapis de {{shover}} à {{stack}} BB.",
-          "fold": "L'équilibre couche {{hand}} de grosse blinde contre un tapis de {{shover}} à {{stack}} BB."
+          "call": "L'équilibre call avec {{hand}} en big blind contre un shove de {{shover}} à {{stack}} BB.",
+          "fold": "L'équilibre fold {{hand}} en big blind contre un shove de {{shover}} à {{stack}} BB."
         }
       },
       "gridLabel": "Range de référence de la position",
       "reference": "Repère v{{version}} (MTT 5–20 €). Ce n'est pas du GTO : nos conventions, à relire dans Ranges.",
       "next": "Main suivante",
       "space": "Espace",
-      "hint": "Réponds avec les boutons ou au clavier (F pour fold, R pour relance). Après ta réponse, tu verras la range de référence de la position avec ta main entourée.",
-      "referencePush": "Équilibre push/fold calculé à {{stack}} BB (tapis égaux, antes 0,125 BB).",
+      "hint": "Réponds avec les boutons ou au clavier (F pour fold, R pour raise). Après ta réponse, tu verras la range de référence de la position avec ta main entourée.",
+      "referencePush": "Équilibre push/fold calculé à {{stack}} BB (stacks égaux, antes 0,125 BB).",
       "modes": {
         "label": "Exercice",
         "open": {
-          "name": "Ouvrir",
-          "text": "Foldé jusqu'à toi : relance ou couche."
+          "name": "Open",
+          "text": "Tout le monde a fold avant toi : raise ou fold."
         },
         "defence": {
           "name": "Défendre la BB",
-          "text": "Un joueur fait tapis : tu payes ou tu couches ?"
+          "text": "Un joueur shove : tu call ou tu fold ?"
         },
         "real": {
           "name": "Mes mains",
           "text": "Tes vrais spots mal joués, à refaire."
         }
       },
-      "shovers": "Pousseurs",
-      "questionDefence": "{{shover}} fait tapis {{stack}}, tout le monde couche. Tu es de grosse blinde : tu payes ?",
-      "gridLabelDefence": "Range de call de référence contre ce pousseur",
-      "referenceDefence": "Calls de l'équilibre push/fold à {{stack}} BB (tapis égaux, antes 0,125 BB, sans ICM) : trop larges près de l'argent.",
-      "hintDefence": "Réponds avec les boutons ou au clavier (F pour fold, C pour payer). Après ta réponse, tu verras la range de call contre ce pousseur avec ta main entourée.",
+      "shovers": "Shovers",
+      "questionDefence": "{{shover}} shove {{stack}}, tout le monde fold. Tu es en big blind : tu call ?",
+      "gridLabelDefence": "Range de call de référence contre ce shover",
+      "referenceDefence": "Calls de l'équilibre push/fold à {{stack}} BB (stacks égaux, antes 0,125 BB, sans ICM) : trop larges près de la bubble.",
+      "hintDefence": "Réponds avec les boutons ou au clavier (F pour fold, C pour call). Après ta réponse, tu verras la range de call contre ce shover avec ta main entourée.",
       "real": {
         "tag": "Ta main du {{date}}",
         "remaining": "{{count}} à revoir",
         "then": {
-          "fold": "Ce jour-là, tu avais couché.",
-          "raise": "Ce jour-là, tu avais relancé.",
-          "limp": "Ce jour-là, tu avais limpé."
+          "fold": "Ce jour-là, tu avais fold.",
+          "raise": "Ce jour-là, tu avais raise.",
+          "limp": "Ce jour-là, tu avais limp."
         },
         "replay": "Revoir la main",
         "doneTitle": "Rien à revoir",
-        "doneDescription": "Tous tes spots d'ouverture des 90 derniers jours suivent les repères, ou tu les as refaits correctement. Importe de nouvelles mains pour en trouver d'autres.",
-        "toOpen": "S'entraîner à ouvrir"
+        "doneDescription": "Tous tes spots d'open des 90 derniers jours suivent les repères, ou tu les as refaits correctement. Importe de nouvelles mains pour en trouver d'autres.",
+        "toOpen": "S'entraîner à open"
       },
-      "hintReal": "Réponds avec les boutons ou au clavier (F pour fold, R pour relance). Ces spots viennent de tes vraies mains, là où ta décision s'écartait des repères : une bonne réponse les retire de la liste."
+      "hintReal": "Réponds avec les boutons ou au clavier (F pour fold, R pour raise). Ces spots viennent de tes vraies mains, là où ta décision s'écartait des repères : une bonne réponse les retire de la liste."
     },
     "progress": {
       "title": "Plan de la semaine",
@@ -1277,7 +1277,7 @@
       "coach": "Comprendre avec le coach",
       "clean": {
         "title": "Aucun leak détecté",
-        "description": "Rien ne sort de nos repères sur tes 90 derniers jours. Garde le volume et entretiens tes ouvertures en salle d'entraînement."
+        "description": "Rien ne sort de nos repères sur tes 90 derniers jours. Garde le volume et entretiens tes opens en salle d'entraînement."
       },
       "drills": "réponses en salle d'entraînement cette semaine",
       "accuracy": "{{value}} de bonnes réponses",
@@ -1545,7 +1545,7 @@
   "formats": {
     "label": "Format de table",
     "sixMax": "6-max",
-    "fullRing": "Table pleine",
+    "fullRing": "Full ring",
     "sixMaxHint": "Tables de 6 places au plus",
     "fullRingHint": "Tables de 7 à 9 places"
   },
@@ -1567,7 +1567,7 @@
       "action": "Écrire le débrief",
       "writing": "Le coach analyse ton tournoi…",
       "stale": "De nouvelles mains ou le résumé ont été importés depuis ce débrief.",
-      "equity": "équité {{value}}",
+      "equity": "equity {{value}}",
       "strengths": "Ce qui a marché",
       "workOn": "À travailler",
       "blocked": {
