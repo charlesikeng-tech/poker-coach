@@ -11,7 +11,8 @@ using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.Api.Account;
 
-public sealed record MeResponse(Guid Id, string DisplayName, string? Email, string PreferredLanguage);
+/// <param name="IsAdmin">Shows the administration page; every admin route checks it again.</param>
+public sealed record MeResponse(Guid Id, string DisplayName, string? Email, string PreferredLanguage, bool IsAdmin);
 
 public sealed record UpdatePreferencesRequest(string? Language);
 
@@ -37,6 +38,7 @@ public static class AccountEndpoints
     private static async Task<Results<Ok<MeResponse>, UnauthorizedHttpResult>> GetMeAsync(
         HttpContext context,
         UserProfileService profiles,
+        AdminOptions admins,
         IAntiforgery antiforgery,
         CancellationToken cancellationToken)
     {
@@ -58,7 +60,7 @@ public static class AccountEndpoints
         }
 
         AntiforgeryTokens.IssueRequestToken(context, antiforgery);
-        return TypedResults.Ok(new MeResponse(profile.Id, profile.DisplayName, profile.Email, profile.PreferredLanguage));
+        return TypedResults.Ok(new MeResponse(profile.Id, profile.DisplayName, profile.Email, profile.PreferredLanguage, admins.IsAdminEmail(profile.Email)));
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> UpdatePreferencesAsync(

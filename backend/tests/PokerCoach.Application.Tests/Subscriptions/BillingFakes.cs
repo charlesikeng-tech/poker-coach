@@ -31,6 +31,35 @@ internal sealed class InMemorySubscriptionStore : ISubscriptionStore
         Saves++;
         return Task.CompletedTask;
     }
+
+    public List<ProGrant> Grants { get; } = [];
+
+    public Task<ProGrant?> FindGrantAsync(Guid userId, CancellationToken cancellationToken) =>
+        Task.FromResult(Grants.FirstOrDefault(g => g.UserId == userId));
+
+    public Task SaveGrantAsync(ProGrant grant, CancellationToken cancellationToken)
+    {
+        if (Grants.FirstOrDefault(g => g.UserId == grant.UserId) is { } current)
+        {
+            current.Renew(grant);
+        }
+        else
+        {
+            Grants.Add(grant);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<bool> DeleteGrantAsync(Guid userId, CancellationToken cancellationToken) =>
+        Task.FromResult(Grants.RemoveAll(g => g.UserId == userId) > 0);
+
+    public Task<IReadOnlyList<GrantView>> ListGrantsAsync(CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<GrantView>>([.. Grants.Select(g => new GrantView(g.UserId, "user", null, g.Reason, g.EndsAt, g.GrantedAt))]);
+
+    public Task<IReadOnlyList<SubscriberView>> ListSubscribersAsync(int limit, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<SubscriberView>>(
+            [.. Rows.Where(r => r.Status is not null).Take(limit).Select(r => new SubscriberView(r.UserId, "user", null, r.CustomerId, r.Status, r.Interval, r.CurrentPeriodEnd, r.CancelAtPeriodEnd))]);
 }
 
 /// <summary>Stripe stand-in: customers and their subscriptions in memory; a valid signature is the string "valid".</summary>
@@ -98,5 +127,5 @@ internal static class BillingFakes
 {
     /// <summary>Billing off: every account has Pro, as in every test written before plans existed.</summary>
     public static PlanAccess Unbilled(TimeProvider time) =>
-        new(new InMemorySubscriptionStore(), new FakeBillingGateway(configured: false), new FreePlanOptions(), time);
+        new(new InMemorySubscriptionStore(), new FakeBillingGateway(configured: false), new Identity.InMemoryUserAccountStore(), new AdminOptions(), new FreePlanOptions(), time);
 }

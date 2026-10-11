@@ -201,6 +201,36 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.ToTable("users", "identity");
                 });
 
+            modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTimeOffset?>("EndsAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ends_at");
+
+                    b.Property<DateTimeOffset>("GrantedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("granted_at");
+
+                    b.Property<Guid>("GrantedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("granted_by");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("reason");
+
+                    b.HasKey("UserId")
+                        .HasName("pk_pro_grants");
+
+                    b.ToTable("pro_grants", "subscriptions");
+                });
+
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.Subscription", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1306,6 +1336,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_password_credentials_users_user_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithOne()
+                        .HasForeignKey("PokerCoach.Domain.Subscriptions.ProGrant", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_pro_grants_users_user_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.Subscription", b =>

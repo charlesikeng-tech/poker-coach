@@ -1,6 +1,6 @@
 # ADR-0014 — Subscriptions: Free and Pro plans, paid through Stripe
 
-Status: accepted (2026-10-10).
+Status: accepted (2026-10-10). Administrators and offered access: ADR-0015.
 
 ## Context
 

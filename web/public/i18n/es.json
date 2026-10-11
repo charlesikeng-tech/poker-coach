@@ -13,7 +13,8 @@
     "ranges": "Rangos",
     "training": "Entrenamiento",
     "bankroll": "Bankroll",
-    "subscription": "Suscripción"
+    "subscription": "Suscripción",
+    "admin": "Admin"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -1462,6 +1463,75 @@
         "NO_SUBSCRIPTION": "Esta cuenta no tiene ninguna suscripción que gestionar.",
         "BILLING_UNAVAILABLE": "Las suscripciones no están activadas en este servidor.",
         "BILLING_FAILED": "El servicio de pago no responde. Inténtalo de nuevo en un momento.",
+        "network": "No hay conexión. Revisa tu red.",
+        "unknown": "Ha ocurrido un error inesperado."
+      },
+      "admin": {
+        "title": "Administrador",
+        "description": "Tu cuenta administra NutsIQ: tienes Pro sin suscripción."
+      },
+      "grant": {
+        "title": "Acceso Pro regalado",
+        "until": "Tu acceso Pro está regalado hasta el {{date}}.",
+        "openEnded": "Tu acceso Pro está regalado, sin fecha de fin.",
+        "after": "Cuando termine el acceso regalado, tu cuenta vuelve a Gratis; podrás suscribirte aquí. No se borra nada."
+      }
+    },
+    "admin": {
+      "title": "Administración",
+      "description": "Accesos Pro regalados y suscriptores. Reembolsos, cancelaciones y cupones se hacen en Stripe.",
+      "loadFailed": "No se ha podido cargar la administración. Recarga la página.",
+      "grant": {
+        "title": "Regalar Pro",
+        "description": "Para un socio, un amigo o un gesto comercial. La cuenta debe existir; regalar de nuevo sustituye el acceso actual.",
+        "email": "Email de la cuenta",
+        "reason": "Motivo",
+        "reasonPlaceholder": "Streamer socio, fase de pruebas",
+        "endsOn": "Hasta (incluido)",
+        "endsOnHint": "Vacío: hasta que lo retires.",
+        "action": "Regalar Pro",
+        "done": "Pro regalado a {{email}}."
+      },
+      "grants": {
+        "title": "Accesos regalados ({{count}})",
+        "empty": "Ningún acceso regalado por ahora.",
+        "openEnded": "Sin fin",
+        "revoke": "Retirar",
+        "confirm": "Confirmar"
+      },
+      "subscribers": {
+        "title": "Suscriptores ({{count}})",
+        "description": "Cuentas que se han suscrito al menos una vez. Abre Stripe para reembolsar, cancelar o ver facturas.",
+        "empty": "Ningún suscriptor por ahora.",
+        "ends": "Termina en esta fecha"
+      },
+      "columns": {
+        "account": "Cuenta",
+        "reason": "Motivo",
+        "until": "Hasta",
+        "actions": "Acciones",
+        "status": "Estado",
+        "renewal": "Renovación"
+      },
+      "status": {
+        "incomplete": "Incompleto",
+        "incompleteExpired": "Caducado",
+        "trialing": "Prueba",
+        "active": "Activo",
+        "pastDue": "Pago atrasado",
+        "canceled": "Cancelado",
+        "unpaid": "Impagado",
+        "paused": "En pausa",
+        "null": "—"
+      },
+      "interval": {
+        "month": "Mensual",
+        "year": "Anual"
+      },
+      "errors": {
+        "USER_NOT_FOUND": "Ninguna cuenta usa esta dirección. La persona debe crear su cuenta primero.",
+        "VALIDATION_FAILED": "Indica un motivo y una fecha de fin futura.",
+        "ADMIN_REQUIRED": "Solo para administradores.",
         "network": "No hay conexión. Revisa tu red.",
         "unknown": "Ha ocurrido un error inesperado."
       }

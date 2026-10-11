@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Microsoft.Extensions.Options;
 using PokerCoach.Api.Account;
+using PokerCoach.Api.Admin;
 using PokerCoach.Api.Analytics;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Bankroll;
@@ -105,7 +106,10 @@ builder.Services.AddOptions<FreePlanOptions>()
     .Validate(o => o.HistoryDays > 0 && o.MonthlyExplanations >= 0, "Invalid free plan limits.")
     .ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<FreePlanOptions>>().Value);
+builder.Services.AddOptions<AdminOptions>().BindConfiguration(AdminOptions.SectionName);
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AdminOptions>>().Value);
 builder.Services.AddScoped<PlanAccess>();
+builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<LeakCoachService>();
 builder.Services.AddScoped<TournamentDebriefService>();
@@ -175,6 +179,7 @@ app.MapProgressEndpoints();
 app.MapLeakEndpoints();
 app.MapCoachingEndpoints();
 app.MapBillingEndpoints();
+app.MapAdminEndpoints();
 if (servesWebApp)
 {
     app.MapWebAppFallback();

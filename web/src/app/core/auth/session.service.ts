@@ -9,6 +9,8 @@ export interface CurrentUser {
   readonly displayName: string;
   readonly email: string | null;
   readonly preferredLanguage: string;
+  /** Shows the administration page (ADR-0015); the API checks it again on every admin call. */
+  readonly isAdmin?: boolean;
 }
 
 /**

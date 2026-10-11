@@ -68,6 +68,10 @@ public static class AuthenticationSetup
                 options.UsePkce = true;
                 options.SaveTokens = false;
 
+                // Google may return an address it has not verified (an account created with another
+                // provider's email). Only a verified one may identify, link or administer an account.
+                options.ClaimActions.MapJsonKey(EmailVerifiedClaim, "email_verified");
+
                 // Google answers with a top-level GET redirect: Lax is enough and works on plain-http localhost.
                 options.CorrelationCookie.SameSite = SameSiteMode.Lax;
                 options.CorrelationCookie.SecurePolicy = securePolicy;
@@ -93,6 +97,8 @@ public static class AuthenticationSetup
     public static bool TryGetUserId(this ClaimsPrincipal principal, out Guid userId) =>
         Guid.TryParse(principal.FindFirst(UserIdClaim)?.Value, out userId);
 
+    private const string EmailVerifiedClaim = "email_verified";
+
     private static async Task OnGoogleTicketReceivedAsync(TicketReceivedContext context)
     {
         var google = context.Principal;
@@ -106,10 +112,11 @@ public static class AuthenticationSetup
         string? language = null;
         context.Properties?.Items.TryGetValue(LanguageItem, out language);
 
+        var emailVerified = string.Equals(google.FindFirst(EmailVerifiedClaim)?.Value, "true", StringComparison.OrdinalIgnoreCase);
         var signIn = new ExternalSignIn(
             IdentityProviders.Google,
             subject,
-            google.FindFirst(ClaimTypes.Email)?.Value,
+            emailVerified ? google.FindFirst(ClaimTypes.Email)?.Value : null,
             google.FindFirst(ClaimTypes.Name)?.Value,
             language);
 

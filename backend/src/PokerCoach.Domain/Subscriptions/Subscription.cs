@@ -110,3 +110,72 @@ public sealed class Subscription
             .FirstOrDefault();
     }
 }
+
+/// <summary>
+/// Pro given without payment (ADR-0015): partners during the test phase, friends, support gestures. One per
+/// user; granting again replaces it, revoking deletes it. Without an end date it lasts until revoked.
+/// </summary>
+public sealed class ProGrant
+{
+    public const int ReasonMaxLength = 200;
+
+    // For EF Core materialization.
+    private ProGrant()
+    {
+    }
+
+    private ProGrant(Guid userId, string reason, DateTimeOffset? endsAt, Guid grantedBy, DateTimeOffset now)
+    {
+        UserId = userId;
+        Reason = reason;
+        EndsAt = endsAt;
+        GrantedBy = grantedBy;
+        GrantedAt = now;
+    }
+
+    public Guid UserId { get; private set; }
+
+    public string Reason { get; private set; } = string.Empty;
+
+    public DateTimeOffset? EndsAt { get; private set; }
+
+    /// <summary>The administrator who granted it.</summary>
+    public Guid GrantedBy { get; private set; }
+
+    public DateTimeOffset GrantedAt { get; private set; }
+
+    public bool IsActive(DateTimeOffset now) => EndsAt is null || EndsAt > now;
+
+    public static ProGrant Give(Guid userId, string reason, DateTimeOffset? endsAt, Guid grantedBy, DateTimeOffset now)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(reason);
+        if (endsAt is { } end && end <= now)
+        {
+            throw new ArgumentOutOfRangeException(nameof(endsAt), "A grant ends in the future.");
+        }
+
+        var trimmed = reason.Trim();
+        return new ProGrant(userId, trimmed.Length > ReasonMaxLength ? trimmed[..ReasonMaxLength] : trimmed, endsAt, grantedBy, now);
+    }
+
+    /// <summary>Granting again: new reason and end, new author.</summary>
+    public void Renew(ProGrant replacement)
+    {
+        ArgumentNullException.ThrowIfNull(replacement);
+        Reason = replacement.Reason;
+        EndsAt = replacement.EndsAt;
+        GrantedBy = replacement.GrantedBy;
+        GrantedAt = replacement.GrantedAt;
+    }
+}
+
+/// <summary>Why an account has the plan it has; shown to the user and to administrators.</summary>
+public enum PlanSource
+{
+    /// <summary>Billing is off on this server: everyone has Pro.</summary>
+    BillingOff = 0,
+    Free = 1,
+    Subscription = 2,
+    Grant = 3,
+    Admin = 4,
+}

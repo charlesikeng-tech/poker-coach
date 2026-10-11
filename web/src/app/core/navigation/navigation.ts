@@ -5,6 +5,7 @@ import {
   Dumbbell,
   LayoutDashboard,
   Radar,
+  ShieldCheck,
   Target,
   TrendingUp,
   Trophy,
@@ -40,3 +41,10 @@ export const SECONDARY_NAVIGATION: readonly NavigationItem[] = [
   { path: '/import', labelKey: 'nav.import', icon: Upload },
   { path: '/subscription', labelKey: 'nav.subscription', icon: Crown },
 ];
+
+/** Shown to administrators only (ADR-0015). */
+export const ADMIN_NAVIGATION: NavigationItem = {
+  path: '/admin',
+  labelKey: 'nav.admin',
+  icon: ShieldCheck,
+};

@@ -10,12 +10,15 @@ using PokerCoach.Domain.Subscriptions;
 namespace PokerCoach.Api.Billing;
 
 /// <param name="Plan">What the account has now: drives limits and upgrade prompts.</param>
+/// <param name="Source">Why: a subscription, an offered access (with <paramref name="GrantEndsAt"/>), administrator, billing off.</param>
 /// <param name="BillingEnabled">False: billing is off on this server and every account has Pro.</param>
 /// <param name="CurrentPeriodEnd">Renewal date, or end date when <paramref name="CancelAtPeriodEnd"/>.</param>
 /// <param name="ExplanationsUsedThisMonth">New leak explanations generated this calendar month (UTC).</param>
 public sealed record BillingResponse(
     bool BillingEnabled,
     Plan Plan,
+    PlanSource Source,
+    DateTimeOffset? GrantEndsAt,
     SubscriptionStatus? Status,
     BillingInterval? Interval,
     DateTimeOffset? CurrentPeriodEnd,
@@ -60,6 +63,8 @@ public static partial class BillingEndpoints
         return TypedResults.Ok(new BillingResponse(
             s.BillingEnabled,
             s.Plan,
+            s.Source,
+            s.GrantEndsAt,
             s.Status,
             s.Interval,
             s.CurrentPeriodEnd,

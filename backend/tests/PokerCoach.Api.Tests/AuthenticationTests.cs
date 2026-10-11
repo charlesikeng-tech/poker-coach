@@ -44,6 +44,9 @@ public sealed class AuthenticationTests
     [InlineData("GET", "/api/billing")]
     [InlineData("POST", "/api/billing/checkout")]
     [InlineData("POST", "/api/billing/portal")]
+    [InlineData("GET", "/api/admin")]
+    [InlineData("PUT", "/api/admin/grants")]
+    [InlineData("DELETE", "/api/admin/grants/0199c5a8-0000-7000-8000-000000000000")]
     public async Task Api_endpoints_answer_401_problem_details_to_anonymous_callers(string method, string path)
     {
         await using var factory = new ApiFactory();
@@ -155,6 +158,26 @@ public sealed class AuthenticationTests
 
         Assert.NotNull(exception);
         Assert.Contains("Authentication:Google:ClientId", exception.ToString(), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("GET", "/api/admin")]
+    [InlineData("PUT", "/api/admin/grants")]
+    [InlineData("DELETE", "/api/admin/grants/0199c5a8-0000-7000-8000-000000000000")]
+    public async Task Administration_is_refused_to_accounts_that_are_not_administrators(string method, string path)
+    {
+        await using var factory = new ApiFactory(signedIn: true);
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { BaseAddress = new Uri("https://localhost") });
+        using var request = new HttpRequestMessage(new HttpMethod(method), new Uri(path, UriKind.Relative));
+        if (method != "GET")
+        {
+            request.Content = JsonContent.Create(new { email = "jo@example.com", reason = "test" });
+        }
+
+        var response = await client.SendAsync(request, TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal("ADMIN_REQUIRED", await ErrorCodeAsync(response));
     }
 
     [Fact]

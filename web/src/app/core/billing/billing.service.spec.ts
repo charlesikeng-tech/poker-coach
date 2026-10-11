@@ -7,6 +7,8 @@ import { BillingService, BillingSummary } from './billing.service';
 const FREE: BillingSummary = {
   billingEnabled: true,
   plan: 'free',
+  source: 'free',
+  grantEndsAt: null,
   status: null,
   interval: null,
   currentPeriodEnd: null,

@@ -297,6 +297,9 @@ Subscriptions (ADR-0014):
 - [x] `subscriptions.subscriptions` (migration `Subscriptions`); the Stripe customer is deleted before the
       account; without `Billing:Stripe:SecretKey` billing is off and every account has Pro
 - [x] Web: `/subscription` page, history-window notice on analysis pages, Pro prompts in the coach panels
+- [x] Administrators from `Admin:Emails` (always Pro) and offered Pro access with an optional end
+      (`subscriptions.pro_grants`, migration `ProGrants`, ADR-0015); `/admin` page with grants and
+      subscribers linked to Stripe; Google emails trusted only when verified
 - [x] Landing page `site/` for nutsiq.com (static, self-hosted fonts); legal pages as templates
 - [ ] Stripe account: Pro product with two prices, customer portal, webhook endpoint, secrets; CGV and
       legal notice (lawyer)

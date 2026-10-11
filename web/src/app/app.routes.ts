@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { anonymousOnlyGuard, authenticatedGuard } from './core/auth/guards';
+import { adminGuard, anonymousOnlyGuard, authenticatedGuard } from './core/auth/guards';
 import { Shell } from './core/layout/shell';
 
 // Route titles are translation keys, resolved by TranslatedTitleStrategy.
@@ -124,6 +124,12 @@ export const routes: Routes = [
         title: 'pages.subscription.title',
         loadComponent: () =>
           import('./features/subscription/subscription-page').then((m) => m.SubscriptionPage),
+      },
+      {
+        path: 'admin',
+        title: 'pages.admin.title',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./features/admin/admin-page').then((m) => m.AdminPage),
       },
       {
         path: 'import',

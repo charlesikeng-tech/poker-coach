@@ -13,7 +13,8 @@
     "ranges": "Ranges",
     "training": "Entraînement",
     "bankroll": "Bankroll",
-    "subscription": "Abonnement"
+    "subscription": "Abonnement",
+    "admin": "Admin"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -1462,6 +1463,75 @@
         "NO_SUBSCRIPTION": "Aucun abonnement à gérer pour ce compte.",
         "BILLING_UNAVAILABLE": "Les abonnements ne sont pas activés sur ce serveur.",
         "BILLING_FAILED": "Le service de paiement ne répond pas. Réessaie dans un instant.",
+        "network": "Connexion impossible. Vérifie ton réseau.",
+        "unknown": "Une erreur inattendue est survenue."
+      },
+      "admin": {
+        "title": "Administrateur",
+        "description": "Ton compte administre NutsIQ : tu as Pro sans abonnement."
+      },
+      "grant": {
+        "title": "Accès Pro offert",
+        "until": "Ton accès Pro est offert jusqu’au {{date}}.",
+        "openEnded": "Ton accès Pro est offert, sans date de fin.",
+        "after": "À la fin de l’accès offert, ton compte repasse en gratuit ; tu pourras t’abonner ici. Rien n’est effacé."
+      }
+    },
+    "admin": {
+      "title": "Administration",
+      "description": "Accès Pro offerts et abonnés. Remboursements, résiliations et coupons se font dans Stripe.",
+      "loadFailed": "Impossible de charger l’administration. Recharge la page.",
+      "grant": {
+        "title": "Offrir Pro",
+        "description": "Pour un partenaire, un ami ou un geste commercial. Le compte doit déjà exister ; offrir à nouveau remplace l’accès en cours.",
+        "email": "E-mail du compte",
+        "reason": "Motif",
+        "reasonPlaceholder": "Streamer partenaire, phase de test",
+        "endsOn": "Jusqu’au (inclus)",
+        "endsOnHint": "Vide : jusqu’à ce que tu le retires.",
+        "action": "Offrir Pro",
+        "done": "Pro offert à {{email}}."
+      },
+      "grants": {
+        "title": "Accès offerts ({{count}})",
+        "empty": "Aucun accès offert pour l’instant.",
+        "openEnded": "Sans fin",
+        "revoke": "Retirer",
+        "confirm": "Confirmer le retrait"
+      },
+      "subscribers": {
+        "title": "Abonnés ({{count}})",
+        "description": "Comptes qui se sont abonnés au moins une fois. Ouvre Stripe pour rembourser, résilier ou voir les factures.",
+        "empty": "Aucun abonné pour l’instant.",
+        "ends": "Se termine à cette date"
+      },
+      "columns": {
+        "account": "Compte",
+        "reason": "Motif",
+        "until": "Jusqu’au",
+        "actions": "Actions",
+        "status": "Statut",
+        "renewal": "Renouvellement"
+      },
+      "status": {
+        "incomplete": "Incomplet",
+        "incompleteExpired": "Expiré",
+        "trialing": "Essai",
+        "active": "Actif",
+        "pastDue": "Paiement en retard",
+        "canceled": "Résilié",
+        "unpaid": "Impayé",
+        "paused": "En pause",
+        "null": "—"
+      },
+      "interval": {
+        "month": "Mensuel",
+        "year": "Annuel"
+      },
+      "errors": {
+        "USER_NOT_FOUND": "Aucun compte n’utilise cette adresse. La personne doit d’abord créer son compte.",
+        "VALIDATION_FAILED": "Indique un motif et une date de fin future.",
+        "ADMIN_REQUIRED": "Réservé aux administrateurs.",
         "network": "Connexion impossible. Vérifie ton réseau.",
         "unknown": "Une erreur inattendue est survenue."
       }

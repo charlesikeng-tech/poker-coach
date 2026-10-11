@@ -10,7 +10,26 @@
   }
 
   @if (summary(); as s) {
-    @if (!s.billingEnabled) {
+    @if (s.source === 'admin') {
+      <section class="card glass current">
+        <span class="badge">{{ t('pro.badge') }}</span>
+        <h2>{{ t('admin.title') }}</h2>
+        <p>{{ t('admin.description') }}</p>
+      </section>
+    } @else if (s.source === 'grant') {
+      <section class="card glass current">
+        <span class="badge">{{ t('pro.badge') }}</span>
+        <h2><app-icon [icon]="icons.Sparkles" />{{ t('grant.title') }}</h2>
+        <p>
+          {{
+            s.grantEndsAt
+              ? t('grant.until', { date: longDate(s.grantEndsAt) })
+              : t('grant.openEnded')
+          }}
+        </p>
+        <p class="hint">{{ t('grant.after') }}</p>
+      </section>
+    } @else if (!s.billingEnabled) {
       <section class="card glass">
         <h2><app-icon [icon]="icons.Sparkles" />{{ t('beta.title') }}</h2>
         <p>{{ t('beta.description') }}</p>

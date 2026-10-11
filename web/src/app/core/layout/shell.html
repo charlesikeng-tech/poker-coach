@@ -44,7 +44,7 @@
 
       <div class="sidebar__footer">
         <ul>
-          @for (item of secondaryNavigation; track item.path) {
+          @for (item of secondaryNavigation(); track item.path) {
             <li>
               <a
                 class="nav-link"

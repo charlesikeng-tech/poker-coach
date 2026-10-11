@@ -15,3 +15,7 @@ export const anonymousOnlyGuard: CanActivateFn = () =>
   inject(SessionService).status() === 'authenticated'
     ? inject(Router).createUrlTree(['/dashboard'])
     : true;
+
+/** UX only: administration routes answer 403 to anyone else. */
+export const adminGuard: CanActivateFn = () =>
+  inject(SessionService).user()?.isAdmin ? true : inject(Router).createUrlTree(['/dashboard']);

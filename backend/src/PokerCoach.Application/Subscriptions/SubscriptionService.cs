@@ -8,6 +8,8 @@ namespace PokerCoach.Application.Subscriptions;
 public sealed record BillingSummary(
     bool BillingEnabled,
     Plan Plan,
+    PlanSource Source,
+    DateTimeOffset? GrantEndsAt,
     SubscriptionStatus? Status,
     BillingInterval? Interval,
     DateTimeOffset? CurrentPeriodEnd,
@@ -70,9 +72,12 @@ public sealed class SubscriptionService(
         var now = time.GetUtcNow();
         var monthStart = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero);
         var used = await coachingLedger.CountCallsSinceAsync(userId, LeakCoachService.Purpose, monthStart, cancellationToken);
+        var access = await plans.GetAccessAsync(userId, cancellationToken);
         return new BillingSummary(
             gateway.IsConfigured,
-            await plans.GetPlanAsync(userId, cancellationToken),
+            access.Plan,
+            access.Source,
+            access.GrantEndsAt,
             subscription?.Status,
             subscription?.Interval,
             subscription?.CurrentPeriodEnd,

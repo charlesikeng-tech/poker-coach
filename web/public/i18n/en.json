@@ -13,7 +13,8 @@
     "ranges": "Ranges",
     "training": "Training",
     "bankroll": "Bankroll",
-    "subscription": "Subscription"
+    "subscription": "Subscription",
+    "admin": "Admin"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -1462,6 +1463,75 @@
         "NO_SUBSCRIPTION": "This account has no subscription to manage.",
         "BILLING_UNAVAILABLE": "Subscriptions are not enabled on this server.",
         "BILLING_FAILED": "The payment service is not answering. Try again in a moment.",
+        "network": "Cannot connect. Check your network.",
+        "unknown": "Something unexpected went wrong."
+      },
+      "admin": {
+        "title": "Administrator",
+        "description": "Your account administers NutsIQ: you have Pro without a subscription."
+      },
+      "grant": {
+        "title": "Pro access offered",
+        "until": "Your Pro access is offered until {{date}}.",
+        "openEnded": "Your Pro access is offered, with no end date.",
+        "after": "When the offered access ends, your account goes back to Free; you can subscribe here. Nothing is deleted."
+      }
+    },
+    "admin": {
+      "title": "Administration",
+      "description": "Offered Pro access and subscribers. Refunds, cancellations and coupons are done in Stripe.",
+      "loadFailed": "Could not load the administration. Reload the page.",
+      "grant": {
+        "title": "Offer Pro",
+        "description": "For a partner, a friend or a goodwill gesture. The account must already exist; offering again replaces the current access.",
+        "email": "Account email",
+        "reason": "Reason",
+        "reasonPlaceholder": "Partner streamer, test phase",
+        "endsOn": "Until (included)",
+        "endsOnHint": "Empty: until you take it back.",
+        "action": "Offer Pro",
+        "done": "Pro offered to {{email}}."
+      },
+      "grants": {
+        "title": "Offered access ({{count}})",
+        "empty": "No offered access yet.",
+        "openEnded": "No end",
+        "revoke": "Take back",
+        "confirm": "Confirm"
+      },
+      "subscribers": {
+        "title": "Subscribers ({{count}})",
+        "description": "Accounts that subscribed at least once. Open Stripe to refund, cancel or see invoices.",
+        "empty": "No subscribers yet.",
+        "ends": "Ends on this date"
+      },
+      "columns": {
+        "account": "Account",
+        "reason": "Reason",
+        "until": "Until",
+        "actions": "Actions",
+        "status": "Status",
+        "renewal": "Renewal"
+      },
+      "status": {
+        "incomplete": "Incomplete",
+        "incompleteExpired": "Expired",
+        "trialing": "Trial",
+        "active": "Active",
+        "pastDue": "Payment overdue",
+        "canceled": "Cancelled",
+        "unpaid": "Unpaid",
+        "paused": "Paused",
+        "null": "—"
+      },
+      "interval": {
+        "month": "Monthly",
+        "year": "Yearly"
+      },
+      "errors": {
+        "USER_NOT_FOUND": "No account uses this address. The person must create an account first.",
+        "VALIDATION_FAILED": "Give a reason and a future end date.",
+        "ADMIN_REQUIRED": "Administrators only.",
         "network": "Cannot connect. Check your network.",
         "unknown": "Something unexpected went wrong."
       }

@@ -190,6 +190,67 @@ public sealed class SubscriptionServiceTests
         Assert.Null(await gate.CheckAsync(jo.Id, "tournament-debrief", 10, 0, Ct));
     }
 
+    [Fact]
+    public async Task Administrators_have_pro_without_paying_whatever_the_case_of_their_email()
+    {
+        admins.Emails.Add(" JO@example.com ");
+        var other = User.Register("Max", "max@example.com", "fr", time.GetUtcNow());
+        users.AddUser(other);
+
+        Assert.Equal(new PlanGrant(Plan.Pro, PlanSource.Admin), await Plans().GetAccessAsync(jo.Id, Ct));
+        Assert.True(await Plans().IsAdminAsync(jo.Id, Ct));
+        Assert.Equal(new PlanGrant(Plan.Free, PlanSource.Free), await Plans().GetAccessAsync(other.Id, Ct));
+        Assert.False(await Plans().IsAdminAsync(other.Id, Ct));
+    }
+
+    [Fact]
+    public async Task An_offered_access_gives_pro_until_its_end_or_until_revoked()
+    {
+        var admin = Admin();
+        var end = time.GetUtcNow().AddDays(30);
+
+        Assert.Equal(GrantResult.Granted, await admin.GrantAsync(Guid.NewGuid(), "JO@example.com", "Streamer partenaire", end, Ct));
+        Assert.Equal(new PlanGrant(Plan.Pro, PlanSource.Grant, end), await Plans().GetAccessAsync(jo.Id, Ct));
+        Assert.Null(await Plans().HistoryStartAsync(jo.Id, Ct));
+
+        time.Advance(TimeSpan.FromDays(31));
+        Assert.Equal(Plan.Free, await Plans().GetPlanAsync(jo.Id, Ct));
+
+        await admin.GrantAsync(Guid.NewGuid(), "jo@example.com", "Prolongé", null, Ct);
+        Assert.Equal(new PlanGrant(Plan.Pro, PlanSource.Grant), await Plans().GetAccessAsync(jo.Id, Ct));
+        Assert.Equal("Prolongé", Assert.Single(await admin.ListGrantsAsync(Ct)).Reason);
+
+        Assert.True(await admin.RevokeAsync(jo.Id, Ct));
+        Assert.False(await admin.RevokeAsync(jo.Id, Ct));
+        Assert.Equal(Plan.Free, await Plans().GetPlanAsync(jo.Id, Ct));
+    }
+
+    [Fact]
+    public async Task Grants_need_a_known_account_a_reason_and_a_future_end()
+    {
+        var admin = Admin();
+
+        Assert.Equal(GrantResult.UserNotFound, await admin.GrantAsync(Guid.NewGuid(), "nobody@example.com", "x", null, Ct));
+        Assert.Equal(GrantResult.UserNotFound, await admin.GrantAsync(Guid.NewGuid(), "not an email", "x", null, Ct));
+        Assert.Equal(GrantResult.InvalidReason, await admin.GrantAsync(Guid.NewGuid(), "jo@example.com", " ", null, Ct));
+        Assert.Equal(GrantResult.EndInPast, await admin.GrantAsync(Guid.NewGuid(), "jo@example.com", "x", time.GetUtcNow(), Ct));
+        Assert.Empty(store.Grants);
+    }
+
+    [Fact]
+    public async Task A_paid_subscription_comes_before_a_grant_and_a_grantee_can_still_subscribe()
+    {
+        await Admin().GrantAsync(Guid.NewGuid(), "jo@example.com", "Ami", null, Ct);
+
+        Assert.NotNull((await Service().StartCheckoutAsync(jo.Id, BillingInterval.Month, "fr", AppUrl, Ct)).Url);
+
+        stripe.Subscriptions["cus_1"].Add(new SubscriptionState("sub_1", SubscriptionStatus.Active, BillingInterval.Month, null, false));
+        await Service().HandleWebhookAsync("cus_1", "valid", Ct);
+        Assert.Equal(PlanSource.Subscription, (await Service().GetAsync(jo.Id, Ct)).Source);
+    }
+
+    private AdminService Admin() => new(store, new InMemoryLocalAccountStore(users), time);
+
     private async Task SubscribeAsync(SubscriptionStatus status)
     {
         await Service().StartCheckoutAsync(jo.Id, BillingInterval.Month, "fr", AppUrl, Ct);
@@ -198,7 +259,9 @@ public sealed class SubscriptionServiceTests
         await Service().HandleWebhookAsync("cus_1", "valid", Ct);
     }
 
-    private PlanAccess Plans(FakeBillingGateway? gateway = null) => new(store, gateway ?? stripe, new FreePlanOptions(), time);
+    private readonly AdminOptions admins = new();
+
+    private PlanAccess Plans(FakeBillingGateway? gateway = null) => new(store, gateway ?? stripe, users, admins, new FreePlanOptions(), time);
 
     private SubscriptionService Service(FakeBillingGateway? gateway = null) =>
         new(store, gateway ?? stripe, Plans(gateway), new UserProfileService(users), new LedgerStore(), time);

@@ -1,0 +1,150 @@
+<ng-container *transloco="let t; prefix: 'pages.admin'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <section class="card glass">
+    <h2><app-icon [icon]="icons.Gift" />{{ t('grant.title') }}</h2>
+    <p>{{ t('grant.description') }}</p>
+    <form class="grant-form" (submit)="grant($event)">
+      <label class="field">
+        <span>{{ t('grant.email') }}</span>
+        <input
+          id="grant-email"
+          type="email"
+          required
+          autocomplete="off"
+          [value]="email()"
+          (input)="email.set(value($event))"
+        />
+      </label>
+      <label class="field">
+        <span>{{ t('grant.reason') }}</span>
+        <input
+          id="grant-reason"
+          type="text"
+          required
+          maxlength="200"
+          [placeholder]="t('grant.reasonPlaceholder')"
+          [value]="reason()"
+          (input)="reason.set(value($event))"
+        />
+      </label>
+      <label class="field">
+        <span>{{ t('grant.endsOn') }}</span>
+        <input id="grant-ends" type="date" [value]="endsOn()" (input)="endsOn.set(value($event))" />
+        <small>{{ t('grant.endsOnHint') }}</small>
+      </label>
+      <button appButton variant="primary" type="submit" [disabled]="saving()">
+        {{ t('grant.action') }}
+      </button>
+    </form>
+    @if (granted(); as who) {
+      <p class="notice" role="status">{{ t('grant.done', { email: who }) }}</p>
+    }
+    @if (grantError(); as code) {
+      <p class="notice notice--danger" role="alert">{{ t('errors.' + code) }}</p>
+    }
+  </section>
+
+  @if (overview(); as o) {
+    <section class="card glass">
+      <h2>{{ t('grants.title', { count: o.grants.length }) }}</h2>
+      @if (o.grants.length === 0) {
+        <p>{{ t('grants.empty') }}</p>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ t('columns.account') }}</th>
+                <th>{{ t('columns.reason') }}</th>
+                <th>{{ t('columns.until') }}</th>
+                <th>
+                  <span class="sr-only">{{ t('columns.actions') }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (g of o.grants; track g.userId) {
+                <tr>
+                  <td>
+                    <strong>{{ g.displayName }}</strong>
+                    <span class="muted">{{ g.email ?? '—' }}</span>
+                  </td>
+                  <td>{{ g.reason }}</td>
+                  <td class="numeric">{{ g.endsAt ? date(g.endsAt) : t('grants.openEnded') }}</td>
+                  <td class="actions">
+                    <button
+                      appButton
+                      variant="ghost"
+                      type="button"
+                      [class.danger]="confirmingRevoke() === g.userId"
+                      (click)="revoke(g)"
+                    >
+                      <app-icon [icon]="icons.Trash2" />{{
+                        confirmingRevoke() === g.userId ? t('grants.confirm') : t('grants.revoke')
+                      }}
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <section class="card glass">
+      <h2>{{ t('subscribers.title', { count: o.subscribers.length }) }}</h2>
+      <p>{{ t('subscribers.description') }}</p>
+      @if (o.subscribers.length === 0) {
+        <p class="muted">{{ t('subscribers.empty') }}</p>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ t('columns.account') }}</th>
+                <th>{{ t('columns.status') }}</th>
+                <th>{{ t('columns.renewal') }}</th>
+                <th><span class="sr-only">Stripe</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of o.subscribers; track s.userId) {
+                <tr>
+                  <td>
+                    <strong>{{ s.displayName }}</strong>
+                    <span class="muted">{{ s.email ?? '—' }}</span>
+                  </td>
+                  <td>
+                    <span class="status" [attr.data-status]="s.status">{{
+                      t('status.' + s.status)
+                    }}</span>
+                    @if (s.interval) {
+                      <span class="muted">{{ t('interval.' + s.interval) }}</span>
+                    }
+                  </td>
+                  <td class="numeric">
+                    {{ date(s.currentPeriodEnd) }}
+                    @if (s.cancelAtPeriodEnd) {
+                      <span class="muted">{{ t('subscribers.ends') }}</span>
+                    }
+                  </td>
+                  <td class="actions">
+                    <a [href]="s.stripeUrl" target="_blank" rel="noopener">
+                      Stripe <app-icon [icon]="icons.ExternalLink" />
+                    </a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  } @else if (loadFailed()) {
+    <p class="notice notice--danger" role="alert">{{ t('loadFailed') }}</p>
+  } @else {
+    <span class="skeleton" style="height: 12rem"></span>
+  }
+</ng-container>

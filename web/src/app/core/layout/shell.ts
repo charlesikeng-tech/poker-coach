@@ -12,7 +12,11 @@ import { SessionService } from '../auth/session.service';
 import { BillingService } from '../billing/billing.service';
 import { WelcomeService } from '../auth/welcome';
 import { LanguageSelect } from '../i18n/language-select';
-import { PRIMARY_NAVIGATION, SECONDARY_NAVIGATION } from '../navigation/navigation';
+import {
+  ADMIN_NAVIGATION,
+  PRIMARY_NAVIGATION,
+  SECONDARY_NAVIGATION,
+} from '../navigation/navigation';
 import { LocalPreferenceStore } from '../storage/local-preference-store';
 import { ThemeService } from '../theme/theme.service';
 import { WelcomeIntro } from './welcome-intro';
@@ -46,7 +50,11 @@ export class Shell {
   protected readonly session = inject(SessionService);
 
   protected readonly primaryNavigation = PRIMARY_NAVIGATION;
-  protected readonly secondaryNavigation = SECONDARY_NAVIGATION;
+  protected readonly secondaryNavigation = computed(() =>
+    this.session.user()?.isAdmin
+      ? [...SECONDARY_NAVIGATION, ADMIN_NAVIGATION]
+      : SECONDARY_NAVIGATION,
+  );
   protected readonly billing = inject(BillingService);
   protected readonly icons = { History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X };
 

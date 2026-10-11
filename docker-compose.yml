@@ -36,6 +36,7 @@ services:
       Billing__Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET:-}
       Billing__Stripe__Prices__Monthly: ${STRIPE_PRICE_MONTHLY:-}
       Billing__Stripe__Prices__Yearly: ${STRIPE_PRICE_YEARLY:-}
+      Admin__Emails__0: ${ADMIN_EMAIL:-}
       App__PublicUrl: http://localhost:8080
     depends_on:
       postgres:

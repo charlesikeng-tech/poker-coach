@@ -21,6 +21,10 @@ export interface BillingSummary {
   /** False: billing is off on this server and every account has Pro. */
   readonly billingEnabled: boolean;
   readonly plan: Plan;
+  /** Why the account has its plan. */
+  readonly source: 'billingOff' | 'free' | 'subscription' | 'grant' | 'admin';
+  /** End of an offered access; null when open-ended. */
+  readonly grantEndsAt: string | null;
   readonly status: SubscriptionStatus | null;
   readonly interval: BillingInterval | null;
   /** Renewal date, or end date when cancelAtPeriodEnd. */
