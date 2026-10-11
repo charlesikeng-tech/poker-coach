@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PokerCoach.Application.Coaching;
@@ -54,8 +55,14 @@ internal sealed partial class AnthropicCoachingModel(
         Write in the language requested in the message, with its accents written as plain characters
         (é, è, ê, à, ç, ô, û, ñ, á), never as escape sequences or mis-encoded characters. Address the
         player informally ("tu" in French,
-        "tú" in Spanish). Keep poker terms in English as players say them in every language: leak, c-bet,
-        3-bet, range, steal, check-raise, all-in, bluff. Never translate "leak" (not "fuite", not "fuga").
+        "tú" in Spanish).
+
+        Poker rule: never translate poker vocabulary. Keep these terms exactly in English in every language,
+        including in French and Spanish: leak, c-bet, 3-bet, range, steal, check-raise, all-in, bluff,
+        limp, raise, fold, call, bet, shove, preflop, flop, turn, river, showdown, value bet, overbet,
+        float, continuation bet, double barrel, donk bet. Do not rewrite them as French/Spanish words or
+        local equivalents. For example, never write "fuite" for leak, "relance" for 3-bet, or "all-in" as a
+        translated phrase; keep the English term exactly as written here.
         """;
 
     private const string Instructions = Context + """
@@ -217,6 +224,18 @@ internal sealed partial class AnthropicCoachingModel(
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
     };
 
+    private static readonly string[] TranslatedPokerTerms =
+    [
+        "fuite", "fuga",
+        "mise de continuation", "apuesta de continuación",
+        "sur-relance", "surrelance", "resubida",
+        "éventail", "rango",
+        "tapis", "farol",
+        "limper", "limpear",
+    ];
+
+    private const int MaxCorrectionAttempts = 1;
+
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
     private const int DebriefMaxOutputTokens = 12_000;
 
@@ -325,8 +344,15 @@ internal sealed partial class AnthropicCoachingModel(
     private static List<string> Clean(IReadOnlyList<string>? items, int max) =>
         (items ?? []).Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()).Take(max).ToList();
 
-    /// <summary>One Messages API call: cached instructions, the user's facts, an answer bound to the schema.</summary>
-    private async Task<(T Answer, ModelUsage Usage)> CallAsync<T>(string instructions, JsonObject schema, string user, int maxTokens, Reasoning reasoning, CancellationToken cancellationToken)
+    /// <summary>Calls the Messages API and makes one correction attempt for a rejected answer.</summary>
+    private async Task<(T Answer, ModelUsage Usage)> CallAsync<T>(
+        string instructions,
+        JsonObject schema,
+        string user,
+        int maxTokens,
+        Reasoning reasoning,
+        CancellationToken cancellationToken,
+        int correctionAttempts = 0)
         where T : class
     {
         var settings = options.Value;
@@ -409,6 +435,28 @@ internal sealed partial class AnthropicCoachingModel(
             var answer = JsonNode.Parse(text) ?? throw new CoachingModelException("Empty model answer.");
             return (Repaired(answer).Deserialize<T>(JsonOptions) ?? throw new CoachingModelException("Empty model answer."), usage);
         }
+        catch (AnswerRejectedException exception) when (correctionAttempts < MaxCorrectionAttempts)
+        {
+            LogCorrectionAttempt(logger, exception.Message);
+            var correction = user
+                + "\n\nYour previous answer was rejected: " + exception.Message
+                + "\nRewrite the complete answer in valid UTF-8, keeping poker vocabulary in English. "
+                + "Preserve the meaning and facts; do not introduce new facts. Return only the corrected JSON."
+                + "\nPrevious answer to correct:\n" + text;
+            var (correctedAnswer, correctionUsage) = await CallAsync<T>(
+                instructions,
+                schema,
+                correction,
+                maxTokens,
+                reasoning,
+                cancellationToken,
+                correctionAttempts + 1);
+            return (correctedAnswer, CombineUsage(usage, correctionUsage));
+        }
+        catch (AnswerRejectedException exception)
+        {
+            throw new CoachingModelException(exception.Message);
+        }
         catch (JsonException exception)
         {
             throw new CoachingModelException("The model answer is not valid JSON.", exception);
@@ -445,13 +493,33 @@ internal sealed partial class AnthropicCoachingModel(
                 return array;
             case JsonValue value when value.TryGetValue<string>(out var text):
                 var repaired = ModelText.Repair(text);
-                return ModelText.IsGarbled(repaired)
-                    ? throw new CoachingModelException("The model answer has garbled characters (mojibake).")
-                    : JsonValue.Create(repaired);
+                if (ModelText.IsGarbled(repaired))
+                {
+                    throw new AnswerRejectedException("The model answer has garbled characters (mojibake).");
+                }
+
+                if (ContainsTranslatedPokerTerm(repaired))
+                {
+                    throw new AnswerRejectedException("The model answer translated poker vocabulary.");
+                }
+
+                return JsonValue.Create(repaired);
             default:
                 return node;
         }
     }
+
+    internal static bool ContainsTranslatedPokerTerm(string text) =>
+        TranslatedPokerTerms.Any(term =>
+            Regex.IsMatch(text, $@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(term)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant));
+
+    private static ModelUsage CombineUsage(ModelUsage first, ModelUsage second) =>
+        new(
+            second.Model,
+            first.InputTokens + second.InputTokens,
+            first.OutputTokens + second.OutputTokens,
+            first.CacheWriteTokens + second.CacheWriteTokens,
+            first.CacheReadTokens + second.CacheReadTokens);
 
     /// <summary>Anthropic errors are <c>{"type":"error","error":{"type":"…","message":"…"}}</c>; anything else is reported as unknown.</summary>
     private static async Task<(string Type, string Message)> ReadErrorAsync(HttpResponseMessage response, CancellationToken cancellationToken)
@@ -479,6 +547,9 @@ internal sealed partial class AnthropicCoachingModel(
     [LoggerMessage(Level = LogLevel.Warning, Message = "Coaching {Task} answer rejected: {Reason}")]
     private static partial void LogRejected(ILogger logger, string task, string reason);
 
+    [LoggerMessage(Level = LogLevel.Information, Message = "Retrying coaching answer after validation rejection: {Reason}")]
+    private static partial void LogCorrectionAttempt(ILogger logger, string reason);
+
     [LoggerMessage(Level = LogLevel.Information, Message = "Coaching model {Model}: {InputTokens} in, {OutputTokens} out, {CacheReadTokens} cached, {ElapsedMs} ms.")]
     private static partial void LogCall(ILogger logger, string model, int inputTokens, int outputTokens, int cacheReadTokens, double elapsedMs);
 
@@ -495,6 +566,10 @@ internal sealed partial class AnthropicCoachingModel(
         [property: JsonPropertyName("output_tokens")] int OutputTokens,
         [property: JsonPropertyName("cache_creation_input_tokens")] int? CacheCreationInputTokens,
         [property: JsonPropertyName("cache_read_input_tokens")] int? CacheReadInputTokens);
+
+    private sealed class AnswerRejectedException(string message) : Exception(message)
+    {
+    }
 
     private sealed record Answer(string Summary, string WhyItCosts, IReadOnlyList<string>? Actions, IReadOnlyList<AnswerHand>? Hands);
 
