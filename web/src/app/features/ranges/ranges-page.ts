@@ -11,11 +11,13 @@ import {
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CircleAlert, LoaderCircle } from 'lucide';
 
+import { BillingService, Feature } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
+import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { RangeGauge } from '../leaks/range-gauge';
 import { PokerPosition } from '../statistics/statistics-api';
@@ -60,7 +62,16 @@ export const POSITION_SHORT: Record<PokerPosition, string> = {
 
 @Component({
   selector: 'app-ranges-page',
-  imports: [TranslocoDirective, FormatToggle, PageHeader, EmptyState, Button, Icon, RangeGauge],
+  imports: [
+    PlanLock,
+    TranslocoDirective,
+    FormatToggle,
+    PageHeader,
+    EmptyState,
+    Button,
+    Icon,
+    RangeGauge,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './ranges-page.html',
@@ -68,6 +79,7 @@ export const POSITION_SHORT: Record<PokerPosition, string> = {
 })
 export class RangesPage {
   private readonly api = inject(RangesApi);
+  protected readonly billing = inject(BillingService);
   private readonly language = inject(LanguageService);
 
   protected readonly periods = PERIOD_FILTERS;
@@ -85,6 +97,14 @@ export class RangesPage {
   /** Push band: stack of the computed equilibrium. */
   protected readonly pushStack = signal(10);
   protected readonly state = signal<LoadState>('loading');
+  /** The feature this view needs and the offer lacks (ADR-0016); null when open. */
+  protected readonly locked = computed<Feature | null>(() =>
+    !this.billing.allows('openingRanges')
+      ? 'openingRanges'
+      : this.band() === 'push' && !this.billing.allows('pushFoldRanges')
+        ? 'pushFoldRanges'
+        : null,
+  );
   protected readonly data = signal<OpeningRanges | null>(null);
   protected readonly selected = signal<PokerPosition | null>(null);
   protected readonly hovered = signal<RangeCell | null>(null);
@@ -200,6 +220,11 @@ export class RangesPage {
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
+    await this.billing.load();
+    if (this.locked() !== null) {
+      this.state.set('ready');
+      return;
+    }
     if (this.data() === null) {
       this.state.set('loading');
     }

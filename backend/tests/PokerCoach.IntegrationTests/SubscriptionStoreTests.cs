@@ -61,20 +61,20 @@ public sealed class SubscriptionStoreTests(PostgresFixture fixture)
         await using (var scope = fixture.Services.CreateAsyncScope())
         {
             var store = scope.ServiceProvider.GetRequiredService<ISubscriptionStore>();
-            await store.SaveGrantAsync(ProGrant.Give(userId, "Partenaire", now.AddDays(30), admin, now), Ct);
-            await store.SaveGrantAsync(ProGrant.Give(userId, "Partenaire, prolongé", null, admin, now), Ct);
+            await store.SaveGrantAsync(ProGrant.Give(userId, Plan.Pro, "Partenaire", now.AddDays(30), admin, now), Ct);
+            await store.SaveGrantAsync(ProGrant.Give(userId, Plan.Elite, "Partenaire, prolongé", null, admin, now), Ct);
         }
 
         await using (var scope = fixture.Services.CreateAsyncScope())
         {
             var store = scope.ServiceProvider.GetRequiredService<ISubscriptionStore>();
             var grant = Assert.Single(await store.ListGrantsAsync(Ct), g => g.UserId == userId);
-            Assert.Equal(("Partenaire, prolongé", (DateTimeOffset?)null, "Jo"), (grant.Reason, grant.EndsAt, grant.DisplayName));
+            Assert.Equal(("Partenaire, prolongé", (DateTimeOffset?)null, "Jo", Plan.Elite), (grant.Reason, grant.EndsAt, grant.DisplayName, grant.Plan));
 
             Assert.True(await store.DeleteGrantAsync(userId, Ct));
             Assert.Null(await store.FindGrantAsync(userId, Ct));
 
-            await store.SaveGrantAsync(ProGrant.Give(userId, "Ami", null, admin, now), Ct);
+            await store.SaveGrantAsync(ProGrant.Give(userId, Plan.Pro, "Ami", null, admin, now), Ct);
             Assert.True(await scope.ServiceProvider.GetRequiredService<IAccountDataStore>().DeleteUserAsync(userId, Ct));
         }
 
@@ -95,7 +95,7 @@ public sealed class SubscriptionStoreTests(PostgresFixture fixture)
         {
             var store = scope.ServiceProvider.GetRequiredService<ISubscriptionStore>();
             var subscription = Subscription.Open(paying, $"cus_{Guid.NewGuid():N}", now);
-            subscription.Sync(new SubscriptionState("sub_1", SubscriptionStatus.Active, BillingInterval.Month, now.AddDays(30), false), now);
+            subscription.Sync(new SubscriptionState("sub_1", SubscriptionStatus.Active, BillingInterval.Month, now.AddDays(30), false, Plan.Elite), now);
             await store.TryAddAsync(subscription, Ct);
             await store.TryAddAsync(Subscription.Open(browsing, $"cus_{Guid.NewGuid():N}", now), Ct);
         }
@@ -103,7 +103,7 @@ public sealed class SubscriptionStoreTests(PostgresFixture fixture)
         await using (var scope = fixture.Services.CreateAsyncScope())
         {
             var subscribers = await scope.ServiceProvider.GetRequiredService<ISubscriptionStore>().ListSubscribersAsync(500, Ct);
-            Assert.Contains(subscribers, s => s.UserId == paying && s.Status == SubscriptionStatus.Active);
+            Assert.Contains(subscribers, s => s.UserId == paying && s.Status == SubscriptionStatus.Active && s.Tier == Plan.Elite);
             Assert.DoesNotContain(subscribers, s => s.UserId == browsing);
         }
     }

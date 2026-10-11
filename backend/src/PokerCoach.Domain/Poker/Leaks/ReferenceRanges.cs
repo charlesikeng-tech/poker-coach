@@ -75,3 +75,16 @@ public static class ReferenceRanges
         new(LeakStat.Rfi, PokerPosition.SmallBlind, 0.28m, 0.50m),
     ];
 }
+
+public static class LeakStats
+{
+    /// <summary>Statistics of play after the flop (the advanced leaks of ADR-0016).</summary>
+    public static bool IsPostflop(this LeakStat stat) => stat is LeakStat.CbetFlop
+        or LeakStat.WentToShowdown
+        or LeakStat.WonAtShowdown
+        or LeakStat.FoldToCbetFlop
+        or LeakStat.CbetTurn
+        or LeakStat.CheckRaiseFlop
+        or LeakStat.WonWhenSawFlop
+        or LeakStat.PostflopAggression;
+}

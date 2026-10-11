@@ -1,7 +1,9 @@
 <ng-container *transloco="let t; prefix: 'pages.ranges'">
   <app-page-header [heading]="t('title')" [description]="t('description')" />
 
-  @if (state() === 'error') {
+  @if (locked() === 'openingRanges') {
+    <app-plan-lock feature="openingRanges" />
+  } @else if (state() === 'error') {
     <app-empty-state
       [icon]="icons.CircleAlert"
       [heading]="t('error.title')"
@@ -64,28 +66,32 @@
       </div>
     </div>
 
-    <nav class="positions" [attr.aria-label]="t('positions')">
-      @for (p of data.positions; track p.position) {
-        <button
-          type="button"
-          class="position"
-          [class.position--active]="range()?.position === p.position"
-          [attr.aria-pressed]="range()?.position === p.position"
-          (click)="selected.set(p.position)"
-        >
-          <strong>{{ short[p.position] }}</strong>
-          <span class="numeric">
-            @if (view() === 'reference') {
-              {{ percent(p.referenceShare) }}
-            } @else {
-              {{ percent(p.openRate.rate) }}
-            }
-          </span>
-        </button>
-      }
-    </nav>
+    @if (locked() === 'pushFoldRanges') {
+      <app-plan-lock feature="pushFoldRanges" />
+    } @else {
+      <nav class="positions" [attr.aria-label]="t('positions')">
+        @for (p of data.positions; track p.position) {
+          <button
+            type="button"
+            class="position"
+            [class.position--active]="range()?.position === p.position"
+            [attr.aria-pressed]="range()?.position === p.position"
+            (click)="selected.set(p.position)"
+          >
+            <strong>{{ short[p.position] }}</strong>
+            <span class="numeric">
+              @if (view() === 'reference') {
+                {{ percent(p.referenceShare) }}
+              } @else {
+                {{ percent(p.openRate.rate) }}
+              }
+            </span>
+          </button>
+        }
+      </nav>
+    }
 
-    @if (range(); as r) {
+    @if (locked() === null ? range() : null; as r) {
       <div class="layout">
         <!-- Keyed on position and view: the grid fills again when either changes. -->
         @for (shown of [r.position + view()]; track shown) {

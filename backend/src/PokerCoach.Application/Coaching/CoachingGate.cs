@@ -4,34 +4,44 @@ using PokerCoach.Domain.Subscriptions;
 namespace PokerCoach.Application.Coaching;
 
 /// <summary>
-/// What every paid model call goes through (ADR-0008, ADR-0014): the model is configured, the plan opens the
-/// feature, the user is under the feature's daily limit (and, on Free, its monthly allowance), the month is
+/// What every paid model call goes through (ADR-0008, ADR-0016): the model is configured, the plan opens the
+/// feature, the month's AI credits cover the call, the user is under the feature's daily limit, the month is
 /// under the global budget; afterwards, the call is billed to the ledger.
 /// </summary>
 internal sealed class CoachingGate(ICoachingStore store, ICoachingModel model, CoachingOptions options, PlanAccess plans, TimeProvider time)
 {
-    /// <param name="freeMonthlyAllowance">New texts a Free user gets per calendar month; 0: Pro only.</param>
-    public async Task<CoachingFailure?> CheckAsync(Guid userId, string purpose, int dailyLimit, int freeMonthlyAllowance, CancellationToken cancellationToken)
+    public const int ProReviewsPerMonth = 1;
+
+    /// <param name="feature">The feature the call belongs to, when the plans gate it; null: every plan (credits apply).</param>
+    public async Task<CoachingFailure?> CheckAsync(Guid userId, string purpose, int dailyLimit, Feature? feature, CancellationToken cancellationToken)
     {
         if (!model.IsAvailable)
         {
             return CoachingFailure.Unavailable;
         }
 
-        var now = time.GetUtcNow();
-        var monthStart = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero);
-        if (await plans.GetPlanAsync(userId, cancellationToken) == Plan.Free)
+        var access = await plans.GetAccessAsync(userId, cancellationToken);
+        if (feature is { } gated && !access.Plan.Allows(gated))
         {
-            if (freeMonthlyAllowance <= 0)
-            {
-                return CoachingFailure.PlanRequired;
-            }
+            return CoachingFailure.PlanRequired;
+        }
 
-            // Counts billed calls, a rejected answer included: rare, and it keeps one ledger as the truth.
-            if (await store.CountCallsSinceAsync(userId, purpose, monthStart, cancellationToken) >= freeMonthlyAllowance)
-            {
-                return CoachingFailure.PlanLimitReached;
-            }
+        var now = time.GetUtcNow();
+        var monthStart = CoachingCredits.MonthStart(now);
+
+        // Pro gets the coach's review once a month, Elite every week (ADR-0016).
+        if (feature == Feature.WeekReview && access.Plan == Plan.Pro
+            && await store.CountCallsSinceAsync(userId, purpose, monthStart, cancellationToken) >= ProReviewsPerMonth)
+        {
+            return CoachingFailure.PlanLimitReached;
+        }
+
+        // Administrators are bounded by the daily limits and the global budget only.
+        if (access.Source != PlanSource.Admin
+            && await CoachingCredits.UsedSinceAsync(store, userId, monthStart, cancellationToken) + CoachingCredits.CostOf(purpose)
+                > plans.Limits.For(access.Plan).MonthlyCredits)
+        {
+            return CoachingFailure.PlanLimitReached;
         }
 
         var today = new DateTimeOffset(now.Date, TimeSpan.Zero);

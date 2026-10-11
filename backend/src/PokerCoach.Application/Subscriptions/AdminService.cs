@@ -9,6 +9,7 @@ public enum GrantResult
     Granted,
     UserNotFound,
     InvalidReason,
+    InvalidPlan,
     EndInPast,
 }
 
@@ -29,11 +30,16 @@ public sealed class AdminService(ISubscriptionStore store, ILocalAccountStore ac
         store.ListSubscribersAsync(MaxSubscribers, cancellationToken);
 
     /// <param name="endsAt">Null: until revoked.</param>
-    public async Task<GrantResult> GrantAsync(Guid adminId, string email, string reason, DateTimeOffset? endsAt, CancellationToken cancellationToken)
+    public async Task<GrantResult> GrantAsync(Guid adminId, string email, Plan plan, string reason, DateTimeOffset? endsAt, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(reason))
         {
             return GrantResult.InvalidReason;
+        }
+
+        if (plan == Plan.Starter)
+        {
+            return GrantResult.InvalidPlan;
         }
 
         var now = time.GetUtcNow();
@@ -48,7 +54,7 @@ public sealed class AdminService(ISubscriptionStore store, ILocalAccountStore ac
             return GrantResult.UserNotFound;
         }
 
-        await store.SaveGrantAsync(ProGrant.Give(user.Id, reason, endsAt, adminId, now), cancellationToken);
+        await store.SaveGrantAsync(ProGrant.Give(user.Id, plan, reason, endsAt, adminId, now), cancellationToken);
         return GrantResult.Granted;
     }
 

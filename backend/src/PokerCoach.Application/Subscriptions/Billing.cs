@@ -4,16 +4,36 @@ using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Application.Subscriptions;
 
-/// <summary>Free-plan limits (ADR-0014). Configuration section "Billing:Free": a pricing test needs no release.</summary>
-public sealed class FreePlanOptions
+/// <summary>History and AI credits of one offer.</summary>
+public sealed class PlanLimits
 {
-    public const string SectionName = "Billing:Free";
+    /// <summary>Days of history shown in statistics, leaks, ranges and tournament lists; null: all of it.</summary>
+    public int? HistoryDays { get; set; }
 
-    /// <summary>Days of history a Free user sees in statistics, leaks, ranges and tournament lists.</summary>
-    public int HistoryDays { get; set; } = 30;
+    /// <summary>AI credits per calendar month (UTC): an explanation costs 1, a review 2, a debrief 5.</summary>
+    public int MonthlyCredits { get; set; }
+}
 
-    /// <summary>New leak explanations a Free user can generate per calendar month (UTC).</summary>
-    public int MonthlyExplanations { get; set; } = 3;
+/// <summary>
+/// Limits per offer (ADR-0016). Configuration section "Billing:Plans": a pricing test needs no release. What each
+/// offer opens besides these limits is the product matrix, <see cref="PlanFeatures"/>.
+/// </summary>
+public sealed class PlanOptions
+{
+    public const string SectionName = "Billing:Plans";
+
+    public PlanLimits Starter { get; set; } = new() { HistoryDays = 30, MonthlyCredits = 3 };
+
+    public PlanLimits Pro { get; set; } = new() { MonthlyCredits = 100 };
+
+    public PlanLimits Elite { get; set; } = new() { MonthlyCredits = 400 };
+
+    public PlanLimits For(Plan plan) => plan switch
+    {
+        Plan.Elite => Elite,
+        Plan.Pro => Pro,
+        _ => Starter,
+    };
 }
 
 /// <summary>Configuration section "Admin" (ADR-0015).</summary>
@@ -22,7 +42,7 @@ public sealed class AdminOptions
     public const string SectionName = "Admin";
 
     /// <summary>
-    /// Accounts whose email is listed administer the product and always have Pro. Emails reach an account only
+    /// Accounts whose email is listed administer the product and always have Elite. Emails reach an account only
     /// once proved (confirmed link, or verified by Google), so listing an address cannot be hijacked by
     /// someone signing up with it.
     /// </summary>
@@ -33,7 +53,7 @@ public sealed class AdminOptions
 }
 
 /// <summary>A grant as administrators see it.</summary>
-public sealed record GrantView(Guid UserId, string DisplayName, string? Email, string Reason, DateTimeOffset? EndsAt, DateTimeOffset GrantedAt);
+public sealed record GrantView(Guid UserId, string DisplayName, string? Email, Plan Plan, string Reason, DateTimeOffset? EndsAt, DateTimeOffset GrantedAt);
 
 /// <summary>A paying (or formerly paying) customer as administrators see it.</summary>
 public sealed record SubscriberView(
@@ -42,6 +62,7 @@ public sealed record SubscriberView(
     string? Email,
     string CustomerId,
     SubscriptionStatus? Status,
+    Plan? Tier,
     BillingInterval? Interval,
     DateTimeOffset? CurrentPeriodEnd,
     bool CancelAtPeriodEnd);
@@ -87,7 +108,7 @@ public interface IBillingGateway
     /// <exception cref="BillingGatewayException"/>
     Task<string> CreateCustomerAsync(Guid userId, string? email, CancellationToken cancellationToken);
 
-    /// <summary>A hosted checkout page for the Pro plan at that interval.</summary>
+    /// <summary>A hosted checkout page for a paid offer at that interval.</summary>
     /// <exception cref="BillingGatewayException"/>
     Task<Uri> CreateCheckoutAsync(CheckoutRequest request, CancellationToken cancellationToken);
 
@@ -109,6 +130,7 @@ public interface IBillingGateway
 public sealed record CheckoutRequest(
     string CustomerId,
     Guid UserId,
+    Plan Plan,
     BillingInterval Interval,
     string Language,
     Uri SuccessUrl,
@@ -118,18 +140,18 @@ public sealed record CheckoutRequest(
 public sealed record PlanGrant(Plan Plan, PlanSource Source, DateTimeOffset? GrantEndsAt = null);
 
 /// <summary>
-/// Which plan a user has and what it opens (ADR-0014, ADR-0015). In order: administrators, then billing off
-/// (Pro for everyone: development, tests, self-hosting), then a live Stripe subscription, then a grant.
+/// Which plan a user has and what it opens (ADR-0014 to 0016). Administrators and billing off (development,
+/// tests, self-hosting) have Elite; otherwise the higher of a live Stripe subscription and an active grant.
 /// </summary>
 public sealed class PlanAccess(
     ISubscriptionStore store,
     IBillingGateway gateway,
     IUserAccountStore users,
     AdminOptions admins,
-    FreePlanOptions free,
+    PlanOptions limits,
     TimeProvider time)
 {
-    public FreePlanOptions FreeLimits => free;
+    public PlanOptions Limits => limits;
 
     public bool BillingEnabled => gateway.IsConfigured;
 
@@ -140,22 +162,23 @@ public sealed class PlanAccess(
     {
         if (await IsAdminAsync(userId, cancellationToken))
         {
-            return new PlanGrant(Plan.Pro, PlanSource.Admin);
+            return new PlanGrant(Plan.Elite, PlanSource.Admin);
         }
 
         if (!gateway.IsConfigured)
         {
-            return new PlanGrant(Plan.Pro, PlanSource.BillingOff);
+            return new PlanGrant(Plan.Elite, PlanSource.BillingOff);
         }
 
-        if ((await store.FindByUserAsync(userId, cancellationToken))?.Plan == Plan.Pro)
+        // The higher of what is paid and what is given (a Pro subscriber given Elite has Elite).
+        var paid = (await store.FindByUserAsync(userId, cancellationToken))?.Plan ?? Plan.Starter;
+        var grant = await store.FindGrantAsync(userId, cancellationToken);
+        if (grant is not null && grant.IsActive(time.GetUtcNow()) && grant.Plan > paid)
         {
-            return new PlanGrant(Plan.Pro, PlanSource.Subscription);
+            return new PlanGrant(grant.Plan, PlanSource.Grant, grant.EndsAt);
         }
 
-        return await store.FindGrantAsync(userId, cancellationToken) is { } grant && grant.IsActive(time.GetUtcNow())
-            ? new PlanGrant(Plan.Pro, PlanSource.Grant, grant.EndsAt)
-            : new PlanGrant(Plan.Free, PlanSource.Free);
+        return paid > Plan.Starter ? new PlanGrant(paid, PlanSource.Subscription) : new PlanGrant(Plan.Starter, PlanSource.Starter);
     }
 
     public async Task<Plan> GetPlanAsync(Guid userId, CancellationToken cancellationToken) =>
@@ -163,9 +186,9 @@ public sealed class PlanAccess(
 
     /// <summary>The oldest moment the user may analyse; null: the whole history.</summary>
     public async Task<DateTimeOffset?> HistoryStartAsync(Guid userId, CancellationToken cancellationToken) =>
-        await GetPlanAsync(userId, cancellationToken) == Plan.Pro
-            ? null
-            : time.GetUtcNow().AddDays(-free.HistoryDays);
+        limits.For(await GetPlanAsync(userId, cancellationToken)).HistoryDays is { } days
+            ? time.GetUtcNow().AddDays(-days)
+            : null;
 
     /// <summary>The requested start, raised to the plan's history start. Data is never deleted, only not shown.</summary>
     public async Task<DateTimeOffset?> ClampFromAsync(Guid userId, DateTimeOffset? from, CancellationToken cancellationToken) =>

@@ -3,9 +3,40 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-// Mirrors backend/src/PokerCoach.Api/Billing (ADR-0014).
+// Mirrors backend/src/PokerCoach.Api/Billing (ADR-0014, ADR-0016).
 
-export type Plan = 'free' | 'pro';
+export type Plan = 'starter' | 'pro' | 'elite';
+export type PaidPlan = Exclude<Plan, 'starter'>;
+
+/** What the offers open besides history and AI credits; mirrors PokerCoach.Domain.Subscriptions.Feature. */
+export type Feature =
+  | 'openingRanges'
+  | 'pushFoldRanges'
+  | 'advancedLeaks'
+  | 'trainingDrills'
+  | 'trainingOwnHands'
+  | 'weekReview'
+  | 'tournamentDebrief';
+
+const PLAN_ORDER: readonly Plan[] = ['starter', 'pro', 'elite'];
+
+/** The lowest offer that opens each feature (the server checks it again). */
+export const MINIMUM_PLAN: Readonly<Record<Feature, PaidPlan>> = {
+  openingRanges: 'pro',
+  trainingDrills: 'pro',
+  weekReview: 'pro',
+  pushFoldRanges: 'elite',
+  advancedLeaks: 'elite',
+  trainingOwnHands: 'elite',
+  tournamentDebrief: 'elite',
+};
+
+export interface PlanOffer {
+  readonly plan: Plan;
+  /** Null: the whole history. */
+  readonly historyDays: number | null;
+  readonly monthlyCredits: number;
+}
 export type BillingInterval = 'month' | 'year';
 export type SubscriptionStatus =
   | 'incomplete'
@@ -22,7 +53,7 @@ export interface BillingSummary {
   readonly billingEnabled: boolean;
   readonly plan: Plan;
   /** Why the account has its plan. */
-  readonly source: 'billingOff' | 'free' | 'subscription' | 'grant' | 'admin';
+  readonly source: 'billingOff' | 'starter' | 'subscription' | 'grant' | 'admin';
   /** End of an offered access; null when open-ended. */
   readonly grantEndsAt: string | null;
   readonly status: SubscriptionStatus | null;
@@ -32,16 +63,23 @@ export interface BillingSummary {
   readonly cancelAtPeriodEnd: boolean;
   /** A Stripe customer exists: the portal can be opened. */
   readonly canManage: boolean;
-  readonly free: { readonly historyDays: number; readonly monthlyExplanations: number };
-  readonly explanationsUsedThisMonth: number;
+  /** The paid offer subscribed to, when a subscription is alive. */
+  readonly tier: PaidPlan | null;
+  /** AI credits of the current plan this month: an explanation costs 1, a review 2, a debrief 5. */
+  readonly monthlyCredits: number;
+  readonly creditsUsedThisMonth: number;
+  readonly offers: readonly PlanOffer[];
 }
 
-/** Prices shown in the app; the amount charged is Stripe's (same values, configured there). */
-export const PRO_PRICES: Readonly<Record<BillingInterval, number>> = { month: 9, year: 79 };
+/** Prices shown in the app (euros, tax included); the amount charged is Stripe's, configured the same. */
+export const PRICES: Readonly<Record<PaidPlan, Record<BillingInterval, number>>> = {
+  pro: { month: 14.9, year: 149 },
+  elite: { month: 29.9, year: 299 },
+};
 
 /**
  * The account's plan, loaded once per session and refreshed after a checkout. Until it is known the app
- * behaves as Pro: a missing answer never locks a paying user out (the server enforces the limits anyway).
+ * behaves as Elite: a missing answer never locks a paying user out (the server enforces the limits anyway).
  */
 @Injectable({ providedIn: 'root' })
 export class BillingService {
@@ -50,8 +88,16 @@ export class BillingService {
   private loading: Promise<void> | null = null;
 
   readonly summary = signal<BillingSummary | null>(null);
-  readonly isFree = computed(() => this.summary()?.plan === 'free');
-  readonly historyDays = computed(() => this.summary()?.free.historyDays ?? 30);
+  /** Until the plan is known, nothing is locked. */
+  readonly plan = computed<Plan>(() => this.summary()?.plan ?? 'elite');
+  readonly isStarter = computed(() => this.plan() === 'starter');
+  readonly historyDays = computed(
+    () => this.summary()?.offers.find((o) => o.plan === 'starter')?.historyDays ?? 30,
+  );
+
+  allows(feature: Feature): boolean {
+    return PLAN_ORDER.indexOf(this.plan()) >= PLAN_ORDER.indexOf(MINIMUM_PLAN[feature]);
+  }
 
   /** Loads the summary unless it is already known; `force` re-reads it (after a checkout). */
   load(force = false): Promise<void> {
@@ -67,8 +113,10 @@ export class BillingService {
   }
 
   /** Sends the browser to Stripe Checkout. Resolves only on failure, with the error code. */
-  async checkout(interval: BillingInterval): Promise<string> {
-    return this.redirect(this.http.post<{ url: string }>('/api/billing/checkout', { interval }));
+  async checkout(plan: PaidPlan, interval: BillingInterval): Promise<string> {
+    return this.redirect(
+      this.http.post<{ url: string }>('/api/billing/checkout', { plan, interval }),
+    );
   }
 
   /** Sends the browser to Stripe's customer portal (card, invoices, plan, cancellation). */

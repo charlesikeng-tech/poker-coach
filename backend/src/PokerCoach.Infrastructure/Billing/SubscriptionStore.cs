@@ -20,6 +20,7 @@ internal sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subsc
         // Stripe's names, readable in SQL and stable if Stripe adds a status.
         builder.Property(s => s.Status).HasConversion<string>().HasMaxLength(32);
         builder.Property(s => s.Interval).HasConversion<string>().HasMaxLength(16);
+        builder.Property(s => s.Tier).HasConversion<string>().HasMaxLength(16);
         builder.Ignore(s => s.Plan);
 
         // Webhooks find the user by customer: one customer per user, one user per customer.
@@ -35,6 +36,9 @@ internal sealed class ProGrantConfiguration : IEntityTypeConfiguration<ProGrant>
         builder.ToTable("pro_grants", "subscriptions");
         builder.HasKey(g => g.UserId);
         builder.Property(g => g.Reason).HasMaxLength(ProGrant.ReasonMaxLength).IsRequired();
+
+        // Grants made before ADR-0016 were Pro.
+        builder.Property(g => g.Plan).HasConversion<string>().HasMaxLength(16).HasDefaultValue(Plan.Pro).HasSentinel(Plan.Starter);
 
         // The author is kept for the record only: deleting an administrator's account keeps their grants.
         builder.HasOne<User>().WithOne().HasForeignKey<ProGrant>(g => g.UserId).OnDelete(DeleteBehavior.Cascade);
@@ -92,7 +96,7 @@ internal sealed class SubscriptionStore(PokerCoachDbContext db) : ISubscriptionS
         await (from g in db.Set<ProGrant>().AsNoTracking()
                join u in db.Set<User>() on g.UserId equals u.Id
                orderby g.EndsAt == null, g.EndsAt, g.GrantedAt descending
-               select new GrantView(u.Id, u.DisplayName, u.Email, g.Reason, g.EndsAt, g.GrantedAt))
+               select new GrantView(u.Id, u.DisplayName, u.Email, g.Plan, g.Reason, g.EndsAt, g.GrantedAt))
             .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<SubscriberView>> ListSubscribersAsync(int limit, CancellationToken cancellationToken) =>
@@ -100,7 +104,7 @@ internal sealed class SubscriptionStore(PokerCoachDbContext db) : ISubscriptionS
                join u in db.Set<User>() on s.UserId equals u.Id
                where s.Status != null
                orderby s.SyncedAt descending
-               select new SubscriberView(u.Id, u.DisplayName, u.Email, s.CustomerId, s.Status, s.Interval, s.CurrentPeriodEnd, s.CancelAtPeriodEnd))
+               select new SubscriberView(u.Id, u.DisplayName, u.Email, s.CustomerId, s.Status, s.Tier, s.Interval, s.CurrentPeriodEnd, s.CancelAtPeriodEnd))
             .Take(limit)
             .ToListAsync(cancellationToken);
 }

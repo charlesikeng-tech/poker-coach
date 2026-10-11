@@ -10,6 +10,12 @@ namespace PokerCoach.Api.Tests;
 public sealed class StripeAdapterTests
 {
     private const string Secret = "whsec_test";
+
+    private static readonly StripePlanPrices Prices = new()
+    {
+        Pro = new StripePrices { Monthly = "price_pro_m", Yearly = "price_pro_y" },
+        Elite = new StripePrices { Monthly = "price_elite_m", Yearly = "price_elite_y" },
+    };
     private static readonly DateTimeOffset Now = new(2026, 10, 10, 12, 0, 0, TimeSpan.Zero);
 
     [Fact]
@@ -34,12 +40,12 @@ public sealed class StripeAdapterTests
     {
         using var json = JsonDocument.Parse("""
             {"id":"sub_1","status":"past_due","cancel_at_period_end":true,
-             "items":{"data":[{"current_period_end":1793000000,"price":{"recurring":{"interval":"year"}}}]}}
+             "items":{"data":[{"current_period_end":1793000000,"price":{"id":"price_elite_y","recurring":{"interval":"year"}}}]}}
             """);
 
-        var state = StripeBillingGateway.StateOf(json.RootElement);
+        var state = StripeBillingGateway.StateOf(json.RootElement, Prices.TierOf);
 
-        Assert.Equal(new SubscriptionState("sub_1", SubscriptionStatus.PastDue, BillingInterval.Year, DateTimeOffset.FromUnixTimeSeconds(1793000000), true), state);
+        Assert.Equal(new SubscriptionState("sub_1", SubscriptionStatus.PastDue, BillingInterval.Year, DateTimeOffset.FromUnixTimeSeconds(1793000000), true, Plan.Elite), state);
     }
 
     [Fact]
@@ -48,12 +54,13 @@ public sealed class StripeAdapterTests
         using var older = JsonDocument.Parse("""{"id":"sub_2","status":"active","current_period_end":1793000000,"items":{"data":[]}}""");
         using var unknown = JsonDocument.Parse("""{"id":"sub_3","status":"something_new"}""");
 
-        var state = StripeBillingGateway.StateOf(older.RootElement);
+        var state = StripeBillingGateway.StateOf(older.RootElement, Prices.TierOf);
 
         Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1793000000), state?.CurrentPeriodEnd);
         Assert.Null(state?.Interval);
+        Assert.Null(state?.Tier);
         Assert.False(state?.CancelAtPeriodEnd);
-        Assert.Null(StripeBillingGateway.StateOf(unknown.RootElement));
+        Assert.Null(StripeBillingGateway.StateOf(unknown.RootElement, Prices.TierOf));
     }
 
     [Fact]

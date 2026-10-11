@@ -20,7 +20,8 @@ public sealed class StripeOptions
     /// <summary>The webhook endpoint's signing secret (whsec_…).</summary>
     public string? WebhookSecret { get; set; }
 
-    public StripePrices Prices { get; set; } = new();
+    /// <summary>Price ids per paid offer (ADR-0016).</summary>
+    public StripePlanPrices Prices { get; set; } = new();
 
     public Uri BaseUrl { get; set; } = new("https://api.stripe.com/");
 
@@ -30,10 +31,35 @@ public sealed class StripeOptions
 
 public sealed class StripePrices
 {
-    /// <summary>Price id of Pro billed monthly (price_…).</summary>
+    /// <summary>Price id billed monthly (price_…).</summary>
     public string? Monthly { get; set; }
 
     public string? Yearly { get; set; }
+}
+
+public sealed class StripePlanPrices
+{
+    public StripePrices Pro { get; set; } = new();
+
+    public StripePrices Elite { get; set; } = new();
+
+    public string? For(Plan plan, BillingInterval interval)
+    {
+        var prices = plan switch
+        {
+            Plan.Elite => Elite,
+            Plan.Pro => Pro,
+            _ => null,
+        };
+        return interval == BillingInterval.Year ? prices?.Yearly : prices?.Monthly;
+    }
+
+    /// <summary>The offer a price belongs to; null for a price not configured here.</summary>
+    public Plan? TierOf(string? priceId) =>
+        string.IsNullOrEmpty(priceId) ? null
+        : priceId == Elite.Monthly || priceId == Elite.Yearly ? Plan.Elite
+        : priceId == Pro.Monthly || priceId == Pro.Yearly ? Plan.Pro
+        : null;
 }
 
 /// <summary>
@@ -66,10 +92,10 @@ internal sealed partial class StripeBillingGateway(
     public async Task<Uri> CreateCheckoutAsync(CheckoutRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
-        var price = request.Interval == BillingInterval.Year ? Settings.Prices.Yearly : Settings.Prices.Monthly;
+        var price = Settings.Prices.For(request.Plan, request.Interval);
         if (string.IsNullOrWhiteSpace(price))
         {
-            throw new BillingGatewayException($"No Stripe price configured for {request.Interval}.");
+            throw new BillingGatewayException($"No Stripe price configured for {request.Plan} billed {request.Interval}.");
         }
 
         using var json = await SendAsync(
@@ -112,7 +138,7 @@ internal sealed partial class StripeBillingGateway(
             form: null,
             idempotencyKey: null,
             cancellationToken);
-        return [.. json.RootElement.GetProperty("data").EnumerateArray().Select(StateOf).OfType<SubscriptionState>()];
+        return [.. json.RootElement.GetProperty("data").EnumerateArray().Select(s => StateOf(s, Settings.Prices.TierOf)).OfType<SubscriptionState>()];
     }
 
     public async Task DeleteCustomerAsync(string customerId, CancellationToken cancellationToken)
@@ -154,7 +180,8 @@ internal sealed partial class StripeBillingGateway(
     }
 
     /// <summary>Null for an object we cannot read: it is left out rather than guessed.</summary>
-    internal static SubscriptionState? StateOf(JsonElement subscription)
+    /// <param name="tierOf">The offer a price id belongs to.</param>
+    internal static SubscriptionState? StateOf(JsonElement subscription, Func<string?, Plan?> tierOf)
     {
         var status = subscription.GetProperty("status").GetString() switch
         {
@@ -178,6 +205,9 @@ internal sealed partial class StripeBillingGateway(
             ? items.GetProperty("data")[0]
             : (JsonElement?)null;
         var periodEnd = UnixTime(item, "current_period_end") ?? UnixTime(subscription, "current_period_end");
+        var priceId = item is { } p && p.TryGetProperty("price", out var priceObject) && priceObject.TryGetProperty("id", out var id)
+            ? id.GetString()
+            : null;
         var interval = item is { } i && i.TryGetProperty("price", out var price) && price.TryGetProperty("recurring", out var recurring)
             && recurring.ValueKind == JsonValueKind.Object
             ? recurring.GetProperty("interval").GetString() switch
@@ -192,7 +222,8 @@ internal sealed partial class StripeBillingGateway(
             status.Value,
             interval,
             periodEnd,
-            subscription.TryGetProperty("cancel_at_period_end", out var cancel) && cancel.ValueKind == JsonValueKind.True);
+            subscription.TryGetProperty("cancel_at_period_end", out var cancel) && cancel.ValueKind == JsonValueKind.True,
+            tierOf(priceId));
     }
 
     private static DateTimeOffset? UnixTime(JsonElement? element, string property) =>

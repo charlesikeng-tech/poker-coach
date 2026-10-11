@@ -16,6 +16,13 @@
           (input)="email.set(value($event))"
         />
       </label>
+      <label class="field field--plan">
+        <span>{{ t('grant.plan') }}</span>
+        <select id="grant-plan" [value]="plan()" (change)="plan.set($any($event.target).value)">
+          <option value="pro">Pro</option>
+          <option value="elite">Elite</option>
+        </select>
+      </label>
       <label class="field">
         <span>{{ t('grant.reason') }}</span>
         <input
@@ -70,7 +77,10 @@
                     <strong>{{ g.displayName }}</strong>
                     <span class="muted">{{ g.email ?? '—' }}</span>
                   </td>
-                  <td>{{ g.reason }}</td>
+                  <td>
+                    <span class="plan-tag">{{ t('plans.' + g.plan) }}</span>
+                    {{ g.reason }}
+                  </td>
                   <td class="numeric">{{ g.endsAt ? date(g.endsAt) : t('grants.openEnded') }}</td>
                   <td class="actions">
                     <button
@@ -120,8 +130,11 @@
                     <span class="status" [attr.data-status]="s.status">{{
                       t('status.' + s.status)
                     }}</span>
-                    @if (s.interval) {
-                      <span class="muted">{{ t('interval.' + s.interval) }}</span>
+                    @if (s.tier || s.interval) {
+                      <span class="muted"
+                        >{{ s.tier ? t('plans.' + s.tier) : '' }}
+                        {{ s.interval ? t('interval.' + s.interval) : '' }}</span
+                      >
                     }
                   </td>
                   <td class="numeric">

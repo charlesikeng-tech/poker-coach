@@ -4,7 +4,11 @@ using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Application.Subscriptions;
 
-/// <summary>What the subscription page shows. <c>Used</c> counts this calendar month (UTC).</summary>
+/// <summary>One offer's limits, for the offer table.</summary>
+public sealed record PlanOffer(Plan Plan, int? HistoryDays, int MonthlyCredits);
+
+/// <summary>What the subscription page shows. Credits count this calendar month (UTC).</summary>
+/// <param name="Tier">The paid offer subscribed to, when there is a subscription.</param>
 public sealed record BillingSummary(
     bool BillingEnabled,
     Plan Plan,
@@ -15,9 +19,10 @@ public sealed record BillingSummary(
     DateTimeOffset? CurrentPeriodEnd,
     bool CancelAtPeriodEnd,
     bool HasCustomer,
-    int FreeHistoryDays,
-    int FreeMonthlyExplanations,
-    int ExplanationsUsedThisMonth);
+    Plan? Tier,
+    int MonthlyCredits,
+    int CreditsUsedThisMonth,
+    IReadOnlyList<PlanOffer> Offers);
 
 public enum BillingFailure
 {
@@ -69,9 +74,7 @@ public sealed class SubscriptionService(
             await TrySyncAsync(subscription, cancellationToken);
         }
 
-        var now = time.GetUtcNow();
-        var monthStart = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero);
-        var used = await coachingLedger.CountCallsSinceAsync(userId, LeakCoachService.Purpose, monthStart, cancellationToken);
+        var used = await CoachingCredits.UsedSinceAsync(coachingLedger, userId, CoachingCredits.MonthStart(time.GetUtcNow()), cancellationToken);
         var access = await plans.GetAccessAsync(userId, cancellationToken);
         return new BillingSummary(
             gateway.IsConfigured,
@@ -83,15 +86,22 @@ public sealed class SubscriptionService(
             subscription?.CurrentPeriodEnd,
             subscription?.CancelAtPeriodEnd ?? false,
             subscription is not null,
-            plans.FreeLimits.HistoryDays,
-            plans.FreeLimits.MonthlyExplanations,
-            used);
+            subscription?.IsAlive == true ? subscription.Plan : null,
+            plans.Limits.For(access.Plan).MonthlyCredits,
+            used,
+            [.. Enum.GetValues<Plan>().Select(p => new PlanOffer(p, plans.Limits.For(p).HistoryDays, plans.Limits.For(p).MonthlyCredits))]);
     }
 
     /// <param name="appUrl">The web app's public address (configuration, never the request's Host).</param>
-    public async Task<BillingRedirect> StartCheckoutAsync(Guid userId, BillingInterval interval, string language, Uri appUrl, CancellationToken cancellationToken)
+    /// <param name="plan">Pro or Elite.</param>
+    public async Task<BillingRedirect> StartCheckoutAsync(Guid userId, Plan plan, BillingInterval interval, string language, Uri appUrl, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(appUrl);
+        if (plan == Plan.Starter)
+        {
+            throw new ArgumentOutOfRangeException(nameof(plan), "Only a paid offer can be bought.");
+        }
+
         if (!gateway.IsConfigured)
         {
             return BillingRedirect.Fail(BillingFailure.Unavailable);
@@ -100,7 +110,8 @@ public sealed class SubscriptionService(
         try
         {
             var subscription = await store.FindByUserAsync(userId, cancellationToken);
-            if (subscription?.Plan == Plan.Pro)
+            // Changing offer (Pro ↔ Elite) happens in Stripe's portal: no second subscription.
+            if (subscription?.IsAlive == true)
             {
                 return BillingRedirect.Fail(BillingFailure.AlreadySubscribed);
             }
@@ -115,6 +126,7 @@ public sealed class SubscriptionService(
                 new CheckoutRequest(
                     subscription.CustomerId,
                     userId,
+                    plan,
                     interval,
                     language,
                     new Uri(appUrl, "subscription?checkout=success"),

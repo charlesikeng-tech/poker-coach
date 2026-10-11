@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
+using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Leaks;
@@ -7,6 +8,8 @@ using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
+
+using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Ranges;
 
@@ -48,7 +51,7 @@ public static class RangeEndpoints
 {
     public static IEndpointRouteBuilder MapRangeEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/ranges/opening", GetOpeningAsync).WithTags("Ranges");
+        endpoints.MapGet("/api/ranges/opening", GetOpeningAsync).WithTags("Ranges").RequiresFeature(Feature.OpeningRanges);
         return endpoints;
     }
 
@@ -94,6 +97,12 @@ public static class RangeEndpoints
         if (from is not null && to is not null && from >= to)
         {
             return ApiProblems.Validation("to", "Must be after 'from'.");
+        }
+
+        // The push/fold equilibrium is an Elite feature (ADR-0016).
+        if (stackBand == StackBand.Push && !(await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.PushFoldRanges))
+        {
+            return PlanGates.Required(Feature.PushFoldRanges);
         }
 
         // Free plan: history window (ADR-0014). Data is kept, only not shown.

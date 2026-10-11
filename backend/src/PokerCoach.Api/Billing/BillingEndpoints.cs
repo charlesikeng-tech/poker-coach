@@ -13,7 +13,9 @@ namespace PokerCoach.Api.Billing;
 /// <param name="Source">Why: a subscription, an offered access (with <paramref name="GrantEndsAt"/>), administrator, billing off.</param>
 /// <param name="BillingEnabled">False: billing is off on this server and every account has Pro.</param>
 /// <param name="CurrentPeriodEnd">Renewal date, or end date when <paramref name="CancelAtPeriodEnd"/>.</param>
-/// <param name="ExplanationsUsedThisMonth">New leak explanations generated this calendar month (UTC).</param>
+/// <param name="Tier">The paid offer subscribed to, when a subscription is alive.</param>
+/// <param name="MonthlyCredits">AI credits of the current plan per calendar month (UTC).</param>
+/// <param name="Offers">Every offer with its limits, for the offer table.</param>
 public sealed record BillingResponse(
     bool BillingEnabled,
     Plan Plan,
@@ -24,12 +26,16 @@ public sealed record BillingResponse(
     DateTimeOffset? CurrentPeriodEnd,
     bool CancelAtPeriodEnd,
     bool CanManage,
-    FreePlanResponse Free,
-    int ExplanationsUsedThisMonth);
+    Plan? Tier,
+    int MonthlyCredits,
+    int CreditsUsedThisMonth,
+    IReadOnlyList<OfferResponse> Offers);
 
-public sealed record FreePlanResponse(int HistoryDays, int MonthlyExplanations);
+/// <param name="HistoryDays">Null: the whole history.</param>
+public sealed record OfferResponse(Plan Plan, int? HistoryDays, int MonthlyCredits);
 
-public sealed record CheckoutRequestBody(BillingInterval? Interval);
+/// <param name="Plan">Pro or Elite.</param>
+public sealed record CheckoutRequestBody(Plan? Plan, BillingInterval? Interval);
 
 /// <summary>A Stripe-hosted page to send the browser to.</summary>
 public sealed record RedirectResponse(Uri Url);
@@ -70,8 +76,10 @@ public static partial class BillingEndpoints
             s.CurrentPeriodEnd,
             s.CancelAtPeriodEnd,
             s.BillingEnabled && s.HasCustomer,
-            new FreePlanResponse(s.FreeHistoryDays, s.FreeMonthlyExplanations),
-            s.ExplanationsUsedThisMonth));
+            s.Tier,
+            s.MonthlyCredits,
+            s.CreditsUsedThisMonth,
+            [.. s.Offers.Select(o => new OfferResponse(o.Plan, o.HistoryDays, o.MonthlyCredits))]));
     }
 
     private static async Task<Results<Ok<RedirectResponse>, ProblemHttpResult, UnauthorizedHttpResult>> CheckoutAsync(
@@ -93,8 +101,15 @@ public static partial class BillingEndpoints
             return ApiProblems.Validation("interval", "Must be month or year.");
         }
 
+        // Pro when omitted: clients written before ADR-0016 only offered Pro.
+        var plan = request.Plan ?? Plan.Pro;
+        if (plan is not (Plan.Pro or Plan.Elite))
+        {
+            return ApiProblems.Validation("plan", "Must be pro or elite.");
+        }
+
         var language = (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage ?? UserLanguages.Default;
-        var result = await subscriptions.StartCheckoutAsync(userId, interval, language, app.Value.BaseUrl(context, environment), cancellationToken);
+        var result = await subscriptions.StartCheckoutAsync(userId, plan, interval, language, app.Value.BaseUrl(context, environment), cancellationToken);
         return Respond(result);
     }
 

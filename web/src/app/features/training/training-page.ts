@@ -12,11 +12,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Check, CircleAlert, Flame, History, RotateCcw, Sparkles, Target, X } from 'lucide';
 
+import { BillingService, Feature } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
+import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PokerTable, TableView } from '../../shared/ui/poker-table/poker-table';
 import { STACK_BANDS, StackBand } from '../ranges/ranges-api';
@@ -49,6 +51,7 @@ const RANKS = 'AKQJT98765432';
 @Component({
   selector: 'app-training-page',
   imports: [
+    PlanLock,
     TranslocoDirective,
     RouterLink,
     PageHeader,
@@ -65,12 +68,21 @@ const RANKS = 'AKQJT98765432';
 })
 export class TrainingPage {
   private readonly api = inject(TrainingApi);
+  protected readonly billing = inject(BillingService);
   private readonly transloco = inject(TranslocoService);
   private readonly language = inject(LanguageService);
 
   protected readonly bands = STACK_BANDS;
   protected readonly modes: readonly DrillMode[] = ['open', 'defence', 'real'];
   protected readonly mode = signal<DrillMode>('open');
+  /** The feature this view needs and the offer lacks (ADR-0016); null when open. */
+  protected readonly locked = computed<Feature | null>(() =>
+    !this.billing.allows('trainingDrills')
+      ? 'trainingDrills'
+      : this.mode() === 'real' && !this.billing.allows('trainingOwnHands')
+        ? 'trainingOwnHands'
+        : null,
+  );
   protected readonly format = signal<TableFormat>('sixMax');
   protected readonly band = signal<StackBand>('mid');
   /** Seats to train; empty: all. */
@@ -264,6 +276,10 @@ export class TrainingPage {
     seats: readonly PokerPosition[],
     mode: DrillMode,
   ): Promise<void> {
+    await this.billing.load();
+    if (this.locked() !== null) {
+      return;
+    }
     this.busy.set(true);
     try {
       const spot = await this.api.spot(format, band, seats, mode);

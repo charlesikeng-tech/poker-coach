@@ -28,7 +28,7 @@
     "themeToDark": "Switch to dark theme",
     "signOut": "Sign out",
     "account": "My account",
-    "planWindow": "Free plan: you see the last {{days}} days. Your whole history is kept.",
+    "planWindow": "Starter: you see the last {{days}} days. Your whole history is kept.",
     "planWindowAction": "See it all with Pro"
   },
   "pages": {
@@ -770,7 +770,7 @@
           "network": "Cannot connect. Check your network.",
           "unknown": "An unexpected error occurred.",
           "PLAN_REQUIRED": "This feature is part of Pro.",
-          "PLAN_LIMIT_REACHED": "Your 3 free explanations for this month are used up."
+          "PLAN_LIMIT_REACHED": "Your AI credits for this month are used up."
         },
         "upgrade": "Go Pro"
       },
@@ -1001,7 +1001,9 @@
             "work": "Bet strong hands for value and draws as semi-bluffs instead of calling."
           }
         }
-      }
+      },
+      "locked": "{{count}} postflop leak(s) found in your hands: they are part of Elite.",
+      "lockedAction": "See Elite"
     },
     "hand": {
       "pageTitle": "Hand",
@@ -1407,74 +1409,120 @@
     },
     "subscription": {
       "title": "Subscription",
-      "description": "Your plan, what it includes, and your billing.",
-      "activating": "Payment received. Your Pro access is being switched on, this takes a few seconds…",
+      "description": "Your plan, your AI credits and your billing.",
+      "activating": "Payment received. Your new plan is being switched on, this takes a few seconds…",
       "cancelled": "Payment cancelled: you were not charged.",
       "interval": {
         "month": "Monthly",
         "year": "Yearly"
       },
+      "current": {
+        "billingOff": "Everything is open",
+        "starter": "You are on Starter",
+        "subscription": "Your subscription",
+        "grant": "Offered access",
+        "admin": "Administrator"
+      },
+      "grant": {
+        "until": "Access offered until {{date}}. Then your account goes back to your paid plan or to Starter, losing nothing.",
+        "openEnded": "Access offered, with no end date."
+      },
+      "admin": {
+        "description": "Your account has every feature, without a subscription and without a credit limit."
+      },
       "beta": {
-        "title": "Everything is open",
-        "description": "Subscriptions are not enabled on this server: you have every NutsIQ feature."
-      },
-      "free": {
-        "badge": "Your plan",
-        "title": "Free",
-        "import": "Unlimited hand imports",
-        "history": "Stats, leaks, ranges and tournaments over the last {{days}} days",
-        "explanations": "{{count}} AI leak explanations every month",
-        "used": "{{used}} of {{count}} explanations used this month",
-        "invoices": "See my invoices"
-      },
-      "offer": {
-        "badge": "Recommended",
-        "title": "Pro",
-        "intervalLabel": "Billing period",
-        "saving": "−€{{amount}}",
-        "per": {
-          "month": "/ month",
-          "year": "/ year"
-        },
-        "history": "Your whole history, no date limit",
-        "debrief": "AI debrief after every tournament",
-        "review": "AI review of your week and your plan",
-        "explanations": "Leak explanations as you need them (within the daily limit)",
-        "action": "Go Pro",
-        "hint": "Secure payment by Stripe. Cancel any time, in one click."
+        "description": "Subscriptions are not enabled on this server: you have every feature."
       },
       "pro": {
-        "badge": "Pro",
-        "title": "You are Pro",
+        "pastDue": "Your last payment did not go through. Update your card to keep your plan.",
         "renewsOn": {
           "month": "Monthly subscription, renews on {{date}}.",
           "year": "Yearly subscription, renews on {{date}}."
         },
         "endsOn": {
-          "month": "Monthly subscription cancelled: your Pro access stays open until {{date}}.",
-          "year": "Yearly subscription cancelled: your Pro access stays open until {{date}}."
+          "month": "Monthly subscription cancelled: your plan stays open until {{date}}.",
+          "year": "Yearly subscription cancelled: your plan stays open until {{date}}."
+        }
+      },
+      "credits": {
+        "label": "AI credits this month",
+        "left": "{{left}} left of {{total}}",
+        "costs": "A leak explanation costs 1 credit, a review 2, a tournament debrief 5. Credits reset on the 1st of the month."
+      },
+      "manage": {
+        "subscribed": "Manage my subscription",
+        "invoices": "See my invoices"
+      },
+      "offers": {
+        "title": "Plans",
+        "intervalLabel": "Billing period",
+        "saving": "2 months free",
+        "current": "Your plan",
+        "popular": "Most popular",
+        "tagline": {
+          "starter": "To discover your leaks.",
+          "pro": "To work on your game every week.",
+          "elite": "To analyse everything, after every tournament."
         },
-        "pastDue": "Your last payment did not go through. Update your card to keep Pro.",
-        "manage": "Manage my subscription",
-        "manageHint": "Card, invoices, monthly ↔ yearly or cancellation, on Stripe’s secure page."
+        "per": {
+          "month": "/ month",
+          "year": "/ year"
+        },
+        "monthsOffered": "{{count}} months free compared to monthly",
+        "forever": "Forever.",
+        "change": "Change plan",
+        "choose": "Choose {{plan}}",
+        "hint": "Prices include tax. Secure payment by Stripe. Change plan or cancel any time from your subscription."
+      },
+      "rows": {
+        "history": {
+          "label": "History",
+          "starter": "last 30 days",
+          "pro": "full",
+          "elite": "full"
+        },
+        "credits": {
+          "label": "AI coaching",
+          "value": "{{count}} credits / month"
+        },
+        "leaks": {
+          "label": "Leak Finder",
+          "starter": "preflop leaks",
+          "pro": "preflop, with explanations",
+          "elite": "preflop and postflop, by phase and stack, all-in luck"
+        },
+        "ranges": {
+          "label": "Ranges & push/fold",
+          "starter": "—",
+          "pro": "opening ranges",
+          "elite": "opening ranges and push/fold equilibrium"
+        },
+        "training": {
+          "label": "Drills",
+          "starter": "—",
+          "pro": "generic drills",
+          "elite": "drills and quiz on your own hands"
+        },
+        "reports": {
+          "label": "Reports",
+          "starter": "—",
+          "pro": "coach review once a month",
+          "elite": "review every week and debrief of every tournament"
+        },
+        "separator": ":"
       },
       "errors": {
-        "ALREADY_SUBSCRIBED": "You are already Pro. Manage your subscription with the button above.",
+        "ALREADY_SUBSCRIBED": "You already have a subscription: change plan from \"Manage my subscription\".",
         "NO_SUBSCRIPTION": "This account has no subscription to manage.",
         "BILLING_UNAVAILABLE": "Subscriptions are not enabled on this server.",
         "BILLING_FAILED": "The payment service is not answering. Try again in a moment.",
         "network": "Cannot connect. Check your network.",
         "unknown": "Something unexpected went wrong."
       },
-      "admin": {
-        "title": "Administrator",
-        "description": "Your account administers NutsIQ: you have Pro without a subscription."
-      },
-      "grant": {
-        "title": "Pro access offered",
-        "until": "Your Pro access is offered until {{date}}.",
-        "openEnded": "Your Pro access is offered, with no end date.",
-        "after": "When the offered access ends, your account goes back to Free; you can subscribe here. Nothing is deleted."
+      "plans": {
+        "starter": "Starter",
+        "pro": "Pro",
+        "elite": "Elite"
       }
     },
     "admin": {
@@ -1490,7 +1538,8 @@
         "endsOn": "Until (included)",
         "endsOnHint": "Empty: until you take it back.",
         "action": "Offer Pro",
-        "done": "Pro offered to {{email}}."
+        "done": "Pro offered to {{email}}.",
+        "plan": "Plan"
       },
       "grants": {
         "title": "Offered access ({{count}})",
@@ -1534,6 +1583,10 @@
         "ADMIN_REQUIRED": "Administrators only.",
         "network": "Cannot connect. Check your network.",
         "unknown": "Something unexpected went wrong."
+      },
+      "plans": {
+        "pro": "Pro",
+        "elite": "Elite"
       }
     }
   },
@@ -1600,9 +1653,45 @@
       "network": "Cannot connect. Check your network.",
       "unknown": "An unexpected error occurred.",
       "PLAN_REQUIRED": "This feature is part of Pro.",
-      "PLAN_LIMIT_REACHED": "Your free explanations for this month are used up."
+      "PLAN_LIMIT_REACHED": "Your AI credits for this month are used up (or, on Pro, this month's review is already written)."
     },
-    "upgrade": "Go Pro",
-    "planRequired": "The tournament debrief and the weekly review are part of Pro."
+    "upgrade": "Go Pro"
+  },
+  "planLock": {
+    "cta": "Go {{plan}}",
+    "plans": {
+      "pro": "Pro",
+      "elite": "Elite"
+    },
+    "features": {
+      "openingRanges": {
+        "title": "Opening ranges",
+        "description": "Your actual ranges by position, next to the references."
+      },
+      "pushFoldRanges": {
+        "title": "Push/fold equilibrium",
+        "description": "The computed shoving range below 15 BB, hand by hand."
+      },
+      "advancedLeaks": {
+        "title": "Advanced leaks",
+        "description": "Postflop leaks, stats by tournament phase and stack, all-in luck."
+      },
+      "trainingDrills": {
+        "title": "Drills",
+        "description": "Open, push/fold and big blind defence, with spaced repetition."
+      },
+      "trainingOwnHands": {
+        "title": "Quiz on your hands",
+        "description": "The spots you misplayed come back until you play them right."
+      },
+      "weekReview": {
+        "title": "Coach review",
+        "description": "What moved on your plan and what to work on next."
+      },
+      "tournamentDebrief": {
+        "title": "Tournament debrief",
+        "description": "The story of your run and a read on each key moment."
+      }
+    }
   }
 }

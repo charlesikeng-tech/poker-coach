@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Subscriptions;
 using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -96,7 +97,7 @@ public sealed class WeekReviewService(
             return ReportOutcome<WeekReviewReport>.Of(View(stored, fingerprint));
         }
 
-        if (await gate.CheckAsync(userId, Kind, options.DailyWeekReviewsPerUser, freeMonthlyAllowance: 0, cancellationToken) is { } refused)
+        if (await gate.CheckAsync(userId, Kind, options.DailyWeekReviewsPerUser, Feature.WeekReview, cancellationToken) is { } refused)
         {
             return ReportOutcome<WeekReviewReport>.Fail(refused);
         }

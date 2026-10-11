@@ -10,16 +10,13 @@
   }
 
   @if (summary(); as s) {
-    @if (s.source === 'admin') {
-      <section class="card glass current">
-        <span class="badge">{{ t('pro.badge') }}</span>
-        <h2>{{ t('admin.title') }}</h2>
-        <p>{{ t('admin.description') }}</p>
-      </section>
-    } @else if (s.source === 'grant') {
-      <section class="card glass current">
-        <span class="badge">{{ t('pro.badge') }}</span>
-        <h2><app-icon [icon]="icons.Sparkles" />{{ t('grant.title') }}</h2>
+    <section class="card glass current">
+      <div class="current__head">
+        <span class="badge">{{ t('plans.' + s.plan) }}</span>
+        <h2>{{ t('current.' + s.source) }}</h2>
+      </div>
+
+      @if (s.source === 'grant') {
         <p>
           {{
             s.grantEndsAt
@@ -27,17 +24,7 @@
               : t('grant.openEnded')
           }}
         </p>
-        <p class="hint">{{ t('grant.after') }}</p>
-      </section>
-    } @else if (!s.billingEnabled) {
-      <section class="card glass">
-        <h2><app-icon [icon]="icons.Sparkles" />{{ t('beta.title') }}</h2>
-        <p>{{ t('beta.description') }}</p>
-      </section>
-    } @else if (s.plan === 'pro') {
-      <section class="card glass current">
-        <span class="badge">{{ t('pro.badge') }}</span>
-        <h2>{{ t('pro.title') }}</h2>
+      } @else if (s.source === 'subscription') {
         @if (s.status === 'pastDue') {
           <p class="notice notice--warning" role="alert">{{ t('pro.pastDue') }}</p>
         }
@@ -50,85 +37,146 @@
             }}
           </p>
         }
-        <button appButton variant="secondary" [disabled]="busy()" (click)="manage()">
-          <app-icon [icon]="icons.CreditCard" />{{ t('pro.manage') }}
-        </button>
-        <p class="hint">{{ t('pro.manageHint') }}</p>
-      </section>
-    } @else {
-      <div class="plans">
-        <section class="card glass plan">
-          <span class="badge badge--muted">{{ t('free.badge') }}</span>
-          <h2>{{ t('free.title') }}</h2>
-          <p class="price"><span class="numeric">0 €</span></p>
-          <ul class="features">
-            <li><app-icon [icon]="icons.Check" />{{ t('free.import') }}</li>
-            <li>
-              <app-icon [icon]="icons.Check" />{{ t('free.history', { days: s.free.historyDays }) }}
-            </li>
-            <li>
-              <app-icon [icon]="icons.Check" />{{
-                t('free.explanations', { count: s.free.monthlyExplanations })
-              }}
-            </li>
-          </ul>
-          <p class="usage">
-            {{
-              t('free.used', {
-                used: s.explanationsUsedThisMonth,
-                count: s.free.monthlyExplanations,
-              })
-            }}
-          </p>
-        </section>
+      } @else if (s.source === 'admin') {
+        <p>{{ t('admin.description') }}</p>
+      } @else if (s.source === 'billingOff') {
+        <p>{{ t('beta.description') }}</p>
+      }
 
-        <section class="card glass plan plan--pro">
-          <span class="badge">{{ t('offer.badge') }}</span>
-          <h2>{{ t('offer.title') }}</h2>
-          <div class="toggle" role="group" [attr.aria-label]="t('offer.intervalLabel')">
-            <button
-              type="button"
-              [attr.aria-pressed]="interval() === 'month'"
-              (click)="interval.set('month')"
-            >
-              {{ t('interval.month') }}
-            </button>
-            <button
-              type="button"
-              [attr.aria-pressed]="interval() === 'year'"
-              (click)="interval.set('year')"
-            >
-              {{ t('interval.year') }}
-              <span class="saving">{{ t('offer.saving', { amount: yearlySaving }) }}</span>
-            </button>
+      @if (s.source !== 'admin') {
+        <div class="credits">
+          <div class="credits__label">
+            <span>{{ t('credits.label') }}</span>
+            <span class="numeric">
+              {{ t('credits.left', { left: creditsLeft(), total: s.monthlyCredits }) }}
+            </span>
           </div>
-          <p class="price">
-            <span class="numeric">{{ prices[interval()] }} €</span>
-            <span class="per">{{ t('offer.per.' + interval()) }}</span>
-          </p>
-          <ul class="features">
-            <li><app-icon [icon]="icons.Check" />{{ t('offer.history') }}</li>
-            <li><app-icon [icon]="icons.Check" />{{ t('offer.debrief') }}</li>
-            <li><app-icon [icon]="icons.Check" />{{ t('offer.review') }}</li>
-            <li><app-icon [icon]="icons.Check" />{{ t('offer.explanations') }}</li>
-          </ul>
-          <button appButton variant="primary" [disabled]="busy()" (click)="subscribe()">
-            <app-icon
-              [class.spin]="busy()"
-              [icon]="busy() ? icons.LoaderCircle : icons.Sparkles"
-            />{{ t('offer.action') }}
-          </button>
-          <p class="hint">{{ t('offer.hint') }}</p>
-        </section>
-      </div>
+          <div
+            class="credits__track"
+            role="meter"
+            [attr.aria-valuenow]="s.creditsUsedThisMonth"
+            aria-valuemin="0"
+            [attr.aria-valuemax]="s.monthlyCredits"
+            [attr.aria-label]="t('credits.label')"
+          >
+            <span
+              [style.width.%]="
+                s.monthlyCredits ? (100 * s.creditsUsedThisMonth) / s.monthlyCredits : 100
+              "
+            ></span>
+          </div>
+          <p class="hint">{{ t('credits.costs') }}</p>
+        </div>
+      }
 
       @if (s.canManage) {
-        <p class="hint">
-          <button type="button" class="link-button" [disabled]="busy()" (click)="manage()">
-            {{ t('free.invoices') }}
-          </button>
-        </p>
+        <button appButton variant="secondary" [disabled]="busy()" (click)="manage()">
+          <app-icon [icon]="icons.CreditCard" />{{
+            subscribed() ? t('manage.subscribed') : t('manage.invoices')
+          }}
+        </button>
       }
+    </section>
+
+    @if (s.billingEnabled && s.source !== 'admin') {
+      <div class="offers-head">
+        <h2>{{ t('offers.title') }}</h2>
+        <div class="toggle" role="group" [attr.aria-label]="t('offers.intervalLabel')">
+          <button
+            type="button"
+            [attr.aria-pressed]="interval() === 'month'"
+            (click)="interval.set('month')"
+          >
+            {{ t('interval.month') }}
+          </button>
+          <button
+            type="button"
+            [attr.aria-pressed]="interval() === 'year'"
+            (click)="interval.set('year')"
+          >
+            {{ t('interval.year') }}
+            <span class="saving">{{ t('offers.saving') }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="plans">
+        @for (plan of plans; track plan) {
+          <section
+            class="card glass plan"
+            [class.plan--featured]="plan === 'pro'"
+            [class.plan--current]="plan === s.plan"
+          >
+            <div class="plan__head">
+              <h3>{{ t('plans.' + plan) }}</h3>
+              @if (plan === s.plan) {
+                <span class="badge badge--muted">{{ t('offers.current') }}</span>
+              } @else if (plan === 'pro') {
+                <span class="badge">{{ t('offers.popular') }}</span>
+              }
+            </div>
+            <p class="tagline">{{ t('offers.tagline.' + plan) }}</p>
+
+            <p class="price">
+              @if (isPaid(plan)) {
+                <span class="numeric">{{ price(plan) }}</span>
+                <span class="per">{{ t('offers.per.' + interval()) }}</span>
+              } @else {
+                <span class="numeric">0 €</span>
+              }
+            </p>
+            <p class="note">
+              @if (isPaid(plan) && interval() === 'year') {
+                {{ t('offers.monthsOffered', { count: monthsOffered(plan) }) }}
+              } @else if (!isPaid(plan)) {
+                {{ t('offers.forever') }}
+              }
+            </p>
+
+            <ul class="features">
+              @for (row of rows; track row) {
+                @let text =
+                  row === 'credits'
+                    ? t('rows.credits.value', { count: offer(plan)?.monthlyCredits ?? 0 })
+                    : t('rows.' + row + '.' + plan);
+                <li [class.off]="text === '—'">
+                  <app-icon [icon]="text === '—' ? icons.Minus : icons.Check" />
+                  <span
+                    ><strong
+                      >{{ t('rows.' + row + '.label')
+                      }}{{ text === '—' ? '' : t('rows.separator') }}</strong
+                    >
+                    {{ text === '—' ? '' : text }}</span
+                  >
+                </li>
+              }
+            </ul>
+
+            @if (isPaid(plan)) {
+              @if (subscribed()) {
+                @if (plan !== s.plan) {
+                  <button appButton variant="secondary" [disabled]="busy()" (click)="manage()">
+                    {{ t('offers.change') }}
+                  </button>
+                }
+              } @else if (canBuy(plan)) {
+                <button
+                  appButton
+                  [variant]="plan === 'pro' ? 'primary' : 'secondary'"
+                  [disabled]="busy()"
+                  (click)="subscribe(plan)"
+                >
+                  <app-icon
+                    [class.spin]="busy()"
+                    [icon]="busy() ? icons.LoaderCircle : icons.Sparkles"
+                  />{{ t('offers.choose', { plan: t('plans.' + plan) }) }}
+                </button>
+              }
+            }
+          </section>
+        }
+      </div>
+      <p class="hint">{{ t('offers.hint') }}</p>
     }
 
     @if (error(); as code) {

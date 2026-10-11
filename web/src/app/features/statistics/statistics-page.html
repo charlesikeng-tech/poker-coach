@@ -171,13 +171,17 @@
         <p class="hint">{{ t('definitions') }}</p>
       </section>
 
-      <app-statistics-breakdowns [query]="breakdownQuery()" [refreshKey]="report.pendingHands" />
+      @if (billing.allows('advancedLeaks')) {
+        <app-statistics-breakdowns [query]="breakdownQuery()" [refreshKey]="report.pendingHands" />
 
-      <app-all-in-luck
-        [from]="fromQuery()"
-        [completeOnly]="completeOnly()"
-        [refreshKey]="report.pendingHands"
-      />
+        <app-all-in-luck
+          [from]="fromQuery()"
+          [completeOnly]="completeOnly()"
+          [refreshKey]="report.pendingHands"
+        />
+      } @else {
+        <app-plan-lock feature="advancedLeaks" />
+      }
     }
   } @else {
     <div role="status" [attr.aria-label]="t('loading')">

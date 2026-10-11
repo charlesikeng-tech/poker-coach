@@ -11,7 +11,7 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload } from 'lucide';
+import { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload, Lock } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
@@ -62,7 +62,7 @@ export class LeaksPage {
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
   protected readonly analysis = signal<LeakAnalysis | null>(null);
-  protected readonly icons = { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload };
+  protected readonly icons = { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload, Lock };
   /** Coach panels by leak key; cleared when the period changes because the leaks may differ. */
   protected readonly coach = signal<Readonly<Record<string, CoachState>>>({});
 

@@ -554,10 +554,35 @@
       }
       .plans {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1.5rem;
-        max-width: 52rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.25rem;
         margin-top: 2rem;
+      }
+      .plan .tag {
+        margin-top: -0.5rem;
+        color: var(--ink-3);
+        font-size: 0.92rem;
+      }
+      .plan h3 .badge {
+        margin-left: 0.4rem;
+        padding: 1px 0.55rem;
+        border-radius: 999px;
+        background: var(--gold-wash);
+        color: var(--gold);
+        font: 600 0.7rem/1.6 var(--body);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        vertical-align: middle;
+      }
+      .plan li b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .plan li.off {
+        color: var(--ink-3);
+      }
+      .plan li.off svg {
+        color: var(--ink-3);
       }
       .plan {
         display: flex;
@@ -617,7 +642,7 @@
         margin-top: auto;
       }
       .fineprint {
-        max-width: 52rem;
+        max-width: 60rem;
         margin-top: 1.25rem;
         color: var(--ink-3);
         font-size: 0.88rem;
@@ -750,6 +775,10 @@
         .partners .wrap {
           grid-template-columns: minmax(0, 1fr);
         }
+        .plans {
+          grid-template-columns: minmax(0, 1fr);
+          max-width: 34rem;
+        }
         .top nav {
           display: none;
         }
@@ -832,7 +861,7 @@
               <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Commencer gratuitement</a>
               <a class="btn btn--ghost" href="#tarifs">Voir les tarifs</a>
             </div>
-            <p class="reassure">Gratuit, sans carte bancaire. Pro à 9 € par mois, résiliable en un clic.</p>
+            <p class="reassure">Starter gratuit, sans carte bancaire. Pro à 14,90 € par mois, résiliable en un clic.</p>
           </div>
 
           <div class="stage" aria-label="Exemple d'un leak tel que NutsIQ l'affiche">
@@ -899,8 +928,8 @@
             <li>
               <h3>Lis ce qui compte</h3>
               <p>
-                Tes stats par position, tes leaks classés par impact, et un débrief des mains qui ont
-                décidé de ton tournoi.
+                Tes stats par position et tes leaks classés par impact. Avec Elite, un débrief des mains
+                qui ont décidé de chaque tournoi.
               </p>
             </li>
           </ol>
@@ -928,7 +957,7 @@
             <div class="feature">
               <h3>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z" /><path d="M17 5h3a3 3 0 0 1-3 4M7 5H4a3 3 0 0 0 3 4" /></svg>
-                Débrief de tournoi <span class="pro">Pro</span>
+                Débrief de tournoi <span class="pro">Elite</span>
               </h3>
               <p>
                 Après chaque tournoi, le récit de ta partie et un avis sur chaque moment clé : bien joué,
@@ -948,7 +977,7 @@
             <div class="feature">
               <h3>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
-                Ranges et entraînement
+                Ranges et entraînement <span class="pro">Pro</span>
               </h3>
               <p>
                 Tes ranges d'ouverture réelles face aux références, et un quiz sur tes propres spots :
@@ -994,8 +1023,8 @@
         <div class="wrap">
           <div class="section-head">
             <p class="eyebrow">Tarifs</p>
-            <h2>Moins cher qu'un buy-in par mois.</h2>
-            <p>Commence gratuitement. Passe Pro quand tu veux tout ton historique et le coach après chaque tournoi.</p>
+            <h2>Une offre pour chaque volume de jeu.</h2>
+            <p>Commence avec Starter. Passe Pro pour tout ton historique et un bilan chaque mois, Elite pour le coach après chaque tournoi.</p>
           </div>
 
           <div class="billing-toggle" role="group" aria-label="Rythme de facturation">
@@ -1005,36 +1034,55 @@
 
           <div class="plans">
             <article class="plan">
-              <h3>Gratuit</h3>
+              <h3>Starter</h3>
+              <p class="tag">Pour découvrir tes leaks.</p>
               <p class="price"><strong class="numeric">0 €</strong></p>
-              <p class="note">Pour toujours.</p>
+              <p class="note">Pour toujours, sans carte bancaire.</p>
               <ul>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Import de mains illimité</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Stats, leaks, ranges et tournois sur les 30 derniers jours</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>3 explications de leak par l'IA chaque mois</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Replay de mains, entraînement, bankroll</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Historique</b> : 30 derniers jours</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Coaching IA</b> : 3 crédits / mois</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Leak Finder</b> : leaks préflop</span></li>
+                <li class="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 12h12" /></svg><span><b>Ranges &amp; push/fold</b></span></li>
+                <li class="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 12h12" /></svg><span><b>Exercices</b></span></li>
+                <li class="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 12h12" /></svg><span><b>Rapports</b></span></li>
               </ul>
               <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in">Créer mon compte</a>
             </article>
             <article class="plan plan--pro">
-              <h3>Pro</h3>
-              <p class="price">
-                <strong class="numeric" id="pro-price">79 €</strong><span id="pro-per">/ an</span>
-              </p>
-              <p class="note numeric" id="pro-note">Soit 6,58 € par mois.</p>
+              <h3>Pro <span class="badge">Le plus choisi</span></h3>
+              <p class="tag">Pour travailler ton jeu chaque semaine.</p>
+              <p class="price"><strong class="numeric" data-month="14,90 €" data-year="149 €">149 €</strong><span class="per">/ an</span></p>
+              <p class="note numeric" data-month="Sans engagement." data-year="Soit 12,42 € par mois.">Soit 12,42 € par mois.</p>
               <ul>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Tout ton historique, sans limite de date</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Débrief IA après chaque tournoi</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Plan de la semaine et bilan du coach</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg>Explications de leak à volonté, dans la limite du jour</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Historique</b> : complet</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Coaching IA</b> : 100 crédits / mois</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Leak Finder</b> : préflop, avec explications</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Ranges &amp; push/fold</b> : ranges d'ouverture</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Exercices</b> : open, push/fold, défense de BB</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Rapports</b> : bilan du coach une fois par mois</span></li>
               </ul>
               <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Passer Pro</a>
             </article>
+            <article class="plan">
+              <h3>Elite</h3>
+              <p class="tag">Pour tout analyser, après chaque tournoi.</p>
+              <p class="price"><strong class="numeric" data-month="29,90 €" data-year="299 €">299 €</strong><span class="per">/ an</span></p>
+              <p class="note numeric" data-month="Sans engagement." data-year="Soit 24,92 € par mois.">Soit 24,92 € par mois.</p>
+              <ul>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Historique</b> : complet</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Coaching IA</b> : 400 crédits / mois</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Leak Finder</b> : préflop et postflop, par phase et par stack, chance à l'all-in</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Ranges &amp; push/fold</b> : ranges d'ouverture et équilibre push/fold</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Exercices</b> : tout, plus un quiz sur tes propres mains</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Rapports</b> : bilan chaque semaine et débrief de chaque tournoi</span></li>
+              </ul>
+              <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in">Passer Elite</a>
+            </article>
           </div>
           <p class="fineprint">
-            Prix TTC. Paiement sécurisé par Stripe : NutsIQ ne voit jamais ta carte. Résiliation en un clic
-            depuis ton compte, ton accès Pro reste ouvert jusqu'à la fin de la période payée. Tes mains ne
-            sont jamais supprimées si tu repasses en gratuit.
+            Prix TTC. Une explication de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Paiement
+            sécurisé par Stripe : NutsIQ ne voit jamais ta carte. Change d'offre ou résilie en un clic depuis
+            ton compte ; tes mains ne sont jamais supprimées si tu repasses sur Starter.
           </p>
         </div>
       </section>
@@ -1096,17 +1144,19 @@
               </p>
             </details>
             <details>
-              <summary>Que se passe-t-il si j'arrête Pro ?</summary>
+              <summary>Que se passe-t-il si j'arrête mon abonnement ?</summary>
               <p>
-                Ton accès Pro reste ouvert jusqu'à la fin de la période payée, puis ton compte repasse en
-                gratuit. Rien n'est effacé : tu retrouves tout ton historique si tu reviens.
+                Ton offre reste ouverte jusqu'à la fin de la période payée, puis ton compte repasse sur Starter.
+                Rien n'est effacé : tu retrouves tout ton historique si tu reviens.
               </p>
             </details>
             <details>
-              <summary>Pourquoi des limites sur l'IA ?</summary>
+              <summary>Comment marchent les crédits IA ?</summary>
               <p>
-                Chaque texte du coach a un coût réel. Les limites quotidiennes évitent les abus et gardent le
-                prix bas pour tout le monde ; un joueur normal ne les atteint pas.
+                Chaque texte du coach a un coût réel, alors chaque offre a des crédits par mois : une explication
+                de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Avec Elite, 400 crédits, c'est par
+                exemple un débrief après chacun de tes tournois et des dizaines d'explications. Les crédits
+                repartent à zéro le 1er du mois.
               </p>
             </details>
           </div>
@@ -1156,15 +1206,15 @@
       (function () {
         var month = document.getElementById('bill-month');
         var year = document.getElementById('bill-year');
-        var price = document.getElementById('pro-price');
-        var per = document.getElementById('pro-per');
-        var note = document.getElementById('pro-note');
         function show(yearly) {
           month.setAttribute('aria-pressed', String(!yearly));
           year.setAttribute('aria-pressed', String(yearly));
-          price.textContent = yearly ? '79 €' : '9 €';
-          per.textContent = yearly ? '/ an' : '/ mois';
-          note.textContent = yearly ? 'Soit 6,58 € par mois.' : 'Sans engagement.';
+          document.querySelectorAll('[data-month]').forEach(function (el) {
+            el.textContent = yearly ? el.getAttribute('data-year') : el.getAttribute('data-month');
+          });
+          document.querySelectorAll('.plan .per').forEach(function (el) {
+            el.textContent = yearly ? '/ an' : '/ mois';
+          });
         }
         month.addEventListener('click', function () { show(false); });
         year.addEventListener('click', function () { show(true); });

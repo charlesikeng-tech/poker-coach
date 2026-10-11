@@ -84,13 +84,8 @@
         <p class="intro">
           {{ state().kind === 'failed' ? t('loadFailed') : t('debrief.intro') }}
         </p>
-        @if (billing.isFree()) {
-          <div class="write">
-            <a appButton variant="primary" routerLink="/subscription">
-              <app-icon [icon]="icons.Sparkles" />{{ t('upgrade') }}
-            </a>
-            <span class="hint">{{ t('planRequired') }}</span>
-          </div>
+        @if (!billing.allows('tournamentDebrief')) {
+          <app-plan-lock feature="tournamentDebrief" [compact]="true" />
         } @else {
           <div class="write">
             <button

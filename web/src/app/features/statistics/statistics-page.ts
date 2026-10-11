@@ -12,6 +12,7 @@ import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CircleAlert, LoaderCircle, Upload } from 'lucide';
 
+import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
@@ -19,6 +20,7 @@ import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
+import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
@@ -71,6 +73,7 @@ const PENDING_REFRESH_MS = 3000;
 @Component({
   selector: 'app-statistics-page',
   imports: [
+    PlanLock,
     FormatToggle,
     TranslocoDirective,
     RouterLink,
@@ -89,6 +92,7 @@ const PENDING_REFRESH_MS = 3000;
 })
 export class StatisticsPage {
   private readonly api = inject(StatisticsApi);
+  protected readonly billing = inject(BillingService);
   private readonly language = inject(LanguageService);
 
   protected readonly periods = PERIOD_FILTERS;

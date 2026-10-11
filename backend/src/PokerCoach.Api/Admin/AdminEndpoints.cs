@@ -6,10 +6,11 @@ using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Admin;
 
+/// <param name="Plan">Pro or Elite; Pro when omitted.</param>
 /// <param name="EndsAt">Null: until revoked.</param>
-public sealed record GrantRequest(string? Email, string? Reason, DateTimeOffset? EndsAt);
+public sealed record GrantRequest(string? Email, Plan? Plan, string? Reason, DateTimeOffset? EndsAt);
 
-public sealed record GrantResponse(Guid UserId, string DisplayName, string? Email, string Reason, DateTimeOffset? EndsAt, DateTimeOffset GrantedAt);
+public sealed record GrantResponse(Guid UserId, string DisplayName, string? Email, Plan Plan, string Reason, DateTimeOffset? EndsAt, DateTimeOffset GrantedAt);
 
 /// <param name="StripeUrl">The customer in the Stripe dashboard, where refunds and cancellations are done.</param>
 public sealed record SubscriberResponse(
@@ -17,6 +18,7 @@ public sealed record SubscriberResponse(
     string DisplayName,
     string? Email,
     SubscriptionStatus? Status,
+    Plan? Tier,
     BillingInterval? Interval,
     DateTimeOffset? CurrentPeriodEnd,
     bool CancelAtPeriodEnd,
@@ -44,12 +46,13 @@ public static class AdminEndpoints
         var grants = await admin.ListGrantsAsync(cancellationToken);
         var subscribers = await admin.ListSubscribersAsync(cancellationToken);
         return TypedResults.Ok(new AdminOverviewResponse(
-            [.. grants.Select(g => new GrantResponse(g.UserId, g.DisplayName, g.Email, g.Reason, g.EndsAt, g.GrantedAt))],
+            [.. grants.Select(g => new GrantResponse(g.UserId, g.DisplayName, g.Email, g.Plan, g.Reason, g.EndsAt, g.GrantedAt))],
             [.. subscribers.Select(s => new SubscriberResponse(
                 s.UserId,
                 s.DisplayName,
                 s.Email,
                 s.Status,
+                s.Tier,
                 s.Interval,
                 s.CurrentPeriodEnd,
                 s.CancelAtPeriodEnd,
@@ -63,12 +66,13 @@ public static class AdminEndpoints
         CancellationToken cancellationToken)
     {
         context.User.TryGetUserId(out var adminId);
-        var result = await admin.GrantAsync(adminId, request.Email ?? string.Empty, request.Reason ?? string.Empty, request.EndsAt, cancellationToken);
+        var result = await admin.GrantAsync(adminId, request.Email ?? string.Empty, request.Plan ?? Plan.Pro, request.Reason ?? string.Empty, request.EndsAt, cancellationToken);
         return result switch
         {
             GrantResult.Granted => TypedResults.NoContent(),
             GrantResult.UserNotFound => ApiProblems.WithCode(StatusCodes.Status404NotFound, "USER_NOT_FOUND", "No account uses this email."),
             GrantResult.EndInPast => ApiProblems.Validation("endsAt", "Must be in the future."),
+            GrantResult.InvalidPlan => ApiProblems.Validation("plan", "Must be pro or elite."),
             _ => ApiProblems.Validation("reason", "Required."),
         };
     }

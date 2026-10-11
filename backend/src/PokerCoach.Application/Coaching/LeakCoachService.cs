@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Subscriptions;
 using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -89,7 +90,7 @@ public sealed class LeakCoachService(
             return CoachingOutcome.Of(cached);
         }
 
-        if (await gate.CheckAsync(userId, Purpose, options.DailyExplanationsPerUser, plans.FreeLimits.MonthlyExplanations, cancellationToken) is { } refused)
+        if (await gate.CheckAsync(userId, Purpose, options.DailyExplanationsPerUser, feature: null, cancellationToken) is { } refused)
         {
             return CoachingOutcome.Fail(refused);
         }

@@ -28,7 +28,7 @@
     "themeToDark": "Cambiar al tema oscuro",
     "signOut": "Cerrar sesión",
     "account": "Mi cuenta",
-    "planWindow": "Plan gratuito: ves los últimos {{days}} días. Todo tu historial se conserva.",
+    "planWindow": "Starter: ves los últimos {{days}} días. Todo tu historial se conserva.",
     "planWindowAction": "Verlo todo con Pro"
   },
   "pages": {
@@ -770,7 +770,7 @@
           "network": "No se puede conectar. Revisa tu red.",
           "unknown": "Se produjo un error inesperado.",
           "PLAN_REQUIRED": "Esta función está incluida en Pro.",
-          "PLAN_LIMIT_REACHED": "Ya has usado tus 3 explicaciones gratuitas de este mes."
+          "PLAN_LIMIT_REACHED": "Ya has usado tus créditos de IA del mes."
         },
         "upgrade": "Hazte Pro"
       },
@@ -1001,7 +1001,9 @@
             "work": "Apuesta tus manos fuertes por valor y tus proyectos como semifarol en lugar de pagar."
           }
         }
-      }
+      },
+      "locked": "{{count}} leak(s) postflop detectado(s) en tus manos: forman parte de Elite.",
+      "lockedAction": "Ver Elite"
     },
     "hand": {
       "pageTitle": "Mano",
@@ -1407,74 +1409,120 @@
     },
     "subscription": {
       "title": "Suscripción",
-      "description": "Tu plan, lo que incluye y tu facturación.",
-      "activating": "Pago recibido. Tu acceso Pro se está activando, tarda unos segundos…",
+      "description": "Tu plan, tus créditos de IA y tu facturación.",
+      "activating": "Pago recibido. Tu nuevo plan se está activando, tarda unos segundos…",
       "cancelled": "Pago cancelado: no se te ha cobrado nada.",
       "interval": {
         "month": "Mensual",
         "year": "Anual"
       },
+      "current": {
+        "billingOff": "Todo está abierto",
+        "starter": "Estás en Starter",
+        "subscription": "Tu suscripción",
+        "grant": "Acceso regalado",
+        "admin": "Administrador"
+      },
+      "grant": {
+        "until": "Acceso regalado hasta el {{date}}. Después tu cuenta vuelve a tu plan de pago o a Starter, sin perder nada.",
+        "openEnded": "Acceso regalado, sin fecha de fin."
+      },
+      "admin": {
+        "description": "Tu cuenta tiene todas las funciones, sin suscripción y sin límite de créditos."
+      },
       "beta": {
-        "title": "Todo está abierto",
-        "description": "Las suscripciones no están activadas en este servidor: tienes todas las funciones de NutsIQ."
-      },
-      "free": {
-        "badge": "Tu plan",
-        "title": "Gratis",
-        "import": "Importación de manos ilimitada",
-        "history": "Stats, leaks, rangos y torneos de los últimos {{days}} días",
-        "explanations": "{{count}} explicaciones de leaks por IA cada mes",
-        "used": "{{used}} de {{count}} explicaciones usadas este mes",
-        "invoices": "Ver mis facturas"
-      },
-      "offer": {
-        "badge": "Recomendado",
-        "title": "Pro",
-        "intervalLabel": "Periodo de facturación",
-        "saving": "−{{amount}} €",
-        "per": {
-          "month": "/ mes",
-          "year": "/ año"
-        },
-        "history": "Todo tu historial, sin límite de fecha",
-        "debrief": "Análisis IA después de cada torneo",
-        "review": "Balance IA de tu semana y de tu plan",
-        "explanations": "Explicaciones de leaks cuando quieras (dentro del límite diario)",
-        "action": "Hazte Pro",
-        "hint": "Pago seguro con Stripe. Cancela cuando quieras, en un clic."
+        "description": "Las suscripciones no están activadas en este servidor: tienes todas las funciones."
       },
       "pro": {
-        "badge": "Pro",
-        "title": "Eres Pro",
+        "pastDue": "Tu último pago no se ha completado. Actualiza tu tarjeta para conservar tu plan.",
         "renewsOn": {
           "month": "Suscripción mensual, se renueva el {{date}}.",
           "year": "Suscripción anual, se renueva el {{date}}."
         },
         "endsOn": {
-          "month": "Suscripción mensual cancelada: tu acceso Pro sigue abierto hasta el {{date}}.",
-          "year": "Suscripción anual cancelada: tu acceso Pro sigue abierto hasta el {{date}}."
+          "month": "Suscripción mensual cancelada: tu plan sigue abierto hasta el {{date}}.",
+          "year": "Suscripción anual cancelada: tu plan sigue abierto hasta el {{date}}."
+        }
+      },
+      "credits": {
+        "label": "Créditos de IA este mes",
+        "left": "Quedan {{left}} de {{total}}",
+        "costs": "Una explicación de leak cuesta 1 crédito, un balance 2, un análisis de torneo 5. Los créditos se reinician el día 1 de cada mes."
+      },
+      "manage": {
+        "subscribed": "Gestionar mi suscripción",
+        "invoices": "Ver mis facturas"
+      },
+      "offers": {
+        "title": "Planes",
+        "intervalLabel": "Periodo de facturación",
+        "saving": "2 meses gratis",
+        "current": "Tu plan",
+        "popular": "El más elegido",
+        "tagline": {
+          "starter": "Para descubrir tus leaks.",
+          "pro": "Para trabajar tu juego cada semana.",
+          "elite": "Para analizarlo todo, después de cada torneo."
         },
-        "pastDue": "Tu último pago no se ha completado. Actualiza tu tarjeta para seguir en Pro.",
-        "manage": "Gestionar mi suscripción",
-        "manageHint": "Tarjeta, facturas, cambio mensual ↔ anual o cancelación, en la página segura de Stripe."
+        "per": {
+          "month": "/ mes",
+          "year": "/ año"
+        },
+        "monthsOffered": "{{count}} meses gratis respecto al mensual",
+        "forever": "Para siempre.",
+        "change": "Cambiar de plan",
+        "choose": "Elegir {{plan}}",
+        "hint": "Precios con IVA. Pago seguro con Stripe. Cambia de plan o cancela cuando quieras desde tu suscripción."
+      },
+      "rows": {
+        "history": {
+          "label": "Historial",
+          "starter": "últimos 30 días",
+          "pro": "completo",
+          "elite": "completo"
+        },
+        "credits": {
+          "label": "Coaching IA",
+          "value": "{{count}} créditos / mes"
+        },
+        "leaks": {
+          "label": "Leak Finder",
+          "starter": "leaks preflop",
+          "pro": "preflop, con explicaciones",
+          "elite": "preflop y postflop, por fase y por stack, suerte en los all-in"
+        },
+        "ranges": {
+          "label": "Rangos y push/fold",
+          "starter": "—",
+          "pro": "rangos de apertura",
+          "elite": "rangos de apertura y equilibrio push/fold"
+        },
+        "training": {
+          "label": "Ejercicios",
+          "starter": "—",
+          "pro": "ejercicios genéricos",
+          "elite": "ejercicios y quiz con tus propias manos"
+        },
+        "reports": {
+          "label": "Informes",
+          "starter": "—",
+          "pro": "balance del coach una vez al mes",
+          "elite": "balance cada semana y análisis de cada torneo"
+        },
+        "separator": ":"
       },
       "errors": {
-        "ALREADY_SUBSCRIBED": "Ya eres Pro. Gestiona tu suscripción con el botón de arriba.",
+        "ALREADY_SUBSCRIBED": "Ya tienes una suscripción: cambia de plan desde «Gestionar mi suscripción».",
         "NO_SUBSCRIPTION": "Esta cuenta no tiene ninguna suscripción que gestionar.",
         "BILLING_UNAVAILABLE": "Las suscripciones no están activadas en este servidor.",
         "BILLING_FAILED": "El servicio de pago no responde. Inténtalo de nuevo en un momento.",
         "network": "No hay conexión. Revisa tu red.",
         "unknown": "Ha ocurrido un error inesperado."
       },
-      "admin": {
-        "title": "Administrador",
-        "description": "Tu cuenta administra NutsIQ: tienes Pro sin suscripción."
-      },
-      "grant": {
-        "title": "Acceso Pro regalado",
-        "until": "Tu acceso Pro está regalado hasta el {{date}}.",
-        "openEnded": "Tu acceso Pro está regalado, sin fecha de fin.",
-        "after": "Cuando termine el acceso regalado, tu cuenta vuelve a Gratis; podrás suscribirte aquí. No se borra nada."
+      "plans": {
+        "starter": "Starter",
+        "pro": "Pro",
+        "elite": "Elite"
       }
     },
     "admin": {
@@ -1490,7 +1538,8 @@
         "endsOn": "Hasta (incluido)",
         "endsOnHint": "Vacío: hasta que lo retires.",
         "action": "Regalar Pro",
-        "done": "Pro regalado a {{email}}."
+        "done": "Pro regalado a {{email}}.",
+        "plan": "Plan"
       },
       "grants": {
         "title": "Accesos regalados ({{count}})",
@@ -1534,6 +1583,10 @@
         "ADMIN_REQUIRED": "Solo para administradores.",
         "network": "No hay conexión. Revisa tu red.",
         "unknown": "Ha ocurrido un error inesperado."
+      },
+      "plans": {
+        "pro": "Pro",
+        "elite": "Elite"
       }
     }
   },
@@ -1600,9 +1653,45 @@
       "network": "No hay conexión. Revisa tu red.",
       "unknown": "Ha ocurrido un error inesperado.",
       "PLAN_REQUIRED": "Esta función está incluida en Pro.",
-      "PLAN_LIMIT_REACHED": "Ya has usado tus explicaciones gratuitas de este mes."
+      "PLAN_LIMIT_REACHED": "Ya has usado tus créditos de IA del mes (o, en Pro, el balance del mes ya está escrito)."
     },
-    "upgrade": "Hazte Pro",
-    "planRequired": "El análisis del torneo y el balance semanal están incluidos en Pro."
+    "upgrade": "Hazte Pro"
+  },
+  "planLock": {
+    "cta": "Pasar a {{plan}}",
+    "plans": {
+      "pro": "Pro",
+      "elite": "Elite"
+    },
+    "features": {
+      "openingRanges": {
+        "title": "Rangos de apertura",
+        "description": "Tus rangos reales por posición, junto a las referencias."
+      },
+      "pushFoldRanges": {
+        "title": "Equilibrio push/fold",
+        "description": "El rango de shove calculado por debajo de 15 BB, mano a mano."
+      },
+      "advancedLeaks": {
+        "title": "Leaks avanzados",
+        "description": "Leaks postflop, stats por fase del torneo y por stack, suerte en los all-in."
+      },
+      "trainingDrills": {
+        "title": "Ejercicios",
+        "description": "Open, push/fold y defensa de la ciega grande, con repaso espaciado."
+      },
+      "trainingOwnHands": {
+        "title": "Quiz con tus manos",
+        "description": "Los spots que jugaste mal vuelven hasta que los juegues bien."
+      },
+      "weekReview": {
+        "title": "Balance del coach",
+        "description": "Lo que ha cambiado en tu plan y qué trabajar después."
+      },
+      "tournamentDebrief": {
+        "title": "Análisis del torneo",
+        "description": "El relato de tu partida y una opinión sobre cada momento clave."
+      }
+    }
   }
 }

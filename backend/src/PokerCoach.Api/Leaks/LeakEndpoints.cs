@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
+using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
@@ -10,6 +11,7 @@ using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
+using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Leaks;
 
@@ -36,6 +38,7 @@ public sealed record UnderSampledResponse(LeakStat Stat, PokerPosition? Position
 /// <param name="ReferenceVersion">Version of the reference ranges used.</param>
 /// <param name="Format">Table format analysed; positions are named within it.</param>
 /// <param name="HandsByFormat">Hands (15+ BB) per format.</param>
+/// <param name="LockedLeaks">Postflop leaks found but not shown: the plan does not include them (ADR-0016).</param>
 public sealed record LeakAnalysisResponse(
     IReadOnlyList<LeakResponse> Leaks,
     IReadOnlyList<UnderSampledResponse> UnderSampled,
@@ -45,7 +48,8 @@ public sealed record LeakAnalysisResponse(
     int PendingHands,
     int ReferenceVersion,
     TableFormat Format,
-    FormatCountsResponse HandsByFormat);
+    FormatCountsResponse HandsByFormat,
+    int LockedLeaks);
 
 /// <param name="Format">The table format the leak was shown for, as returned by GET /api/leaks.</param>
 /// <param name="From">The period the leak was shown for, as in GET /api/leaks.</param>
@@ -106,8 +110,12 @@ public static class LeakEndpoints
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var analysis = await leaks.GetAsync(userId, tableFormat, from, to, cancellationToken);
+
+        // Postflop leaks are Elite (ADR-0016): counted, not shown, so the page can say what Elite would add.
+        var advanced = (await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.AdvancedLeaks);
+        var shown = analysis.Report.Leaks.Where(l => advanced || !l.Stat.IsPostflop()).ToList();
         return TypedResults.Ok(new LeakAnalysisResponse(
-            analysis.Report.Leaks.Select(l => new LeakResponse(
+            shown.Select(l => new LeakResponse(
                 l.Stat,
                 l.Position,
                 l.Direction,
@@ -118,14 +126,15 @@ public static class LeakEndpoints
                 l.IntervalLow,
                 l.IntervalHigh,
                 new ReferenceRangeResponse(l.Range.Min, l.Range.Max))).ToList(),
-            analysis.Report.UnderSampled.Select(u => new UnderSampledResponse(u.Stat, u.Position, u.Opportunities, u.Needed)).ToList(),
+            analysis.Report.UnderSampled.Where(u => advanced || !u.Stat.IsPostflop()).Select(u => new UnderSampledResponse(u.Stat, u.Position, u.Opportunities, u.Needed)).ToList(),
             analysis.Hands,
             analysis.Sample.Tournaments,
             analysis.Sample.CompleteTournaments,
             analysis.PendingHands,
             analysis.ReferenceVersion,
             analysis.Format,
-            new FormatCountsResponse(analysis.HandsByFormat.SixMax, analysis.HandsByFormat.FullRing)));
+            new FormatCountsResponse(analysis.HandsByFormat.SixMax, analysis.HandsByFormat.FullRing),
+            analysis.Report.Leaks.Count - shown.Count));
     }
 
     /// <summary>
@@ -148,6 +157,11 @@ public static class LeakEndpoints
         if (request.Stat is not { } stat)
         {
             return ApiProblems.Validation("stat", "Required.");
+        }
+
+        if (stat.IsPostflop() && !(await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.AdvancedLeaks))
+        {
+            return PlanGates.Required(Feature.AdvancedLeaks);
         }
 
         if (request.Direction is not { } direction)

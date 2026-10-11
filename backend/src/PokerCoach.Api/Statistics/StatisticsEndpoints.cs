@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
+using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
+
+using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Statistics;
 
@@ -119,8 +122,8 @@ public static class StatisticsEndpoints
     public static IEndpointRouteBuilder MapStatisticsEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/api/statistics", GetAsync).WithTags("Statistics");
-        endpoints.MapGet("/api/statistics/all-in", GetAllInLuckAsync).WithTags("Statistics");
-        endpoints.MapGet("/api/statistics/breakdowns", GetBreakdownsAsync).WithTags("Statistics");
+        endpoints.MapGet("/api/statistics/all-in", GetAllInLuckAsync).WithTags("Statistics").RequiresFeature(Feature.AdvancedLeaks);
+        endpoints.MapGet("/api/statistics/breakdowns", GetBreakdownsAsync).WithTags("Statistics").RequiresFeature(Feature.AdvancedLeaks);
         return endpoints;
     }
 

@@ -301,8 +301,12 @@ Subscriptions (ADR-0014):
       (`subscriptions.pro_grants`, migration `ProGrants`, ADR-0015); `/admin` page with grants and
       subscribers linked to Stripe; Google emails trusted only when verified
 - [x] Landing page `site/` for nutsiq.com (static, self-hosted fonts); legal pages as templates
-- [ ] Stripe account: Pro product with two prices, customer portal, webhook endpoint, secrets; CGV and
-      legal notice (lawyer)
+- [x] Three offers (ADR-0016): Starter 0 €, Pro 14,90 €/149 €, Elite 29,90 €/299 €; monthly AI credits
+      from the usage ledger (explanation 1, weekly review 2, debrief 5); feature matrix in the domain,
+      `403 PLAN_REQUIRED` gates, locks in the web app; tier read from the Stripe price (migration `PlanTiers`)
+- [ ] Stripe account: Pro and Elite products with two prices each, customer portal allowing switches,
+      webhook endpoint, secrets; raise `Coaching:MonthlyBudgetUsd` with subscribers; CGV and legal notice
+      (lawyer)
 
 Coach reports (ADR-0012):
 

@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
+using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Training;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
+
+using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Training;
 
@@ -61,7 +65,7 @@ public static class TrainingEndpoints
 
     public static IEndpointRouteBuilder MapTrainingEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("/api/training/opening").WithTags("Training");
+        var group = endpoints.MapGroup("/api/training/opening").WithTags("Training").RequiresFeature(Feature.TrainingDrills);
         group.MapGet("/spot", GetSpotAsync);
         group.MapPost("/answers", AnswerAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapGet("/progress", GetProgressAsync);
@@ -76,6 +80,7 @@ public static class TrainingEndpoints
     private static async Task<Results<Ok<DrillSpotResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetSpotAsync(
         HttpContext context,
         OpeningTrainingService training,
+        PlanAccess plans,
         CancellationToken cancellationToken,
         string format = "sixMax",
         string band = "mid",
@@ -94,6 +99,11 @@ public static class TrainingEndpoints
 
         if (string.Equals(mode, "real", StringComparison.OrdinalIgnoreCase))
         {
+            if (!(await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.TrainingOwnHands))
+            {
+                return PlanGates.Required(Feature.TrainingOwnHands);
+            }
+
             var real = await training.NextRealAsync(userId, parsedFormat, cancellationToken);
             if (real is null)
             {
@@ -157,11 +167,17 @@ public static class TrainingEndpoints
         DrillAnswerRequest request,
         HttpContext context,
         OpeningTrainingService training,
+        PlanAccess plans,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
             return TypedResults.Unauthorized();
+        }
+
+        if (request.SourceHandId is not null && !(await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.TrainingOwnHands))
+        {
+            return PlanGates.Required(Feature.TrainingOwnHands);
         }
 
         if (request.Format is not { } format || request.Band is not { } band || request.Position is not { } position || request.Answer is not { } answer)

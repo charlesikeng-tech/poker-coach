@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Subscriptions;
 using PokerCoach.Application.Subscriptions;
 using System.Globalization;
 using System.Security.Cryptography;
@@ -121,7 +122,7 @@ public sealed class TournamentDebriefService(
             return ReportOutcome<DebriefReport>.Of(View(stored, fingerprint));
         }
 
-        if (await gate.CheckAsync(userId, Kind, options.DailyDebriefsPerUser, freeMonthlyAllowance: 0, cancellationToken) is { } refused)
+        if (await gate.CheckAsync(userId, Kind, options.DailyDebriefsPerUser, Feature.TournamentDebrief, cancellationToken) is { } refused)
         {
             return ReportOutcome<DebriefReport>.Fail(refused);
         }

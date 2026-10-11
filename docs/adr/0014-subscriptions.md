@@ -2,6 +2,9 @@
 
 Status: accepted (2026-10-10). Administrators and offered access: ADR-0015.
 
+> Amendment (2026-10-12): the Free/Pro grid and its prices are superseded by ADR-0016 (Starter, Pro,
+> Elite, monthly AI credits). Billing mechanics below are unchanged.
+
 ## Context
 
 The product is now NutsIQ (nutsiq.com) and it needs revenue that covers the AI coach and hosting. The

@@ -17,6 +17,7 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
+import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { positionShort } from '../training/spot-table';
 import {
   CoachingApi,
@@ -48,7 +49,7 @@ export interface ReviewableWeek {
  */
 @Component({
   selector: 'app-week-review-panel',
-  imports: [TranslocoDirective, RouterLink, Button, Icon],
+  imports: [TranslocoDirective, RouterLink, PlanLock, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './week-review-panel.html',
   styleUrls: ['./coach-panel.scss', './week-review-panel.scss'],

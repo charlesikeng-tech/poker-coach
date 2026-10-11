@@ -23,7 +23,7 @@ import { WelcomeIntro } from './welcome-intro';
 
 const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
 
-/** Pages whose figures a Free account sees over its history window only (ADR-0014). */
+/** Pages whose figures a Starter account sees over its history window only (ADR-0014). */
 const WINDOWED_PAGES = ['/statistics', '/leaks', '/ranges', '/tournaments', '/performance'];
 
 @Component({
@@ -66,10 +66,10 @@ export class Shell {
     { initialValue: inject(Router).url },
   );
 
-  /** A Free account on a page limited to recent history: say so, and that nothing is lost. */
+  /** A Starter account on a page limited to recent history: say so, and that nothing is lost. */
   protected readonly windowed = computed(
     () =>
-      this.billing.isFree() &&
+      this.billing.isStarter() &&
       WINDOWED_PAGES.some((page) => this.url().split('?')[0].startsWith(page)),
   );
 

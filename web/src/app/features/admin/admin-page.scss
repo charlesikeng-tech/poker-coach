@@ -157,3 +157,17 @@ table {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.field--plan {
+  flex: 0 0 8rem;
+}
+
+.plan-tag {
+  margin-right: var(--space-2);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}

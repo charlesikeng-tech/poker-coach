@@ -55,11 +55,11 @@ internal sealed class InMemorySubscriptionStore : ISubscriptionStore
         Task.FromResult(Grants.RemoveAll(g => g.UserId == userId) > 0);
 
     public Task<IReadOnlyList<GrantView>> ListGrantsAsync(CancellationToken cancellationToken) =>
-        Task.FromResult<IReadOnlyList<GrantView>>([.. Grants.Select(g => new GrantView(g.UserId, "user", null, g.Reason, g.EndsAt, g.GrantedAt))]);
+        Task.FromResult<IReadOnlyList<GrantView>>([.. Grants.Select(g => new GrantView(g.UserId, "user", null, g.Plan, g.Reason, g.EndsAt, g.GrantedAt))]);
 
     public Task<IReadOnlyList<SubscriberView>> ListSubscribersAsync(int limit, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<SubscriberView>>(
-            [.. Rows.Where(r => r.Status is not null).Take(limit).Select(r => new SubscriberView(r.UserId, "user", null, r.CustomerId, r.Status, r.Interval, r.CurrentPeriodEnd, r.CancelAtPeriodEnd))]);
+            [.. Rows.Where(r => r.Status is not null).Take(limit).Select(r => new SubscriberView(r.UserId, "user", null, r.CustomerId, r.Status, r.Tier, r.Interval, r.CurrentPeriodEnd, r.CancelAtPeriodEnd))]);
 }
 
 /// <summary>Stripe stand-in: customers and their subscriptions in memory; a valid signature is the string "valid".</summary>
@@ -125,7 +125,7 @@ internal sealed class FakeBillingGateway(bool configured = true) : IBillingGatew
 
 internal static class BillingFakes
 {
-    /// <summary>Billing off: every account has Pro, as in every test written before plans existed.</summary>
+    /// <summary>Billing off: every account has Elite, as in every test written before plans existed.</summary>
     public static PlanAccess Unbilled(TimeProvider time) =>
-        new(new InMemorySubscriptionStore(), new FakeBillingGateway(configured: false), new Identity.InMemoryUserAccountStore(), new AdminOptions(), new FreePlanOptions(), time);
+        new(new InMemorySubscriptionStore(), new FakeBillingGateway(configured: false), new Identity.InMemoryUserAccountStore(), new AdminOptions(), new PlanOptions(), time);
 }

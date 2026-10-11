@@ -101,11 +101,13 @@ builder.Services.AddOptions<CoachingOptions>()
     .Validate(o => o.MonthlyBudgetUsd >= 0 && o.DailyExplanationsPerUser >= 0 && o.ExampleHands is > 0 and <= 10, "Invalid coaching limits.")
     .ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<CoachingOptions>>().Value);
-builder.Services.AddOptions<FreePlanOptions>()
-    .BindConfiguration(FreePlanOptions.SectionName)
-    .Validate(o => o.HistoryDays > 0 && o.MonthlyExplanations >= 0, "Invalid free plan limits.")
+builder.Services.AddOptions<PlanOptions>()
+    .BindConfiguration(PlanOptions.SectionName)
+    .Validate(
+        o => o.Starter.HistoryDays > 0 && new[] { o.Starter, o.Pro, o.Elite }.All(l => l.MonthlyCredits >= 0 && l.HistoryDays is null or > 0),
+        "Invalid plan limits.")
     .ValidateOnStart();
-builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<FreePlanOptions>>().Value);
+builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<PlanOptions>>().Value);
 builder.Services.AddOptions<AdminOptions>().BindConfiguration(AdminOptions.SectionName);
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AdminOptions>>().Value);
 builder.Services.AddScoped<PlanAccess>();

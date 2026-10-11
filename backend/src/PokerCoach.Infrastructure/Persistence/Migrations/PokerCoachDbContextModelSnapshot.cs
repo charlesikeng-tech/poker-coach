@@ -219,6 +219,14 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("granted_by");
 
+                    b.Property<string>("Plan")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasDefaultValue("Pro")
+                        .HasColumnName("plan");
+
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -273,6 +281,11 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("SyncedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("synced_at");
+
+                    b.Property<string>("Tier")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasColumnName("tier");
 
                     b.HasKey("UserId")
                         .HasName("pk_subscriptions");

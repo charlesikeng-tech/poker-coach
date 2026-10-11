@@ -167,6 +167,14 @@
         }
       }
 
+      @if (analysis.lockedLeaks > 0) {
+        <p class="locked-leaks">
+          <app-icon [icon]="icons.Lock" />
+          <span>{{ t('locked', { count: analysis.lockedLeaks }) }}</span>
+          <a routerLink="/subscription">{{ t('lockedAction') }}</a>
+        </p>
+      }
+
       @if (analysis.underSampled.length > 0) {
         <details class="under glass">
           <summary>{{ t('under.title', { count: analysis.underSampled.length }) }}</summary>

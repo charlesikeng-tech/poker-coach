@@ -5,7 +5,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ExternalLink, Gift, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
-import { BillingInterval, SubscriptionStatus } from '../../core/billing/billing.service';
+import { BillingInterval, PaidPlan, SubscriptionStatus } from '../../core/billing/billing.service';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
@@ -16,6 +16,7 @@ interface Grant {
   readonly userId: string;
   readonly displayName: string;
   readonly email: string | null;
+  readonly plan: PaidPlan;
   readonly reason: string;
   readonly endsAt: string | null;
   readonly grantedAt: string;
@@ -26,6 +27,7 @@ interface Subscriber {
   readonly displayName: string;
   readonly email: string | null;
   readonly status: SubscriptionStatus | null;
+  readonly tier: PaidPlan | null;
   readonly interval: BillingInterval | null;
   readonly currentPeriodEnd: string | null;
   readonly cancelAtPeriodEnd: boolean;
@@ -63,6 +65,7 @@ export class AdminPage {
 
   protected readonly email = signal('');
   protected readonly reason = signal('');
+  protected readonly plan = signal<PaidPlan>('pro');
   /** yyyy-mm-dd from the date input; empty: until revoked. */
   protected readonly endsOn = signal('');
   protected readonly saving = signal(false);
@@ -99,6 +102,7 @@ export class AdminPage {
       await firstValueFrom(
         this.http.put('/api/admin/grants', {
           email: this.email().trim(),
+          plan: this.plan(),
           reason: this.reason().trim(),
           endsAt,
         }),
@@ -106,6 +110,7 @@ export class AdminPage {
       this.granted.set(this.email().trim());
       this.email.set('');
       this.reason.set('');
+      this.plan.set('pro');
       this.endsOn.set('');
       await this.load();
     } catch (error) {

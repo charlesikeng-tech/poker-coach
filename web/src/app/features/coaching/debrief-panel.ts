@@ -17,6 +17,7 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
+import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
 import { CoachingApi, Debrief, DebriefMoment, coachErrorCode, notWrittenYet } from './coaching-api';
 
@@ -35,7 +36,7 @@ type PanelState =
  */
 @Component({
   selector: 'app-debrief-panel',
-  imports: [TranslocoDirective, RouterLink, Button, Icon, PlayingCard],
+  imports: [TranslocoDirective, RouterLink, PlanLock, Button, Icon, PlayingCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './debrief-panel.html',
   styleUrls: ['./coach-panel.scss', './debrief-panel.scss'],

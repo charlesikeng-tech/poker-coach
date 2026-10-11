@@ -55,6 +55,8 @@ export interface LeakAnalysis {
   /** Table format analysed; positions are named within it. */
   readonly format: TableFormat;
   readonly handsByFormat: Readonly<Record<TableFormat, number>>;
+  /** Postflop leaks found but not in the account's offer (ADR-0016). */
+  readonly lockedLeaks: number;
 }
 
 /** A hand the coach used as an example, labelled with our own data (ADR-0008). */
