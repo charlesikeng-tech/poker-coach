@@ -4,8 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Import;
 using PokerCoach.Application.Poker;
+using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 using PokerCoach.Domain.Identity;
 using PokerCoach.Infrastructure.Import;
@@ -203,6 +205,11 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         Assert.Equal(72, after.ByPosition.Sum(p => p.Line.Hands));
         Assert.InRange(after.Overall.Vpip.Opportunities, 1, 72);
         Assert.True(after.Overall.Pfr.Made <= after.Overall.Vpip.Made);
+
+        // Facing a single open is a narrower spot than any 3-bet opportunity (ADR-0018).
+        var defences = await scope.ServiceProvider.GetRequiredService<IRangeReadStore>().CountDefencesAsync(userId, noFilter, HeroHandFacts.Version, Ct);
+        Assert.InRange(defences.Sum(d => d.Dealt), 1, after.Overall.ThreeBet.Opportunities);
+        Assert.All(defences, d => Assert.InRange(d.Calls + d.ThreeBets, 0, d.Dealt));
 
         var deep = await statistics.GetAsync(userId, noFilter with { MinStackBigBlinds = 1_000m }, Ct);
         Assert.Equal(0, deep.Overall.Hands);

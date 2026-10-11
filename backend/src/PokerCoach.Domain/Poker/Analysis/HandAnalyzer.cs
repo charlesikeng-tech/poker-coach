@@ -7,6 +7,9 @@ namespace PokerCoach.Domain.Poker.Analysis;
 /// <item>RFI (open): first to enter the pot, with a raise, when everyone before folded. Limp: same spot, a call.</item>
 /// <item>Steal: an open from the cutoff, the button or the small blind.</item>
 /// <item>3-bet: re-raise when facing exactly one raise. Fold to 3-bet: after opening, fold to the single re-raise.</item>
+/// <item>Facing an open: the first decision faces one raise that is not all-in, nobody having limped or called
+/// before; the hero calls, 3-bets or folds. A narrower spot than the 3-bet opportunity (no squeeze, no
+/// open-shove), the one defence ranges are written for.</item>
 /// <item>C-bet flop: as the last preflop raiser, bet the flop when checked to (or first to act).</item>
 /// <item>Went to showdown: saw the flop and was still in when two or more players remained at the end.</item>
 /// <item>Postflop (fold to / raise the flop c-bet, turn c-bet, flop check-raise, won when saw flop, aggression
@@ -29,7 +32,7 @@ public static class HandAnalyzer
         var dealt = hand.Actions.Select(a => a.Player).Distinct(StringComparer.Ordinal).Count();
         var heroStack = hand.Seats.FirstOrDefault(s => s.Player == hero)?.Stack ?? 0;
 
-        var preflop = Preflop(hand, hero, position);
+        var preflop = Preflop(hand, hero, position, positions);
         var postflop = Postflop(hand, hero, preflop.HeroFolded, preflop.LastRaiser == hero);
 
         var invested = hand.Actions.Where(a => a.Player == hero).Sum(a => a.Amount);
@@ -71,15 +74,19 @@ public static class HandAnalyzer
             play.CheckRaiseFlop,
             play.WonWhenSawFlop,
             play.Aggressive,
-            play.Decisions);
+            play.Decisions,
+            preflop.FacingOpenFrom,
+            preflop.FacingOpenCall,
+            preflop.FacingOpenThreeBet);
     }
 
-    private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position)
+    private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position, IReadOnlyDictionary<string, PokerPosition> positions)
     {
         var facts = new PreflopFacts();
         var raises = 0;
         var calls = 0;
         var heroOpened = false;
+        var lastRaiseAllIn = false;
 
         foreach (var action in hand.Actions.Where(a => a.Street == Street.Preflop && !IsForced(a.Kind)))
         {
@@ -100,6 +107,14 @@ public static class HandAnalyzer
                     }
 
                     facts.ThreeBet = facts.ThreeBetOpportunity && action.Kind == ActionKind.Raise;
+
+                    if (raises == 1 && calls == 0 && !lastRaiseAllIn
+                        && facts.LastRaiser is { } opener && positions.TryGetValue(opener, out var openerPosition))
+                    {
+                        facts.FacingOpenFrom = openerPosition;
+                        facts.FacingOpenCall = action.Kind == ActionKind.Call;
+                        facts.FacingOpenThreeBet = action.Kind == ActionKind.Raise;
+                    }
                 }
                 else if (heroOpened && raises == 2 && !facts.FoldToThreeBetOpportunity)
                 {
@@ -117,6 +132,7 @@ public static class HandAnalyzer
                 case ActionKind.Bet or ActionKind.Raise:
                     raises++;
                     facts.LastRaiser = action.Player;
+                    lastRaiseAllIn = action.IsAllIn;
                     break;
                 case ActionKind.Call:
                     calls++;
@@ -198,6 +214,12 @@ public static class HandAnalyzer
         public bool HeroFolded { get; set; }
 
         public string? LastRaiser { get; set; }
+
+        public PokerPosition? FacingOpenFrom { get; set; }
+
+        public bool FacingOpenCall { get; set; }
+
+        public bool FacingOpenThreeBet { get; set; }
     }
 
     private sealed record PostflopFacts(bool SawFlop, bool CbetOpportunity, bool Cbet, bool WentToShowdown);

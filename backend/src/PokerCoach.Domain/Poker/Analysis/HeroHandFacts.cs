@@ -10,6 +10,11 @@ namespace PokerCoach.Domain.Poker.Analysis;
 /// <param name="NetChips">Chips won minus chips put in, antes and blinds included.</param>
 /// <param name="AllInEquity">Preflop all-in with every hand shown: the hero's share of the main pot. Null otherwise.</param>
 /// <param name="PostflopAggressive">Bets and raises after the flop; <paramref name="PostflopDecisions"/> adds calls and folds.</param>
+/// <param name="FacingOpenFrom">
+/// The hero's first preflop decision faced exactly one raise, not all-in, with nobody limping or calling before
+/// him: the opener's position. Null for any other spot (or an opener that cannot be named).
+/// </param>
+/// <param name="FacingOpenCall">In that spot, he called; <paramref name="FacingOpenThreeBet"/>: he re-raised.</param>
 /// <param name="AllInExpectedNetChips">Same hands: what the hero should have won given the cards (see <see cref="AllInExpectation"/>).</param>
 public sealed record HeroHandFacts(
     PokerPosition? Position,
@@ -45,11 +50,14 @@ public sealed record HeroHandFacts(
     bool CheckRaiseFlop = false,
     bool WonWhenSawFlop = false,
     int PostflopAggressive = 0,
-    int PostflopDecisions = 0)
+    int PostflopDecisions = 0,
+    PokerPosition? FacingOpenFrom = null,
+    bool FacingOpenCall = false,
+    bool FacingOpenThreeBet = false)
 {
     /// <summary>Bump on any change of a definition below or in <see cref="HandAnalyzer"/>.</summary>
-    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay).</remarks>
-    public const int Version = 3;
+    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018).</remarks>
+    public const int Version = 4;
 
     /// <summary>Expected result of an all-in in big blinds, comparable across levels and tournaments.</summary>
     public decimal? AllInExpectedNetBigBlinds(long bigBlind) =>

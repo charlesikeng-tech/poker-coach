@@ -47,6 +47,35 @@ public sealed class HandAnalyzerTests
     }
 
     [Fact]
+    public void Facing_one_open_records_the_opener_and_what_the_hero_did()
+    {
+        var called = Analyze(Blinds(), Pre("P3", Raise, 400), Pre("P4", Fold), Pre("P5", Fold), Pre("Hero", Call, 400));
+        Assert.Equal(PokerPosition.Utg, called.FacingOpenFrom);
+        Assert.True(called.FacingOpenCall);
+        Assert.False(called.FacingOpenThreeBet);
+
+        var threeBet = Analyze(Blinds(), Pre("P3", Fold), Pre("P4", Fold), Pre("P5", Raise, 450), Pre("Hero", Raise, 1300));
+        Assert.Equal((PokerPosition.Cutoff, false, true), (threeBet.FacingOpenFrom, threeBet.FacingOpenCall, threeBet.FacingOpenThreeBet));
+
+        var folded = Analyze(Blinds(), Pre("P3", Fold), Pre("P4", Raise, 400), Pre("P5", Fold), Pre("Hero", Fold));
+        Assert.Equal((PokerPosition.Hijack, false, false), (folded.FacingOpenFrom, folded.FacingOpenCall, folded.FacingOpenThreeBet));
+    }
+
+    [Fact]
+    public void A_caller_before_an_open_shove_or_a_limp_are_not_the_defence_spot()
+    {
+        var squeeze = Analyze(Blinds(), Pre("P3", Raise, 400), Pre("P4", Call, 400), Pre("P5", Fold), Pre("Hero", Raise, 1600));
+        Assert.Null(squeeze.FacingOpenFrom);
+        Assert.True(squeeze.ThreeBetOpportunity && squeeze.ThreeBet);
+
+        var shove = Analyze(Blinds(), Pre("P3", Fold), Pre("P4", Fold), new HandAction(Street.Preflop, "P5", Raise, 3000, true), Pre("Hero", Call, 3000));
+        Assert.Null(shove.FacingOpenFrom);
+
+        var isolated = Analyze(Blinds(), Pre("P3", Call, 200), Pre("P4", Raise, 800), Pre("P5", Fold), Pre("Hero", Fold));
+        Assert.Null(isolated.FacingOpenFrom);
+    }
+
+    [Fact]
     public void A_walk_gives_no_preflop_decision()
     {
         // Hero in the big blind (button on seat 4): everyone folds to him.
@@ -179,6 +208,9 @@ public sealed class HandAnalyzerTests
             Assert.True(!facts.WonWhenSawFlop || facts.SawFlop);
             Assert.InRange(facts.PostflopAggressive, 0, facts.PostflopDecisions);
             Assert.True(facts.SawFlop || facts.PostflopDecisions == 0);
+            Assert.False(facts.FacingOpenCall && facts.FacingOpenThreeBet);
+            Assert.True(facts.FacingOpenFrom is not null || !(facts.FacingOpenCall || facts.FacingOpenThreeBet));
+            Assert.True(facts.FacingOpenFrom is null || facts.ThreeBetOpportunity);
         });
 
         // The hero can never win or lose more than the pot.

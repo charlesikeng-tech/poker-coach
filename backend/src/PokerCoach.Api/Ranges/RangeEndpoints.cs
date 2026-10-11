@@ -8,7 +8,6 @@ using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
-
 using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Ranges;
@@ -47,11 +46,47 @@ public sealed record OpeningRangesResponse(
     int PendingHands,
     int ReferenceVersion);
 
+/// <param name="Reference">What the reference does with it (fold, call, threeBet); null when no reference is written.</param>
+public sealed record DefenceCellResponse(string Hand, int Dealt, int Calls, int ThreeBets, DefenceAction? Reference);
+
+/// <param name="Defender">The seat facing the open, named like the opening positions.</param>
+/// <param name="DefenceRate">Calls and 3-bets over spots.</param>
+public sealed record DefencePairResponse(
+    PokerPosition Defender,
+    PokerPosition Opener,
+    int Dealt,
+    int Calls,
+    int ThreeBets,
+    StatRateResponse DefenceRate,
+    StatRateResponse ThreeBetRate,
+    bool HasReference);
+
+/// <param name="CallShare">Share of all two-card holdings the reference calls (ratio); null without a reference.</param>
+/// <param name="Cells">The 169 starting hands in grid order.</param>
+public sealed record DefenceSpotResponse(
+    DefencePairResponse Pair,
+    string? CallNotation,
+    string? ThreeBetNotation,
+    decimal? CallShare,
+    decimal? ThreeBetShare,
+    IReadOnlyList<DefenceCellResponse> Cells);
+
+/// <param name="Pairs">Every defender–opener pair of the format with its counts, openers first to act first.</param>
+public sealed record DefenceRangesResponse(
+    TableFormat Format,
+    StackBand Band,
+    FormatCountsResponse Spots,
+    IReadOnlyList<DefencePairResponse> Pairs,
+    DefenceSpotResponse Selected,
+    int PendingHands,
+    int ReferenceVersion);
+
 public static class RangeEndpoints
 {
     public static IEndpointRouteBuilder MapRangeEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/api/ranges/opening", GetOpeningAsync).WithTags("Ranges").RequiresFeature(Feature.OpeningRanges);
+        endpoints.MapGet("/api/ranges/defence", GetDefenceAsync).WithTags("Ranges").RequiresFeature(Feature.DefenceRanges);
         return endpoints;
     }
 
@@ -126,4 +161,99 @@ public static class RangeEndpoints
             result.PendingHands,
             result.ReferenceVersion));
     }
+
+    /// <summary>
+    /// The player's defence against a single open next to the reference (ADR-0018): for one defender and one
+    /// opener, what each starting hand did (call, 3-bet, fold), with the list of every pair and its counts.
+    /// </summary>
+    /// <param name="band">short (15–25 BB, no reference written), mid (25–40 BB) or deep (40 BB and more).</param>
+    /// <param name="defender">Seat facing the open; with <paramref name="opener"/>, omitted or invalid: the big blind's busiest spot.</param>
+    private static async Task<Results<Ok<DefenceRangesResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetDefenceAsync(
+        HttpContext context,
+        PlanAccess plans,
+        DefenceRangeService defence,
+        CancellationToken cancellationToken,
+        string? format = null,
+        string band = "mid",
+        string? defender = null,
+        string? opener = null,
+        DateTimeOffset? from = null,
+        DateTimeOffset? to = null)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!Enum.TryParse<StackBand>(band, ignoreCase: true, out var stackBand) || !Enum.IsDefined(stackBand) || stackBand == StackBand.Push)
+        {
+            return ApiProblems.Validation("band", "Must be one of: short, mid, deep.");
+        }
+
+        if (!TableFormatQuery.TryParse(format, out var tableFormat))
+        {
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        if (from is not null && to is not null && from >= to)
+        {
+            return ApiProblems.Validation("to", "Must be after 'from'.");
+        }
+
+        if (!TryParseSeat(defender, out var defenderSeat))
+        {
+            return ApiProblems.Validation("defender", "Must be a position (utg … bigBlind).");
+        }
+
+        if (!TryParseSeat(opener, out var openerSeat))
+        {
+            return ApiProblems.Validation("opener", "Must be a position (utg … smallBlind).");
+        }
+
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
+        var result = await defence.GetAsync(userId, tableFormat, stackBand, defenderSeat, openerSeat, from, to, cancellationToken);
+        var selected = result.Selected;
+        return TypedResults.Ok(new DefenceRangesResponse(
+            result.Format,
+            result.Band,
+            new FormatCountsResponse(result.SpotsByFormat[TableFormat.SixMax], result.SpotsByFormat[TableFormat.FullRing]),
+            result.Pairs.Select(Pair).ToList(),
+            new DefenceSpotResponse(
+                Pair(selected.Pair),
+                selected.CallNotation,
+                selected.ThreeBetNotation,
+                selected.CallShare,
+                selected.ThreeBetShare,
+                selected.Cells.Select(c => new DefenceCellResponse(c.Hand.ToString(), c.Dealt, c.Calls, c.ThreeBets, c.Reference)).ToList()),
+            result.PendingHands,
+            result.ReferenceVersion));
+    }
+
+    /// <summary>Omitted is valid (null); a name in any case is; a number or an unknown name is not.</summary>
+    private static bool TryParseSeat(string? value, out PokerPosition? seat)
+    {
+        seat = null;
+        if (string.IsNullOrEmpty(value))
+        {
+            return true;
+        }
+
+        if (int.TryParse(value, out _) || !Enum.TryParse<PokerPosition>(value, ignoreCase: true, out var parsed) || !Enum.IsDefined(parsed))
+        {
+            return false;
+        }
+
+        seat = parsed;
+        return true;
+    }
+
+    private static DefencePairResponse Pair(DefencePair p) => new(
+        p.Defender,
+        p.Opener,
+        p.Dealt,
+        p.Calls,
+        p.ThreeBets,
+        new StatRateResponse(p.DefenceRate.Made, p.DefenceRate.Opportunities, p.DefenceRate.Rate),
+        new StatRateResponse(p.ThreeBetRate.Made, p.ThreeBetRate.Opportunities, p.ThreeBetRate.Rate),
+        p.HasReference);
 }

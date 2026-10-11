@@ -1159,7 +1159,66 @@
         "tooTight": "{{count}} reference hand(s) you fold",
         "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
       },
-      "pushStack": "Stack (push/fold)"
+      "pushStack": "Stack (push/fold)",
+      "spot": "Spot",
+      "spots": {
+        "open": "Open",
+        "defence": "Defence vs open"
+      },
+      "defence": {
+        "description": "What you call, 3-bet or fold facing a single raise, hand by hand, by your position and the opener's.",
+        "defenders": "Your position",
+        "openers": "Opener's position",
+        "facing": "Facing:",
+        "cellLabel": "{{hand}}: dealt {{dealt}} times facing this open, call {{calls}}, 3-bet {{threeBets}}",
+        "gridLabel": {
+          "mine": "Your defence in the {{defender}} facing a {{opener}} open",
+          "reference": "Reference defence in the {{defender}} facing {{opener}}",
+          "gap": "Gap with the reference in the {{defender}} facing {{opener}}"
+        },
+        "summary": {
+          "title": "{{defender}} facing a {{opener}} open",
+          "none": "No spot of this kind for these filters.",
+          "counts": "{{calls}} call · {{threeBets}} 3-bet over {{dealt}} spots",
+          "reference": "Reference: defend {{defend}}, including 3-bet {{threeBet}} (you: 3-bet {{mine}})."
+        },
+        "noReference": {
+          "short": "No reference yet between 15 and 25 BB: 3-bets become shoves and the strategy changes. Your hands are still counted.",
+          "spot": "No reference written for this spot: we cover the BB, SB, BTN, CO and middle seats against the most frequent opens."
+        },
+        "reference": {
+          "title": "Reference v{{version}} · {{defender}} vs {{opener}}",
+          "threeBet": "3-bet: {{share}} of hands",
+          "call": "Call: {{share}} of hands",
+          "note": "Our conventions for €5–20 online MTTs with antes, facing a 2–2.3 BB open (3 BB from the SB), chip EV, no ICM. Written hand by hand (call, 3-bet or fold): not a GTO computation."
+        },
+        "gap": {
+          "title": "Gap · {{defender}} vs {{opener}}",
+          "tooLoose": "{{count}} hand(s) played where the reference folds",
+          "tooTight": "{{count}} reference hand(s) you fold",
+          "otherAction": "{{count}} hand(s) played the other way (call instead of 3-bet, or the reverse)",
+          "rule": "A hand counts as played if you call or 3-bet it at least half the time, then by your most frequent action. On 1 or 2 occurrences it is only a hint."
+        },
+        "detail": {
+          "hint": "Hover a cell to see how often you were dealt this hand facing this open and what you did with it.",
+          "never": "Never dealt facing this open for these filters.",
+          "reference": {
+            "fold": "Reference: fold",
+            "call": "Reference: call",
+            "threeBet": "Reference: 3-bet"
+          }
+        },
+        "legend": {
+          "threeBet": "Share played as a 3-bet",
+          "call": "Share played as a call",
+          "refThreeBet": "Reference 3-bet",
+          "refCall": "Reference call",
+          "tooLoose": "Played, where the reference folds",
+          "tooTight": "Folded, where the reference plays",
+          "otherAction": "Played differently from the reference"
+        },
+        "method": "Spot counted: your first decision facing a single raise (not all-in), nobody having limped or called before you; squeezes and open-shoves are left out. Counted separately for 6-max and full ring; a 6-max UTG is treated as a full-ring LJ. Reference v{{version}} for 25 BB and more (ADR-0018)."
+      }
     },
     "training": {
       "title": "Training room",
@@ -1717,6 +1776,10 @@
       "tournamentDebrief": {
         "title": "Tournament debrief",
         "description": "The story of your run and a read on each key moment."
+      },
+      "defenceRanges": {
+        "title": "Defence vs open",
+        "description": "What you call and 3-bet facing an open, against the references."
       }
     }
   }

@@ -16,13 +16,15 @@ export type Feature =
   | 'trainingDrills'
   | 'trainingOwnHands'
   | 'weekReview'
-  | 'tournamentDebrief';
+  | 'tournamentDebrief'
+  | 'defenceRanges';
 
 const PLAN_ORDER: readonly Plan[] = ['starter', 'pro', 'elite'];
 
 /** The lowest offer that opens each feature (the server checks it again). */
 export const MINIMUM_PLAN: Readonly<Record<Feature, PaidPlan>> = {
   openingRanges: 'pro',
+  defenceRanges: 'pro',
   trainingDrills: 'pro',
   weekReview: 'pro',
   pushFoldRanges: 'elite',

@@ -1159,7 +1159,66 @@
         "tooTight": "{{count}} main(s) du repère que tu fold",
         "rule": "Une main compte comme jouée en open si tu fais un raise au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
       },
-      "pushStack": "Stack (push/fold)"
+      "pushStack": "Stack (push/fold)",
+      "spot": "Spot",
+      "spots": {
+        "open": "Open",
+        "defence": "Défense vs open"
+      },
+      "defence": {
+        "description": "Ce que tu call, 3-bet ou fold face à une seule relance, main par main, selon ta position et celle de l'ouvreur.",
+        "defenders": "Ta position",
+        "openers": "Position de l'ouvreur",
+        "facing": "Face à :",
+        "cellLabel": "{{hand}} : reçue {{dealt}} fois face à cet open, call {{calls}}, 3-bet {{threeBets}}",
+        "gridLabel": {
+          "mine": "Ta défense en {{defender}} face à un open de {{opener}}",
+          "reference": "Défense de référence en {{defender}} face à {{opener}}",
+          "gap": "Écart avec la référence en {{defender}} face à {{opener}}"
+        },
+        "summary": {
+          "title": "{{defender}} face à un open de {{opener}}",
+          "none": "Aucun spot de ce type pour ces filtres.",
+          "counts": "{{calls}} call · {{threeBets}} 3-bet sur {{dealt}} spots",
+          "reference": "Repère : défense {{defend}} dont 3-bet {{threeBet}} (toi : 3-bet {{mine}})."
+        },
+        "noReference": {
+          "short": "Pas encore de repère entre 15 et 25 BB : les 3-bets y deviennent des tapis et la stratégie change. Tes mains restent comptées.",
+          "spot": "Pas de repère écrit pour ce spot : on couvre la BB, la SB, le BTN, le CO et les positions du milieu face aux opens les plus fréquents."
+        },
+        "reference": {
+          "title": "Repère v{{version}} · {{defender}} vs {{opener}}",
+          "threeBet": "3-bet : {{share}} des mains",
+          "call": "Call : {{share}} des mains",
+          "note": "Nos conventions pour des MTT en ligne à 5–20 € avec antes, face à un open de 2 à 2,3 BB (3 BB depuis la SB), en chips, sans ICM. Écrites main par main (call, 3-bet ou fold) : ce n'est pas un calcul GTO."
+        },
+        "gap": {
+          "title": "Écart · {{defender}} vs {{opener}}",
+          "tooLoose": "{{count}} main(s) jouées alors que le repère fold",
+          "tooTight": "{{count}} main(s) du repère que tu fold",
+          "otherAction": "{{count}} main(s) jouées autrement (call au lieu de 3-bet, ou l'inverse)",
+          "rule": "Une main compte comme jouée si tu la call ou la 3-bet au moins une fois sur deux, puis selon ton action la plus fréquente. Sur 1 ou 2 occurrences, ce n'est qu'un indice."
+        },
+        "detail": {
+          "hint": "Survole une case pour voir combien de fois tu as reçu cette main face à cet open et ce que tu en as fait.",
+          "never": "Jamais reçue face à cet open pour ces filtres.",
+          "reference": {
+            "fold": "Repère : fold",
+            "call": "Repère : call",
+            "threeBet": "Repère : 3-bet"
+          }
+        },
+        "legend": {
+          "threeBet": "Part jouée en 3-bet",
+          "call": "Part jouée en call",
+          "refThreeBet": "3-bet recommandé",
+          "refCall": "Call recommandé",
+          "tooLoose": "Jouée, alors que le repère fold",
+          "tooTight": "Fold, alors que le repère joue",
+          "otherAction": "Jouée autrement que le repère"
+        },
+        "method": "Spot compté : ta première décision face à une seule relance (pas un tapis), sans limp ni call avant toi ; les squeezes et les open-shoves sont exclus. Comptage séparé 6-max / full ring ; un UTG 6-max est traité comme le LJ d'une table full ring. Repère v{{version}} pour 25 BB et plus (ADR-0018)."
+      }
     },
     "training": {
       "title": "Salle d'entraînement",
@@ -1717,6 +1776,10 @@
       "tournamentDebrief": {
         "title": "Débrief de tournoi",
         "description": "Le récit de ta partie et un avis sur chaque moment clé."
+      },
+      "defenceRanges": {
+        "title": "Défense vs open",
+        "description": "Ce que tu call et 3-bet face à un open, comparé aux références."
       }
     }
   }

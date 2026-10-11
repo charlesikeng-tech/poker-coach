@@ -13,8 +13,21 @@ namespace PokerCoach.Application.Ranges;
 /// <param name="Limps">Times he called first in.</param>
 public sealed record OpeningHoldingCount(PokerPosition Position, int MaxSeats, int PlayersDealt, string HeroCards, int Dealt, int Opens, int Limps);
 
+/// <summary>Spots facing a single open (see <see cref="HeroHandFacts.FacingOpenFrom"/>) of one seat, opener, table and holding.</summary>
+/// <param name="Position">The hero's seat, as resolved in the hand.</param>
+/// <param name="Opener">The opener's seat, as resolved in the hand.</param>
+/// <param name="Dealt">Times the hero faced that open with this holding.</param>
+public sealed record DefenceHoldingCount(PokerPosition Position, PokerPosition Opener, int MaxSeats, int PlayersDealt, string HeroCards, int Dealt, int Calls, int ThreeBets);
+
 public interface IRangeReadStore
 {
+    /// <summary>Spots facing a single open within the filter, grouped by seat, opener, table size and holding.</summary>
+    Task<IReadOnlyList<DefenceHoldingCount>> CountDefencesAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken);
+
     /// <summary>RFI spots of the user's analysed hands within the filter, grouped by position, table size and holding.</summary>
     Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
         Guid userId,

@@ -20,6 +20,7 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { RangeGauge } from '../leaks/range-gauge';
+import { DefenceRanges } from './defence-ranges';
 import { PokerPosition } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import {
@@ -31,9 +32,10 @@ import {
   STACK_BANDS,
   StackBand,
 } from './ranges-api';
+import { POSITION_SHORT, RangeView } from './ranges-shared';
 
 type LoadState = 'loading' | 'ready' | 'error';
-export type RangeView = 'mine' | 'reference' | 'gap';
+type RangeSpot = 'open' | 'defence';
 const VIEWS: readonly RangeView[] = ['mine', 'reference', 'gap'];
 
 /**
@@ -47,19 +49,6 @@ const PENDING_REFRESH_MS = 3000;
 const THIN_SAMPLE = 3;
 const RANKS = 'AKQJT98765432';
 
-/** Poker abbreviations: the same in every language. */
-export const POSITION_SHORT: Record<PokerPosition, string> = {
-  utg: 'UTG',
-  utg1: 'UTG+1',
-  utg2: 'UTG+2',
-  lojack: 'LJ',
-  hijack: 'HJ',
-  cutoff: 'CO',
-  button: 'BTN',
-  smallBlind: 'SB',
-  bigBlind: 'BB',
-};
-
 @Component({
   selector: 'app-ranges-page',
   imports: [
@@ -71,6 +60,7 @@ export const POSITION_SHORT: Record<PokerPosition, string> = {
     Button,
     Icon,
     RangeGauge,
+    DefenceRanges,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -82,6 +72,9 @@ export class RangesPage {
   protected readonly billing = inject(BillingService);
   private readonly language = inject(LanguageService);
 
+  /** Opening ranges, or defence against an open (ADR-0018). */
+  protected readonly spots: readonly RangeSpot[] = ['open', 'defence'];
+  protected readonly spot = signal<RangeSpot>('open');
   protected readonly periods = PERIOD_FILTERS;
   protected readonly bands = STACK_BANDS;
   /** The player's choice; null lets the server pick the format he plays most. */
@@ -148,7 +141,10 @@ export class RangesPage {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
       const args = [this.formatChoice(), this.period(), this.band(), this.pushStack()] as const;
-      untracked(() => void this.load(...args));
+      // The defence view loads its own data.
+      if (this.spot() === 'open') {
+        untracked(() => void this.load(...args));
+      }
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }

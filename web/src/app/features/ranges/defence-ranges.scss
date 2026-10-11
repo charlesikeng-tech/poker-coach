@@ -1,0 +1,29 @@
+// Defence against an open: same grid as the opening ranges (ranges-page.scss), with 3-bet in gold and
+// call in blue, and a fourth kind of gap when the player plays the hand the other way.
+
+.openers {
+  align-items: center;
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.openers__label {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.cell[data-view='reference'][data-ref='threeBet'].cell--in .cell__fill {
+  background: var(--accent-primary);
+}
+
+// As specific as the opening reference rule it overrides.
+.cell[data-view='reference'][data-ref='call'].cell--in .cell__fill {
+  background: #5f9fd6;
+}
+
+.cell[data-gap='otherAction'] {
+  --gap-color: var(--warning);
+}
+
+.swatch--other {
+  background: var(--warning);
+}

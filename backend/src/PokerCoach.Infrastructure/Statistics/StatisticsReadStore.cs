@@ -206,6 +206,33 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToList();
     }
 
+    public async Task<IReadOnlyList<DefenceHoldingCount>> CountDefencesAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+    {
+        var rows = await Filtered(userId, filter, factsVersion)
+            .Where(x => x.F.FacingOpenFrom != null && x.F.Position != null && x.HeroCards != null)
+            .GroupBy(x => new { x.F.Position, x.F.FacingOpenFrom, x.MaxSeats, x.F.PlayersDealt, x.HeroCards })
+            .Select(g => new
+            {
+                g.Key.Position,
+                g.Key.FacingOpenFrom,
+                g.Key.MaxSeats,
+                g.Key.PlayersDealt,
+                g.Key.HeroCards,
+                Dealt = g.Count(),
+                Calls = g.Count(x => x.F.FacingOpenCall),
+                ThreeBets = g.Count(x => x.F.FacingOpenThreeBet),
+            })
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(r => new DefenceHoldingCount(r.Position!.Value, r.FacingOpenFrom!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Calls, r.ThreeBets))
+            .ToList();
+    }
+
     /// <summary>The hero's raise-first-in spots with known cards: a fifth of the hands at most, read whole.</summary>
     public async Task<IReadOnlyList<RealOpeningRow>> ListOpeningSpotsAsync(Guid userId, TableFormat format, DateTimeOffset since, int factsVersion, CancellationToken cancellationToken) =>
         await Filtered(userId, new StatisticsFilter(since, null, null, null, Format: format), factsVersion)

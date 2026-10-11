@@ -1100,6 +1100,18 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("check_raise_flop_opportunity");
 
+                    b.Property<bool>("FacingOpenCall")
+                        .HasColumnType("boolean")
+                        .HasColumnName("facing_open_call");
+
+                    b.Property<int?>("FacingOpenFrom")
+                        .HasColumnType("integer")
+                        .HasColumnName("facing_open_from");
+
+                    b.Property<bool>("FacingOpenThreeBet")
+                        .HasColumnType("boolean")
+                        .HasColumnName("facing_open_three_bet");
+
                     b.Property<int>("FactsVersion")
                         .HasColumnType("integer")
                         .HasColumnName("facts_version");

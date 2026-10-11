@@ -208,6 +208,9 @@ Ranges (ADR-0009):
       missed hands come back, seats with an opening leak weighted up, answers stored
       (`training.opening_attempts`), progress per seat; shared `PokerTable` with the replayer
 - [x] Migration `Training`
+- [x] Defence against an open (ADR-0018): hand facts v4 (single open, not all-in, nobody in between:
+      opener, call, 3-bet; migration `DefenceFacts`), `GET /api/ranges/defence`, reference v1 for 25 BB and
+      more (`ReferenceDefenceRanges`), "Open / Défense vs open" switch on the Ranges page
 - [x] Push/fold equilibrium below 15 BB (`PushFoldNash`, preflop equity table from
       `backend/tools/preflop-equity`): push band in Ranges (stack 3–15 BB) and in the trainer
 - [x] Migration `TrainingPushStack`

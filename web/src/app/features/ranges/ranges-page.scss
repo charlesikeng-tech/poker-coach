@@ -23,6 +23,33 @@
   }
 }
 
+.spots {
+  display: inline-flex;
+  margin-bottom: var(--space-4);
+  padding: 2px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+
+  button {
+    padding: var(--space-1) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+
+    &.active {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--focus-ring);
+    }
+  }
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;

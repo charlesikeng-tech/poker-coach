@@ -1,0 +1,333 @@
+<ng-container *transloco="let t; prefix: 'pages.ranges'">
+  @if (locked()) {
+    <app-plan-lock feature="defenceRanges" />
+  } @else if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (data(); as data) {
+    @if (data.pendingHands > 0) {
+      <p class="pending glass" role="status">
+        <app-icon class="spin" [icon]="icons.LoaderCircle" />
+        {{ t('pending', { count: data.pendingHands }) }}
+      </p>
+    }
+
+    <div class="toolbar">
+      <app-format-toggle
+        class="format"
+        [value]="format()"
+        [counts]="data.spots"
+        (changed)="setFormat($event)"
+      />
+      <label>
+        <span>{{ t('band') }}</span>
+        <select [value]="band()" (change)="setBand($any($event.target).value)">
+          @for (option of bands; track option) {
+            <option [value]="option" [selected]="option === band()">
+              {{ t('bands.' + option) }}
+            </option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>{{ t('period') }}</span>
+        <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+          @for (option of periods; track option) {
+            <option [value]="option" [selected]="option === period()">
+              {{ t('periods.' + option) }}
+            </option>
+          }
+        </select>
+      </label>
+      @if (hasReference()) {
+        <div class="views" role="group" [attr.aria-label]="t('view')">
+          @for (v of views; track v) {
+            <button
+              type="button"
+              [class.active]="view() === v"
+              [attr.aria-pressed]="view() === v"
+              (click)="view.set(v)"
+            >
+              {{ t('views.' + v) }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    @if (spot(); as s) {
+      <nav class="positions" [attr.aria-label]="t('defence.defenders')">
+        @for (d of defenders(); track d.position) {
+          <button
+            type="button"
+            class="position"
+            [class.position--active]="s.pair.defender === d.position"
+            [attr.aria-pressed]="s.pair.defender === d.position"
+            (click)="chooseDefender(d.position)"
+          >
+            <strong>{{ short[d.position] }}</strong>
+            <span class="numeric">{{ percent(d.rate) }}</span>
+          </button>
+        }
+      </nav>
+      <nav class="positions openers" [attr.aria-label]="t('defence.openers')">
+        <span class="openers__label">{{ t('defence.facing') }}</span>
+        @for (o of openers(); track o.opener) {
+          <button
+            type="button"
+            class="position"
+            [class.position--active]="s.pair.opener === o.opener"
+            [attr.aria-pressed]="s.pair.opener === o.opener"
+            (click)="chooseOpener(o.opener)"
+          >
+            <strong>{{ short[o.opener] }}</strong>
+            <span class="numeric">{{ percent(o.defenceRate.rate) }}</span>
+          </button>
+        }
+      </nav>
+
+      <div class="layout">
+        @for (shown of [s.pair.defender + s.pair.opener + shownView()]; track shown) {
+          <div
+            class="grid glass"
+            role="grid"
+            [attr.aria-label]="
+              t('defence.gridLabel.' + shownView(), {
+                defender: short[s.pair.defender],
+                opener: short[s.pair.opener],
+              })
+            "
+          >
+            @for (cell of s.cells; track cell.hand; let i = $index) {
+              <button
+                type="button"
+                class="cell"
+                role="gridcell"
+                [attr.data-view]="shownView()"
+                [attr.data-ref]="shownView() === 'reference' ? cell.reference : null"
+                [attr.data-gap]="shownView() === 'gap' ? gap(cell) : null"
+                [class.cell--in]="cell.reference !== null && cell.reference !== 'fold'"
+                [class.cell--never]="shownView() !== 'reference' && cell.dealt === 0"
+                [class.cell--thin]="
+                  shownView() === 'mine' && cell.dealt > 0 && cell.dealt < thinSample
+                "
+                [style.--open]="shownView() === 'mine' ? threeBetShare(cell) : 0"
+                [style.--limp]="shownView() === 'mine' ? callShare(cell) : 0"
+                [style.animation-delay.ms]="delay(i)"
+                [attr.aria-label]="
+                  t('defence.cellLabel', {
+                    hand: cell.hand,
+                    dealt: cell.dealt,
+                    calls: cell.calls,
+                    threeBets: cell.threeBets,
+                  })
+                "
+                (mouseenter)="hovered.set(cell)"
+                (focus)="hovered.set(cell)"
+                (mouseleave)="hovered.set(null)"
+                (blur)="hovered.set(null)"
+              >
+                <span class="cell__fill" aria-hidden="true"></span>
+                <span class="cell__hand">{{ cell.hand }}</span>
+                @if (cell.dealt > 0 && shownView() !== 'reference') {
+                  <span class="cell__count numeric">{{ cell.dealt }}</span>
+                }
+              </button>
+            }
+          </div>
+        }
+
+        <aside class="side">
+          @switch (shownView()) {
+            @case ('reference') {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('defence.reference.title', {
+                      defender: short[s.pair.defender],
+                      opener: short[s.pair.opener],
+                      version: data.referenceVersion,
+                    })
+                  }}
+                </h2>
+                <p class="line">
+                  <span class="swatch swatch--open"></span>
+                  {{ t('defence.reference.threeBet', { share: percent(s.threeBetShare) }) }}
+                </p>
+                <code class="notation">{{ s.threeBetNotation }}</code>
+                <p class="line">
+                  <span class="swatch swatch--limp"></span>
+                  {{ t('defence.reference.call', { share: percent(s.callShare) }) }}
+                </p>
+                <code class="notation">{{ s.callNotation }}</code>
+                <p class="muted">{{ t('defence.reference.note') }}</p>
+              </section>
+            }
+            @case ('gap') {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('defence.gap.title', {
+                      defender: short[s.pair.defender],
+                      opener: short[s.pair.opener],
+                    })
+                  }}
+                </h2>
+                @if (gapSummary().played === 0) {
+                  <p class="muted">{{ t('gap.none') }}</p>
+                } @else {
+                  <p class="line">
+                    <span class="swatch swatch--loose"></span>
+                    {{ t('defence.gap.tooLoose', { count: gapSummary().tooLoose.length }) }}
+                  </p>
+                  @if (gapSummary().tooLoose.length > 0) {
+                    <p class="hands">{{ gapSummary().tooLoose.join(' · ') }}</p>
+                  }
+                  <p class="line">
+                    <span class="swatch swatch--tight"></span>
+                    {{ t('defence.gap.tooTight', { count: gapSummary().tooTight.length }) }}
+                  </p>
+                  @if (gapSummary().tooTight.length > 0) {
+                    <p class="hands">{{ gapSummary().tooTight.join(' · ') }}</p>
+                  }
+                  <p class="line">
+                    <span class="swatch swatch--other"></span>
+                    {{ t('defence.gap.otherAction', { count: gapSummary().otherAction.length }) }}
+                  </p>
+                  @if (gapSummary().otherAction.length > 0) {
+                    <p class="hands">{{ gapSummary().otherAction.join(' · ') }}</p>
+                  }
+                  <p class="muted">{{ t('defence.gap.rule') }}</p>
+                }
+              </section>
+            }
+            @default {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('defence.summary.title', {
+                      defender: short[s.pair.defender],
+                      opener: short[s.pair.opener],
+                    })
+                  }}
+                </h2>
+                @if (s.pair.dealt === 0) {
+                  <p class="muted">{{ t('defence.summary.none') }}</p>
+                } @else {
+                  <p class="big numeric">{{ percent(s.pair.defenceRate.rate) }}</p>
+                  <p class="muted">
+                    {{
+                      t('defence.summary.counts', {
+                        calls: s.pair.calls,
+                        threeBets: s.pair.threeBets,
+                        dealt: s.pair.dealt,
+                      })
+                    }}
+                  </p>
+                  @if (s.callShare !== null && s.threeBetShare !== null) {
+                    <p class="muted">
+                      {{
+                        t('defence.summary.reference', {
+                          defend: percent(s.callShare + s.threeBetShare),
+                          threeBet: percent(s.threeBetShare),
+                          mine: percent(s.pair.threeBetRate.rate),
+                        })
+                      }}
+                    </p>
+                  }
+                }
+                @if (!s.pair.hasReference) {
+                  <p class="nash">
+                    {{
+                      band() === 'short'
+                        ? t('defence.noReference.short')
+                        : t('defence.noReference.spot')
+                    }}
+                  </p>
+                }
+              </section>
+            }
+          }
+
+          <section class="card glass detail" aria-live="polite">
+            @if (focus(); as c) {
+              <p class="detail__hand">
+                {{ c.hand }}
+                @if (c.reference) {
+                  <span class="tag" [class.tag--in]="c.reference !== 'fold'">{{
+                    t('defence.detail.reference.' + c.reference)
+                  }}</span>
+                }
+              </p>
+              @if (c.dealt === 0) {
+                <p class="muted">{{ t('defence.detail.never') }}</p>
+              } @else {
+                <dl>
+                  <div>
+                    <dt>{{ t('detail.dealt') }}</dt>
+                    <dd class="numeric">{{ c.dealt }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--open"></span>3-bet</dt>
+                    <dd class="numeric">{{ c.threeBets }} · {{ percent(threeBetShare(c)) }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--limp"></span>Call</dt>
+                    <dd class="numeric">{{ c.calls }} · {{ percent(callShare(c)) }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--fold"></span>{{ t('detail.folds') }}</dt>
+                    <dd class="numeric">{{ c.dealt - c.calls - c.threeBets }}</dd>
+                  </div>
+                </dl>
+                @if (c.dealt < thinSample) {
+                  <p class="muted">{{ t('detail.thin') }}</p>
+                }
+              }
+            } @else {
+              <p class="muted">{{ t('defence.detail.hint') }}</p>
+            }
+          </section>
+
+          <section class="card glass legend">
+            @switch (shownView()) {
+              @case ('mine') {
+                <p><span class="swatch swatch--open"></span>{{ t('defence.legend.threeBet') }}</p>
+                <p><span class="swatch swatch--limp"></span>{{ t('defence.legend.call') }}</p>
+                <p><span class="swatch swatch--fold"></span>{{ t('legend.fold') }}</p>
+                <p><span class="swatch swatch--never"></span>{{ t('legend.never') }}</p>
+                <p class="muted">{{ t('legend.sample') }}</p>
+              }
+              @case ('reference') {
+                <p>
+                  <span class="swatch swatch--open"></span>{{ t('defence.legend.refThreeBet') }}
+                </p>
+                <p><span class="swatch swatch--limp"></span>{{ t('defence.legend.refCall') }}</p>
+                <p><span class="swatch swatch--fold"></span>{{ t('legend.refFold') }}</p>
+              }
+              @default {
+                <p><span class="swatch swatch--match"></span>{{ t('legend.match') }}</p>
+                <p><span class="swatch swatch--loose"></span>{{ t('defence.legend.tooLoose') }}</p>
+                <p><span class="swatch swatch--tight"></span>{{ t('defence.legend.tooTight') }}</p>
+                <p>
+                  <span class="swatch swatch--other"></span>{{ t('defence.legend.otherAction') }}
+                </p>
+                <p><span class="swatch swatch--never"></span>{{ t('legend.neverGap') }}</p>
+              }
+            }
+          </section>
+        </aside>
+      </div>
+      <p class="method">{{ t('defence.method', { version: data.referenceVersion }) }}</p>
+    }
+  } @else {
+    <div class="layout" role="status" [attr.aria-label]="t('loading')">
+      <div class="grid glass skeleton-grid"><span class="skeleton"></span></div>
+    </div>
+  }
+</ng-container>
