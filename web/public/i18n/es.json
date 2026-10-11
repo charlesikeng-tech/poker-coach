@@ -134,7 +134,8 @@
           "upTo5": "Hasta 5 €",
           "from5To10": "De 5 a 10 €",
           "from10To20": "De 10 a 20 €",
-          "over20": "Más de 20 €"
+          "from20To50": "De 20 a 50 €",
+          "over50": "Más de 50 €"
         },
         "type": {
           "knockout": "Knockout (bounty)",
@@ -179,7 +180,8 @@
           "upTo5": "Hasta 5 €",
           "upTo10": "Hasta 10 €",
           "upTo20": "Hasta 20 €",
-          "over20": "Más de 20 €"
+          "upTo50": "Hasta 50 €",
+          "over50": "Más de 50 €"
         }
       },
       "totals": {

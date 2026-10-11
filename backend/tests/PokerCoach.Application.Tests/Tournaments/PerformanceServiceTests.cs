@@ -31,7 +31,7 @@ public sealed class PerformanceServiceTests
 
         var report = await new PerformanceService(store).GetAsync(Guid.NewGuid(), null, null, TestContext.Current.CancellationToken);
 
-        Assert.Equal(new[] { "upTo5", "from5To10", "over20" }, report.ByBuyIn.Select(g => g.Key));
+        Assert.Equal(new[] { "upTo5", "from5To10", "from20To50" }, report.ByBuyIn.Select(g => g.Key));
         Assert.Equal(2, report.ByBuyIn[0].Figures.Tournaments);
         Assert.Equal(1m, report.ByBuyIn[1].Figures.ItmRate);
         Assert.Equal(0.5m, report.Totals.ItmRate);
@@ -41,7 +41,9 @@ public sealed class PerformanceServiceTests
     [InlineData(5.0, "upTo5")]
     [InlineData(5.01, "from5To10")]
     [InlineData(20.0, "from10To20")]
-    [InlineData(20.5, "over20")]
+    [InlineData(20.5, "from20To50")]
+    [InlineData(50.0, "from20To50")]
+    [InlineData(50.5, "over50")]
     public void Buy_in_band_upper_bounds_are_inclusive(double buyIn, string band) =>
         Assert.Equal(band, PerformanceService.BuyInBand((decimal)buyIn));
 

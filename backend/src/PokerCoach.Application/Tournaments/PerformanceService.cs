@@ -18,13 +18,17 @@ public sealed record PerformanceReport(
 /// <summary>Performance screen: cumulative profit and the same figures split by buy-in and format.</summary>
 public sealed class PerformanceService(ITournamentReadStore store)
 {
-    /// <summary>Disjoint bands on the price of one entry, fee included (upper bound inclusive).</summary>
+    /// <summary>
+    /// Disjoint bands on the price of one entry, fee included (upper bound inclusive). Fine where the target
+    /// plays (5–20 €), then 20–50 € to follow a move up towards mid stakes, and the rest.
+    /// </summary>
     internal static readonly (string Key, decimal Max)[] BuyInBands =
     [
         ("upTo5", 5m),
         ("from5To10", 10m),
         ("from10To20", 20m),
-        ("over20", decimal.MaxValue),
+        ("from20To50", 50m),
+        ("over50", decimal.MaxValue),
     ];
 
     public async Task<PerformanceReport> GetAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken)

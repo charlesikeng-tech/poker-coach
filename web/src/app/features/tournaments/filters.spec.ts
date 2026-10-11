@@ -14,6 +14,7 @@ describe('toQuery', () => {
 
   it('turns a buy-in band into bounds', () => {
     expect(toQuery('all', 'upTo10', 2, 50, now)).toEqual({ maxBuyIn: 10, page: 2, pageSize: 50 });
-    expect(toQuery('all', 'over20', 1, 50, now).minBuyIn).toBe(20.01);
+    expect(toQuery('all', 'upTo50', 1, 50, now).maxBuyIn).toBe(50);
+    expect(toQuery('all', 'over50', 1, 50, now).minBuyIn).toBe(50.01);
   });
 });

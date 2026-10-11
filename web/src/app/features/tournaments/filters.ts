@@ -1,7 +1,7 @@
 import { TournamentQuery } from './tournaments-api';
 
 export type PeriodFilter = 'all' | '7d' | '30d' | '90d' | 'year';
-export type BuyInFilter = 'all' | 'upTo5' | 'upTo10' | 'upTo20' | 'over20';
+export type BuyInFilter = 'all' | 'upTo5' | 'upTo10' | 'upTo20' | 'upTo50' | 'over50';
 
 export const PERIOD_FILTERS: readonly PeriodFilter[] = ['all', '7d', '30d', '90d', 'year'];
 export const BUY_IN_FILTERS: readonly BuyInFilter[] = [
@@ -9,7 +9,8 @@ export const BUY_IN_FILTERS: readonly BuyInFilter[] = [
   'upTo5',
   'upTo10',
   'upTo20',
-  'over20',
+  'upTo50',
+  'over50',
 ];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -49,7 +50,9 @@ function buyInBounds(buyIn: BuyInFilter): { minBuyIn?: number; maxBuyIn?: number
       return { maxBuyIn: 10 };
     case 'upTo20':
       return { maxBuyIn: 20 };
-    case 'over20':
-      return { minBuyIn: 20.01 };
+    case 'upTo50':
+      return { maxBuyIn: 50 };
+    case 'over50':
+      return { minBuyIn: 50.01 };
   }
 }

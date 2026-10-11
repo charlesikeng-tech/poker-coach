@@ -12,7 +12,7 @@ export interface ProfitPoint {
   readonly cumulativeProfit: number;
 }
 
-/** key: buy-in band (upTo5, from5To10, from10To20, over20) or the room's raw value; null = unknown. */
+/** key: buy-in band (upTo5, from5To10, from10To20, from20To50, over50) or the room's raw value; null = unknown. */
 export interface PerformanceGroup {
   readonly key: string | null;
   readonly figures: PerformanceFigures;

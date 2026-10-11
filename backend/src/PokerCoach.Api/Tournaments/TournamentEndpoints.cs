@@ -119,7 +119,7 @@ public sealed record TournamentPageResponse(
 
 public sealed record ProfitPointResponse(int Index, DateTimeOffset? StartedAt, string Name, decimal Profit, decimal CumulativeProfit);
 
-/// <param name="Key">Band name (upTo5, from5To10, from10To20, over20) or the room's raw value; null when unknown.</param>
+/// <param name="Key">Band name (upTo5, from5To10, from10To20, from20To50, over50) or the room's raw value; null when unknown.</param>
 public sealed record PerformanceGroupResponse(string? Key, PerformanceFiguresResponse Figures);
 
 public sealed record PerformanceResponse(
