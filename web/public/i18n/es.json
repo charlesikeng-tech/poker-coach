@@ -591,7 +591,7 @@
     },
     "import": {
       "title": "Importar",
-      "description": "Añade tus historiales de manos y tus resúmenes de torneos. Salas compatibles: {{rooms}}.",
+      "description": "Añade tus historiales de manos y tus resúmenes de torneos.",
       "drop": {
         "title": "Suelta tus archivos aquí",
         "hint": "Historiales de manos y resúmenes de torneos (.txt), o un archivo .zip. Puedes soltar una carpeta entera: importar dos veces el mismo archivo nunca crea duplicados.",
@@ -656,7 +656,8 @@
         "cancel": "Cancelar",
         "linked": "Cuentas de póker:",
         "error": "No se pudieron cargar o modificar tus cuentas de póker. Inténtalo de nuevo."
-      }
+      },
+      "rooms": "Salas compatibles:"
     },
     "notFound": {
       "title": "Página no encontrada",

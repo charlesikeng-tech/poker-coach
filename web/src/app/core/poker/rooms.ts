@@ -17,8 +17,3 @@ const ROOM_NAMES: Readonly<Record<string, string>> = {
 export function roomName(room: string): string {
   return ROOM_NAMES[room] ?? room;
 }
-
-/** "Winamax", or "Winamax, PokerStars" once a second room is supported. */
-export function supportedRoomNames(): string {
-  return SUPPORTED_ROOMS.map(roomName).join(', ');
-}

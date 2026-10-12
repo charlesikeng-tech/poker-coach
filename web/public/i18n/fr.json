@@ -591,7 +591,7 @@
     },
     "import": {
       "title": "Import",
-      "description": "Ajoute tes historiques de mains et tes résumés de tournois. Rooms prises en charge : {{rooms}}.",
+      "description": "Ajoute tes historiques de mains et tes résumés de tournois.",
       "drop": {
         "title": "Dépose tes fichiers ici",
         "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Tu peux déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
@@ -656,7 +656,8 @@
         "cancel": "Annuler",
         "linked": "Comptes de poker :",
         "error": "Impossible de charger ou de modifier tes comptes de poker. Réessaie."
-      }
+      },
+      "rooms": "Rooms prises en charge :"
     },
     "notFound": {
       "title": "Page introuvable",

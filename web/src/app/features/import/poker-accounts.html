@@ -48,7 +48,8 @@
       <app-icon [icon]="icons.BadgeCheck" />
       <span>{{ t('linked') }}</span>
       @for (account of confirmed(); track account.id) {
-        <strong>{{ account.screenName }}</strong> ({{ roomName(account.room) }})
+        <strong>{{ account.screenName }}</strong>
+        <app-room-badge [room]="account.room" />
       }
     </p>
   }

@@ -1,8 +1,12 @@
 <ng-container *transloco="let t; prefix: 'pages.import'">
-  <app-page-header
-    [heading]="t('title')"
-    [description]="t('description', { rooms: supportedRooms })"
-  />
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <p class="rooms">
+    <span>{{ t('rooms') }}</span>
+    @for (room of rooms; track room) {
+      <app-room-badge [room]="room" />
+    }
+  </p>
 
   <app-poker-accounts />
 
@@ -29,7 +33,7 @@
         </div>
         @for (room of rooms; track room) {
           <p class="drop-zone__help">
-            <strong>{{ roomName(room) }}</strong> · {{ t('drop.where.' + room) }}
+            <app-room-badge [room]="room" /> {{ t('drop.where.' + room) }}
           </p>
         }
         @if (nothingToImport()) {

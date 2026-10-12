@@ -12,6 +12,7 @@ import { BadgeCheck, UserRound } from 'lucide';
 
 import { roomName } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
+import { RoomBadge } from '../../shared/ui/room-badge/room-badge';
 import { Icon } from '../../shared/ui/icon/icon';
 import { ImportApi, PokerAccount } from './import-api';
 import { ImportSession } from './import-session';
@@ -22,7 +23,7 @@ import { ImportSession } from './import-session';
  */
 @Component({
   selector: 'app-poker-accounts',
-  imports: [TranslocoDirective, Button, Icon],
+  imports: [TranslocoDirective, Button, Icon, RoomBadge],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './poker-accounts.html',
   styleUrl: './poker-accounts.scss',
