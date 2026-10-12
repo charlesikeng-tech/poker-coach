@@ -60,7 +60,7 @@ public sealed record DrillProgress(int Attempts, int Correct, int Streak, int Du
 /// The open-or-fold trainer: deals spots (missed hands come back, seats with a detected opening leak come
 /// more often), checks answers against the reference ranges, keeps the player's record.
 /// </summary>
-public sealed class OpeningTrainingService(ITrainingStore store, LeakService leaks, TimeProvider time, Random random, IRealSpotStore? realSpots = null)
+public sealed class OpeningTrainingService(ITrainingStore store, ILeakService leaks, TimeProvider time, Random random, IRealSpotStore? realSpots = null)
 {
     /// <summary>Real spots looked at: recent play, the player's current habits.</summary>
     public const int RealSpotDays = 90;

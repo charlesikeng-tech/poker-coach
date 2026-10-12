@@ -58,7 +58,7 @@ public sealed record DebriefReport(TournamentDebrief Debrief, IReadOnlyList<Debr
 /// </summary>
 public sealed class TournamentDebriefService(
     TournamentDetailService tournaments,
-    LeakService leaks,
+    ILeakService leaks,
     ICoachingReportStore reports,
     AiUsageGuard guard,
     TimeProvider time)

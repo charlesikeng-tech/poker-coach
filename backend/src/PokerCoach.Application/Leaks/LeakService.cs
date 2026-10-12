@@ -37,7 +37,13 @@ public sealed record LeakCounts(TableFormat Format, HeroStatCounts Overall, IRea
     }
 }
 
-public sealed class LeakService(IStatisticsReadStore store)
+public interface ILeakService
+{
+    Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken);
+    Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken);
+}
+
+public sealed class LeakService(IStatisticsReadStore store) : ILeakService
 {
     /// <summary>Counts of one format over a period (15+ BB hands), for measuring statistics outside a full analysis.</summary>
     /// <param name="to">Exclusive upper bound.</param>

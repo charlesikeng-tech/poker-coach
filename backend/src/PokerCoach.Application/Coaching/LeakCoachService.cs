@@ -53,7 +53,7 @@ public sealed record CoachingOutcome(StoredExplanation? Explanation, CoachingFai
 /// analysis; the model only writes. An explanation is stored and reused until its inputs change.
 /// </summary>
 public sealed class LeakCoachService(
-    LeakService leaks,
+    ILeakService leaks,
     ICoachingStore store,
     AiUsageGuard guard,
     CoachingOptions options,

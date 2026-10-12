@@ -86,7 +86,7 @@ public static class LeakEndpoints
     private static async Task<Results<Ok<LeakAnalysisResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         PlanAccess plans,
-        LeakService leaks,
+        ILeakService leaks,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,

@@ -97,7 +97,7 @@ builder.Services.AddScoped<HandFactsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
 builder.Services.AddScoped<AllInLuckService>();
-builder.Services.AddScoped<LeakService>();
+builder.Services.AddScoped<ILeakService, LeakService>();
 builder.Services.AddOptions<CoachingOptions>()
     .BindConfiguration(CoachingOptions.SectionName)
     .Validate(o => o.MonthlyBudgetUsd >= 0 && o.DailyExplanationsPerUser >= 0 && o.ExampleHands is > 0 and <= 10, "Invalid coaching limits.")

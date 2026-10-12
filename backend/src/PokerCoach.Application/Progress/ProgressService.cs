@@ -42,7 +42,7 @@ public sealed record ProgressReport(
 /// <see cref="WeeklyPlanner.BaselineDays"/> days, frozen for the week, with live progress on the week's
 /// hands and the training room's drills.
 /// </summary>
-public sealed class ProgressService(IWeeklyPlanStore plans, LeakService leaks, ITrainingStore training, TimeProvider time)
+public sealed class ProgressService(IWeeklyPlanStore plans, ILeakService leaks, ITrainingStore training, TimeProvider time)
 {
     /// <summary>Below this many baseline hands, a plan would rest on noise: none is made.</summary>
     public const int MinBaselineHands = 300;
