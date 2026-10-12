@@ -307,9 +307,11 @@ Subscriptions (ADR-0014):
 - [x] Three offers (ADR-0016): Starter 0 €, Pro 14,90 €/149 €, Elite 29,90 €/299 €; monthly AI credits
       from the usage ledger (explanation 1, weekly review 2, debrief 5); feature matrix in the domain,
       `403 PLAN_REQUIRED` gates, locks in the web app; tier read from the Stripe price (migration `PlanTiers`)
-- [ ] Stripe account: Pro and Elite products with two prices each, customer portal allowing switches,
-      webhook endpoint, secrets; raise `Coaching:MonthlyBudgetUsd` with subscribers; CGV and legal notice
-      (lawyer)
+- [x] Stripe in test mode: Pro and Elite products with two prices each, customer portal with plan switches
+      and proration, webhook via the Stripe CLI; checkout, Pro → Elite, cancellation verified end to end
+      (`docs/runbooks/stripe-setup.md`)
+- [ ] Stripe in live mode at launch (same runbook); raise `Coaching:MonthlyBudgetUsd` with subscribers; VAT
+      check with an accountant; CGV and legal notice (lawyer)
 
 AI usage guard (ADR-0017):
 
