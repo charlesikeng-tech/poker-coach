@@ -222,6 +222,20 @@ public sealed class SubscriptionServiceTests
     }
 
     [Fact]
+    public async Task A_subscriber_changes_offer_on_stripe_confirmation_page_or_the_portal_when_refused()
+    {
+        Assert.Equal(BillingFailure.NoSubscription, (await Service().ChangePlanAsync(jo.Id, Plan.Elite, BillingInterval.Year, AppUrl, Ct)).Failure);
+
+        await SubscribeAsync(SubscriptionStatus.Active, Plan.Pro);
+        var change = await Service().ChangePlanAsync(jo.Id, Plan.Elite, BillingInterval.Year, AppUrl, Ct);
+        Assert.Equal(new Uri("https://billing.stripe.test/cus_1/change/Elite/Year"), change.Url);
+        Assert.Equal(("sub_1", Plan.Elite, BillingInterval.Year), Assert.Single(stripe.PlanChanges));
+
+        stripe.RefusesPlanChange = true;
+        Assert.Equal(new Uri("https://billing.stripe.test/cus_1"), (await Service().ChangePlanAsync(jo.Id, Plan.Elite, BillingInterval.Month, AppUrl, Ct)).Url);
+    }
+
+    [Fact]
     public async Task A_price_we_do_not_know_counts_as_pro_never_more()
     {
         await SubscribeAsync(SubscriptionStatus.Active, tier: null);

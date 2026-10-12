@@ -154,9 +154,18 @@
 
             @if (isPaid(plan)) {
               @if (subscribed()) {
-                @if (plan !== s.plan) {
-                  <button appButton variant="secondary" [disabled]="busy()" (click)="manage()">
-                    {{ t('offers.change') }}
+                @if (plan !== s.plan || interval() !== s.interval) {
+                  <button
+                    appButton
+                    [variant]="rank(plan) > rank(s.plan) ? 'primary' : 'secondary'"
+                    [disabled]="busy()"
+                    (click)="change(plan)"
+                  >
+                    {{
+                      plan === s.plan
+                        ? t('offers.switchInterval.' + interval())
+                        : t('offers.switchTo', { plan: t('plans.' + plan) })
+                    }}
                   </button>
                 }
               } @else if (canBuy(plan)) {

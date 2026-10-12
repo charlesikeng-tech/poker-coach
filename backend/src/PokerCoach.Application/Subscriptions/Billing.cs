@@ -115,6 +115,13 @@ public interface IBillingGateway
     /// <exception cref="BillingGatewayException"/>
     Task<Uri> CreatePortalAsync(string customerId, Uri returnUrl, CancellationToken cancellationToken);
 
+    /// <summary>
+    /// The portal opened on the confirmation of a change to another offer or billing period: Stripe shows the
+    /// prorated amount and applies the change once confirmed (the webhook then re-reads the subscription).
+    /// </summary>
+    /// <exception cref="BillingGatewayException">Includes a price not configured for that offer and period.</exception>
+    Task<Uri> CreatePlanChangeAsync(string customerId, string subscriptionId, Plan plan, BillingInterval interval, Uri returnUrl, CancellationToken cancellationToken);
+
     /// <summary>Every subscription of the customer, whatever its status.</summary>
     /// <exception cref="BillingGatewayException"/>
     Task<IReadOnlyList<SubscriptionState>> ListSubscriptionsAsync(string customerId, CancellationToken cancellationToken);

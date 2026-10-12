@@ -1539,9 +1539,13 @@
         },
         "monthsOffered": "{{count}} mois offerts par rapport au mensuel",
         "forever": "Pour toujours.",
-        "change": "Changer d’offre",
         "choose": "Choisir {{plan}}",
-        "hint": "Prix TTC. Paiement sécurisé par Stripe. Change d’offre ou résilie à tout moment depuis ton abonnement."
+        "hint": "Prix TTC. Paiement sécurisé par Stripe. Change d’offre ou résilie à tout moment depuis ton abonnement.",
+        "switchTo": "Passer à {{plan}}",
+        "switchInterval": {
+          "month": "Passer au mensuel",
+          "year": "Passer à l’annuel"
+        }
       },
       "rows": {
         "history": {

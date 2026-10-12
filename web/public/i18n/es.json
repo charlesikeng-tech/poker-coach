@@ -1539,9 +1539,13 @@
         },
         "monthsOffered": "{{count}} meses gratis respecto al mensual",
         "forever": "Para siempre.",
-        "change": "Cambiar de plan",
         "choose": "Elegir {{plan}}",
-        "hint": "Precios con IVA. Pago seguro con Stripe. Cambia de plan o cancela cuando quieras desde tu suscripción."
+        "hint": "Precios con IVA. Pago seguro con Stripe. Cambia de plan o cancela cuando quieras desde tu suscripción.",
+        "switchTo": "Pasar a {{plan}}",
+        "switchInterval": {
+          "month": "Pasar a mensual",
+          "year": "Pasar a anual"
+        }
       },
       "rows": {
         "history": {

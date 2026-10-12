@@ -1539,9 +1539,13 @@
         },
         "monthsOffered": "{{count}} months free compared to monthly",
         "forever": "Forever.",
-        "change": "Change plan",
         "choose": "Choose {{plan}}",
-        "hint": "Prices include tax. Secure payment by Stripe. Change plan or cancel any time from your subscription."
+        "hint": "Prices include tax. Secure payment by Stripe. Change plan or cancel any time from your subscription.",
+        "switchTo": "Switch to {{plan}}",
+        "switchInterval": {
+          "month": "Switch to monthly",
+          "year": "Switch to yearly"
+        }
       },
       "rows": {
         "history": {

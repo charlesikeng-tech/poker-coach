@@ -121,6 +121,16 @@ export class BillingService {
     );
   }
 
+  /**
+   * A subscriber moves to another offer or period: Stripe's confirmation page for that change, with the
+   * prorated amount (the portal's home page if Stripe refuses the shortcut).
+   */
+  async changePlan(plan: PaidPlan, interval: BillingInterval): Promise<string> {
+    return this.redirect(
+      this.http.post<{ url: string }>('/api/billing/change', { plan, interval }),
+    );
+  }
+
   /** Sends the browser to Stripe's customer portal (card, invoices, plan, cancellation). */
   async portal(): Promise<string> {
     return this.redirect(this.http.post<{ url: string }>('/api/billing/portal', {}));

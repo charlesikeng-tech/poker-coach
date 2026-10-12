@@ -29,6 +29,9 @@ public enum BillingFailure
     Unavailable,
     AlreadySubscribed,
     NoCustomer,
+
+    /// <summary>A change of offer needs a live subscription; a new one goes through checkout.</summary>
+    NoSubscription,
     ProviderFailed,
     UserNotFound,
 }
@@ -162,6 +165,41 @@ public sealed class SubscriptionService(
         {
             // The adapter logged the provider's error.
             return BillingRedirect.Fail(BillingFailure.ProviderFailed);
+        }
+    }
+
+    /// <summary>
+    /// A subscriber moves to another offer or billing period: straight to Stripe's confirmation of that change
+    /// rather than the portal's home page. If Stripe refuses the shortcut, the portal still opens.
+    /// </summary>
+    public async Task<BillingRedirect> ChangePlanAsync(Guid userId, Plan plan, BillingInterval interval, Uri appUrl, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(appUrl);
+        if (plan is not (Plan.Pro or Plan.Elite))
+        {
+            throw new ArgumentOutOfRangeException(nameof(plan), plan, "Only a paid offer can be chosen.");
+        }
+
+        if (!gateway.IsConfigured)
+        {
+            return BillingRedirect.Fail(BillingFailure.Unavailable);
+        }
+
+        var subscription = await store.FindByUserAsync(userId, cancellationToken);
+        if (subscription is not { IsAlive: true, SubscriptionId: { } subscriptionId })
+        {
+            return BillingRedirect.Fail(BillingFailure.NoSubscription);
+        }
+
+        var returnUrl = new Uri(appUrl, "subscription");
+        try
+        {
+            return BillingRedirect.To(await gateway.CreatePlanChangeAsync(subscription.CustomerId, subscriptionId, plan, interval, returnUrl, cancellationToken));
+        }
+        catch (BillingGatewayException)
+        {
+            // The adapter logged why; the portal's own plan switch is the way left.
+            return await OpenPortalAsync(userId, appUrl, cancellationToken);
         }
     }
 

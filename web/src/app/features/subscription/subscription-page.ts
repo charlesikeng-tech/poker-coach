@@ -122,6 +122,15 @@ export class SubscriptionPage implements OnDestroy {
     await this.run(() => this.billing.checkout(plan, this.interval()));
   }
 
+  protected rank(plan: Plan): number {
+    return this.plans.indexOf(plan);
+  }
+
+  /** Subscribers change offer or period on Stripe's confirmation page, not through a second checkout. */
+  protected async change(plan: PaidPlan): Promise<void> {
+    await this.run(() => this.billing.changePlan(plan, this.interval()));
+  }
+
   protected async manage(): Promise<void> {
     await this.run(() => this.billing.portal());
   }

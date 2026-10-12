@@ -118,6 +118,47 @@ internal sealed partial class StripeBillingGateway(
         return new Uri(json.RootElement.GetProperty("url").GetString()!);
     }
 
+    public async Task<Uri> CreatePlanChangeAsync(string customerId, string subscriptionId, Plan plan, BillingInterval interval, Uri returnUrl, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(returnUrl);
+        var price = Settings.Prices.For(plan, interval);
+        if (string.IsNullOrWhiteSpace(price))
+        {
+            throw new BillingGatewayException($"No Stripe price configured for {plan} billed {interval}.");
+        }
+
+        // The confirmation flow replaces an existing subscription item: read which one.
+        string itemId;
+        using (var subscription = await SendAsync(HttpMethod.Get, $"v1/subscriptions/{Uri.EscapeDataString(subscriptionId)}", null, idempotencyKey: null, cancellationToken))
+        {
+            var items = subscription.RootElement.GetProperty("items").GetProperty("data");
+            if (items.GetArrayLength() == 0)
+            {
+                throw new BillingGatewayException($"Subscription {subscriptionId} has no item to change.");
+            }
+
+            itemId = items[0].GetProperty("id").GetString()!;
+        }
+
+        using var json = await SendAsync(
+            HttpMethod.Post,
+            "v1/billing_portal/sessions",
+            [
+                new("customer", customerId),
+                new("return_url", returnUrl.ToString()),
+                new("flow_data[type]", "subscription_update_confirm"),
+                new("flow_data[subscription_update_confirm][subscription]", subscriptionId),
+                new("flow_data[subscription_update_confirm][items][0][id]", itemId),
+                new("flow_data[subscription_update_confirm][items][0][price]", price),
+                new("flow_data[subscription_update_confirm][items][0][quantity]", "1"),
+                new("flow_data[after_completion][type]", "redirect"),
+                new("flow_data[after_completion][redirect][return_url]", returnUrl.ToString()),
+            ],
+            idempotencyKey: null,
+            cancellationToken);
+        return new Uri(json.RootElement.GetProperty("url").GetString()!);
+    }
+
     public async Task<Uri> CreatePortalAsync(string customerId, Uri returnUrl, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(returnUrl);

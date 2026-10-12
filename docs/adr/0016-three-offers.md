@@ -48,6 +48,10 @@ in the dashboard) counts as Pro rather than locking a paying customer out. Order
 **Changes of offer go through Stripe's portal.** Checkout is refused (`ALREADY_SUBSCRIBED`) while a
 subscription is alive; the portal handles upgrades, downgrades and proration, and the webhook re-reads the
 tier. A grant does not block checkout (a partner may subscribe before the access ends).
+"Passer à Elite" (or to another billing period) opens the portal directly on the confirmation of that
+change (`POST /api/billing/change`, portal flow `subscription_update_confirm` with the new price): the player
+sees the prorated amount and confirms, without hunting for the option in the portal. If Stripe refuses the
+shortcut, the portal's home page opens instead.
 
 ## Alternatives considered
 

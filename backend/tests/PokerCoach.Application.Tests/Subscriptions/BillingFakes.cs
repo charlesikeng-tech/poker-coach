@@ -92,6 +92,23 @@ internal sealed class FakeBillingGateway(bool configured = true) : IBillingGatew
         return Task.FromResult(new Uri($"https://checkout.stripe.test/{request.CustomerId}/{request.Interval}"));
     }
 
+    /// <summary>Refuse the confirmation shortcut only (as Stripe does when the portal cannot switch plans).</summary>
+    public bool RefusesPlanChange { get; set; }
+
+    public List<(string SubscriptionId, Plan Plan, BillingInterval Interval)> PlanChanges { get; } = [];
+
+    public Task<Uri> CreatePlanChangeAsync(string customerId, string subscriptionId, Plan plan, BillingInterval interval, Uri returnUrl, CancellationToken cancellationToken)
+    {
+        Fail();
+        if (RefusesPlanChange)
+        {
+            throw new BillingGatewayException("refused");
+        }
+
+        PlanChanges.Add((subscriptionId, plan, interval));
+        return Task.FromResult(new Uri($"https://billing.stripe.test/{customerId}/change/{plan}/{interval}"));
+    }
+
     public Task<Uri> CreatePortalAsync(string customerId, Uri returnUrl, CancellationToken cancellationToken)
     {
         Fail();

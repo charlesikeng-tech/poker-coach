@@ -49,6 +49,7 @@ public static partial class BillingEndpoints
         group.MapGet("", GetAsync);
         group.MapPost("/checkout", CheckoutAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapPost("/portal", PortalAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        group.MapPost("/change", ChangeAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
 
         // Called by Stripe: no session, no CSRF token; the signature is the authentication.
         group.MapPost("/webhook", WebhookAsync).AllowAnonymous().ExcludeFromDescription();
@@ -113,6 +114,37 @@ public static partial class BillingEndpoints
         return Respond(result);
     }
 
+    /// <summary>
+    /// A subscriber switches offer or billing period: the URL of Stripe's confirmation page for that change
+    /// (prorated amount shown there), or of the portal if Stripe refuses the shortcut. 404 NO_SUBSCRIPTION without
+    /// a live subscription: a first purchase goes through checkout.
+    /// </summary>
+    private static async Task<Results<Ok<RedirectResponse>, ProblemHttpResult, UnauthorizedHttpResult>> ChangeAsync(
+        CheckoutRequestBody request,
+        HttpContext context,
+        SubscriptionService subscriptions,
+        IOptions<AppOptions> app,
+        IHostEnvironment environment,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (request.Interval is not { } interval || !Enum.IsDefined(interval))
+        {
+            return ApiProblems.Validation("interval", "Must be month or year.");
+        }
+
+        if (request.Plan is not { } plan || plan is not (Plan.Pro or Plan.Elite))
+        {
+            return ApiProblems.Validation("plan", "Must be pro or elite.");
+        }
+
+        return Respond(await subscriptions.ChangePlanAsync(userId, plan, interval, app.Value.BaseUrl(context, environment), cancellationToken));
+    }
+
     private static async Task<Results<Ok<RedirectResponse>, ProblemHttpResult, UnauthorizedHttpResult>> PortalAsync(
         HttpContext context,
         SubscriptionService subscriptions,
@@ -167,6 +199,7 @@ public static partial class BillingEndpoints
             { Url: { } url } => TypedResults.Ok(new RedirectResponse(url)),
             { Failure: BillingFailure.AlreadySubscribed } => ApiProblems.WithCode(StatusCodes.Status409Conflict, "ALREADY_SUBSCRIBED", "This account already has Pro: manage it from the portal."),
             { Failure: BillingFailure.NoCustomer } => ApiProblems.WithCode(StatusCodes.Status404NotFound, "NO_SUBSCRIPTION", "This account has never subscribed."),
+            { Failure: BillingFailure.NoSubscription } => ApiProblems.WithCode(StatusCodes.Status404NotFound, "NO_SUBSCRIPTION", "This account has no live subscription to change."),
             { Failure: BillingFailure.UserNotFound } => TypedResults.Unauthorized(),
             { Failure: BillingFailure.Unavailable } => ApiProblems.WithCode(StatusCodes.Status503ServiceUnavailable, "BILLING_UNAVAILABLE", "Billing is not enabled on this server."),
             _ => ApiProblems.WithCode(StatusCodes.Status502BadGateway, "BILLING_FAILED", "The payment provider could not be reached. Try again."),

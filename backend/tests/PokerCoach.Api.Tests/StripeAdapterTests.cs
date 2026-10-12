@@ -82,6 +82,43 @@ public sealed class StripeAdapterTests
         Assert.Null(gateway.ReadWebhook(updated, "t=1,v1=00"));
     }
 
+    [Fact]
+    public async Task A_change_of_offer_opens_the_portal_on_the_confirmation_of_the_new_price()
+    {
+        var handler = new Recorder(
+            """{"id":"sub_1","items":{"data":[{"id":"si_1"}]}}""",
+            """{"url":"https://billing.stripe.com/p/session/x"}""");
+        using var http = new HttpClient(handler);
+        var gateway = new StripeBillingGateway(
+            http,
+            Options.Create(new StripeOptions { SecretKey = "sk_test", Prices = Prices }),
+            new FixedTime(Now),
+            NullLogger<StripeBillingGateway>.Instance);
+
+        var url = await gateway.CreatePlanChangeAsync("cus_1", "sub_1", Plan.Elite, BillingInterval.Year, new Uri("https://app.test/subscription"), TestContext.Current.CancellationToken);
+
+        Assert.Equal(new Uri("https://billing.stripe.com/p/session/x"), url);
+        Assert.Equal("/v1/subscriptions/sub_1", handler.Paths[0]);
+        var form = handler.Bodies[1];
+        Assert.Contains("flow_data%5Btype%5D=subscription_update_confirm", form, StringComparison.Ordinal);
+        Assert.Contains("flow_data%5Bsubscription_update_confirm%5D%5Bitems%5D%5B0%5D%5Bid%5D=si_1", form, StringComparison.Ordinal);
+        Assert.Contains("flow_data%5Bsubscription_update_confirm%5D%5Bitems%5D%5B0%5D%5Bprice%5D=price_elite_y", form, StringComparison.Ordinal);
+    }
+
+    private sealed class Recorder(params string[] answers) : HttpMessageHandler
+    {
+        public List<string> Paths { get; } = [];
+
+        public List<string> Bodies { get; } = [];
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Paths.Add(request.RequestUri!.AbsolutePath);
+            Bodies.Add(request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync(cancellationToken));
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(answers[Paths.Count - 1]) };
+        }
+    }
+
     private static string Signed(string payload) =>
         $"t={Now.ToUnixTimeSeconds()},v1={StripeSignature.Sign(payload, Now.ToUnixTimeSeconds(), Secret)}";
 
