@@ -104,7 +104,7 @@
           (input)="email.set(value($event))"
         />
       </label>
-      <label class="field field--plan">
+      <label class="field">
         <span>{{ t('grant.plan') }}</span>
         <select id="grant-plan" [value]="plan()" (change)="plan.set($any($event.target).value)">
           <option value="pro">Pro</option>
@@ -126,7 +126,6 @@
       <label class="field">
         <span>{{ t('grant.endsOn') }}</span>
         <input id="grant-ends" type="date" [value]="endsOn()" (input)="endsOn.set(value($event))" />
-        <small>{{ t('grant.endsOnHint') }}</small>
       </label>
       <button appButton variant="primary" type="submit" [disabled]="saving()">
         {{ t('grant.action') }}

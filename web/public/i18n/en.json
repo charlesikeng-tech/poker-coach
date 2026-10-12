@@ -1591,15 +1591,14 @@
       "description": "Offered Pro access and subscribers. Refunds, cancellations and coupons are done in Stripe.",
       "loadFailed": "Could not load the administration. Reload the page.",
       "grant": {
-        "title": "Offer Pro",
-        "description": "For a partner, a friend or a goodwill gesture. The account must already exist; offering again replaces the current access.",
+        "title": "Offer access",
+        "description": "For a partner, a friend or a goodwill gesture. The account must already exist; offering again replaces the current access. Without an end date, the access lasts until you take it back.",
         "email": "Account email",
         "reason": "Reason",
         "reasonPlaceholder": "Partner streamer, test phase",
-        "endsOn": "Until (included)",
-        "endsOnHint": "Empty: until you take it back.",
-        "action": "Offer Pro",
-        "done": "Pro offered to {{email}}.",
+        "endsOn": "Until (optional)",
+        "action": "Offer",
+        "done": "Access offered to {{email}}.",
         "plan": "Plan"
       },
       "grants": {

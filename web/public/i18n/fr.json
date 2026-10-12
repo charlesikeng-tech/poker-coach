@@ -1591,15 +1591,14 @@
       "description": "Accès Pro offerts et abonnés. Remboursements, résiliations et coupons se font dans Stripe.",
       "loadFailed": "Impossible de charger l’administration. Recharge la page.",
       "grant": {
-        "title": "Offrir Pro",
-        "description": "Pour un partenaire, un ami ou un geste commercial. Le compte doit déjà exister ; offrir à nouveau remplace l’accès en cours.",
+        "title": "Offrir un accès",
+        "description": "Pour un partenaire, un ami ou un geste commercial. Le compte doit déjà exister ; offrir à nouveau remplace l’accès en cours. Sans date de fin, l’accès dure jusqu’à ce que tu le retires.",
         "email": "E-mail du compte",
         "reason": "Motif",
         "reasonPlaceholder": "Streamer partenaire, phase de test",
-        "endsOn": "Jusqu’au (inclus)",
-        "endsOnHint": "Vide : jusqu’à ce que tu le retires.",
-        "action": "Offrir Pro",
-        "done": "Pro offert à {{email}}.",
+        "endsOn": "Jusqu’au (optionnel)",
+        "action": "Offrir",
+        "done": "Accès offert à {{email}}.",
         "plan": "Offre"
       },
       "grants": {

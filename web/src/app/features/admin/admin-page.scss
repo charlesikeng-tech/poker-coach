@@ -25,7 +25,11 @@
 
 .grant-form {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) minmax(0, 0.9fr) auto;
+  // Email, offer, reason, end date, button: one row, every input on the same line (labels have one line).
+  grid-template-columns: minmax(0, 1.3fr) minmax(7rem, 0.6fr) minmax(0, 1.3fr) minmax(
+      9.5rem,
+      0.8fr
+    ) auto;
   gap: var(--space-3);
   align-items: end;
 
@@ -156,10 +160,6 @@ table {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-.field--plan {
-  flex: 0 0 8rem;
 }
 
 .plan-tag {

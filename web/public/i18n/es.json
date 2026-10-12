@@ -1591,15 +1591,14 @@
       "description": "Accesos Pro regalados y suscriptores. Reembolsos, cancelaciones y cupones se hacen en Stripe.",
       "loadFailed": "No se ha podido cargar la administración. Recarga la página.",
       "grant": {
-        "title": "Regalar Pro",
-        "description": "Para un socio, un amigo o un gesto comercial. La cuenta debe existir; regalar de nuevo sustituye el acceso actual.",
+        "title": "Regalar un acceso",
+        "description": "Para un socio, un amigo o un gesto comercial. La cuenta debe existir; regalar de nuevo sustituye el acceso actual. Sin fecha de fin, el acceso dura hasta que lo retires.",
         "email": "Email de la cuenta",
         "reason": "Motivo",
         "reasonPlaceholder": "Streamer socio, fase de pruebas",
-        "endsOn": "Hasta (incluido)",
-        "endsOnHint": "Vacío: hasta que lo retires.",
-        "action": "Regalar Pro",
-        "done": "Pro regalado a {{email}}.",
+        "endsOn": "Hasta (opcional)",
+        "action": "Regalar",
+        "done": "Acceso regalado a {{email}}.",
         "plan": "Plan"
       },
       "grants": {
