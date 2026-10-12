@@ -1420,7 +1420,7 @@
         },
         "hosting": {
           "title": "Alojamiento",
-          "body": "La aplicación y su base de datos están alojadas en la Unión Europea. Los alias de tus rivales presentes en tus archivos nunca salen de nuestros servidores. Los correos de cuenta (confirmación, contraseña) los envía Brevo, un proveedor alojado en la Unión Europea."
+          "body": "La aplicación y su base de datos están alojadas en Francia (París) por Scaleway. Los alias de tus rivales presentes en tus archivos nunca salen de nuestros servidores. Los correos de cuenta (confirmación, contraseña) los envía Brevo, un proveedor alojado en la Unión Europea."
         },
         "retention": {
           "title": "Cuánto tiempo",

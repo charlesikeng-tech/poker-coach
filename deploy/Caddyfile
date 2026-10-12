@@ -1,0 +1,37 @@
+# Public entry point (ADR-0019): TLS for both domains, the landing page as static files, the app behind a
+# reverse proxy. Caddy obtains and renews the certificates itself (Let's Encrypt).
+{
+	email {$ACME_EMAIL}
+}
+
+# The app (ADR-0011). The container is only reachable through here: it trusts X-Forwarded-*, which Caddy
+# sets. No body-size limit here: the app enforces its own (100 MB per upload).
+{$APP_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:8080
+}
+
+# The landing page (site/): plain files, baked into this image.
+{$SITE_DOMAIN} {
+	root * /srv/site
+	encode zstd gzip
+	try_files {path} {path}.html
+	file_server
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# Fonts and images keep their name across releases: a day of cache, then revalidated.
+	@static path /fonts/* /assets/* /favicon.svg
+	header @static Cache-Control "public, max-age=86400"
+}
+
+www.{$SITE_DOMAIN} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}

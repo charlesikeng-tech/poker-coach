@@ -1,0 +1,53 @@
+# Production on one Scaleway instance (ADR-0019): Caddy (TLS, landing page) in front of the app container;
+# PostgreSQL is Scaleway's managed database, reached over the private network. Deploy with ./deploy.sh <sha>.
+name: nutsiq
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+services:
+  edge:
+    image: ${EDGE_IMAGE:?}:${RELEASE:?}
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?}
+      SITE_DOMAIN: ${SITE_DOMAIN:?}
+      ACME_EMAIL: ${ACME_EMAIL:?}
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+    logging: *logging
+
+  app:
+    image: ${APP_IMAGE:?}:${RELEASE:?}
+    restart: unless-stopped
+    env_file: app.env
+    environment:
+      App__PublicUrl: https://${APP_DOMAIN:?}
+    # Never published on the host: only Caddy reaches it, which is what makes trusting the forwarded
+    # headers safe (ADR-0011).
+    expose:
+      - "8080"
+    logging: *logging
+
+  # Release step, run by deploy.sh before the new version takes traffic (ADR-0011).
+  migrate:
+    image: ${APP_IMAGE:?}:${RELEASE:?}
+    profiles: [release]
+    command: ["migrate"]
+    env_file: app.env
+    restart: "no"
+    logging: *logging
+
+volumes:
+  caddy-data:
+  caddy-config:

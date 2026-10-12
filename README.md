@@ -97,6 +97,8 @@ docker compose --profile app up --build   # PostgreSQL + migrate + app on http:/
 # Behind the host's TLS proxy only (forwarded headers are trusted); probes: /health/live, /health/ready.
 ```
 
+Production runs on Scaleway (ADR-0019): `deploy/scaleway/` and `docs/runbooks/scaleway-deploy.md`.
+
 ## Conventions
 
 - **Errors**: every API error is RFC 9457 problem details with a stable `code`
@@ -338,7 +340,11 @@ Deployment readiness (roadmap step 5, ADR-0011):
 - [x] First-party feature usage (`platform.feature_usage`, 13 months, deleted with the account)
 - [x] Privacy page `/privacy` (FR/EN/ES), linked from sign-in and account
 - [x] CI: image built, smoke-tested on PostgreSQL, pushed to GHCR from `main`
-- [ ] Hosting decision (EU, backups ≤ 30 days), domain, Google production redirect URI, privacy contact
+- [x] Hosting decision (ADR-0019): Scaleway fr-par, one instance with Docker Compose (Caddy for TLS and the
+      landing page, app container), Managed PostgreSQL on a private network, backups 7 days; edge image built
+      and pushed by CI with the app; `deploy/scaleway/deploy.sh <sha>` (pull, migrate, up, readiness)
+- [ ] Production provisioned (`docs/runbooks/scaleway-deploy.md`): DNS, env files, first deploy, restore tested,
+      uptime check; Google production redirect URI, Stripe live, Brevo domain; privacy contact, legal notice
 - [ ] Telemetry exporter (Azure Monitor or OTLP) with the hosting decision
 
 MVP-3 — Leaks (ADR-0007):

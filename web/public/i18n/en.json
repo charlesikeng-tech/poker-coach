@@ -1420,7 +1420,7 @@
         },
         "hosting": {
           "title": "Hosting",
-          "body": "The app and its database are hosted in the European Union. Opponents' screen names in your files never leave our servers. Account emails (confirmation, password) are sent by Brevo, a provider hosted in the European Union."
+          "body": "The app and its database are hosted in France (Paris) by Scaleway. Opponents' screen names in your files never leave our servers. Account emails (confirmation, password) are sent by Brevo, a provider hosted in the European Union."
         },
         "retention": {
           "title": "How long we keep it",

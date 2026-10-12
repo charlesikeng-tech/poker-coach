@@ -1,0 +1,7 @@
+# syntax=docker/dockerfile:1
+# Edge image (ADR-0019): Caddy with the landing page and the Caddyfile baked in, so a release pins both.
+#   docker build -f deploy/Dockerfile.edge -t nutsiq-edge .
+FROM caddy:2.10-alpine
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+COPY site/ /srv/site/
+RUN rm -f /srv/site/README.md

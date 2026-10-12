@@ -1420,7 +1420,7 @@
         },
         "hosting": {
           "title": "Hébergement",
-          "body": "L'application et sa base de données sont hébergées dans l'Union européenne. Les pseudos adverses présents dans tes fichiers ne quittent jamais nos serveurs. Les e-mails de compte (confirmation, mot de passe) sont envoyés par Brevo, prestataire hébergé dans l'Union européenne."
+          "body": "L'application et sa base de données sont hébergées en France, à Paris, par Scaleway. Les pseudos adverses présents dans tes fichiers ne quittent jamais nos serveurs. Les e-mails de compte (confirmation, mot de passe) sont envoyés par Brevo, prestataire hébergé dans l'Union européenne."
         },
         "retention": {
           "title": "Durée de conservation",
