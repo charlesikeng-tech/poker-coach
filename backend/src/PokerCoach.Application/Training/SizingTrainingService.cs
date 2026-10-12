@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
@@ -6,7 +7,7 @@ using PokerCoach.Domain.Training;
 namespace PokerCoach.Application.Training;
 
 /// <summary>One answer given in a sizing drill, as stored.</summary>
-public sealed record SizingAttempt(SizingItem Item, RaiseSize Answer, bool Correct, DateTimeOffset AnsweredAt);
+public sealed record SizingAttempt(SizingItem Item, RaiseSize Answer, bool Correct, DateTimeOffset AnsweredAt, Guid? SourceHandId = null);
 
 public interface ISizingTrainingStore
 {
@@ -14,11 +15,15 @@ public interface ISizingTrainingStore
 
     /// <summary>The user's latest sizing attempts at a format checked against the current reference, most recent first.</summary>
     Task<IReadOnlyList<SizingAttempt>> RecentAsync(Guid userId, TableFormat format, int count, CancellationToken cancellationToken);
+
+    /// <summary>Hand IDs of real sizing spots that were already answered correctly at least once.</summary>
+    Task<IReadOnlySet<Guid>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken);
 }
 
 /// <summary>A raise the hero made preflop with its context (current facts): an open, or a 3-bet against a single open.</summary>
 /// <param name="Position">As <see cref="PositionResolver"/> named it in the hand.</param>
 /// <param name="OpenToBigBlinds">Set for an open; <paramref name="ThreeBetToBigBlinds"/> for a 3-bet.</param>
+/// <param name="HeroCards">Four-character string ("AhKd"); present when this row is used for the real-spots quiz.</param>
 public sealed record PlayedRaiseRow(
     Guid HandId,
     DateTimeOffset PlayedAt,
@@ -31,7 +36,8 @@ public sealed record PlayedRaiseRow(
     decimal? FacingOpenToBigBlinds,
     decimal? EffectiveStackBigBlinds,
     decimal? ThreeBetToBigBlinds,
-    bool ThreeBetAllIn);
+    bool ThreeBetAllIn,
+    string? HeroCards = null);
 
 public interface IPlayedSizingStore
 {
@@ -72,6 +78,11 @@ public sealed record PlayedSizingGroup(
 
 public sealed record PlayedSizings(TableFormat Format, IReadOnlyList<PlayedSizingGroup> Groups, int PendingHands, int ReferenceVersion);
 
+/// <summary>A real poorly-sized hand turned into a sizing drill.</summary>
+/// <param name="Actual">The size the hero played.</param>
+/// <param name="Remaining">Off-reference hands left to fix, this one included.</param>
+public sealed record RealSizingDrill(SizingDrillSpot Drill, Guid HandId, DateTimeOffset PlayedAt, RaiseSize Actual, int Remaining);
+
 /// <summary>
 /// Sizing (ADR-0020): drills on how much to raise, checked against <see cref="ReferenceSizings"/>, and the player's
 /// own open and 3-bet sizes next to the same reference. Missed spots come back, as in the other drills.
@@ -99,8 +110,54 @@ public sealed class SizingTrainingService(
         return new SizingDrillSpot(spot, SizingDrill.Choices(spot.Item), review is not null);
     }
 
+    internal const int RealSpotDays = 90;
+    internal const int RealSpotPool = 30;
+
+    /// <summary>
+    /// The next real spot where the hero sized off the reference, not yet answered correctly.
+    /// Returns null when there are no such spots in the last <see cref="RealSpotDays"/> days.
+    /// </summary>
+    public async Task<RealSizingDrill?> NextRealAsync(Guid userId, TableFormat format, CancellationToken cancellationToken)
+    {
+        var since = time.GetUtcNow().AddDays(-RealSpotDays);
+        var rows = await played.ListRaisesAsync(userId, new StatisticsFilter(since, null, null, null, Format: format), HeroHandFacts.Version, cancellationToken);
+        var outcomes = await store.RealHandOutcomesAsync(userId, format, cancellationToken);
+        var missed = rows
+            .Where(r => r.HeroCards != null)
+            .Select(r => (Row: r, Judged: Judge(r, format)))
+            .Where(t => t.Judged is { Verdict: not SizingVerdict.InLine } && !outcomes.Contains(t.Row.HandId))
+            .OrderByDescending(t => t.Row.PlayedAt)
+            .ToList();
+        if (missed.Count == 0)
+        {
+            return null;
+        }
+
+        var (row, judged) = missed[random.Next(Math.Min(missed.Count, RealSpotPool))];
+        var cards = row.HeroCards!;
+        if (cards.Length != 4
+            || !Card.TryParse(cards[..2], out var first)
+            || !Card.TryParse(cards[2..], out var second)
+            || first == second)
+        {
+            return null;
+        }
+
+        var item = judged!.Kind == SizingKind.Open
+            ? new SizingItem(format, judged.Band, judged.Seat!.Value, row.StackBigBlinds, null, null)
+            : new SizingItem(format, judged.Band, row.Position, row.EffectiveStackBigBlinds!.Value, row.Opener, row.FacingOpenToBigBlinds);
+        var spot = new SizingSpot(item, HandClass.Of(first, second), first, second);
+        var choices = SizingDrill.Choices(item);
+        return new RealSizingDrill(
+            new SizingDrillSpot(spot, choices, Review: outcomes.Contains(row.HandId)),
+            row.HandId,
+            row.PlayedAt,
+            judged.Played,
+            missed.Count);
+    }
+
     /// <exception cref="ArgumentException">The answer is not one of the sizes offered for the spot.</exception>
-    public async Task<SizingDrillResult> AnswerAsync(Guid userId, SizingItem item, RaiseSize answer, CancellationToken cancellationToken)
+    public async Task<SizingDrillResult> AnswerAsync(Guid userId, SizingItem item, RaiseSize answer, CancellationToken cancellationToken, Guid? sourceHandId = null)
     {
         ArgumentNullException.ThrowIfNull(item);
         ArgumentNullException.ThrowIfNull(answer);
@@ -112,7 +169,7 @@ public sealed class SizingTrainingService(
         var advice = SizingDrill.Advice(item);
         var verdict = advice.Judge(answer);
         var correct = verdict == SizingVerdict.InLine;
-        await store.RecordAsync(userId, new SizingAttempt(item, answer, correct, time.GetUtcNow()), ReferenceSizings.Version, cancellationToken);
+        await store.RecordAsync(userId, new SizingAttempt(item, answer, correct, time.GetUtcNow(), sourceHandId), ReferenceSizings.Version, cancellationToken);
         var inPosition = item.Opener is { } opener && ReferenceSizings.InPosition(item.Position, opener);
         return new SizingDrillResult(correct, verdict, advice, inPosition, ReferenceSizings.Version);
     }

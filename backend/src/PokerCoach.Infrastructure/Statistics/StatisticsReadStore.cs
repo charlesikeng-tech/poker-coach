@@ -249,7 +249,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 x.F.FacingOpenToBigBlinds,
                 x.F.FacingOpenEffectiveStack,
                 x.F.ThreeBetToBigBlinds,
-                x.F.ThreeBetAllIn))
+                x.F.ThreeBetAllIn,
+                x.HeroCards))
             .ToListAsync(cancellationToken);
 
     /// <summary>The hero's raise-first-in spots with known cards: a fifth of the hands at most, read whole.</summary>

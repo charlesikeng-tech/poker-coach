@@ -103,6 +103,10 @@ public sealed class SizingTrainingServiceTests
 
         public Task<IReadOnlyList<SizingAttempt>> RecentAsync(Guid userId, TableFormat format, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<SizingAttempt>>(Recorded.Take(count).ToList());
+
+        public Task<IReadOnlySet<Guid>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlySet<Guid>>(
+                new HashSet<Guid>(Recorded.Where(a => a.SourceHandId != null && a.Correct).Select(a => a.SourceHandId!.Value)));
     }
 
     private sealed class Played(params PlayedRaiseRow[] rows) : IPlayedSizingStore

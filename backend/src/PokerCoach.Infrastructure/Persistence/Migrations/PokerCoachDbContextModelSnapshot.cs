@@ -1428,6 +1428,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("reference_version");
 
+                    b.Property<Guid?>("SourceHandId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_hand_id");
+
                     b.Property<decimal>("StackBigBlinds")
                         .HasPrecision(6, 2)
                         .HasColumnType("numeric(6,2)")
@@ -1442,6 +1446,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId", "Format", "CreatedAt")
                         .HasDatabaseName("ix_sizing_attempts_user_id_format_created_at");
+
+                    b.HasIndex("UserId", "Format", "SourceHandId")
+                        .HasDatabaseName("ix_sizing_attempts_user_id_format_source_hand_id")
+                        .HasFilter("source_hand_id IS NOT NULL");
 
                     b.ToTable("sizing_attempts", "training");
                 });

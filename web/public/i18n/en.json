@@ -1407,6 +1407,13 @@
           "tooBig": "{{count}} too big",
           "replay": "hand {{n}}",
           "note": "Each hand is judged with its own stack and the open it faced (references v{{version}}). Typical size: the median, all-ins left out. 3-bets: against a single open, nobody calling before you."
+        },
+        "modeLabel": "Mode",
+        "modeDrill": "Reference",
+        "modeReal": "My hands",
+        "real": {
+          "doneDescription": "All your sizings from the last 90 days are on reference, or you have corrected them. Import new hands to find more.",
+          "played": "You played: {{size}}."
         }
       }
     },

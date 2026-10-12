@@ -85,6 +85,7 @@ export class TrainingPage {
   protected readonly sizingFilters = SIZING_FILTERS;
   protected readonly sizingBand = signal<SizingBand>('mid');
   protected readonly sizingFilter = signal<SizingFilter>('both');
+  protected readonly sizingMode = signal<'drill' | 'real'>('drill');
   /** The feature this view needs and the offer lacks (ADR-0016); null when open. */
   protected readonly locked = computed<Feature | null>(() =>
     !this.billing.allows('trainingDrills')

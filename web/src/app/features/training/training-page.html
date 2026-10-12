@@ -34,29 +34,47 @@
         </label>
       }
       @if (mode() === 'sizing') {
-        <label>
-          <span>{{ t('band') }}</span>
-          <select [value]="sizingBand()" (change)="setSizingBand($any($event.target).value)">
-            @for (option of sizingBands; track option) {
-              <option [value]="option" [selected]="option === sizingBand()">
-                {{ t('bands.' + option) }}
-              </option>
-            }
-          </select>
-        </label>
-        <div class="seats" role="group" [attr.aria-label]="t('sizing.kinds.label')">
-          @for (f of sizingFilters; track f) {
-            <button
-              type="button"
-              class="seat-chip"
-              [class.active]="sizingFilter() === f"
-              [attr.aria-pressed]="sizingFilter() === f"
-              (click)="sizingFilter.set(f)"
-            >
-              {{ t('sizing.kinds.' + f) }}
-            </button>
-          }
+        <div class="seats" role="group" [attr.aria-label]="t('sizing.modeLabel')">
+          <button
+            type="button"
+            class="seat-chip"
+            [class.active]="sizingMode() === 'drill'"
+            [attr.aria-pressed]="sizingMode() === 'drill'"
+            (click)="sizingMode.set('drill')"
+          >{{ t('sizing.modeDrill') }}</button>
+          <button
+            type="button"
+            class="seat-chip"
+            [class.active]="sizingMode() === 'real'"
+            [attr.aria-pressed]="sizingMode() === 'real'"
+            (click)="sizingMode.set('real')"
+          >{{ t('sizing.modeReal') }}</button>
         </div>
+        @if (sizingMode() === 'drill') {
+          <label>
+            <span>{{ t('band') }}</span>
+            <select [value]="sizingBand()" (change)="setSizingBand($any($event.target).value)">
+              @for (option of sizingBands; track option) {
+                <option [value]="option" [selected]="option === sizingBand()">
+                  {{ t('bands.' + option) }}
+                </option>
+              }
+            </select>
+          </label>
+          <div class="seats" role="group" [attr.aria-label]="t('sizing.kinds.label')">
+            @for (f of sizingFilters; track f) {
+              <button
+                type="button"
+                class="seat-chip"
+                [class.active]="sizingFilter() === f"
+                [attr.aria-pressed]="sizingFilter() === f"
+                (click)="sizingFilter.set(f)"
+              >
+                {{ t('sizing.kinds.' + f) }}
+              </button>
+            }
+          </div>
+        }
       }
       @if (mode() === 'open' || mode() === 'defence') {
         <div
@@ -86,7 +104,11 @@
     </div>
 
     @if (mode() === 'sizing') {
-      <app-sizing-drill [format]="format()" [band]="sizingBand()" [filter]="sizingFilter()" />
+      @if (sizingMode() === 'real' && !billing.allows('trainingOwnHands')) {
+        <app-plan-lock feature="trainingOwnHands" />
+      } @else {
+        <app-sizing-drill [format]="format()" [band]="sizingBand()" [filter]="sizingFilter()" [mode]="sizingMode()" />
+      }
     } @else if (locked() === 'trainingOwnHands') {
       <app-plan-lock feature="trainingOwnHands" />
     } @else if (state() === 'done') {

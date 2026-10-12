@@ -7,6 +7,12 @@
     >
       <button appButton variant="secondary" (click)="nextSpot()">{{ t('error.retry') }}</button>
     </app-empty-state>
+  } @else if (state() === 'done') {
+    <app-empty-state
+      [icon]="icons.Sparkles"
+      [heading]="t('real.doneTitle')"
+      [description]="t('sizing.real.doneDescription')"
+    />
   } @else if (spot(); as s) {
     <div class="room">
       <section class="table-card glass">
@@ -28,7 +34,14 @@
                   })
             }}
           </p>
-          @if (s.review) {
+          @if (realSpot(); as real) {
+            <div class="badges">
+              <span class="badge">{{ t('real.tag', { date: playedOn(real.playedAt) }) }}</span>
+              @if (real.remaining > 1) {
+                <span class="badge">{{ t('real.remaining', { count: real.remaining }) }}</span>
+              }
+            </div>
+          } @else if (s.review) {
             <div class="badges">
               <span class="badge badge--review">
                 <app-icon [icon]="icons.RotateCcw" />{{ t('review') }}
@@ -103,6 +116,9 @@
               <app-icon [icon]="r.correct ? icons.Check : icons.X" />
               {{ t('sizing.verdict.' + r.verdict) }}
             </p>
+            @if (realSpot(); as real) {
+              <p>{{ t('sizing.real.played', { size: sizeLabel(s, real.actual) }) }}</p>
+            }
             <p>
               {{
                 t('sizing.verdict.reference', {
@@ -130,6 +146,7 @@
     </div>
   }
 
+  @if (mode() !== 'real') {
   <section class="played card glass">
     <h2>{{ t('sizing.played.title') }}</h2>
     @if (played(); as p) {
@@ -207,4 +224,5 @@
       <span class="skeleton played__skeleton"></span>
     }
   </section>
+  }
 </ng-container>

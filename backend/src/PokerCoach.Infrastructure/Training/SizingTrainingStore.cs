@@ -40,6 +40,9 @@ internal sealed class SizingAttemptRecord
     public int ReferenceVersion { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }
+
+    /// <summary>Set when the attempt is an answer to a real badly-sized hand (not a reference drill spot).</summary>
+    public Guid? SourceHandId { get; set; }
 }
 
 internal sealed class SizingAttemptConfiguration : IEntityTypeConfiguration<SizingAttemptRecord>
@@ -58,6 +61,9 @@ internal sealed class SizingAttemptConfiguration : IEntityTypeConfiguration<Sizi
         builder.Property(a => a.AnswerSize).HasPrecision(5, 2);
         // Reads are "this user's latest attempts at a format".
         builder.HasIndex(a => new { a.UserId, a.Format, a.CreatedAt });
+        // Reads for real-spot outcomes: which real hands did this user already answer correctly?
+        builder.HasIndex(a => new { a.UserId, a.Format, a.SourceHandId })
+            .HasFilter("source_hand_id IS NOT NULL");
         builder.HasOne<User>().WithMany().HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Cascade);
     }
 }
@@ -80,9 +86,20 @@ internal sealed class SizingTrainingStore(PokerCoachDbContext db) : ISizingTrain
             Correct = attempt.Correct,
             ReferenceVersion = referenceVersion,
             CreatedAt = attempt.AnsweredAt,
+            SourceHandId = attempt.SourceHandId,
         });
         await db.SaveChangesAsync(cancellationToken);
         db.ChangeTracker.Clear();
+    }
+
+    public async Task<IReadOnlySet<Guid>> RealHandOutcomesAsync(Guid userId, TableFormat format, CancellationToken cancellationToken)
+    {
+        var ids = await db.Set<SizingAttemptRecord>().AsNoTracking()
+            .Where(a => a.UserId == userId && a.Format == format && a.SourceHandId != null && a.Correct)
+            .Select(a => a.SourceHandId!.Value)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        return new HashSet<Guid>(ids);
     }
 
     /// <summary>Attempts checked against another reference version are left out: their answer key changed.</summary>

@@ -1407,6 +1407,13 @@
           "tooBig": "{{count}} trop gros",
           "replay": "main {{n}}",
           "note": "Chaque main est jugée avec son propre tapis et l'open affronté (repères v{{version}}). Taille typique : la médiane, hors tapis. 3-bets : face à un seul open, sans caller avant toi."
+        },
+        "modeLabel": "Mode",
+        "modeDrill": "Repère",
+        "modeReal": "Mes mains",
+        "real": {
+          "doneDescription": "Tous tes sizings des 90 derniers jours suivent les repères, ou tu les as refaits correctement. Importe de nouvelles mains pour en trouver d'autres.",
+          "played": "Tu avais joué : {{size}}."
         }
       }
     },

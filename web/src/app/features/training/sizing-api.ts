@@ -88,6 +88,15 @@ export interface PlayedSizings {
   readonly referenceVersion: number;
 }
 
+/** A real poorly-sized hand turned into a sizing drill. */
+export interface RealSizingSpot extends SizingSpot {
+  readonly handId: string;
+  readonly playedAt: string;
+  /** The size the hero actually played. */
+  readonly actual: RaiseSize;
+  readonly remaining: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SizingApi {
   private readonly http = inject(HttpClient);
@@ -101,7 +110,7 @@ export class SizingApi {
     return firstValueFrom(this.http.get<SizingSpot>('/api/training/sizing/spot', { params }));
   }
 
-  answer(spot: SizingSpot, answer: RaiseSize): Promise<SizingResult> {
+  answer(spot: SizingSpot, answer: RaiseSize, sourceHandId?: string): Promise<SizingResult> {
     return firstValueFrom(
       this.http.post<SizingResult>('/api/training/sizing/answers', {
         format: spot.format,
@@ -111,6 +120,16 @@ export class SizingApi {
         opener: spot.opener,
         openToBigBlinds: spot.openToBigBlinds,
         answer,
+        sourceHandId: sourceHandId ?? null,
+      }),
+    );
+  }
+
+  /** The next real poorly-sized hand to replay; 404 when none left. */
+  realSpot(format: TableFormat): Promise<RealSizingSpot> {
+    return firstValueFrom(
+      this.http.get<RealSizingSpot>('/api/training/sizing/real', {
+        params: new HttpParams().set('format', format),
       }),
     );
   }

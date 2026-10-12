@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Check, CircleAlert, Flame, LoaderCircle, RotateCcw, X } from 'lucide';
+import { Check, CircleAlert, Flame, LoaderCircle, RotateCcw, Sparkles, X } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
@@ -23,6 +23,7 @@ import {
   PlayedSizingGroup,
   PlayedSizings,
   RaiseSize,
+  RealSizingSpot,
   SizingApi,
   SizingBand,
   SizingKind,
@@ -33,7 +34,7 @@ import {
 import { raiseTo, sizingTable } from './sizing-table';
 import { CHIPS_PER_BB, positionShort } from './spot-table';
 
-type LoadState = 'loading' | 'ready' | 'error';
+type LoadState = 'loading' | 'ready' | 'error' | 'done';
 
 /** Which spots to drill: opens, 3-bets, or both mixed. */
 export type SizingFilter = SizingKind | 'both';
@@ -63,16 +64,19 @@ export class SizingDrill {
   readonly format = input.required<TableFormat>();
   readonly band = input.required<SizingBand>();
   readonly filter = input.required<SizingFilter>();
+  /** 'drill': random reference spots; 'real': player's own poorly-sized hands. */
+  readonly mode = input<'drill' | 'real'>('drill');
 
   protected readonly state = signal<LoadState>('loading');
   protected readonly spot = signal<SizingSpot | null>(null);
+  protected readonly realSpot = signal<RealSizingSpot | null>(null);
   protected readonly answer = signal<RaiseSize | null>(null);
   protected readonly result = signal<SizingResult | null>(null);
   protected readonly progress = signal<SizingProgress | null>(null);
   protected readonly played = signal<PlayedSizings | null>(null);
   protected readonly session = signal({ answered: 0, correct: 0 });
   protected readonly busy = signal(false);
-  protected readonly icons = { Check, CircleAlert, Flame, LoaderCircle, RotateCcw, X };
+  protected readonly icons = { Check, CircleAlert, Flame, LoaderCircle, RotateCcw, Sparkles, X };
   protected readonly short = positionShort;
 
   private readonly locale = computed(() => this.language.current());
@@ -104,7 +108,7 @@ export class SizingDrill {
 
   constructor() {
     effect(() => {
-      const args = [this.format(), this.band(), this.filter()] as const;
+      const args = [this.format(), this.band(), this.filter(), this.mode()] as const;
       untracked(() => {
         this.session.set({ answered: 0, correct: 0 });
         void this.next(...args);
@@ -115,7 +119,9 @@ export class SizingDrill {
       const format = this.format();
       untracked(() => {
         void this.loadProgress(format);
-        void this.loadPlayed(format);
+        if (this.mode() !== 'real') {
+          void this.loadPlayed(format);
+        }
       });
     });
   }
@@ -196,7 +202,7 @@ export class SizingDrill {
     this.answer.set(size);
     this.busy.set(true);
     try {
-      const result = await this.api.answer(spot, size);
+      const result = await this.api.answer(spot, size, this.realSpot()?.handId);
       this.result.set(result);
       this.session.update((s) => ({
         answered: s.answered + 1,
@@ -222,7 +228,12 @@ export class SizingDrill {
   }
 
   protected nextSpot(): void {
-    void this.next(this.format(), this.band(), this.filter());
+    void this.next(this.format(), this.band(), this.filter(), this.mode());
+  }
+
+  protected playedOn(iso: string): string {
+    const locale = this.language.current();
+    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long' }).format(new Date(iso));
   }
 
   protected onKey(event: KeyboardEvent): void {
@@ -249,16 +260,31 @@ export class SizingDrill {
     return this.transloco.translate(`pages.training.${key}`, params);
   }
 
-  private async next(format: TableFormat, band: SizingBand, filter: SizingFilter): Promise<void> {
+  private async next(format: TableFormat, band: SizingBand, filter: SizingFilter, mode: 'drill' | 'real'): Promise<void> {
     this.busy.set(true);
     try {
-      const spot = await this.api.spot(format, band, filter === 'both' ? null : filter);
-      this.answer.set(null);
-      this.result.set(null);
-      this.spot.set(spot);
-      this.state.set('ready');
-    } catch {
-      this.state.set('error');
+      if (mode === 'real') {
+        const real = await this.api.realSpot(format);
+        this.answer.set(null);
+        this.result.set(null);
+        this.realSpot.set(real);
+        this.spot.set(real);
+        this.state.set('ready');
+      } else {
+        const spot = await this.api.spot(format, band, filter === 'both' ? null : filter);
+        this.answer.set(null);
+        this.result.set(null);
+        this.realSpot.set(null);
+        this.spot.set(spot);
+        this.state.set('ready');
+      }
+    } catch (error) {
+      if (mode === 'real') {
+        const code = (error as { error?: { code?: string } } | null)?.error?.code;
+        this.state.set(code === 'NO_REAL_SIZING_SPOT_LEFT' ? 'done' : 'error');
+      } else {
+        this.state.set('error');
+      }
     } finally {
       this.busy.set(false);
     }

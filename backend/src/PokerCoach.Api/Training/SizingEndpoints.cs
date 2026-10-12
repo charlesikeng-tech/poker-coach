@@ -39,6 +39,7 @@ public sealed record SizingSpotResponse(
     bool Review);
 
 /// <summary>The spot as received, and the size chosen among its choices.</summary>
+/// <param name="SourceHandId">Set when the spot is a real poorly-sized hand (not a reference drill).</param>
 public sealed record SizingAnswerRequest(
     TableFormat? Format,
     StackBand? Band,
@@ -46,7 +47,8 @@ public sealed record SizingAnswerRequest(
     decimal? StackInBigBlinds,
     PokerPosition? Opener,
     decimal? OpenToBigBlinds,
-    RaiseSizeDto? Answer);
+    RaiseSizeDto? Answer,
+    Guid? SourceHandId = null);
 
 /// <param name="Verdict">The size answered: inLine, tooSmall or tooBig.</param>
 /// <param name="Min">Smallest size still in line (same unit as the size); null for an all-in reference.</param>
@@ -63,6 +65,30 @@ public sealed record SizingResultResponse(
     int ReferenceVersion);
 
 public sealed record SizingProgressResponse(int Attempts, int Correct, int Streak, int DueReviews);
+
+/// <summary>
+/// A real poorly-sized hand as a sizing drill: same structure as <see cref="SizingSpotResponse"/>, plus the real context.
+/// </summary>
+/// <param name="HandId">Sent back with the answer as <c>sourceHandId</c>.</param>
+/// <param name="PlayedAt">ISO-8601 timestamp of the hand.</param>
+/// <param name="Actual">The size the hero played.</param>
+/// <param name="Remaining">Off-reference hands left to fix, this one included.</param>
+public sealed record RealSizingSpotResponse(
+    TableFormat Format,
+    StackBand Band,
+    SizingKind Kind,
+    PokerPosition Position,
+    PokerPosition? Opener,
+    decimal? OpenToBigBlinds,
+    decimal StackInBigBlinds,
+    string Hand,
+    IReadOnlyList<string> Cards,
+    IReadOnlyList<RaiseSizeDto> Choices,
+    bool Review,
+    Guid HandId,
+    DateTimeOffset PlayedAt,
+    RaiseSizeDto Actual,
+    int Remaining);
 
 /// <param name="Seat">Opens: the seat (by distance to the button). Null for 3-bets.</param>
 /// <param name="InPosition">3-bets: in or out of position. Null for opens.</param>
@@ -95,6 +121,7 @@ public static class SizingEndpoints
     {
         var group = endpoints.MapGroup("/api/training/sizing").WithTags("Training").RequiresFeature(Feature.TrainingDrills);
         group.MapGet("/spot", GetSpotAsync);
+        group.MapGet("/real", GetRealSpotAsync).RequiresFeature(Feature.TrainingOwnHands);
         group.MapPost("/answers", AnswerAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapGet("/progress", GetProgressAsync);
         group.MapGet("/played", GetPlayedAsync);
@@ -154,6 +181,50 @@ public static class SizingEndpoints
             drill.Review));
     }
 
+    private const string NoRealSizingSpotLeft = "NO_REAL_SIZING_SPOT_LEFT";
+
+    /// <param name="format">sixMax (default) or fullRing.</param>
+    private static async Task<Results<Ok<RealSizingSpotResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetRealSpotAsync(
+        HttpContext context,
+        SizingTrainingService sizing,
+        CancellationToken cancellationToken,
+        string format = "sixMax")
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!TableFormatQuery.TryParse(format, out var tableFormat) || tableFormat is not { } parsedFormat)
+        {
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        var real = await sizing.NextRealAsync(userId, parsedFormat, cancellationToken);
+        if (real is null)
+        {
+            return ApiProblems.WithCode(StatusCodes.Status404NotFound, NoRealSizingSpotLeft, "No real badly-sized spot left to train.");
+        }
+
+        var item = real.Drill.Spot.Item;
+        return TypedResults.Ok(new RealSizingSpotResponse(
+            item.Format,
+            item.Band,
+            item.Kind,
+            item.Position,
+            item.Opener,
+            item.OpenToBigBlinds,
+            item.StackBigBlinds,
+            real.Drill.Spot.Hand.ToString(),
+            [real.Drill.Spot.First.ToString(), real.Drill.Spot.Second.ToString()],
+            real.Drill.Choices.Select(RaiseSizeDto.From).ToList(),
+            real.Drill.Review,
+            real.HandId,
+            real.PlayedAt,
+            RaiseSizeDto.From(real.Actual),
+            real.Remaining));
+    }
+
     private static async Task<Results<Ok<SizingResultResponse>, ProblemHttpResult, UnauthorizedHttpResult>> AnswerAsync(
         SizingAnswerRequest request,
         HttpContext context,
@@ -202,7 +273,7 @@ public static class SizingEndpoints
             return ApiProblems.Validation("answer", "Must be one of the sizes offered for the spot.");
         }
 
-        var result = await sizing.AnswerAsync(userId, item, size, cancellationToken);
+        var result = await sizing.AnswerAsync(userId, item, size, cancellationToken, request.SourceHandId);
         return TypedResults.Ok(new SizingResultResponse(
             result.Correct,
             result.Verdict,

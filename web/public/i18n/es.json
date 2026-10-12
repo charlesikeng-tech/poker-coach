@@ -1407,6 +1407,13 @@
           "tooBig": "{{count}} demasiado grande(s)",
           "replay": "mano {{n}}",
           "note": "Cada mano se juzga con su propio stack y el open al que se enfrentó (referencias v{{version}}). Tamaño típico: la mediana, sin los all-in. 3-bets: contra un solo open, sin nadie que pague antes que tú."
+        },
+        "modeLabel": "Modo",
+        "modeDrill": "Referencia",
+        "modeReal": "Mis manos",
+        "real": {
+          "doneDescription": "Todos tus sizings de los últimos 90 días están en referencia, o los has corregido. Importa nuevas manos para encontrar más.",
+          "played": "Jugaste: {{size}}."
         }
       }
     },
