@@ -23,23 +23,32 @@
       </div>
 
       <nav class="sidebar__nav" [attr.aria-label]="t('shell.mainNavigation')">
-        <ul>
-          @for (item of primaryNavigation; track item.path) {
-            <li>
-              <a
-                class="nav-link"
-                [routerLink]="item.path"
-                routerLinkActive="nav-link--active"
-                ariaCurrentWhenActive="page"
-                [attr.title]="collapsed() ? t(item.labelKey) : null"
-                (click)="closeMobileNavigation()"
-              >
-                <app-icon [icon]="item.icon" />
-                <span class="rail-hidden">{{ t(item.labelKey) }}</span>
-              </a>
-            </li>
-          }
-        </ul>
+        @for (section of primaryNavigation; track $index) {
+          <div class="nav-section">
+            @if (section.labelKey; as label) {
+              <p class="nav-section__label rail-hidden" [id]="'nav-section-' + $index">
+                {{ t(label) }}
+              </p>
+            }
+            <ul [attr.aria-labelledby]="section.labelKey ? 'nav-section-' + $index : null">
+              @for (item of section.items; track item.path) {
+                <li>
+                  <a
+                    class="nav-link"
+                    [routerLink]="item.path"
+                    routerLinkActive="nav-link--active"
+                    ariaCurrentWhenActive="page"
+                    [attr.title]="collapsed() ? t(item.labelKey) : null"
+                    (click)="closeMobileNavigation()"
+                  >
+                    <app-icon [icon]="item.icon" />
+                    <span class="rail-hidden">{{ t(item.labelKey) }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
+          </div>
+        }
       </nav>
 
       <div class="sidebar__footer">

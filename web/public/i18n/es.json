@@ -4,7 +4,7 @@
   },
   "nav": {
     "dashboard": "Panel",
-    "progress": "Plan",
+    "progress": "Plan semanal",
     "performance": "Rendimiento",
     "tournaments": "Torneos",
     "statistics": "Estadísticas",
@@ -14,7 +14,12 @@
     "training": "Entrenamiento",
     "bankroll": "Bankroll",
     "subscription": "Suscripción",
-    "admin": "Admin"
+    "admin": "Admin",
+    "sections": {
+      "results": "Resultados",
+      "analysis": "Análisis",
+      "improve": "Progresar"
+    }
   },
   "shell": {
     "skipToContent": "Ir al contenido",

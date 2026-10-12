@@ -19,6 +19,14 @@ $desktop: 1024px;
   .nav-link {
     justify-content: center;
   }
+  // Section titles are hidden on the rail: a thin rule keeps the groups apart.
+  .sidebar__nav {
+    gap: var(--space-2);
+  }
+  .nav-section + .nav-section {
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border-subtle);
+  }
 }
 
 .shell {
@@ -95,7 +103,20 @@ ul {
 }
 
 .sidebar__nav {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.nav-section__label {
+  margin: 0 0 var(--space-1);
+  padding: 0 var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .sidebar__footer {

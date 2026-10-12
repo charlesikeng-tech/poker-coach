@@ -21,20 +21,45 @@ export interface NavigationItem {
   readonly icon: IconNode;
 }
 
+export interface NavigationSection {
+  /** Null for the opening section (the dashboard), shown without a title. */
+  readonly labelKey: string | null;
+  readonly items: readonly NavigationItem[];
+}
+
 /**
- * Navigation. Hands, Coach, Training and Progress are added when their phase ships:
- * no entry for a screen that does not exist yet (ADR-0003).
+ * Main navigation, in the order a player uses it: what happened (results), why (analysis), what to do about
+ * it (improve). Import, subscription and administration sit in the footer. No entry for a screen that does
+ * not exist yet (ADR-0003).
  */
-export const PRIMARY_NAVIGATION: readonly NavigationItem[] = [
-  { path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard },
-  { path: '/progress', labelKey: 'nav.progress', icon: Target },
-  { path: '/performance', labelKey: 'nav.performance', icon: TrendingUp },
-  { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy },
-  { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },
-  { path: '/leaks', labelKey: 'nav.leaks', icon: Radar },
-  { path: '/ranges', labelKey: 'nav.ranges', icon: Grid3x3 },
-  { path: '/training', labelKey: 'nav.training', icon: Dumbbell },
-  { path: '/bankroll', labelKey: 'nav.bankroll', icon: Wallet },
+export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
+  {
+    labelKey: null,
+    items: [{ path: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard }],
+  },
+  {
+    labelKey: 'nav.sections.results',
+    items: [
+      { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy },
+      { path: '/performance', labelKey: 'nav.performance', icon: TrendingUp },
+      { path: '/bankroll', labelKey: 'nav.bankroll', icon: Wallet },
+    ],
+  },
+  {
+    labelKey: 'nav.sections.analysis',
+    items: [
+      { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },
+      { path: '/leaks', labelKey: 'nav.leaks', icon: Radar },
+      { path: '/ranges', labelKey: 'nav.ranges', icon: Grid3x3 },
+    ],
+  },
+  {
+    labelKey: 'nav.sections.improve',
+    items: [
+      { path: '/progress', labelKey: 'nav.progress', icon: Target },
+      { path: '/training', labelKey: 'nav.training', icon: Dumbbell },
+    ],
+  },
 ];
 
 export const SECONDARY_NAVIGATION: readonly NavigationItem[] = [
