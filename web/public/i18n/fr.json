@@ -37,7 +37,7 @@
       "description": "Où en est ton jeu et sur quoi travailler ensuite.",
       "empty": {
         "title": "Aucun résultat pour l'instant",
-        "description": "Importe tes historiques de mains et tes résumés de tournois Winamax pour voir tes résultats ici.",
+        "description": "Importe tes historiques de mains et tes résumés de tournois pour voir tes résultats ici.",
         "action": "Importer des fichiers"
       },
       "importAction": "Importer des fichiers",
@@ -48,7 +48,7 @@
         "retry": "Réessayer"
       },
       "alerts": {
-        "unconfirmed": "Un compte Winamax trouvé dans tes fichiers attend ta confirmation.",
+        "unconfirmed": "Un compte de poker trouvé dans tes fichiers attend ta confirmation.",
         "missingSummaries": "{{count}} tournoi(s) n'ont pas de fichier de résumé : leur résultat est inconnu."
       },
       "window": "{{days}} derniers jours",
@@ -157,7 +157,7 @@
         "description": "Les tournois importés apparaissent ici avec leur buy-in, leur résultat et ta place finale.",
         "action": "Importer des fichiers"
       },
-      "unconfirmed": "Certains comptes Winamax importés ne sont pas encore confirmés : leurs tournois ne sont pas listés.",
+      "unconfirmed": "Certains comptes de poker importés ne sont pas encore confirmés : leurs tournois ne sont pas listés.",
       "unconfirmedAction": "Confirmer sur la page d'import",
       "loading": "Chargement de tes tournois…",
       "error": {
@@ -578,7 +578,7 @@
         "phasesTitle": "Par phase de tournoi",
         "phasesLead": "Ton jeu selon le moment du tournoi. Le style doit changer quand les stacks raccourcissent : plus de steals, moins de calls.",
         "phase": "Phase",
-        "phasesHint": "Phases par niveau de blinds : les historiques Winamax ne disent pas combien de joueurs restent, donc la bubble, le passage ITM et la final table ne peuvent pas être repérées sans deviner.",
+        "phasesHint": "Phases par niveau de blinds : les historiques de mains ne disent pas combien de joueurs restent, donc la bubble, le passage ITM et la final table ne peuvent pas être repérées sans deviner.",
         "trendTitle": "Évolution mois par mois",
         "trendLead": "Tes statistiques mois par mois, avec la zone de référence en vert : tes leaks se referment-ils ?",
         "trendPick": "Statistique suivie",
@@ -591,13 +591,15 @@
     },
     "import": {
       "title": "Import",
-      "description": "Ajoute tes historiques de mains et résumés de tournois Winamax.",
+      "description": "Ajoute tes historiques de mains et tes résumés de tournois. Rooms prises en charge : {{rooms}}.",
       "drop": {
-        "title": "Dépose tes fichiers Winamax ici",
+        "title": "Dépose tes fichiers ici",
         "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Tu peux déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
         "chooseFiles": "Choisir des fichiers",
         "chooseFolder": "Choisir un dossier",
-        "where": "Sur Mac, Winamax les enregistre dans ~/Library/Application Support/winamax/documents/accounts/<ton pseudo>/history. Dans la fenêtre de sélection, fais ⌘⇧G et colle ce chemin (le dossier Bibliothèque est masqué par défaut).",
+        "where": {
+          "winamax": "Sur Mac, les fichiers sont dans ~/Library/Application Support/winamax/documents/accounts/<ton pseudo>/history. Dans la fenêtre de sélection, fais ⌘⇧G et colle ce chemin (le dossier Bibliothèque est masqué par défaut)."
+        },
         "nothing": "Aucun fichier .txt ou .zip dans cette sélection."
       },
       "progress": {
@@ -635,8 +637,8 @@
         "INVALID_ARCHIVE": "Archive .zip endommagée ou illisible.",
         "UPLOAD_TOO_LARGE": "Trop de données d'un coup. Importe moins de fichiers à la fois.",
         "TOO_MANY_FILES": "Trop de fichiers d'un coup. Importe moins de fichiers à la fois.",
-        "INVALID_ENCODING": "Encodage inattendu : ce n'est pas un fichier Winamax d'origine.",
-        "UNRECOGNIZED_FORMAT": "Ce n'est ni un historique de mains ni un résumé de tournoi Winamax.",
+        "INVALID_ENCODING": "Encodage inattendu : ce n'est pas un fichier d'historique d'origine.",
+        "UNRECOGNIZED_FORMAT": "Ce n'est ni un historique de mains ni un résumé de tournoi d'une room prise en charge.",
         "INVALID_SUMMARY": "Résumé de tournoi incomplet ou illisible.",
         "NO_VALID_HAND": "Aucune main complète n'a pu être lue dans ce fichier.",
         "PROCESSING_FAILED": "Ce fichier n'a pas pu être traité. Il sera retenté si tu l'importes à nouveau.",
@@ -644,7 +646,7 @@
         "unknown": "Une erreur est survenue. Réessaie."
       },
       "accounts": {
-        "title": "Est-ce ton compte Winamax ?",
+        "title": "Est-ce ton compte {{room}} ?",
         "description": "Nous avons trouvé le pseudo {{name}} dans tes fichiers. Confirme qu'il s'agit bien de toi pour que ses résultats comptent dans tes statistiques.",
         "confirm": "Oui, c'est moi",
         "reject": "Non, ce n'est pas moi",
@@ -652,8 +654,8 @@
         "rejectDescription": "Tous les tournois et toutes les mains importés sous ce pseudo seront supprimés. Tu pourras ensuite importer tes propres fichiers.",
         "rejectConfirm": "Supprimer",
         "cancel": "Annuler",
-        "linked": "Compte Winamax :",
-        "error": "Impossible de charger ou de modifier tes comptes Winamax. Réessaie."
+        "linked": "Comptes de poker :",
+        "error": "Impossible de charger ou de modifier tes comptes de poker. Réessaie."
       }
     },
     "notFound": {
@@ -687,7 +689,7 @@
       "product": "NutsIQ",
       "launching": "Direction Google…",
       "features": {
-        "import": "Importe tes historiques Winamax en un glisser-déposer.",
+        "import": "Importe tes historiques de mains en un glisser-déposer.",
         "leaks": "Repère tes leaks, mesurés avec un intervalle de confiance.",
         "replay": "Rejoue tes mains clés, expliquées par ton coach IA."
       },

@@ -23,7 +23,7 @@
             </button>
           </div>
         } @else {
-          <h2 [id]="'account-' + account.id">{{ t('title') }}</h2>
+          <h2 [id]="'account-' + account.id">{{ t('title', { room: roomName(account.room) }) }}</h2>
           <p>{{ t('description', { name: account.screenName }) }}</p>
           <div class="account-prompt__actions">
             <button
@@ -48,7 +48,7 @@
       <app-icon [icon]="icons.BadgeCheck" />
       <span>{{ t('linked') }}</span>
       @for (account of confirmed(); track account.id) {
-        <strong>{{ account.screenName }}</strong>
+        <strong>{{ account.screenName }}</strong> ({{ roomName(account.room) }})
       }
     </p>
   }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CircleAlert, CircleCheck, Clock, FolderOpen, Upload } from 'lucide';
 
+import { SUPPORTED_ROOMS, roomName, supportedRoomNames } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
@@ -34,6 +35,10 @@ const KNOWN_ERRORS = new Set([
   styleUrl: './import-page.scss',
 })
 export class ImportPage {
+  /** Where each supported room saves its files: one help line per room. */
+  protected readonly rooms = SUPPORTED_ROOMS;
+  protected readonly supportedRooms = supportedRoomNames();
+  protected readonly roomName = roomName;
   protected readonly session = inject(ImportSession);
   protected readonly dragging = signal(false);
   protected readonly nothingToImport = signal(false);

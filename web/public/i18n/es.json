@@ -37,7 +37,7 @@
       "description": "Cómo va tu juego y en qué trabajar a continuación.",
       "empty": {
         "title": "Todavía no hay resultados",
-        "description": "Importa tus historiales de manos y resúmenes de torneos de Winamax para ver aquí tus resultados.",
+        "description": "Importa tus historiales de manos y tus resúmenes de torneos para ver tus resultados aquí.",
         "action": "Importar archivos"
       },
       "importAction": "Importar archivos",
@@ -48,7 +48,7 @@
         "retry": "Reintentar"
       },
       "alerts": {
-        "unconfirmed": "Una cuenta de Winamax encontrada en tus archivos espera tu confirmación.",
+        "unconfirmed": "Una cuenta de póker encontrada en tus archivos espera tu confirmación.",
         "missingSummaries": "{{count}} torneo(s) no tienen archivo de resumen: su resultado es desconocido."
       },
       "window": "Últimos {{days}} días",
@@ -157,7 +157,7 @@
         "description": "Los torneos importados aparecen aquí con su buy-in, su resultado y tu posición final.",
         "action": "Importar archivos"
       },
-      "unconfirmed": "Algunas cuentas de Winamax importadas aún no están confirmadas: sus torneos no aparecen.",
+      "unconfirmed": "Algunas cuentas de póker importadas aún no están confirmadas: sus torneos no se listan.",
       "unconfirmedAction": "Confirmar en la página de importación",
       "loading": "Cargando tus torneos…",
       "error": {
@@ -578,7 +578,7 @@
         "phasesTitle": "Por fase del torneo",
         "phasesLead": "Tu juego según el momento del torneo. El estilo debe cambiar cuando los stacks se acortan: más robos, menos calls.",
         "phase": "Fase",
-        "phasesHint": "Fases por nivel de ciegas: los historiales de Winamax no dicen cuántos jugadores quedan, así que la burbuja, la entrada en premios y la mesa final no se pueden detectar sin adivinar.",
+        "phasesHint": "Fases por nivel de ciegas: los historiales de manos no dicen cuántos jugadores quedan, así que la burbuja, la entrada en premios y la mesa final no se pueden detectar sin adivinar.",
         "trendTitle": "Mes a mes",
         "trendLead": "Tus estadísticas mes a mes, con la zona de referencia en verde: ¿se están cerrando tus leaks?",
         "trendPick": "Estadística seguida",
@@ -591,13 +591,15 @@
     },
     "import": {
       "title": "Importar",
-      "description": "Añade tus historiales de manos y resúmenes de torneos de Winamax.",
+      "description": "Añade tus historiales de manos y tus resúmenes de torneos. Salas compatibles: {{rooms}}.",
       "drop": {
-        "title": "Suelta aquí tus archivos de Winamax",
+        "title": "Suelta tus archivos aquí",
         "hint": "Historiales de manos y resúmenes de torneos (.txt), o un archivo .zip. Puedes soltar una carpeta entera: importar dos veces el mismo archivo nunca crea duplicados.",
         "chooseFiles": "Elegir archivos",
         "chooseFolder": "Elegir una carpeta",
-        "where": "En Mac, Winamax los guarda en ~/Library/Application Support/winamax/documents/accounts/<tu seudónimo>/history. En la ventana de selección, pulsa ⌘⇧G y pega esta ruta (la carpeta Biblioteca está oculta por defecto).",
+        "where": {
+          "winamax": "En Mac, los archivos están en ~/Library/Application Support/winamax/documents/accounts/<tu nick>/history. En la ventana de selección, pulsa ⌘⇧G y pega esa ruta (la carpeta Biblioteca está oculta por defecto)."
+        },
         "nothing": "No hay ningún archivo .txt o .zip en esta selección."
       },
       "progress": {
@@ -635,8 +637,8 @@
         "INVALID_ARCHIVE": "Archivo .zip dañado o ilegible.",
         "UPLOAD_TOO_LARGE": "Demasiados datos a la vez. Importa menos archivos cada vez.",
         "TOO_MANY_FILES": "Demasiados archivos a la vez. Importa menos archivos cada vez.",
-        "INVALID_ENCODING": "Codificación inesperada: no es un archivo original de Winamax.",
-        "UNRECOGNIZED_FORMAT": "No es un historial de manos ni un resumen de torneo de Winamax.",
+        "INVALID_ENCODING": "Codificación inesperada: no es un archivo de historial original.",
+        "UNRECOGNIZED_FORMAT": "No es ni un historial de manos ni un resumen de torneo de una sala compatible.",
         "INVALID_SUMMARY": "Resumen de torneo incompleto o ilegible.",
         "NO_VALID_HAND": "No se pudo leer ninguna mano completa en este archivo.",
         "PROCESSING_FAILED": "No se pudo procesar este archivo. Se volverá a intentar si lo importas de nuevo.",
@@ -644,7 +646,7 @@
         "unknown": "Algo ha fallado. Inténtalo de nuevo."
       },
       "accounts": {
-        "title": "¿Es esta tu cuenta de Winamax?",
+        "title": "¿Es tu cuenta de {{room}}?",
         "description": "Hemos encontrado el seudónimo {{name}} en tus archivos. Confirma que eres tú para que sus resultados cuenten en tus estadísticas.",
         "confirm": "Sí, soy yo",
         "reject": "No, no soy yo",
@@ -652,8 +654,8 @@
         "rejectDescription": "Se eliminarán todos los torneos y manos importados con este seudónimo. Después podrás importar tus propios archivos.",
         "rejectConfirm": "Eliminar",
         "cancel": "Cancelar",
-        "linked": "Cuenta de Winamax:",
-        "error": "No se han podido cargar o actualizar tus cuentas de Winamax. Inténtalo de nuevo."
+        "linked": "Cuentas de póker:",
+        "error": "No se pudieron cargar o modificar tus cuentas de póker. Inténtalo de nuevo."
       }
     },
     "notFound": {
@@ -687,7 +689,7 @@
       "product": "NutsIQ",
       "launching": "Rumbo a Google…",
       "features": {
-        "import": "Importa tus historiales de Winamax arrastrando y soltando.",
+        "import": "Importa tus historiales de manos con un arrastrar y soltar.",
         "leaks": "Detecta tus leaks, medidos con un intervalo de confianza.",
         "replay": "Repite tus manos clave, explicadas por tu coach IA."
       },

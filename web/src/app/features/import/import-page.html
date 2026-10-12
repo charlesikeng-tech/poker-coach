@@ -1,5 +1,8 @@
 <ng-container *transloco="let t; prefix: 'pages.import'">
-  <app-page-header [heading]="t('title')" [description]="t('description')" />
+  <app-page-header
+    [heading]="t('title')"
+    [description]="t('description', { rooms: supportedRooms })"
+  />
 
   <app-poker-accounts />
 
@@ -24,7 +27,11 @@
             {{ t('drop.chooseFolder') }}
           </button>
         </div>
-        <p class="drop-zone__help">{{ t('drop.where') }}</p>
+        @for (room of rooms; track room) {
+          <p class="drop-zone__help">
+            <strong>{{ roomName(room) }}</strong> · {{ t('drop.where.' + room) }}
+          </p>
+        }
         @if (nothingToImport()) {
           <p class="notice notice--danger" role="alert">{{ t('drop.nothing') }}</p>
         }

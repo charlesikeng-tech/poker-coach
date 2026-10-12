@@ -37,7 +37,7 @@
       "description": "How your game is going and what to work on next.",
       "empty": {
         "title": "No results yet",
-        "description": "Import your Winamax hand histories and tournament summaries to see your results here.",
+        "description": "Import your hand histories and tournament summaries to see your results here.",
         "action": "Import files"
       },
       "importAction": "Import files",
@@ -48,7 +48,7 @@
         "retry": "Try again"
       },
       "alerts": {
-        "unconfirmed": "A Winamax account found in your files is waiting for your confirmation.",
+        "unconfirmed": "A poker account found in your files is waiting for your confirmation.",
         "missingSummaries": "{{count}} tournament(s) have no summary file: their result is unknown."
       },
       "window": "Last {{days}} days",
@@ -157,7 +157,7 @@
         "description": "Imported tournaments are listed here with their buy-in, result and finish position.",
         "action": "Import files"
       },
-      "unconfirmed": "Some of your imported Winamax accounts are not confirmed yet: their tournaments are not listed.",
+      "unconfirmed": "Some imported poker accounts are not confirmed yet: their tournaments are not listed.",
       "unconfirmedAction": "Confirm on the import page",
       "loading": "Loading your tournaments…",
       "error": {
@@ -578,7 +578,7 @@
         "phasesTitle": "By tournament phase",
         "phasesLead": "Your game depending on the stage of the tournament. Style should change as stacks get shorter: more steals, fewer calls.",
         "phase": "Phase",
-        "phasesHint": "Phases by blind level: Winamax hand histories do not say how many players are left, so the bubble, the money and the final table cannot be told without guessing.",
+        "phasesHint": "Phases by blind level: hand histories do not say how many players remain, so the bubble, the money and the final table cannot be found without guessing.",
         "trendTitle": "Month by month",
         "trendLead": "Your statistics month by month, with the reference range in green: are your leaks closing?",
         "trendPick": "Statistic followed",
@@ -591,13 +591,15 @@
     },
     "import": {
       "title": "Import",
-      "description": "Add your Winamax hand histories and tournament summaries.",
+      "description": "Add your hand histories and tournament summaries. Supported rooms: {{rooms}}.",
       "drop": {
-        "title": "Drop your Winamax files here",
+        "title": "Drop your files here",
         "hint": "Hand histories and tournament summaries (.txt), or a .zip archive. You can drop a whole folder: importing the same file twice never creates duplicates.",
         "chooseFiles": "Choose files",
         "chooseFolder": "Choose a folder",
-        "where": "On a Mac, Winamax saves them in ~/Library/Application Support/winamax/documents/accounts/<your pseudonym>/history. In the file picker, press ⌘⇧G and paste this path (the Library folder is hidden by default).",
+        "where": {
+          "winamax": "On a Mac, the files are in ~/Library/Application Support/winamax/documents/accounts/<your name>/history. In the file picker, press ⌘⇧G and paste that path (the Library folder is hidden by default)."
+        },
         "nothing": "No .txt or .zip file in this selection."
       },
       "progress": {
@@ -635,8 +637,8 @@
         "INVALID_ARCHIVE": "Damaged or unreadable .zip archive.",
         "UPLOAD_TOO_LARGE": "Too much data at once. Import fewer files at a time.",
         "TOO_MANY_FILES": "Too many files at once. Import fewer files at a time.",
-        "INVALID_ENCODING": "Unexpected text encoding: this is not an original Winamax file.",
-        "UNRECOGNIZED_FORMAT": "Not a Winamax hand history or tournament summary.",
+        "INVALID_ENCODING": "Unexpected encoding: this is not an original hand-history file.",
+        "UNRECOGNIZED_FORMAT": "This is neither a hand history nor a tournament summary from a supported room.",
         "INVALID_SUMMARY": "Tournament summary incomplete or unreadable.",
         "NO_VALID_HAND": "No complete hand could be read in this file.",
         "PROCESSING_FAILED": "This file could not be processed. It will be retried if you import it again.",
@@ -644,7 +646,7 @@
         "unknown": "Something went wrong. Try again."
       },
       "accounts": {
-        "title": "Is this your Winamax account?",
+        "title": "Is this your {{room}} account?",
         "description": "We found the pseudonym {{name}} in your files. Confirm it is yours so that its results count in your statistics.",
         "confirm": "Yes, it's me",
         "reject": "No, it's not me",
@@ -652,8 +654,8 @@
         "rejectDescription": "Every tournament and hand imported under this pseudonym will be deleted. You can then import your own files.",
         "rejectConfirm": "Delete",
         "cancel": "Cancel",
-        "linked": "Winamax account:",
-        "error": "Your Winamax accounts could not be loaded or updated. Try again."
+        "linked": "Poker accounts:",
+        "error": "Your poker accounts could not be loaded or changed. Try again."
       }
     },
     "notFound": {
@@ -687,7 +689,7 @@
       "product": "NutsIQ",
       "launching": "Off to Google…",
       "features": {
-        "import": "Import your Winamax histories with a drag and drop.",
+        "import": "Import your hand histories with a drag and drop.",
         "leaks": "Spot your leaks, measured with a confidence interval.",
         "replay": "Replay your key hands, explained by your AI coach."
       },

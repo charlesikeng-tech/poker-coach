@@ -10,6 +10,7 @@ import {
 import { TranslocoDirective } from '@jsverse/transloco';
 import { BadgeCheck, UserRound } from 'lucide';
 
+import { roomName } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { ImportApi, PokerAccount } from './import-api';
@@ -27,6 +28,7 @@ import { ImportSession } from './import-session';
   styleUrl: './poker-accounts.scss',
 })
 export class PokerAccounts {
+  protected readonly roomName = roomName;
   private readonly api = inject(ImportApi);
   private readonly session = inject(ImportSession);
 
