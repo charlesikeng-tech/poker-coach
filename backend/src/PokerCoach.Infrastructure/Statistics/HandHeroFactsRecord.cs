@@ -13,6 +13,8 @@ internal sealed class HandHeroFactsRecord
 {
     public Guid HandId { get; set; }
 
+    public Guid PokerAccountId { get; set; }
+
     public int FactsVersion { get; set; }
 
     public PokerPosition? Position { get; set; }
@@ -212,7 +214,9 @@ internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<Hand
         builder.Property(f => f.FacingOpenToBigBlinds).HasPrecision(10, 2);
         builder.Property(f => f.FacingOpenEffectiveStack).HasPrecision(10, 2);
         builder.Property(f => f.ThreeBetToBigBlinds).HasPrecision(10, 2);
+        builder.HasIndex(f => new { f.PokerAccountId, f.FactsVersion }).HasDatabaseName("ix_hand_hero_facts_poker_account_id_facts_version");
         builder.HasIndex(f => f.FactsVersion);
         builder.HasOne<HandRecord>().WithOne().HasForeignKey<HandHeroFactsRecord>(f => f.HandId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne<PokerAccountRecord>().WithMany().HasForeignKey(f => f.PokerAccountId).OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -32,11 +32,19 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
             .Where(f => ids.Contains(f.HandId))
             .ToDictionaryAsync(f => f.HandId, cancellationToken);
 
+        var newIds = ids.Where(id => !existing.ContainsKey(id)).ToList();
+        var accountIds = newIds.Count > 0
+            ? await db.Set<HandRecord>().AsNoTracking()
+                .Where(h => newIds.Contains(h.Id))
+                .Select(h => new { h.Id, h.PokerAccountId })
+                .ToDictionaryAsync(h => h.Id, h => h.PokerAccountId, cancellationToken)
+            : [];
+
         foreach (var (handId, handFacts) in facts)
         {
             if (!existing.TryGetValue(handId, out var record))
             {
-                record = new HandHeroFactsRecord { HandId = handId };
+                record = new HandHeroFactsRecord { HandId = handId, PokerAccountId = accountIds[handId] };
                 db.Add(record);
             }
 

@@ -1176,6 +1176,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("players_dealt");
 
+                    b.Property<Guid>("PokerAccountId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("poker_account_id");
+
                     b.Property<int?>("Position")
                         .HasColumnType("integer")
                         .HasColumnName("position");
@@ -1255,6 +1259,9 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("FactsVersion")
                         .HasDatabaseName("ix_hand_hero_facts_facts_version");
+
+                    b.HasIndex("PokerAccountId", "FactsVersion")
+                        .HasDatabaseName("ix_hand_hero_facts_poker_account_id_facts_version");
 
                     b.ToTable("hand_hero_facts", "poker");
                 });
@@ -1650,6 +1657,13 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_hand_hero_facts_hands_hand_id");
+
+                    b.HasOne("PokerCoach.Infrastructure.Poker.PokerAccountRecord", null)
+                        .WithMany()
+                        .HasForeignKey("PokerAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_hand_hero_facts_poker_accounts_poker_account_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Infrastructure.Tournaments.TournamentCoverageRecord", b =>
