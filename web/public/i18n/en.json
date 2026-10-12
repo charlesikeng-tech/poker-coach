@@ -1230,7 +1230,7 @@
     },
     "training": {
       "title": "Training room",
-      "description": "Three drills: open when it is folded to you, defend your big blind against a shove, and replay your real misplayed spots. Missed hands come back.",
+      "description": "Four drills: open when it folds to you, defend your big blind against a shove, pick the right raise size, and replay your own misplayed spots. Missed hands come back.",
       "loading": "Dealing…",
       "band": "Stack",
       "bands": {
@@ -1295,6 +1295,10 @@
           "name": "Defend the BB",
           "text": "Someone shoves: call or fold?"
         },
+        "sizing": {
+          "name": "Sizing",
+          "text": "Open or 3-bet: how much to raise?"
+        },
         "real": {
           "name": "My hands",
           "text": "Your real misplayed spots, to replay."
@@ -1318,7 +1322,57 @@
         "doneDescription": "All your opening spots of the last 90 days follow the references, or you have replayed them right. Import new hands to find more.",
         "toOpen": "Train opening"
       },
-      "hintReal": "Answer with the buttons or the keyboard (F to fold, R to raise). These spots come from your real hands, where your decision differed from the references: a right answer takes them off the list."
+      "hintReal": "Answer with the buttons or the keyboard (F to fold, R to raise). These spots come from your real hands, where your decision differed from the references: a right answer takes them off the list.",
+      "sizing": {
+        "kinds": {
+          "label": "Spots",
+          "both": "Open and 3-bet",
+          "open": "Open",
+          "threeBet": "3-bet"
+        },
+        "allIn": "All-in",
+        "questionOpen": "{{position}} · {{stack}} — folded to you. You raise {{hand}}: how much?",
+        "questionThreeBet": "{{opener}} opens to {{open}}. You 3-bet {{hand}} from {{position}}, {{stack}} effective: to how much?",
+        "sizesLabel": "Raise size",
+        "hint": "Raising is already decided here: the hand comes from the spot's reference range. Pick the size with the buttons or keys 1 to 6. The reference keeps one size per spot whatever the hand, so the size gives nothing away.",
+        "verdict": {
+          "inLine": "Good size",
+          "tooSmall": "Too small",
+          "tooBig": "Too big",
+          "reference": "Reference: {{size}} ({{interval}}).",
+          "interval": "{{min}} to {{max}} accepted",
+          "intervalAllIn": "only all-in is accepted",
+          "method": "Sizing references v{{version}} (low-stakes MTTs with antes, no ICM): our conventions, not GTO."
+        },
+        "rules": {
+          "open": "Above 25 BB, a small raise is enough (2 to 2.3 BB, up to 2.5 BB deep): with antes the pot is already big, and raising more risks more to steal the same.",
+          "openShort": "Between 15 and 25 BB, min-raise (2 BB): the raise is cheap and lets you fold without regret to an all-in 3-bet.",
+          "openSmallBlind": "From the small blind, raise bigger (2.5 BB below 25 BB, 3 BB above): you will play the hand out of position, so make the big blind pay to see the flop.",
+          "threeBetIp": "In position, about 3 times the open: you will play the rest of the hand in position, no need to inflate the pot.",
+          "threeBetOop": "Out of position, about 4 times the open: a bigger raise makes the opener pay for his positional edge and cuts his calls.",
+          "threeBetShort": "Below 25 BB effective ({{stack}} here), the 3-bet is a shove: a smaller raise would commit you anyway without taking all the fold equity.",
+          "threeBetCommit": "At {{stack}} effective, a 3-bet to {{multiple}} would put more than a third of your stack in: you would be committed, so shove straight away."
+        },
+        "played": {
+          "title": "Your real sizes",
+          "pending": "{{count}} hand(s) being analysed…",
+          "none": "No open or 3-bet analysed at this format yet.",
+          "spot": "Spot",
+          "hands": "Hands",
+          "typical": "Typical size",
+          "reference": "Reference",
+          "inLine": "In line",
+          "off": "Off the reference",
+          "open": "Open {{seat}}",
+          "threeBetIp": "3-bet in position",
+          "threeBetOop": "3-bet out of position",
+          "allIns": "+{{count}} all-in",
+          "tooSmall": "{{count}} too small",
+          "tooBig": "{{count}} too big",
+          "replay": "hand {{n}}",
+          "note": "Each hand is judged with its own stack and the open it faced (references v{{version}}). Typical size: the median, all-ins left out. 3-bets: against a single open, nobody calling before you."
+        }
+      }
     },
     "progress": {
       "title": "Weekly plan",

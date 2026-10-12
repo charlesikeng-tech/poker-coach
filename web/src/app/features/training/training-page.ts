@@ -22,6 +22,8 @@ import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PokerTable, TableView } from '../../shared/ui/poker-table/poker-table';
 import { STACK_BANDS, StackBand } from '../ranges/ranges-api';
+import { SIZING_BANDS, SizingBand } from './sizing-api';
+import { SIZING_FILTERS, SizingDrill, SizingFilter } from './sizing-drill';
 import { PokerPosition } from '../statistics/statistics-api';
 import { CHIPS_PER_BB, positionShort, spotTable } from './spot-table';
 import {
@@ -32,6 +34,9 @@ import {
   DrillSpot,
   TrainingApi,
 } from './training-api';
+
+/** The room's views: the range drills, plus sizing (its own component, ADR-0020). */
+type RoomMode = DrillMode | 'sizing';
 
 /** done: the quiz on real hands has nothing left to ask. */
 type LoadState = 'loading' | 'ready' | 'error' | 'done';
@@ -60,6 +65,7 @@ const RANKS = 'AKQJT98765432';
     Icon,
     FormatToggle,
     PokerTable,
+    SizingDrill,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter', '(window:keydown)': 'onKey($event)' },
@@ -73,8 +79,12 @@ export class TrainingPage {
   private readonly language = inject(LanguageService);
 
   protected readonly bands = STACK_BANDS;
-  protected readonly modes: readonly DrillMode[] = ['open', 'defence', 'real'];
-  protected readonly mode = signal<DrillMode>('open');
+  protected readonly modes: readonly RoomMode[] = ['open', 'defence', 'sizing', 'real'];
+  protected readonly mode = signal<RoomMode>('open');
+  protected readonly sizingBands = SIZING_BANDS;
+  protected readonly sizingFilters = SIZING_FILTERS;
+  protected readonly sizingBand = signal<SizingBand>('mid');
+  protected readonly sizingFilter = signal<SizingFilter>('both');
   /** The feature this view needs and the offer lacks (ADR-0016); null when open. */
   protected readonly locked = computed<Feature | null>(() =>
     !this.billing.allows('trainingDrills')
@@ -154,11 +164,14 @@ export class TrainingPage {
   constructor() {
     this.applyLink(inject(ActivatedRoute).snapshot.queryParamMap);
     effect(() => {
-      // A new drill whenever the mode, format, band or seats change.
-      const args = [this.format(), this.band(), this.chosen(), this.mode()] as const;
+      // A new drill whenever the mode, format, band or seats change; sizing loads its own.
+      const [format, band, chosen, mode] = [this.format(), this.band(), this.chosen(), this.mode()];
+      if (mode === 'sizing') {
+        return;
+      }
       untracked(() => {
-        void this.next(...args);
-        void this.loadProgress(args[0], args[3]);
+        void this.next(format, band, chosen, mode);
+        void this.loadProgress(format, mode);
       });
     });
   }
@@ -170,7 +183,7 @@ export class TrainingPage {
       this.format.set(format);
     }
     const mode = params.get('mode');
-    if (mode === 'open' || mode === 'defence' || mode === 'real') {
+    if (mode === 'open' || mode === 'defence' || mode === 'real' || mode === 'sizing') {
       this.mode.set(mode);
     }
     const allowed = SEATS[this.format()];
@@ -187,7 +200,7 @@ export class TrainingPage {
     this.format.set(value);
   }
 
-  protected setMode(value: DrillMode): void {
+  protected setMode(value: RoomMode): void {
     this.chosen.set([]);
     this.session.set({ answered: 0, correct: 0 });
     this.mode.set(value);
@@ -195,6 +208,10 @@ export class TrainingPage {
 
   protected setBand(value: string): void {
     this.band.set(value as StackBand);
+  }
+
+  protected setSizingBand(value: string): void {
+    this.sizingBand.set(value as SizingBand);
   }
 
   protected toggleSeat(seat: PokerPosition): void {
@@ -251,10 +268,16 @@ export class TrainingPage {
   }
 
   protected nextHand(): void {
-    void this.next(this.format(), this.band(), this.chosen(), this.mode());
+    const mode = this.mode();
+    if (mode !== 'sizing') {
+      void this.next(this.format(), this.band(), this.chosen(), mode);
+    }
   }
 
   protected onKey(event: KeyboardEvent): void {
+    if (this.mode() === 'sizing') {
+      return; // The sizing drill handles its own keys.
+    }
     const target = event.target as HTMLElement | null;
     if (target?.closest('input, select, textarea')) {
       return;

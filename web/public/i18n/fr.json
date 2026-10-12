@@ -1230,7 +1230,7 @@
     },
     "training": {
       "title": "Salle d'entraînement",
-      "description": "Trois exercices : open quand c'est fold jusqu'à toi, défendre ta big blind contre un shove, et refaire tes vrais spots mal joués. Les mains ratées reviennent.",
+      "description": "Quatre exercices : open quand c'est fold jusqu'à toi, défendre ta big blind contre un shove, choisir la bonne taille de relance, et refaire tes vrais spots mal joués. Les mains ratées reviennent.",
       "loading": "Distribution…",
       "band": "Stack",
       "bands": {
@@ -1295,6 +1295,10 @@
           "name": "Défendre la BB",
           "text": "Un joueur shove : tu call ou tu fold ?"
         },
+        "sizing": {
+          "name": "Sizing",
+          "text": "Open ou 3-bet : de combien relancer ?"
+        },
         "real": {
           "name": "Mes mains",
           "text": "Tes vrais spots mal joués, à refaire."
@@ -1318,7 +1322,57 @@
         "doneDescription": "Tous tes spots d'open des 90 derniers jours suivent les repères, ou tu les as refaits correctement. Importe de nouvelles mains pour en trouver d'autres.",
         "toOpen": "S'entraîner à open"
       },
-      "hintReal": "Réponds avec les boutons ou au clavier (F pour fold, R pour raise). Ces spots viennent de tes vraies mains, là où ta décision s'écartait des repères : une bonne réponse les retire de la liste."
+      "hintReal": "Réponds avec les boutons ou au clavier (F pour fold, R pour raise). Ces spots viennent de tes vraies mains, là où ta décision s'écartait des repères : une bonne réponse les retire de la liste.",
+      "sizing": {
+        "kinds": {
+          "label": "Spots",
+          "both": "Open et 3-bet",
+          "open": "Open",
+          "threeBet": "3-bet"
+        },
+        "allIn": "All-in",
+        "questionOpen": "{{position}} · {{stack}} — fold jusqu'à toi. Tu relances {{hand}} : de combien ?",
+        "questionThreeBet": "{{opener}} ouvre à {{open}}. Tu 3-bet {{hand}} depuis {{position}}, {{stack}} effectifs : à combien ?",
+        "sizesLabel": "Taille de la relance",
+        "hint": "Ici, relancer est déjà décidé : la main vient de la range de référence du spot. Choisis la taille avec les boutons ou les touches 1 à 6. Le repère garde une seule taille par spot, quelle que soit la main, pour ne rien dévoiler.",
+        "verdict": {
+          "inLine": "Bonne taille",
+          "tooSmall": "Trop petit",
+          "tooBig": "Trop gros",
+          "reference": "Repère : {{size}} ({{interval}}).",
+          "interval": "de {{min}} à {{max}} accepté",
+          "intervalAllIn": "seul le tapis est accepté",
+          "method": "Repères de sizing v{{version}} (MTT low stakes avec antes, sans ICM) : nos conventions, pas du GTO."
+        },
+        "rules": {
+          "open": "Au-delà de 25 BB, une petite relance suffit (2 à 2,3 BB, jusqu'à 2,5 BB en stack profond) : avec les antes, le pot est déjà gros, et relancer plus risque davantage pour voler la même chose.",
+          "openShort": "Entre 15 et 25 BB, min-raise (2 BB) : la relance coûte peu et te laisse folder sans regret face à un 3-bet tapis.",
+          "openSmallBlind": "Depuis la small blind, relance plus gros (2,5 BB sous 25 BB, 3 BB au-delà) : tu joueras le coup hors de position, autant que la big blind paie cher pour voir le flop.",
+          "threeBetIp": "En position, environ 3 fois l'open : tu joueras la suite du coup en position, inutile de gonfler le pot.",
+          "threeBetOop": "Hors de position, environ 4 fois l'open : une relance plus grosse fait payer à l'ouvreur son avantage de position et réduit ses calls.",
+          "threeBetShort": "Sous 25 BB effectifs ({{stack}} ici), le 3-bet se joue tapis : une relance plus petite t'engagerait quand même, sans prendre toute la fold equity.",
+          "threeBetCommit": "À {{stack}} effectifs, un 3-bet à {{multiple}} mettrait plus d'un tiers de ton tapis au milieu : tu serais engagé, donc tapis directement."
+        },
+        "played": {
+          "title": "Tes sizings réels",
+          "pending": "{{count}} main(s) en cours d'analyse…",
+          "none": "Aucun open ni 3-bet analysé à ce format pour l'instant.",
+          "spot": "Spot",
+          "hands": "Mains",
+          "typical": "Taille typique",
+          "reference": "Repère",
+          "inLine": "Dans le repère",
+          "off": "Hors repère",
+          "open": "Open {{seat}}",
+          "threeBetIp": "3-bet en position",
+          "threeBetOop": "3-bet hors position",
+          "allIns": "+{{count}} tapis",
+          "tooSmall": "{{count}} trop petit(s)",
+          "tooBig": "{{count}} trop gros",
+          "replay": "main {{n}}",
+          "note": "Chaque main est jugée avec son propre tapis et l'open affronté (repères v{{version}}). Taille typique : la médiane, hors tapis. 3-bets : face à un seul open, sans caller avant toi."
+        }
+      }
     },
     "progress": {
       "title": "Plan de la semaine",

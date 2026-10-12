@@ -1,0 +1,210 @@
+<ng-container *transloco="let t; prefix: 'pages.training'">
+  @if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="nextSpot()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (spot(); as s) {
+    <div class="room">
+      <section class="table-card glass">
+        <div class="spot-head">
+          <p class="question">
+            {{
+              s.kind === 'open'
+                ? t('sizing.questionOpen', {
+                    position: short(s.position),
+                    hand: s.hand,
+                    stack: bb(s.stackInBigBlinds),
+                  })
+                : t('sizing.questionThreeBet', {
+                    opener: short(s.opener!),
+                    open: bb(s.openToBigBlinds ?? 0),
+                    position: short(s.position),
+                    hand: s.hand,
+                    stack: bb(s.stackInBigBlinds),
+                  })
+            }}
+          </p>
+          @if (s.review) {
+            <div class="badges">
+              <span class="badge badge--review">
+                <app-icon [icon]="icons.RotateCcw" />{{ t('review') }}
+              </span>
+            </div>
+          }
+        </div>
+
+        @if (table(); as view) {
+          <app-poker-table
+            [view]="view"
+            [format]="chipsFormat()"
+            [labels]="{
+              pot: t('pot'),
+              button: t('button'),
+              hiddenCard: t('hiddenCard'),
+              allIn: '',
+            }"
+          />
+        }
+
+        <div class="sizes" role="group" [attr.aria-label]="t('sizing.sizesLabel')">
+          @for (c of s.choices; track $index; let i = $index) {
+            <button
+              type="button"
+              class="action size"
+              [class.chosen]="isAnswer(c)"
+              [class.size--best]="isBest(c)"
+              [class.size--all-in]="c.allIn"
+              [disabled]="answer() !== null"
+              (click)="choose(c)"
+            >
+              <span>{{ sizeLabel(s, c) }}</span>
+              <kbd>{{ i + 1 }}</kbd>
+            </button>
+          }
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="card glass score">
+          <div>
+            <p class="score__value numeric">{{ session().correct }} / {{ session().answered }}</p>
+            <p class="muted">{{ t('session') }}</p>
+          </div>
+          @if (progress(); as p) {
+            <div>
+              <p class="score__value numeric">{{ percent(accuracy()) }}</p>
+              <p class="muted">{{ t('overall', { count: p.attempts }) }}</p>
+            </div>
+            <div>
+              <p class="score__value numeric streak">
+                <app-icon [icon]="icons.Flame" />{{ p.streak }}
+              </p>
+              <p class="muted">{{ t('streak') }}</p>
+            </div>
+            @if (p.dueReviews > 0) {
+              <p class="muted due">{{ t('due', { count: p.dueReviews }) }}</p>
+            }
+          }
+        </section>
+
+        @if (result(); as r) {
+          <section
+            class="card glass verdict"
+            [class.verdict--ok]="r.correct"
+            [class.verdict--ko]="!r.correct"
+            animate.enter="verdict-in"
+            aria-live="polite"
+          >
+            <p class="verdict__title">
+              <app-icon [icon]="r.correct ? icons.Check : icons.X" />
+              {{ t('sizing.verdict.' + r.verdict) }}
+            </p>
+            <p>
+              {{
+                t('sizing.verdict.reference', {
+                  size: sizeLabel(s, r.best),
+                  interval: interval(s, r),
+                })
+              }}
+            </p>
+            <p>{{ rule(s, r) }}</p>
+            <p class="muted">{{ t('sizing.verdict.method', { version: r.referenceVersion }) }}</p>
+            <button appButton variant="primary" class="next" (click)="nextSpot()">
+              {{ t('next') }} <kbd>{{ t('space') }}</kbd>
+            </button>
+          </section>
+        } @else {
+          <section class="card glass hint">
+            <p>{{ t('sizing.hint') }}</p>
+          </section>
+        }
+      </aside>
+    </div>
+  } @else {
+    <div class="glass skeleton-room" role="status" [attr.aria-label]="t('loading')">
+      <span class="skeleton"></span>
+    </div>
+  }
+
+  <section class="played card glass">
+    <h2>{{ t('sizing.played.title') }}</h2>
+    @if (played(); as p) {
+      @if (p.pendingHands > 0) {
+        <p class="pending" role="status">
+          <app-icon class="spin" [icon]="icons.LoaderCircle" />
+          {{ t('sizing.played.pending', { count: p.pendingHands }) }}
+        </p>
+      }
+      @if (p.groups.length === 0) {
+        <p class="muted">{{ t('sizing.played.none') }}</p>
+      } @else {
+        <div class="played__scroll">
+          <table class="played__table">
+            <thead>
+              <tr>
+                <th scope="col">{{ t('sizing.played.spot') }}</th>
+                <th scope="col">{{ t('band') }}</th>
+                <th scope="col" class="numeric">{{ t('sizing.played.hands') }}</th>
+                <th scope="col" class="numeric">{{ t('sizing.played.typical') }}</th>
+                <th scope="col" class="numeric">{{ t('sizing.played.reference') }}</th>
+                <th scope="col" class="numeric">{{ t('sizing.played.inLine') }}</th>
+                <th scope="col">{{ t('sizing.played.off') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (g of p.groups; track g.kind + g.seat + g.inPosition + g.band) {
+                <tr>
+                  <th scope="row">{{ groupLabel(g) }}</th>
+                  <td>{{ t('bands.' + g.band) }}</td>
+                  <td class="numeric">{{ g.hands }}</td>
+                  <td class="numeric">
+                    @if (g.typicalSize === null && g.allIns > 0) {
+                      {{ t('sizing.allIn') }}
+                    } @else {
+                      {{ groupSize(g, g.typicalSize) }}
+                      @if (g.allIns > 0) {
+                        <small class="muted">{{
+                          t('sizing.played.allIns', { count: g.allIns })
+                        }}</small>
+                      }
+                    }
+                  </td>
+                  <td class="numeric">
+                    {{ groupSize(g, g.reference.size, g.reference.allIn) }}
+                  </td>
+                  <td class="numeric" [class.ok]="g.inLine * 2 >= g.hands">
+                    {{ percent(g.inLine / g.hands) }}
+                  </td>
+                  <td class="off">
+                    @if (g.tooSmall > 0) {
+                      <span class="tag tag--small">{{
+                        t('sizing.played.tooSmall', { count: g.tooSmall })
+                      }}</span>
+                    }
+                    @if (g.tooBig > 0) {
+                      <span class="tag tag--big">{{
+                        t('sizing.played.tooBig', { count: g.tooBig })
+                      }}</span>
+                    }
+                    @for (id of g.offHands; track id; let i = $index) {
+                      <a [routerLink]="['/hands', id]">{{
+                        t('sizing.played.replay', { n: i + 1 })
+                      }}</a>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+      <p class="muted">{{ t('sizing.played.note', { version: p.referenceVersion }) }}</p>
+    } @else {
+      <span class="skeleton played__skeleton"></span>
+    }
+  </section>
+</ng-container>

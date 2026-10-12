@@ -108,10 +108,16 @@ internal sealed class TrainingStore(PokerCoachDbContext db) : ITrainingStore
 
     public async Task<(int Attempts, int Correct)> CountSinceAsync(Guid userId, DateTimeOffset since, DateTimeOffset? until, CancellationToken cancellationToken)
     {
-        var counts = await db.Set<OpeningAttemptRecord>().AsNoTracking()
+        // Every drill counts toward the weekly goal: range drills and sizing drills (ADR-0020).
+        var outcomes = db.Set<OpeningAttemptRecord>().AsNoTracking()
             .Where(a => a.UserId == userId && a.CreatedAt >= since && (until == null || a.CreatedAt < until))
+            .Select(a => a.Correct)
+            .Concat(db.Set<SizingAttemptRecord>().AsNoTracking()
+                .Where(a => a.UserId == userId && a.CreatedAt >= since && (until == null || a.CreatedAt < until))
+                .Select(a => a.Correct));
+        var counts = await outcomes
             .GroupBy(_ => 1)
-            .Select(g => new { Attempts = g.Count(), Correct = g.Count(a => a.Correct) })
+            .Select(g => new { Attempts = g.Count(), Correct = g.Count(correct => correct) })
             .SingleOrDefaultAsync(cancellationToken);
         return counts is null ? (0, 0) : (counts.Attempts, counts.Correct);
     }

@@ -61,6 +61,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
         services.AddScoped<IHandReplayStore, HandReplayStore>();
         services.AddScoped<ITrainingStore, TrainingStore>();
+        services.AddScoped<ISizingTrainingStore, SizingTrainingStore>();
         services.AddScoped<IBankrollStore, BankrollStore>();
         services.AddScoped<IWeeklyPlanStore, WeeklyPlanStore>();
         services.AddScoped<TournamentReadStore>();
@@ -73,6 +74,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IRangeReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IAllInReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IRealSpotStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
+        services.AddScoped<IPlayedSizingStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<ICoachingStore, CoachingStore>();
         services.AddScoped<IAiUsageLedger, AiUsageLedger>();
         services.AddScoped<ICoachingReportStore, CoachingReportStore>();

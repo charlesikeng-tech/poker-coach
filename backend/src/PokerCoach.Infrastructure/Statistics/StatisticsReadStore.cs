@@ -13,7 +13,7 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
 {
     public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
@@ -232,6 +232,25 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .Select(r => new DefenceHoldingCount(r.Position!.Value, r.FacingOpenFrom!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Calls, r.ThreeBets))
             .ToList();
     }
+
+    /// <summary>The hero's opens and 3-bets against a single open: a few columns per raise, a sixth of the hands at most.</summary>
+    public async Task<IReadOnlyList<PlayedRaiseRow>> ListRaisesAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+        await Filtered(userId, filter, factsVersion)
+            .Where(x => x.F.Position != null && (x.F.OpenToBigBlinds != null || x.F.ThreeBetToBigBlinds != null))
+            .Select(x => new PlayedRaiseRow(
+                x.F.HandId,
+                x.StartedAt,
+                x.F.Position!.Value,
+                x.F.PlayersDealt,
+                x.F.StackInBigBlinds,
+                x.F.OpenToBigBlinds,
+                x.F.OpenAllIn,
+                x.F.FacingOpenFrom,
+                x.F.FacingOpenToBigBlinds,
+                x.F.FacingOpenEffectiveStack,
+                x.F.ThreeBetToBigBlinds,
+                x.F.ThreeBetAllIn))
+            .ToListAsync(cancellationToken);
 
     /// <summary>The hero's raise-first-in spots with known cards: a fifth of the hands at most, read whole.</summary>
     public async Task<IReadOnlyList<RealOpeningRow>> ListOpeningSpotsAsync(Guid userId, TableFormat format, DateTimeOffset since, int factsVersion, CancellationToken cancellationToken) =>

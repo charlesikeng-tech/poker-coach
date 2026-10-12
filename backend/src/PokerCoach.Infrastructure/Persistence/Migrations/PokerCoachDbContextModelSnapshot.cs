@@ -1104,6 +1104,11 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("facing_open_call");
 
+                    b.Property<decimal?>("FacingOpenEffectiveStack")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("facing_open_effective_stack");
+
                     b.Property<int?>("FacingOpenFrom")
                         .HasColumnType("integer")
                         .HasColumnName("facing_open_from");
@@ -1111,6 +1116,11 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<bool>("FacingOpenThreeBet")
                         .HasColumnType("boolean")
                         .HasColumnName("facing_open_three_bet");
+
+                    b.Property<decimal?>("FacingOpenToBigBlinds")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("facing_open_to_big_blinds");
 
                     b.Property<int>("FactsVersion")
                         .HasColumnType("integer")
@@ -1148,6 +1158,15 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<long>("NetChips")
                         .HasColumnType("bigint")
                         .HasColumnName("net_chips");
+
+                    b.Property<bool>("OpenAllIn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("open_all_in");
+
+                    b.Property<decimal?>("OpenToBigBlinds")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("open_to_big_blinds");
 
                     b.Property<bool>("Pfr")
                         .HasColumnType("boolean")
@@ -1202,9 +1221,18 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("three_bet");
 
+                    b.Property<bool>("ThreeBetAllIn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("three_bet_all_in");
+
                     b.Property<bool>("ThreeBetOpportunity")
                         .HasColumnType("boolean")
                         .HasColumnName("three_bet_opportunity");
+
+                    b.Property<decimal?>("ThreeBetToBigBlinds")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("three_bet_to_big_blinds");
 
                     b.Property<bool>("Vpip")
                         .HasColumnType("boolean")
@@ -1354,6 +1382,68 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_opening_attempts_user_id_format_created_at");
 
                     b.ToTable("opening_attempts", "training");
+                });
+
+            modelBuilder.Entity("PokerCoach.Infrastructure.Training.SizingAttemptRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal?>("AnswerSize")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("answer_size");
+
+                    b.Property<int>("Band")
+                        .HasColumnType("integer")
+                        .HasColumnName("band");
+
+                    b.Property<bool>("Correct")
+                        .HasColumnType("boolean")
+                        .HasColumnName("correct");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("integer")
+                        .HasColumnName("format");
+
+                    b.Property<decimal?>("OpenToBigBlinds")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)")
+                        .HasColumnName("open_to_big_blinds");
+
+                    b.Property<int?>("Opener")
+                        .HasColumnType("integer")
+                        .HasColumnName("opener");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer")
+                        .HasColumnName("position");
+
+                    b.Property<int>("ReferenceVersion")
+                        .HasColumnType("integer")
+                        .HasColumnName("reference_version");
+
+                    b.Property<decimal>("StackBigBlinds")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("numeric(6,2)")
+                        .HasColumnName("stack_big_blinds");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_sizing_attempts");
+
+                    b.HasIndex("UserId", "Format", "CreatedAt")
+                        .HasDatabaseName("ix_sizing_attempts_user_id_format_created_at");
+
+                    b.ToTable("sizing_attempts", "training");
                 });
 
             modelBuilder.Entity("PokerCoach.Domain.Identity.EmailToken", b =>
@@ -1572,6 +1662,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_opening_attempts_users_user_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Infrastructure.Training.SizingAttemptRecord", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_sizing_attempts_users_user_id");
                 });
 #pragma warning restore 612, 618
         }

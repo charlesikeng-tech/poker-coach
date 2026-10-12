@@ -77,12 +77,25 @@ public static class HandAnalyzer
             play.Decisions,
             preflop.FacingOpenFrom,
             preflop.FacingOpenCall,
-            preflop.FacingOpenThreeBet);
+            preflop.FacingOpenThreeBet,
+            InBigBlinds(preflop.OpenTo, hand.BigBlind),
+            preflop.OpenAllIn,
+            InBigBlinds(preflop.FacingOpenTo, hand.BigBlind),
+            InBigBlinds(preflop.FacingOpenEffectiveStack, hand.BigBlind),
+            InBigBlinds(preflop.ThreeBetTo, hand.BigBlind),
+            preflop.ThreeBetAllIn);
     }
 
     private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position, IReadOnlyDictionary<string, PokerPosition> positions)
     {
         var facts = new PreflopFacts();
+        // Chips each player has in front of him preflop, blinds included and antes not: a raise's "to" amount.
+        var putIn = new Dictionary<string, long>(StringComparer.Ordinal);
+        foreach (var blind in hand.Actions.Where(a => a.Street == Street.Preflop && a.Kind is ActionKind.PostSmallBlind or ActionKind.PostBigBlind))
+        {
+            putIn[blind.Player] = putIn.GetValueOrDefault(blind.Player) + blind.Amount;
+        }
+
         var raises = 0;
         var calls = 0;
         var heroOpened = false;
@@ -104,6 +117,11 @@ public static class HandAnalyzer
                         facts.Limp = action.Kind == ActionKind.Call;
                         facts.Steal = facts.StealOpportunity && facts.Rfi;
                         heroOpened = facts.Rfi;
+                        if (facts.Rfi)
+                        {
+                            facts.OpenTo = putIn.GetValueOrDefault(hero) + action.Amount;
+                            facts.OpenAllIn = action.IsAllIn;
+                        }
                     }
 
                     facts.ThreeBet = facts.ThreeBetOpportunity && action.Kind == ActionKind.Raise;
@@ -114,6 +132,13 @@ public static class HandAnalyzer
                         facts.FacingOpenFrom = openerPosition;
                         facts.FacingOpenCall = action.Kind == ActionKind.Call;
                         facts.FacingOpenThreeBet = action.Kind == ActionKind.Raise;
+                        facts.FacingOpenTo = putIn.GetValueOrDefault(opener);
+                        facts.FacingOpenEffectiveStack = Math.Min(StackOf(hand, hero), StackOf(hand, opener));
+                        if (facts.FacingOpenThreeBet)
+                        {
+                            facts.ThreeBetTo = putIn.GetValueOrDefault(hero) + action.Amount;
+                            facts.ThreeBetAllIn = action.IsAllIn;
+                        }
                     }
                 }
                 else if (heroOpened && raises == 2 && !facts.FoldToThreeBetOpportunity)
@@ -127,6 +152,7 @@ public static class HandAnalyzer
                 facts.HeroFolded |= action.Kind == ActionKind.Fold;
             }
 
+            putIn[action.Player] = putIn.GetValueOrDefault(action.Player) + action.Amount;
             switch (action.Kind)
             {
                 case ActionKind.Bet or ActionKind.Raise:
@@ -182,6 +208,12 @@ public static class HandAnalyzer
         return new PostflopFacts(sawFlop, cbetOpportunity, cbet, wentToShowdown);
     }
 
+    private static long StackOf(HandForAnalysis hand, string player) =>
+        hand.Seats.FirstOrDefault(s => s.Player == player)?.Stack ?? 0;
+
+    private static decimal? InBigBlinds(long? chips, long bigBlind) =>
+        chips is { } c && bigBlind > 0 ? Math.Round((decimal)c / bigBlind, 2) : null;
+
     private static bool IsForced(ActionKind kind) =>
         kind is ActionKind.PostAnte or ActionKind.PostSmallBlind or ActionKind.PostBigBlind;
 
@@ -220,6 +252,18 @@ public static class HandAnalyzer
         public bool FacingOpenCall { get; set; }
 
         public bool FacingOpenThreeBet { get; set; }
+
+        public long? OpenTo { get; set; }
+
+        public bool OpenAllIn { get; set; }
+
+        public long? FacingOpenTo { get; set; }
+
+        public long? FacingOpenEffectiveStack { get; set; }
+
+        public long? ThreeBetTo { get; set; }
+
+        public bool ThreeBetAllIn { get; set; }
     }
 
     private sealed record PostflopFacts(bool SawFlop, bool CbetOpportunity, bool Cbet, bool WentToShowdown);

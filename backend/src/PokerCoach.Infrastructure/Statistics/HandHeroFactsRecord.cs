@@ -89,6 +89,18 @@ internal sealed class HandHeroFactsRecord
 
     public bool FacingOpenThreeBet { get; set; }
 
+    public decimal? OpenToBigBlinds { get; set; }
+
+    public bool OpenAllIn { get; set; }
+
+    public decimal? FacingOpenToBigBlinds { get; set; }
+
+    public decimal? FacingOpenEffectiveStack { get; set; }
+
+    public decimal? ThreeBetToBigBlinds { get; set; }
+
+    public bool ThreeBetAllIn { get; set; }
+
     public void Apply(HeroHandFacts facts, int version)
     {
         FactsVersion = version;
@@ -129,6 +141,12 @@ internal sealed class HandHeroFactsRecord
         FacingOpenFrom = facts.FacingOpenFrom;
         FacingOpenCall = facts.FacingOpenCall;
         FacingOpenThreeBet = facts.FacingOpenThreeBet;
+        OpenToBigBlinds = facts.OpenToBigBlinds;
+        OpenAllIn = facts.OpenAllIn;
+        FacingOpenToBigBlinds = facts.FacingOpenToBigBlinds;
+        FacingOpenEffectiveStack = facts.FacingOpenEffectiveStack;
+        ThreeBetToBigBlinds = facts.ThreeBetToBigBlinds;
+        ThreeBetAllIn = facts.ThreeBetAllIn;
     }
 
     public HeroHandFacts ToDomain() => new(
@@ -168,7 +186,13 @@ internal sealed class HandHeroFactsRecord
         PostflopDecisions,
         FacingOpenFrom,
         FacingOpenCall,
-        FacingOpenThreeBet);
+        FacingOpenThreeBet,
+        OpenToBigBlinds,
+        OpenAllIn,
+        FacingOpenToBigBlinds,
+        FacingOpenEffectiveStack,
+        ThreeBetToBigBlinds,
+        ThreeBetAllIn);
 }
 
 internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<HandHeroFactsRecord>
@@ -184,6 +208,10 @@ internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<Hand
         builder.Property(f => f.NetBigBlinds).HasPrecision(12, 2);
         builder.Property(f => f.AllInEquity).HasPrecision(5, 4);
         builder.Property(f => f.AllInExpectedNetChips).HasPrecision(14, 2);
+        builder.Property(f => f.OpenToBigBlinds).HasPrecision(10, 2);
+        builder.Property(f => f.FacingOpenToBigBlinds).HasPrecision(10, 2);
+        builder.Property(f => f.FacingOpenEffectiveStack).HasPrecision(10, 2);
+        builder.Property(f => f.ThreeBetToBigBlinds).HasPrecision(10, 2);
         builder.HasIndex(f => f.FactsVersion);
         builder.HasOne<HandRecord>().WithOne().HasForeignKey<HandHeroFactsRecord>(f => f.HandId).OnDelete(DeleteBehavior.Cascade);
     }

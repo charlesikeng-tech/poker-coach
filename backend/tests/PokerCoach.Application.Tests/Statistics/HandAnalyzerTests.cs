@@ -62,6 +62,30 @@ public sealed class HandAnalyzerTests
     }
 
     [Fact]
+    public void Open_and_3bet_sizes_are_raise_to_amounts_in_big_blinds_blinds_included_antes_not()
+    {
+        var open = Analyze(Blinds(), Pre("P3", Fold), Pre("P4", Fold), Pre("P5", Fold), Pre("Hero", Raise, 450));
+        Assert.Equal((2.25m, false), (open.OpenToBigBlinds, open.OpenAllIn));
+        Assert.Null(open.ThreeBetToBigBlinds);
+
+        var threeBet = Analyze(Blinds(), Pre("P3", Fold), Pre("P4", Fold), Pre("P5", Raise, 450), Pre("Hero", Raise, 1300));
+        Assert.Equal((2.25m, 6.5m, 100m, false), (threeBet.FacingOpenToBigBlinds, threeBet.ThreeBetToBigBlinds, threeBet.FacingOpenEffectiveStack, threeBet.ThreeBetAllIn));
+        Assert.Null(threeBet.OpenToBigBlinds);
+
+        // Hero in the big blind (button on seat 4): his posted blind is part of his raise-to.
+        var fromBigBlind = Analyze(
+            4,
+            [new HandAction(Street.Preflop, "P5", PostSmallBlind, 100, false), new HandAction(Street.Preflop, "Hero", PostBigBlind, 200, false)],
+            Pre("P1", Raise, 400), Pre("P2", Fold), Pre("P3", Fold), Pre("P4", Fold), Pre("P5", Fold),
+            new HandAction(Street.Preflop, "Hero", Raise, 1400, true));
+        Assert.Equal((PokerPosition.BigBlind, 2m, 8m, true), (fromBigBlind.Position, fromBigBlind.FacingOpenToBigBlinds, fromBigBlind.ThreeBetToBigBlinds, fromBigBlind.ThreeBetAllIn));
+
+        var called = Analyze(Blinds(), Pre("P3", Raise, 400), Pre("P4", Fold), Pre("P5", Fold), Pre("Hero", Call, 400));
+        Assert.Equal(2m, called.FacingOpenToBigBlinds);
+        Assert.Null(called.ThreeBetToBigBlinds);
+    }
+
+    [Fact]
     public void A_caller_before_an_open_shove_or_a_limp_are_not_the_defence_spot()
     {
         var squeeze = Analyze(Blinds(), Pre("P3", Raise, 400), Pre("P4", Call, 400), Pre("P5", Fold), Pre("Hero", Raise, 1600));

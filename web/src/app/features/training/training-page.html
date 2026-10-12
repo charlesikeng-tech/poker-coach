@@ -26,12 +26,39 @@
           <span>{{ t('band') }}</span>
           <select [value]="band()" (change)="setBand($any($event.target).value)">
             @for (option of bands; track option) {
-              <option [value]="option">{{ t('bands.' + option) }}</option>
+              <option [value]="option" [selected]="option === band()">
+                {{ t('bands.' + option) }}
+              </option>
             }
           </select>
         </label>
       }
-      @if (mode() !== 'real') {
+      @if (mode() === 'sizing') {
+        <label>
+          <span>{{ t('band') }}</span>
+          <select [value]="sizingBand()" (change)="setSizingBand($any($event.target).value)">
+            @for (option of sizingBands; track option) {
+              <option [value]="option" [selected]="option === sizingBand()">
+                {{ t('bands.' + option) }}
+              </option>
+            }
+          </select>
+        </label>
+        <div class="seats" role="group" [attr.aria-label]="t('sizing.kinds.label')">
+          @for (f of sizingFilters; track f) {
+            <button
+              type="button"
+              class="seat-chip"
+              [class.active]="sizingFilter() === f"
+              [attr.aria-pressed]="sizingFilter() === f"
+              (click)="sizingFilter.set(f)"
+            >
+              {{ t('sizing.kinds.' + f) }}
+            </button>
+          }
+        </div>
+      }
+      @if (mode() === 'open' || mode() === 'defence') {
         <div
           class="seats"
           role="group"
@@ -58,7 +85,9 @@
       }
     </div>
 
-    @if (locked() === 'trainingOwnHands') {
+    @if (mode() === 'sizing') {
+      <app-sizing-drill [format]="format()" [band]="sizingBand()" [filter]="sizingFilter()" />
+    } @else if (locked() === 'trainingOwnHands') {
       <app-plan-lock feature="trainingOwnHands" />
     } @else if (state() === 'done') {
       <app-empty-state

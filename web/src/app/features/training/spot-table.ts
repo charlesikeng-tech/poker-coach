@@ -28,30 +28,24 @@ export function positionShort(position: PokerPosition): string {
   return SHORT[position];
 }
 
-/**
- * The table for a drill spot, the hero at seat 1 (drawn at the bottom), the blinds posted.
- * Opening drills: everyone before the hero has folded; other stacks vary a little so the table looks
- * like a real one (they play no part in the answer).
- * Defence drills: the shover is all-in, everyone else folded, every stack equal (the equilibrium's
- * assumption, so the table shows what the answer is computed for).
- */
-export function spotTable(
-  spot: DrillSpot,
-  labels: { you: string },
-  answer: DrillAnswer | null,
-  bubbleText: string,
-  shoveText?: string,
-): TableView {
-  const seatsCount = spot.format === 'sixMax' ? 6 : 9;
-  const order = BY_DISTANCE[spot.format];
+/** Seat geometry of a drill table, the hero at seat 1 (drawn at the bottom). */
+export interface TableLayout {
+  readonly seatsCount: number;
+  readonly heroSeat: number;
+  readonly buttonSeat: number;
+  /** The position sitting at a seat. */
+  readonly positionOf: (seat: number) => PokerPosition;
+  /** Preflop action order of a seat: 0 acts first (the seat after the big blind). */
+  readonly actsAt: (seat: number) => number;
+}
+
+export function tableLayout(format: TableFormat, position: PokerPosition): TableLayout {
+  const seatsCount = format === 'sixMax' ? 6 : 9;
+  const order = BY_DISTANCE[format];
   const heroSeat = 1;
   // Seats are numbered clockwise: the button is that many seats after the hero (blinds: before him).
   const buttonOffset =
-    spot.position === 'smallBlind'
-      ? -1
-      : spot.position === 'bigBlind'
-        ? -2
-        : order.indexOf(spot.position);
+    position === 'smallBlind' ? -1 : position === 'bigBlind' ? -2 : order.indexOf(position);
   const buttonSeat = wrap(heroSeat + buttonOffset, seatsCount);
 
   // Seats after the button are the blinds; the others are named by distance to the button.
@@ -71,6 +65,27 @@ export function spotTable(
     const fromButton = (seat - buttonSeat + seatsCount) % seatsCount;
     return fromButton >= 3 ? fromButton - 3 : seatsCount - 3 + fromButton;
   };
+  return { seatsCount, heroSeat, buttonSeat, positionOf, actsAt };
+}
+
+/**
+ * The table for a drill spot, the hero at seat 1 (drawn at the bottom), the blinds posted.
+ * Opening drills: everyone before the hero has folded; other stacks vary a little so the table looks
+ * like a real one (they play no part in the answer).
+ * Defence drills: the shover is all-in, everyone else folded, every stack equal (the equilibrium's
+ * assumption, so the table shows what the answer is computed for).
+ */
+export function spotTable(
+  spot: DrillSpot,
+  labels: { you: string },
+  answer: DrillAnswer | null,
+  bubbleText: string,
+  shoveText?: string,
+): TableView {
+  const { seatsCount, heroSeat, buttonSeat, positionOf, actsAt } = tableLayout(
+    spot.format,
+    spot.position,
+  );
   const heroTurn = actsAt(heroSeat);
   const shoverSeat = spot.shover
     ? Array.from({ length: seatsCount }, (_, i) => i + 1).find(

@@ -283,6 +283,18 @@ Quiz on real hands:
       web: "My hands" mode with the date, what the hero did that day and a link to the replay
 - [x] Migration `TrainingRealHands`
 
+Preflop sizing (ADR-0020):
+
+- [x] `ReferenceSizings` v1: opens (2 BB short, 2.2 BB above, small blind 2.5–3 BB, all-in below 15 BB) and
+      3-bets against a single open (×3 in position, ×4 out of position, all-in below 25 BB or past a third of
+      the effective stack), each with an interval still in line
+- [x] Sizing drill (`/api/training/sizing/{spot,answers,progress}`, `training.sizing_attempts`): raising is
+      given, the size is asked; reviews and the weekly goal like the other drills; web: "Sizing" mode
+- [x] Hand facts v5: open and 3-bet raise-to, open faced, effective stack; `GET /api/training/sizing/played`
+      judges the player's own raises hand by hand, grouped by seat or side and band, with hands to replay
+- [x] Migration `SizingFacts`
+- [ ] Squeeze and postflop (c-bet by texture) sizing; opponent-aware sizing with the HUD
+
 Email and password accounts (ADR-0013):
 
 - [x] Sign-up with confirmation link (password required to confirm), sign-in with lockout, forgotten

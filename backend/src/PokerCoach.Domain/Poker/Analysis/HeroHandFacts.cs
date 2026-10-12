@@ -15,6 +15,12 @@ namespace PokerCoach.Domain.Poker.Analysis;
 /// him: the opener's position. Null for any other spot (or an opener that cannot be named).
 /// </param>
 /// <param name="FacingOpenCall">In that spot, he called; <paramref name="FacingOpenThreeBet"/>: he re-raised.</param>
+/// <param name="OpenToBigBlinds">The hero opened (raise first in): his raise-to in big blinds, blinds included, antes not;
+/// <paramref name="OpenAllIn"/> when that raise was all-in.</param>
+/// <param name="FacingOpenToBigBlinds">Facing an open (see <paramref name="FacingOpenFrom"/>): the opener's raise-to in big
+/// blinds; <paramref name="FacingOpenEffectiveStack"/>: the smaller of the two starting stacks, in big blinds.</param>
+/// <param name="ThreeBetToBigBlinds">In that spot, he 3-bet: his raise-to in big blinds; <paramref name="ThreeBetAllIn"/>
+/// when all-in.</param>
 /// <param name="AllInExpectedNetChips">Same hands: what the hero should have won given the cards (see <see cref="AllInExpectation"/>).</param>
 public sealed record HeroHandFacts(
     PokerPosition? Position,
@@ -53,11 +59,17 @@ public sealed record HeroHandFacts(
     int PostflopDecisions = 0,
     PokerPosition? FacingOpenFrom = null,
     bool FacingOpenCall = false,
-    bool FacingOpenThreeBet = false)
+    bool FacingOpenThreeBet = false,
+    decimal? OpenToBigBlinds = null,
+    bool OpenAllIn = false,
+    decimal? FacingOpenToBigBlinds = null,
+    decimal? FacingOpenEffectiveStack = null,
+    decimal? ThreeBetToBigBlinds = null,
+    bool ThreeBetAllIn = false)
 {
     /// <summary>Bump on any change of a definition below or in <see cref="HandAnalyzer"/>.</summary>
-    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018).</remarks>
-    public const int Version = 4;
+    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018). 5: open and 3-bet sizes (ADR-0020).</remarks>
+    public const int Version = 5;
 
     /// <summary>Expected result of an all-in in big blinds, comparable across levels and tournaments.</summary>
     public decimal? AllInExpectedNetBigBlinds(long bigBlind) =>

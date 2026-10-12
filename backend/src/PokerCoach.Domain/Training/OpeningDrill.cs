@@ -140,7 +140,7 @@ public static class OpeningDrill
     }
 
     /// <summary>A stack inside the band, by half big blinds.</summary>
-    private static decimal Stack(Random random, StackBand band)
+    internal static decimal Stack(Random random, StackBand band)
     {
         var (min, max) = band switch
         {

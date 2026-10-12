@@ -113,6 +113,30 @@ public sealed class FeatureStoresTests(PostgresFixture fixture)
     }
 
     [Fact]
+    public async Task Played_raises_are_read_from_the_facts_and_sizing_answers_count_toward_the_week()
+    {
+        var userId = await ImportConfirmedAsync();
+        await using var scope = fixture.Services.CreateAsyncScope();
+        var played = scope.ServiceProvider.GetRequiredService<IPlayedSizingStore>();
+        var sizing = scope.ServiceProvider.GetRequiredService<ISizingTrainingStore>();
+        var training = scope.ServiceProvider.GetRequiredService<ITrainingStore>();
+
+        var rows = await played.ListRaisesAsync(userId, new StatisticsFilter(null, null, null, null, Format: TableFormat.SixMax), HeroHandFacts.Version, Ct);
+        Assert.NotEmpty(rows);
+        Assert.All(rows, r => Assert.True(r.OpenToBigBlinds is > 1m || (r.ThreeBetToBigBlinds is > 1m && r.Opener is not null && r.FacingOpenToBigBlinds is > 1m)));
+
+        var item = new SizingItem(TableFormat.SixMax, StackBand.Mid, PokerPosition.BigBlind, 30.5m, PokerPosition.Button, 2.2m);
+        var answeredAt = DateTimeOffset.UtcNow;
+        await sizing.RecordAsync(userId, new SizingAttempt(item, RaiseSize.AllIn, true, answeredAt), ReferenceSizings.Version, Ct);
+        await sizing.RecordAsync(userId, new SizingAttempt(item with { Opener = null, OpenToBigBlinds = null, Position = PokerPosition.Button }, RaiseSize.Of(2.2m), false, answeredAt.AddSeconds(1)), ReferenceSizings.Version, Ct);
+
+        var recent = await sizing.RecentAsync(userId, TableFormat.SixMax, 10, Ct);
+        Assert.Equal((RaiseSize.Of(2.2m), RaiseSize.AllIn), (recent[0].Answer, recent[1].Answer));
+        Assert.Equal(item, recent[1].Item);
+        Assert.Equal((2, 1), await training.CountSinceAsync(userId, answeredAt.AddMinutes(-1), null, Ct));
+    }
+
+    [Fact]
     public async Task Deleting_an_account_removes_everything_it_owns()
     {
         var userId = await ImportConfirmedAsync();

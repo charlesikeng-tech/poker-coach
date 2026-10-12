@@ -1230,7 +1230,7 @@
     },
     "training": {
       "title": "Sala de entrenamiento",
-      "description": "Tres ejercicios: abrir cuando foldean hasta ti, defender tu ciega grande contra un all-in, y repetir tus spots reales mal jugados. Las manos falladas vuelven.",
+      "description": "Cuatro ejercicios: abrir cuando foldean hasta ti, defender tu ciega grande contra un shove, elegir el tamaño de subida correcto y repetir tus spots mal jugados. Las manos falladas vuelven.",
       "loading": "Repartiendo…",
       "band": "Stack",
       "bands": {
@@ -1295,6 +1295,10 @@
           "name": "Defender la BB",
           "text": "Alguien va all-in: ¿pagas o tiras?"
         },
+        "sizing": {
+          "name": "Sizing",
+          "text": "Open o 3-bet: ¿cuánto subir?"
+        },
         "real": {
           "name": "Mis manos",
           "text": "Tus spots reales mal jugados, para repetir."
@@ -1318,7 +1322,57 @@
         "doneDescription": "Todos tus spots de apertura de los últimos 90 días siguen las referencias, o ya los repetiste bien. Importa manos nuevas para encontrar más.",
         "toOpen": "Entrenar aperturas"
       },
-      "hintReal": "Responde con los botones o el teclado (F para tirar, R para subir). Estos spots vienen de tus manos reales, donde tu decisión se apartaba de las referencias: una respuesta correcta los quita de la lista."
+      "hintReal": "Responde con los botones o el teclado (F para tirar, R para subir). Estos spots vienen de tus manos reales, donde tu decisión se apartaba de las referencias: una respuesta correcta los quita de la lista.",
+      "sizing": {
+        "kinds": {
+          "label": "Spots",
+          "both": "Open y 3-bet",
+          "open": "Open",
+          "threeBet": "3-bet"
+        },
+        "allIn": "All-in",
+        "questionOpen": "{{position}} · {{stack}} — foldean hasta ti. Subes con {{hand}}: ¿cuánto?",
+        "questionThreeBet": "{{opener}} abre a {{open}}. Haces 3-bet con {{hand}} desde {{position}}, {{stack}} efectivas: ¿a cuánto?",
+        "sizesLabel": "Tamaño de la subida",
+        "hint": "Aquí subir ya está decidido: la mano viene del rango de referencia del spot. Elige el tamaño con los botones o las teclas 1 a 6. La referencia usa un solo tamaño por spot, sea cual sea la mano, para no revelar nada.",
+        "verdict": {
+          "inLine": "Buen tamaño",
+          "tooSmall": "Demasiado pequeño",
+          "tooBig": "Demasiado grande",
+          "reference": "Referencia: {{size}} ({{interval}}).",
+          "interval": "de {{min}} a {{max}} aceptado",
+          "intervalAllIn": "solo se acepta el all-in",
+          "method": "Referencias de sizing v{{version}} (MTT de bajo límite con antes, sin ICM): nuestras convenciones, no GTO."
+        },
+        "rules": {
+          "open": "Por encima de 25 BB basta una subida pequeña (2 a 2,3 BB, hasta 2,5 BB con stack profundo): con antes el bote ya es grande, y subir más arriesga más para robar lo mismo.",
+          "openShort": "Entre 15 y 25 BB, min-raise (2 BB): la subida cuesta poco y te deja foldear sin remordimiento ante un 3-bet all-in.",
+          "openSmallBlind": "Desde la ciega pequeña, sube más (2,5 BB por debajo de 25 BB, 3 BB por encima): jugarás la mano fuera de posición, así que haz pagar a la ciega grande por ver el flop.",
+          "threeBetIp": "En posición, unas 3 veces el open: jugarás el resto de la mano en posición, no hace falta inflar el bote.",
+          "threeBetOop": "Fuera de posición, unas 4 veces el open: una subida mayor hace pagar al que abre su ventaja de posición y reduce sus calls.",
+          "threeBetShort": "Por debajo de 25 BB efectivas ({{stack}} aquí), el 3-bet es all-in: una subida menor te comprometería igual sin tomar toda la fold equity.",
+          "threeBetCommit": "Con {{stack}} efectivas, un 3-bet a {{multiple}} pondría más de un tercio de tu stack en el bote: quedarías comprometido, así que all-in directamente."
+        },
+        "played": {
+          "title": "Tus tamaños reales",
+          "pending": "{{count}} mano(s) en análisis…",
+          "none": "Todavía no hay opens ni 3-bets analizados en este formato.",
+          "spot": "Spot",
+          "hands": "Manos",
+          "typical": "Tamaño típico",
+          "reference": "Referencia",
+          "inLine": "En la referencia",
+          "off": "Fuera de la referencia",
+          "open": "Open {{seat}}",
+          "threeBetIp": "3-bet en posición",
+          "threeBetOop": "3-bet fuera de posición",
+          "allIns": "+{{count}} all-in",
+          "tooSmall": "{{count}} demasiado pequeño(s)",
+          "tooBig": "{{count}} demasiado grande(s)",
+          "replay": "mano {{n}}",
+          "note": "Cada mano se juzga con su propio stack y el open al que se enfrentó (referencias v{{version}}). Tamaño típico: la mediana, sin los all-in. 3-bets: contra un solo open, sin nadie que pague antes que tú."
+        }
+      }
     },
     "progress": {
       "title": "Plan de la semana",
