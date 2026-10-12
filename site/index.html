@@ -524,6 +524,85 @@
         background: linear-gradient(var(--gold), var(--gold)) 0 0.62em / 0.55rem 0.55rem no-repeat;
       }
 
+      /* Coverage: rooms, buy-ins and formats, said plainly. */
+      .coverage {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.25rem;
+        margin-top: 2.5rem;
+      }
+      .coverage article {
+        display: grid;
+        align-content: start;
+        gap: 0.9rem;
+        padding: 1.5rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--felt-raised);
+      }
+      .coverage h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+      .coverage p,
+      .coverage li {
+        color: var(--ink-2);
+        font-size: 0.95rem;
+      }
+      .coverage ul {
+        display: grid;
+        gap: 0.55rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .coverage .note {
+        color: var(--ink-3);
+        font-size: 0.85rem;
+      }
+      .room {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .room strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .room strong::before {
+        content: "♠";
+        margin-right: 0.4rem;
+        color: var(--gold);
+      }
+      .status {
+        padding: 1px 0.55rem;
+        border-radius: 999px;
+        font: 600 0.7rem/1.6 var(--body);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .status--live {
+        background: var(--gold-wash);
+        color: var(--gold);
+      }
+      .status--soon {
+        border: 1px solid var(--line-strong);
+        color: var(--ink-3);
+      }
+      .bands {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .bands span {
+        padding: 2px 0.6rem;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        color: var(--ink);
+        font-size: 0.85rem;
+      }
+
       /* Pricing */
       .billing-toggle {
         display: inline-flex;
@@ -779,6 +858,10 @@
           grid-template-columns: minmax(0, 1fr);
           max-width: 34rem;
         }
+        .coverage {
+          grid-template-columns: minmax(0, 1fr);
+          max-width: 34rem;
+        }
         .top nav {
           display: none;
         }
@@ -796,6 +879,7 @@
       @media (max-width: 720px) {
         .steps,
         .features,
+        .coverage,
         .plans {
           grid-template-columns: minmax(0, 1fr);
         }
@@ -836,6 +920,7 @@
         </a>
         <nav aria-label="Sections">
           <a href="#comment">Comment ça marche</a>
+          <a href="#couverture">Rooms et buy-ins</a>
           <a href="#fonctions">Fonctions</a>
           <a href="#tarifs">Tarifs</a>
           <a href="#faq">FAQ</a>
@@ -936,12 +1021,52 @@
         </div>
       </section>
 
+      <section id="couverture">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow">Rooms et buy-ins</p>
+            <h2>Ce que NutsIQ lit aujourd'hui.</h2>
+          </div>
+          <div class="coverage">
+            <article>
+              <h3>Rooms</h3>
+              <ul>
+                <li class="room"><strong>Winamax</strong><span class="status status--live">Disponible</span></li>
+                <li class="room"><strong>PokerStars</strong><span class="status status--soon">Bientôt</span></li>
+              </ul>
+              <p class="note">
+                Historiques de mains et résumés de tournois. NutsIQ est construit pour accueillir d'autres rooms.
+              </p>
+            </article>
+            <article>
+              <h3>Buy-ins</h3>
+              <p>Tous les buy-ins sont importés, et tes résultats sont rangés par tranche :</p>
+              <div class="bands numeric">
+                <span>Jusqu'à 5 €</span><span>5 à 10 €</span><span>10 à 20 €</span><span>20 à 50 €</span><span>50 € et plus</span>
+              </div>
+              <p class="note">
+                Les repères (leaks, ranges) sont écrits pour le micro et le low stakes, jusqu'à 25 € environ.
+                Au-dessus, tes stats restent exactes ; les repères, eux, sont plus indulgents que ton field.
+              </p>
+            </article>
+            <article>
+              <h3>Formats</h3>
+              <ul>
+                <li>Tournois MTT : classiques, knockout, turbo et hyper-turbo, avec re-entries et rebuys.</li>
+                <li>Tables 6-max et full ring, analysées séparément.</li>
+              </ul>
+              <p class="note">Pas encore de cash game ni de Spin.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section id="fonctions">
         <div class="wrap">
           <div class="section-head">
             <p class="eyebrow">Fonctions</p>
             <h2>Ce que fait un coach, sur toutes tes mains.</h2>
-            <p>Pensé pour les MTT de 5 à 20 €, où les mêmes erreurs coûtent le plus.</p>
+            <p>Pensé pour le micro et le low stakes, où les mêmes erreurs coûtent le plus.</p>
           </div>
           <div class="features">
             <div class="feature">
@@ -1119,6 +1244,14 @@
               <p>
                 Winamax aujourd'hui, en tournois MTT. PokerStars viendra ensuite : NutsIQ est construit pour
                 accueillir d'autres rooms.
+              </p>
+            </details>
+            <details>
+              <summary>Quels buy-ins sont pris en charge ?</summary>
+              <p>
+                Tous : NutsIQ importe chaque tournoi, quel que soit son prix, et range tes résultats par tranche
+                de buy-in. Les repères de leaks et de ranges sont écrits pour le micro et le low stakes (jusqu'à
+                25 € environ) ; au-dessus, ils restent utiles mais moins exigeants que le niveau du field.
               </p>
             </details>
             <details>
