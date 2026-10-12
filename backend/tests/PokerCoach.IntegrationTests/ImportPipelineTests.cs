@@ -164,7 +164,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
 
         // ACCELERATOR: 5 € in, 44.28 € back. ASTEROID: two 5 € entries, nothing back.
         // CASSIOPEIA: hands only, no summary: listed, not counted.
-        Assert.Equal(new PerformanceFigures(3, 2, 3, 1, 15m, 44.28m, 29.28m, 1.952m, 0.3333m), page.Totals);
+        Assert.Equal(new PerformanceFigures(3, 2, 3, 1, 15m, 44.28m, 29.28m, 1.952m, null, null, 0.3333m), page.Totals);
         var accelerator = page.Items.Single(i => i.Name == "ACCELERATOR");
         Assert.Equal(222, accelerator.HandCount);
         Assert.Equal(11, accelerator.FinishPosition);
