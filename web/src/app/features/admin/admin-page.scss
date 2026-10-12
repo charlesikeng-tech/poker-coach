@@ -26,10 +26,9 @@
 .grant-form {
   display: grid;
   // Email, offer, reason, end date, button: one row, every input on the same line (labels have one line).
-  grid-template-columns: minmax(0, 1.3fr) minmax(7rem, 0.6fr) minmax(0, 1.3fr) minmax(
-      9.5rem,
-      0.8fr
-    ) auto;
+  grid-template-columns:
+    minmax(0, 1.3fr) minmax(7rem, 0.6fr) minmax(0, 1.3fr) minmax(9.5rem, 0.8fr)
+    auto;
   gap: var(--space-3);
   align-items: end;
 
