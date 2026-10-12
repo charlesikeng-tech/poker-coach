@@ -57,11 +57,17 @@ public sealed record PositionRange(
     decimal? ReferenceShare,
     IReadOnlyList<RangeCell> Cells);
 
+/// <param name="Caller">The seat considering the call.</param>
+/// <param name="Shover">The seat that shoved.</param>
+/// <param name="Cells">169 booleans, one per <see cref="HandClass.All"/> entry: true when the equilibrium calls.</param>
+public sealed record PushCallRange(PokerPosition Caller, PokerPosition Shover, IReadOnlyList<bool> Cells);
+
 /// <param name="Format">The table format shown.</param>
 /// <param name="SpotsByFormat">RFI spots in each format for the band and period: lets the page offer the
 /// other format, and pick the one the player actually plays.</param>
 /// <param name="Positions">Every position that opens at that format, from UTG to the small blind, even
 /// without spots (the reference is still worth showing).</param>
+/// <param name="CallRanges">Push band only: equilibrium calling ranges for every (caller, shover) pair.</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: ranges are partial until 0.</param>
 /// <param name="PushStack">For the push/fold band: the stack the computed reference is for.</param>
 public sealed record OpeningRanges(
@@ -70,6 +76,7 @@ public sealed record OpeningRanges(
     int? PushStack,
     IReadOnlyDictionary<TableFormat, int> SpotsByFormat,
     IReadOnlyList<PositionRange> Positions,
+    IReadOnlyList<PushCallRange> CallRanges,
     int PendingHands,
     int ReferenceVersion);
 
@@ -99,7 +106,28 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
             f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
         var stack = band == StackBand.Push ? pushStack ?? ReferenceOpeningRanges.DefaultPushStack : (int?)null;
-        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stack), pending, ReferenceOpeningRanges.Version);
+        var callRanges = stack is { } s ? BuildCallRanges(shown, s) : [];
+        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stack), callRanges, pending, ReferenceOpeningRanges.Version);
+    }
+
+    internal static List<PushCallRange> BuildCallRanges(TableFormat format, int stackBb)
+    {
+        var chart = PushFoldNash.Solve(format, stackBb);
+        var seats = PushFoldNash.Seats(format);
+        var result = new List<PushCallRange>();
+        for (var i = 0; i < seats.Count - 1; i++) // shover: UTG through SB
+        {
+            for (var j = i + 1; j < seats.Count; j++) // caller: everyone after shover
+            {
+                var callSet = chart.Call(seats[j], seats[i]);
+                if (callSet.Count == 0) continue;
+                result.Add(new PushCallRange(
+                    seats[j],
+                    seats[i],
+                    HandClass.All.Select(h => callSet.Contains(h)).ToList()));
+            }
+        }
+        return result;
     }
 
     internal static List<PositionRange> Build(TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts, int? pushStack = null)

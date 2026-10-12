@@ -1192,6 +1192,17 @@
         "tooTight": "{{count}} mano(s) de la referencia que tiras",
         "rule": "Una mano cuenta como «abierta» si la subes al menos la mitad de las veces. Fíjate en el número pequeño: con 1 o 2 ocurrencias solo es un indicio."
       },
+      "pushView": {
+        "label": "Shove o call",
+        "shove": "Shove",
+        "call": "Call",
+        "facing": "Frente a un shove de",
+        "callTitle": "{{caller}} frente al shove de {{shover}} a {{stack}} BB",
+        "callShare": "de las manos iniciales (por combos)",
+        "gridLabel": "Rango de call en {{caller}} frente al shove de {{shover}}",
+        "legendCall": "Call",
+        "legendFold": "Fold"
+      },
       "pushStack": "Stack (push/fold)",
       "spot": "Spot",
       "spots": {

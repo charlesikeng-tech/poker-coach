@@ -35,14 +35,21 @@ public sealed record PositionRangeResponse(
     decimal? ReferenceShare,
     IReadOnlyList<RangeCellResponse> Cells);
 
+/// <param name="Caller">The seat considering the call.</param>
+/// <param name="Shover">The seat that shoved all-in.</param>
+/// <param name="Cells">169 booleans in grid order: true when equilibrium calls.</param>
+public sealed record PushCallRangeResponse(PokerPosition Caller, PokerPosition Shover, IReadOnlyList<bool> Cells);
+
 /// <param name="PendingHands">Hands still being analysed: ranges are partial while above zero.</param>
 /// <param name="PushStack">Push/fold band: the stack the computed reference is for.</param>
+/// <param name="CallRanges">Push band only: equilibrium calling ranges for every (caller, shover) pair.</param>
 public sealed record OpeningRangesResponse(
     TableFormat Format,
     StackBand Band,
     int? PushStack,
     FormatCountsResponse Spots,
     IReadOnlyList<PositionRangeResponse> Positions,
+    IReadOnlyList<PushCallRangeResponse> CallRanges,
     int PendingHands,
     int ReferenceVersion);
 
@@ -158,6 +165,7 @@ public static class RangeEndpoints
                 p.ReferenceNotation,
                 p.ReferenceShare,
                 p.Cells.Select(c => new RangeCellResponse(c.Hand.ToString(), c.Dealt, c.Opens, c.Limps, c.InReference)).ToList())).ToList(),
+            result.CallRanges.Select(cr => new PushCallRangeResponse(cr.Caller, cr.Shover, cr.Cells)).ToList(),
             result.PendingHands,
             result.ReferenceVersion));
     }

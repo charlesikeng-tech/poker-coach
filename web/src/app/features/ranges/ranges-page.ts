@@ -26,6 +26,7 @@ import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import {
   OpeningRanges,
   PositionRange,
+  PushCallRange,
   RangeCell,
   PUSH_STACKS,
   RangesApi,
@@ -36,6 +37,7 @@ import { POSITION_SHORT, RangeView } from './ranges-shared';
 
 type LoadState = 'loading' | 'ready' | 'error';
 type RangeSpot = 'open' | 'defence';
+type PushView = 'shove' | 'call';
 const VIEWS: readonly RangeView[] = ['mine', 'reference', 'gap'];
 
 /**
@@ -101,6 +103,10 @@ export class RangesPage {
   protected readonly data = signal<OpeningRanges | null>(null);
   protected readonly selected = signal<PokerPosition | null>(null);
   protected readonly hovered = signal<RangeCell | null>(null);
+  /** Push band only: shove or call view toggle. */
+  protected readonly pushView = signal<PushView>('shove');
+  /** Push call view: the seat whose shove we're facing. */
+  protected readonly shover = signal<PokerPosition | null>(null);
   protected readonly icons = { CircleAlert, LoaderCircle };
   protected readonly ranks = RANKS.split('');
   protected readonly short = POSITION_SHORT;
@@ -131,6 +137,23 @@ export class RangesPage {
     return null;
   });
 
+  /** Push call view: shovers that have a call range for the currently selected caller. */
+  protected readonly validShovers = computed<readonly PokerPosition[]>(() => {
+    const caller = this.range()?.position;
+    const data = this.data();
+    if (!caller || !data) return [];
+    return data.callRanges.filter((r) => r.caller === caller).map((r) => r.shover);
+  });
+
+  /** Push call view: the call range for the current (caller, shover) pair. */
+  protected readonly callRange = computed<PushCallRange | null>(() => {
+    const caller = this.range()?.position;
+    const shover = this.shover();
+    const data = this.data();
+    if (!caller || !shover || !data) return null;
+    return data.callRanges.find((r) => r.caller === caller && r.shover === shover) ?? null;
+  });
+
   protected readonly share = computed(() => {
     const locale = this.locale();
     return (value: number) =>
@@ -144,6 +167,14 @@ export class RangesPage {
       // The defence view loads its own data.
       if (this.spot() === 'open') {
         untracked(() => void this.load(...args));
+      }
+    });
+    // Auto-select first valid shover when call view is entered or caller changes.
+    effect(() => {
+      const shovers = this.validShovers();
+      const current = this.shover();
+      if (shovers.length > 0 && (current === null || !shovers.includes(current))) {
+        this.shover.set(shovers[0]);
       }
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));

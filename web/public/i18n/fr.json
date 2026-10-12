@@ -1192,6 +1192,17 @@
         "tooTight": "{{count}} main(s) du repère que tu fold",
         "rule": "Une main compte comme jouée en open si tu fais un raise au moins une fois sur deux. Regarde le petit chiffre : sur 1 ou 2 occurrences, ce n'est qu'un indice."
       },
+      "pushView": {
+        "label": "Shove ou call",
+        "shove": "Shove",
+        "call": "Call",
+        "facing": "Face à un shove de",
+        "callTitle": "{{caller}} face au shove de {{shover}} à {{stack}} BB",
+        "callShare": "des mains de départ (en combinaisons)",
+        "gridLabel": "Range de call en {{caller}} face au shove de {{shover}}",
+        "legendCall": "Call",
+        "legendFold": "Fold"
+      },
       "pushStack": "Stack (push/fold)",
       "spot": "Spot",
       "spots": {

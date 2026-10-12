@@ -1192,6 +1192,17 @@
         "tooTight": "{{count}} reference hand(s) you fold",
         "rule": "A hand counts as \"opened\" if you raise it at least half the time. Mind the small number: on 1 or 2 occurrences it is only a hint."
       },
+      "pushView": {
+        "label": "Shove or call",
+        "shove": "Shove",
+        "call": "Call",
+        "facing": "Facing a shove from",
+        "callTitle": "{{caller}} facing shove from {{shover}} at {{stack}} BB",
+        "callShare": "of starting hands (by combos)",
+        "gridLabel": "Call range in {{caller}} facing shove from {{shover}}",
+        "legendCall": "Call",
+        "legendFold": "Fold"
+      },
       "pushStack": "Stack (push/fold)",
       "spot": "Spot",
       "spots": {

@@ -39,6 +39,14 @@ export interface PositionRange {
   readonly cells: readonly RangeCell[];
 }
 
+/** Push band: equilibrium calling range for one (caller, shover) pair. */
+export interface PushCallRange {
+  readonly caller: PokerPosition;
+  readonly shover: PokerPosition;
+  /** 169 booleans in grid order (same as PositionRange.cells): true when equilibrium calls. */
+  readonly cells: readonly boolean[];
+}
+
 export interface OpeningRanges {
   readonly format: TableFormat;
   readonly band: StackBand;
@@ -47,6 +55,8 @@ export interface OpeningRanges {
   /** RFI spots per table format for the band and period. */
   readonly spots: { readonly sixMax: number; readonly fullRing: number };
   readonly positions: readonly PositionRange[];
+  /** Push band only: equilibrium calling ranges for every (caller, shover) pair. */
+  readonly callRanges: readonly PushCallRange[];
   readonly pendingHands: number;
   readonly referenceVersion: number;
 }
