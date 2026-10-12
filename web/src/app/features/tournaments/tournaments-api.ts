@@ -56,6 +56,8 @@ export interface PerformanceFigures {
   readonly winnings: number;
   readonly profit: number;
   readonly roi: number | null;
+  readonly roiLow: number | null;
+  readonly roiHigh: number | null;
   readonly itmRate: number | null;
 }
 

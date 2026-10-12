@@ -48,6 +48,12 @@ h2 {
   font-size: var(--font-size-sm);
 }
 
+.roi-ci {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+}
+
 .panel {
   margin-top: var(--space-6);
   padding: var(--space-5);

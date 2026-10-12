@@ -104,10 +104,12 @@ public sealed record PerformanceFiguresResponse(
     decimal Winnings,
     decimal Profit,
     decimal? Roi,
+    decimal? RoiLow,
+    decimal? RoiHigh,
     decimal? ItmRate)
 {
     public static PerformanceFiguresResponse From(PerformanceFigures f) =>
-        new(f.Tournaments, f.TournamentsWithResult, f.Entries, f.PaidEntries, f.BuyIns, f.Winnings, f.Profit, f.Roi, f.ItmRate);
+        new(f.Tournaments, f.TournamentsWithResult, f.Entries, f.PaidEntries, f.BuyIns, f.Winnings, f.Profit, f.Roi, f.RoiLow, f.RoiHigh, f.ItmRate);
 }
 
 public sealed record TournamentPageResponse(

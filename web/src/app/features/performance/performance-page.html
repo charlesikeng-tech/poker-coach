@@ -44,7 +44,13 @@
             [value]="report.totals.roi"
             [format]="formats().percent"
             [signed]="true"
-          />
+          >
+            @if (report.totals.roiLow !== null && report.totals.roiHigh !== null) {
+              <span class="roi-ci">
+                {{ percent(report.totals.roiLow) }} / {{ percent(report.totals.roiHigh) }}
+              </span>
+            }
+          </app-stat-tile>
           <app-stat-tile
             [label]="t('totals.itm')"
             [value]="report.totals.itmRate"
