@@ -1,0 +1,17 @@
+<Project>
+  <!--
+    On macOS (APFS), the .msCoverageSourceRootsMapping_* files created by Microsoft.CodeCoverage
+    can be left in a state where they exist on disk but are temporarily unreadable by MSBuild's
+    incremental build check, producing MSB3492 which TreatWarningsAsErrors promotes to a fatal error.
+    Deleting them before the CodeCoverage target runs forces a clean regeneration every build.
+    This has no effect on CI (Linux) where the issue does not occur.
+  -->
+  <Target Name="CleanCoverageMappingFiles"
+          BeforeTargets="VSTestTask2;_CodeCoverageInstrument;CollectCoverage"
+          Condition="'$(IsTestProject)' == 'true'">
+    <ItemGroup>
+      <_CoverageMappingFiles Include="$(OutDir).msCoverageSourceRootsMapping_*" />
+    </ItemGroup>
+    <Delete Files="@(_CoverageMappingFiles)" ContinueOnError="true" />
+  </Target>
+</Project>

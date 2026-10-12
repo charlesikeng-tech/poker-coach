@@ -9,5 +9,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <!-- The backend never formats culture-specific text: formatting is the client's job. -->
     <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- MSB3492 fires on macOS when incremental build cache files are temporarily unreadable (APFS).
+         TreatWarningsAsErrors would promote it to a fatal error; demote it to a message instead. -->
+    <MSBuildWarningsAsMessages>MSB3492</MSBuildWarningsAsMessages>
   </PropertyGroup>
 </Project>
