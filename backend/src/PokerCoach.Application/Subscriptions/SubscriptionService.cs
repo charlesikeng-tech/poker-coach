@@ -113,7 +113,15 @@ public sealed class SubscriptionService(
         try
         {
             var subscription = await store.FindByUserAsync(userId, cancellationToken);
-            // Changing offer (Pro ↔ Elite) happens in Stripe's portal: no second subscription.
+
+            // Our record can lag Stripe (a webhook not received yet, or missed): read Stripe before selling a second
+            // subscription. If Stripe cannot be read, no checkout rather than a possible duplicate.
+            if (subscription is not null && subscription.IsAlive != true)
+            {
+                await SyncAsync(subscription, cancellationToken);
+            }
+
+            // Changing offer (Pro ↔ Elite) happens on Stripe's confirmation page: no second subscription.
             if (subscription?.IsAlive == true)
             {
                 return BillingRedirect.Fail(BillingFailure.AlreadySubscribed);

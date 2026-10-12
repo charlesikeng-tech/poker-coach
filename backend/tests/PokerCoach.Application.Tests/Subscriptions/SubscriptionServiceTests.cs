@@ -236,6 +236,33 @@ public sealed class SubscriptionServiceTests
     }
 
     [Fact]
+    public async Task A_second_checkout_is_refused_when_stripe_has_a_subscription_our_record_has_not_seen_yet()
+    {
+        await Service().StartCheckoutAsync(jo.Id, Plan.Pro, BillingInterval.Month, "fr", AppUrl, Ct);
+
+        // Paid, but the webhook has not landed: our record still says "no subscription".
+        stripe.Subscriptions["cus_1"].Add(new SubscriptionState("sub_1", SubscriptionStatus.Active, BillingInterval.Month, time.GetUtcNow().AddDays(30), false, Plan.Pro));
+
+        Assert.Equal(BillingFailure.AlreadySubscribed, (await Service().StartCheckoutAsync(jo.Id, Plan.Elite, BillingInterval.Year, "fr", AppUrl, Ct)).Failure);
+        Assert.Single(stripe.Checkouts);
+        Assert.Equal(Plan.Pro, await Plans().GetPlanAsync(jo.Id, Ct));
+    }
+
+    [Fact]
+    public void With_several_subscriptions_the_one_that_renews_counts()
+    {
+        var end = new DateTimeOffset(2027, 10, 12, 0, 0, 0, TimeSpan.Zero);
+        var current = Subscription.Current(
+        [
+            new SubscriptionState("sub_cancelling", SubscriptionStatus.Active, BillingInterval.Year, end.AddDays(10), true, Plan.Pro),
+            new SubscriptionState("sub_renewing", SubscriptionStatus.Active, BillingInterval.Year, end, false, Plan.Pro),
+            new SubscriptionState("sub_old", SubscriptionStatus.Canceled, BillingInterval.Month, end.AddYears(1), false, Plan.Elite),
+        ]);
+
+        Assert.Equal("sub_renewing", current?.SubscriptionId);
+    }
+
+    [Fact]
     public async Task A_price_we_do_not_know_counts_as_pro_never_more()
     {
         await SubscribeAsync(SubscriptionStatus.Active, tier: null);

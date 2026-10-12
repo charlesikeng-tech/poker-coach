@@ -114,8 +114,12 @@ public sealed class Subscription
     public static SubscriptionState? Current(IEnumerable<SubscriptionState> states)
     {
         ArgumentNullException.ThrowIfNull(states);
+        // A customer should have one subscription, but a checkout taken before the webhook landed can leave two:
+        // the one that renews and opens the most counts.
         return states
             .OrderByDescending(s => s.Status is SubscriptionStatus.Active or SubscriptionStatus.Trialing or SubscriptionStatus.PastDue)
+            .ThenBy(s => s.CancelAtPeriodEnd)
+            .ThenByDescending(s => s.Tier ?? Plan.Pro)
             .ThenByDescending(s => s.CurrentPeriodEnd ?? DateTimeOffset.MinValue)
             .FirstOrDefault();
     }
