@@ -69,7 +69,10 @@ public sealed class LeakService(IStatisticsReadStore store)
 
         var (overall, byPosition) = Aggregate(groups, shown);
 
-        var report = LeakDetector.Detect(overall, byPosition, ReferenceRanges.LowStakesMtt);
+        var relevantRanges = ReferenceRanges.LowStakesMtt
+            .Where(r => r.Position is null || byPosition.ContainsKey(r.Position.Value))
+            .ToList();
+        var report = LeakDetector.Detect(overall, byPosition, relevantRanges);
         return new LeakAnalysis(
             new LeakReport(
                 report.Leaks.Select(l => l with { Position = Named(l.Position, shown) }).ToList(),

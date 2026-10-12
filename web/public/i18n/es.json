@@ -122,7 +122,10 @@
       "breakdown": {
         "buyIn": "Por buy-in",
         "type": "Por tipo",
-        "speed": "Por velocidad"
+        "speed": "Por velocidad",
+        "month": "Por mes",
+        "dayOfWeek": "Por día de la semana",
+        "timeSlot": "Por franja horaria"
       },
       "columns": {
         "group": "Grupo",
@@ -151,6 +154,21 @@
           "semiturbo": "Semi-turbo",
           "turbo": "Turbo",
           "hyperturbo": "Hiper-turbo"
+        },
+        "dayOfWeek": {
+          "monday": "Lunes",
+          "tuesday": "Martes",
+          "wednesday": "Miércoles",
+          "thursday": "Jueves",
+          "friday": "Viernes",
+          "saturday": "Sábado",
+          "sunday": "Domingo"
+        },
+        "timeSlot": {
+          "morning": "Mañana (6h–12h)",
+          "afternoon": "Tarde (12h–18h)",
+          "evening": "Noche temprana (18h–23h)",
+          "night": "Madrugada (23h–6h)"
         }
       }
     },
@@ -786,6 +804,13 @@
       },
       "under": {
         "title": "{{count}} estadística(s) aún no se puede(n) juzgar: muy pocas situaciones"
+      },
+      "trend": {
+        "title": "Evolución a lo largo del tiempo",
+        "lead": "Cómo ha evolucionado este leak mes a mes, para ver si tu juego progresa.",
+        "pick": "Estadística seguida",
+        "empty": "Aún no hay suficientes datos para trazar una curva.",
+        "aria": "Evolución mensual: {{stat}}"
       },
       "method": "Referencias versión {{version}}: MTT online de 5 a 20 €, regulares sólidos, manos con 15 BB o más. Un leak solo se confirma si todo el intervalo de confianza al 95 % sale de la referencia.",
       "positions": {

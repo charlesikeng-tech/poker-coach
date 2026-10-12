@@ -167,6 +167,8 @@
         }
       }
 
+      <app-leak-trend [leaks]="analysis.leaks" [format]="analysis.format" [from]="from()" />
+
       @if (analysis.lockedLeaks > 0) {
         <p class="locked-leaks">
           <app-icon [icon]="icons.Lock" />

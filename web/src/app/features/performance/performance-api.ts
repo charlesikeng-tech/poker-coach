@@ -24,6 +24,9 @@ export interface PerformanceReport {
   readonly byBuyIn: readonly PerformanceGroup[];
   readonly byType: readonly PerformanceGroup[];
   readonly bySpeed: readonly PerformanceGroup[];
+  readonly byMonth: readonly PerformanceGroup[];
+  readonly byDayOfWeek: readonly PerformanceGroup[];
+  readonly byTimeSlot: readonly PerformanceGroup[];
 }
 
 @Injectable({ providedIn: 'root' })

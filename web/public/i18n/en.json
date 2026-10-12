@@ -122,7 +122,10 @@
       "breakdown": {
         "buyIn": "By buy-in",
         "type": "By type",
-        "speed": "By speed"
+        "speed": "By speed",
+        "month": "By month",
+        "dayOfWeek": "By day of the week",
+        "timeSlot": "By time slot"
       },
       "columns": {
         "group": "Group",
@@ -151,6 +154,21 @@
           "semiturbo": "Semi-turbo",
           "turbo": "Turbo",
           "hyperturbo": "Hyper-turbo"
+        },
+        "dayOfWeek": {
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday",
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday",
+          "sunday": "Sunday"
+        },
+        "timeSlot": {
+          "morning": "Morning (6am–12pm)",
+          "afternoon": "Afternoon (12pm–6pm)",
+          "evening": "Evening (6pm–11pm)",
+          "night": "Night (11pm–6am)"
         }
       }
     },
@@ -786,6 +804,13 @@
       },
       "under": {
         "title": "{{count}} statistic(s) cannot be judged yet: too few situations"
+      },
+      "trend": {
+        "title": "Evolution over time",
+        "lead": "How this leak has evolved month by month, to see if your game is improving.",
+        "pick": "Tracked statistic",
+        "empty": "Not enough data yet to draw a curve.",
+        "aria": "Monthly evolution: {{stat}}"
       },
       "method": "References version {{version}}: online MTTs from €5 to €20, solid regulars, hands with 15 BB or more. A leak is confirmed only when the whole 95 % confidence interval is outside the reference.",
       "positions": {

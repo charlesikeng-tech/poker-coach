@@ -95,50 +95,61 @@
             { dimension: 'buyIn', groups: report.byBuyIn },
             { dimension: 'type', groups: report.byType },
             { dimension: 'speed', groups: report.bySpeed },
+            { dimension: 'month', groups: report.byMonth },
+            { dimension: 'dayOfWeek', groups: report.byDayOfWeek },
+            { dimension: 'timeSlot', groups: report.byTimeSlot },
           ];
           track section.dimension
         ) {
-          <section class="panel glass">
-            <h2>{{ t('breakdown.' + section.dimension) }}</h2>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col">{{ t('columns.group') }}</th>
-                    <th scope="col" class="num">{{ t('columns.tournaments') }}</th>
-                    <th scope="col" class="num optional">{{ t('columns.buyIns') }}</th>
-                    <th scope="col" class="num optional">{{ t('columns.winnings') }}</th>
-                    <th scope="col" class="num">{{ t('columns.profit') }}</th>
-                    <th scope="col" class="num">{{ t('columns.roi') }}</th>
-                    <th scope="col" class="num optional">{{ t('columns.itm') }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (group of section.groups; track group.key) {
+          @if (section.groups.length > 0) {
+            <section class="panel glass">
+              <h2>{{ t('breakdown.' + section.dimension) }}</h2>
+              <div class="table-wrap">
+                <table>
+                  <thead>
                     <tr>
-                      @let key = groupKey($any(section.dimension), group);
-                      <th scope="row">{{ key ? t(key) : group.key }}</th>
-                      <td class="num numeric">
-                        {{ integer(group.figures.tournamentsWithResult) }}
-                        @if (group.figures.tournaments > group.figures.tournamentsWithResult) {
-                          <span class="muted">/ {{ integer(group.figures.tournaments) }}</span>
-                        }
-                      </td>
-                      <td class="num numeric optional">{{ money(group.figures.buyIns) }}</td>
-                      <td class="num numeric optional">{{ money(group.figures.winnings) }}</td>
-                      <td class="num numeric" [attr.data-sign]="sign(group.figures.profit)">
-                        {{ signedMoney(group.figures.profit) }}
-                      </td>
-                      <td class="num numeric" [attr.data-sign]="sign(group.figures.roi)">
-                        {{ percent(group.figures.roi) }}
-                      </td>
-                      <td class="num numeric optional">{{ share(group.figures.itmRate) }}</td>
+                      <th scope="col">{{ t('columns.group') }}</th>
+                      <th scope="col" class="num">{{ t('columns.tournaments') }}</th>
+                      <th scope="col" class="num optional">{{ t('columns.buyIns') }}</th>
+                      <th scope="col" class="num optional">{{ t('columns.winnings') }}</th>
+                      <th scope="col" class="num">{{ t('columns.profit') }}</th>
+                      <th scope="col" class="num">{{ t('columns.roi') }}</th>
+                      <th scope="col" class="num optional">{{ t('columns.itm') }}</th>
                     </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </section>
+                  </thead>
+                  <tbody>
+                    @for (group of section.groups; track group.key) {
+                      <tr>
+                        <th scope="row">
+                          @if (section.dimension === 'month') {
+                            {{ monthLabel(group.key) }}
+                          } @else {
+                            @let key = groupKey($any(section.dimension), group);
+                            {{ key ? t(key) : group.key }}
+                          }
+                        </th>
+                        <td class="num numeric">
+                          {{ integer(group.figures.tournamentsWithResult) }}
+                          @if (group.figures.tournaments > group.figures.tournamentsWithResult) {
+                            <span class="muted">/ {{ integer(group.figures.tournaments) }}</span>
+                          }
+                        </td>
+                        <td class="num numeric optional">{{ money(group.figures.buyIns) }}</td>
+                        <td class="num numeric optional">{{ money(group.figures.winnings) }}</td>
+                        <td class="num numeric" [attr.data-sign]="sign(group.figures.profit)">
+                          {{ signedMoney(group.figures.profit) }}
+                        </td>
+                        <td class="num numeric" [attr.data-sign]="sign(group.figures.roi)">
+                          {{ percent(group.figures.roi) }}
+                        </td>
+                        <td class="num numeric optional">{{ share(group.figures.itmRate) }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          }
         }
       </div>
     }

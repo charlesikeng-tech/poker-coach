@@ -1,0 +1,36 @@
+<ng-container *transloco="let t; prefix: 'pages.leaks'">
+  @if (stats().length > 0) {
+    <section class="panel glass">
+      <h2>{{ t('trend.title') }}</h2>
+      <p class="lead">{{ t('trend.lead') }}</p>
+      <div class="chips" role="group" [attr.aria-label]="t('trend.pick')">
+        @for (stat of stats(); track stat) {
+          <button
+            type="button"
+            class="chip"
+            [class.active]="selected() === stat"
+            [attr.aria-pressed]="selected() === stat"
+            (click)="selected.set(stat)"
+          >
+            {{ t('stats.' + stat) }}
+          </button>
+        }
+      </div>
+      @if (points().length > 1) {
+        <app-line-chart
+          [points]="points()"
+          [band]="band()"
+          [formatY]="formatAxis()"
+          [formatX]="formatMonth()"
+          [height]="240"
+          [ariaLabel]="t('trend.aria', { stat: selected() ? t('stats.' + selected()) : '' })"
+        />
+        @if (band(); as b) {
+          <p class="hint">{{ bandHint(b) }}</p>
+        }
+      } @else {
+        <p class="hint">{{ t('trend.empty') }}</p>
+      }
+    </section>
+  }
+</ng-container>

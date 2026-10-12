@@ -127,7 +127,10 @@ public sealed record PerformanceResponse(
     IReadOnlyList<ProfitPointResponse> Curve,
     IReadOnlyList<PerformanceGroupResponse> ByBuyIn,
     IReadOnlyList<PerformanceGroupResponse> ByType,
-    IReadOnlyList<PerformanceGroupResponse> BySpeed);
+    IReadOnlyList<PerformanceGroupResponse> BySpeed,
+    IReadOnlyList<PerformanceGroupResponse> ByMonth,
+    IReadOnlyList<PerformanceGroupResponse> ByDayOfWeek,
+    IReadOnlyList<PerformanceGroupResponse> ByTimeSlot);
 
 public static class TournamentEndpoints
 {
@@ -271,7 +274,10 @@ public static class TournamentEndpoints
             report.Curve.Select(p => new ProfitPointResponse(p.Index, p.StartedAt, p.Name, p.Profit, p.CumulativeProfit)).ToList(),
             Groups(report.ByBuyIn),
             Groups(report.ByType),
-            Groups(report.BySpeed)));
+            Groups(report.BySpeed),
+            Groups(report.ByMonth),
+            Groups(report.ByDayOfWeek),
+            Groups(report.ByTimeSlot)));
     }
 
     private static List<PerformanceGroupResponse> Groups(IReadOnlyList<PerformanceGroup> groups) =>

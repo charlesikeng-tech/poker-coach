@@ -13,7 +13,10 @@ public sealed record PerformanceReport(
     IReadOnlyList<ProfitPoint> Curve,
     IReadOnlyList<PerformanceGroup> ByBuyIn,
     IReadOnlyList<PerformanceGroup> ByType,
-    IReadOnlyList<PerformanceGroup> BySpeed);
+    IReadOnlyList<PerformanceGroup> BySpeed,
+    IReadOnlyList<PerformanceGroup> ByMonth,
+    IReadOnlyList<PerformanceGroup> ByDayOfWeek,
+    IReadOnlyList<PerformanceGroup> ByTimeSlot);
 
 /// <summary>Performance screen: cumulative profit and the same figures split by buy-in and format.</summary>
 public sealed class PerformanceService(ITournamentReadStore store)
@@ -41,8 +44,56 @@ public sealed class PerformanceService(ITournamentReadStore store)
             Curve(rows.Select(r => r.Item)),
             Group(rows, r => BuyInBand(r.Item.BuyIn), BuyInBands.Select(b => b.Key).Append(null)),
             Group(rows, r => r.Facts.Type, null),
-            Group(rows, r => r.Facts.Speed, null));
+            Group(rows, r => r.Facts.Speed, null),
+            GroupByMonth(rows),
+            GroupByDayOfWeek(rows),
+            GroupByTimeSlot(rows));
     }
+
+    private static readonly string[] DayOrder =
+        ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+    private static readonly string[] TimeSlotOrder = ["morning", "afternoon", "evening", "night"];
+
+    private static List<PerformanceGroup> GroupByDayOfWeek(List<(TournamentFacts Facts, TournamentListItem Item)> rows)
+    {
+        var grouped = rows
+            .Where(r => r.Facts.StartedAt is not null)
+            .GroupBy(r => r.Facts.StartedAt!.Value.UtcDateTime.DayOfWeek.ToString().ToLowerInvariant())
+            .ToDictionary(g => g.Key, g => g);
+        return DayOrder
+            .Where(day => grouped.ContainsKey(day))
+            .Select(day => new PerformanceGroup(day, PerformanceFigures.Of(grouped[day].Select(r => r.Item.Result).ToList())))
+            .ToList();
+    }
+
+    private static List<PerformanceGroup> GroupByTimeSlot(List<(TournamentFacts Facts, TournamentListItem Item)> rows)
+    {
+        var grouped = rows
+            .Where(r => r.Facts.StartedAt is not null)
+            .GroupBy(r => TimeSlot(r.Facts.StartedAt!.Value.UtcDateTime.Hour))
+            .ToDictionary(g => g.Key, g => g);
+        return TimeSlotOrder
+            .Where(slot => grouped.ContainsKey(slot))
+            .Select(slot => new PerformanceGroup(slot, PerformanceFigures.Of(grouped[slot].Select(r => r.Item.Result).ToList())))
+            .ToList();
+    }
+
+    private static string TimeSlot(int hour) => hour switch
+    {
+        >= 6 and <= 11 => "morning",
+        >= 12 and <= 17 => "afternoon",
+        >= 18 and <= 22 => "evening",
+        _ => "night",
+    };
+
+    private static List<PerformanceGroup> GroupByMonth(List<(TournamentFacts Facts, TournamentListItem Item)> rows) =>
+        rows
+            .Where(r => r.Facts.StartedAt is not null)
+            .GroupBy(r => new DateOnly(r.Facts.StartedAt!.Value.UtcDateTime.Year, r.Facts.StartedAt.Value.UtcDateTime.Month, 1))
+            .OrderByDescending(g => g.Key)
+            .Select(g => new PerformanceGroup(g.Key.ToString("yyyy-MM-dd"), PerformanceFigures.Of(g.Select(r => r.Item.Result).ToList())))
+            .ToList();
 
     internal static string? BuyInBand(decimal? buyIn) =>
         buyIn is { } value ? BuyInBands.First(b => value <= b.Max).Key : null;

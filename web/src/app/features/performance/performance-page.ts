@@ -145,15 +145,27 @@ export class PerformancePage {
 
   /** Translation key (relative to pages.performance) for a group, or null to show the raw value as is. */
   protected groupKey(
-    dimension: 'buyIn' | 'type' | 'speed',
+    dimension: 'buyIn' | 'type' | 'speed' | 'dayOfWeek' | 'timeSlot',
     group: PerformanceGroup,
   ): string | null {
     if (group.key === null) {
       return 'groups.unknown';
     }
+    if (dimension === 'dayOfWeek' || dimension === 'timeSlot') {
+      return `groups.${dimension}.${group.key}`;
+    }
     const known =
       dimension === 'buyIn' || (dimension === 'type' ? KNOWN_TYPES : KNOWN_SPEEDS).has(group.key);
     return known ? `groups.${dimension}.${group.key}` : null;
+  }
+
+  protected monthLabel(key: string | null): string {
+    if (!key) {
+      return '—';
+    }
+    return new Intl.DateTimeFormat(this.locale(), { month: 'long', year: 'numeric' }).format(
+      new Date(key),
+    );
   }
 
   private async load(period: PeriodFilter): Promise<void> {

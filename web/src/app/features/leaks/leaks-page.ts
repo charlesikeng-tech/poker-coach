@@ -23,6 +23,7 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { ExampleHand, Leak, LeakAnalysis, LeakExplanation, LeaksApi } from './leaks-api';
+import { LeakTrend } from './leak-trend';
 import { RangeGauge } from './range-gauge';
 
 type LoadState = 'loading' | 'ready' | 'error';
@@ -46,6 +47,7 @@ const PENDING_REFRESH_MS = 3000;
     Icon,
     Spotlight,
     RangeGauge,
+    LeakTrend,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -65,6 +67,7 @@ export class LeaksPage {
   protected readonly icons = { CircleAlert, CircleCheck, LoaderCircle, Sparkles, Upload, Lock };
   /** Coach panels by leak key; cleared when the period changes because the leaks may differ. */
   protected readonly coach = signal<Readonly<Record<string, CoachState>>>({});
+  protected readonly from = signal<string | undefined>(undefined);
 
   private readonly locale = computed(() => this.language.current());
   private request = 0;
@@ -171,7 +174,9 @@ export class LeaksPage {
       this.state.set('loading');
     }
     try {
-      const analysis = await this.api.get(toQuery(period, 'all', 1, 1, new Date()).from, format);
+      const from = toQuery(period, 'all', 1, 1, new Date()).from;
+      this.from.set(from);
+      const analysis = await this.api.get(from, format);
       if (request !== this.request) {
         return;
       }
