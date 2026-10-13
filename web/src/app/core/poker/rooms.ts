@@ -11,6 +11,7 @@ export type SupportedRoom = (typeof SUPPORTED_ROOMS)[number];
 const ROOM_NAMES: Readonly<Record<string, string>> = {
   winamax: 'Winamax',
   pokerStars: 'PokerStars',
+  betclic: 'Betclic',
 };
 
 /** The room's display name; an unknown value is shown as the API sent it. */
