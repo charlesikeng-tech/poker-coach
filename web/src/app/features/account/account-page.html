@@ -21,6 +21,56 @@
   }
 
   <section class="card glass">
+    <h2><app-icon [icon]="icons.KeyRound" />{{ t('password.title') }}</h2>
+    <p>{{ t('password.description') }}</p>
+    <form (submit)="changePassword($event)" novalidate>
+      <label class="field">
+        <span>{{ t('password.current') }}</span>
+        <input
+          type="password"
+          name="currentPassword"
+          autocomplete="current-password"
+          required
+          [value]="currentPassword()"
+          (input)="currentPassword.set(value($event))"
+        />
+      </label>
+      <label class="field">
+        <span>{{ t('password.new', { count: minPassword }) }}</span>
+        <input
+          type="password"
+          name="newPassword"
+          autocomplete="new-password"
+          required
+          [value]="newPassword()"
+          (input)="newPassword.set(value($event))"
+        />
+      </label>
+      <label class="field">
+        <span>{{ t('password.repeat') }}</span>
+        <input
+          type="password"
+          name="repeatPassword"
+          autocomplete="new-password"
+          required
+          [value]="repeatPassword()"
+          (input)="repeatPassword.set(value($event))"
+          [attr.aria-invalid]="passwordMismatch() || null"
+        />
+      </label>
+      @if (passwordMismatch()) {
+        <p class="error" role="alert">{{ t('password.mismatch') }}</p>
+      } @else if (passwordError(); as code) {
+        <p class="error" role="alert">{{ t('password.errors.' + code, { count: minPassword }) }}</p>
+      }
+      <button appButton variant="primary" type="submit" [disabled]="changingPassword() || passwordMismatch()">
+        {{ t(changingPassword() ? 'password.updating' : 'password.action') }}
+      </button>
+    </form>
+    <p class="hint">{{ t('password.hint') }}</p>
+  </section>
+
+  <section class="card glass">
     <h2>{{ t('export.title') }}</h2>
     <p>{{ t('export.description') }}</p>
     <ul class="contents">

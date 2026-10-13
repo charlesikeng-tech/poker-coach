@@ -1468,6 +1468,25 @@
       "name": "Name",
       "email": "Email",
       "signIn": "Sign-in",
+      "password": {
+        "title": "Change password",
+        "description": "Changing your password signs you out on all devices — you'll need to sign back in with the new one.",
+        "current": "Current password",
+        "new": "New password (min. {{count}} characters)",
+        "repeat": "Repeat new password",
+        "action": "Update password",
+        "updating": "Updating…",
+        "mismatch": "The two passwords do not match.",
+        "hint": "No password yet? Use the "Forgot password" link on the sign-in page.",
+        "errors": {
+          "INVALID_CREDENTIALS": "Current password is incorrect.",
+          "ACCOUNT_LOCKED": "Too many attempts. Try again in a few minutes.",
+          "WEAK_PASSWORD": "The new password is too weak (min. {{count}} characters).",
+          "NO_PASSWORD_ACCOUNT": "Your account has no password. Use the "Forgot password" link on the sign-in page.",
+          "unknown": "Something went wrong. Please try again.",
+          "network": "Could not reach the server. Check your connection."
+        }
+      },
       "export": {
         "title": "Export my data",
         "description": "A .zip archive with everything NutsIQ keeps about you:",

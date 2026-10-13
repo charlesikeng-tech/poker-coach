@@ -1468,6 +1468,25 @@
       "name": "Nom",
       "email": "E-mail",
       "signIn": "Connexion",
+      "password": {
+        "title": "Changer de mot de passe",
+        "description": "Modifier ton mot de passe te déconnecte de tous tes appareils : tu devras te reconnecter avec le nouveau.",
+        "current": "Mot de passe actuel",
+        "new": "Nouveau mot de passe ({{count}} caractères min.)",
+        "repeat": "Répéter le nouveau mot de passe",
+        "action": "Mettre à jour",
+        "updating": "Mise à jour…",
+        "mismatch": "Les deux mots de passe ne correspondent pas.",
+        "hint": "Tu n'as pas de mot de passe ? Utilise le lien « Mot de passe oublié » sur la page de connexion.",
+        "errors": {
+          "INVALID_CREDENTIALS": "Mot de passe actuel incorrect.",
+          "ACCOUNT_LOCKED": "Trop de tentatives. Réessaie dans quelques minutes.",
+          "WEAK_PASSWORD": "Le nouveau mot de passe est trop faible ({{count}} caractères min.).",
+          "NO_PASSWORD_ACCOUNT": "Ton compte n'a pas de mot de passe. Utilise le lien « Mot de passe oublié » sur la page de connexion.",
+          "unknown": "Une erreur est survenue. Réessaie.",
+          "network": "Impossible de contacter le serveur. Vérifie ta connexion."
+        }
+      },
       "export": {
         "title": "Exporter mes données",
         "description": "Une archive .zip avec tout ce que NutsIQ garde sur toi :",

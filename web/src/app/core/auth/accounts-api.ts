@@ -15,6 +15,7 @@ const ACCOUNT_ERRORS = new Set([
   'EMAIL_NOT_CONFIRMED',
   'ACCOUNT_LOCKED',
   'INVALID_TOKEN',
+  'NO_PASSWORD_ACCOUNT',
   'RATE_LIMITED',
   'INVALID_ANTIFORGERY_TOKEN',
 ]);
@@ -61,6 +62,10 @@ export class AccountsApi {
 
   resetPassword(token: string, password: string): Promise<unknown> {
     return firstValueFrom(this.http.post('/api/auth/password/reset', { token, password }));
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Promise<unknown> {
+    return firstValueFrom(this.http.post('/api/me/password', { currentPassword, newPassword }));
   }
 }
 

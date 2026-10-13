@@ -1468,6 +1468,25 @@
       "name": "Nombre",
       "email": "Correo",
       "signIn": "Inicio de sesión",
+      "password": {
+        "title": "Cambiar contraseña",
+        "description": "Cambiar tu contraseña cierra sesión en todos tus dispositivos — tendrás que volver a iniciar sesión con la nueva.",
+        "current": "Contraseña actual",
+        "new": "Nueva contraseña (mín. {{count}} caracteres)",
+        "repeat": "Repetir nueva contraseña",
+        "action": "Actualizar contraseña",
+        "updating": "Actualizando…",
+        "mismatch": "Las dos contraseñas no coinciden.",
+        "hint": "¿Todavía no tienes contraseña? Usa el enlace «Olvidé mi contraseña» en la página de inicio de sesión.",
+        "errors": {
+          "INVALID_CREDENTIALS": "La contraseña actual es incorrecta.",
+          "ACCOUNT_LOCKED": "Demasiados intentos. Vuelve a intentarlo en unos minutos.",
+          "WEAK_PASSWORD": "La nueva contraseña es demasiado débil (mín. {{count}} caracteres).",
+          "NO_PASSWORD_ACCOUNT": "Tu cuenta no tiene contraseña. Usa el enlace «Olvidé mi contraseña» en la página de inicio de sesión.",
+          "unknown": "Algo salió mal. Por favor, inténtalo de nuevo.",
+          "network": "No se pudo contactar el servidor. Comprueba tu conexión."
+        }
+      },
       "export": {
         "title": "Exportar mis datos",
         "description": "Un archivo .zip con todo lo que NutsIQ guarda sobre ti:",

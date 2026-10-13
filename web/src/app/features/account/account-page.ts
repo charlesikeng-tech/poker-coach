@@ -1,11 +1,12 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Download, ShieldAlert, Trash2 } from 'lucide';
+import { Download, KeyRound, ShieldAlert, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
+import { AccountsApi, MIN_PASSWORD_LENGTH, accountErrorCode, retryWithToken } from '../../core/auth/accounts-api';
 import { SessionService } from '../../core/auth/session.service';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -27,9 +28,24 @@ export class AccountPage {
   private readonly http = inject(HttpClient);
   private readonly document = inject(DOCUMENT);
   private readonly transloco = inject(TranslocoService);
+  private readonly accounts = inject(AccountsApi);
+  private readonly router = inject(Router);
   protected readonly session = inject(SessionService);
 
-  protected readonly icons = { Download, ShieldAlert, Trash2 };
+  protected readonly icons = { Download, KeyRound, ShieldAlert, Trash2 };
+  protected readonly minPassword = MIN_PASSWORD_LENGTH;
+
+  // Change password
+  protected readonly currentPassword = signal('');
+  protected readonly newPassword = signal('');
+  protected readonly repeatPassword = signal('');
+  protected readonly changingPassword = signal(false);
+  protected readonly passwordError = signal<string | null>(null);
+  protected readonly passwordMismatch = computed(
+    () => this.repeatPassword() !== '' && this.repeatPassword() !== this.newPassword(),
+  );
+
+  // Delete account
   protected readonly confirmation = signal('');
   protected readonly deleting = signal(false);
   protected readonly failed = signal(false);
@@ -47,6 +63,27 @@ export class AccountPage {
 
   protected value(event: Event): string {
     return (event.target as HTMLInputElement).value;
+  }
+
+  protected async changePassword(event: Event): Promise<void> {
+    event.preventDefault();
+    if (this.changingPassword() || this.passwordMismatch()) {
+      return;
+    }
+    this.changingPassword.set(true);
+    this.passwordError.set(null);
+    try {
+      await retryWithToken(this.session, () =>
+        this.accounts.changePassword(this.currentPassword(), this.newPassword()),
+      );
+      // The session serial has rotated: sign out now rather than letting the cookie expire silently.
+      await firstValueFrom(this.http.post('/api/auth/logout', {}));
+      await this.router.navigateByUrl('/sign-in');
+    } catch (error) {
+      this.passwordError.set(accountErrorCode(error));
+    } finally {
+      this.changingPassword.set(false);
+    }
   }
 
   protected async delete(): Promise<void> {
