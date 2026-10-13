@@ -14,7 +14,12 @@
         </div>
         <div>
           <dt>{{ t('signIn') }}</dt>
-          <dd>Google</dd>
+          <dd>
+            @if (user.hasGoogle && user.hasPassword) { Google · E-mail }
+            @else if (user.hasGoogle) { Google }
+            @else if (user.hasPassword) { E-mail }
+            @else { — }
+          </dd>
         </div>
       </dl>
     </section>

@@ -9,6 +9,9 @@ public interface IUserAccountStore
 
     Task<User?> FindByIdAsync(Guid userId, CancellationToken cancellationToken);
 
+    /// <summary>The names of all external providers linked to this user (e.g. "google").</summary>
+    Task<IReadOnlyList<string>> GetLinkedProvidersAsync(Guid userId, CancellationToken cancellationToken);
+
     /// <summary>
     /// Saves a new user and its first external identity atomically.
     /// Returns false, saving nothing, when the identity already exists (concurrent first sign-in).

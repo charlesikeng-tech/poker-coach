@@ -28,6 +28,9 @@ internal sealed class InMemoryUserAccountStore : IUserAccountStore
     public Task<User?> FindByIdAsync(Guid userId, CancellationToken cancellationToken) =>
         Task.FromResult(users.Find(u => u.Id == userId));
 
+    public Task<IReadOnlyList<string>> GetLinkedProvidersAsync(Guid userId, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<string>>(identities.Where(i => i.UserId == userId).Select(i => i.Provider).ToList());
+
     public Task<bool> TryAddAsync(User user, ExternalIdentity identity, CancellationToken cancellationToken)
     {
         if (SimulateConcurrentFirstSignIn is { } concurrent)

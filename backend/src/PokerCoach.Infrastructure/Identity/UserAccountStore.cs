@@ -17,6 +17,12 @@ internal sealed class UserAccountStore(PokerCoachDbContext db) : IUserAccountSto
     public Task<User?> FindByIdAsync(Guid userId, CancellationToken cancellationToken) =>
         db.Set<User>().FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
+    public async Task<IReadOnlyList<string>> GetLinkedProvidersAsync(Guid userId, CancellationToken cancellationToken) =>
+        await db.Set<ExternalIdentity>()
+            .Where(i => i.UserId == userId)
+            .Select(i => i.Provider)
+            .ToListAsync(cancellationToken);
+
     public async Task<bool> TryAddAsync(User user, ExternalIdentity identity, CancellationToken cancellationToken)
     {
         db.Add(user);

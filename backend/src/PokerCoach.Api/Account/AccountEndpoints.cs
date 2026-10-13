@@ -12,7 +12,9 @@ using PokerCoach.Domain.Identity;
 namespace PokerCoach.Api.Account;
 
 /// <param name="IsAdmin">Shows the administration page; every admin route checks it again.</param>
-public sealed record MeResponse(Guid Id, string DisplayName, string? Email, string PreferredLanguage, bool IsAdmin);
+/// <param name="HasPassword">Whether the account has an email and password credential.</param>
+/// <param name="HasGoogle">Whether the account has a Google identity linked.</param>
+public sealed record MeResponse(Guid Id, string DisplayName, string? Email, string PreferredLanguage, bool IsAdmin, bool HasPassword, bool HasGoogle);
 
 public sealed record UpdatePreferencesRequest(string? Language);
 
@@ -63,7 +65,11 @@ public static class AccountEndpoints
         }
 
         AntiforgeryTokens.IssueRequestToken(context, antiforgery);
-        return TypedResults.Ok(new MeResponse(profile.Id, profile.DisplayName, profile.Email, profile.PreferredLanguage, admins.IsAdminEmail(profile.Email)));
+        return TypedResults.Ok(new MeResponse(
+            profile.Id, profile.DisplayName, profile.Email, profile.PreferredLanguage,
+            admins.IsAdminEmail(profile.Email),
+            profile.HasPassword,
+            profile.LinkedProviders.Contains(IdentityProviders.Google)));
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> ChangePasswordAsync(
