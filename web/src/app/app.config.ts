@@ -6,7 +6,7 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { TitleStrategy, provideRouter, withComponentInputBinding } from '@angular/router';
+import { PreloadAllModules, TitleStrategy, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
 import { provideTransloco } from '@jsverse/transloco';
 
 import { routes } from './app.routes';
@@ -21,7 +21,7 @@ import { ThemeService } from './core/theme/theme.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withComponentInputBinding()),
+    provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
     provideHttpClient(withFetch()),
     provideTransloco({
       config: {
