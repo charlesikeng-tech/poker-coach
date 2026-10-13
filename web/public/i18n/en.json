@@ -30,6 +30,8 @@
     "expandSidebar": "Expand sidebar",
     "language": "Language",
     "themeToLight": "Switch to light theme",
+    "ghostOn": "Demo mode: hide values",
+    "ghostOff": "Demo mode: show values",
     "themeToDark": "Switch to dark theme",
     "signOut": "Sign out",
     "account": "My account",

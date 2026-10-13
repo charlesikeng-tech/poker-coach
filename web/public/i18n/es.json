@@ -30,6 +30,8 @@
     "expandSidebar": "Expandir el menú",
     "language": "Idioma",
     "themeToLight": "Cambiar al tema claro",
+    "ghostOn": "Modo demo: ocultar valores",
+    "ghostOff": "Modo demo: mostrar valores",
     "themeToDark": "Cambiar al tema oscuro",
     "signOut": "Cerrar sesión",
     "account": "Mi cuenta",

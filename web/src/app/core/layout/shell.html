@@ -106,6 +106,16 @@
         <button
           type="button"
           class="icon-button"
+          [attr.aria-label]="ghost.isActive() ? t('shell.ghostOff') : t('shell.ghostOn')"
+          [attr.title]="ghost.isActive() ? t('shell.ghostOff') : t('shell.ghostOn')"
+          (click)="ghost.toggle()"
+        >
+          <app-icon [icon]="ghost.isActive() ? icons.EyeOff : icons.Eye" />
+        </button>
+
+        <button
+          type="button"
+          class="icon-button"
           [attr.aria-label]="
             theme.current() === 'dark' ? t('shell.themeToLight') : t('shell.themeToDark')
           "

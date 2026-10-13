@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X } from 'lucide';
+import { Eye, EyeOff, History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X } from 'lucide';
 import { filter, map } from 'rxjs';
 
 import { BrandMark } from '../../shared/ui/brand-mark/brand-mark';
@@ -11,6 +11,7 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { SessionService } from '../auth/session.service';
 import { BillingService } from '../billing/billing.service';
 import { WelcomeService } from '../auth/welcome';
+import { GhostModeService } from '../ghost-mode/ghost-mode.service';
 import { LanguageSelect } from '../i18n/language-select';
 import {
   ADMIN_NAVIGATION,
@@ -47,6 +48,7 @@ export class Shell {
   private readonly store = inject(LocalPreferenceStore);
   private readonly document = inject(DOCUMENT);
   protected readonly theme = inject(ThemeService);
+  protected readonly ghost = inject(GhostModeService);
   protected readonly session = inject(SessionService);
 
   protected readonly primaryNavigation = PRIMARY_NAVIGATION;
@@ -56,7 +58,7 @@ export class Shell {
       : SECONDARY_NAVIGATION,
   );
   protected readonly billing = inject(BillingService);
-  protected readonly icons = { History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X };
+  protected readonly icons = { Eye, EyeOff, History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X };
 
   private readonly url = toSignal(
     inject(Router).events.pipe(

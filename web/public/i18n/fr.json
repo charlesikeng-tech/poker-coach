@@ -31,6 +31,8 @@
     "language": "Langue",
     "themeToLight": "Passer au thème clair",
     "themeToDark": "Passer au thème sombre",
+    "ghostOn": "Mode démo : masquer les valeurs",
+    "ghostOff": "Mode démo : afficher les valeurs",
     "signOut": "Se déconnecter",
     "account": "Mon compte",
     "planWindow": "Starter : tu vois les {{days}} derniers jours. Tout ton historique est conservé.",

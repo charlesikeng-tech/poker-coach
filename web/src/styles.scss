@@ -66,6 +66,13 @@ input {
   font-variant-numeric: tabular-nums;
 }
 
+// Ghost mode: blurs all numeric values for demos (toggled by the eye icon in the topbar).
+.ghost-mode .numeric {
+  filter: blur(6px);
+  user-select: none;
+  transition: filter 0.15s ease;
+}
+
 ::selection {
   background: var(--accent-subtle);
   color: var(--text-primary);
