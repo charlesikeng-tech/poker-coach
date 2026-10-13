@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Identity;
@@ -32,7 +33,7 @@ public static class AccountEndpoints
         // Anonymous allowed: it answers 401 itself, after issuing the anti-forgery token the sign-in forms need.
         group.MapGet("/", GetMeAsync).AllowAnonymous();
         group.MapPut("/preferences", UpdatePreferencesAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
-        group.MapPost("/password", ChangePasswordAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        group.MapPost("/password", ChangePasswordAsync).AddEndpointFilter<AntiforgeryValidationFilter>().RequireRateLimiting(LocalAccountEndpoints.RateLimitPolicy);
         group.MapGet("/export", ExportAsync);
         group.MapDelete("/", DeleteAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
 
