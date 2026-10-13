@@ -31,6 +31,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled
 WORKDIR /app
 COPY --from=api /app ./
 COPY --from=web /src/web/dist/web/browser ./wwwroot
+# Chiseled images ship no time zone data: copied from the SDK so performance can group by the player's time zone.
+COPY --from=api /usr/share/zoneinfo /usr/share/zoneinfo
 ENV ASPNETCORE_HTTP_PORTS=8080 \
     ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 EXPOSE 8080

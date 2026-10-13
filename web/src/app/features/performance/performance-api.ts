@@ -42,6 +42,11 @@ export class PerformanceApi {
     if (to) {
       params = params.set('to', to);
     }
+    // Days of the week and time slots are the player's, not UTC.
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timeZone) {
+      params = params.set('timeZone', timeZone);
+    }
     return firstValueFrom(this.http.get<PerformanceReport>('/api/performance', { params }));
   }
 }

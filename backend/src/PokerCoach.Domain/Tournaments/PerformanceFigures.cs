@@ -22,7 +22,6 @@ public sealed record PerformanceFigures(
     decimal? ItmRate)
 {
     private const int MinResultsForInterval = 10;
-    private const double Z95 = 1.96;
 
     public static PerformanceFigures Of(IReadOnlyCollection<TournamentResult> results)
     {
@@ -36,25 +35,10 @@ public sealed record PerformanceFigures(
         var profit = winnings - buyIns;
         var roi = buyIns == 0m ? null : (decimal?)Math.Round(profit / buyIns, 4);
 
-        decimal? roiLow = null;
-        decimal? roiHigh = null;
-        if (known.Count >= MinResultsForInterval && buyIns > 0m)
-        {
-            // Per-tournament ROI: profit_i / buy_in_i, normalized so each tournament contributes equally.
-            var perTournament = known
-                .Where(r => r.TotalBuyIn > 0m)
-                .Select(r => (double)(r.Profit!.Value / r.TotalBuyIn!.Value))
-                .ToArray();
-            if (perTournament.Length >= 2)
-            {
-                var n = perTournament.Length;
-                var mean = perTournament.Average();
-                var variance = perTournament.Sum(r => (r - mean) * (r - mean)) / (n - 1);
-                var se = Math.Sqrt(variance / n);
-                roiLow = Math.Round((decimal)(mean - Z95 * se), 4);
-                roiHigh = Math.Round((decimal)(mean + Z95 * se), 4);
-            }
-        }
+        // Same interval as the bankroll page (RoiInterval), shown from 10 results on.
+        var interval = known.Count >= MinResultsForInterval
+            ? RoiInterval.Of(known.Select(r => (r.TotalBuyIn!.Value, r.Profit!.Value)))
+            : null;
 
         return new PerformanceFigures(
             results.Count,
@@ -65,8 +49,8 @@ public sealed record PerformanceFigures(
             winnings,
             profit,
             roi,
-            roiLow,
-            roiHigh,
+            interval?.Low,
+            interval?.High,
             entries == 0 ? null : Math.Round((decimal)paid / entries, 4));
     }
 }

@@ -1,3 +1,5 @@
+using PokerCoach.Domain.Tournaments;
+
 namespace PokerCoach.Domain.Bankroll;
 
 /// <summary>ROI with how uncertain it is: in MTTs a few hundred tournaments say little.</summary>
@@ -39,18 +41,11 @@ public static class RiskSimulation
     public static RoiEstimate Roi(IReadOnlyList<TournamentMoney> tournaments)
     {
         ArgumentNullException.ThrowIfNull(tournaments);
-        var returns = tournaments.Where(t => t.Cost > 0).Select(t => (double)(t.Profit / t.Cost)).ToList();
-        if (returns.Count == 0)
-        {
-            return new RoiEstimate(0, 0m, 0m, 0m);
-        }
-
-        // ROI as total profit over total cost; its spread from the per-tournament returns.
-        var mean = (double)(tournaments.Where(t => t.Cost > 0).Sum(t => t.Profit) / tournaments.Where(t => t.Cost > 0).Sum(t => t.Cost));
-        var average = returns.Average();
-        var variance = returns.Count > 1 ? returns.Sum(r => (r - average) * (r - average)) / (returns.Count - 1) : 0;
-        var margin = 1.96 * Math.Sqrt(variance / returns.Count);
-        return new RoiEstimate(returns.Count, Round(mean), Round(mean - margin), Round(mean + margin));
+        // One interval for the whole app (performance shows the same one).
+        var range = RoiInterval.Of(tournaments.Select(t => (t.Cost, t.Profit)));
+        return range is null
+            ? new RoiEstimate(0, 0m, 0m, 0m)
+            : new RoiEstimate(range.Tournaments, range.Roi, range.Low, range.High);
     }
 
     /// <returns>Null when there are fewer than <see cref="MinTournaments"/> results or no bankroll left.</returns>
