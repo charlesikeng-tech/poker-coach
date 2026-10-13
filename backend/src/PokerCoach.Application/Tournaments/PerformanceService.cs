@@ -34,8 +34,11 @@ public sealed class PerformanceService(ITournamentReadStore store)
         ("over50", decimal.MaxValue),
     ];
 
-    public async Task<PerformanceReport> GetAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken)
+    /// <param name="timeZone">The player's time zone: days and time slots are his, not UTC (a Sunday 00:30 start in
+    /// Paris is a Saturday evening in UTC). Null: UTC.</param>
+    public async Task<PerformanceReport> GetAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, TimeZoneInfo? timeZone = null)
     {
+        var zone = timeZone ?? TimeZoneInfo.Utc;
         var facts = await store.ListAsync(userId, from, to, cancellationToken);
         var rows = facts.Select(f => (Facts: f, Item: TournamentListService.ToItem(f))).ToList();
 
@@ -45,9 +48,9 @@ public sealed class PerformanceService(ITournamentReadStore store)
             Group(rows, r => BuyInBand(r.Item.BuyIn), BuyInBands.Select(b => b.Key).Append(null)),
             Group(rows, r => r.Facts.Type, null),
             Group(rows, r => r.Facts.Speed, null),
-            GroupByMonth(rows),
-            GroupByDayOfWeek(rows),
-            GroupByTimeSlot(rows));
+            GroupByMonth(rows, zone),
+            GroupByDayOfWeek(rows, zone),
+            GroupByTimeSlot(rows, zone));
     }
 
     private static readonly string[] DayOrder =
@@ -55,11 +58,15 @@ public sealed class PerformanceService(ITournamentReadStore store)
 
     private static readonly string[] TimeSlotOrder = ["morning", "afternoon", "evening", "night"];
 
-    private static List<PerformanceGroup> GroupByDayOfWeek(List<(TournamentFacts Facts, TournamentListItem Item)> rows)
+    private static DateTime Local(DateTimeOffset startedAt, TimeZoneInfo zone) => TimeZoneInfo.ConvertTime(startedAt, zone).DateTime;
+
+    private static DateOnly MonthOf(DateTime local) => new(local.Year, local.Month, 1);
+
+    private static List<PerformanceGroup> GroupByDayOfWeek(List<(TournamentFacts Facts, TournamentListItem Item)> rows, TimeZoneInfo zone)
     {
         var grouped = rows
             .Where(r => r.Facts.StartedAt is not null)
-            .GroupBy(r => r.Facts.StartedAt!.Value.UtcDateTime.DayOfWeek.ToString().ToLowerInvariant())
+            .GroupBy(r => Local(r.Facts.StartedAt!.Value, zone).DayOfWeek.ToString().ToLowerInvariant())
             .ToDictionary(g => g.Key, g => g);
         return DayOrder
             .Where(day => grouped.ContainsKey(day))
@@ -67,11 +74,11 @@ public sealed class PerformanceService(ITournamentReadStore store)
             .ToList();
     }
 
-    private static List<PerformanceGroup> GroupByTimeSlot(List<(TournamentFacts Facts, TournamentListItem Item)> rows)
+    private static List<PerformanceGroup> GroupByTimeSlot(List<(TournamentFacts Facts, TournamentListItem Item)> rows, TimeZoneInfo zone)
     {
         var grouped = rows
             .Where(r => r.Facts.StartedAt is not null)
-            .GroupBy(r => TimeSlot(r.Facts.StartedAt!.Value.UtcDateTime.Hour))
+            .GroupBy(r => TimeSlot(Local(r.Facts.StartedAt!.Value, zone).Hour))
             .ToDictionary(g => g.Key, g => g);
         return TimeSlotOrder
             .Where(slot => grouped.ContainsKey(slot))
@@ -87,10 +94,10 @@ public sealed class PerformanceService(ITournamentReadStore store)
         _ => "night",
     };
 
-    private static List<PerformanceGroup> GroupByMonth(List<(TournamentFacts Facts, TournamentListItem Item)> rows) =>
+    private static List<PerformanceGroup> GroupByMonth(List<(TournamentFacts Facts, TournamentListItem Item)> rows, TimeZoneInfo zone) =>
         rows
             .Where(r => r.Facts.StartedAt is not null)
-            .GroupBy(r => new DateOnly(r.Facts.StartedAt!.Value.UtcDateTime.Year, r.Facts.StartedAt.Value.UtcDateTime.Month, 1))
+            .GroupBy(r => MonthOf(Local(r.Facts.StartedAt!.Value, zone)))
             .OrderByDescending(g => g.Key)
             .Select(g => new PerformanceGroup(g.Key.ToString("yyyy-MM-dd"), PerformanceFigures.Of(g.Select(r => r.Item.Result).ToList())))
             .ToList();

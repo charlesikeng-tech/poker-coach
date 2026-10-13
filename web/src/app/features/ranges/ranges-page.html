@@ -67,12 +67,20 @@
             </select>
           </label>
           <div class="views" role="group" [attr.aria-label]="t('pushView.label')">
-            <button type="button" [class.active]="pushView() === 'shove'"
-              [attr.aria-pressed]="pushView() === 'shove'" (click)="pushView.set('shove')">
+            <button
+              type="button"
+              [class.active]="pushView() === 'shove'"
+              [attr.aria-pressed]="pushView() === 'shove'"
+              (click)="pushView.set('shove')"
+            >
               {{ t('pushView.shove') }}
             </button>
-            <button type="button" [class.active]="pushView() === 'call'"
-              [attr.aria-pressed]="pushView() === 'call'" (click)="pushView.set('call')">
+            <button
+              type="button"
+              [class.active]="pushView() === 'call'"
+              [attr.aria-pressed]="pushView() === 'call'"
+              (click)="pushView.set('call')"
+            >
               {{ t('pushView.call') }}
             </button>
           </div>
@@ -129,8 +137,13 @@
       @if (band() === 'push' && pushView() === 'call' && locked() === null) {
         <nav class="positions" [attr.aria-label]="t('pushView.facing')">
           @for (s of validShovers(); track s) {
-            <button type="button" class="position" [class.position--active]="shover() === s"
-              [attr.aria-pressed]="shover() === s" (click)="shover.set(s)">
+            <button
+              type="button"
+              class="position"
+              [class.position--active]="shover() === s"
+              [attr.aria-pressed]="shover() === s"
+              (click)="shover.set(s)"
+            >
               <strong>{{ short[s] }}</strong>
             </button>
           }
@@ -138,13 +151,25 @@
         @if (callRange(); as cr) {
           <div class="layout">
             @for (shown of [range()!.position + 'call' + shover()]; track shown) {
-              <div class="grid glass" role="grid"
-                [attr.aria-label]="t('pushView.gridLabel', { caller: short[range()!.position], shover: short[shover()!] })">
+              <div
+                class="grid glass"
+                role="grid"
+                [attr.aria-label]="
+                  t('pushView.gridLabel', {
+                    caller: short[range()!.position],
+                    shover: short[shover()!],
+                  })
+                "
+              >
                 @for (inRef of cr.cells; track $index; let i = $index) {
-                  <button type="button" class="cell" role="gridcell"
+                  <button
+                    type="button"
+                    class="cell"
+                    role="gridcell"
                     [attr.data-view]="'reference'"
                     [class.cell--in]="inRef"
-                    [style.animation-delay.ms]="delay(i)">
+                    [style.animation-delay.ms]="delay(i)"
+                  >
                     <span class="cell__fill" aria-hidden="true"></span>
                     <span class="cell__hand">{{ data.positions[0].cells[i].hand }}</span>
                   </button>
@@ -153,8 +178,16 @@
             }
             <aside class="side">
               <section class="card glass">
-                <h2>{{ t('pushView.callTitle', { caller: short[range()!.position], shover: short[shover()!], stack: data.pushStack }) }}</h2>
-                <p class="big numeric">{{ percent(cr.cells.filter(b => b).length / 169) }}</p>
+                <h2>
+                  {{
+                    t('pushView.callTitle', {
+                      caller: short[range()!.position],
+                      shover: short[shover()!],
+                      stack: data.pushStack,
+                    })
+                  }}
+                </h2>
+                <p class="big numeric">{{ percent(cr.cells.filter((b) => b).length / 169) }}</p>
                 <p class="muted">{{ t('pushView.callShare') }}</p>
                 <p class="nash">{{ t('reference.nash', { stack: data.pushStack }) }}</p>
                 <p class="muted">{{ t('reference.nashNote') }}</p>
@@ -168,7 +201,10 @@
         }
       }
 
-      @if (locked() === null ? (band() !== 'push' || pushView() === 'shove' ? range() : null) : null; as r) {
+      @if (
+        locked() === null ? (band() !== 'push' || pushView() === 'shove' ? range() : null) : null;
+        as r
+      ) {
         <div class="layout">
           <!-- Keyed on position and view: the grid fills again when either changes. -->
           @for (shown of [r.position + view()]; track shown) {

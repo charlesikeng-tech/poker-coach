@@ -37,6 +37,20 @@ public sealed class PerformanceServiceTests
         Assert.Equal(0.5m, report.Totals.ItmRate);
     }
 
+    [Fact]
+    public async Task Days_and_time_slots_are_the_players_not_utc()
+    {
+        // Saturday 22:30 UTC in October is Sunday 00:30 in Paris: night, on Sunday.
+        var store = new StubStore(Facts("LATE", new DateTimeOffset(2026, 10, 10, 22, 30, 0, TimeSpan.Zero), 5m, [new EntryOutcome(12, null, null)]));
+
+        var utc = await new PerformanceService(store).GetAsync(Guid.NewGuid(), null, null, TestContext.Current.CancellationToken);
+        var paris = await new PerformanceService(store).GetAsync(
+            Guid.NewGuid(), null, null, TestContext.Current.CancellationToken, TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris"));
+
+        Assert.Equal(("saturday", "evening"), (utc.ByDayOfWeek.Single().Key, utc.ByTimeSlot.Single().Key));
+        Assert.Equal(("sunday", "night"), (paris.ByDayOfWeek.Single().Key, paris.ByTimeSlot.Single().Key));
+    }
+
     [Theory]
     [InlineData(5.0, "upTo5")]
     [InlineData(5.01, "from5To10")]

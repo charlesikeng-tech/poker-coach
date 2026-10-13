@@ -250,13 +250,15 @@ public static class TournamentEndpoints
     }
 
     /// <param name="to">Exclusive upper bound on the start time.</param>
+    /// <param name="timeZone">IANA time zone of the player ("Europe/Paris") for days and time slots; omitted: UTC.</param>
     private static async Task<Results<Ok<PerformanceResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetPerformanceAsync(
         HttpContext context,
         PlanAccess plans,
         PerformanceService performance,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
-        DateTimeOffset? to = null)
+        DateTimeOffset? to = null,
+        string? timeZone = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -268,9 +270,15 @@ public static class TournamentEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        TimeZoneInfo? zone = null;
+        if (timeZone is not null && (timeZone.Length > 64 || !TimeZoneInfo.TryFindSystemTimeZoneById(timeZone, out zone)))
+        {
+            return ApiProblems.Validation("timeZone", "Must be an IANA time zone, like Europe/Paris.");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var report = await performance.GetAsync(userId, from, to, cancellationToken);
+        var report = await performance.GetAsync(userId, from, to, cancellationToken, zone);
         return TypedResults.Ok(new PerformanceResponse(
             PerformanceFiguresResponse.From(report.Totals),
             report.Curve.Select(p => new ProfitPointResponse(p.Index, p.StartedAt, p.Name, p.Profit, p.CumulativeProfit)).ToList(),
