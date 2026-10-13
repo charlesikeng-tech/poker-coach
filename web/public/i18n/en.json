@@ -1477,12 +1477,12 @@
         "action": "Update password",
         "updating": "Updating…",
         "mismatch": "The two passwords do not match.",
-        "hint": "No password yet? Use the "Forgot password" link on the sign-in page.",
+        "hint": "No password yet? Use the “Forgot password” link on the sign-in page.",
         "errors": {
           "INVALID_CREDENTIALS": "Current password is incorrect.",
           "ACCOUNT_LOCKED": "Too many attempts. Try again in a few minutes.",
           "WEAK_PASSWORD": "The new password is too weak (min. {{count}} characters).",
-          "NO_PASSWORD_ACCOUNT": "Your account has no password. Use the "Forgot password" link on the sign-in page.",
+          "NO_PASSWORD_ACCOUNT": "Your account has no password. Use the “Forgot password” link on the sign-in page.",
           "unknown": "Something went wrong. Please try again.",
           "network": "Could not reach the server. Check your connection."
         }
