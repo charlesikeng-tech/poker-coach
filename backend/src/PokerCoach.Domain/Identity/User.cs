@@ -36,12 +36,20 @@ public sealed class User
 
     public UserStatus Status { get; private set; }
 
+    /// <summary>
+    /// Rotated on every sign-in. The cookie carries this value; a mismatch means someone else has
+    /// signed in since — the session is rejected, which prevents account sharing.
+    /// </summary>
+    public Guid SessionSerial { get; private set; }
+
     public static User Register(string displayName, string? email, string preferredLanguage, DateTimeOffset now)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(displayName);
         EnsureSupported(preferredLanguage);
         return new User(Guid.CreateVersion7(), displayName.Trim(), email, preferredLanguage, now);
     }
+
+    public void RotateSessionSerial() => SessionSerial = Guid.NewGuid();
 
     /// <summary>Keeps the email in sync with the provider; the display name stays the user's choice.</summary>
     public void RecordLogin(DateTimeOffset now, string? email)

@@ -17,6 +17,9 @@ public static class AuthenticationSetup
     /// <summary>Claim holding our internal user id: the only claim kept in the session cookie.</summary>
     public const string UserIdClaim = "pc_uid";
 
+    /// <summary>Rotated on every sign-in. Mismatch → session rejected (account sharing / stolen cookie mitigation).</summary>
+    public const string SessionSerialClaim = "pc_ser";
+
     /// <summary>Language the visitor was using before sign-in, carried through the Google round trip.</summary>
     internal const string LanguageItem = "pc_language";
 
@@ -58,6 +61,7 @@ public static class AuthenticationSetup
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
                     return Task.CompletedTask;
                 };
+                options.Events.OnValidatePrincipal = ValidateSessionSerialAsync;
             })
             .AddGoogle(options =>
             {
@@ -97,7 +101,54 @@ public static class AuthenticationSetup
     public static bool TryGetUserId(this ClaimsPrincipal principal, out Guid userId) =>
         Guid.TryParse(principal.FindFirst(UserIdClaim)?.Value, out userId);
 
+    // Checked at most once every 30 minutes per session; more frequent for a cookie stolen mid-day, less
+    // friction for a normal user browsing without gaps.
+    private static readonly TimeSpan SerialValidationInterval = TimeSpan.FromMinutes(30);
+    private const string SerialValidatedAtProperty = "pc_svt";
+
     private const string EmailVerifiedClaim = "email_verified";
+
+    private static async Task ValidateSessionSerialAsync(CookieValidatePrincipalContext context)
+    {
+        var principal = context.Principal;
+        if (principal is null || !principal.TryGetUserId(out var userId))
+        {
+            context.RejectPrincipal();
+            return;
+        }
+
+        var serialClaim = principal.FindFirst(SessionSerialClaim)?.Value;
+        if (serialClaim is null || !Guid.TryParse(serialClaim, out var cookieSerial))
+        {
+            // Cookie predates this feature: force re-login once to pick up the serial.
+            context.RejectPrincipal();
+            await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return;
+        }
+
+        var time = context.HttpContext.RequestServices.GetRequiredService<TimeProvider>();
+        var now = time.GetUtcNow();
+
+        if (context.Properties.Items.TryGetValue(SerialValidatedAtProperty, out var lastStr)
+            && DateTimeOffset.TryParse(lastStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var last)
+            && now - last < SerialValidationInterval)
+        {
+            return;
+        }
+
+        var store = context.HttpContext.RequestServices.GetRequiredService<IUserAccountStore>();
+        var user = await store.FindByIdAsync(userId, context.HttpContext.RequestAborted);
+
+        if (user is null || user.SessionSerial != cookieSerial)
+        {
+            context.RejectPrincipal();
+            await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return;
+        }
+
+        context.Properties.Items[SerialValidatedAtProperty] = now.ToString("O");
+        context.ShouldRenew = true;
+    }
 
     private static async Task OnGoogleTicketReceivedAsync(TicketReceivedContext context)
     {
@@ -124,9 +175,9 @@ public static class AuthenticationSetup
         var signInService = context.HttpContext.RequestServices.GetRequiredService<ExternalSignInService>();
         var user = await signInService.SignInAsync(signIn, context.HttpContext.RequestAborted);
 
-        // Keep only our own id in the cookie: no Google claims, no email.
+        // Keep only our own id and session serial in the cookie: no Google claims, no email.
         context.Principal = new ClaimsPrincipal(new ClaimsIdentity(
-            [new Claim(UserIdClaim, user.Id.ToString())],
+            [new Claim(UserIdClaim, user.Id.ToString()), new Claim(SessionSerialClaim, user.SessionSerial.ToString())],
             CookieAuthenticationDefaults.AuthenticationScheme));
     }
 }

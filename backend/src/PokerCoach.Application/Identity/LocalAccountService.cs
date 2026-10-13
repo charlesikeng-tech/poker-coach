@@ -91,6 +91,16 @@ public enum LocalSignInFailure
     WeakPassword,
 }
 
+public enum ChangePasswordResult
+{
+    Success,
+    InvalidCredentials,
+    Locked,
+    WeakPassword,
+    /// <summary>Google-only account: no password credential exists yet. Use forgot-password instead.</summary>
+    NoPasswordAccount,
+}
+
 public sealed record LocalSignInOutcome(User? User, LocalSignInFailure? Failure)
 {
     public static LocalSignInOutcome Of(User user) => new(user, null);
@@ -353,6 +363,7 @@ public sealed class LocalAccountService(
 
         await store.RevokeTokensAsync(user.Id, EmailTokenPurpose.ResetPassword, now, cancellationToken);
         user.RecordLogin(now, null);
+        user.RotateSessionSerial();
         await store.SaveChangesAsync(cancellationToken);
         return LocalSignInOutcome.Of(user);
     }
@@ -393,6 +404,7 @@ public sealed class LocalAccountService(
         }
 
         user.RecordLogin(now, null);
+        user.RotateSessionSerial();
         await store.SaveChangesAsync(cancellationToken);
         return LocalSignInOutcome.Of(user);
     }
@@ -427,6 +439,46 @@ public sealed class LocalAccountService(
         var token = Base64Url(RandomNumberGenerator.GetBytes(32));
         await store.AddTokenAsync(EmailToken.Issue(userId, purpose, Hash(token), now), cancellationToken);
         return token;
+    }
+
+    public async Task<ChangePasswordResult> ChangePasswordAsync(
+        Guid userId,
+        string currentPassword,
+        string newPassword,
+        CancellationToken cancellationToken)
+    {
+        var credential = await store.FindCredentialByUserAsync(userId, cancellationToken);
+        if (credential is null)
+        {
+            return ChangePasswordResult.NoPasswordAccount;
+        }
+
+        var now = time.GetUtcNow();
+        if (credential.IsLocked(now))
+        {
+            return ChangePasswordResult.Locked;
+        }
+
+        var check = hasher.Verify(credential.PasswordHash, currentPassword ?? string.Empty);
+        if (check == PasswordCheck.Failed)
+        {
+            credential.RecordFailure(now);
+            await store.SaveChangesAsync(cancellationToken);
+            return ChangePasswordResult.InvalidCredentials;
+        }
+
+        if (!IsStrongEnough(newPassword, credential.Email))
+        {
+            return ChangePasswordResult.WeakPassword;
+        }
+
+        credential.ChangePassword(hasher.Hash(newPassword), now);
+
+        var user = await store.FindUserAsync(userId, cancellationToken);
+        user?.RotateSessionSerial();
+
+        await store.SaveChangesAsync(cancellationToken);
+        return ChangePasswordResult.Success;
     }
 
     private string DummyHash() => dummyHash ??= hasher.Hash("not-a-real-password-" + Guid.NewGuid());

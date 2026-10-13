@@ -152,6 +152,48 @@ public sealed partial class LocalAccountServiceTests
         Assert.NotEqual(accounts.Credentials.Single(c => c.Email == "max@example.com").UserId, max.Id);
     }
 
+    [Fact]
+    public async Task Sign_in_rotates_the_session_serial_so_a_second_sign_in_invalidates_the_first()
+    {
+        var user = await RegisterConfirmedAsync("jo@example.com");
+        var serialAfterFirstLogin = user.SessionSerial;
+
+        var second = (await Service().SignInAsync("jo@example.com", Password, Ct)).User!;
+        Assert.NotEqual(serialAfterFirstLogin, second.SessionSerial);
+    }
+
+    [Fact]
+    public async Task Changing_password_requires_the_current_password_and_rotates_the_serial()
+    {
+        const string NewPassword = "a completely different password";
+        var user = await RegisterConfirmedAsync("jo@example.com");
+        var serialBefore = user.SessionSerial;
+
+        Assert.Equal(ChangePasswordResult.InvalidCredentials, await Service().ChangePasswordAsync(user.Id, "wrong password!", NewPassword, Ct));
+
+        Assert.Equal(ChangePasswordResult.Success, await Service().ChangePasswordAsync(user.Id, Password, NewPassword, Ct));
+        Assert.NotEqual(serialBefore, user.SessionSerial);
+        Assert.NotNull((await Service().SignInAsync("jo@example.com", NewPassword, Ct)).User);
+        Assert.Equal(LocalSignInFailure.InvalidCredentials, (await Service().SignInAsync("jo@example.com", Password, Ct)).Failure);
+    }
+
+    [Fact]
+    public async Task Changing_password_rejects_a_weak_new_password()
+    {
+        var user = await RegisterConfirmedAsync("jo@example.com");
+
+        Assert.Equal(ChangePasswordResult.WeakPassword, await Service().ChangePasswordAsync(user.Id, Password, "short", Ct));
+    }
+
+    [Fact]
+    public async Task Changing_password_returns_no_password_account_for_google_only_users()
+    {
+        var google = User.Register("Jo", "jo@example.com", "en", time.GetUtcNow());
+        users.AddUser(google);
+
+        Assert.Equal(ChangePasswordResult.NoPasswordAccount, await Service().ChangePasswordAsync(google.Id, Password, "a brand new password", Ct));
+    }
+
     private async Task<User> RegisterConfirmedAsync(string address)
     {
         await Service().RegisterAsync(address, Password, null, "en", Links, Ct);

@@ -16,6 +16,8 @@ public sealed record MeResponse(Guid Id, string DisplayName, string? Email, stri
 
 public sealed record UpdatePreferencesRequest(string? Language);
 
+public sealed record ChangePasswordRequest(string? CurrentPassword, string? NewPassword);
+
 /// <param name="Confirm">Must be exactly "DELETE": a deletion is never one stray request away.</param>
 public sealed record DeleteAccountRequest(string? Confirm);
 
@@ -28,6 +30,7 @@ public static class AccountEndpoints
         // Anonymous allowed: it answers 401 itself, after issuing the anti-forgery token the sign-in forms need.
         group.MapGet("/", GetMeAsync).AllowAnonymous();
         group.MapPut("/preferences", UpdatePreferencesAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        group.MapPost("/password", ChangePasswordAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapGet("/export", ExportAsync);
         group.MapDelete("/", DeleteAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
 
@@ -61,6 +64,34 @@ public static class AccountEndpoints
 
         AntiforgeryTokens.IssueRequestToken(context, antiforgery);
         return TypedResults.Ok(new MeResponse(profile.Id, profile.DisplayName, profile.Email, profile.PreferredLanguage, admins.IsAdminEmail(profile.Email)));
+    }
+
+    private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> ChangePasswordAsync(
+        ChangePasswordRequest request,
+        HttpContext context,
+        LocalAccountService accounts,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var result = await accounts.ChangePasswordAsync(
+            userId,
+            request.CurrentPassword ?? string.Empty,
+            request.NewPassword ?? string.Empty,
+            cancellationToken);
+
+        return result switch
+        {
+            ChangePasswordResult.Success => TypedResults.NoContent(),
+            ChangePasswordResult.Locked => ApiProblems.WithCode(StatusCodes.Status429TooManyRequests, "ACCOUNT_LOCKED", "Too many failed attempts. Try again later."),
+            ChangePasswordResult.WeakPassword => ApiProblems.WithCode(StatusCodes.Status400BadRequest, "WEAK_PASSWORD", "The new password is too weak.",
+                new Dictionary<string, object?> { ["minLength"] = LocalAccountService.MinPasswordLength }),
+            ChangePasswordResult.NoPasswordAccount => ApiProblems.WithCode(StatusCodes.Status400BadRequest, "NO_PASSWORD_ACCOUNT", "Use the forgotten password link to add a password to your account."),
+            _ => ApiProblems.WithCode(StatusCodes.Status400BadRequest, "INVALID_CREDENTIALS", "Wrong current password."),
+        };
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> UpdatePreferencesAsync(

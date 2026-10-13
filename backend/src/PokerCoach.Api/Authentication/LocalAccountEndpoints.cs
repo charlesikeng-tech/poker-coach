@@ -157,7 +157,7 @@ public static class LocalAccountEndpoints
         if (outcome.User is { } user)
         {
             var principal = new ClaimsPrincipal(new ClaimsIdentity(
-                [new Claim(AuthenticationSetup.UserIdClaim, user.Id.ToString())],
+                [new Claim(AuthenticationSetup.UserIdClaim, user.Id.ToString()), new Claim(AuthenticationSetup.SessionSerialClaim, user.SessionSerial.ToString())],
                 CookieAuthenticationDefaults.AuthenticationScheme));
             await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
             return TypedResults.NoContent();

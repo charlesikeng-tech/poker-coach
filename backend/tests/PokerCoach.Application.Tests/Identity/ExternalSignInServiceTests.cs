@@ -91,6 +91,18 @@ public sealed class ExternalSignInServiceTests
         Assert.Equal(expected, user.DisplayName);
     }
 
+    [Fact]
+    public async Task Each_sign_in_rotates_the_session_serial()
+    {
+        var first = await service.SignInAsync(GoogleSignIn(), TestContext.Current.CancellationToken);
+        var serialAfterFirst = first.SessionSerial;
+
+        clock.Advance(TimeSpan.FromHours(1));
+        await service.SignInAsync(GoogleSignIn(), TestContext.Current.CancellationToken);
+
+        Assert.NotEqual(serialAfterFirst, first.SessionSerial);
+    }
+
     private static ExternalSignIn GoogleSignIn(
         string subject = "111",
         string? email = "charles@example.com",

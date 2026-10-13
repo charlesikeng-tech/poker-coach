@@ -191,6 +191,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(8)")
                         .HasColumnName("preferred_language");
 
+                    b.Property<Guid>("SessionSerial")
+                        .HasColumnType("uuid")
+                        .HasColumnName("session_serial");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");

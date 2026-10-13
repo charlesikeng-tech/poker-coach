@@ -47,6 +47,7 @@ public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider 
         }
 
         user.RecordLogin(now, signIn.Email);
+        user.RotateSessionSerial();
         await store.SaveChangesAsync(cancellationToken);
         return user;
     }

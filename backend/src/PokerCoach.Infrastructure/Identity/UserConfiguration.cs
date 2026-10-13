@@ -17,6 +17,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Status).HasConversion<int>();
         builder.Property(u => u.CreatedAt).IsRequired();
         builder.Property(u => u.LastLoginAt).IsRequired();
+        builder.Property(u => u.SessionSerial).IsRequired();
     }
 }
 

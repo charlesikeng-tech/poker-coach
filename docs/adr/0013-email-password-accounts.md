@@ -1,6 +1,7 @@
 # ADR-0013 — Email and password accounts
 
 Status: accepted (2026-10-10). Extends ADR-0004 (Google sign-in, cookie session), which stays as is.
+Updated 2026-10-13: session revocation follow-up completed (ADR-0021); `POST /api/me/password` added.
 
 ## Context
 
@@ -30,6 +31,7 @@ rest of Identity, whose stores, managers and tables would be dead weight.
 | `POST /password/login` | `INVALID_CREDENTIALS`; `EMAIL_NOT_CONFIRMED` only after a right password; `ACCOUNT_LOCKED` after 5 failures in a row (15 min). |
 | `POST /email/resend`, `POST /password/forgot` | 202 whatever happens; at most 3 emails of a kind per account and hour. |
 | `POST /password/reset` `{token, password}` | New password, address confirmed (the link proves the mailbox), other reset links voided, signed in. A Google account gains a password this way. |
+| `POST /api/me/password` `{currentPassword, newPassword}` | Changes the password of a signed-in user. Requires the current password (prevents lock-screen hijack). Rotates the session serial, invalidating all other active sessions (ADR-0021). |
 
 **Security choices that are not obvious:**
 
@@ -69,8 +71,7 @@ account's language, no tracking.
 
 - Brevo: create the account, authenticate the sending domain (SPF, DKIM), set `Email:BrevoApiKey` and
   `Email:FromAddress`; the privacy page names Brevo as a processor.
-- Sessions are not revoked when the password changes (cookie sessions, 14 days). A security stamp checked
-  on each request would fix it; worth it once accounts hold paid plans.
+- ~~Sessions are not revoked when the password changes~~ — Done: ADR-0021 (session serial, 2026-10-13).
 - Accounts never confirmed stay in `identity.users`; a periodic cleanup (older than 7 days, no other
   identity) is to add.
 - Looking up an account by email (`users.email`) is a scan: fine at this size, add a functional index on

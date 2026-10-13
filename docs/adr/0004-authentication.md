@@ -1,6 +1,7 @@
 # ADR-0004 — Authentication: Google sign-in handled by the backend, cookie session
 
 > Extended by ADR-0013 (email and password accounts, same cookie session).
+> Extended by ADR-0021 (session serial: account-sharing prevention and session invalidation on password change).
 
 - Status: Accepted
 - Date: 2026-10-08
@@ -18,7 +19,8 @@ Code + PKCE, `Microsoft.AspNetCore.Authentication.Google`) and signs the user in
 **HttpOnly cookie** session. Angular never sees a token: it calls `/api/...` on the same origin.
 
 - Session cookie `pc.session`: HttpOnly, SameSite=Lax, Secure outside Development, 14 days sliding.
-  It holds one claim, our internal user id; no Google claim and no email.
+  It holds two claims: our internal user id (`pc_uid`) and a session serial (`pc_ser`). No Google
+  claim, no email. See ADR-0021 for the serial's role.
 - Google tokens are not stored (`SaveTokens = false`): we only need the identity, not Google APIs.
 - Accounts: `identity.users` + `identity.external_identities`, unique on
   `(provider, provider_subject_id)`. The email is informational, never a key. A first sign-in is
