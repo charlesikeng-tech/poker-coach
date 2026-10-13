@@ -4,4 +4,6 @@ namespace PokerCoach.Domain.Poker;
 public enum PokerRoom
 {
     Winamax = 1,
+    PokerStars = 2,
+    Betclic = 3,
 }
