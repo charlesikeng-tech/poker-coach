@@ -1,12 +1,14 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   ApplicationConfig,
+  ErrorHandler,
   inject,
   isDevMode,
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { PreloadAllModules, TitleStrategy, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
+import * as Sentry from '@sentry/angular';
 import { provideTransloco } from '@jsverse/transloco';
 
 import { routes } from './app.routes';
@@ -21,6 +23,7 @@ import { ThemeService } from './core/theme/theme.service';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    { provide: ErrorHandler, useValue: Sentry.createErrorHandler() },
     provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules)),
     provideHttpClient(withFetch()),
     provideTransloco({

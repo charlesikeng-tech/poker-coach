@@ -20,6 +20,7 @@
     "@fontsource-variable/ibm-plex-sans": "5.3.0",
     "@fontsource-variable/sora": "^5.0.0",
     "@jsverse/transloco": "8.4.0",
+    "@sentry/angular": "^11.7.0",
     "lucide": "1.52.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
