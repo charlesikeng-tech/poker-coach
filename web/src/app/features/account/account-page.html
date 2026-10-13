@@ -12,7 +12,7 @@
                 <input
                   type="text"
                   [value]="newName()"
-                  [maxlength]="maxNameLength"
+                  [attr.maxlength]="maxNameLength"
                   required
                   autofocus
                   (input)="newName.set(value($event))"
