@@ -61,6 +61,20 @@ public sealed class User
         }
     }
 
+    public const int MaxDisplayNameLength = 50;
+
+    public void ChangeDisplayName(string displayName)
+    {
+        var trimmed = displayName?.Trim() ?? string.Empty;
+        ArgumentException.ThrowIfNullOrEmpty(trimmed);
+        if (trimmed.Length > MaxDisplayNameLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(displayName), $"Display name must be at most {MaxDisplayNameLength} characters.");
+        }
+
+        DisplayName = trimmed;
+    }
+
     public void ChangePreferredLanguage(string language)
     {
         EnsureSupported(language);

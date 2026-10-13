@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Download, KeyRound, ShieldAlert, Trash2 } from 'lucide';
+import { Download, KeyRound, Pencil, ShieldAlert, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
 import { AccountsApi, MIN_PASSWORD_LENGTH, accountErrorCode, retryWithToken } from '../../core/auth/accounts-api';
@@ -32,8 +32,15 @@ export class AccountPage {
   private readonly router = inject(Router);
   protected readonly session = inject(SessionService);
 
-  protected readonly icons = { Download, KeyRound, ShieldAlert, Trash2 };
+  protected readonly icons = { Download, KeyRound, Pencil, ShieldAlert, Trash2 };
   protected readonly minPassword = MIN_PASSWORD_LENGTH;
+  protected readonly maxNameLength = 50;
+
+  // Change display name
+  protected readonly editingName = signal(false);
+  protected readonly newName = signal('');
+  protected readonly savingName = signal(false);
+  protected readonly nameError = signal<string | null>(null);
 
   // Change password
   protected readonly currentPassword = signal('');
@@ -63,6 +70,36 @@ export class AccountPage {
 
   protected value(event: Event): string {
     return (event.target as HTMLInputElement).value;
+  }
+
+  protected startEditName(): void {
+    this.newName.set(this.session.user()?.displayName ?? '');
+    this.nameError.set(null);
+    this.editingName.set(true);
+  }
+
+  protected cancelEditName(): void {
+    this.editingName.set(false);
+  }
+
+  protected async saveName(event: Event): Promise<void> {
+    event.preventDefault();
+    if (this.savingName()) {
+      return;
+    }
+    this.savingName.set(true);
+    this.nameError.set(null);
+    try {
+      await retryWithToken(this.session, () =>
+        this.accounts.changeDisplayName(this.newName()),
+      );
+      await this.session.load();
+      this.editingName.set(false);
+    } catch {
+      this.nameError.set('unknown');
+    } finally {
+      this.savingName.set(false);
+    }
   }
 
   protected async changePassword(event: Event): Promise<void> {

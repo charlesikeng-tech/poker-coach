@@ -67,6 +67,10 @@ export class AccountsApi {
   changePassword(currentPassword: string, newPassword: string): Promise<unknown> {
     return firstValueFrom(this.http.post('/api/me/password', { currentPassword, newPassword }));
   }
+
+  changeDisplayName(displayName: string): Promise<unknown> {
+    return firstValueFrom(this.http.put('/api/me/display-name', { displayName }));
+  }
 }
 
 /** Mirrors LocalAccountService.MinPasswordLength. */

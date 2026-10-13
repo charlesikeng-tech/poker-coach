@@ -1470,7 +1470,14 @@
     "account": {
       "title": "Mon compte",
       "description": "Ton compte et tes données : tu peux tout récupérer, ou tout supprimer, à tout moment.",
-      "name": "Nom",
+      "name": "Pseudo",
+      "nameEdit": {
+        "edit": "Modifier",
+        "save": "Enregistrer",
+        "saving": "Enregistrement…",
+        "cancel": "Annuler",
+        "error": "Une erreur est survenue. Réessaie."
+      },
       "email": "E-mail",
       "signIn": "Connexion",
       "password": {

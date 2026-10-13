@@ -35,6 +35,36 @@
   dd {
     margin: var(--space-1) 0 0;
     overflow-wrap: anywhere;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+.edit-btn {
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-xs);
+  height: 1.6rem;
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+
+  input {
+    flex: 1 1 10rem;
+    min-width: 0;
+  }
+
+  .error {
+    width: 100%;
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin: 0;
   }
 }
 

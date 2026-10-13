@@ -1471,6 +1471,13 @@
       "title": "Mi cuenta",
       "description": "Tu cuenta y tus datos: puedes recuperarlo todo, o borrarlo todo, en cualquier momento.",
       "name": "Nombre",
+      "nameEdit": {
+        "edit": "Editar",
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "cancel": "Cancelar",
+        "error": "Algo salió mal. Inténtalo de nuevo."
+      },
       "email": "Correo",
       "signIn": "Inicio de sesión",
       "password": {

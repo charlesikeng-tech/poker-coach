@@ -22,6 +22,20 @@ public sealed class UserProfileService(IUserAccountStore store, ILocalAccountSto
     }
 
     /// <returns>False when the user does not exist.</returns>
+    public async Task<bool> ChangeDisplayNameAsync(Guid userId, string displayName, CancellationToken cancellationToken)
+    {
+        var user = await store.FindByIdAsync(userId, cancellationToken);
+        if (user is null)
+        {
+            return false;
+        }
+
+        user.ChangeDisplayName(displayName);
+        await store.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    /// <returns>False when the user does not exist.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Unsupported language: validate input first.</exception>
     public async Task<bool> ChangePreferredLanguageAsync(Guid userId, string language, CancellationToken cancellationToken)
     {

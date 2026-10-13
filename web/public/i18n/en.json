@@ -1471,6 +1471,13 @@
       "title": "My account",
       "description": "Your account and your data: you can take everything back, or delete everything, at any time.",
       "name": "Name",
+      "nameEdit": {
+        "edit": "Edit",
+        "save": "Save",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "error": "Something went wrong. Please try again."
+      },
       "email": "Email",
       "signIn": "Sign-in",
       "password": {

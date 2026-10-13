@@ -19,6 +19,8 @@ public sealed record MeResponse(Guid Id, string DisplayName, string? Email, stri
 
 public sealed record UpdatePreferencesRequest(string? Language);
 
+public sealed record ChangeDisplayNameRequest(string? DisplayName);
+
 public sealed record ChangePasswordRequest(string? CurrentPassword, string? NewPassword);
 
 /// <param name="Confirm">Must be exactly "DELETE": a deletion is never one stray request away.</param>
@@ -33,6 +35,7 @@ public static class AccountEndpoints
         // Anonymous allowed: it answers 401 itself, after issuing the anti-forgery token the sign-in forms need.
         group.MapGet("/", GetMeAsync).AllowAnonymous();
         group.MapPut("/preferences", UpdatePreferencesAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        group.MapPut("/display-name", ChangeDisplayNameAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapPost("/password", ChangePasswordAsync).AddEndpointFilter<AntiforgeryValidationFilter>().RequireRateLimiting(LocalAccountEndpoints.RateLimitPolicy);
         group.MapGet("/export", ExportAsync);
         group.MapDelete("/", DeleteAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
@@ -99,6 +102,31 @@ public static class AccountEndpoints
             ChangePasswordResult.NoPasswordAccount => ApiProblems.WithCode(StatusCodes.Status400BadRequest, "NO_PASSWORD_ACCOUNT", "Use the forgotten password link to add a password to your account."),
             _ => ApiProblems.WithCode(StatusCodes.Status400BadRequest, "INVALID_CREDENTIALS", "Wrong current password."),
         };
+    }
+
+    private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> ChangeDisplayNameAsync(
+        ChangeDisplayNameRequest request,
+        HttpContext context,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        var name = request.DisplayName?.Trim() ?? string.Empty;
+        if (name.Length == 0 || name.Length > User.MaxDisplayNameLength)
+        {
+            return ApiProblems.Validation("displayName", $"Must be 1 to {User.MaxDisplayNameLength} characters.");
+        }
+
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!await profiles.ChangeDisplayNameAsync(userId, name, cancellationToken))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        return TypedResults.NoContent();
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> UpdatePreferencesAsync(
