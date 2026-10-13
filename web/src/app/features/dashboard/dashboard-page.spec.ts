@@ -12,12 +12,17 @@ function report(profit: number, withResult: number): PerformanceReport {
       winnings: 0,
       profit,
       roi: null,
+      roiLow: null,
+      roiHigh: null,
       itmRate: null,
     },
     curve: [],
     byBuyIn: [],
     byType: [],
     bySpeed: [],
+    byMonth: [],
+    byDayOfWeek: [],
+    byTimeSlot: [],
   };
 }
 
