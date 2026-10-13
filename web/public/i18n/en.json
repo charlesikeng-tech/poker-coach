@@ -741,7 +741,9 @@
         "description": "With Google, or your email and a password.",
         "action": "Create my account",
         "passwordHint": "At least {{count}} characters. A sentence you remember makes a good password.",
-        "sent": "Almost done: open the link sent to {{email}} to activate your account. Check your spam folder too."
+        "sent": "Almost done: open the link sent to {{email}} to activate your account. Check your spam folder too.",
+        "terms": "By creating an account, you agree to the",
+        "termsLink": "Terms of sale"
       }
     },
     "leaks": {

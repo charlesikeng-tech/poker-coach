@@ -178,6 +178,12 @@
         <p class="card__privacy">
           {{ t('privacy') }} <a routerLink="/privacy">{{ t('privacyLink') }}</a>
         </p>
+        @if (mode() === 'signUp') {
+          <p class="card__privacy">
+            {{ t('signUp.terms') }}
+            <a href="https://nutsiq.com/cgv.html" target="_blank" rel="noopener">{{ t('signUp.termsLink') }}</a>.
+          </p>
+        }
       </div>
     </section>
   </div>

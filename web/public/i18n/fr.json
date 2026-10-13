@@ -741,7 +741,9 @@
         "description": "Avec Google, ou ton e-mail et un mot de passe.",
         "action": "Créer mon compte",
         "passwordHint": "Au moins {{count}} caractères. Une phrase facile à retenir fait un bon mot de passe.",
-        "sent": "C'est presque fini : ouvre le lien envoyé à {{email}} pour activer ton compte. Pense à regarder dans les spams."
+        "sent": "C'est presque fini : ouvre le lien envoyé à {{email}} pour activer ton compte. Pense à regarder dans les spams.",
+        "terms": "En créant un compte, tu acceptes les",
+        "termsLink": "Conditions de vente"
       }
     },
     "leaks": {
