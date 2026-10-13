@@ -75,8 +75,12 @@ h2 {
   font-size: var(--font-size-sm);
 }
 
-.drop-zone__help-path {
-  padding-left: var(--space-4);
+.drop-zone__help-paths {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 // Progress and results ------------------------------------------------------------------------------

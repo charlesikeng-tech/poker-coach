@@ -34,8 +34,10 @@
         @for (room of rooms; track room) {
           <div class="drop-zone__help">
             <app-room-badge [room]="room" />
-            <span class="drop-zone__help-path">{{ t('drop.where.' + room + '.mac') }}</span>
-            <span class="drop-zone__help-path">{{ t('drop.where.' + room + '.windows') }}</span>
+            <ul class="drop-zone__help-paths">
+              <li>{{ t('drop.where.' + room + '.mac') }}</li>
+              <li>{{ t('drop.where.' + room + '.windows') }}</li>
+            </ul>
           </div>
         }
         @if (nothingToImport()) {
