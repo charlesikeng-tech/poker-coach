@@ -72,6 +72,7 @@ account's language, no tracking.
 - Brevo: create the account, authenticate the sending domain (SPF, DKIM), set `Email:BrevoApiKey` and
   `Email:FromAddress`; the privacy page names Brevo as a processor.
 - ~~Sessions are not revoked when the password changes~~ — Done: ADR-0021 (session serial, 2026-10-13).
+- ~~Accounts never confirmed stay in `identity.users`~~ — Done: `UnconfirmedAccountCleanupService` deletes them after `Cleanup:UnconfirmedAccountDays` days (default 7), runs every 24 h.
 - Accounts never confirmed stay in `identity.users`; a periodic cleanup (older than 7 days, no other
   identity) is to add.
 - Looking up an account by email (`users.email`) is a scan: fine at this size, add a functional index on

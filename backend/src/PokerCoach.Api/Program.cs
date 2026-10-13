@@ -111,6 +111,8 @@ builder.Services.AddOptions<PlanOptions>()
     .ValidateOnStart();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<PlanOptions>>().Value);
 builder.Services.AddOptions<AdminOptions>().BindConfiguration(AdminOptions.SectionName);
+builder.Services.AddOptions<CleanupOptions>().BindConfiguration(CleanupOptions.SectionName);
+builder.Services.AddHostedService<UnconfirmedAccountCleanupService>();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AdminOptions>>().Value);
 builder.Services.AddScoped<PlanAccess>();
 builder.Services.AddScoped<AdminService>();
