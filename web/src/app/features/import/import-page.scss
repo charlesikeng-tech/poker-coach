@@ -67,8 +67,18 @@ h2 {
 }
 
 .drop-zone .drop-zone__help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
   color: var(--text-muted);
   font-size: var(--font-size-sm);
+}
+
+.drop-zone__help-path {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
 }
 
 // Progress and results ------------------------------------------------------------------------------

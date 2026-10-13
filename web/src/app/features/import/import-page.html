@@ -32,9 +32,11 @@
           </button>
         </div>
         @for (room of rooms; track room) {
-          <p class="drop-zone__help">
-            <app-room-badge [room]="room" /> {{ t('drop.where.' + room) }}
-          </p>
+          <div class="drop-zone__help">
+            <app-room-badge [room]="room" />
+            <span class="drop-zone__help-path"><span aria-hidden="true">🍎</span> {{ t('drop.where.' + room + '.mac') }}</span>
+            <span class="drop-zone__help-path"><span aria-hidden="true">🪟</span> {{ t('drop.where.' + room + '.windows') }}</span>
+          </div>
         }
         @if (nothingToImport()) {
           <p class="notice notice--danger" role="alert">{{ t('drop.nothing') }}</p>

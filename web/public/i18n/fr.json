@@ -621,7 +621,10 @@
         "chooseFiles": "Choisir des fichiers",
         "chooseFolder": "Choisir un dossier",
         "where": {
-          "winamax": "Mac : ~/Library/Application Support/winamax/documents/accounts/<pseudo>/history (⌘⇧G dans la fenêtre de sélection, le dossier Bibliothèque est masqué). Windows : Documents\\Winamax\\accounts\\<pseudo>\\history."
+          "winamax": {
+            "mac": "~/Library/Application Support/winamax/documents/accounts/<pseudo>/history — ⌘⇧G dans la fenêtre de sélection (dossier Bibliothèque masqué).",
+            "windows": "Documents\\Winamax\\accounts\\<pseudo>\\history."
+          }
         },
         "nothing": "Aucun fichier .txt ou .zip dans cette sélection."
       },

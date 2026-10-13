@@ -621,7 +621,10 @@
         "chooseFiles": "Choose files",
         "chooseFolder": "Choose a folder",
         "where": {
-          "winamax": "Mac: ~/Library/Application Support/winamax/documents/accounts/<name>/history (press ⌘⇧G in the file picker — the Library folder is hidden). Windows: Documents\\Winamax\\accounts\\<name>\\history."
+          "winamax": {
+            "mac": "~/Library/Application Support/winamax/documents/accounts/<name>/history — press ⌘⇧G in the file picker (Library folder is hidden).",
+            "windows": "Documents\\Winamax\\accounts\\<name>\\history."
+          }
         },
         "nothing": "No .txt or .zip file in this selection."
       },
