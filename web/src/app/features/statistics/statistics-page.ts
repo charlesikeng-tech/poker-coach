@@ -17,6 +17,7 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
+import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -26,6 +27,7 @@ import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
 import { BreakdownsPanel } from './breakdowns-panel';
 import {
+  GameType,
   STACK_FILTERS,
   StackFilter,
   StatLine,
@@ -75,6 +77,7 @@ const PENDING_REFRESH_MS = 3000;
   imports: [
     PlanLock,
     FormatToggle,
+    GameTypeToggle,
     TranslocoDirective,
     RouterLink,
     PageHeader,
@@ -109,6 +112,7 @@ export class StatisticsPage {
   protected readonly phases = TOURNAMENT_PHASES;
   protected readonly phase = signal<TournamentPhase | 'all'>('all');
   protected readonly completeOnly = signal(false);
+  protected readonly gameType = signal<GameType>('tournament');
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
@@ -124,6 +128,7 @@ export class StatisticsPage {
     from: this.fromQuery(),
     ...stackBounds(this.stack()),
     completeOnly: this.completeOnly(),
+    gameType: this.gameType(),
   }));
 
   private readonly locale = computed(() => this.language.current());
@@ -162,6 +167,7 @@ export class StatisticsPage {
         this.stack(),
         this.completeOnly(),
         this.phase(),
+        this.gameType(),
       ] as const;
       untracked(() => void this.load(...args));
     });
@@ -184,6 +190,10 @@ export class StatisticsPage {
     this.phase.set(value as TournamentPhase | 'all');
   }
 
+  protected setGameType(value: GameType): void {
+    this.gameType.set(value);
+  }
+
   protected retry(): void {
     void this.load(
       this.formatChoice(),
@@ -191,6 +201,7 @@ export class StatisticsPage {
       this.stack(),
       this.completeOnly(),
       this.phase(),
+      this.gameType(),
     );
   }
 
@@ -208,6 +219,7 @@ export class StatisticsPage {
     stack: StackFilter,
     completeOnly: boolean,
     phase: TournamentPhase | 'all',
+    gameType: GameType = 'tournament',
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
@@ -221,6 +233,7 @@ export class StatisticsPage {
         ...stackBounds(stack),
         completeOnly,
         phase: phase === 'all' ? undefined : phase,
+        gameType,
       });
       if (request !== this.request) {
         return;
@@ -229,7 +242,7 @@ export class StatisticsPage {
       this.state.set('ready');
       if (report.pendingHands > 0) {
         this.refreshTimer = setTimeout(
-          () => void this.load(report.format, period, stack, completeOnly, phase),
+          () => void this.load(report.format, period, stack, completeOnly, phase, gameType),
           PENDING_REFRESH_MS,
         );
       }

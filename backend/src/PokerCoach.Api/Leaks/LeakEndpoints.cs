@@ -5,6 +5,7 @@ using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Coaching;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Application.Identity;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Domain.Identity;
@@ -90,7 +91,8 @@ public static class LeakEndpoints
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
-        string? format = null)
+        string? format = null,
+        string? gameType = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -107,9 +109,14 @@ public static class LeakEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var analysis = await leaks.GetAsync(userId, tableFormat, from, to, cancellationToken);
+        var analysis = await leaks.GetAsync(userId, tableFormat, from, to, cancellationToken, parsedGameType);
 
         // Postflop leaks are Elite (ADR-0016): counted, not shown, so the page can say what Elite would add.
         var advanced = (await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.AdvancedLeaks);

@@ -32,6 +32,10 @@
       }
 
       <div class="filters">
+        <app-game-type-toggle
+          [value]="gameType()"
+          (changed)="setGameType($event)"
+        />
         <app-format-toggle
           class="format"
           [value]="report.format"
@@ -177,6 +181,7 @@
         <app-all-in-luck
           [from]="fromQuery()"
           [completeOnly]="completeOnly()"
+          [gameType]="gameType()"
           [refreshKey]="report.pendingHands"
         />
       } @else {

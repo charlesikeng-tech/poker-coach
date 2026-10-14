@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { TableFormat } from '../../shared/ui/format-toggle/format-toggle';
-import { PokerPosition } from '../statistics/statistics-api';
+import { GameType, PokerPosition } from '../statistics/statistics-api';
 
 // Mirrors backend/src/PokerCoach.Api/Leaks. Rates and ranges are ratios (0.22 = 22 %).
 
@@ -85,10 +85,13 @@ export interface LeakExplanation {
 export class LeaksApi {
   private readonly http = inject(HttpClient);
 
-  get(from: string | undefined, format: TableFormat | null): Promise<LeakAnalysis> {
+  get(from: string | undefined, format: TableFormat | null, gameType?: GameType): Promise<LeakAnalysis> {
     let params = from ? new HttpParams().set('from', from) : new HttpParams();
     if (format) {
       params = params.set('format', format);
+    }
+    if (gameType && gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
     }
     return firstValueFrom(this.http.get<LeakAnalysis>('/api/leaks', { params }));
   }

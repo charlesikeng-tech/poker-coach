@@ -15,13 +15,14 @@ import { BillingService, Feature } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
+import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { RangeGauge } from '../leaks/range-gauge';
 import { DefenceRanges } from './defence-ranges';
-import { PokerPosition } from '../statistics/statistics-api';
+import { GameType, PokerPosition } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import {
   OpeningRanges,
@@ -57,6 +58,7 @@ const RANKS = 'AKQJT98765432';
     PlanLock,
     TranslocoDirective,
     FormatToggle,
+    GameTypeToggle,
     PageHeader,
     EmptyState,
     Button,
@@ -78,6 +80,7 @@ export class RangesPage {
   protected readonly spots: readonly RangeSpot[] = ['open', 'defence'];
   protected readonly spot = signal<RangeSpot>('open');
   protected readonly periods = PERIOD_FILTERS;
+  protected readonly gameType = signal<GameType>('tournament');
   protected readonly bands = STACK_BANDS;
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
@@ -163,7 +166,7 @@ export class RangesPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.formatChoice(), this.period(), this.band(), this.pushStack()] as const;
+      const args = [this.formatChoice(), this.period(), this.band(), this.pushStack(), this.gameType()] as const;
       // The defence view loads its own data.
       if (this.spot() === 'open') {
         untracked(() => void this.load(...args));
@@ -197,8 +200,12 @@ export class RangesPage {
     this.formatChoice.set(value);
   }
 
+  protected setGameType(value: GameType): void {
+    this.gameType.set(value);
+  }
+
   protected retry(): void {
-    void this.load(this.formatChoice(), this.period(), this.band(), this.pushStack());
+    void this.load(this.formatChoice(), this.period(), this.band(), this.pushStack(), this.gameType());
   }
 
   protected gap(cell: RangeCell): GapKind {
@@ -244,6 +251,7 @@ export class RangesPage {
     period: PeriodFilter,
     band: StackBand,
     pushStack: number,
+    gameType: GameType = 'tournament',
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
@@ -261,6 +269,7 @@ export class RangesPage {
         band,
         stack: band === 'push' ? pushStack : undefined,
         from: toQuery(period, 'all', 1, 1, new Date()).from,
+        gameType: gameType !== 'tournament' ? gameType : undefined,
       });
       if (request !== this.request) {
         return;
@@ -269,7 +278,7 @@ export class RangesPage {
       this.state.set('ready');
       if (data.pendingHands > 0) {
         this.refreshTimer = setTimeout(
-          () => void this.load(data.format, period, band, pushStack),
+          () => void this.load(data.format, period, band, pushStack, gameType),
           PENDING_REFRESH_MS,
         );
       }

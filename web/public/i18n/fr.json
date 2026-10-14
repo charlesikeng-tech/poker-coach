@@ -1865,6 +1865,11 @@
     "sixMaxHint": "Tables de 6 places au plus",
     "fullRingHint": "Tables de 7 à 9 places"
   },
+  "gameTypes": {
+    "label": "Type de jeu",
+    "tournament": "Tournoi",
+    "cashGame": "Cash Game"
+  },
   "coach": {
     "aiTag": "IA",
     "loading": "Chargement du texte du coach…",

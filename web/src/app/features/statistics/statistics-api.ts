@@ -52,6 +52,8 @@ export interface StatisticsReport {
   readonly handsByFormat: Readonly<Record<TableFormat, number>>;
 }
 
+export type GameType = 'tournament' | 'cashGame';
+
 export type TournamentPhase = 'early' | 'middle' | 'late';
 export const TOURNAMENT_PHASES: readonly TournamentPhase[] = ['early', 'middle', 'late'];
 
@@ -77,6 +79,8 @@ export interface StatisticsQuery {
   readonly completeOnly?: boolean;
   /** By blind level: early (1–6), middle (7–12), late (13+). */
   readonly phase?: TournamentPhase;
+  /** Omitted or tournament: tournament hands only. cashGame: cash hands only. */
+  readonly gameType?: GameType;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -103,6 +107,9 @@ export class StatisticsApi {
     if (query.phase) {
       params = params.set('phase', query.phase);
     }
+    if (query.gameType && query.gameType !== 'tournament') {
+      params = params.set('gameType', query.gameType);
+    }
     return firstValueFrom(this.http.get<StatisticsReport>('/api/statistics', { params }));
   }
 
@@ -124,19 +131,25 @@ export class StatisticsApi {
     if (query.completeOnly) {
       params = params.set('completeOnly', true);
     }
+    if (query.gameType && query.gameType !== 'tournament') {
+      params = params.set('gameType', query.gameType);
+    }
     return firstValueFrom(
       this.http.get<StatisticsBreakdowns>('/api/statistics/breakdowns', { params }),
     );
   }
 
   /** Every table format together: luck does not depend on the table size. */
-  allInLuck(from: string | undefined, completeOnly: boolean): Promise<AllInLuck> {
+  allInLuck(from: string | undefined, completeOnly: boolean, gameType?: GameType): Promise<AllInLuck> {
     let params = new HttpParams();
     if (from) {
       params = params.set('from', from);
     }
     if (completeOnly) {
       params = params.set('completeOnly', true);
+    }
+    if (gameType && gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
     }
     return firstValueFrom(this.http.get<AllInLuck>('/api/statistics/all-in', { params }));
   }
@@ -181,7 +194,7 @@ export interface LuckPoint {
 
 export interface LuckSwing {
   readonly handId: string;
-  readonly tournamentId: string;
+  readonly tournamentId: string | null;
   readonly startedAt: string;
   readonly heroCards: string | null;
   /** The hero's share of the main pot when the money went in (0–1). */

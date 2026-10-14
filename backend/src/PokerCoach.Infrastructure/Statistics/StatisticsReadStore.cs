@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Training;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
@@ -173,7 +174,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         CancellationToken cancellationToken)
     {
         var tournaments = await Filtered(userId, filter, factsVersion)
-            .Select(x => new { x.TournamentId, x.Complete })
+            .Where(x => x.TournamentId != null)
+            .Select(x => new { TournamentId = x.TournamentId!.Value, x.Complete })
             .Distinct()
             .ToListAsync(cancellationToken);
         return new StatisticsSample(tournaments.Count, tournaments.Count(t => t.Complete));
@@ -287,6 +289,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
     /// <summary>The user's analyzed hands within the filter, with whether their tournament's history is complete.</summary>
     private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion)
     {
+        var gameType = filter.GameType ?? GameType.Tournament;
         var query =
             from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
             join h in db.Set<HandRecord>() on f.HandId equals h.Id
@@ -294,12 +297,12 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
             from c in coverage.DefaultIfEmpty()
             where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
-                  && h.TournamentId != null
+                  && h.GameType == gameType
             select new FilteredHand
             {
                 F = f,
                 StartedAt = h.StartedAt,
-                TournamentId = h.TournamentId!.Value,
+                TournamentId = h.TournamentId,
                 HeroCards = h.HeroCards,
                 MaxSeats = h.MaxSeats,
                 BigBlind = h.BigBlind,
@@ -367,7 +370,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
 
         public DateTimeOffset StartedAt { get; init; }
 
-        public Guid TournamentId { get; init; }
+        public Guid? TournamentId { get; init; }
 
         public string? HeroCards { get; init; }
 

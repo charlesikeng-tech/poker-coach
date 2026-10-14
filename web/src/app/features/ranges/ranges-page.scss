@@ -53,6 +53,7 @@
 .toolbar {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
 
@@ -97,9 +98,6 @@
   }
 }
 
-.toolbar .format {
-  align-self: flex-end;
-}
 
 .hint,
 .method,

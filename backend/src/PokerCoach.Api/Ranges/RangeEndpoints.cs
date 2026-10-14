@@ -6,6 +6,7 @@ using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Leaks;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Ranges;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Subscriptions;
@@ -114,7 +115,8 @@ public static class RangeEndpoints
         string band = "mid",
         int? stack = null,
         DateTimeOffset? from = null,
-        DateTimeOffset? to = null)
+        DateTimeOffset? to = null,
+        string? gameType = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -141,6 +143,11 @@ public static class RangeEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         // The push/fold equilibrium is an Elite feature (ADR-0016).
         if (stackBand == StackBand.Push && !(await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.PushFoldRanges))
         {
@@ -149,7 +156,7 @@ public static class RangeEndpoints
 
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, stack, from, to, cancellationToken);
+        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, stack, from, to, cancellationToken, parsedGameType);
         return TypedResults.Ok(new OpeningRangesResponse(
             result.Format,
             result.Band,
@@ -186,7 +193,8 @@ public static class RangeEndpoints
         string? defender = null,
         string? opener = null,
         DateTimeOffset? from = null,
-        DateTimeOffset? to = null)
+        DateTimeOffset? to = null,
+        string? gameType = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -208,6 +216,11 @@ public static class RangeEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         if (!TryParseSeat(defender, out var defenderSeat))
         {
             return ApiProblems.Validation("defender", "Must be a position (utg … bigBlind).");
@@ -219,7 +232,7 @@ public static class RangeEndpoints
         }
 
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var result = await defence.GetAsync(userId, tableFormat, stackBand, defenderSeat, openerSeat, from, to, cancellationToken);
+        var result = await defence.GetAsync(userId, tableFormat, stackBand, defenderSeat, openerSeat, from, to, cancellationToken, parsedGameType);
         var selected = result.Selected;
         return TypedResults.Ok(new DefenceRangesResponse(
             result.Format,

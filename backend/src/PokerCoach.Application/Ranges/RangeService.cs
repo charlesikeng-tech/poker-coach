@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -95,10 +96,11 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         int? pushStack,
         DateTimeOffset? from,
         DateTimeOffset? to,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        GameType? gameType = null)
     {
         var (min, max) = ReferenceOpeningRanges.Bounds(band);
-        var counts = await ranges.CountOpeningsAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max), HeroHandFacts.Version, cancellationToken);
+        var counts = await ranges.CountOpeningsAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max, GameType: gameType), HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
 
         var spots = Enum.GetValues<TableFormat>().ToDictionary(

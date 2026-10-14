@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 
@@ -54,7 +55,8 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
         PokerPosition? opener,
         DateTimeOffset? from,
         DateTimeOffset? to,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        GameType? gameType = null)
     {
         if (band == StackBand.Push)
         {
@@ -62,7 +64,7 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
         }
 
         var (min, max) = ReferenceOpeningRanges.Bounds(band);
-        var counts = await ranges.CountDefencesAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max), HeroHandFacts.Version, cancellationToken);
+        var counts = await ranges.CountDefencesAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max, GameType: gameType), HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
 
         var spots = Enum.GetValues<TableFormat>().ToDictionary(

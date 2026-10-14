@@ -6,7 +6,7 @@ namespace PokerCoach.Application.Statistics;
 /// <param name="HeroCards">"AhKd"; null if unknown (never for a counted all-in, kept nullable as stored).</param>
 public sealed record AllInHand(
     Guid HandId,
-    Guid TournamentId,
+    Guid? TournamentId,
     DateTimeOffset StartedAt,
     long BigBlind,
     string? HeroCards,
@@ -24,7 +24,7 @@ public interface IAllInReadStore
 public sealed record LuckPoint(int Index, DateTimeOffset StartedAt, decimal ActualBigBlinds, decimal ExpectedBigBlinds);
 
 /// <param name="Luck">Actual minus expected, in big blinds: positive when the board was kind.</param>
-public sealed record LuckSwing(Guid HandId, Guid TournamentId, DateTimeOffset StartedAt, string? HeroCards, decimal Equity, decimal NetBigBlinds, decimal Luck);
+public sealed record LuckSwing(Guid HandId, Guid? TournamentId, DateTimeOffset StartedAt, string? HeroCards, decimal Equity, decimal NetBigBlinds, decimal Luck);
 
 /// <param name="Won">All-ins the hero came out of with more chips than he put in.</param>
 /// <param name="ExpectedWins">Sum of the hero's main-pot equities: how many he "should" have won.</param>

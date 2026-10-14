@@ -99,7 +99,7 @@ public sealed record LuckPointResponse(int Index, DateTimeOffset StartedAt, deci
 
 /// <param name="Equity">The hero's share of the main pot when the money went in (0–1).</param>
 /// <param name="Luck">Actual minus expected, in big blinds.</param>
-public sealed record LuckSwingResponse(Guid HandId, Guid TournamentId, DateTimeOffset StartedAt, string? HeroCards, decimal Equity, decimal NetBigBlinds, decimal Luck);
+public sealed record LuckSwingResponse(Guid HandId, Guid? TournamentId, DateTimeOffset StartedAt, string? HeroCards, decimal Equity, decimal NetBigBlinds, decimal Luck);
 
 /// <summary>Preflop all-ins with every hand shown: actual against expected, in big blinds.</summary>
 /// <param name="ExpectedWins">Sum of the hero's equities: all-ins he "should" have won.</param>
@@ -137,7 +137,8 @@ public static class StatisticsEndpoints
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
-        bool completeOnly = false)
+        bool completeOnly = false,
+        string? gameType = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -149,9 +150,14 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("to", "Must be after 'from'.");
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var report = await luck.GetAsync(userId, new StatisticsFilter(from, to, null, null, completeOnly), cancellationToken);
+        var report = await luck.GetAsync(userId, new StatisticsFilter(from, to, null, null, completeOnly, GameType: parsedGameType), cancellationToken);
         return TypedResults.Ok(new AllInLuckResponse(
             report.AllIns,
             report.Won,
@@ -181,7 +187,8 @@ public static class StatisticsEndpoints
         decimal? maxStackBb = null,
         bool completeOnly = false,
         string? format = null,
-        string? phase = null)
+        string? phase = null,
+        string? gameType = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -208,9 +215,14 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("phase", "Must be early, middle or late.");
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase), cancellationToken);
+        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase, parsedGameType), cancellationToken);
         return TypedResults.Ok(new StatisticsResponse(
             StatLineResponse.From(report.Overall),
             report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
@@ -234,7 +246,8 @@ public static class StatisticsEndpoints
         decimal? minStackBb = null,
         decimal? maxStackBb = null,
         bool completeOnly = false,
-        string? format = null)
+        string? format = null,
+        string? gameType = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -256,9 +269,14 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat), time.GetUtcNow(), cancellationToken);
+        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, GameType: parsedGameType), time.GetUtcNow(), cancellationToken);
         return TypedResults.Ok(new StatisticsBreakdownsResponse(
             b.Format,
             b.ByPhase.Select(p => new PhaseStatLineResponse(p.Phase, StatLineResponse.From(p.Line))).ToList(),

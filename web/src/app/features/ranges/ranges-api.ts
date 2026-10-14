@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { TableFormat } from '../../shared/ui/format-toggle/format-toggle';
-import { PokerPosition, StatRate } from '../statistics/statistics-api';
+import { GameType, PokerPosition, StatRate } from '../statistics/statistics-api';
 
 // Mirrors backend/src/PokerCoach.Api/Ranges. Counts only: nothing is extrapolated.
 
@@ -68,6 +68,7 @@ export interface RangeQuery {
   /** Push band only: stack in big blinds for the equilibrium. */
   readonly stack?: number;
   readonly from?: string;
+  readonly gameType?: GameType;
 }
 
 /** What a reference does with a hand facing an open. */
@@ -127,6 +128,7 @@ export interface DefenceQuery {
   readonly defender?: PokerPosition;
   readonly opener?: PokerPosition;
   readonly from?: string;
+  readonly gameType?: GameType;
 }
 
 @Injectable({ providedIn: 'root' })

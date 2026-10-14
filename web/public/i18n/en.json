@@ -1865,6 +1865,11 @@
     "sixMaxHint": "Tables of 6 seats or fewer",
     "fullRingHint": "Tables of 7 to 9 seats"
   },
+  "gameTypes": {
+    "label": "Game type",
+    "tournament": "Tournament",
+    "cashGame": "Cash Game"
+  },
   "coach": {
     "aiTag": "AI",
     "loading": "Loading the coach's text…",

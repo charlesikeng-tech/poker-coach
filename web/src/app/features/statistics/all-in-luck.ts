@@ -16,7 +16,7 @@ import { formatDateTime } from '../../shared/format/format';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
-import { AllInLuck, StatisticsApi } from './statistics-api';
+import { AllInLuck, GameType, StatisticsApi } from './statistics-api';
 
 /** Below this, the gap between actual and expected is noise, and the panel says so. */
 const FEW_ALL_INS = 30;
@@ -39,6 +39,7 @@ export class AllInLuckPanel {
 
   readonly from = input<string | undefined>(undefined);
   readonly completeOnly = input(false);
+  readonly gameType = input<GameType>('tournament');
   /** Changes while facts are being computed: the panel reloads with the page. */
   readonly refreshKey = input(0);
 
@@ -92,8 +93,8 @@ export class AllInLuckPanel {
 
   constructor() {
     effect(() => {
-      const args = [this.from(), this.completeOnly(), this.refreshKey()] as const;
-      untracked(() => void this.load(args[0], args[1]));
+      const args = [this.from(), this.completeOnly(), this.gameType(), this.refreshKey()] as const;
+      untracked(() => void this.load(args[0], args[1], args[2]));
     });
   }
 
@@ -121,10 +122,10 @@ export class AllInLuckPanel {
     return new Intl.DateTimeFormat(this.locale(), { dateStyle: 'medium' }).format(new Date(iso));
   }
 
-  private async load(from: string | undefined, completeOnly: boolean): Promise<void> {
+  private async load(from: string | undefined, completeOnly: boolean, gameType: GameType = 'tournament'): Promise<void> {
     const request = ++this.request;
     try {
-      const luck = await this.api.allInLuck(from, completeOnly);
+      const luck = await this.api.allInLuck(from, completeOnly, gameType);
       if (request === this.request) {
         this.luck.set(luck);
         this.failed.set(false);

@@ -16,9 +16,10 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
+import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
-import { PokerPosition } from '../statistics/statistics-api';
+import { GameType, PokerPosition } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import {
   DEFENCE_BANDS,
@@ -49,7 +50,7 @@ const RANKS = 'AKQJT98765432';
  */
 @Component({
   selector: 'app-defence-ranges',
-  imports: [TranslocoDirective, FormatToggle, EmptyState, Button, Icon, PlanLock],
+  imports: [TranslocoDirective, FormatToggle, GameTypeToggle, EmptyState, Button, Icon, PlanLock],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './defence-ranges.html',
   styleUrls: ['./ranges-page.scss', './defence-ranges.scss'],
@@ -69,6 +70,7 @@ export class DefenceRanges {
 
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly period = signal<PeriodFilter>('all');
+  protected readonly gameType = signal<GameType>('tournament');
   protected readonly band = signal<DefenceBand>('mid');
   protected readonly defender = signal<PokerPosition | null>(null);
   protected readonly opener = signal<PokerPosition | null>(null);
@@ -143,6 +145,7 @@ export class DefenceRanges {
         this.band(),
         this.defender(),
         this.opener(),
+        this.gameType(),
       ] as const;
       untracked(() => void this.load(...args));
     });
@@ -163,6 +166,10 @@ export class DefenceRanges {
     this.period.set(value as PeriodFilter);
   }
 
+  protected setGameType(value: GameType): void {
+    this.gameType.set(value);
+  }
+
   /** A new defender keeps the opener when it can face it; otherwise the server picks the busiest. */
   protected chooseDefender(position: PokerPosition): void {
     const opener = this.spot()?.pair.opener ?? null;
@@ -177,7 +184,7 @@ export class DefenceRanges {
   }
 
   protected retry(): void {
-    void this.load(this.formatChoice(), this.period(), this.band(), this.defender(), this.opener());
+    void this.load(this.formatChoice(), this.period(), this.band(), this.defender(), this.opener(), this.gameType());
   }
 
   protected percent(value: number | null | undefined): string {
@@ -224,6 +231,7 @@ export class DefenceRanges {
     band: DefenceBand,
     defender: PokerPosition | null,
     opener: PokerPosition | null,
+    gameType: GameType = 'tournament',
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
@@ -242,6 +250,7 @@ export class DefenceRanges {
         defender: defender ?? undefined,
         opener: opener ?? undefined,
         from: toQuery(period, 'all', 1, 1, new Date()).from,
+        gameType: gameType !== 'tournament' ? gameType : undefined,
       });
       if (request !== this.request) {
         return;
@@ -257,6 +266,7 @@ export class DefenceRanges {
               band,
               data.selected.pair.defender,
               data.selected.pair.opener,
+              gameType,
             ),
           PENDING_REFRESH_MS,
         );
