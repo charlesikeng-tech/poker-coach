@@ -14,7 +14,7 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, ICashPerformanceReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
 {
     public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
@@ -354,6 +354,15 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         }
 
         return query;
+    }
+
+    public async Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(
+        Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken)
+    {
+        var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
+        return await Filtered(userId, filter, factsVersion)
+            .Select(x => new CashHandRow(x.StartedAt, x.BigBlind, x.F.NetBigBlinds))
+            .ToListAsync(cancellationToken);
     }
 
     public Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) =>

@@ -172,6 +172,28 @@
           "evening": "Evening (6pm–11pm)",
           "night": "Night (11pm–6am)"
         }
+      },
+      "cash": {
+        "bb100": "BB/100",
+        "profit": "Profit €",
+        "netBb": "BB won",
+        "hands": "hands",
+        "pending": "{{count}} hand(s) still being analyzed — figures will update.",
+        "chartTitle": "Cumulative profit in BB",
+        "chartAria": "Cumulative profit curve: {{bb}} BB",
+        "chartHint": "One point per day played, in big blinds won.",
+        "breakdown": {
+          "stakes": "By stakes",
+          "month": "By month",
+          "dayOfWeek": "By day of the week",
+          "timeSlot": "By time slot"
+        },
+        "columns": {
+          "hands": "Hands",
+          "profit": "Profit €",
+          "netBb": "Net BB",
+          "bb100": "BB/100"
+        }
       }
     },
     "tournaments": {

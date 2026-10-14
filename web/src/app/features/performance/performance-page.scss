@@ -10,6 +10,7 @@ h2 {
 
 .filters {
   display: flex;
+  align-items: flex-end;
   gap: var(--space-4);
   margin-bottom: var(--space-5);
 

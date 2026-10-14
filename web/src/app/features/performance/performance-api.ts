@@ -29,6 +29,37 @@ export interface PerformanceReport {
   readonly byTimeSlot: readonly PerformanceGroup[];
 }
 
+export interface CashPerformanceFigures {
+  readonly hands: number;
+  readonly netBigBlinds: number;
+  readonly bigBlindsPer100: number | null;
+  readonly netMoney: number;
+}
+
+export interface CashPerformanceGroup {
+  readonly key: string;
+  readonly figures: CashPerformanceFigures;
+}
+
+export interface CashProfitPoint {
+  readonly date: string;
+  readonly hands: number;
+  readonly netBigBlinds: number;
+  readonly cumulativeNetBigBlinds: number;
+  readonly netMoney: number;
+  readonly cumulativeNetMoney: number;
+}
+
+export interface CashPerformanceReport {
+  readonly totals: CashPerformanceFigures;
+  readonly curve: readonly CashProfitPoint[];
+  readonly byStakes: readonly CashPerformanceGroup[];
+  readonly byMonth: readonly CashPerformanceGroup[];
+  readonly byDayOfWeek: readonly CashPerformanceGroup[];
+  readonly byTimeSlot: readonly CashPerformanceGroup[];
+  readonly pendingHands: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class PerformanceApi {
   private readonly http = inject(HttpClient);
@@ -48,5 +79,20 @@ export class PerformanceApi {
       params = params.set('timeZone', timeZone);
     }
     return firstValueFrom(this.http.get<PerformanceReport>('/api/performance', { params }));
+  }
+
+  getCash(from: string | undefined, to?: string): Promise<CashPerformanceReport> {
+    let params = new HttpParams();
+    if (from) {
+      params = params.set('from', from);
+    }
+    if (to) {
+      params = params.set('to', to);
+    }
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timeZone) {
+      params = params.set('timeZone', timeZone);
+    }
+    return firstValueFrom(this.http.get<CashPerformanceReport>('/api/performance/cash', { params }));
   }
 }

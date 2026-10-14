@@ -9,8 +9,165 @@
     >
       <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
     </app-empty-state>
+  } @else if (gameType() === 'cashGame') {
+    <!-- Cash game mode -->
+    @if (cashReport(); as report) {
+      @if (report.totals.hands === 0 && period() === 'all') {
+        <div class="filters">
+          <app-game-type-toggle
+            [value]="gameType()"
+            (changed)="setGameType($event)"
+          />
+        </div>
+        <app-empty-state
+          [icon]="icons.Upload"
+          [heading]="t('empty.title')"
+          [description]="t('empty.description')"
+        >
+          <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+        </app-empty-state>
+      } @else {
+        <div class="filters">
+          <app-game-type-toggle
+            [value]="gameType()"
+            (changed)="setGameType($event)"
+          />
+          <label>
+            <span>{{ t('filters.period') }}</span>
+            <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+              @for (option of periods; track option) {
+                <option [value]="option">{{ t('filters.periods.' + option) }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <div [class.stale]="state() === 'loading'">
+          <div class="totals">
+            <app-stat-tile
+              class="stat-tile--hero"
+              [label]="t('cash.bb100')"
+              [value]="report.totals.bigBlindsPer100"
+              [format]="formats().bb100"
+              [signed]="true"
+            />
+            <app-stat-tile
+              [label]="t('cash.profit')"
+              [value]="report.totals.netMoney"
+              [format]="formats().signedMoney"
+              [signed]="true"
+            />
+            <app-stat-tile
+              [label]="t('cash.netBb')"
+              [value]="report.totals.netBigBlinds"
+              [format]="formats().bb"
+              [signed]="true"
+            />
+            <app-stat-tile
+              [label]="t('cash.hands')"
+              [value]="report.totals.hands"
+              [format]="formats().integer"
+            />
+          </div>
+          @if (report.pendingHands > 0) {
+            <p class="hint">{{ t('cash.pending', { count: report.pendingHands }) }}</p>
+          }
+
+          <section class="panel glass">
+            <h2>{{ t('cash.chartTitle') }}</h2>
+            @if (cashChartPoints().length > 1) {
+              <app-line-chart
+                [points]="cashChartPoints()"
+                [formatY]="formatBbAxis()"
+                [ariaLabel]="t('cash.chartAria', { bb: bb(report.totals.netBigBlinds) })"
+              />
+              <p class="hint">{{ t('cash.chartHint') }}</p>
+            } @else {
+              <p class="hint">{{ t('chart.notEnough') }}</p>
+            }
+          </section>
+
+          @for (
+            section of [
+              { dimension: 'stakes', groups: report.byStakes },
+              { dimension: 'month', groups: report.byMonth },
+              { dimension: 'dayOfWeek', groups: report.byDayOfWeek },
+              { dimension: 'timeSlot', groups: report.byTimeSlot },
+            ];
+            track section.dimension
+          ) {
+            @if (section.groups.length > 0) {
+              <section class="panel glass">
+                <h2>{{ t('cash.breakdown.' + section.dimension) }}</h2>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">{{ t('columns.group') }}</th>
+                        <th scope="col" class="num">{{ t('cash.columns.hands') }}</th>
+                        <th scope="col" class="num">{{ t('cash.columns.profit') }}</th>
+                        <th scope="col" class="num">{{ t('cash.columns.netBb') }}</th>
+                        <th scope="col" class="num">{{ t('cash.columns.bb100') }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (group of section.groups; track group.key) {
+                        <tr>
+                          <th scope="row">
+                            @if (section.dimension === 'stakes') {
+                              {{ stakesLabel(group.key) }}
+                            } @else if (section.dimension === 'month') {
+                              {{ monthLabel(group.key) }}
+                            } @else {
+                              {{ t('groups.' + section.dimension + '.' + group.key) }}
+                            }
+                          </th>
+                          <td class="num numeric">{{ integer(group.figures.hands) }}</td>
+                          <td class="num numeric" [attr.data-sign]="sign(group.figures.netMoney)">
+                            {{ signedMoney(group.figures.netMoney) }}
+                          </td>
+                          <td class="num numeric" [attr.data-sign]="sign(group.figures.netBigBlinds)">
+                            {{ bb(group.figures.netBigBlinds) }}
+                          </td>
+                          <td class="num numeric" [attr.data-sign]="sign(group.figures.bigBlindsPer100)">
+                            {{ bb100(group.figures.bigBlindsPer100) }}
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            }
+          }
+        </div>
+      }
+    } @else {
+      <div class="filters">
+        <app-game-type-toggle
+          [value]="gameType()"
+          (changed)="setGameType($event)"
+        />
+      </div>
+      <div role="status" [attr.aria-label]="t('loading')">
+        <div class="totals">
+          @for (i of [1, 2, 3]; track i) {
+            <div class="glass skeleton-tile">
+              <span class="skeleton"></span><span class="skeleton"></span>
+            </div>
+          }
+        </div>
+      </div>
+    }
   } @else if (report(); as report) {
+    <!-- Tournament mode -->
     @if (report.totals.tournamentsWithResult === 0 && period() === 'all') {
+      <div class="filters">
+        <app-game-type-toggle
+          [value]="gameType()"
+          (changed)="setGameType($event)"
+        />
+      </div>
       <app-empty-state
         [icon]="icons.Upload"
         [heading]="t('empty.title')"
@@ -20,6 +177,10 @@
       </app-empty-state>
     } @else {
       <div class="filters">
+        <app-game-type-toggle
+          [value]="gameType()"
+          (changed)="setGameType($event)"
+        />
         <label>
           <span>{{ t('filters.period') }}</span>
           <select [value]="period()" (change)="setPeriod($any($event.target).value)">
@@ -160,6 +321,12 @@
       </div>
     }
   } @else {
+    <div class="filters">
+      <app-game-type-toggle
+        [value]="gameType()"
+        (changed)="setGameType($event)"
+      />
+    </div>
     <div role="status" [attr.aria-label]="t('loading')">
       <div class="totals">
         @for (i of [1, 2, 3, 4, 5]; track i) {

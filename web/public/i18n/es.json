@@ -172,6 +172,28 @@
           "evening": "Noche temprana (18h–23h)",
           "night": "Madrugada (23h–6h)"
         }
+      },
+      "cash": {
+        "bb100": "BB/100",
+        "profit": "Beneficio €",
+        "netBb": "BB ganados",
+        "hands": "manos",
+        "pending": "{{count}} mano(s) en análisis — las cifras van a actualizarse.",
+        "chartTitle": "Beneficio acumulado en BB",
+        "chartAria": "Curva de beneficio acumulado: {{bb}} BB",
+        "chartHint": "Un punto por día jugado, en big blinds ganados.",
+        "breakdown": {
+          "stakes": "Por stakes",
+          "month": "Por mes",
+          "dayOfWeek": "Por día de la semana",
+          "timeSlot": "Por franja horaria"
+        },
+        "columns": {
+          "hands": "Manos",
+          "profit": "Beneficio €",
+          "netBb": "BB netas",
+          "bb100": "BB/100"
+        }
       }
     },
     "tournaments": {

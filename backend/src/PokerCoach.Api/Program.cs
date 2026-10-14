@@ -101,6 +101,7 @@ builder.Services.AddScoped<HandFactsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
 builder.Services.AddScoped<AllInLuckService>();
+builder.Services.AddScoped<CashPerformanceService>();
 builder.Services.AddScoped<ILeakService, LeakService>();
 builder.Services.AddOptions<CoachingOptions>()
     .BindConfiguration(CoachingOptions.SectionName)
@@ -183,6 +184,7 @@ app.MapPokerAccountEndpoints();
 app.MapTournamentEndpoints();
 app.MapHandEndpoints();
 app.MapStatisticsEndpoints();
+app.MapCashPerformanceEndpoints();
 app.MapRangeEndpoints();
 app.MapTrainingEndpoints();
 app.MapSizingEndpoints();

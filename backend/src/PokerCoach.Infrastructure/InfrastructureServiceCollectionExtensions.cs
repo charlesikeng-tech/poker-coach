@@ -76,6 +76,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IAllInReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IRealSpotStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IPlayedSizingStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
+        services.AddScoped<ICashPerformanceReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<ICoachingStore, CoachingStore>();
         services.AddScoped<IAiUsageLedger, AiUsageLedger>();
         services.AddScoped<ICoachingReportStore, CoachingReportStore>();

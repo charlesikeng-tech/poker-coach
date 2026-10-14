@@ -24,8 +24,10 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
+import { GameType } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
-import { PerformanceGroup, PerformanceReport, PerformanceApi } from './performance-api';
+import { CashPerformanceReport, PerformanceGroup, PerformanceReport, PerformanceApi } from './performance-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
 
@@ -35,7 +37,7 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
 
 @Component({
   selector: 'app-performance-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart, StatTile],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart, StatTile, GameTypeToggle],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './performance-page.html',
@@ -48,8 +50,10 @@ export class PerformancePage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
+  protected readonly gameType = signal<GameType>('tournament');
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<PerformanceReport | null>(null);
+  protected readonly cashReport = signal<CashPerformanceReport | null>(null);
   protected readonly icons = { CircleAlert, Upload };
 
   private readonly locale = computed(() => this.language.current());
@@ -80,6 +84,28 @@ export class PerformancePage {
       }).format(value);
   });
 
+  protected readonly cashChartPoints = computed<LinePoint[]>(() => {
+    const report = this.cashReport();
+    const locale = this.locale();
+    const monthFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    return (report?.curve ?? []).map((p, i) => ({
+      x: i,
+      y: p.cumulativeNetBigBlinds,
+      label: monthFmt.format(new Date(`${p.date}T00:00:00Z`)),
+      details: [
+        `${p.hands} ${this.transloco.translate('pages.performance.cash.hands')}`,
+        `${this.bb(p.netBigBlinds)} BB`,
+        `${this.transloco.translate('pages.performance.chart.cumulative')} ${this.bb(p.cumulativeNetBigBlinds)} BB`,
+      ],
+    }));
+  });
+
+  protected readonly formatBbAxis = computed(() => {
+    const locale = this.locale();
+    return (value: number) =>
+      `${new Intl.NumberFormat(locale, { maximumFractionDigits: 0, signDisplay: 'exceptZero' }).format(value)} BB`;
+  });
+
   /** Formatters handed to animated figures: rebuilt when the language changes. */
   protected readonly formats = computed(() => {
     const locale = this.locale();
@@ -95,19 +121,37 @@ export class PerformancePage {
             ),
       integer: (value: number | null) =>
         formatInteger(value === null ? null : Math.round(value), locale),
+      bb: (value: number | null) =>
+        value === null
+          ? '—'
+          : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1, signDisplay: 'exceptZero' }).format(value)} BB`,
+      bb100: (value: number | null) =>
+        value === null
+          ? '—'
+          : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 2, signDisplay: 'exceptZero' }).format(value)} BB/100`,
     };
   });
 
   constructor() {
     effect(() => {
-      // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
       const period = this.period();
-      untracked(() => void this.load(period));
+      const gt = this.gameType();
+      untracked(() => {
+        if (gt === 'cashGame') {
+          void this.loadCash(period);
+        } else {
+          void this.load(period);
+        }
+      });
     });
   }
 
   protected setPeriod(value: string): void {
     this.period.set(value as PeriodFilter);
+  }
+
+  protected setGameType(value: GameType): void {
+    this.gameType.set(value);
   }
 
   protected retry(): void {
@@ -143,6 +187,33 @@ export class PerformancePage {
     return value === null || value === 0 ? 'neutral' : value > 0 ? 'positive' : 'negative';
   }
 
+  protected bb(value: number | null): string {
+    return value === null
+      ? '—'
+      : new Intl.NumberFormat(this.locale(), {
+          maximumFractionDigits: 1,
+          signDisplay: 'exceptZero',
+        }).format(value);
+  }
+
+  protected bb100(value: number | null): string {
+    return value === null
+      ? '—'
+      : new Intl.NumberFormat(this.locale(), {
+          maximumFractionDigits: 2,
+          signDisplay: 'exceptZero',
+        }).format(value);
+  }
+
+  protected stakesLabel(bigBlindCents: string): string {
+    const bb = parseInt(bigBlindCents, 10);
+    if (isNaN(bb) || bb === 0) return bigBlindCents;
+    const sb = bb / 2;
+    const fmt = (v: number) =>
+      new Intl.NumberFormat(this.locale(), { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(v / 100);
+    return `${fmt(sb)} / ${fmt(bb)}`;
+  }
+
   /** Translation key (relative to pages.performance) for a group, or null to show the raw value as is. */
   protected groupKey(
     dimension: 'buyIn' | 'type' | 'speed' | 'dayOfWeek' | 'timeSlot',
@@ -175,6 +246,22 @@ export class PerformancePage {
       const report = await this.api.get(toQuery(period, 'all', 1, 1, new Date()).from);
       if (request === this.request) {
         this.report.set(report);
+        this.state.set('ready');
+      }
+    } catch {
+      if (request === this.request) {
+        this.state.set('error');
+      }
+    }
+  }
+
+  private async loadCash(period: PeriodFilter): Promise<void> {
+    const request = ++this.request;
+    this.state.set('loading');
+    try {
+      const report = await this.api.getCash(toQuery(period, 'all', 1, 1, new Date()).from);
+      if (request === this.request) {
+        this.cashReport.set(report);
         this.state.set('ready');
       }
     } catch {
