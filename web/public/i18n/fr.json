@@ -619,16 +619,53 @@
       "description": "Ajoute tes historiques de mains et tes résumés de tournois.",
       "drop": {
         "title": "Dépose tes fichiers ici",
-        "hint": "Historiques de mains et résumés de tournois (.txt), ou une archive .zip. Tu peux déposer un dossier entier : importer deux fois le même fichier ne crée jamais de doublon.",
-        "chooseFiles": "Choisir des fichiers",
-        "chooseFolder": "Choisir un dossier",
-        "where": {
-          "winamax": {
-            "mac": "~/Library/Application Support/winamax/documents/accounts/<pseudo>/history — ⌘⇧G dans la fenêtre de sélection (dossier Bibliothèque masqué).",
-            "windows": "Documents\\Winamax\\accounts\\<pseudo>\\history."
-          }
-        },
+        "hint": "ou clique pour parcourir — .txt, .zip ou dossier entier, pas de doublon",
+        "chooseFolder": "Sélectionner un dossier",
         "nothing": "Aucun fichier .txt ou .zip dans cette sélection."
+      },
+      "guide": {
+        "toggle": "Comment trouver mes fichiers ?",
+        "title": "Guide pas-à-pas",
+        "subtitle": "Choisis ta room et suis les étapes.",
+        "tip": {
+          "label": "Astuce",
+          "winamax": "Tournois : il faut le fichier de mains (HH) + le résumé (_summary.txt). Cash game : le fichier de mains suffit. Tu peux déposer un dossier entier, NutsIQ détecte et trie automatiquement.",
+          "betclic": "Betclic fournit un fichier .txt par session de cash game. Dépose tous les fichiers d'un coup, NutsIQ détecte et trie automatiquement."
+        },
+        "steps": {
+          "winamax": {
+            "1": {
+              "title": "Ouvre les options Winamax",
+              "text": "Depuis le lobby Winamax, clique sur l'icône ⚙ (engrenage) dans la barre à droite."
+            },
+            "2": {
+              "title": "Va dans « Tracker »",
+              "text": "Dans le menu de gauche, descends et clique sur Tracker."
+            },
+            "3": {
+              "title": "Ouvre le dossier d'historiques",
+              "text": "Dans « Emplacement de l'historique des mains », clique sur OUVRIR pour afficher le dossier sur ton ordinateur."
+            },
+            "4": {
+              "title": "Dépose le dossier « history »",
+              "text": "Dans le dossier qui s'ouvre : winamax > documents > accounts > <ton pseudo> > history. Dépose le dossier entier (ou les fichiers .txt) dans NutsIQ."
+            }
+          },
+          "betclic": {
+            "1": {
+              "title": "Connecte-toi à ton espace joueur",
+              "text": "Sur le site Betclic, accède à la section Poker de ton compte."
+            },
+            "2": {
+              "title": "Télécharge l'historique",
+              "text": "Va dans Poker → Historique des mains et exporte tes mains au format .txt."
+            },
+            "3": {
+              "title": "Dépose les fichiers dans NutsIQ",
+              "text": "Dépose les fichiers .txt téléchargés directement dans la zone ci-dessus."
+            }
+          }
+        }
       },
       "progress": {
         "label": "Import en cours",

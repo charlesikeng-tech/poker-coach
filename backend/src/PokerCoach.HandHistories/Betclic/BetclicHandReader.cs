@@ -1,0 +1,659 @@
+using System.Globalization;
+using System.Text.RegularExpressions;
+using PokerCoach.Domain.Poker;
+
+namespace PokerCoach.HandHistories.Betclic;
+
+internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
+{
+    internal const int MaxLineLength = 1_000;
+
+    private enum Section
+    {
+        Header,
+        Players,
+        HoleCards,
+        Actions,
+        Showdown,
+        Summary,
+    }
+
+    private readonly List<ParsedSeat> seats = [];
+    private readonly List<ParsedAction> actions = [];
+    private readonly List<Card> board = [];
+    private readonly List<ParsedShownCards> shownCards = [];
+    private readonly List<ParsedPotCollection> collections = [];
+    private readonly Dictionary<string, long> streetContributions = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<Card>> holeCards = new(StringComparer.Ordinal);
+
+    private Section section = Section.Header;
+    private Street street = Street.Preflop;
+    private long currentBet;
+    private string? handId;
+    private string? heroName;
+    private List<Card> heroCards = [];
+    private HeaderInfo? header;
+    private long? totalPot;
+    private long rake;
+    private ParseError? error;
+
+    public (ParsedHand? Hand, ParseError? Error) Read()
+    {
+        for (var i = 0; i < block.Count; i++)
+        {
+            if (!ReadLine(block[i]))
+            {
+                return (null, error);
+            }
+        }
+
+        var lastLine = block[^1];
+        if (section != Section.Summary || header is null || totalPot is not { } pot)
+        {
+            Fail(ParseErrorCodes.IncompleteHand, lastLine);
+            return (null, error);
+        }
+
+        if (seats.Count == 0)
+        {
+            Fail(ParseErrorCodes.MissingSeats, lastLine);
+            return (null, error);
+        }
+
+        if (!Validate(pot, lastLine))
+        {
+            return (null, error);
+        }
+
+        var hand = new ParsedHand
+        {
+            Room = PokerRoom.Betclic,
+            GameType = GameType.CashGame,
+            ExternalHandId = header.HandId,
+            TournamentName = null,
+            ExternalTournamentId = null,
+            BuyIn = null,
+            TableName = header.TableId,
+            MaxSeats = header.MaxSeats,
+            IsRealMoney = true,
+            Level = 0,
+            Ante = null,
+            SmallBlind = header.SmallBlind,
+            BigBlind = header.BigBlind,
+            StartedAt = header.StartedAt,
+            ButtonSeat = FindButtonSeat(),
+            Seats = seats,
+            HeroName = heroName,
+            HeroCards = heroCards,
+            Actions = actions,
+            Board = board,
+            ShownCards = shownCards,
+            Collections = collections,
+            TotalPot = pot,
+            Rake = rake,
+            Stakes = header.Stakes,
+            LineNumber = block[0].Number,
+        };
+        return (hand, null);
+    }
+
+    private bool ReadLine(SourceLine line)
+    {
+        var text = line.Text;
+        if (text.Length > MaxLineLength)
+        {
+            return Fail(ParseErrorCodes.LineTooLong, line);
+        }
+
+        if (text == BetclicValues.HeaderMarker)
+        {
+            return section == Section.Header;
+        }
+
+        if (text == BetclicValues.PlayersMarker)
+        {
+            return section == Section.Header && header is not null ? Enter(Section.Players) : Fail(ParseErrorCodes.UnexpectedSection, line);
+        }
+
+        if (text == BetclicValues.HoleCardsMarker)
+        {
+            if (section != Section.Players || seats.Count == 0)
+            {
+                return Fail(ParseErrorCodes.UnexpectedSection, line);
+            }
+
+            return Enter(Section.HoleCards);
+        }
+
+        if (text == BetclicValues.PreflopMarker)
+        {
+            return section == Section.HoleCards ? Enter(Section.Actions) : Fail(ParseErrorCodes.UnexpectedSection, line);
+        }
+
+        if (text == BetclicValues.ShowdownMarker)
+        {
+            return section == Section.Actions ? Enter(Section.Showdown) : Fail(ParseErrorCodes.UnexpectedSection, line);
+        }
+
+        if (text == BetclicValues.SummaryMarker)
+        {
+            return section is Section.Actions or Section.Showdown
+                ? Enter(Section.Summary)
+                : Fail(ParseErrorCodes.UnexpectedSection, line);
+        }
+
+        var streetMarker = BetclicPatterns.StreetMarker().Match(text);
+        if (streetMarker.Success)
+        {
+            return section == Section.Actions ? ReadStreet(streetMarker, line) : Fail(ParseErrorCodes.UnexpectedSection, line);
+        }
+
+        return section switch
+        {
+            Section.Header => ReadHeaderField(line),
+            Section.Players => ReadSeat(line),
+            Section.HoleCards => ReadHoleCards(line),
+            Section.Actions or Section.Showdown => ReadActionOrShow(line),
+            Section.Summary => ReadSummaryLine(line),
+            _ => Fail(ParseErrorCodes.UnrecognizedLine, line),
+        };
+    }
+
+    private bool ReadHeaderField(SourceLine line)
+    {
+        var text = line.Text;
+
+        if (text.StartsWith("Hand ID: ", StringComparison.Ordinal))
+        {
+            handId = text["Hand ID: ".Length..];
+            if (header is not null)
+            {
+                header = header with { HandId = handId };
+            }
+
+            return true;
+        }
+
+        if (text.StartsWith("Site: ", StringComparison.Ordinal)
+            || text.StartsWith("Game Mode: ", StringComparison.Ordinal)
+            || text.StartsWith("Game Type: ", StringComparison.Ordinal)
+            || text.StartsWith("Game ID: ", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        if (text.StartsWith("Game Name: ", StringComparison.Ordinal))
+        {
+            return ReadGameName(text["Game Name: ".Length..], line);
+        }
+
+        if (text.StartsWith("Table ID: ", StringComparison.Ordinal))
+        {
+            if (header is not null)
+            {
+                header = header with { TableId = text["Table ID: ".Length..] };
+            }
+
+            return true;
+        }
+
+        if (text.StartsWith("Date & Time: ", StringComparison.Ordinal))
+        {
+            var dateText = text["Date & Time: ".Length..];
+            if (dateText.EndsWith(" (UTC)", StringComparison.Ordinal))
+            {
+                dateText = dateText[..^" (UTC)".Length];
+            }
+
+            if (!BetclicValues.TryParseUtc(dateText, out var startedAt))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            if (header is not null)
+            {
+                header = header with { StartedAt = startedAt };
+            }
+
+            return true;
+        }
+
+        if (text.StartsWith("Blinds: ", StringComparison.Ordinal))
+        {
+            return ReadBlinds(text["Blinds: ".Length..], line);
+        }
+
+        if (text.StartsWith("Total Pot: ", StringComparison.Ordinal))
+        {
+            var potText = text["Total Pot: ".Length..];
+            if (!BetclicValues.TryParseEuroAmount(potText, out var pot))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            totalPot = pot;
+            return true;
+        }
+
+        if (text.StartsWith("Rake: ", StringComparison.Ordinal))
+        {
+            var rakeText = text["Rake: ".Length..];
+            if (!BetclicValues.TryParseEuroAmount(rakeText, out var rakeValue))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            rake = rakeValue;
+            return true;
+        }
+
+        return Fail(ParseErrorCodes.UnrecognizedLine, line);
+    }
+
+    private bool ReadGameName(string gameName, SourceLine line)
+    {
+        // "NLHE 0.25/0.5 6 max Deep" or "NLHE 0.10/0.25 6 Max Deep"
+        var parts = gameName.Split(' ');
+        if (parts.Length < 3)
+        {
+            return Fail(ParseErrorCodes.MissingField, line);
+        }
+
+        var stakes = parts[1];
+        if (!int.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out var maxSeats))
+        {
+            return Fail(ParseErrorCodes.InvalidNumber, line);
+        }
+
+        header = new HeaderInfo(handId ?? string.Empty, string.Empty, DateTimeOffset.MinValue, stakes, 0, 0, maxSeats);
+        return true;
+    }
+
+    private bool ReadBlinds(string blindsText, SourceLine line)
+    {
+        // "€0.25/€0.50"
+        var slash = blindsText.IndexOf('/');
+        if (slash < 0)
+        {
+            return Fail(ParseErrorCodes.MissingField, line);
+        }
+
+        if (!BetclicValues.TryParseEuroAmount(blindsText[..slash], out var sb)
+            || !BetclicValues.TryParseEuroAmount(blindsText[(slash + 1)..], out var bb))
+        {
+            return Fail(ParseErrorCodes.InvalidNumber, line);
+        }
+
+        if (header is not null)
+        {
+            header = header with { SmallBlind = sb, BigBlind = bb };
+        }
+
+        return true;
+    }
+
+    private bool ReadSeat(SourceLine line)
+    {
+        var match = BetclicPatterns.SeatLine().Match(line.Text);
+        if (!match.Success)
+        {
+            return Fail(ParseErrorCodes.UnrecognizedLine, line);
+        }
+
+        if (!int.TryParse(match.Groups["seat"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var seatNumber)
+            || !BetclicValues.TryParseCents(match.Groups["stack"].Value, out var stack))
+        {
+            return Fail(ParseErrorCodes.InvalidNumber, line);
+        }
+
+        var name = match.Groups["name"].Value;
+        if (streetContributions.ContainsKey(name) || seats.Exists(s => s.SeatNumber == seatNumber))
+        {
+            return Fail(ParseErrorCodes.DuplicatePlayer, line);
+        }
+
+        var tags = match.Groups["tags"].Value;
+        if (tags.Contains("Hero", StringComparison.Ordinal))
+        {
+            heroName = name;
+        }
+
+        seats.Add(new ParsedSeat(seatNumber, name, stack, null));
+        streetContributions[name] = 0;
+        return true;
+    }
+
+    private bool ReadHoleCards(SourceLine line)
+    {
+        // "Héros: [6c Jh]" or "Vilain 6: [4d 4s]"
+        var text = line.Text;
+        var colonBracket = text.IndexOf(": [", StringComparison.Ordinal);
+        if (colonBracket < 0 || text[^1] != ']')
+        {
+            return Fail(ParseErrorCodes.UnrecognizedLine, line);
+        }
+
+        var playerName = text[..colonBracket];
+        var cardsText = text[(colonBracket + 3)..^1];
+
+        if (!BetclicValues.TryParseCards(cardsText, out var cards) || cards.Count != 2)
+        {
+            return Fail(ParseErrorCodes.InvalidHoleCards, line);
+        }
+
+        if (!seats.Exists(s => s.PlayerName == playerName))
+        {
+            return Fail(ParseErrorCodes.UnknownPlayer, line);
+        }
+
+        holeCards[playerName] = cards;
+        if (playerName == heroName)
+        {
+            heroCards = cards;
+        }
+
+        return true;
+    }
+
+    private bool ReadStreet(Match match, SourceLine line)
+    {
+        var streetName = match.Groups["street"].Value;
+        var allCardsText = match.Groups["cards"].Value;
+
+        if (!BetclicValues.TryParseCards(allCardsText, out var allCards))
+        {
+            return Fail(ParseErrorCodes.InvalidCard, line);
+        }
+
+        var (nextStreet, expectedTotal) = streetName switch
+        {
+            "FLOP" => (Street.Flop, 3),
+            "TURN" => (Street.Turn, 4),
+            _ => (Street.River, 5),
+        };
+
+        if (allCards.Count != expectedTotal)
+        {
+            return Fail(ParseErrorCodes.InvalidBoard, line);
+        }
+
+        // Betclic prints all board cards on each street line; extract only the new ones.
+        var newCards = allCards.Skip(board.Count).ToList();
+        var expectedNew = expectedTotal - board.Count;
+        if (newCards.Count != expectedNew)
+        {
+            return Fail(ParseErrorCodes.InvalidBoard, line);
+        }
+
+        // Verify previously dealt cards match.
+        for (var i = 0; i < board.Count; i++)
+        {
+            if (board[i] != allCards[i])
+            {
+                return Fail(ParseErrorCodes.BoardMismatch, line);
+            }
+        }
+
+        board.AddRange(newCards);
+        street = nextStreet;
+        currentBet = 0;
+        foreach (var name in streetContributions.Keys)
+        {
+            streetContributions[name] = 0;
+        }
+
+        return true;
+    }
+
+    private bool ReadActionOrShow(SourceLine line)
+    {
+        var actionMatch = BetclicPatterns.ActionLine().Match(line.Text);
+        if (!actionMatch.Success)
+        {
+            // Showdown shows line (no timestamp prefix).
+            if (section == Section.Showdown)
+            {
+                return ReadShowdownLine(line);
+            }
+
+            return Fail(ParseErrorCodes.UnrecognizedLine, line);
+        }
+
+        var playerName = actionMatch.Groups["name"].Value;
+        var actionText = actionMatch.Groups["action"].Value;
+
+        // Noise lines.
+        if (actionText is "Sits in" or "Sits out" or "Disconnected")
+        {
+            return true;
+        }
+
+        if (!seats.Exists(s => s.PlayerName == playerName))
+        {
+            return Fail(ParseErrorCodes.UnknownPlayer, line);
+        }
+
+        if (BetclicPatterns.Post().Match(actionText) is { Success: true } post)
+        {
+            return ReadPost(playerName, post, line);
+        }
+
+        if (BetclicPatterns.Fold().IsMatch(actionText))
+        {
+            AddAction(playerName, ParsedActionType.Fold, 0, raiseTo: null, isAllIn: false);
+            return true;
+        }
+
+        if (BetclicPatterns.Check().IsMatch(actionText))
+        {
+            AddAction(playerName, ParsedActionType.Check, 0, raiseTo: null, isAllIn: false);
+            return true;
+        }
+
+        if (BetclicPatterns.Call().Match(actionText) is { Success: true } call)
+        {
+            if (!BetclicValues.TryParseCents(call.Groups["amount"].Value, out var amount))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            AddToStreet(playerName, amount);
+            AddAction(playerName, ParsedActionType.Call, amount, raiseTo: null, call.Groups["allIn"].Success);
+            return true;
+        }
+
+        if (BetclicPatterns.Bet().Match(actionText) is { Success: true } bet)
+        {
+            if (!BetclicValues.TryParseCents(bet.Groups["amount"].Value, out var amount))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            AddToStreet(playerName, amount);
+            AddAction(playerName, ParsedActionType.Bet, amount, raiseTo: null, bet.Groups["allIn"].Success);
+            return true;
+        }
+
+        if (BetclicPatterns.Raise().Match(actionText) is { Success: true } raise)
+        {
+            if (!BetclicValues.TryParseCents(raise.Groups["to"].Value, out var raiseTo))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            var alreadyIn = streetContributions[playerName];
+            var increment = raiseTo - alreadyIn;
+            if (increment <= 0 || raiseTo <= currentBet)
+            {
+                return Fail(ParseErrorCodes.InconsistentRaise, line);
+            }
+
+            AddAction(playerName, ParsedActionType.Raise, increment, raiseTo, raise.Groups["allIn"].Success);
+            streetContributions[playerName] = raiseTo;
+            currentBet = raiseTo;
+            return true;
+        }
+
+        return Fail(ParseErrorCodes.UnrecognizedLine, line);
+    }
+
+    private bool ReadPost(string playerName, Match post, SourceLine line)
+    {
+        if (!BetclicValues.TryParseCents(post.Groups["amount"].Value, out var amount))
+        {
+            return Fail(ParseErrorCodes.InvalidNumber, line);
+        }
+
+        var type = post.Groups["kind"].Value == "SB"
+            ? ParsedActionType.PostSmallBlind
+            : ParsedActionType.PostBigBlind;
+
+        AddToStreet(playerName, amount);
+        AddAction(playerName, type, amount, raiseTo: null, isAllIn: false);
+        return true;
+    }
+
+    private bool ReadShowdownLine(SourceLine line)
+    {
+        var shows = BetclicPatterns.Shows().Match(line.Text);
+        if (shows.Success)
+        {
+            var playerName = shows.Groups["name"].Value;
+            if (!BetclicValues.TryParseCards(shows.Groups["cards"].Value, out var cards) || cards.Count != 2)
+            {
+                return Fail(ParseErrorCodes.InvalidHoleCards, line);
+            }
+
+            shownCards.Add(new ParsedShownCards(playerName, cards, shows.Groups["description"].Value));
+            return true;
+        }
+
+        return Fail(ParseErrorCodes.UnrecognizedLine, line);
+    }
+
+    private bool ReadSummaryLine(SourceLine line)
+    {
+        var wins = BetclicPatterns.Wins().Match(line.Text);
+        if (!wins.Success)
+        {
+            return Fail(ParseErrorCodes.UnrecognizedLine, line);
+        }
+
+        var playerName = wins.Groups["name"].Value;
+        if (!BetclicValues.TryParseCents(wins.Groups["amount"].Value, out var amount))
+        {
+            return Fail(ParseErrorCodes.InvalidNumber, line);
+        }
+
+        var sideOrd = wins.Groups["sideOrd"];
+        if (sideOrd.Success)
+        {
+            if (!int.TryParse(sideOrd.Value, NumberStyles.None, CultureInfo.InvariantCulture, out var sideNumber))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            collections.Add(new ParsedPotCollection(playerName, amount, PotKind.Side, sideNumber));
+        }
+        else
+        {
+            var kind = collections.Count > 0 || rake > 0 ? PotKind.Main : PotKind.Single;
+            collections.Add(new ParsedPotCollection(playerName, amount, kind, null));
+        }
+
+        return true;
+    }
+
+    private bool Validate(long pot, SourceLine lastLine)
+    {
+        long invested = 0;
+        foreach (var action in actions)
+        {
+            invested += action.Amount;
+        }
+
+        long collectedTotal = 0;
+        foreach (var collection in collections)
+        {
+            collectedTotal += collection.Amount;
+        }
+
+        // collected + rake must equal the declared pot.
+        // invested >= pot: uncalled bets (returned to winner) make invested > pot.
+        if (invested < pot || collectedTotal + rake != pot)
+        {
+            return Fail(ParseErrorCodes.PotMismatch, lastLine);
+        }
+
+        return true;
+    }
+
+    private int FindButtonSeat()
+    {
+        // Find the seat tagged [BTN].
+        foreach (var seat in seats)
+        {
+            // The tag was parsed from the seat line; we stored it as part of the name extraction.
+            // We need to check the original block for the BTN tag.
+        }
+
+        // Fall back: scan the block for BTN tag.
+        foreach (var line in block)
+        {
+            if (line.Text.StartsWith("Seat ", StringComparison.Ordinal) && line.Text.Contains("[BTN", StringComparison.Ordinal))
+            {
+                var match = BetclicPatterns.SeatLine().Match(line.Text);
+                if (match.Success && int.TryParse(match.Groups["seat"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var seatNumber))
+                {
+                    return seatNumber;
+                }
+            }
+        }
+
+        // Heads-up or no BTN tag: SB is the button. Find first SB poster.
+        foreach (var action in actions)
+        {
+            if (action.Type == ParsedActionType.PostSmallBlind)
+            {
+                var sbSeat = seats.Find(s => s.PlayerName == action.PlayerName);
+                if (sbSeat is not null)
+                {
+                    return sbSeat.SeatNumber;
+                }
+            }
+        }
+
+        return seats.Count > 0 ? seats[0].SeatNumber : 1;
+    }
+
+    private void AddToStreet(string player, long amount)
+    {
+        var total = streetContributions[player] + amount;
+        streetContributions[player] = total;
+        currentBet = Math.Max(currentBet, total);
+    }
+
+    private void AddAction(string player, ParsedActionType type, long amount, long? raiseTo, bool isAllIn) =>
+        actions.Add(new ParsedAction(actions.Count + 1, street, player, type, amount, raiseTo, isAllIn));
+
+    private bool Enter(Section next)
+    {
+        section = next;
+        return true;
+    }
+
+    private bool Fail(string code, SourceLine line)
+    {
+        error ??= new ParseError(code, line.Number, handId);
+        return false;
+    }
+
+    private sealed record HeaderInfo(
+        string HandId,
+        string TableId,
+        DateTimeOffset StartedAt,
+        string Stakes,
+        long SmallBlind,
+        long BigBlind,
+        int MaxSeats);
+}

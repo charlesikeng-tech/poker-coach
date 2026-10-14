@@ -619,16 +619,53 @@
       "description": "Add your hand histories and tournament summaries.",
       "drop": {
         "title": "Drop your files here",
-        "hint": "Hand histories and tournament summaries (.txt), or a .zip archive. You can drop a whole folder: importing the same file twice never creates duplicates.",
-        "chooseFiles": "Choose files",
-        "chooseFolder": "Choose a folder",
-        "where": {
-          "winamax": {
-            "mac": "~/Library/Application Support/winamax/documents/accounts/<name>/history — press ⌘⇧G in the file picker (Library folder is hidden).",
-            "windows": "Documents\\Winamax\\accounts\\<name>\\history."
-          }
-        },
+        "hint": "or click to browse — .txt, .zip or full folder, no duplicates",
+        "chooseFolder": "Select a folder",
         "nothing": "No .txt or .zip file in this selection."
+      },
+      "guide": {
+        "toggle": "How to find my files?",
+        "title": "Step-by-step guide",
+        "subtitle": "Pick your room and follow the steps.",
+        "tip": {
+          "label": "Tip",
+          "winamax": "Tournaments: you need the hand history file (HH) + the summary (_summary.txt). Cash game: the hand history file is enough. You can drop a whole folder — NutsIQ detects and sorts files automatically.",
+          "betclic": "Betclic provides a .txt file per cash game session. Drop all files at once — NutsIQ detects and sorts them automatically."
+        },
+        "steps": {
+          "winamax": {
+            "1": {
+              "title": "Open Winamax settings",
+              "text": "From the Winamax lobby, click the ⚙ icon (gear) in the right sidebar."
+            },
+            "2": {
+              "title": "Go to \"Tracker\"",
+              "text": "In the left menu, scroll down and click Tracker."
+            },
+            "3": {
+              "title": "Open the history folder",
+              "text": "In \"Hand history location\", click OPEN to reveal the folder on your computer."
+            },
+            "4": {
+              "title": "Drop the \"history\" folder",
+              "text": "In the folder that opens: winamax > documents > accounts > <your name> > history. Drop the whole folder (or the .txt files) into NutsIQ."
+            }
+          },
+          "betclic": {
+            "1": {
+              "title": "Sign in to your player area",
+              "text": "On the Betclic website, go to the Poker section of your account."
+            },
+            "2": {
+              "title": "Download your hand history",
+              "text": "Go to Poker → Hand History and export your hands as .txt."
+            },
+            "3": {
+              "title": "Drop the files into NutsIQ",
+              "text": "Drop the downloaded .txt files directly into the zone above."
+            }
+          }
+        }
       },
       "progress": {
         "label": "Import in progress",

@@ -15,31 +15,17 @@
       <section
         class="drop-zone"
         [class.drop-zone--active]="dragging()"
+        role="button"
+        tabindex="0"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)"
+        (click)="filePicker.click()"
+        (keydown.enter)="filePicker.click()"
       >
         <span class="drop-zone__icon"><app-icon [icon]="icons.Upload" /></span>
         <h2>{{ t('drop.title') }}</h2>
         <p>{{ t('drop.hint') }}</p>
-        <div class="drop-zone__actions">
-          <button appButton variant="primary" (click)="filePicker.click()">
-            {{ t('drop.chooseFiles') }}
-          </button>
-          <button appButton variant="secondary" (click)="folderPicker.click()">
-            <app-icon [icon]="icons.FolderOpen" />
-            {{ t('drop.chooseFolder') }}
-          </button>
-        </div>
-        @for (room of rooms; track room) {
-          <div class="drop-zone__help">
-            <app-room-badge [room]="room" />
-            <ul class="drop-zone__help-paths">
-              <li>{{ t('drop.where.' + room + '.mac') }}</li>
-              <li>{{ t('drop.where.' + room + '.windows') }}</li>
-            </ul>
-          </div>
-        }
         @if (nothingToImport()) {
           <p class="notice notice--danger" role="alert">{{ t('drop.nothing') }}</p>
         }
@@ -49,10 +35,30 @@
           multiple
           accept=".txt,.zip"
           hidden
+          (click)="$event.stopPropagation()"
           (change)="onPick(filePicker)"
         />
-        <input #folderPicker type="file" webkitdirectory hidden (change)="onPick(folderPicker)" />
+        <input
+          #folderPicker
+          type="file"
+          webkitdirectory
+          hidden
+          (click)="$event.stopPropagation()"
+          (change)="onPick(folderPicker)"
+        />
       </section>
+
+      <div class="drop-zone__links">
+        <button class="drop-zone__link" (click)="folderPicker.click()">
+          <app-icon [icon]="icons.FolderOpen" />
+          {{ t('drop.chooseFolder') }}
+        </button>
+        <span class="drop-zone__separator">·</span>
+        <button class="drop-zone__link" (click)="guideOpen.set(true)">
+          <app-icon [icon]="icons.BookOpen" />
+          {{ t('guide.toggle') }}
+        </button>
+      </div>
     }
     @default {
       <section class="progress glass" aria-live="polite">
@@ -180,4 +186,62 @@
       </section>
     }
   }
+
+  <!-- Guide drawer -->
+  <div
+    class="drawer-backdrop"
+    [class.drawer-backdrop--visible]="guideOpen()"
+    (click)="guideOpen.set(false)"
+  ></div>
+
+  <aside
+    class="drawer"
+    [class.drawer--open]="guideOpen()"
+    role="dialog"
+    [attr.aria-modal]="guideOpen()"
+    [attr.aria-label]="t('guide.title')"
+  >
+    <header class="drawer__header">
+      <h2>{{ t('guide.title') }}</h2>
+      <button class="drawer__close" (click)="guideOpen.set(false)">
+        <app-icon [icon]="icons.X" />
+      </button>
+    </header>
+
+    <p class="drawer__subtitle">{{ t('guide.subtitle') }}</p>
+
+    <nav class="drawer__tabs" role="tablist">
+      @for (room of rooms; track room) {
+        <button
+          role="tab"
+          [class.drawer__tab--active]="guideRoom() === room"
+          [attr.aria-selected]="guideRoom() === room"
+          (click)="guideRoom.set(room)"
+        >
+          <app-room-badge [room]="room" />
+        </button>
+      }
+    </nav>
+
+    <div class="drawer__tip">
+      <strong>{{ t('guide.tip.label') }}</strong>
+      {{ t('guide.tip.' + guideRoom()) }}
+    </div>
+
+    <ol class="drawer__steps">
+      @for (step of [1, 2, 3, 4]; track step) {
+        @if (t('guide.steps.' + guideRoom() + '.' + step + '.title'); as title) {
+          @if (title !== 'guide.steps.' + guideRoom() + '.' + step + '.title') {
+            <li class="drawer__step">
+              <span class="drawer__step-number">{{ step }}</span>
+              <div>
+                <strong>{{ title }}</strong>
+                <p>{{ t('guide.steps.' + guideRoom() + '.' + step + '.text') }}</p>
+              </div>
+            </li>
+          }
+        }
+      }
+    </ol>
+  </aside>
 </ng-container>

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { CircleAlert, CircleCheck, Clock, FolderOpen, Upload } from 'lucide';
+import { BookOpen, CircleAlert, CircleCheck, Clock, FolderOpen, Upload, X } from 'lucide';
 
-import { SUPPORTED_ROOMS } from '../../core/poker/rooms';
+import { SupportedRoom, SUPPORTED_ROOMS } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
@@ -31,17 +31,21 @@ const KNOWN_ERRORS = new Set([
   selector: 'app-import-page',
   imports: [TranslocoDirective, PageHeader, Button, Icon, PokerAccounts, RoomBadge],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'page-enter' },
+  host: {
+    class: 'page-enter',
+    '(document:keydown.escape)': 'onEscape()',
+  },
   templateUrl: './import-page.html',
   styleUrl: './import-page.scss',
 })
 export class ImportPage {
-  /** Where each supported room saves its files: one help line per room. */
   protected readonly rooms = SUPPORTED_ROOMS;
   protected readonly session = inject(ImportSession);
   protected readonly dragging = signal(false);
   protected readonly nothingToImport = signal(false);
-  protected readonly icons = { CircleAlert, CircleCheck, Clock, FolderOpen, Upload };
+  protected readonly guideOpen = signal(false);
+  protected readonly guideRoom = signal<SupportedRoom>('winamax');
+  protected readonly icons = { BookOpen, CircleAlert, CircleCheck, Clock, FolderOpen, Upload, X };
 
   /** Problems first: they are what the user has to act on. */
   protected readonly sortedRows = computed(() =>
@@ -76,6 +80,12 @@ export class ImportPage {
   }
 
   /** Translation key, relative to pages.import. */
+  protected onEscape(): void {
+    if (this.guideOpen()) {
+      this.guideOpen.set(false);
+    }
+  }
+
   protected errorKey(code: string | null): string {
     return `errors.${code && KNOWN_ERRORS.has(code) ? code : 'unknown'}`;
   }
@@ -84,6 +94,7 @@ export class ImportPage {
     const selection = selectImportableFiles(files);
     this.nothingToImport.set(selection.accepted.length === 0);
     if (selection.accepted.length > 0) {
+      this.guideOpen.set(false);
       void this.session.start(selection.accepted, selection.ignored);
     }
   }

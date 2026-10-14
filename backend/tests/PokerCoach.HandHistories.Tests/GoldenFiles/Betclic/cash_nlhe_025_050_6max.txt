@@ -1,0 +1,294 @@
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4V6EYZPT0B2KT25FYFQV82B
+Hand ID: 01M4VENZVZXSTKSZR9K4G364P1
+Date & Time: 2026-10-13 20:18:52 (UTC)
+Table ID: 01M4V6EYZPF354TA964V01E9B0
+Blinds: €0.25/€0.50
+Total Pot: €0.75
+Rake: €0.00
+*** PLAYERS ***
+Seat 1: Vilain1 (€58.12) [BB]
+Seat 2: Hero (€83.21) [Hero]
+Seat 3: Vilain2 (€85.55)
+Seat 4: Vilain3 (€50.00)
+Seat 5: Vilain4 (€103.55) [BTN]
+Seat 6: Vilain5 (€50.00) [SB]
+*** HOLE CARDS ***
+Hero: [6c Jh]
+*** PRE-FLOP ***
+20:18:52 - Vilain5: Posts SB €0.25
+20:18:52 - Vilain1: Posts BB €0.50
+20:18:56 - Hero: Folds
+20:18:59 - Vilain2: Folds
+20:18:59 - Vilain3: Folds
+20:18:59 - Vilain4: Folds
+20:18:59 - Vilain5: Folds
+*** SUMMARY ***
+Vilain1 wins main pot of €0.75
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCGNC0TQ5JZJF54R8WJBTV
+Hand ID: 01M4VEN393SQBSESZF5BWE5VAT
+Date & Time: 2026-10-13 20:18:23 (UTC)
+Table ID: 01M4VCGNC0Z0MGWT73MDQB68TA
+Blinds: €0.25/€0.50
+Total Pot: €11.00
+Rake: €0.30
+*** PLAYERS ***
+Seat 1: Vilain6 (€61.14)
+Seat 2: Vilain7 (€64.57) [BTN]
+Seat 3: Vilain8 (€67.95) [SB]
+Seat 4: Vilain9 (€50.00) [BB]
+Seat 5: Hero (€51.19) [Hero]
+Seat 6: Vilain10 (€50.47)
+*** HOLE CARDS ***
+Hero: [6d 3s]
+*** PRE-FLOP ***
+20:18:23 - Vilain8: Posts SB €0.25
+20:18:23 - Vilain9: Posts BB €0.50
+20:18:26 - Hero: Folds
+20:18:28 - Vilain10: Sits in
+20:18:33 - Vilain10: Folds
+20:18:35 - Vilain6: Calls €0.50
+20:18:35 - Vilain7: Folds
+20:18:41 - Vilain8: Raises to €2.50
+20:18:43 - Vilain9: Folds
+20:18:45 - Vilain6: Calls €2.00
+*** FLOP *** [4s Th 6c]
+20:18:49 - Vilain8: Checks
+20:18:52 - Vilain6: Bets €5.50
+20:19:01 - Vilain8: Folds
+*** SUMMARY ***
+Vilain6 wins main pot of €10.70
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4V6EYZPT0B2KT25FYFQV82B
+Hand ID: 01M4VEH678S3MRA7HG576RBZ8W
+Date & Time: 2026-10-13 20:16:15 (UTC)
+Table ID: 01M4V6EYZPF354TA964V01E9B0
+Blinds: €0.25/€0.50
+Total Pot: €5.36
+Rake: €0.17
+*** PLAYERS ***
+Seat 1: Vilain1 (€52.47)
+Seat 2: Hero (€83.21) [BTN Hero]
+Seat 3: Vilain2 (€85.80) [SB]
+Seat 4: Vilain3 (€50.00) [BB]
+Seat 5: Vilain4 (€105.55)
+Seat 6: Vilain5 (€50.00)
+*** HOLE CARDS ***
+Hero: [9h 8h]
+*** PRE-FLOP ***
+20:16:15 - Vilain2: Posts SB €0.25
+20:16:15 - Vilain3: Posts BB €0.50
+20:16:27 - Vilain4: Raises to €1.25
+20:16:29 - Vilain5: Folds
+20:16:35 - Vilain1: Calls €1.25
+20:16:39 - Hero: Folds
+20:16:41 - Vilain2: Folds
+20:16:41 - Vilain3: Folds
+*** FLOP *** [6c 9c Jh]
+20:17:00 - Vilain4: Checks
+20:17:02 - Vilain1: Bets €2.11
+20:17:13 - Vilain4: Folds
+*** SUMMARY ***
+Vilain1 wins main pot of €5.19
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCX6X7SGV4E9QQQG4TW9VM
+Hand ID: 01M4VEH9JW4RZDK5DBE408GR85
+Date & Time: 2026-10-13 20:16:19 (UTC)
+Table ID: 01M4VCX6X7NDBQZG9ZN443W5CJ
+Blinds: €0.25/€0.50
+Total Pot: €1.89
+Rake: €0.00
+*** PLAYERS ***
+Seat 1: Vilain15 (€53.55)
+Seat 2: Hero (€108.89) [Hero]
+Seat 3: Vilain14 (€50.00) [BTN]
+Seat 4: Vilain9 (€50.00) [SB]
+Seat 5: Vilain7 (€56.38) [BB]
+*** HOLE CARDS ***
+Hero: [Kc Ts]
+*** PRE-FLOP ***
+20:16:19 - Vilain9: Posts SB €0.25
+20:16:19 - Vilain7: Posts BB €0.50
+20:16:23 - Vilain15: Folds
+20:16:29 - Hero: Raises to €1.14
+20:16:29 - Vilain14: Folds
+20:16:29 - Vilain9: Folds
+20:16:30 - Vilain7: Folds
+*** SUMMARY ***
+Hero wins main pot of €1.89
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCGNC0TQ5JZJF54R8WJBTV
+Hand ID: 01M4VEJA8X8PRA20HVCTDN0R37
+Date & Time: 2026-10-13 20:16:52 (UTC)
+Table ID: 01M4VCGNC0Z0MGWT73MDQB68TA
+Blinds: €0.25/€0.50
+Total Pot: €9.74
+Rake: €0.53
+*** PLAYERS ***
+Seat 1: Vilain6 (€65.76) [BTN]
+Seat 2: Vilain7 (€65.07) [SB]
+Seat 3: Vilain8 (€63.36) [BB]
+Seat 5: Hero (€51.19) [Hero]
+Seat 6: Vilain10 (€50.47)
+*** HOLE CARDS ***
+Vilain6: [4d 4s]
+Vilain8: [5d 5s]
+Hero: [8c 4c]
+*** PRE-FLOP ***
+20:16:52 - Vilain7: Posts SB €0.25
+20:16:52 - Vilain8: Posts BB €0.50
+20:16:54 - Vilain7: Sits in
+20:16:58 - Hero: Folds
+20:17:03 - Vilain10: Folds
+20:17:04 - Vilain6: Calls €0.50
+20:17:07 - Vilain7: Calls €0.25
+20:17:13 - Vilain8: Raises to €2.75
+20:17:16 - Vilain6: Calls €2.25
+20:17:17 - Vilain7: Folds
+*** FLOP *** [9c 9h 7c]
+20:17:52 - Vilain8: Bets €1.87
+20:17:55 - Vilain6: Calls €1.87
+*** TURN *** [9c 9h 7c 2d]
+20:17:59 - Vilain8: Checks
+20:18:02 - Vilain6: Checks
+*** RIVER *** [9c 9h 7c 2d Kc]
+20:18:15 - Vilain8: Checks
+20:18:17 - Vilain6: Checks
+*** SHOWDOWN ***
+Vilain8 shows [5d 5s] (Two Pair) [9h 9c 5s 5d Kc]
+Vilain6 shows [4d 4s] (Two Pair) [9h 9c 4s 4d Kc]
+*** SUMMARY ***
+Vilain8 wins main pot of €9.21
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCX6X7SGV4E9QQQG4TW9VM
+Hand ID: 01M4VEFEB5AYCA6MR42FZ52AJR
+Date & Time: 2026-10-13 20:15:18 (UTC)
+Table ID: 01M4VCX6X7NDBQZG9ZN443W5CJ
+Blinds: €0.25/€0.50
+Total Pot: €107.85
+Rake: €3.00
+*** PLAYERS ***
+Seat 1: Vilain15 (€55.55)
+Seat 2: Hero (€56.59) [BTN Hero]
+Seat 3: Vilain14 (€50.00) [SB]
+Seat 4: Vilain9 (€50.00) [BB]
+Seat 5: Vilain7 (€56.38)
+Seat 6: Vilain20 (€52.55)
+*** HOLE CARDS ***
+Hero: [Kh Kc]
+Vilain20: [Ad 2d]
+*** PRE-FLOP ***
+20:15:18 - Vilain14: Posts SB €0.25
+20:15:18 - Vilain9: Posts BB €0.50
+20:15:23 - Vilain7: Folds
+20:15:30 - Vilain20: Calls €0.50
+20:15:33 - Vilain15: Raises to €2.00
+20:15:39 - Hero: Raises to €6.00
+20:15:45 - Vilain14: Folds
+20:15:46 - Vilain9: Folds
+20:15:48 - Vilain20: Calls €5.50
+20:15:52 - Vilain15: Folds
+*** FLOP *** [Ah Kd 7c]
+20:15:55 - Vilain20: Checks
+20:15:58 - Hero: Bets €4.86
+20:15:59 - Vilain20: Calls €4.86
+*** TURN *** [Ah Kd 7c 9d]
+20:16:02 - Vilain20: Checks
+20:16:06 - Hero: Bets €18.35
+20:16:07 - Vilain20: Calls €18.35
+*** RIVER *** [Ah Kd 7c 9d 5s]
+20:16:10 - Vilain20: Bets €23.34 and is all-in
+20:16:11 - Hero: Calls €23.34
+*** SHOWDOWN ***
+Vilain20 shows [Ad 2d] (Pair) [Ah Ad Kd 9d 7c]
+Hero shows [Kh Kc] (Three of a Kind) [Kh Kd Kc Ah 9d]
+*** SUMMARY ***
+Hero wins main pot of €104.85
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCVH8EMJED8PZB6V049NME
+Hand ID: 01M4VEBKCD16RXR8G145Z6F5YZ
+Date & Time: 2026-10-13 20:13:12 (UTC)
+Table ID: 01M4VCVH8EQM6XY5SD7GYB03C4
+Blinds: €0.25/€0.50
+Total Pot: €126.95
+Rake: €3.00
+*** PLAYERS ***
+Seat 1: Vilain22 (€44.33) [SB]
+Seat 2: Vilain12 (€51.80) [BB]
+Seat 3: Vilain23 (€38.29)
+Seat 4: Hero (€56.87) [Hero]
+Seat 5: Vilain14 (€50.00)
+Seat 6: Vilain15 (€51.26) [BTN]
+*** HOLE CARDS ***
+Vilain22: [7s 6d]
+Vilain12: [Jc 8c]
+Vilain23: [Ad 9d]
+Hero: [Qd 9s]
+*** PRE-FLOP ***
+20:13:12 - Vilain22: Posts SB €0.25
+20:13:12 - Vilain12: Posts BB €0.50
+20:13:15 - Vilain23: Calls €0.50
+20:13:15 - Hero: Folds
+20:13:16 - Vilain14: Folds
+20:13:21 - Vilain15: Folds
+20:13:24 - Vilain22: Raises to €1.50
+20:13:26 - Vilain12: Calls €1.00
+20:13:30 - Vilain23: Calls €1.00
+*** FLOP *** [5c Td 7c]
+20:13:34 - Vilain22: Bets €4.50
+20:13:38 - Vilain12: Calls €4.50
+20:13:41 - Vilain23: Raises to €9.00
+20:13:45 - Vilain22: Calls €4.50
+20:13:47 - Vilain12: Raises to €50.30 and is all-in
+20:13:49 - Vilain23: Calls €27.79 and is all-in
+20:14:00 - Vilain22: Calls €33.83 and is all-in
+*** TURN *** [5c Td 7c Tc]
+*** RIVER *** [5c Td 7c Tc 9c]
+*** SHOWDOWN ***
+Vilain22 shows [7s 6d] (Two Pair) [Td Tc 7s 7c 9c]
+Vilain12 shows [Jc 8c] (Straight Flush) [Jc Tc 9c 8c 7c]
+Vilain23 shows [Ad 9d] (Two Pair) [Td Tc 9d 9c Ad]
+*** SUMMARY ***
+Vilain12 wins main pot of €111.87
+Vilain12 wins 1st side pot of €12.08

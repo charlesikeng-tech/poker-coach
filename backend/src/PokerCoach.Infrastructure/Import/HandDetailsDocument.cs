@@ -12,7 +12,7 @@ namespace PokerCoach.Infrastructure.Import;
 /// </summary>
 internal sealed record HandDetailsDocument(
     int Version,
-    string TournamentName,
+    string? TournamentName,
     decimal BuyInExcludingFee,
     decimal Fee,
     string Currency,
@@ -22,9 +22,12 @@ internal sealed record HandDetailsDocument(
     IReadOnlyList<HandDetailsDocument.PlayerAction> Actions,
     IReadOnlyList<string> Board,
     IReadOnlyList<HandDetailsDocument.Shown> ShownCards,
-    IReadOnlyList<HandDetailsDocument.Collection> Collections)
+    IReadOnlyList<HandDetailsDocument.Collection> Collections,
+    GameType GameType = GameType.Tournament,
+    long? Rake = null,
+    string? Stakes = null)
 {
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -42,16 +45,19 @@ internal sealed record HandDetailsDocument(
     public static HandDetailsDocument From(ParsedHand hand) => new(
         CurrentVersion,
         hand.TournamentName,
-        hand.BuyIn.AmountExcludingFee,
-        hand.BuyIn.Fee,
-        hand.BuyIn.Currency,
+        hand.BuyIn?.AmountExcludingFee ?? 0m,
+        hand.BuyIn?.Fee ?? 0m,
+        hand.BuyIn?.Currency ?? "EUR",
         hand.IsRealMoney,
         hand.HeroName,
         hand.Seats.Select(s => new Seat(s.SeatNumber, s.PlayerName, s.Stack, s.Bounty)).ToList(),
         hand.Actions.Select(a => new PlayerAction(a.Sequence, a.Street, a.PlayerName, a.Type, a.Amount, a.RaiseTo, a.IsAllIn)).ToList(),
         Cards(hand.Board),
         hand.ShownCards.Select(s => new Shown(s.PlayerName, Cards(s.Cards), s.HandDescription)).ToList(),
-        hand.Collections.Select(c => new Collection(c.PlayerName, c.Amount, c.Kind, c.SidePotNumber)).ToList());
+        hand.Collections.Select(c => new Collection(c.PlayerName, c.Amount, c.Kind, c.SidePotNumber)).ToList(),
+        hand.GameType,
+        hand.Rake,
+        hand.Stakes);
 
     public string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 

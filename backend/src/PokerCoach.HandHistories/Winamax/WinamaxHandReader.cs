@@ -82,6 +82,7 @@ internal sealed class WinamaxHandReader(IReadOnlyList<SourceLine> block)
         var hand = new ParsedHand
         {
             Room = PokerRoom.Winamax,
+            GameType = GameType.Tournament,
             ExternalHandId = header.HandId,
             TournamentName = header.TournamentName,
             ExternalTournamentId = table.TournamentId,

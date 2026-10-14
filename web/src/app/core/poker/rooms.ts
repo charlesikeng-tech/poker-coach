@@ -3,9 +3,10 @@
  * rooms in general; a room's name only appears where the text is about that room (its account, where it
  * saves its files). Add a room here when its import ships.
  */
-export const SUPPORTED_ROOMS = ['winamax'] as const;
+export const SUPPORTED_ROOMS = ['winamax', 'betclic'] as const;
 
 export type SupportedRoom = (typeof SUPPORTED_ROOMS)[number];
+
 
 /** Brand names are the same in every language. */
 const ROOM_NAMES: Readonly<Record<string, string>> = {

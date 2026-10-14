@@ -619,16 +619,53 @@
       "description": "Añade tus historiales de manos y tus resúmenes de torneos.",
       "drop": {
         "title": "Suelta tus archivos aquí",
-        "hint": "Historiales de manos y resúmenes de torneos (.txt), o un archivo .zip. Puedes soltar una carpeta entera: importar dos veces el mismo archivo nunca crea duplicados.",
-        "chooseFiles": "Elegir archivos",
-        "chooseFolder": "Elegir una carpeta",
-        "where": {
-          "winamax": {
-            "mac": "~/Library/Application Support/winamax/documents/accounts/<nick>/history — pulsa ⌘⇧G en el selector de archivos (carpeta Biblioteca oculta).",
-            "windows": "Documents\\Winamax\\accounts\\<nick>\\history."
-          }
-        },
+        "hint": "o haz clic para explorar — .txt, .zip o carpeta entera, sin duplicados",
+        "chooseFolder": "Seleccionar una carpeta",
         "nothing": "No hay ningún archivo .txt o .zip en esta selección."
+      },
+      "guide": {
+        "toggle": "¿Cómo encontrar mis archivos?",
+        "title": "Guía paso a paso",
+        "subtitle": "Elige tu sala y sigue los pasos.",
+        "tip": {
+          "label": "Consejo",
+          "winamax": "Torneos: necesitas el archivo de manos (HH) + el resumen (_summary.txt). Cash game: el archivo de manos es suficiente. Puedes soltar una carpeta entera — NutsIQ detecta y clasifica los archivos automáticamente.",
+          "betclic": "Betclic proporciona un archivo .txt por sesión de cash game. Suelta todos los archivos a la vez — NutsIQ detecta y clasifica automáticamente."
+        },
+        "steps": {
+          "winamax": {
+            "1": {
+              "title": "Abre las opciones de Winamax",
+              "text": "Desde el lobby de Winamax, haz clic en el icono ⚙ (engranaje) en la barra derecha."
+            },
+            "2": {
+              "title": "Ve a \"Tracker\"",
+              "text": "En el menú de la izquierda, baja y haz clic en Tracker."
+            },
+            "3": {
+              "title": "Abre la carpeta de historiales",
+              "text": "En \"Ubicación del historial de manos\", haz clic en ABRIR para mostrar la carpeta en tu ordenador."
+            },
+            "4": {
+              "title": "Suelta la carpeta \"history\"",
+              "text": "En la carpeta que se abre: winamax > documents > accounts > <tu nick> > history. Suelta la carpeta entera (o los archivos .txt) en NutsIQ."
+            }
+          },
+          "betclic": {
+            "1": {
+              "title": "Inicia sesión en tu espacio de jugador",
+              "text": "En el sitio web de Betclic, accede a la sección Poker de tu cuenta."
+            },
+            "2": {
+              "title": "Descarga el historial",
+              "text": "Ve a Poker → Historial de manos y exporta tus manos en formato .txt."
+            },
+            "3": {
+              "title": "Suelta los archivos en NutsIQ",
+              "text": "Suelta los archivos .txt descargados directamente en la zona de arriba."
+            }
+          }
+        }
       },
       "progress": {
         "label": "Importación en curso",

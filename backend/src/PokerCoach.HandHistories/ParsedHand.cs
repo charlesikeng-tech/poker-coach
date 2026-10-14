@@ -11,15 +11,19 @@ public sealed record ParsedHand
 {
     public required PokerRoom Room { get; init; }
 
+    public required GameType GameType { get; init; }
+
     /// <summary>Provider hand id; unique per provider and the deduplication key.</summary>
     public required string ExternalHandId { get; init; }
 
-    public required string TournamentName { get; init; }
+    /// <summary>Tournament name from the header. Null for cash game hands.</summary>
+    public required string? TournamentName { get; init; }
 
-    /// <summary>Null when the provider does not print it in the hand.</summary>
+    /// <summary>Null for cash game hands or when the provider does not print it.</summary>
     public required string? ExternalTournamentId { get; init; }
 
-    public required HandBuyIn BuyIn { get; init; }
+    /// <summary>Tournament buy-in (amount + fee). Null for cash game hands.</summary>
+    public required HandBuyIn? BuyIn { get; init; }
 
     public required string TableName { get; init; }
 
@@ -27,6 +31,7 @@ public sealed record ParsedHand
 
     public required bool IsRealMoney { get; init; }
 
+    /// <summary>Blind level in tournaments (1, 2…). 0 for cash game hands (fixed blinds).</summary>
     public required int Level { get; init; }
 
     /// <summary>Null when the provider does not print an ante for the level.</summary>
@@ -65,8 +70,14 @@ public sealed record ParsedHand
     /// </summary>
     public required IReadOnlyList<ParsedPotCollection> Collections { get; init; }
 
-    /// <summary>Equals the sum of action amounts and the sum of collections (checked by the parser).</summary>
+    /// <summary>Equals the sum of action amounts and the sum of collections plus rake (checked by the parser).</summary>
     public required long TotalPot { get; init; }
+
+    /// <summary>Rake taken from the pot, in the same unit as chip amounts. Null for tournaments (rake is in the buy-in fee).</summary>
+    public long? Rake { get; init; }
+
+    /// <summary>Table's advertised blinds for display and grouping ("0.25/0.50"). Null for tournaments.</summary>
+    public string? Stakes { get; init; }
 
     /// <summary>1-based line of the hand header in the source file.</summary>
     public required int LineNumber { get; init; }

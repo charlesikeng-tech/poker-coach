@@ -28,7 +28,10 @@ web/                     Angular app (ADR-0003)
   src/app/features/      one folder per product screen
   public/i18n/           fr / en / es translations
 docs/adr/                architecture decision records
-tools/                   anonymize_winamax.py (golden files)
+docs/runbooks/           dns-setup, scaleway-deploy, stripe-setup
+site/                    landing page nutsiq.com (static, self-hosted fonts)
+deploy/                  Caddyfile, Dockerfile.edge, scaleway/ (compose, deploy.sh)
+tools/                   anonymize_winamax.py (golden files), dev-setup.command
 docker-compose.yml       local PostgreSQL
 ```
 
@@ -290,9 +293,11 @@ Preflop sizing (ADR-0020):
       the effective stack), each with an interval still in line
 - [x] Sizing drill (`/api/training/sizing/{spot,answers,progress}`, `training.sizing_attempts`): raising is
       given, the size is asked; reviews and the weekly goal like the other drills; web: "Sizing" mode
-- [x] Hand facts v5: open and 3-bet raise-to, open faced, effective stack; `GET /api/training/sizing/played`
+- [x] Hand facts v5: open and 3-bet raise-to, open faced, effective stack, poker account id
+      (migrations `SizingFacts`, `HandHeroFactsPokerAccountId`); `GET /api/training/sizing/played`
       judges the player's own raises hand by hand, grouped by seat or side and band, with hands to replay
-- [x] Migration `SizingFacts`
+- [x] Real sizing drill (`GET /api/training/sizing/real`): poorly-sized hands from the player's own
+      history, same flow as the reference drill; migration `SizingRealSpots`
 - [ ] Squeeze and postflop (c-bet by texture) sizing; opponent-aware sizing with the HUD
 
 Email and password accounts (ADR-0013):
@@ -304,6 +309,14 @@ Email and password accounts (ADR-0013):
       Development; `App:PublicUrl` required outside Development; rate limit 10/min per address on `/api/auth`
 - [x] Web: sign-in / sign-up on the sign-in page, `/forgot-password`, `/reset-password`, `/confirm-email`
 - [ ] Brevo account and authenticated sending domain; cleanup of never-confirmed accounts
+
+Session serial (ADR-0021):
+
+- [x] `session_serial UUID` on `identity.users`, rotated on every sign-in and password change;
+      `pc_ser` claim in the session cookie, validated every 30 minutes — prevents account sharing
+      and revokes sessions on password change
+- [x] `POST /api/me/password` (change password, rotates the serial)
+- [x] Migration `SessionSerial`
 
 Subscriptions (ADR-0014):
 
@@ -355,6 +368,9 @@ Deployment readiness (roadmap step 5, ADR-0011):
 - [x] Hosting decision (ADR-0019): Scaleway fr-par, one instance with Docker Compose (Caddy for TLS and the
       landing page, app container), Managed PostgreSQL on a private network, backups 7 days; edge image built
       and pushed by CI with the app; `deploy/scaleway/deploy.sh <sha>` (pull, migrate, up, readiness)
+- [x] Ghost mode: masking numeric values for demos (`web/src/app/core/ghost-mode/`)
+- [x] Sentry integration: frontend error monitoring (`@sentry/angular`, browser tracing),
+      separate DSN for dev and prod environments
 - [ ] Production provisioned (`docs/runbooks/scaleway-deploy.md`): DNS, env files, first deploy, restore tested,
       uptime check; Google production redirect URI, Stripe live, Brevo domain; privacy contact, legal notice
 - [ ] Telemetry exporter (Azure Monitor or OTLP) with the hosting decision
@@ -369,3 +385,13 @@ MVP-3 — Leaks (ADR-0007):
       limit and global monthly budget, usage ledger
 - [x] Migration `Coaching`
 - [ ] Adjustable references; evaluation set for explanations
+
+Betclic cash game (ADR-0022):
+
+- [x] `GameType` enum (`Tournament`, `CashGame`), `Rake`, `Stakes` on `ParsedHand`
+- [x] Betclic NL Hold'em cash game parser (`BetclicHandHistoryParser`, `BetclicHandReader`,
+      `BetclicPatterns`, `BetclicValues`), detection, rake balance check, noise line skipping
+- [x] Migration `CashGame`: `game_type`, `rake`, `stakes` columns on `poker.hands`,
+      `tournament_id` nullable, index `(poker_account_id, game_type)`
+- [x] Import pipeline: cash game hands stored without tournament FK, `HandDetailsDocument` v2
+- [ ] Cash-specific statistics (BB/100, session tracking), performance page, game type filter

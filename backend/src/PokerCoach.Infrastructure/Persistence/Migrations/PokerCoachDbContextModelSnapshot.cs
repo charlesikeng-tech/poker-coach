@@ -760,6 +760,12 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(64)")
                         .HasColumnName("external_hand_id");
 
+                    b.Property<short>("GameType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)1)
+                        .HasColumnName("game_type");
+
                     b.Property<string>("HeroCards")
                         .HasMaxLength(8)
                         .HasColumnType("character varying(8)")
@@ -789,9 +795,18 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("poker_account_id");
 
+                    b.Property<long?>("Rake")
+                        .HasColumnType("bigint")
+                        .HasColumnName("rake");
+
                     b.Property<long>("SmallBlind")
                         .HasColumnType("bigint")
                         .HasColumnName("small_blind");
+
+                    b.Property<string>("Stakes")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasColumnName("stakes");
 
                     b.Property<DateTimeOffset>("StartedAt")
                         .HasColumnType("timestamp with time zone")
@@ -807,7 +822,7 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("total_pot");
 
-                    b.Property<Guid>("TournamentId")
+                    b.Property<Guid?>("TournamentId")
                         .HasColumnType("uuid")
                         .HasColumnName("tournament_id");
 
@@ -820,6 +835,9 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.HasIndex("PokerAccountId", "ExternalHandId")
                         .IsUnique()
                         .HasDatabaseName("ux_hands_poker_account_id_external_hand_id");
+
+                    b.HasIndex("PokerAccountId", "GameType")
+                        .HasDatabaseName("ix_hands_poker_account_id_game_type");
 
                     b.HasIndex("TournamentId", "StartedAt")
                         .HasDatabaseName("ix_hands_tournament_id_started_at");
@@ -1608,8 +1626,7 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.HasOne("PokerCoach.Infrastructure.Poker.TournamentRecord", null)
                         .WithMany()
                         .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_hands_tournaments_tournament_id");
                 });
 

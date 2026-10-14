@@ -1,8 +1,8 @@
 namespace PokerCoach.HandHistories.Tests;
 
 /// <summary>
-/// Real Winamax files, anonymized: the account owner is "Hero", opponents are "VillainNN" variants that
-/// keep the shape of the original names (spaces, dots, dashes).
+/// Real files, anonymized: the account owner is "Hero", opponents are "VilainNN" / "VillainNN" variants
+/// that keep the shape of the original names (spaces, dots, dashes).
 /// </summary>
 internal static class GoldenFiles
 {
@@ -43,8 +43,14 @@ internal static class GoldenFiles
 
     public const string AsteroidSummary = "20261003_ASTEROID_1178140542__real_holdem_no-limit_summary.txt";
 
+    /// <summary>7 hands: fold preflop, raise + flop, hero wins, 5-max, showdown, all-in, side pot.</summary>
+    public const string BetclicCash6Max = "cash_nlhe_025_050_6max.txt";
+
     public static string Read(string fileName) =>
         File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Winamax", fileName));
+
+    public static string ReadBetclic(string fileName) =>
+        File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Betclic", fileName));
 
     /// <summary>Replaces the first occurrence only, and fails loudly if the text is not there.</summary>
     public static string ReplaceFirst(string content, string oldValue, string newValue)

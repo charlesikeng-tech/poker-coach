@@ -300,9 +300,9 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         Add(command, "poker_account_id", NpgsqlDbType.Uuid, pokerAccountId);
         Add(command, "external_id", NpgsqlDbType.Text, externalTournamentId);
         Add(command, "name", NpgsqlDbType.Text, hand.TournamentName);
-        Add(command, "currency", NpgsqlDbType.Text, hand.BuyIn.Currency);
-        Add(command, "buy_in", NpgsqlDbType.Numeric, hand.BuyIn.AmountExcludingFee);
-        Add(command, "fee", NpgsqlDbType.Numeric, hand.BuyIn.Fee);
+        Add(command, "currency", NpgsqlDbType.Text, hand.BuyIn?.Currency);
+        Add(command, "buy_in", NpgsqlDbType.Numeric, hand.BuyIn?.AmountExcludingFee);
+        Add(command, "fee", NpgsqlDbType.Numeric, hand.BuyIn?.Fee);
         Add(command, "first_hand_at", NpgsqlDbType.TimestampTz, hand.StartedAt.ToUniversalTime());
         Add(command, "now", NpgsqlDbType.TimestampTz, time.GetUtcNow());
         return (Guid)(await command.ExecuteScalarAsync(cancellationToken))!;
@@ -388,14 +388,14 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         }
     }
 
-    public async Task<bool> TryInsertHandAsync(Guid pokerAccountId, Guid tournamentId, Guid importedFileId, ParsedHand hand, CancellationToken cancellationToken)
+    public async Task<bool> TryInsertHandAsync(Guid pokerAccountId, Guid? tournamentId, Guid importedFileId, ParsedHand hand, CancellationToken cancellationToken)
     {
         const string Sql = """
             INSERT INTO poker.hands
-                (id, poker_account_id, tournament_id, imported_file_id, external_hand_id, started_at, level, small_blind,
-                 big_blind, ante, table_name, max_seats, button_seat, hero_seat, hero_stack, hero_cards, total_pot, details, created_at)
-            VALUES (@id, @poker_account_id, @tournament_id, @imported_file_id, @external_hand_id, @started_at, @level, @small_blind,
-                 @big_blind, @ante, @table_name, @max_seats, @button_seat, @hero_seat, @hero_stack, @hero_cards, @total_pot, @details, @now)
+                (id, poker_account_id, tournament_id, imported_file_id, game_type, external_hand_id, started_at, level, small_blind,
+                 big_blind, ante, table_name, max_seats, button_seat, hero_seat, hero_stack, hero_cards, total_pot, rake, stakes, details, created_at)
+            VALUES (@id, @poker_account_id, @tournament_id, @imported_file_id, @game_type, @external_hand_id, @started_at, @level, @small_blind,
+                 @big_blind, @ante, @table_name, @max_seats, @button_seat, @hero_seat, @hero_stack, @hero_cards, @total_pot, @rake, @stakes, @details, @now)
             ON CONFLICT (poker_account_id, external_hand_id) DO NOTHING
             """;
 
@@ -406,6 +406,7 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         Add(command, "poker_account_id", NpgsqlDbType.Uuid, pokerAccountId);
         Add(command, "tournament_id", NpgsqlDbType.Uuid, tournamentId);
         Add(command, "imported_file_id", NpgsqlDbType.Uuid, importedFileId);
+        Add(command, "game_type", NpgsqlDbType.Smallint, (short)hand.GameType);
         Add(command, "external_hand_id", NpgsqlDbType.Text, hand.ExternalHandId);
         Add(command, "started_at", NpgsqlDbType.TimestampTz, hand.StartedAt.ToUniversalTime());
         Add(command, "level", NpgsqlDbType.Integer, hand.Level);
@@ -419,6 +420,8 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         Add(command, "hero_stack", NpgsqlDbType.Bigint, heroSeat?.Stack);
         Add(command, "hero_cards", NpgsqlDbType.Text, hand.HeroCards.Count == 0 ? null : string.Concat(hand.HeroCards));
         Add(command, "total_pot", NpgsqlDbType.Bigint, hand.TotalPot);
+        Add(command, "rake", NpgsqlDbType.Bigint, hand.Rake);
+        Add(command, "stakes", NpgsqlDbType.Text, hand.Stakes);
         Add(command, "details", NpgsqlDbType.Jsonb, HandDetailsDocument.From(hand).ToJson());
         Add(command, "now", NpgsqlDbType.TimestampTz, time.GetUtcNow());
         return await command.ExecuteNonQueryAsync(cancellationToken) == 1;

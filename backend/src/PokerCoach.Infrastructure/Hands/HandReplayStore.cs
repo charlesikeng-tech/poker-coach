@@ -56,7 +56,7 @@ internal sealed class HandReplayStore(PokerCoachDbContext db) : IHandReplayStore
 
         return new HandReplaySource(
             row.Id,
-            row.TournamentId,
+            row.TournamentId!.Value,
             row.TournamentName,
             row.StartedAt,
             row.Level,

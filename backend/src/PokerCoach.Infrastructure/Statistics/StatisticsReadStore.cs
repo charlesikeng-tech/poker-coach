@@ -294,11 +294,12 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
             from c in coverage.DefaultIfEmpty()
             where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
+                  && h.TournamentId != null
             select new FilteredHand
             {
                 F = f,
                 StartedAt = h.StartedAt,
-                TournamentId = h.TournamentId,
+                TournamentId = h.TournamentId!.Value,
                 HeroCards = h.HeroCards,
                 MaxSeats = h.MaxSeats,
                 BigBlind = h.BigBlind,

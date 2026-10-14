@@ -84,8 +84,8 @@ internal sealed class CoverageStore(PokerCoachDbContext db, TimeProvider time) :
         var points = (await (
                 from h in hands.AsNoTracking()
                 join f in facts on h.Id equals f.HandId
-                where ids.Contains(h.TournamentId)
-                select new { h.TournamentId, h.StartedAt, h.Level, h.ExternalHandId, h.HeroStack, f.NetChips })
+                where h.TournamentId != null && ids.Contains(h.TournamentId.Value)
+                select new { TournamentId = h.TournamentId!.Value, h.StartedAt, h.Level, h.ExternalHandId, h.HeroStack, f.NetChips })
             .ToListAsync(cancellationToken))
             .ToLookup(h => h.TournamentId, h => new StoredHandPoint(h.StartedAt, h.Level, h.ExternalHandId, h.HeroStack, h.NetChips));
 

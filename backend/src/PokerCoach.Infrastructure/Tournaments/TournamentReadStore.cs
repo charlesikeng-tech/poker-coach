@@ -98,8 +98,8 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 e => new EntryOutcome(e.FinishPosition, e.PrizeWinnings, e.BountyWinnings, e.Rebuys, e.Addons));
 
         var handCounts = await db.Set<HandRecord>().AsNoTracking()
-            .Where(h => ids.Contains(h.TournamentId))
-            .GroupBy(h => h.TournamentId)
+            .Where(h => h.TournamentId != null && ids.Contains(h.TournamentId.Value))
+            .GroupBy(h => h.TournamentId!.Value)
             .Select(g => new { TournamentId = g.Key, Count = g.Count() })
             .ToDictionaryAsync(g => g.TournamentId, g => g.Count, cancellationToken);
 

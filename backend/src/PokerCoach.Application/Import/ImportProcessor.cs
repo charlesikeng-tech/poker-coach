@@ -1,4 +1,5 @@
 using System.Text;
+using PokerCoach.Domain.Poker;
 using PokerCoach.HandHistories;
 
 namespace PokerCoach.Application.Import;
@@ -95,15 +96,13 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
 
         foreach (var hand in result.Hands)
         {
-            // Without the hero we cannot tell whose hand it is; without the tournament id we cannot group
-            // it. Both are rejected rather than guessed.
             if (hand.HeroName is null)
             {
                 rejections.Add(new ParseError(ImportErrorCodes.HeroNotFound, hand.LineNumber, hand.ExternalHandId));
                 continue;
             }
 
-            if (hand.ExternalTournamentId is null)
+            if (hand.GameType == GameType.Tournament && hand.ExternalTournamentId is null)
             {
                 rejections.Add(new ParseError(ImportErrorCodes.TournamentUnknown, hand.LineNumber, hand.ExternalHandId));
                 continue;
@@ -117,10 +116,16 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
 
             firstAccountId ??= accountId;
 
-            if (!tournaments.TryGetValue((accountId, hand.ExternalTournamentId), out var tournamentId))
+            Guid? tournamentId = null;
+            if (hand.ExternalTournamentId is not null)
             {
-                tournamentId = await store.EnsureTournamentAsync(accountId, hand.ExternalTournamentId, hand, cancellationToken);
-                tournaments[(accountId, hand.ExternalTournamentId)] = tournamentId;
+                if (!tournaments.TryGetValue((accountId, hand.ExternalTournamentId), out var tid))
+                {
+                    tid = await store.EnsureTournamentAsync(accountId, hand.ExternalTournamentId, hand, cancellationToken);
+                    tournaments[(accountId, hand.ExternalTournamentId)] = tid;
+                }
+
+                tournamentId = tid;
             }
 
             if (await store.TryInsertHandAsync(accountId, tournamentId, file.Id, hand, cancellationToken))

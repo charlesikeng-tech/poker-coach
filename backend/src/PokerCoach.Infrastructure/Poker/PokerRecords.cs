@@ -115,9 +115,11 @@ internal sealed class HandRecord
 
     public Guid PokerAccountId { get; set; }
 
-    public Guid TournamentId { get; set; }
+    public Guid? TournamentId { get; set; }
 
     public Guid? ImportedFileId { get; set; }
+
+    public GameType GameType { get; set; }
 
     public string ExternalHandId { get; set; } = string.Empty;
 
@@ -145,6 +147,10 @@ internal sealed class HandRecord
     public string? HeroCards { get; set; }
 
     public long TotalPot { get; set; }
+
+    public long? Rake { get; set; }
+
+    public string? Stakes { get; set; }
 
     public string Details { get; set; } = string.Empty;
 
@@ -218,18 +224,20 @@ internal sealed class HandConfiguration : IEntityTypeConfiguration<HandRecord>
         builder.ToTable("hands", PokerSchema.Name);
         builder.HasKey(h => h.Id);
         builder.Property(h => h.Id).ValueGeneratedNever();
+        builder.Property(h => h.GameType).HasConversion<short>().HasDefaultValue(GameType.Tournament);
         builder.Property(h => h.ExternalHandId).HasMaxLength(64).IsRequired();
         builder.Property(h => h.TableName).HasMaxLength(100).IsRequired();
         builder.Property(h => h.HeroCards).HasMaxLength(8);
+        builder.Property(h => h.Stakes).HasMaxLength(16);
         builder.Property(h => h.Details).HasColumnType("jsonb").IsRequired();
 
-        // Deduplication key of hands: re-imports and overlapping files never create a second copy.
         builder.HasIndex(h => new { h.PokerAccountId, h.ExternalHandId }).IsUnique();
         builder.HasIndex(h => new { h.TournamentId, h.StartedAt });
         builder.HasIndex(h => h.ImportedFileId);
+        builder.HasIndex(h => new { h.PokerAccountId, h.GameType });
 
         builder.HasOne<PokerAccountRecord>().WithMany().HasForeignKey(h => h.PokerAccountId).OnDelete(DeleteBehavior.Cascade);
-        builder.HasOne<TournamentRecord>().WithMany().HasForeignKey(h => h.TournamentId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne<TournamentRecord>().WithMany().HasForeignKey(h => h.TournamentId).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne<Import.ImportedFileRecord>().WithMany().HasForeignKey(h => h.ImportedFileId).OnDelete(DeleteBehavior.SetNull);
     }
 }
