@@ -14,6 +14,9 @@ namespace PokerCoach.Api.Coaching;
 /// <param name="Language">fr, en or es; defaults to the account's language.</param>
 public sealed record GenerateDebriefRequest(string? Language);
 
+/// <param name="Day">The UTC day of the cash session ("2026-10-14"); required.</param>
+public sealed record GenerateCashDebriefRequest(DateOnly Day, string? Language);
+
 /// <param name="Week">Monday of the week to review ("2026-10-05"); this week when omitted.</param>
 public sealed record GenerateWeekReviewRequest(DateOnly? Week, string? Language);
 
@@ -37,6 +40,30 @@ public sealed record DebriefResponse(
     string Headline,
     string Story,
     IReadOnlyList<DebriefMomentResponse> Moments,
+    IReadOnlyList<string> Strengths,
+    IReadOnlyList<string> WorkOn,
+    bool Stale,
+    string Model,
+    DateTimeOffset CreatedAt);
+
+/// <summary>A key moment in a cash session debrief.</summary>
+public sealed record CashDebriefMomentResponse(
+    string Ref,
+    Guid HandId,
+    long BigBlind,
+    PokerPosition? Position,
+    string? HeroCards,
+    decimal StackInBigBlinds,
+    decimal NetBigBlinds,
+    MomentVerdict? Verdict,
+    string? Note);
+
+/// <summary>AI-written cash session debrief.</summary>
+public sealed record CashDebriefResponse(
+    DateOnly Day,
+    string Headline,
+    string Story,
+    IReadOnlyList<CashDebriefMomentResponse> Moments,
     IReadOnlyList<string> Strengths,
     IReadOnlyList<string> WorkOn,
     bool Stale,
@@ -79,6 +106,9 @@ public static class CoachingEndpoints
     {
         endpoints.MapGet("/api/tournaments/{id:guid}/debrief", GetDebriefAsync).WithTags("Coaching");
         endpoints.MapPost("/api/tournaments/{id:guid}/debrief", GenerateDebriefAsync).WithTags("Coaching")
+            .AddEndpointFilter<AntiforgeryValidationFilter>();
+        endpoints.MapGet("/api/cash/debrief", GetCashDebriefAsync).WithTags("Coaching");
+        endpoints.MapPost("/api/cash/debrief", GenerateCashDebriefAsync).WithTags("Coaching")
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         endpoints.MapGet("/api/progress/review", GetReviewAsync).WithTags("Coaching");
         endpoints.MapPost("/api/progress/review", GenerateReviewAsync).WithTags("Coaching")
@@ -209,6 +239,75 @@ public static class CoachingEndpoints
 
         var outcome = await reviews.GenerateAsync(userId, request?.Week, answerLanguage!, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToResponse(view)) : Problem(outcome.Failure!.Value, "WEEK_NOT_FOUND");
+    }
+
+    private static async Task<Results<Ok<CashDebriefResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetCashDebriefAsync(
+        DateOnly day,
+        string? language,
+        HttpContext context,
+        CashSessionDebriefService debriefs,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var view = await debriefs.GetAsync(userId, day, answerLanguage!, cancellationToken);
+        return view is null
+            ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "CASH_DEBRIEF_NOT_FOUND", "No debrief written for this cash session yet.")
+            : TypedResults.Ok(ToCashResponse(day, view));
+    }
+
+    private static async Task<Results<Ok<CashDebriefResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GenerateCashDebriefAsync(
+        GenerateCashDebriefRequest request,
+        HttpContext context,
+        CashSessionDebriefService debriefs,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(request.Language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var outcome = await debriefs.GenerateAsync(userId, request.Day, answerLanguage!, cancellationToken);
+        return outcome.View is { } view ? TypedResults.Ok(ToCashResponse(request.Day, view)) : Problem(outcome.Failure!.Value, "CASH_SESSION_NOT_FOUND");
+    }
+
+    private static CashDebriefResponse ToCashResponse(DateOnly day, ReportView<CashDebriefReport> view)
+    {
+        var notes = view.Report.Debrief.Moments.ToDictionary(n => n.Ref, StringComparer.Ordinal);
+        var debrief = view.Report.Debrief;
+        return new CashDebriefResponse(
+            day,
+            debrief.Headline,
+            debrief.Story,
+            view.Report.Moments
+                .Select(m =>
+                {
+                    var note = notes.GetValueOrDefault(m.Ref);
+                    return new CashDebriefMomentResponse(m.Ref, m.HandId, m.BigBlind, m.Position, m.HeroCards, m.StackInBigBlinds, m.NetBigBlinds, note?.Verdict, note?.Note);
+                })
+                .ToList(),
+            debrief.Strengths,
+            debrief.WorkOn,
+            view.Stale,
+            view.Model,
+            view.CreatedAt);
     }
 
     private static DebriefResponse ToResponse(ReportView<DebriefReport> view)

@@ -123,6 +123,9 @@ public sealed class BankrollServiceTests
     {
         public Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<CashHandRow>>(rows);
+
+        public Task<IReadOnlyList<CashHandSummary>> ListCashHandSummariesAsync(Guid userId, DateTimeOffset from, DateTimeOffset to, int factsVersion, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<CashHandSummary>>([]);
     }
 
     private sealed class InMemoryBankrollStore : IBankrollStore

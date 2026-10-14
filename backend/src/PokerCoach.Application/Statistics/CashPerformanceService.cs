@@ -24,10 +24,16 @@ public sealed record CashPerformanceReport(
     IReadOnlyList<CashPerformanceGroup> ByTimeSlot,
     int PendingHands);
 
+/// <summary>A cash hand with its id and net result, for selecting key moments.</summary>
+public sealed record CashHandSummary(Guid HandId, DateTimeOffset StartedAt, long BigBlind, int MaxSeats, decimal NetBigBlinds, decimal StackInBigBlinds, PokerPosition? Position, string? HeroCards);
+
 public interface ICashPerformanceReadStore
 {
     Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(
         Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<CashHandSummary>> ListCashHandSummariesAsync(
+        Guid userId, DateTimeOffset from, DateTimeOffset to, int factsVersion, CancellationToken cancellationToken);
 }
 
 public sealed class CashPerformanceService(ICashPerformanceReadStore store, IStatisticsReadStore stats)

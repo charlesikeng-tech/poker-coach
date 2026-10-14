@@ -125,6 +125,7 @@ builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<AiUsageGuard>();
 builder.Services.AddScoped<LeakCoachService>();
 builder.Services.AddScoped<TournamentDebriefService>();
+builder.Services.AddScoped<CashSessionDebriefService>();
 builder.Services.AddScoped<WeekReviewService>();
 builder.Services.AddSingleton<FeatureUsageTracker>();
 

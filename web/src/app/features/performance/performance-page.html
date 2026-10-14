@@ -140,6 +140,31 @@
               </section>
             }
           }
+
+          @if (cashDays().length > 0) {
+            <section class="panel glass">
+              <h2>{{ t('cash.debrief.title') }}</h2>
+              <label>
+                <span>{{ t('cash.debrief.selectDay') }}</span>
+                <select
+                  [value]="selectedDay() ?? ''"
+                  (change)="selectDay($any($event.target).value || null)"
+                >
+                  <option value="">{{ t('cash.debrief.placeholder') }}</option>
+                  @for (day of cashDays(); track day) {
+                    <option [value]="day">{{ monthLabel(day) }}</option>
+                  }
+                </select>
+              </label>
+              @if (selectedDay(); as day) {
+                <app-cash-debrief-panel
+                  #cashDebriefPanel
+                  [day]="day"
+                  [handsCount]="selectedDayHands()"
+                />
+              }
+            </section>
+          }
         </div>
       }
     } @else {

@@ -6,6 +6,7 @@ import {
   inject,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -27,6 +28,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { GameType } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
+import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
 import { CashPerformanceReport, PerformanceGroup, PerformanceReport, PerformanceApi } from './performance-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
@@ -37,7 +39,7 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
 
 @Component({
   selector: 'app-performance-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart, StatTile, GameTypeToggle],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart, StatTile, GameTypeToggle, CashDebriefPanel],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './performance-page.html',
@@ -54,7 +56,22 @@ export class PerformancePage {
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<PerformanceReport | null>(null);
   protected readonly cashReport = signal<CashPerformanceReport | null>(null);
+  protected readonly selectedDay = signal<string | null>(null);
   protected readonly icons = { CircleAlert, Upload };
+
+  protected readonly cashDebriefPanel = viewChild<CashDebriefPanel>('cashDebriefPanel');
+
+  protected readonly cashDays = computed(() => {
+    const report = this.cashReport();
+    return (report?.curve ?? []).map((p) => p.date);
+  });
+
+  protected readonly selectedDayHands = computed(() => {
+    const day = this.selectedDay();
+    const report = this.cashReport();
+    if (!day || !report) return 0;
+    return report.curve.find((p) => p.date === day)?.hands ?? 0;
+  });
 
   private readonly locale = computed(() => this.language.current());
   private request = 0;
@@ -152,6 +169,16 @@ export class PerformancePage {
 
   protected setGameType(value: GameType): void {
     this.gameType.set(value);
+  }
+
+  protected selectDay(day: string | null): void {
+    this.selectedDay.set(day);
+    if (day) {
+      const panel = this.cashDebriefPanel();
+      if (panel) {
+        void panel.load();
+      }
+    }
   }
 
   protected retry(): void {

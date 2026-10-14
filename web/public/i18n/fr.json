@@ -202,6 +202,11 @@
           "profit": "Profit €",
           "netBb": "BB nettes",
           "bb100": "BB/100"
+        },
+        "debrief": {
+          "title": "Débrief de session",
+          "selectDay": "Jour",
+          "placeholder": "Choisis un jour…"
         }
       }
     },
@@ -1933,6 +1938,16 @@
         "tooShort": "Il faut au moins {{count}} mains jouées dans le tournoi."
       }
     },
+    "cashDebrief": {
+      "title": "Débrief session cash",
+      "intro": "Le coach analyse ta session de cash game : les mains marquantes, ce qui a fonctionné et ce qu'il faut travailler.",
+      "action": "Écrire le débrief",
+      "writing": "Le coach analyse ta session…",
+      "stale": "De nouvelles mains ont été importées depuis ce débrief.",
+      "blocked": {
+        "tooFew": "Il faut au moins {{count}} mains dans cette session."
+      }
+    },
     "review": {
       "title": "Bilan du coach",
       "which": "Semaine à commenter",
@@ -1951,6 +1966,7 @@
       "NOT_ENOUGH_HANDS": "Pas assez de mains pour que le coach ait quelque chose à dire.",
       "TOURNAMENT_NOT_FOUND": "Ce tournoi est introuvable.",
       "WEEK_NOT_FOUND": "Pas de plan pour cette semaine.",
+      "CASH_SESSION_NOT_FOUND": "Aucune session cash trouvée pour ce jour.",
       "COACHING_DAILY_LIMIT": "Limite quotidienne atteinte pour le coach. Réessaie demain.",
       "COACHING_BUDGET_EXHAUSTED": "Le coach est en pause jusqu'au mois prochain.",
       "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré sur ce serveur.",

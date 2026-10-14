@@ -365,6 +365,15 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<CashHandSummary>> ListCashHandSummariesAsync(
+        Guid userId, DateTimeOffset from, DateTimeOffset to, int factsVersion, CancellationToken cancellationToken)
+    {
+        var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
+        return await Filtered(userId, filter, factsVersion)
+            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards))
+            .ToListAsync(cancellationToken);
+    }
+
     public Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) =>
         (from h in db.Set<HandRecord>()
          join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id

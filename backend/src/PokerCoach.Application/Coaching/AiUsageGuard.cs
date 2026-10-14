@@ -9,6 +9,7 @@ public enum AiTask
     LeakExplanation,
     WeekReview,
     TournamentDebrief,
+    CashDebrief,
 }
 
 public static class AiTasks
@@ -17,6 +18,7 @@ public static class AiTasks
     public static string Purpose(this AiTask task) => task switch
     {
         AiTask.TournamentDebrief => "tournament-debrief",
+        AiTask.CashDebrief => "cash-debrief",
         AiTask.WeekReview => "week-review",
         _ => "leak-explanation",
     };
@@ -25,6 +27,7 @@ public static class AiTasks
     public static int Credits(this AiTask task) => task switch
     {
         AiTask.TournamentDebrief => 5,
+        AiTask.CashDebrief => 5,
         AiTask.WeekReview => 2,
         _ => 1,
     };
@@ -33,6 +36,7 @@ public static class AiTasks
     public static Feature? Feature(this AiTask task) => task switch
     {
         AiTask.TournamentDebrief => Domain.Subscriptions.Feature.TournamentDebrief,
+        AiTask.CashDebrief => Domain.Subscriptions.Feature.TournamentDebrief,
         AiTask.WeekReview => Domain.Subscriptions.Feature.WeekReview,
         _ => null,
     };
@@ -213,7 +217,7 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
 
     private int DailyLimit(AiTask task) => task switch
     {
-        AiTask.TournamentDebrief => options.DailyDebriefsPerUser,
+        AiTask.TournamentDebrief or AiTask.CashDebrief => options.DailyDebriefsPerUser,
         AiTask.WeekReview => options.DailyWeekReviewsPerUser,
         _ => options.DailyExplanationsPerUser,
     };

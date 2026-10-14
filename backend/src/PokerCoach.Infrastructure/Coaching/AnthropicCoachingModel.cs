@@ -292,7 +292,7 @@ internal sealed partial class AnthropicCoachingModel(
         var settings = options.Value;
         var output = task switch
         {
-            AiTask.TournamentDebrief => DebriefMaxOutputTokens,
+            AiTask.TournamentDebrief or AiTask.CashDebrief => DebriefMaxOutputTokens,
             AiTask.WeekReview => ReviewMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };

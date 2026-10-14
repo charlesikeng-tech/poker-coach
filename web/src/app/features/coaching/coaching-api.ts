@@ -65,12 +65,37 @@ export interface WeekReview {
   readonly createdAt: string;
 }
 
+export interface CashDebriefMoment {
+  readonly ref: string;
+  readonly handId: string;
+  readonly bigBlind: number;
+  readonly position: PokerPosition | null;
+  readonly heroCards: string | null;
+  readonly stackInBigBlinds: number;
+  readonly netBigBlinds: number;
+  readonly verdict: MomentVerdict | null;
+  readonly note: string | null;
+}
+
+export interface CashDebrief {
+  readonly day: string;
+  readonly headline: string;
+  readonly story: string;
+  readonly moments: readonly CashDebriefMoment[];
+  readonly strengths: readonly string[];
+  readonly workOn: readonly string[];
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 /** Error codes the coach panels explain; anything else is shown as a generic failure. */
 const COACH_ERRORS = new Set([
   'HANDS_PENDING',
   'NOT_ENOUGH_HANDS',
   'TOURNAMENT_NOT_FOUND',
   'WEEK_NOT_FOUND',
+  'CASH_SESSION_NOT_FOUND',
   'COACHING_DAILY_LIMIT',
   'PLAN_REQUIRED',
   'PLAN_LIMIT_REACHED',
@@ -97,7 +122,7 @@ export function notWrittenYet(error: unknown): boolean {
     return false;
   }
   const code = (error.error as { code?: unknown } | null)?.code;
-  return code === 'DEBRIEF_NOT_FOUND' || code === 'REVIEW_NOT_FOUND';
+  return code === 'DEBRIEF_NOT_FOUND' || code === 'REVIEW_NOT_FOUND' || code === 'CASH_DEBRIEF_NOT_FOUND';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -117,6 +142,20 @@ export class CoachingApi {
   writeDebrief(tournamentId: string, language: string): Promise<Debrief> {
     return firstValueFrom(
       this.http.post<Debrief>(`/api/tournaments/${tournamentId}/debrief`, { language }),
+    );
+  }
+
+  cashDebrief(day: string, language: string): Promise<CashDebrief> {
+    return firstValueFrom(
+      this.http.get<CashDebrief>('/api/cash/debrief', {
+        params: new HttpParams().set('day', day).set('language', language),
+      }),
+    );
+  }
+
+  writeCashDebrief(day: string, language: string): Promise<CashDebrief> {
+    return firstValueFrom(
+      this.http.post<CashDebrief>('/api/cash/debrief', { day, language }),
     );
   }
 
