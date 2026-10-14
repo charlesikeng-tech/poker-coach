@@ -79,6 +79,15 @@
         "more": "All tournaments",
         "missingSummary": "No summary",
         "incomplete": "Incomplete"
+      },
+      "cash": {
+        "title": "Cash Game",
+        "bb100": "BB/100",
+        "profit": "Profit €",
+        "hands": "hands",
+        "chartTitle": "Cumulative profit in BB",
+        "chartAria": "Cash game profit curve: {{bb}} BB",
+        "chartNotEnough": "Play at least two days of cash game in the last {{days}} days to see the curve."
       }
     },
     "performance": {

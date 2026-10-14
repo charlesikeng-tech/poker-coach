@@ -79,6 +79,15 @@
         "more": "Tous les tournois",
         "missingSummary": "Sans résumé",
         "incomplete": "Incomplet"
+      },
+      "cash": {
+        "title": "Cash Game",
+        "bb100": "BB/100",
+        "profit": "Profit €",
+        "hands": "mains",
+        "chartTitle": "Profit cumulé en BB",
+        "chartAria": "Courbe de profit cash game : {{bb}} BB",
+        "chartNotEnough": "Joue au moins deux jours de cash game sur les {{days}} derniers jours pour voir la courbe."
       }
     },
     "performance": {

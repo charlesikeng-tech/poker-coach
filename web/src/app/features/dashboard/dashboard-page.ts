@@ -19,7 +19,7 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi } from '../import/import-api';
-import { PerformanceApi, PerformanceReport } from '../performance/performance-api';
+import { CashPerformanceReport, PerformanceApi, PerformanceReport } from '../performance/performance-api';
 import { TournamentPage, TournamentsApi } from '../tournaments/tournaments-api';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -31,6 +31,7 @@ interface DashboardData {
   readonly previous: PerformanceReport;
   /** All-time list, first page: the latest tournaments and the all-time counts. */
   readonly recent: TournamentPage;
+  readonly cash: CashPerformanceReport;
   readonly unconfirmedAccounts: number;
 }
 
@@ -87,6 +88,14 @@ export class DashboardPage {
       integer: (value: number | null) =>
         formatInteger(value === null ? null : Math.round(value), locale),
       date: (value: string | null) => formatDateTime(value, locale),
+      bb: (value: number | null) =>
+        value === null
+          ? '—'
+          : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1, signDisplay: 'exceptZero' }).format(value)} BB`,
+      bb100: (value: number | null) =>
+        value === null
+          ? '—'
+          : `${new Intl.NumberFormat(locale, { maximumFractionDigits: 2, signDisplay: 'exceptZero' }).format(value)} BB/100`,
     };
   });
 
@@ -124,6 +133,28 @@ export class DashboardPage {
       }).format(value);
   });
 
+  protected readonly cashChartPoints = computed<LinePoint[]>(() => {
+    const data = this.data();
+    const locale = this.locale();
+    const dayFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    return (data?.cash.curve ?? []).map((p, i) => ({
+      x: i,
+      y: p.cumulativeNetBigBlinds,
+      label: dayFmt.format(new Date(`${p.date}T00:00:00Z`)),
+      details: [
+        `${p.hands} ${this.transloco.translate('pages.dashboard.cash.hands')}`,
+        `${this.bb(p.netBigBlinds)} BB`,
+        `${this.transloco.translate('pages.dashboard.chart.total')} ${this.bb(p.cumulativeNetBigBlinds)} BB`,
+      ],
+    }));
+  });
+
+  protected readonly formatBbAxis = computed(() => {
+    const locale = this.locale();
+    return (value: number) =>
+      `${new Intl.NumberFormat(locale, { maximumFractionDigits: 0, signDisplay: 'exceptZero' }).format(value)} BB`;
+  });
+
   constructor() {
     void this.load();
   }
@@ -136,22 +167,30 @@ export class DashboardPage {
     return value === null || value === 0 ? null : value > 0 ? 'positive' : 'negative';
   }
 
+  protected bb(value: number | null): string {
+    return value === null
+      ? '—'
+      : new Intl.NumberFormat(this.locale(), { maximumFractionDigits: 1, signDisplay: 'exceptZero' }).format(value);
+  }
+
   private async load(): Promise<void> {
     this.state.set('loading');
     const now = Date.now();
     const windowStart = new Date(now - WINDOW_DAYS * DAY_MS).toISOString();
     const previousStart = new Date(now - 2 * WINDOW_DAYS * DAY_MS).toISOString();
     try {
-      const [current, previous, recent, accounts] = await Promise.all([
+      const [current, previous, recent, cash, accounts] = await Promise.all([
         this.performanceApi.get(windowStart),
         this.performanceApi.get(previousStart, windowStart),
         this.tournamentsApi.list({ page: 1, pageSize: RECENT_COUNT }),
+        this.performanceApi.getCash(windowStart),
         this.importApi.listAccounts(),
       ]);
       this.data.set({
         current,
         previous,
         recent,
+        cash,
         unconfirmedAccounts: accounts.filter((a) => !a.confirmedAt).length,
       });
       this.state.set('ready');

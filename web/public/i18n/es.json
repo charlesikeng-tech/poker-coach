@@ -79,6 +79,15 @@
         "more": "Todos los torneos",
         "missingSummary": "Sin resumen",
         "incomplete": "Incompleto"
+      },
+      "cash": {
+        "title": "Cash Game",
+        "bb100": "BB/100",
+        "profit": "Beneficio €",
+        "hands": "manos",
+        "chartTitle": "Beneficio acumulado en BB",
+        "chartAria": "Curva de beneficio cash game: {{bb}} BB",
+        "chartNotEnough": "Juega al menos dos días de cash game en los últimos {{days}} días para ver la curva."
       }
     },
     "performance": {
