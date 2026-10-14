@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using PokerCoach.Application.Progress;
+using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
 using PokerCoach.Domain.Poker.Analysis;
@@ -45,6 +46,7 @@ public sealed class WeekReviewService(
     ProgressService progress,
     ITrainingStore training,
     PerformanceService performance,
+    CashPerformanceService cashPerformance,
     ICoachingReportStore reports,
     AiUsageGuard guard,
     TimeProvider time)
@@ -129,7 +131,7 @@ public sealed class WeekReviewService(
     }
 
     /// <summary>Everything the review is written from, for this week or one of the history's weeks.</summary>
-    internal sealed record WeekFacts(WeekReport Week, bool WeekOver, int DayOfWeek, int DrillAttempts, int DrillCorrect, int DrillGoal, PerformanceFigures Results);
+    internal sealed record WeekFacts(WeekReport Week, bool WeekOver, int DayOfWeek, int DrillAttempts, int DrillCorrect, int DrillGoal, PerformanceFigures Results, CashPerformanceFigures? CashResults);
 
     private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, CancellationToken cancellationToken)
     {
@@ -147,8 +149,10 @@ public sealed class WeekReviewService(
             ? (report.DrillAttempts, report.DrillCorrect)
             : await training.CountSinceAsync(userId, start, end, cancellationToken);
         var results = (await performance.GetAsync(userId, start, end, cancellationToken)).Totals;
+        var cashReport = await cashPerformance.GetAsync(userId, start, end, cancellationToken);
+        var cashResults = cashReport.Totals.Hands > 0 ? cashReport.Totals : (CashPerformanceFigures?)null;
         var now = time.GetUtcNow();
-        return new WeekFacts(measured, now >= end, Math.Clamp((int)(now - start).TotalDays + 1, 1, 7), attempts, correct, report.DrillGoal, results);
+        return new WeekFacts(measured, now >= end, Math.Clamp((int)(now - start).TotalDays + 1, 1, 7), attempts, correct, report.DrillGoal, results, cashResults);
     }
 
     /// <summary>The week in plain facts, all computed by us.</summary>
@@ -164,6 +168,11 @@ public sealed class WeekReviewService(
         if (r.TournamentsWithResult > 0)
         {
             text.AppendLine(CultureInfo.InvariantCulture, $"Results ({r.TournamentsWithResult} tournaments with a known result): profit {r.Profit.ToString("0.00", CultureInfo.InvariantCulture)}, ROI {(r.Roi is { } roi ? Pct(roi) : "unknown")}, {r.PaidEntries} paid of {r.Entries} entries. A week of tournaments is mostly variance: never judge the player's level or the plan from the money.");
+        }
+
+        if (facts.CashResults is { } cash)
+        {
+            text.AppendLine(CultureInfo.InvariantCulture, $"Cash game this week: {cash.Hands} hands, BB/100 {(cash.BigBlindsPer100?.ToString("0.00", CultureInfo.InvariantCulture) ?? "N/A")}, net {(cash.NetMoney >= 0 ? "+" : string.Empty)}{cash.NetMoney.ToString("0.00", CultureInfo.InvariantCulture)} €. Cash results over a single week are a small sample: note the volume but do not judge the player's level from the money.");
         }
 
         text.AppendLine(CultureInfo.InvariantCulture, $"Training-room drills this week: {facts.DrillAttempts} answers, {facts.DrillCorrect} right; weekly goal {facts.DrillGoal}.");
@@ -192,6 +201,7 @@ public sealed class WeekReviewService(
             string.Join(',', facts.Week.Priorities.Select(p => $"{p.Week.Made}/{p.Week.Opportunities}")),
             (facts.DrillAttempts / 10).ToString(CultureInfo.InvariantCulture),
             facts.Results.TournamentsWithResult.ToString(CultureInfo.InvariantCulture),
+            (facts.CashResults?.Hands ?? 0).ToString(CultureInfo.InvariantCulture),
             facts.WeekOver.ToString(),
             language);
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(key)));
