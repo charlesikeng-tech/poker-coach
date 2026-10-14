@@ -124,6 +124,14 @@
           [format]="formats().signedMoney"
           [signed]="true"
         />
+        @if (summary.cashProfit !== 0) {
+          <app-stat-tile
+            [label]="t('totals.cashProfit')"
+            [value]="summary.cashProfit"
+            [format]="formats().signedMoney"
+            [signed]="true"
+          />
+        }
         <app-stat-tile
           [label]="t('totals.netDeposits')"
           [value]="summary.netDeposits"

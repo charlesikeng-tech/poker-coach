@@ -47,6 +47,9 @@ public sealed record BankrollSettings(decimal StartingAmount, DateTimeOffset Sta
 /// <summary>A tournament's money as the bankroll sees it: only tournaments with a known result.</summary>
 public sealed record TournamentMoney(DateTimeOffset PlayedAt, decimal Cost, decimal Profit, string Name);
 
+/// <summary>One day's cash game profit, aggregated from individual hands.</summary>
+public sealed record CashDayMoney(DateTimeOffset At, decimal Profit, string Label);
+
 /// <summary>One step of the balance curve.</summary>
 public sealed record BalancePoint(DateTimeOffset At, decimal Balance, decimal Change, BalanceEvent Event, string? Label);
 
@@ -55,6 +58,7 @@ public enum BalanceEvent
     Start,
     Tournament,
     Movement,
+    CashGame,
 }
 
 /// <summary>The bankroll over time: start, then every tournament result and movement in time order.</summary>
@@ -63,6 +67,7 @@ public static class BankrollLedger
     public static IReadOnlyList<BalancePoint> Curve(
         BankrollSettings settings,
         IEnumerable<TournamentMoney> tournaments,
+        IEnumerable<CashDayMoney> cashDays,
         IEnumerable<BankrollMovement> movements)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -70,6 +75,9 @@ public static class BankrollLedger
         var events = tournaments
             .Where(t => t.PlayedAt >= settings.StartedOn)
             .Select(t => (At: t.PlayedAt, Change: t.Profit, Event: BalanceEvent.Tournament, Label: (string?)t.Name))
+            .Concat(cashDays
+                .Where(c => c.At >= settings.StartedOn)
+                .Select(c => (c.At, Change: c.Profit, Event: BalanceEvent.CashGame, Label: (string?)c.Label)))
             .Concat(movements
                 .Where(m => m.OccurredAt >= settings.StartedOn)
                 .Select(m => (At: m.OccurredAt, Change: m.Signed, Event: BalanceEvent.Movement, Label: m.Note)))

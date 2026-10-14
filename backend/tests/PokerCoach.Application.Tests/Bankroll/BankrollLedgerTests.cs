@@ -20,7 +20,7 @@ public sealed class BankrollLedgerTests
             new BankrollMovement(Guid.NewGuid(), BankrollMovementKind.Withdrawal, 100m, Start.AddDays(2), "cash out"),
         };
 
-        var curve = BankrollLedger.Curve(settings, tournaments, movements);
+        var curve = BankrollLedger.Curve(settings, tournaments, [], movements);
 
         Assert.Equal(new[] { 500m, 490m, 390m, 430m }, curve.Select(p => p.Balance));
         Assert.Equal(new[] { BalanceEvent.Start, BalanceEvent.Tournament, BalanceEvent.Movement, BalanceEvent.Tournament }, curve.Select(p => p.Event));
@@ -35,6 +35,7 @@ public sealed class BankrollLedgerTests
         var curve = BankrollLedger.Curve(
             settings,
             [new TournamentMoney(Start.AddDays(-1), 5m, 100m, "BEFORE")],
+            [],
             [new BankrollMovement(Guid.NewGuid(), BankrollMovementKind.Deposit, 50m, Start.AddHours(-1), null)]);
 
         Assert.Single(curve);

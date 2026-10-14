@@ -124,7 +124,9 @@ export class BankrollPage {
       label:
         p.event === 'start'
           ? this.transloco.translate('pages.bankroll.chart.start')
-          : (p.label ?? this.transloco.translate('pages.bankroll.chart.movement')),
+          : p.event === 'cashGame'
+            ? (p.label ?? this.transloco.translate('pages.bankroll.chart.cash'))
+            : (p.label ?? this.transloco.translate('pages.bankroll.chart.movement')),
       details: [
         formatDateTime(p.at, locale),
         ...(p.event === 'start' ? [] : [formatSignedMoney(p.change, 'EUR', locale)]),
@@ -137,11 +139,11 @@ export class BankrollPage {
     const curve = this.bankroll()?.summary?.curve ?? [];
     return curve
       .map((p, i) => ({ p, i }))
-      .filter(({ p }) => p.event === 'movement')
+      .filter(({ p }) => p.event === 'movement' || p.event === 'cashGame')
       .slice(-MAX_MARKERS)
       .map(({ p, i }) => ({
         pointIndex: i,
-        label: p.change >= 0 ? '+' : '−',
+        label: p.event === 'cashGame' ? '₵' : p.change >= 0 ? '+' : '−',
         tone: p.change >= 0 ? 'positive' : 'negative',
       }));
   });

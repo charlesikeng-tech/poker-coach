@@ -39,6 +39,7 @@ public sealed record RiskOutlookResponse(
 public sealed record BankrollSummaryResponse(
     decimal Balance,
     decimal TournamentProfit,
+    decimal CashProfit,
     decimal NetDeposits,
     int Tournaments,
     int UnknownResults,
@@ -194,6 +195,7 @@ public static class BankrollEndpoints
             new BankrollSummaryResponse(
                 o.Balance,
                 o.TournamentProfit,
+                o.CashProfit,
                 o.NetDeposits,
                 o.Tournaments,
                 o.UnknownResults,

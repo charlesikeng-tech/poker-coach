@@ -1,4 +1,5 @@
 using PokerCoach.Application.Bankroll;
+using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Bankroll;
 using PokerCoach.Domain.Tournaments;
@@ -100,8 +101,8 @@ public sealed class BankrollServiceTests
         Assert.Single(store.Movements);
     }
 
-    private static BankrollService Service(InMemoryBankrollStore store, TournamentFacts[] facts) =>
-        new(store, new StubTournaments(facts), new FixedTime(Now));
+    private static BankrollService Service(InMemoryBankrollStore store, TournamentFacts[] facts, StubCash? cash = null) =>
+        new(store, new StubTournaments(facts), cash ?? new StubCash(), new FixedTime(Now));
 
     /// <summary>Fee-free buy-in: the buy-in is the amount given.</summary>
     private static TournamentFacts Facts(string name, DateTimeOffset startedAt, decimal buyIn, IReadOnlyList<EntryOutcome> entries) =>
@@ -116,6 +117,12 @@ public sealed class BankrollServiceTests
     private sealed class FixedTime(DateTimeOffset now) : TimeProvider
     {
         public override DateTimeOffset GetUtcNow() => now;
+    }
+
+    private sealed class StubCash(params CashHandRow[] rows) : ICashPerformanceReadStore
+    {
+        public Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<CashHandRow>>(rows);
     }
 
     private sealed class InMemoryBankrollStore : IBankrollStore

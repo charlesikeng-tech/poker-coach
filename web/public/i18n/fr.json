@@ -406,6 +406,7 @@
       "totals": {
         "balance": "Solde",
         "tournamentProfit": "Résultat des tournois",
+        "cashProfit": "Résultat cash game",
         "netDeposits": "Dépôts nets"
       },
       "limit": {
@@ -428,9 +429,10 @@
       "chart": {
         "title": "Évolution du solde",
         "aria": "Évolution de la bankroll, solde actuel {{balance}}",
-        "notEnough": "La courbe apparaît dès ton premier tournoi ou mouvement.",
+        "notEnough": "La courbe apparaît dès ton premier tournoi, session cash ou mouvement.",
         "start": "Départ",
         "movement": "Mouvement",
+        "cash": "Cash game",
         "balance": "Solde"
       },
       "risk": {

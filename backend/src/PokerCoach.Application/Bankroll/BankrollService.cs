@@ -1,5 +1,7 @@
+using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Bankroll;
+using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Bankroll;
@@ -37,6 +39,7 @@ public sealed record BankrollOverview(
     BankrollSettings Settings,
     decimal Balance,
     decimal TournamentProfit,
+    decimal CashProfit,
     decimal NetDeposits,
     int Tournaments,
     int UnknownResults,
@@ -62,7 +65,7 @@ public enum MovementOutcome
 /// the chosen rule, and how risky the road ahead is given the player's own results.
 /// Only tournaments with a known result count: a missing summary is never read as a zero.
 /// </summary>
-public sealed class BankrollService(IBankrollStore store, ITournamentReadStore tournaments, TimeProvider time)
+public sealed class BankrollService(IBankrollStore store, ITournamentReadStore tournaments, ICashPerformanceReadStore cashStore, TimeProvider time)
 {
     public const int MaxNoteLength = 200;
 
@@ -96,7 +99,10 @@ public sealed class BankrollService(IBankrollStore store, ITournamentReadStore t
         var sinceStart = history.Where(t => t.PlayedAt >= settings.StartedOn).ToList();
         var countedMovements = movements.Where(m => m.OccurredAt >= settings.StartedOn).ToList();
 
-        var curve = BankrollLedger.Curve(settings, sinceStart, countedMovements);
+        var cashRows = await cashStore.ListCashHandsAsync(userId, null, null, HeroHandFacts.Version, cancellationToken);
+        var cashDays = AggregateCashByDay(cashRows);
+
+        var curve = BankrollLedger.Curve(settings, sinceStart, cashDays, countedMovements);
         var balance = curve[^1].Balance;
         var maxBuyIn = settings.MaxAverageBuyIn(balance);
 
@@ -110,6 +116,8 @@ public sealed class BankrollService(IBankrollStore store, ITournamentReadStore t
 
         var unknown = items.Count(i => i.StartedAt >= settings.StartedOn && i.Result.Status != TournamentResultStatus.Known);
 
+        var cashProfit = cashDays.Where(c => c.At >= settings.StartedOn).Sum(c => c.Profit);
+
         var risk = recentAverage is { } stake
             ? RiskSimulation.Simulate(new Random(Seed(userId, history.Count, balance)), history, balance, stake, SimulatedTournaments)
             : null;
@@ -118,6 +126,7 @@ public sealed class BankrollService(IBankrollStore store, ITournamentReadStore t
             settings,
             balance,
             sinceStart.Sum(t => t.Profit),
+            Math.Round(cashProfit, 2),
             countedMovements.Sum(m => m.Signed),
             sinceStart.Count,
             unknown,
@@ -165,6 +174,18 @@ public sealed class BankrollService(IBankrollStore store, ITournamentReadStore t
 
     private static TournamentMoney ToMoney(TournamentListItem item) =>
         new(item.StartedAt!.Value, item.Result.TotalBuyIn!.Value, item.Result.Profit!.Value, item.Name);
+
+    private static List<CashDayMoney> AggregateCashByDay(IReadOnlyList<CashHandRow> rows) =>
+        rows
+            .GroupBy(r => DateOnly.FromDateTime(r.StartedAt.UtcDateTime))
+            .OrderBy(g => g.Key)
+            .Select(g =>
+            {
+                var profit = Math.Round(g.Sum(r => r.NetBigBlinds * r.BigBlind) / 100m, 2);
+                var at = new DateTimeOffset(g.Key.ToDateTime(new TimeOnly(23, 59, 59)), TimeSpan.Zero);
+                return new CashDayMoney(at, profit, $"Cash · {g.Count()} mains");
+            })
+            .ToList();
 
     /// <summary>
     /// Same data, same simulation: the figures must not move on every refresh. Guid.GetHashCode is not

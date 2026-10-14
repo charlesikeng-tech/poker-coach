@@ -406,6 +406,7 @@
       "totals": {
         "balance": "Balance",
         "tournamentProfit": "Tournament results",
+        "cashProfit": "Cash game results",
         "netDeposits": "Net deposits"
       },
       "limit": {
@@ -428,9 +429,10 @@
       "chart": {
         "title": "Balance over time",
         "aria": "Bankroll over time, current balance {{balance}}",
-        "notEnough": "The curve appears after your first tournament or movement.",
+        "notEnough": "The curve appears after your first tournament, cash session or movement.",
         "start": "Start",
         "movement": "Movement",
+        "cash": "Cash game",
         "balance": "Balance"
       },
       "risk": {

@@ -406,6 +406,7 @@
       "totals": {
         "balance": "Saldo",
         "tournamentProfit": "Resultado de los torneos",
+        "cashProfit": "Resultado cash game",
         "netDeposits": "Depósitos netos"
       },
       "limit": {
@@ -428,9 +429,10 @@
       "chart": {
         "title": "Evolución del saldo",
         "aria": "Evolución del bankroll, saldo actual {{balance}}",
-        "notEnough": "La curva aparece con tu primer torneo o movimiento.",
+        "notEnough": "La curva aparece con tu primer torneo, sesión de cash o movimiento.",
         "start": "Inicio",
         "movement": "Movimiento",
+        "cash": "Cash game",
         "balance": "Saldo"
       },
       "risk": {

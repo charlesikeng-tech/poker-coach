@@ -30,8 +30,8 @@ export interface BalancePoint {
   readonly at: string;
   readonly balance: number;
   readonly change: number;
-  readonly event: 'start' | 'tournament' | 'movement';
-  /** Tournament name or the movement's note. */
+  readonly event: 'start' | 'tournament' | 'movement' | 'cashGame';
+  /** Tournament name, cash day label, or the movement's note. */
   readonly label: string | null;
 }
 
@@ -68,6 +68,7 @@ export interface RiskOutlook {
 export interface BankrollSummary {
   readonly balance: number;
   readonly tournamentProfit: number;
+  readonly cashProfit: number;
   readonly netDeposits: number;
   readonly tournaments: number;
   readonly unknownResults: number;
