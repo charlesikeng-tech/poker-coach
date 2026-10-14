@@ -46,13 +46,17 @@
           </select>
         </label>
         <p class="basis">
-          {{
-            t('basis', {
-              hands: formats().integer(analysis.hands),
-              tournaments: formats().integer(analysis.tournaments),
-              complete: formats().integer(analysis.completeTournaments),
-            })
-          }}
+          @if (gameType() === 'cashGame') {
+            {{ t('basisCash', { hands: formats().integer(analysis.hands) }) }}
+          } @else {
+            {{
+              t('basis', {
+                hands: formats().integer(analysis.hands),
+                tournaments: formats().integer(analysis.tournaments),
+                complete: formats().integer(analysis.completeTournaments),
+              })
+            }}
+          }
         </p>
       </div>
 

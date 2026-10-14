@@ -77,7 +77,9 @@ public sealed class LeakService(IStatisticsReadStore store) : ILeakService
 
         var (overall, byPosition) = Aggregate(groups, shown);
 
-        var relevantRanges = ReferenceRanges.LowStakesMtt
+        var isCash = (gameType ?? GameType.Tournament) == GameType.CashGame;
+        var baseRanges = isCash ? ReferenceRanges.LowStakesCash : ReferenceRanges.LowStakesMtt;
+        var relevantRanges = baseRanges
             .Where(r => r.Position is null || byPosition.ContainsKey(r.Position.Value))
             .ToList();
         var report = LeakDetector.Detect(overall, byPosition, relevantRanges);

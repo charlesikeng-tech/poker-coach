@@ -832,6 +832,7 @@
         "year": "Cette année"
       },
       "basis": "Sur {{hands}} mains jouées avec 15 BB ou plus, de {{tournaments}} tournoi(s) dont {{complete}} avec un historique complet.",
+      "basisCash": "Sur {{hands}} mains de cash game (15 BB+).",
       "clear": {
         "title": "Aucun leak repéré",
         "description": "Toutes tes statistiques suffisamment fournies sont dans les repères. Continue à importer : de nouvelles situations seront jugées."

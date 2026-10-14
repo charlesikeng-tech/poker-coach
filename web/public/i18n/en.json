@@ -832,6 +832,7 @@
         "year": "This year"
       },
       "basis": "Based on {{hands}} hands played with 15 BB or more, from {{tournaments}} tournament(s), {{complete}} with a complete hand history.",
+      "basisCash": "Based on {{hands}} cash game hands (15 BB+).",
       "clear": {
         "title": "No leak found",
         "description": "Every statistic with enough situations is within the references. Keep importing: new situations will be judged."

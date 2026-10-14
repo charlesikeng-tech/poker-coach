@@ -74,6 +74,41 @@ public static class ReferenceRanges
         new(LeakStat.Rfi, PokerPosition.Button, 0.35m, 0.52m),
         new(LeakStat.Rfi, PokerPosition.SmallBlind, 0.28m, 0.50m),
     ];
+
+    /// <summary>
+    /// Usual figures for solid regulars in low-stakes online 6-max cash games (NL10–NL25, 100 BB deep).
+    /// Deeper stacks and no ICM shift ranges compared to MTTs: wider opens, more 3-betting, lower c-bet
+    /// frequencies, and more postflop play.
+    /// </summary>
+    public static readonly IReadOnlyList<ReferenceRange> LowStakesCash =
+    [
+        new(LeakStat.Vpip, null, 0.21m, 0.28m),
+        new(LeakStat.Pfr, null, 0.17m, 0.24m),
+        new(LeakStat.VpipPfrGap, null, 0.00m, 0.06m),
+        new(LeakStat.Limp, null, 0.00m, 0.03m),
+        new(LeakStat.Steal, null, 0.35m, 0.52m),
+        new(LeakStat.ThreeBet, null, 0.07m, 0.12m),
+        new(LeakStat.FoldToThreeBet, null, 0.45m, 0.60m),
+        new(LeakStat.CbetFlop, null, 0.45m, 0.68m),
+        new(LeakStat.WentToShowdown, null, 0.24m, 0.31m),
+        new(LeakStat.WonAtShowdown, null, 0.50m, 0.58m),
+
+        new(LeakStat.FoldToCbetFlop, null, 0.35m, 0.50m),
+        new(LeakStat.CbetTurn, null, 0.40m, 0.58m),
+        new(LeakStat.CheckRaiseFlop, null, 0.06m, 0.14m),
+        new(LeakStat.WonWhenSawFlop, null, 0.44m, 0.54m),
+        new(LeakStat.PostflopAggression, null, 0.38m, 0.52m),
+
+        // 6-max cash RFI: wider than MTT at every seat (no ICM, deeper stacks).
+        new(LeakStat.Rfi, PokerPosition.Utg, 0.15m, 0.22m),
+        new(LeakStat.Rfi, PokerPosition.Utg1, 0.16m, 0.23m),
+        new(LeakStat.Rfi, PokerPosition.Utg2, 0.17m, 0.24m),
+        new(LeakStat.Rfi, PokerPosition.Lojack, 0.19m, 0.27m),
+        new(LeakStat.Rfi, PokerPosition.Hijack, 0.22m, 0.30m),
+        new(LeakStat.Rfi, PokerPosition.Cutoff, 0.27m, 0.38m),
+        new(LeakStat.Rfi, PokerPosition.Button, 0.42m, 0.56m),
+        new(LeakStat.Rfi, PokerPosition.SmallBlind, 0.32m, 0.52m),
+    ];
 }
 
 public static class LeakStats
