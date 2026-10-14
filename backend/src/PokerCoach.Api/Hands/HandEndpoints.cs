@@ -25,8 +25,8 @@ public sealed record ReplayActionResponse(Street Street, int SeatNumber, ActionK
 /// <param name="Index">Position of the hand in its tournament, from 1, in play order.</param>
 public sealed record HandReplayResponse(
     Guid HandId,
-    Guid TournamentId,
-    string TournamentName,
+    Guid? TournamentId,
+    string? TournamentName,
     DateTimeOffset StartedAt,
     int Level,
     long SmallBlind,

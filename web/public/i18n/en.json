@@ -1120,10 +1120,12 @@
     "hand": {
       "pageTitle": "Hand",
       "title": "Hand {{index}} / {{count}}",
+      "titleCash": "Cash game hand",
       "level": "Level {{level}}",
       "ante": "ante {{ante}}",
       "loading": "Loading the hand…",
       "backToTournaments": "Back to tournaments",
+      "backToCash": "Back to cash game",
       "navigation": "Hand navigation",
       "previousHand": "Previous",
       "nextHand": "Next",

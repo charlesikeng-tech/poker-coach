@@ -202,6 +202,9 @@ export class RangesPage {
 
   protected setGameType(value: GameType): void {
     this.gameType.set(value);
+    if (value === 'cashGame') {
+      this.band.set('deep');
+    }
   }
 
   protected retry(): void {

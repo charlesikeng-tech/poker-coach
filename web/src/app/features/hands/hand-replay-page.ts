@@ -416,7 +416,9 @@ export class HandReplayPage {
       this.hand.set(hand);
       this.frameIndex.set(0);
       this.state.set('ready');
-      void this.loadKeyMoments(hand.tournamentId);
+      if (hand.tournamentId) {
+        void this.loadKeyMoments(hand.tournamentId);
+      }
     } catch (error) {
       if (request === this.request) {
         this.hand.set(null);

@@ -35,8 +35,8 @@ export interface ReplayAction {
 
 export interface HandReplay {
   readonly handId: string;
-  readonly tournamentId: string;
-  readonly tournamentName: string;
+  readonly tournamentId: string | null;
+  readonly tournamentName: string | null;
   readonly startedAt: string;
   readonly level: number;
   readonly smallBlind: number;

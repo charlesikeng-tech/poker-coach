@@ -1120,10 +1120,12 @@
     "hand": {
       "pageTitle": "Main",
       "title": "Main {{index}} / {{count}}",
+      "titleCash": "Main de cash game",
       "level": "Niveau {{level}}",
       "ante": "ante {{ante}}",
       "loading": "Chargement de la main…",
       "backToTournaments": "Retour aux tournois",
+      "backToCash": "Retour au cash game",
       "navigation": "Navigation entre les mains",
       "previousHand": "Précédente",
       "nextHand": "Suivante",

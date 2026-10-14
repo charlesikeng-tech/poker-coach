@@ -22,16 +22,31 @@
       @if (hand(); as h) {
         @let f = frame();
         <header class="head">
-          <a class="back" [routerLink]="['/tournaments', h.tournamentId]">
-            <app-icon [icon]="icons.ArrowLeft" />
-            {{ h.tournamentName }}
-          </a>
+          @if (h.tournamentId) {
+            <a class="back" [routerLink]="['/tournaments', h.tournamentId]">
+              <app-icon [icon]="icons.ArrowLeft" />
+              {{ h.tournamentName }}
+            </a>
+          } @else {
+            <a class="back" routerLink="/performance">
+              <app-icon [icon]="icons.ArrowLeft" />
+              {{ t('backToCash') }}
+            </a>
+          }
           <div class="head__row">
             <div>
-              <h1>{{ t('title', { index: h.index, count: h.handCount }) }}</h1>
+              <h1>
+                @if (h.tournamentId) {
+                  {{ t('title', { index: h.index, count: h.handCount }) }}
+                } @else {
+                  {{ t('titleCash') }}
+                }
+              </h1>
               <p class="head__meta numeric">
-                {{ t('level', { level: h.level }) }} · {{ amount(h.smallBlind) }} /
-                {{ amount(h.bigBlind) }}
+                @if (h.tournamentId) {
+                  {{ t('level', { level: h.level }) }} ·
+                }
+                {{ amount(h.smallBlind) }} / {{ amount(h.bigBlind) }}
                 @if (h.ante) {
                   · {{ t('ante', { ante: amount(h.ante) }) }}
                 }

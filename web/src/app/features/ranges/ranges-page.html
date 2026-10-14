@@ -49,45 +49,47 @@
           [counts]="data.spots"
           (changed)="setFormat($event)"
         />
-        <label>
-          <span>{{ t('band') }}</span>
-          <select [value]="band()" (change)="setBand($any($event.target).value)">
-            @for (option of bands; track option) {
-              <option [value]="option" [selected]="option === band()">
-                {{ t('bands.' + option) }}
-              </option>
-            }
-          </select>
-        </label>
-        @if (band() === 'push') {
+        @if (gameType() !== 'cashGame') {
           <label>
-            <span>{{ t('pushStack') }}</span>
-            <select [value]="pushStack()" (change)="setPushStack($any($event.target).value)">
-              @for (option of pushStacks; track option) {
-                <option [value]="option" [selected]="option === pushStack()">
-                  {{ option }} BB
+            <span>{{ t('band') }}</span>
+            <select [value]="band()" (change)="setBand($any($event.target).value)">
+              @for (option of bands; track option) {
+                <option [value]="option" [selected]="option === band()">
+                  {{ t('bands.' + option) }}
                 </option>
               }
             </select>
           </label>
-          <div class="views" role="group" [attr.aria-label]="t('pushView.label')">
-            <button
-              type="button"
-              [class.active]="pushView() === 'shove'"
-              [attr.aria-pressed]="pushView() === 'shove'"
-              (click)="pushView.set('shove')"
-            >
-              {{ t('pushView.shove') }}
-            </button>
-            <button
-              type="button"
-              [class.active]="pushView() === 'call'"
-              [attr.aria-pressed]="pushView() === 'call'"
-              (click)="pushView.set('call')"
-            >
-              {{ t('pushView.call') }}
-            </button>
-          </div>
+          @if (band() === 'push') {
+            <label>
+              <span>{{ t('pushStack') }}</span>
+              <select [value]="pushStack()" (change)="setPushStack($any($event.target).value)">
+                @for (option of pushStacks; track option) {
+                  <option [value]="option" [selected]="option === pushStack()">
+                    {{ option }} BB
+                  </option>
+                }
+              </select>
+            </label>
+            <div class="views" role="group" [attr.aria-label]="t('pushView.label')">
+              <button
+                type="button"
+                [class.active]="pushView() === 'shove'"
+                [attr.aria-pressed]="pushView() === 'shove'"
+                (click)="pushView.set('shove')"
+              >
+                {{ t('pushView.shove') }}
+              </button>
+              <button
+                type="button"
+                [class.active]="pushView() === 'call'"
+                [attr.aria-pressed]="pushView() === 'call'"
+                (click)="pushView.set('call')"
+              >
+                {{ t('pushView.call') }}
+              </button>
+            </div>
+          }
         }
         <label>
           <span>{{ t('period') }}</span>

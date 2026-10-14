@@ -18,14 +18,14 @@ internal sealed class HandReplayStore(PokerCoachDbContext db) : IHandReplayStore
     {
         var row = await (
                 from h in db.Set<HandRecord>().AsNoTracking()
-                join t in db.Set<TournamentRecord>() on h.TournamentId equals t.Id
                 join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
+                from t in db.Set<TournamentRecord>().Where(t => t.Id == h.TournamentId).DefaultIfEmpty()
                 where h.Id == handId && a.UserId == userId && a.ConfirmedAt != null
                 select new
                 {
                     h.Id,
                     h.TournamentId,
-                    TournamentName = t.Name,
+                    TournamentName = t != null ? t.Name : null,
                     h.StartedAt,
                     h.Level,
                     h.SmallBlind,
@@ -42,21 +42,39 @@ internal sealed class HandReplayStore(PokerCoachDbContext db) : IHandReplayStore
             return null;
         }
 
-        // Same order as the tournament detail, so "hand 23" means the same hand on both pages.
-        var order = await db.Set<HandRecord>().AsNoTracking()
-            .Where(h => h.TournamentId == row.TournamentId)
-            .OrderBy(h => h.StartedAt)
-            .ThenBy(h => h.ExternalHandId)
-            .Select(h => h.Id)
-            .ToListAsync(cancellationToken);
-        var position = order.IndexOf(row.Id);
+        int position;
+        int handCount;
+        Guid? previousHandId;
+        Guid? nextHandId;
+
+        if (row.TournamentId is { } tournamentId)
+        {
+            var order = await db.Set<HandRecord>().AsNoTracking()
+                .Where(h => h.TournamentId == tournamentId)
+                .OrderBy(h => h.StartedAt)
+                .ThenBy(h => h.ExternalHandId)
+                .Select(h => h.Id)
+                .ToListAsync(cancellationToken);
+            var idx = order.IndexOf(row.Id);
+            position = idx + 1;
+            handCount = order.Count;
+            previousHandId = idx > 0 ? order[idx - 1] : null;
+            nextHandId = idx < order.Count - 1 ? order[idx + 1] : null;
+        }
+        else
+        {
+            position = 0;
+            handCount = 0;
+            previousHandId = null;
+            nextHandId = null;
+        }
 
         var document = HandDetailsDocument.FromJson(row.Details)
             ?? throw new InvalidOperationException("Stored hand details are empty.");
 
         return new HandReplaySource(
             row.Id,
-            row.TournamentId!.Value,
+            row.TournamentId,
             row.TournamentName,
             row.StartedAt,
             row.Level,
@@ -70,10 +88,10 @@ internal sealed class HandReplayStore(PokerCoachDbContext db) : IHandReplayStore
             document.ShownCards
                 .GroupBy(s => s.Player, StringComparer.Ordinal)
                 .ToDictionary(g => g.Key, g => (IReadOnlyList<Card>)Cards(g.First().Cards), StringComparer.Ordinal),
-            position + 1,
-            order.Count,
-            position > 0 ? order[position - 1] : null,
-            position < order.Count - 1 ? order[position + 1] : null);
+            position,
+            handCount,
+            previousHandId,
+            nextHandId);
     }
 
     /// <summary>Unreadable cards are dropped, not guessed: the parser validated them at import.</summary>

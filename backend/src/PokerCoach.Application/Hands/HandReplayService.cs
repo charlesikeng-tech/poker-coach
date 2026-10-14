@@ -8,8 +8,8 @@ namespace PokerCoach.Application.Hands;
 /// <param name="Shown">Cards shown at showdown, by player.</param>
 public sealed record HandReplaySource(
     Guid HandId,
-    Guid TournamentId,
-    string TournamentName,
+    Guid? TournamentId,
+    string? TournamentName,
     DateTimeOffset StartedAt,
     int Level,
     long SmallBlind,
@@ -49,8 +49,8 @@ public sealed record ReplayAction(Street Street, int SeatNumber, ActionKind Kind
 
 public sealed record HandReplay(
     Guid HandId,
-    Guid TournamentId,
-    string TournamentName,
+    Guid? TournamentId,
+    string? TournamentName,
     DateTimeOffset StartedAt,
     int Level,
     long SmallBlind,
