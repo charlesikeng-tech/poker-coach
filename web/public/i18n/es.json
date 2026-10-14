@@ -557,6 +557,7 @@
         "unknown": "Desconocida"
       },
       "basis": "Sobre {{hands}} manos de {{tournaments}} torneo(s), {{complete}} con historial completo.",
+      "basisCash": "Sobre {{hands}} manos de cash game.",
       "luck": {
         "title": "Suerte en los all-in",
         "lead": "Tus all-in preflop con las cartas mostradas: lo que te dieron, frente a lo que deberían haber dado según las manos. La diferencia es suerte — lo que controlas es la curva esperada.",

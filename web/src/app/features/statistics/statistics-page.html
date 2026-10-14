@@ -58,33 +58,39 @@
             }
           </select>
         </label>
-        <label>
-          <span>{{ t('filters.phase') }}</span>
-          <select [value]="phase()" (change)="setPhase($any($event.target).value)">
-            <option value="all">{{ t('phases.all') }}</option>
-            @for (option of phases; track option) {
-              <option [value]="option">{{ t('phases.' + option) }}</option>
-            }
-          </select>
-        </label>
-        <label class="toggle">
-          <input
-            type="checkbox"
-            [checked]="completeOnly()"
-            (change)="completeOnly.set($any($event.target).checked)"
-          />
-          <span>{{ t('filters.completeOnly') }}</span>
-        </label>
+        @if (gameType() !== 'cashGame') {
+          <label>
+            <span>{{ t('filters.phase') }}</span>
+            <select [value]="phase()" (change)="setPhase($any($event.target).value)">
+              <option value="all">{{ t('phases.all') }}</option>
+              @for (option of phases; track option) {
+                <option [value]="option">{{ t('phases.' + option) }}</option>
+              }
+            </select>
+          </label>
+          <label class="toggle">
+            <input
+              type="checkbox"
+              [checked]="completeOnly()"
+              (change)="completeOnly.set($any($event.target).checked)"
+            />
+            <span>{{ t('filters.completeOnly') }}</span>
+          </label>
+        }
       </div>
 
       <p class="sample-line">
-        {{
-          t('basis', {
-            hands: formats().integer(report.overall.hands),
-            tournaments: formats().integer(report.sample.tournaments),
-            complete: formats().integer(report.sample.completeTournaments),
-          })
-        }}
+        @if (gameType() === 'cashGame') {
+          {{ t('basisCash', { hands: formats().integer(report.overall.hands) }) }}
+        } @else {
+          {{
+            t('basis', {
+              hands: formats().integer(report.overall.hands),
+              tournaments: formats().integer(report.sample.tournaments),
+              complete: formats().integer(report.sample.completeTournaments),
+            })
+          }}
+        }
       </p>
 
       <h2 class="section-title">{{ t('sections.preflop') }}</h2>

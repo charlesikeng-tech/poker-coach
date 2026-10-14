@@ -171,11 +171,16 @@ public sealed class StatisticsService(IStatisticsReadStore store)
         var format = filter.Format ?? (await store.CountByFormatAsync(userId, filter, HeroHandFacts.Version, cancellationToken)).Busiest;
         filter = filter with { Format = format };
 
+        var isCash = (filter.GameType ?? GameType.Tournament) == GameType.CashGame;
+
         var phases = new List<PhaseStatLine>();
-        foreach (var phase in Enum.GetValues<TournamentPhase>())
+        if (!isCash)
         {
-            var groups = await store.CountByPositionAsync(userId, filter with { Phase = phase }, HeroHandFacts.Version, cancellationToken);
-            phases.Add(new PhaseStatLine(phase, StatLine.From(groups.Aggregate(HeroStatCounts.Zero, (total, g) => total.Add(g.Counts)))));
+            foreach (var phase in Enum.GetValues<TournamentPhase>())
+            {
+                var groups = await store.CountByPositionAsync(userId, filter with { Phase = phase }, HeroHandFacts.Version, cancellationToken);
+                phases.Add(new PhaseStatLine(phase, StatLine.From(groups.Aggregate(HeroStatCounts.Zero, (total, g) => total.Add(g.Counts)))));
+            }
         }
 
         var firstMonth = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero).AddMonths(-(TrendMonths - 1));
@@ -185,6 +190,6 @@ public sealed class StatisticsService(IStatisticsReadStore store)
             format,
             phases,
             months.Select(m => new MonthStatLine(m.Month, StatLine.From(m.Counts))).ToList(),
-            ReferenceRanges.LowStakesMtt.Where(r => r.Position is null).ToList());
+            isCash ? [] : ReferenceRanges.LowStakesMtt.Where(r => r.Position is null).ToList());
     }
 }

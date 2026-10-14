@@ -557,6 +557,7 @@
         "unknown": "Inconnue"
       },
       "basis": "Sur {{hands}} mains de {{tournaments}} tournoi(s), dont {{complete}} avec un historique complet.",
+      "basisCash": "Sur {{hands}} mains de cash game.",
       "luck": {
         "title": "Chance aux all-in",
         "lead": "Tes all-in preflop où les cartes ont été montrées : ce qu'ils t'ont rapporté, contre ce qu'ils auraient dû rapporter vu les mains. L'écart, c'est la chance — ce que tu contrôles, c'est la courbe attendue.",

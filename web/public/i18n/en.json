@@ -557,6 +557,7 @@
         "unknown": "Unknown"
       },
       "basis": "Based on {{hands}} hands from {{tournaments}} tournament(s), {{complete}} with a complete hand history.",
+      "basisCash": "Based on {{hands}} cash game hands.",
       "luck": {
         "title": "All-in luck",
         "lead": "Your preflop all-ins where the cards were shown: what they returned, against what they should have given the hands. The gap is luck — what you control is the expected line.",

@@ -123,13 +123,16 @@ export class StatisticsPage {
    * The breakdown panel's query: the page's filters in the format shown, without the phase. A computed
    * value, not a method: a new object on every check would reload the panel in a loop.
    */
-  protected readonly breakdownQuery = computed<StatisticsQuery>(() => ({
-    format: this.report()?.format,
-    from: this.fromQuery(),
-    ...stackBounds(this.stack()),
-    completeOnly: this.completeOnly(),
-    gameType: this.gameType(),
-  }));
+  protected readonly breakdownQuery = computed<StatisticsQuery>(() => {
+    const gt = this.gameType();
+    return {
+      format: this.report()?.format,
+      from: this.fromQuery(),
+      ...stackBounds(this.stack()),
+      completeOnly: gt !== 'cashGame' && this.completeOnly(),
+      gameType: gt,
+    };
+  });
 
   private readonly locale = computed(() => this.language.current());
   private request = 0;
@@ -227,12 +230,13 @@ export class StatisticsPage {
       this.state.set('loading');
     }
     try {
+      const isCash = gameType === 'cashGame';
       const report = await this.api.get({
         format: format ?? undefined,
         from: toQuery(period, 'all', 1, 1, new Date()).from,
         ...stackBounds(stack),
-        completeOnly,
-        phase: phase === 'all' ? undefined : phase,
+        completeOnly: !isCash && completeOnly,
+        phase: !isCash && phase !== 'all' ? phase : undefined,
         gameType,
       });
       if (request !== this.request) {
