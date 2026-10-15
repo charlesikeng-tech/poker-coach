@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>NutsIQ</title>
+    <title>NutsIQ — Coach IA pour joueurs de MTT et cash game</title>
     <meta
       name="description"
       content="NutsIQ lit tes historiques de mains, trouve les leaks qui te coûtent des chips et te dit quoi travailler. Le coach IA des joueurs de MTT."
@@ -23,6 +23,7 @@
     <meta property="og:locale" content="fr_FR" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preload" href="/fonts/sora-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <style>
       /* fonts:start — self-hosted: no third-party font request (GDPR). */
       @font-face {
@@ -896,6 +897,70 @@
         }
       }
     </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quelles rooms sont prises en charge ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Winamax aujourd'hui, en tournois MTT. PokerStars et Betclic arrivent ensuite : NutsIQ est construit pour accueillir d'autres rooms."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quels buy-ins sont pris en charge ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tous : NutsIQ importe chaque tournoi, quel que soit son prix, et range tes résultats par tranche de buy-in. Les repères de leaks et de ranges sont écrits pour le micro et le low stakes (jusqu'à 25 € environ) ; au-dessus, ils restent utiles mais moins exigeants que le niveau du field."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Faut-il installer quelque chose ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non. Tout se passe dans le navigateur : tu importes le .zip de ton dossier d'historique. Une application de bureau qui importe toute seule après chaque session est prévue."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Est-ce que NutsIQ joue à ma place ou s'utilise pendant les parties ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Non. NutsIQ analyse des mains déjà jouées, entre les sessions. Il n'affiche rien pendant que tu joues."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Que deviennent mes données ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tes mains servent uniquement à calculer tes statistiques. Tu peux tout télécharger ou supprimer ton compte à tout moment depuis la page Compte ; la suppression efface tout. Le coach IA ne reçoit que des chiffres et des mains anonymisées."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Que se passe-t-il si j'arrête mon abonnement ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ton offre reste ouverte jusqu'à la fin de la période payée, puis ton compte repasse sur Starter. Rien n'est effacé : tu retrouves tout ton historique si tu reviens."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment marchent les crédits IA ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Chaque texte du coach a un coût réel, alors chaque offre a des crédits par mois : une explication de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Avec Elite, 400 crédits, c'est par exemple un débrief après chacun de tes tournois et des dizaines d'explications. Les crédits repartent à zéro le 1er du mois."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <header class="top">
