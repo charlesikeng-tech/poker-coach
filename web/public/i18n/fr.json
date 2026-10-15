@@ -759,7 +759,8 @@
         "rejectConfirm": "Supprimer",
         "cancel": "Annuler",
         "linked": "Comptes de poker :",
-        "error": "Impossible de charger ou de modifier tes comptes de poker. Réessaie."
+        "error": "Impossible de charger ou de modifier tes comptes de poker. Réessaie.",
+        "unlink": "Délier"
       },
       "rooms": "Rooms prises en charge :"
     },

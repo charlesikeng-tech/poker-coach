@@ -759,7 +759,8 @@
         "rejectConfirm": "Eliminar",
         "cancel": "Cancelar",
         "linked": "Cuentas de póker:",
-        "error": "No se pudieron cargar o modificar tus cuentas de póker. Inténtalo de nuevo."
+        "error": "No se pudieron cargar o modificar tus cuentas de póker. Inténtalo de nuevo.",
+        "unlink": "Desvincular"
       },
       "rooms": "Salas compatibles:"
     },

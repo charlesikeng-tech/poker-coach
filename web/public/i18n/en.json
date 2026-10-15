@@ -759,7 +759,8 @@
         "rejectConfirm": "Delete",
         "cancel": "Cancel",
         "linked": "Poker accounts:",
-        "error": "Your poker accounts could not be loaded or changed. Try again."
+        "error": "Your poker accounts could not be loaded or changed. Try again.",
+        "unlink": "Unlink"
       },
       "rooms": "Supported rooms:"
     },

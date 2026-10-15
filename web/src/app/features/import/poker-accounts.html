@@ -47,11 +47,42 @@
     <p class="accounts-linked">
       <app-icon [icon]="icons.BadgeCheck" />
       <span>{{ t('linked') }}</span>
-      @for (account of confirmed(); track account.id) {
-        <strong>{{ account.screenName }}</strong>
-        <app-room-badge [room]="account.room" />
-      }
     </p>
+    @for (account of confirmed(); track account.id) {
+      @if (pendingDeletion() === account.id) {
+        <section class="account-prompt" [attr.aria-labelledby]="'account-' + account.id">
+          <span class="account-prompt__icon"><app-icon [icon]="icons.UserRound" /></span>
+          <div class="account-prompt__body">
+            <h2 [id]="'account-' + account.id">
+              {{ t('rejectTitle', { name: account.screenName }) }}
+            </h2>
+            <p>{{ t('rejectDescription') }}</p>
+            <div class="account-prompt__actions">
+              <button
+                appButton
+                variant="primary"
+                class="danger"
+                [disabled]="busyAccount() === account.id"
+                (click)="delete(account)"
+              >
+                {{ t('rejectConfirm') }}
+              </button>
+              <button appButton variant="ghost" (click)="pendingDeletion.set(null)">
+                {{ t('cancel') }}
+              </button>
+            </div>
+          </div>
+        </section>
+      } @else {
+        <div class="accounts-linked__item">
+          <strong>{{ account.screenName }}</strong>
+          <app-room-badge [room]="account.room" />
+          <button appButton variant="ghost" (click)="pendingDeletion.set(account.id)">
+            {{ t('unlink') }}
+          </button>
+        </div>
+      }
+    }
   }
 
   @if (failed()) {
