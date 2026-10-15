@@ -12,6 +12,6 @@ internal sealed class AccountCleanupStore(PokerCoachDbContext db) : IAccountClea
             .Where(u => u.CreatedAt < createdBefore
                 && !db.Set<ExternalIdentity>().Any(i => i.UserId == u.Id)
                 && db.Set<PasswordCredential>().Any(c => c.UserId == u.Id
-                    && EF.Property<DateTimeOffset?>(c, "ConfirmedAt") == null))
+                    && c.EmailConfirmedAt == null))
             .ExecuteDeleteAsync(cancellationToken);
 }
