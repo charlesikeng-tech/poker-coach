@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
+using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
 using PokerCoach.Domain.Identity;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Progress;
@@ -18,7 +20,8 @@ public sealed record GenerateDebriefRequest(string? Language);
 public sealed record GenerateCashDebriefRequest(DateOnly Day, string? Language);
 
 /// <param name="Week">Monday of the week to review ("2026-10-05"); this week when omitted.</param>
-public sealed record GenerateWeekReviewRequest(DateOnly? Week, string? Language);
+/// <param name="GameType">tournament or cashGame; defaults to tournament.</param>
+public sealed record GenerateWeekReviewRequest(DateOnly? Week, string? Language, string? GameType);
 
 /// <summary>A key moment: our figures; <c>verdict</c> and <c>note</c> are the coach's, null when not commented.</summary>
 public sealed record DebriefMomentResponse(
@@ -196,6 +199,7 @@ public static class CoachingEndpoints
 
     private static async Task<Results<Ok<WeekReviewResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetReviewAsync(
         DateOnly? week,
+        string? gameType,
         string? language,
         HttpContext context,
         WeekReviewService reviews,
@@ -207,13 +211,18 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var view = await reviews.GetAsync(userId, week, answerLanguage!, cancellationToken);
+        var view = await reviews.GetAsync(userId, week, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
         return view is null
             ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "REVIEW_NOT_FOUND", "No review written for this week yet.")
             : TypedResults.Ok(ToResponse(view));
@@ -231,13 +240,18 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
+        if (!GameTypeQuery.TryParse(request?.GameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
         var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var outcome = await reviews.GenerateAsync(userId, request?.Week, answerLanguage!, cancellationToken);
+        var outcome = await reviews.GenerateAsync(userId, request?.Week, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToResponse(view)) : Problem(outcome.Failure!.Value, "WEEK_NOT_FOUND");
     }
 

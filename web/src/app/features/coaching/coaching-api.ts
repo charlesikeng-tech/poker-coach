@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { LeakStat } from '../leaks/leaks-api';
 import { PriorityStatus } from '../progress/progress-api';
-import { PokerPosition } from '../statistics/statistics-api';
+import { GameType, PokerPosition } from '../statistics/statistics-api';
 
 // Mirrors backend/src/PokerCoach.Api/Coaching (ADR-0012). Figures are NutsIQ's; texts are AI-written.
 
@@ -159,15 +159,23 @@ export class CoachingApi {
     );
   }
 
-  review(week: string, language: string): Promise<WeekReview> {
+  review(week: string, language: string, gameType: GameType = 'tournament'): Promise<WeekReview> {
+    let params = new HttpParams().set('week', week).set('language', language);
+    if (gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
+    }
     return firstValueFrom(
-      this.http.get<WeekReview>('/api/progress/review', {
-        params: new HttpParams().set('week', week).set('language', language),
-      }),
+      this.http.get<WeekReview>('/api/progress/review', { params }),
     );
   }
 
-  writeReview(week: string, language: string): Promise<WeekReview> {
-    return firstValueFrom(this.http.post<WeekReview>('/api/progress/review', { week, language }));
+  writeReview(week: string, language: string, gameType: GameType = 'tournament'): Promise<WeekReview> {
+    return firstValueFrom(
+      this.http.post<WeekReview>('/api/progress/review', {
+        week,
+        language,
+        ...(gameType !== 'tournament' ? { gameType } : {}),
+      }),
+    );
   }
 }

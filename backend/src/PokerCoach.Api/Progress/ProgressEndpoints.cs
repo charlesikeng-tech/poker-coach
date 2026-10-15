@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
+using PokerCoach.Api.Errors;
+using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Progress;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
@@ -60,10 +62,10 @@ public static class ProgressEndpoints
         return endpoints;
     }
 
-    private static async Task<Results<Ok<ProgressResponse>, UnauthorizedHttpResult>> GetAsync(
+    private static async Task<Results<Ok<ProgressResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         ProgressService progress,
-        GameType? gameType,
+        string? gameType,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -71,13 +73,18 @@ public static class ProgressEndpoints
             return TypedResults.Unauthorized();
         }
 
-        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, gameType ?? GameType.Tournament, cancellationToken)));
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, parsedGameType ?? GameType.Tournament, cancellationToken)));
     }
 
-    private static async Task<Results<Ok<ProgressResponse>, UnauthorizedHttpResult>> RebuildAsync(
+    private static async Task<Results<Ok<ProgressResponse>, ProblemHttpResult, UnauthorizedHttpResult>> RebuildAsync(
         HttpContext context,
         ProgressService progress,
-        GameType? gameType,
+        string? gameType,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -85,7 +92,12 @@ public static class ProgressEndpoints
             return TypedResults.Unauthorized();
         }
 
-        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, gameType ?? GameType.Tournament, cancellationToken)));
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, parsedGameType ?? GameType.Tournament, cancellationToken)));
     }
 
     private static ProgressResponse ToResponse(ProgressReport r) => new(

@@ -175,7 +175,7 @@
       }
 
       @if (r.current) {
-        <app-week-review-panel class="review" [weeks]="reviewWeeks()" />
+        <app-week-review-panel class="review" [weeks]="reviewWeeks()" [gameType]="gameType()" />
       }
 
       @if (r.history.length > 0) {

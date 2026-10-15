@@ -5,6 +5,7 @@ using PokerCoach.Application.Progress;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -60,20 +61,26 @@ public sealed class WeekReviewService(
 
     /// <summary>The stored review of the week (this week when null), and whether the week moved since. Free.</summary>
     public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
+        => await GetAsync(userId, week, GameType.Tournament, language, cancellationToken);
+
+    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken)
     {
-        var facts = await MeasureAsync(userId, week, cancellationToken);
+        var facts = await MeasureAsync(userId, week, gameType, cancellationToken);
         if (facts is null)
         {
             return null;
         }
 
-        var stored = await reports.FindAsync<WeekReviewReport>(userId, Kind, Subject(facts.Week.Plan.WeekStart), language, cancellationToken);
+        var stored = await reports.FindAsync<WeekReviewReport>(userId, Kind, Subject(facts.Week.Plan.WeekStart, gameType), language, cancellationToken);
         return stored is null ? null : View(stored, Fingerprint(facts, language));
     }
 
     public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
+        => await GenerateAsync(userId, week, GameType.Tournament, language, cancellationToken);
+
+    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken)
     {
-        var facts = await MeasureAsync(userId, week, cancellationToken);
+        var facts = await MeasureAsync(userId, week, gameType, cancellationToken);
         if (facts is null)
         {
             return ReportOutcome<WeekReviewReport>.Fail(CoachingFailure.NotFound);
@@ -85,7 +92,7 @@ public sealed class WeekReviewService(
         }
 
         var fingerprint = Fingerprint(facts, language);
-        var subject = Subject(facts.Week.Plan.WeekStart);
+        var subject = Subject(facts.Week.Plan.WeekStart, gameType);
         var stored = await reports.FindAsync<WeekReviewReport>(userId, Kind, subject, language, cancellationToken);
         if (stored is not null && stored.Fingerprint == fingerprint)
         {
@@ -131,11 +138,11 @@ public sealed class WeekReviewService(
     }
 
     /// <summary>Everything the review is written from, for this week or one of the history's weeks.</summary>
-    internal sealed record WeekFacts(WeekReport Week, bool WeekOver, int DayOfWeek, int DrillAttempts, int DrillCorrect, int DrillGoal, PerformanceFigures Results, CashPerformanceFigures? CashResults);
+    internal sealed record WeekFacts(WeekReport Week, GameType GameType, bool WeekOver, int DayOfWeek, int DrillAttempts, int DrillCorrect, int DrillGoal, PerformanceFigures Results, CashPerformanceFigures? CashResults);
 
-    private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, CancellationToken cancellationToken)
+    private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, GameType gameType, CancellationToken cancellationToken)
     {
-        var report = await progress.GetAsync(userId, cancellationToken);
+        var report = await progress.GetAsync(userId, gameType, cancellationToken);
         var current = week is null || week == report.WeekStart;
         var measured = current ? report.Current : report.History.FirstOrDefault(h => h.Plan.WeekStart == week);
         if (measured is null)
@@ -152,7 +159,7 @@ public sealed class WeekReviewService(
         var cashReport = await cashPerformance.GetAsync(userId, start, end, cancellationToken);
         var cashResults = cashReport.Totals.Hands > 0 ? cashReport.Totals : (CashPerformanceFigures?)null;
         var now = time.GetUtcNow();
-        return new WeekFacts(measured, now >= end, Math.Clamp((int)(now - start).TotalDays + 1, 1, 7), attempts, correct, report.DrillGoal, results, cashResults);
+        return new WeekFacts(measured, gameType, now >= end, Math.Clamp((int)(now - start).TotalDays + 1, 1, 7), attempts, correct, report.DrillGoal, results, cashResults);
     }
 
     /// <summary>The week in plain facts, all computed by us.</summary>
@@ -160,19 +167,18 @@ public sealed class WeekReviewService(
     {
         string Pct(decimal ratio) => (ratio * 100m).ToString("0.#", CultureInfo.InvariantCulture) + " %";
         var text = new StringBuilder();
-        var r = facts.Results;
+        var format = facts.Week.Plan.Format == TableFormat.SixMax ? "6-max" : "full-ring";
         text.AppendLine(facts.WeekOver
             ? "The week is over: review it as a whole."
             : string.Create(CultureInfo.InvariantCulture, $"The week is in progress (day {facts.DayOfWeek} of 7): this is a mid-week check, not a verdict."));
-        text.AppendLine(CultureInfo.InvariantCulture, $"Volume: {facts.Week.Hands} hands at {(facts.Week.Plan.Format == TableFormat.SixMax ? "6-max" : "full-ring")} tables (15+ BB), {r.Tournaments} tournaments.");
-        if (r.TournamentsWithResult > 0)
-        {
-            text.AppendLine(CultureInfo.InvariantCulture, $"Results ({r.TournamentsWithResult} tournaments with a known result): profit {r.Profit.ToString("0.00", CultureInfo.InvariantCulture)}, ROI {(r.Roi is { } roi ? Pct(roi) : "unknown")}, {r.PaidEntries} paid of {r.Entries} entries. A week of tournaments is mostly variance: never judge the player's level or the plan from the money.");
-        }
 
-        if (facts.CashResults is { } cash)
+        if (facts.GameType == GameType.CashGame)
         {
-            text.AppendLine(CultureInfo.InvariantCulture, $"Cash game this week: {cash.Hands} hands, BB/100 {(cash.BigBlindsPer100?.ToString("0.00", CultureInfo.InvariantCulture) ?? "N/A")}, net {(cash.NetMoney >= 0 ? "+" : string.Empty)}{cash.NetMoney.ToString("0.00", CultureInfo.InvariantCulture)} €. Cash results over a single week are a small sample: note the volume but do not judge the player's level from the money.");
+            AppendCashFacts(text, facts, format, Pct);
+        }
+        else
+        {
+            AppendTournamentFacts(text, facts, format, Pct);
         }
 
         text.AppendLine(CultureInfo.InvariantCulture, $"Training-room drills this week: {facts.DrillAttempts} answers, {facts.DrillCorrect} right; weekly goal {facts.DrillGoal}.");
@@ -190,6 +196,36 @@ public sealed class WeekReviewService(
         return text.ToString();
     }
 
+    private static void AppendTournamentFacts(StringBuilder text, WeekFacts facts, string format, Func<decimal, string> Pct)
+    {
+        var r = facts.Results;
+        text.AppendLine(CultureInfo.InvariantCulture, $"Volume: {facts.Week.Hands} hands at {format} tables (15+ BB), {r.Tournaments} tournaments.");
+        if (r.TournamentsWithResult > 0)
+        {
+            text.AppendLine(CultureInfo.InvariantCulture, $"Results ({r.TournamentsWithResult} tournaments with a known result): profit {r.Profit.ToString("0.00", CultureInfo.InvariantCulture)}, ROI {(r.Roi is { } roi ? Pct(roi) : "unknown")}, {r.PaidEntries} paid of {r.Entries} entries. A week of tournaments is mostly variance: never judge the player's level or the plan from the money.");
+        }
+
+        if (facts.CashResults is { } cash)
+        {
+            text.AppendLine(CultureInfo.InvariantCulture, $"Cash game this week: {cash.Hands} hands, BB/100 {(cash.BigBlindsPer100?.ToString("0.00", CultureInfo.InvariantCulture) ?? "N/A")}, net {(cash.NetMoney >= 0 ? "+" : string.Empty)}{cash.NetMoney.ToString("0.00", CultureInfo.InvariantCulture)} €. Cash results over a single week are a small sample: note the volume but do not judge the player's level from the money.");
+        }
+    }
+
+    private static void AppendCashFacts(StringBuilder text, WeekFacts facts, string format, Func<decimal, string> Pct)
+    {
+        text.AppendLine(CultureInfo.InvariantCulture, $"Volume: {facts.Week.Hands} cash game hands at {format} tables (15+ BB).");
+        if (facts.CashResults is { } cash)
+        {
+            text.AppendLine(CultureInfo.InvariantCulture, $"Results: {cash.Hands} hands, BB/100 {(cash.BigBlindsPer100?.ToString("0.00", CultureInfo.InvariantCulture) ?? "N/A")}, net {(cash.NetMoney >= 0 ? "+" : string.Empty)}{cash.NetMoney.ToString("0.00", CultureInfo.InvariantCulture)} €. Cash results over a single week are a small sample: note the volume but do not judge the player's level from the money.");
+        }
+
+        var r = facts.Results;
+        if (r.Tournaments > 0)
+        {
+            text.AppendLine(CultureInfo.InvariantCulture, $"The player also played {r.Tournaments} tournaments this week.");
+        }
+    }
+
     internal static string Fingerprint(WeekFacts facts, string language)
     {
         var key = string.Join(
@@ -203,6 +239,7 @@ public sealed class WeekReviewService(
             facts.Results.TournamentsWithResult.ToString(CultureInfo.InvariantCulture),
             (facts.CashResults?.Hands ?? 0).ToString(CultureInfo.InvariantCulture),
             facts.WeekOver.ToString(),
+            facts.GameType.ToString(),
             language);
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(key)));
     }
@@ -218,5 +255,8 @@ public sealed class WeekReviewService(
     private static ReportView<WeekReviewReport> View(StoredReport<WeekReviewReport> stored, string fingerprint) =>
         new(stored.Report, stored.Fingerprint != fingerprint, stored.Model, stored.CreatedAt);
 
-    private static string Subject(DateOnly week) => week.ToString("O", CultureInfo.InvariantCulture);
+    private static string Subject(DateOnly week, GameType gameType) =>
+        gameType == GameType.Tournament
+            ? week.ToString("O", CultureInfo.InvariantCulture)
+            : $"{week.ToString("O", CultureInfo.InvariantCulture)}:{gameType}";
 }

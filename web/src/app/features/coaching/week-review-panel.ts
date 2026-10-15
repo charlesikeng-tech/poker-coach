@@ -18,6 +18,7 @@ import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
+import { GameType } from '../statistics/statistics-api';
 import { positionShort } from '../training/spot-table';
 import {
   CoachingApi,
@@ -61,6 +62,7 @@ export class WeekReviewPanel {
 
   /** This week first, then the most recent finished week when there is one. */
   readonly weeks = input.required<readonly ReviewableWeek[]>();
+  readonly gameType = input<GameType>('tournament');
 
   protected readonly selected = signal(0);
   protected readonly state = signal<PanelState>({ kind: 'loading' });
@@ -81,8 +83,9 @@ export class WeekReviewPanel {
     effect(() => {
       const week = this.week()?.weekStart;
       const language = this.language.current();
+      const gameType = this.gameType();
       if (week) {
-        untracked(() => void this.load(week, language));
+        untracked(() => void this.load(week, language, gameType));
       }
     });
   }
@@ -99,7 +102,7 @@ export class WeekReviewPanel {
     this.writing.set(true);
     this.writeError.set(null);
     try {
-      const review = await this.api.writeReview(week.weekStart, this.language.current());
+      const review = await this.api.writeReview(week.weekStart, this.language.current(), this.gameType());
       this.state.set({ kind: 'ready', review });
     } catch (error) {
       this.writeError.set(coachErrorCode(error));
@@ -125,12 +128,12 @@ export class WeekReviewPanel {
     return formatDateTime(value, this.language.current());
   }
 
-  private async load(week: string, language: string): Promise<void> {
+  private async load(week: string, language: string, gameType: GameType = 'tournament'): Promise<void> {
     const request = ++this.request;
     this.state.set({ kind: 'loading' });
     this.writeError.set(null);
     try {
-      const review = await this.api.review(week, language);
+      const review = await this.api.review(week, language, gameType);
       if (request === this.request) {
         this.state.set({ kind: 'ready', review });
       }
