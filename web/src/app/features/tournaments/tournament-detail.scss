@@ -274,13 +274,12 @@
 }
 
 .moment__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
   color: var(--text-muted);
   font-size: var(--font-size-xs);
-}
-
-.cards {
-  color: var(--text-primary);
-  font-weight: var(--font-weight-medium);
 }
 
 .moment__swing {

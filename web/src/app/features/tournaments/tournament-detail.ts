@@ -26,6 +26,7 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
 import { Icon } from '../../shared/ui/icon/icon';
 import { ChartMarker, LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
+import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
 import { DebriefPanel } from '../coaching/debrief-panel';
 import { StatRate } from '../statistics/statistics-api';
 import { KeyMoment, TournamentDetail, TournamentsApi } from './tournaments-api';
@@ -49,6 +50,7 @@ const SESSION_STATS = ['vpip', 'pfr', 'threeBet', 'steal', 'cbetFlop', 'wentToSh
     LineChart,
     Spotlight,
     DebriefPanel,
+    PlayingCard,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -202,6 +204,14 @@ export class TournamentDetailPage {
 
   protected sign(value: number | null): 'positive' | 'negative' | 'neutral' {
     return value === null || value === 0 ? 'neutral' : value > 0 ? 'positive' : 'negative';
+  }
+
+  protected parseCards(heroCards: string): string[] {
+    const cards: string[] = [];
+    for (let i = 0; i + 1 < heroCards.length; i += 2) {
+      cards.push(heroCards.slice(i, i + 2));
+    }
+    return cards;
   }
 
   private handTitle(index: number, level: number): string {

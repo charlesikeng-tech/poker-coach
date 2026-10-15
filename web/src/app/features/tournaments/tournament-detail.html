@@ -175,16 +175,19 @@
                           >· {{ t('detail.moments.stages.' + k.stage) }}</span
                         >
                       </p>
-                      <p class="moment__meta numeric">
-                        {{ t('detail.handTitle', { index: k.index, level: k.level }) }}
+                      <div class="moment__meta numeric">
+                        <span>{{ t('detail.handTitle', { index: k.index, level: k.level }) }}</span>
                         @if (k.position) {
-                          · {{ t('detail.positions.' + k.position) }}
+                          <span>· {{ t('detail.positions.' + k.position) }}</span>
                         }
                         @if (k.heroCards) {
-                          · <span class="cards">{{ k.heroCards }}</span>
+                          <span>·</span>
+                          @for (card of parseCards(k.heroCards); track card) {
+                            <app-playing-card [card]="card" size="small" />
+                          }
                         }
-                        · {{ t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) }) }}
-                      </p>
+                        <span>· {{ t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) }) }}</span>
+                      </div>
                     </div>
                     <div class="moment__swing numeric">
                       <strong>{{ signedBigBlinds(k.netBigBlinds) }}</strong>
