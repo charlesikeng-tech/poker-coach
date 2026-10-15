@@ -576,6 +576,12 @@
         margin-right: 0.4rem;
         color: var(--gold);
       }
+      .room-note {
+        display: block;
+        color: var(--ink-3);
+        font-size: 0.82rem;
+        font-weight: 400;
+      }
       .status {
         padding: 1px 0.55rem;
         border-radius: 999px;
@@ -842,6 +848,20 @@
       footer a:hover {
         color: var(--ink);
       }
+      .menu-btn {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-md);
+        background: none;
+        color: var(--ink);
+        cursor: pointer;
+      }
+
       .responsible {
         max-width: 60rem;
         padding: 0.8rem 1rem;
@@ -863,11 +883,31 @@
           grid-template-columns: minmax(0, 1fr);
           max-width: 34rem;
         }
+        .menu-btn {
+          display: flex;
+          margin-left: auto;
+        }
         .top nav {
           display: none;
         }
-        .top .actions {
-          margin-left: auto;
+        .top nav.open {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          padding: 0.5rem max(16px, 4vw) 1rem;
+          gap: 0;
+          border-bottom: 1px solid var(--line);
+          background: rgb(11 20 17 / 0.96);
+          backdrop-filter: blur(14px);
+        }
+        .top nav.open a {
+          padding: 0.65rem 0;
+          border-bottom: 1px solid var(--line);
+          font-size: 1rem;
+          color: var(--ink-2);
         }
         .window {
           margin-top: 3rem;
@@ -907,7 +947,7 @@
           "name": "Quelles rooms sont prises en charge ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Winamax aujourd'hui, en tournois MTT. PokerStars et Betclic arrivent ensuite : NutsIQ est construit pour accueillir d'autres rooms."
+            "text": "Winamax (MTT), Betclic (cash game, MTT bientôt) et PMU Poker (cash game) sont disponibles aujourd'hui. PokerStars arrive ensuite : NutsIQ est construit pour accueillir d'autres rooms et formats."
           }
         },
         {
@@ -983,13 +1023,18 @@
           </svg>
           <span>Nuts<b>IQ</b></span>
         </a>
-        <nav aria-label="Sections">
+        <nav id="main-nav" aria-label="Sections">
           <a href="#comment">Comment ça marche</a>
           <a href="#couverture">Rooms et buy-ins</a>
           <a href="#fonctions">Fonctions</a>
           <a href="#tarifs">Tarifs</a>
           <a href="#faq">FAQ</a>
         </nav>
+        <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="main-nav">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path d="M3 5h14M3 10h14M3 15h14" />
+          </svg>
+        </button>
         <div class="actions">
           <a class="signin" href="https://app.nutsiq.com/sign-in">Se connecter</a>
           <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Essayer gratuitement</a>
@@ -1096,12 +1141,13 @@
             <article>
               <h3>Rooms</h3>
               <ul>
-                <li class="room"><strong>Winamax</strong><span class="status status--live">Disponible</span></li>
-                <li class="room"><strong>PokerStars</strong><span class="status status--soon">Bientôt</span></li>
-                <li class="room"><strong>Betclic</strong><span class="status status--soon">Bientôt</span></li>
+                <li class="room"><div><strong>Winamax</strong><span class="room-note">MTT</span></div><span class="status status--live">Disponible</span></li>
+                <li class="room"><div><strong>Betclic</strong><span class="room-note">Cash game · MTT bientôt</span></div><span class="status status--live">Disponible</span></li>
+                <li class="room"><div><strong>PMU Poker</strong><span class="room-note">Cash game</span></div><span class="status status--live">Disponible</span></li>
+                <li class="room"><div><strong>PokerStars</strong><span class="room-note">MTT</span></div><span class="status status--soon">Bientôt</span></li>
               </ul>
               <p class="note">
-                Historiques de mains et résumés de tournois. NutsIQ est construit pour accueillir d'autres rooms.
+                NutsIQ est construit pour accueillir d'autres rooms et formats.
               </p>
             </article>
             <article>
@@ -1121,7 +1167,7 @@
                 <li>Tournois MTT : classiques, knockout, turbo et hyper-turbo, avec re-entries et rebuys.</li>
                 <li>Tables 6-max et full ring, analysées séparément.</li>
               </ul>
-              <p class="note">Pas encore de cash game ni de Spin.</p>
+              <p class="note">Cash game : disponible sur Betclic et PMU Poker. Spin &amp; Go : bientôt.</p>
             </article>
           </div>
         </div>
@@ -1284,8 +1330,7 @@
             <p class="eyebrow">Coachs et streamers</p>
             <h2>Tu coaches ou tu streames du MTT ?</h2>
             <p>
-              On cherche quelques coachs et streamers pour construire NutsIQ avec nous, avant son lancement
-              public.
+              On cherche quelques coachs et streamers pour construire NutsIQ avec nous et façonner ses prochaines fonctions.
             </p>
             <p class="contact">Écris-nous : <code>partenaires@nutsiq.com</code></p>
           </div>
@@ -1417,6 +1462,23 @@
         }
         month.addEventListener('click', function () { show(false); });
         year.addEventListener('click', function () { show(true); });
+      })();
+
+      // Mobile nav toggle
+      (function () {
+        var btn = document.querySelector('.menu-btn');
+        var nav = document.getElementById('main-nav');
+        if (!btn || !nav) return;
+        btn.addEventListener('click', function () {
+          var open = nav.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(open));
+        });
+        nav.querySelectorAll('a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            nav.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+          });
+        });
       })();
     </script>
   </body>
