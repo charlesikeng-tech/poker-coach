@@ -36,6 +36,7 @@ using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
 using PokerCoach.HandHistories;
 using PokerCoach.HandHistories.Betclic;
+using PokerCoach.HandHistories.Pmu;
 using PokerCoach.HandHistories.PokerStars;
 using PokerCoach.HandHistories.Winamax;
 using PokerCoach.Infrastructure;
@@ -82,6 +83,7 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<ImportOptions
 builder.Services.AddSingleton<IHandHistoryProvider, WinamaxHandHistoryProvider>();
 builder.Services.AddSingleton<IHandHistoryProvider, PokerStarsHandHistoryProvider>();
 builder.Services.AddSingleton<IHandHistoryProvider, BetclicHandHistoryProvider>();
+builder.Services.AddSingleton<IHandHistoryProvider, PmuHandHistoryProvider>();
 builder.Services.AddScoped<ImportService>();
 builder.Services.AddScoped<ImportProcessor>();
 builder.Services.AddScoped<PokerAccountService>();

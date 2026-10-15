@@ -3,7 +3,7 @@
  * rooms in general; a room's name only appears where the text is about that room (its account, where it
  * saves its files). Add a room here when its import ships.
  */
-export const SUPPORTED_ROOMS = ['winamax', 'betclic'] as const;
+export const SUPPORTED_ROOMS = ['winamax', 'betclic', 'pmu'] as const;
 
 export type SupportedRoom = (typeof SUPPORTED_ROOMS)[number];
 
@@ -13,6 +13,7 @@ const ROOM_NAMES: Readonly<Record<string, string>> = {
   winamax: 'Winamax',
   pokerStars: 'PokerStars',
   betclic: 'Betclic',
+  pmu: 'PMU Poker',
 };
 
 /** The room's display name; an unknown value is shown as the API sent it. */

@@ -1,0 +1,202 @@
+GAME #9126398469 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:16:47/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table [FR]  Lille, 560237452
+Seat 1: Vilain 121 (€50.00 in chips)
+Seat 3: Héros (€58.47 in chips)
+Seat 5: Vilain 122 (€104.57 in chips)
+Seat 6: Vilain 123 (€56.31 in chips)
+Seat 8: Vilain 124 (€78.39 in chips)  DEALER
+Seat 10: Vilain 125 (€14.75 in chips)
+Vilain 125: Post SB €0.25
+Vilain 121: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [S6 C9]
+Héros: Fold
+Vilain 122: Fold
+Vilain 123: Fold
+Vilain 124: Fold
+Vilain 125: Call €0.25
+Vilain 121: Raise (NF) €1.50
+Vilain 125: Fold
+*** SUMMARY ***
+Total pot €1.00 Rake €0.00
+Vilain 121: wins €1.00
+
+GAME #9126396212 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:15:35/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table [FR]  Lille, 560237452
+Seat 3: Héros (€58.47 in chips)
+Seat 5: Vilain 122 (€111.04 in chips)
+Seat 6: Vilain 123 (€50.00 in chips)  DEALER
+Seat 8: Vilain 124 (€78.64 in chips)
+Seat 10: Vilain 125 (€15.25 in chips)
+Vilain 124: Post SB €0.25
+Vilain 125: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [DQ S8]
+Héros: Fold
+Vilain 122: Raise (NF) €1.25
+Vilain 123: Raise (NF) €3.75
+Vilain 124: Fold
+Vilain 125: Fold
+Vilain 122: Call €2.50
+*** FLOP *** [S2 H3 SQ]
+Vilain 122: Check
+Vilain 123: Bet €2.72
+Vilain 122: Call €2.72
+*** TURN *** [D5]
+Vilain 122: Check
+Vilain 123: Bet €9.00
+Vilain 122: Fold
+*** SUMMARY ***
+Total pot €12.78 Rake €0.91
+Vilain 123: wins €12.78
+
+GAME #9126396142 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:15:04/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table Kherson, 560252357
+Seat 1: Vilain 126 (€43.47 in chips)
+Seat 3: Vilain 127 (€51.25 in chips)
+Seat 5: Vilain 128 (€58.29 in chips)
+Seat 6: Héros (€50.82 in chips)  DEALER
+Seat 8: Vilain 123 (€50.00 in chips)
+Vilain 123: Post SB €0.25
+Vilain 126: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [C6 SQ]
+Vilain 127: Fold
+Vilain 128: Fold
+Héros: Fold
+Vilain 123: Fold
+*** SUMMARY ***
+Total pot €0.50 Rake €0.00
+Vilain 126: wins €0.50
+
+GAME #9126390548 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:11:42/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table [FR]  Lille, 560237452
+Seat 1: Vilain 133 (€29.44 in chips)  DEALER
+Seat 3: Héros (€56.70 in chips)
+Seat 5: Vilain 122 (€112.29 in chips)
+Seat 6: Vilain 123 (€50.50 in chips)
+Héros: Post SB €0.25
+Vilain 122: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [S8 CA]
+Vilain 123: Fold
+Vilain 133: Call €0.50
+Héros: Call €0.25
+Vilain 122: Check
+*** FLOP *** [HQ DA CJ]
+Héros: Check
+Vilain 122: Check
+Vilain 133: Bet €1.00
+Héros: Call €1.00
+Vilain 122: Fold
+*** TURN *** [H8]
+Héros: Bet €2.62
+Vilain 133: Fold
+*** SUMMARY ***
+Total pot €3.27 Rake €0.23
+Héros: Mucks [S8 CA]
+Héros: wins €3.27
+
+GAME #9126394446 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:13:29/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table [FR]  Lille, 560237452
+Seat 1: Vilain 133 (€27.94 in chips)
+Seat 3: Héros (€58.47 in chips)
+Seat 5: Vilain 122 (€111.54 in chips)  DEALER
+Seat 6: Vilain 123 (€50.00 in chips)
+Seat 8: Vilain 124 (€52.45 in chips)
+Seat 10: Vilain 125 (€15.75 in chips)
+Vilain 123: Post SB €0.25
+Vilain 124: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [D5 HQ]
+Vilain 125: Call €0.50
+Vilain 133: Call €0.50
+Héros: Fold
+Vilain 122: Call €0.50
+Vilain 123: Fold
+Vilain 124: Raise (NF) €5.00
+Vilain 125: Fold
+Vilain 133: Call €4.50
+Vilain 122: Fold
+*** FLOP *** [D10 HA DA]
+Vilain 124: Bet €3.71
+Vilain 133: Call €3.71
+*** TURN *** [S9]
+Vilain 124: Bet €4.67
+Vilain 133: Call €4.67
+*** RIVER *** [S6]
+Vilain 124: Bet €35.01
+Vilain 133: Allin €14.56
+*** SUMMARY ***
+Total pot €54.13 Rake €3.00
+Vilain 133: Shows [SQ S10] Two Pair, Aces and Tens
+Vilain 124: Shows [C8 CA] Three of a Kind, Aces
+Vilain 124: wins €54.13
+
+GAME #9126386585 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:08:50/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table Kiel, 560278231
+Seat 1: Vilain 124 (€50.00 in chips)
+Seat 3: Vilain 136 (€12.37 in chips)
+Seat 5: Vilain 131 (€50.00 in chips)
+Seat 6: Héros (€50.00 in chips)
+Seat 8: Vilain 134 (€59.68 in chips)  DEALER
+Seat 10: Vilain 135 (€53.05 in chips)
+Vilain 135: Post SB €0.25
+Vilain 124: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [H5 DK]
+Vilain 136: Call €0.50
+Vilain 131: Fold
+Héros: Fold
+Vilain 134: Fold
+Vilain 135: Fold
+Vilain 124: Check
+*** FLOP *** [H10 CA D10]
+Vilain 124: Check
+Vilain 136: Bet €1.50
+Vilain 124: Call €1.50
+*** TURN *** [HK]
+Vilain 124: Check
+Vilain 136: Bet €2.00
+Vilain 124: Raise (NF) €14.38
+Vilain 136: Allin €8.37
+*** RIVER *** [H6]
+*** SUMMARY ***
+Total pot €23.33 Rake €1.66
+Vilain 124: Shows [HJ S10] Three of a Kind, Tens
+Vilain 136: Shows [S3 HA] Two Pair, Aces and Tens
+Vilain 124: wins €23.33
+
+GAME #9126386144 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-13 22:07:31/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table [FR]  Lille, 560237452
+Seat 1: Vilain 137 (€23.27 in chips)  DEALER
+Seat 3: Héros (€57.45 in chips)
+Seat 5: Vilain 122 (€114.29 in chips)
+Seat 6: Vilain 129 (€59.36 in chips)
+Seat 8: Vilain 124 (€50.75 in chips)
+Héros: Post SB €0.25
+Vilain 122: Post BB €0.50
+*** HOLE CARDS ***
+Dealt to Héros [C4 SQ]
+Vilain 129: Raise (NF) €1.25
+Vilain 124: Fold
+Vilain 137: Raise (NF) €2.00
+Héros: Fold
+Vilain 122: Fold
+Vilain 129: Raise (NF) €59.36
+Vilain 137: Allin €21.27
+*** FLOP *** [D9 DJ C9]
+*** TURN *** [H3]
+*** RIVER *** [D6]
+*** SUMMARY ***
+Total pot €44.29 Rake €3.00
+Vilain 137: Shows [H10 D10] Two Pair, Tens and Nines
+Vilain 129: Shows [DQ HQ] Two Pair, Queens and Nines
+Vilain 129: wins €44.29

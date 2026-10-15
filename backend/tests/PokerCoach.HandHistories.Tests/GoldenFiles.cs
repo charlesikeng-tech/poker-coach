@@ -46,11 +46,17 @@ internal static class GoldenFiles
     /// <summary>7 hands: fold preflop, raise + flop, hero wins, 5-max, showdown, all-in, side pot.</summary>
     public const string BetclicCash6Max = "cash_nlhe_025_050_6max.txt";
 
+    /// <summary>7 hands: fold preflop, 3-bet + flop/turn, hero DEALER walk, hero wins + mucks, all-in showdown, raise + all-in turn, 4-bet all-in preflop.</summary>
+    public const string PmuCash6Max = "cash_nlhe_025_050_6max.txt";
+
     public static string Read(string fileName) =>
         File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Winamax", fileName));
 
     public static string ReadBetclic(string fileName) =>
         File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Betclic", fileName));
+
+    public static string ReadPmu(string fileName) =>
+        File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Pmu", fileName));
 
     /// <summary>Replaces the first occurrence only, and fails loudly if the text is not there.</summary>
     public static string ReplaceFirst(string content, string oldValue, string newValue)
