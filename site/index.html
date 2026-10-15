@@ -2,7 +2,10 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>NutsIQ — Coach IA pour joueurs de MTT et cash game</title>
     <meta
       name="description"
@@ -14,7 +17,10 @@
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="NutsIQ" />
-    <meta property="og:title" content="NutsIQ — Trouve tes leaks. Joue tes nuts." />
+    <meta
+      property="og:title"
+      content="NutsIQ — Trouve tes leaks. Joue tes nuts."
+    />
     <meta
       property="og:description"
       content="Le coach IA des joueurs de MTT : importe tes mains, découvre tes leaks, reçois un débrief après chaque tournoi."
@@ -22,19 +28,31 @@
     <meta property="og:image" content="https://nutsiq.com/assets/og.png" />
     <meta property="og:locale" content="fr_FR" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preload" href="/fonts/sora-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/sora-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/ibm-plex-sans-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <style>
       /* fonts:start — self-hosted: no third-party font request (GDPR). */
       @font-face {
-        font-family: 'Sora Variable';
-        src: url('/fonts/sora-latin-wght-normal.woff2') format('woff2');
+        font-family: "Sora Variable";
+        src: url("/fonts/sora-latin-wght-normal.woff2") format("woff2");
         font-weight: 100 800;
         font-display: swap;
       }
       @font-face {
-        font-family: 'IBM Plex Sans Variable';
-        src: url('/fonts/ibm-plex-sans-latin-wght-normal.woff2') format('woff2');
+        font-family: "IBM Plex Sans Variable";
+        src: url("/fonts/ibm-plex-sans-latin-wght-normal.woff2") format("woff2");
         font-weight: 100 700;
         font-display: swap;
       }
@@ -60,8 +78,12 @@
         --good: #3ddc97;
         --bad: #ff6b6b;
         --felt-light: rgb(31 77 56 / 0.55);
-        --display: 'Sora Variable', 'Sora', 'IBM Plex Sans Variable', system-ui, sans-serif;
-        --body: 'IBM Plex Sans Variable', 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --display:
+          "Sora Variable", "Sora", "IBM Plex Sans Variable", system-ui,
+          sans-serif;
+        --body:
+          "IBM Plex Sans Variable", "IBM Plex Sans", system-ui, -apple-system,
+          "Segoe UI", sans-serif;
         --radius-sm: 6px;
         --radius-md: 10px;
         --radius-lg: 16px;
@@ -77,7 +99,11 @@
       body {
         margin: 0;
         background:
-          radial-gradient(900px 520px at 70% -120px, var(--felt-light), transparent 70%),
+          radial-gradient(
+            900px 520px at 70% -120px,
+            var(--felt-light),
+            transparent 70%
+          ),
           var(--felt);
         color: var(--ink);
         font: 400 1.0625rem/1.6 var(--body);
@@ -142,10 +168,15 @@
       .btn--gold {
         background: linear-gradient(180deg, var(--gold-hi), var(--gold));
         color: var(--on-gold);
-        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 1px 2px rgb(0 0 0 / 0.3);
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 0.3),
+          0 1px 2px rgb(0 0 0 / 0.3);
       }
       .btn--gold:hover {
-        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 0 0 1px var(--gold-glow), 0 8px 28px var(--gold-glow);
+        box-shadow:
+          inset 0 1px 0 rgb(255 255 255 / 0.3),
+          0 0 0 1px var(--gold-glow),
+          0 8px 28px var(--gold-glow);
       }
       .btn--ghost {
         border-color: var(--line-strong);
@@ -280,7 +311,9 @@
         border: 1px solid var(--line-strong);
         border-radius: var(--radius-lg);
         background: rgb(15 26 22 / 0.86);
-        box-shadow: 0 30px 80px rgb(0 0 0 / 0.5), inset 0 1px 0 rgb(255 255 255 / 0.05);
+        box-shadow:
+          0 30px 80px rgb(0 0 0 / 0.5),
+          inset 0 1px 0 rgb(255 255 255 / 0.05);
         backdrop-filter: blur(14px);
       }
       .window .tag {
@@ -522,7 +555,8 @@
       }
       .truth li {
         padding-left: 1.4rem;
-        background: linear-gradient(var(--gold), var(--gold)) 0 0.62em / 0.55rem 0.55rem no-repeat;
+        background: linear-gradient(var(--gold), var(--gold)) 0 0.62em / 0.55rem
+          0.55rem no-repeat;
       }
 
       /* Coverage: rooms, buy-ins and formats, said plainly. */
@@ -630,7 +664,7 @@
         font: 500 0.92rem/1.4 var(--body);
         cursor: pointer;
       }
-      .billing-toggle button[aria-pressed='true'] {
+      .billing-toggle button[aria-pressed="true"] {
         background: var(--gold-wash);
         color: var(--gold);
       }
@@ -681,7 +715,9 @@
       }
       .plan--pro {
         border-color: var(--gold-glow);
-        box-shadow: 0 0 0 1px var(--gold-glow), 0 20px 60px rgb(233 185 73 / 0.1);
+        box-shadow:
+          0 0 0 1px var(--gold-glow),
+          0 20px 60px rgb(233 185 73 / 0.1);
       }
       .plan h3 {
         font-size: 1.35rem;
@@ -792,13 +828,13 @@
         display: none;
       }
       summary::after {
-        content: '+';
+        content: "+";
         float: right;
         color: var(--gold);
         font-weight: 400;
       }
       details[open] summary::after {
-        content: '–';
+        content: "–";
       }
       details p {
         padding: 0 1.25rem 1.1rem;
@@ -938,68 +974,115 @@
       }
     </style>
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Quelles rooms sont prises en charge ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Winamax (MTT), Betclic (cash game, MTT bientôt) et PMU Poker (cash game) sont disponibles aujourd'hui. PokerStars arrive ensuite : NutsIQ est construit pour accueillir d'autres rooms et formats."
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Quelles rooms sont prises en charge ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Winamax (MTT), Betclic (cash game, MTT bientôt) et PMU Poker (cash game) sont disponibles aujourd'hui. PokerStars arrive ensuite : NutsIQ est construit pour accueillir d'autres rooms et formats."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Quels buy-ins sont pris en charge ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tous : NutsIQ importe chaque tournoi, quel que soit son prix, et range tes résultats par tranche de buy-in. Les repères de leaks et de ranges sont écrits pour le micro et le low stakes (jusqu'à 25 € environ) ; au-dessus, ils restent utiles mais moins exigeants que le niveau du field."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Faut-il installer quelque chose ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Non. Tout se passe dans le navigateur : tu importes le .zip de ton dossier d'historique. Une application de bureau qui importe toute seule après chaque session est prévue."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Est-ce que NutsIQ joue à ma place ou s'utilise pendant les parties ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Non. NutsIQ analyse des mains déjà jouées, entre les sessions. Il n'affiche rien pendant que tu joues."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Que deviennent mes données ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Tes mains servent uniquement à calculer tes statistiques. Tu peux tout télécharger ou supprimer ton compte à tout moment depuis la page Compte ; la suppression efface tout. Le coach IA ne reçoit que des chiffres et des mains anonymisées."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Que se passe-t-il si j'arrête mon abonnement ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ton offre reste ouverte jusqu'à la fin de la période payée, puis ton compte repasse sur Starter. Rien n'est effacé : tu retrouves tout ton historique si tu reviens."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Comment marchent les crédits IA ?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Chaque texte du coach a un coût réel, alors chaque offre a des crédits par mois : une explication de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Avec Elite, 400 crédits, c'est par exemple un débrief après chacun de tes tournois et des dizaines d'explications. Les crédits repartent à zéro le 1er du mois."
+            }
           }
-        },
-        {
-          "@type": "Question",
-          "name": "Quels buy-ins sont pris en charge ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Tous : NutsIQ importe chaque tournoi, quel que soit son prix, et range tes résultats par tranche de buy-in. Les repères de leaks et de ranges sont écrits pour le micro et le low stakes (jusqu'à 25 € environ) ; au-dessus, ils restent utiles mais moins exigeants que le niveau du field."
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "NutsIQ",
+        "description": "NutsIQ lit tes historiques de mains, trouve les leaks qui te coûtent des chips et te dit quoi travailler. Le coach IA des joueurs de MTT.",
+        "url": "https://nutsiq.com/",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "fr",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Starter",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "Pour toujours, sans carte bancaire."
+          },
+          {
+            "@type": "Offer",
+            "name": "Pro",
+            "price": "149",
+            "priceCurrency": "EUR",
+            "description": "Historique complet et bilan mensuel, 149 € par an.",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "149",
+              "priceCurrency": "EUR",
+              "billingDuration": "P1Y"
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Elite",
+            "price": "299",
+            "priceCurrency": "EUR",
+            "description": "Coach IA après chaque tournoi, 299 € par an.",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "299",
+              "priceCurrency": "EUR",
+              "billingDuration": "P1Y"
+            }
           }
-        },
-        {
-          "@type": "Question",
-          "name": "Faut-il installer quelque chose ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Non. Tout se passe dans le navigateur : tu importes le .zip de ton dossier d'historique. Une application de bureau qui importe toute seule après chaque session est prévue."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Est-ce que NutsIQ joue à ma place ou s'utilise pendant les parties ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Non. NutsIQ analyse des mains déjà jouées, entre les sessions. Il n'affiche rien pendant que tu joues."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Que deviennent mes données ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Tes mains servent uniquement à calculer tes statistiques. Tu peux tout télécharger ou supprimer ton compte à tout moment depuis la page Compte ; la suppression efface tout. Le coach IA ne reçoit que des chiffres et des mains anonymisées."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Que se passe-t-il si j'arrête mon abonnement ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Ton offre reste ouverte jusqu'à la fin de la période payée, puis ton compte repasse sur Starter. Rien n'est effacé : tu retrouves tout ton historique si tu reviens."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Comment marchent les crédits IA ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Chaque texte du coach a un coût réel, alors chaque offre a des crédits par mois : une explication de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Avec Elite, 400 crédits, c'est par exemple un débrief après chacun de tes tournois et des dizaines d'explications. Les crédits repartent à zéro le 1er du mois."
-          }
-        }
-      ]
-    }
+        ]
+      }
     </script>
   </head>
   <body>
@@ -1030,14 +1113,31 @@
           <a href="#tarifs">Tarifs</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="main-nav">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+        <button
+          class="menu-btn"
+          aria-label="Menu"
+          aria-expanded="false"
+          aria-controls="main-nav"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            aria-hidden="true"
+          >
             <path d="M3 5h14M3 10h14M3 15h14" />
           </svg>
         </button>
         <div class="actions">
-          <a class="signin" href="https://app.nutsiq.com/sign-in">Se connecter</a>
-          <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Essayer gratuitement</a>
+          <a class="signin" href="https://app.nutsiq.com/sign-in"
+            >Se connecter</a
+          >
+          <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in"
+            >Essayer gratuitement</a
+          >
         </div>
       </div>
     </header>
@@ -1046,20 +1146,29 @@
       <section class="hero">
         <div class="wrap">
           <div>
-            <p class="eyebrow">Coach IA pour joueurs de MTT</p>
+            <p class="eyebrow">Coach IA pour joueurs de MTT et cash game</p>
             <h1>Trouve tes leaks. <em>Joue tes nuts.</em></h1>
             <p class="lede">
-              NutsIQ lit tes historiques de mains, repère les erreurs qui te coûtent des chips et
-              te dit quoi travailler, avec tes propres mains en exemple.
+              NutsIQ lit tes historiques de mains, repère les erreurs qui te
+              coûtent des chips et te dit quoi travailler, avec tes propres
+              mains en exemple.
             </p>
             <div class="ctas">
-              <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Commencer gratuitement</a>
+              <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in"
+                >Commencer gratuitement</a
+              >
               <a class="btn btn--ghost" href="#tarifs">Voir les tarifs</a>
             </div>
-            <p class="reassure">Starter gratuit, sans carte bancaire. Pro à 14,90 € par mois, résiliable en un clic.</p>
+            <p class="reassure">
+              Starter gratuit, sans carte bancaire. Pro à 14,90 € par mois,
+              résiliable en un clic.
+            </p>
           </div>
 
-          <div class="stage" aria-label="Exemple d'un leak tel que NutsIQ l'affiche">
+          <div
+            class="stage"
+            aria-label="Exemple d'un leak tel que NutsIQ l'affiche"
+          >
             <div class="range" id="range" aria-hidden="true"></div>
             <article class="window">
               <span class="tag">Exemple</span>
@@ -1068,7 +1177,10 @@
                 <span class="sev">Leak majeur</span>
               </div>
               <div class="gauge">
-                <div class="gauge-track" style="--from: 35; --to: 55; --at: 20.5">
+                <div
+                  class="gauge-track"
+                  style="--from: 35; --to: 55; --at: 20.5"
+                >
                   <span class="gauge-band"></span>
                   <span class="gauge-dot"></span>
                 </div>
@@ -1079,18 +1191,30 @@
               </div>
               <div class="coach">
                 <span class="who">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M12 3l1.9 5.8L20 10l-5 3.6L16.8 20 12 16.6 7.2 20 9 13.6 4 10l6.1-1.2z" />
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3l1.9 5.8L20 10l-5 3.6L16.8 20 12 16.6 7.2 20 9 13.6 4 10l6.1-1.2z"
+                    />
                   </svg>
                   Le coach
                 </span>
                 <p>
-                  Face à un open du cutoff, tu payes avec des mains qui gagnent plus en 3-bet. Mets-y les As
-                  faibles assortis et les broadways : tu reprends l'initiative au lieu de jouer hors de position
-                  à plusieurs.
+                  Face à un open du cutoff, tu payes avec des mains qui gagnent
+                  plus en 3-bet. Mets-y les As faibles assortis et les broadways
+                  : tu reprends l'initiative au lieu de jouer hors de position à
+                  plusieurs.
                 </p>
                 <div class="cards">
-                  <span class="card s numeric">A♠</span><span class="card s numeric">5♠</span>
+                  <span class="card s numeric">A♠</span
+                  ><span class="card s numeric">5♠</span>
                   <span>H3 · tu payes 2,2 BB, flop à trois, tu perds 9 BB</span>
                 </div>
               </div>
@@ -1103,28 +1227,31 @@
         <div class="wrap">
           <div class="section-head">
             <p class="eyebrow">Comment ça marche</p>
-            <h2>De ton historique de mains à ton plan de travail, en trois étapes.</h2>
+            <h2>
+              De ton historique de mains à ton plan de travail, en trois étapes.
+            </h2>
           </div>
           <ol class="steps">
             <li>
               <h3>Récupère tes mains</h3>
               <p>
-                Ta room enregistre chaque main jouée. Sur Winamax, le dossier <code>history</code> est dans
-                les données du logiciel : compresse-le en .zip.
+                Ta room enregistre chaque main jouée. Sur Winamax, le dossier
+                <code>history</code> est dans les données du logiciel :
+                compresse-le en .zip.
               </p>
             </li>
             <li>
               <h3>Importe-les</h3>
               <p>
-                Dépose le .zip. Les doublons sont ignorés, les fichiers abîmés signalés : tu peux importer
-                le même dossier chaque semaine.
+                Dépose le .zip. Les doublons sont ignorés, les fichiers abîmés
+                signalés : tu peux importer le même dossier chaque semaine.
               </p>
             </li>
             <li>
               <h3>Lis ce qui compte</h3>
               <p>
-                Tes stats par position et tes leaks classés par impact. Avec Elite, un débrief des mains
-                qui ont décidé de chaque tournoi.
+                Tes stats par position et tes leaks classés par impact. Avec
+                Elite, un débrief des mains qui ont décidé de chaque tournoi.
               </p>
             </li>
           </ol>
@@ -1141,10 +1268,33 @@
             <article>
               <h3>Rooms</h3>
               <ul>
-                <li class="room"><div><strong>Winamax</strong><span class="room-note">MTT</span></div><span class="status status--live">Disponible</span></li>
-                <li class="room"><div><strong>Betclic</strong><span class="room-note">Cash game · MTT bientôt</span></div><span class="status status--live">Disponible</span></li>
-                <li class="room"><div><strong>PMU Poker</strong><span class="room-note">Cash game</span></div><span class="status status--live">Disponible</span></li>
-                <li class="room"><div><strong>PokerStars</strong><span class="room-note">MTT</span></div><span class="status status--soon">Bientôt</span></li>
+                <li class="room">
+                  <div>
+                    <strong>Winamax</strong><span class="room-note">MTT</span>
+                  </div>
+                  <span class="status status--live">Disponible</span>
+                </li>
+                <li class="room">
+                  <div>
+                    <strong>Betclic</strong
+                    ><span class="room-note">Cash game · MTT bientôt</span>
+                  </div>
+                  <span class="status status--live">Disponible</span>
+                </li>
+                <li class="room">
+                  <div>
+                    <strong>PMU Poker</strong
+                    ><span class="room-note">Cash game</span>
+                  </div>
+                  <span class="status status--live">Disponible</span>
+                </li>
+                <li class="room">
+                  <div>
+                    <strong>PokerStars</strong
+                    ><span class="room-note">MTT</span>
+                  </div>
+                  <span class="status status--soon">Bientôt</span>
+                </li>
               </ul>
               <p class="note">
                 NutsIQ est construit pour accueillir d'autres rooms et formats.
@@ -1152,22 +1302,34 @@
             </article>
             <article>
               <h3>Buy-ins</h3>
-              <p>Tous les buy-ins sont importés, et tes résultats sont rangés par tranche :</p>
+              <p>
+                Tous les buy-ins sont importés, et tes résultats sont rangés par
+                tranche :
+              </p>
               <div class="bands numeric">
-                <span>Jusqu'à 5 €</span><span>5 à 10 €</span><span>10 à 20 €</span><span>20 à 50 €</span><span>50 € et plus</span>
+                <span>Jusqu'à 5 €</span><span>5 à 10 €</span
+                ><span>10 à 20 €</span><span>20 à 50 €</span
+                ><span>50 € et plus</span>
               </div>
               <p class="note">
-                Les repères (leaks, ranges) sont écrits pour le micro et le low stakes, jusqu'à 25 € environ.
-                Au-dessus, tes stats restent exactes ; les repères, eux, sont plus indulgents que ton field.
+                Les repères (leaks, ranges) sont écrits pour le micro et le low
+                stakes, jusqu'à 25 € environ. Au-dessus, tes stats restent
+                exactes ; les repères, eux, sont plus indulgents que ton field.
               </p>
             </article>
             <article>
               <h3>Formats</h3>
               <ul>
-                <li>Tournois MTT : classiques, knockout, turbo et hyper-turbo, avec re-entries et rebuys.</li>
+                <li>
+                  Tournois MTT : classiques, knockout, turbo et hyper-turbo,
+                  avec re-entries et rebuys.
+                </li>
                 <li>Tables 6-max et full ring, analysées séparément.</li>
               </ul>
-              <p class="note">Cash game : disponible sur Betclic et PMU Poker. Spin &amp; Go : bientôt.</p>
+              <p class="note">
+                Cash game : disponible sur Betclic et PMU Poker. Spin &amp; Go :
+                bientôt.
+              </p>
             </article>
           </div>
         </div>
@@ -1178,65 +1340,131 @@
           <div class="section-head">
             <p class="eyebrow">Fonctions</p>
             <h2>Ce que fait un coach, sur toutes tes mains.</h2>
-            <p>Pensé pour le micro et le low stakes, où les mêmes erreurs coûtent le plus.</p>
+            <p>
+              Pensé pour le micro et le low stakes, où les mêmes erreurs coûtent
+              le plus.
+            </p>
           </div>
           <div class="features">
             <div class="feature">
               <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1" /></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <circle cx="12" cy="12" r="5" />
+                  <circle cx="12" cy="12" r="1" />
+                </svg>
                 Détection de leaks
               </h3>
               <p>
-                VPIP, open, 3-bet, c-bet, fold to 3-bet… par position et par profondeur de stack, comparés à
-                des repères de joueurs solides. Seuls les écarts assez fréquents pour compter sont signalés.
+                VPIP, open, 3-bet, c-bet, fold to 3-bet… par position et par
+                profondeur de stack, comparés à des repères de joueurs solides.
+                Seuls les écarts assez fréquents pour compter sont signalés.
               </p>
             </div>
             <div class="feature">
               <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z" /><path d="M17 5h3a3 3 0 0 1-3 4M7 5H4a3 3 0 0 0 3 4" /></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  aria-hidden="true"
+                >
+                  <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z" />
+                  <path d="M17 5h3a3 3 0 0 1-3 4M7 5H4a3 3 0 0 0 3 4" />
+                </svg>
                 Débrief de tournoi <span class="pro">Elite</span>
               </h3>
               <p>
-                Après chaque tournoi, le récit de ta partie et un avis sur chaque moment clé : bien joué,
-                erreur, ou variance quand l'équité calculée dit que tu étais devant.
+                Après chaque tournoi, le récit de ta partie et un avis sur
+                chaque moment clé : bien joué, erreur, ou variance quand
+                l'équité calculée dit que tu étais devant.
               </p>
             </div>
             <div class="feature">
               <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M3 3v18h18" /><path d="m7 15 4-4 3 3 5-6" /></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  aria-hidden="true"
+                >
+                  <path d="M3 3v18h18" />
+                  <path d="m7 15 4-4 3 3 5-6" />
+                </svg>
                 Plan de la semaine <span class="pro">Pro</span>
               </h3>
               <p>
-                Trois priorités tirées de tes leaks, suivies sur les mains de la semaine, et un bilan du coach
-                sur ce qui a bougé.
+                Trois priorités tirées de tes leaks, suivies sur les mains de la
+                semaine, et un bilan du coach sur ce qui a bougé.
               </p>
             </div>
             <div class="feature">
               <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
                 Ranges et entraînement <span class="pro">Pro</span>
               </h3>
               <p>
-                Tes ranges d'ouverture réelles face aux références, et un quiz sur tes propres spots :
-                ceux que tu as ratés reviennent jusqu'à ce que tu les joues juste.
+                Tes ranges d'ouverture réelles face aux références, et un quiz
+                sur tes propres spots : ceux que tu as ratés reviennent jusqu'à
+                ce que tu les joues juste.
               </p>
             </div>
             <div class="feature">
               <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 3v18M3 12h18" /><circle cx="12" cy="12" r="9" /></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  aria-hidden="true"
+                >
+                  <path d="M12 3v18M3 12h18" />
+                  <circle cx="12" cy="12" r="9" />
+                </svg>
                 Replay de mains
               </h3>
               <p>
-                Rejoue n'importe quelle main à la table, street par street, avec les stacks en big blinds.
+                Rejoue n'importe quelle main à la table, street par street, avec
+                les stacks en big blinds.
               </p>
             </div>
             <div class="feature">
               <h3>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16V7" /><circle cx="16" cy="14" r="1.5" /></svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  aria-hidden="true"
+                >
+                  <path d="M20 7H5a2 2 0 0 1 0-4h14v4" />
+                  <path d="M3 5v14a2 2 0 0 0 2 2h16V7" />
+                  <circle cx="16" cy="14" r="1.5" />
+                </svg>
                 Bankroll et performance
               </h3>
               <p>
-                ROI, ITM, résultats par buy-in et par format, courbe de bankroll avec tes dépôts et retraits.
+                ROI, ITM, résultats par buy-in et par format, courbe de bankroll
+                avec tes dépôts et retraits.
               </p>
             </div>
           </div>
@@ -1246,12 +1474,22 @@
       <section class="truth">
         <div class="wrap">
           <blockquote>
-            Les chiffres viennent <span>de tes mains</span>. L'IA explique, elle n'invente rien.
+            Les chiffres viennent <span>de tes mains</span>. L'IA explique, elle
+            n'invente rien.
           </blockquote>
           <ul>
-            <li>Chaque stat est calculée par NutsIQ sur tes mains importées, avec le nombre de spots derrière.</li>
-            <li>Le coach IA reçoit ces chiffres et des mains anonymisées : jamais ton pseudo ni ceux de tes adversaires.</li>
-            <li>Pas de promesse de « GTO » : des repères de joueurs gagnants, et ce que tu peux corriger dès ta prochaine session.</li>
+            <li>
+              Chaque stat est calculée par NutsIQ sur tes mains importées, avec
+              le nombre de spots derrière.
+            </li>
+            <li>
+              Le coach IA reçoit ces chiffres et des mains anonymisées : jamais
+              ton pseudo ni ceux de tes adversaires.
+            </li>
+            <li>
+              Pas de promesse de « GTO » : des repères de joueurs gagnants, et
+              ce que tu peux corriger dès ta prochaine session.
+            </li>
           </ul>
         </div>
       </section>
@@ -1261,12 +1499,23 @@
           <div class="section-head">
             <p class="eyebrow">Tarifs</p>
             <h2>Une offre pour chaque volume de jeu.</h2>
-            <p>Commence avec Starter. Passe Pro pour tout ton historique et un bilan chaque mois, Elite pour le coach après chaque tournoi.</p>
+            <p>
+              Commence avec Starter. Passe Pro pour tout ton historique et un
+              bilan chaque mois, Elite pour le coach après chaque tournoi.
+            </p>
           </div>
 
-          <div class="billing-toggle" role="group" aria-label="Rythme de facturation">
-            <button type="button" id="bill-month" aria-pressed="false">Mensuel</button>
-            <button type="button" id="bill-year" aria-pressed="true">Annuel <small>2 mois offerts</small></button>
+          <div
+            class="billing-toggle"
+            role="group"
+            aria-label="Rythme de facturation"
+          >
+            <button type="button" id="bill-month" aria-pressed="false">
+              Mensuel
+            </button>
+            <button type="button" id="bill-year" aria-pressed="true">
+              Annuel <small>2 mois offerts</small>
+            </button>
           </div>
 
           <div class="plans">
@@ -1276,50 +1525,276 @@
               <p class="price"><strong class="numeric">0 €</strong></p>
               <p class="note">Pour toujours, sans carte bancaire.</p>
               <ul>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Historique</b> : 30 derniers jours</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Coaching IA</b> : 3 crédits / mois</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Leak Finder</b> : leaks préflop</span></li>
-                <li class="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 12h12" /></svg><span><b>Ranges &amp; push/fold</b></span></li>
-                <li class="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 12h12" /></svg><span><b>Exercices</b></span></li>
-                <li class="off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 12h12" /></svg><span><b>Rapports</b></span></li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Historique</b> : 30 derniers jours</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Coaching IA</b> : 3 crédits / mois</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Leak Finder</b> : leaks préflop</span>
+                </li>
+                <li class="off">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 12h12" /></svg
+                  ><span><b>Ranges &amp; push/fold</b></span>
+                </li>
+                <li class="off">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 12h12" /></svg
+                  ><span><b>Exercices</b></span>
+                </li>
+                <li class="off">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 12h12" /></svg
+                  ><span><b>Rapports</b></span>
+                </li>
               </ul>
-              <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in">Créer mon compte</a>
+              <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in"
+                >Créer mon compte</a
+              >
             </article>
             <article class="plan plan--pro">
               <h3>Pro <span class="badge">Le plus choisi</span></h3>
               <p class="tag">Pour travailler ton jeu chaque semaine.</p>
-              <p class="price"><strong class="numeric" data-month="14,90 €" data-year="149 €">149 €</strong><span class="per">/ an</span></p>
-              <p class="note numeric" data-month="Sans engagement." data-year="Soit 12,42 € par mois.">Soit 12,42 € par mois.</p>
+              <p class="price">
+                <strong class="numeric" data-month="14,90 €" data-year="149 €"
+                  >149 €</strong
+                ><span class="per">/ an</span>
+              </p>
+              <p
+                class="note numeric"
+                data-month="Sans engagement."
+                data-year="Soit 12,42 € par mois."
+              >
+                Soit 12,42 € par mois.
+              </p>
               <ul>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Historique</b> : complet</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Coaching IA</b> : 100 crédits / mois</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Leak Finder</b> : préflop, avec explications</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Ranges &amp; push/fold</b> : ranges d'ouverture</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Exercices</b> : open, push/fold, défense de BB</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Rapports</b> : bilan du coach une fois par mois</span></li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Historique</b> : complet</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Coaching IA</b> : 100 crédits / mois</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Leak Finder</b> : préflop, avec explications</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Ranges &amp; push/fold</b> : ranges d'ouverture</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Exercices</b> : open, push/fold, défense de BB</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Rapports</b> : bilan du coach une fois par mois</span
+                  >
+                </li>
               </ul>
-              <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Passer Pro</a>
+              <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in"
+                >Passer Pro</a
+              >
             </article>
             <article class="plan">
               <h3>Elite</h3>
               <p class="tag">Pour tout analyser, après chaque tournoi.</p>
-              <p class="price"><strong class="numeric" data-month="29,90 €" data-year="299 €">299 €</strong><span class="per">/ an</span></p>
-              <p class="note numeric" data-month="Sans engagement." data-year="Soit 24,92 € par mois.">Soit 24,92 € par mois.</p>
+              <p class="price">
+                <strong class="numeric" data-month="29,90 €" data-year="299 €"
+                  >299 €</strong
+                ><span class="per">/ an</span>
+              </p>
+              <p
+                class="note numeric"
+                data-month="Sans engagement."
+                data-year="Soit 24,92 € par mois."
+              >
+                Soit 24,92 € par mois.
+              </p>
               <ul>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Historique</b> : complet</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Coaching IA</b> : 400 crédits / mois</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Leak Finder</b> : préflop et postflop, par phase et par stack, chance à l'all-in</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Ranges &amp; push/fold</b> : ranges d'ouverture et équilibre push/fold</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Exercices</b> : tout, plus un quiz sur tes propres mains</span></li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5L20 7" /></svg><span><b>Rapports</b> : bilan chaque semaine et débrief de chaque tournoi</span></li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Historique</b> : complet</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Coaching IA</b> : 400 crédits / mois</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Leak Finder</b> : préflop et postflop, par phase et par
+                    stack, chance à l'all-in</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Ranges &amp; push/fold</b> : ranges d'ouverture et
+                    équilibre push/fold</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Exercices</b> : tout, plus un quiz sur tes propres
+                    mains</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Rapports</b> : bilan chaque semaine et débrief de chaque
+                    tournoi</span
+                  >
+                </li>
               </ul>
-              <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in">Passer Elite</a>
+              <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in"
+                >Passer Elite</a
+              >
             </article>
           </div>
           <p class="fineprint">
-            Prix TTC. Une explication de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Paiement
-            sécurisé par Stripe : NutsIQ ne voit jamais ta carte. Change d'offre ou résilie en un clic depuis
-            ton compte ; tes mains ne sont jamais supprimées si tu repasses sur Starter.
+            Prix TTC. Une explication de leak coûte 1 crédit, un bilan 2, un
+            débrief de tournoi 5. Paiement sécurisé par Stripe : NutsIQ ne voit
+            jamais ta carte. Change d'offre ou résilie en un clic depuis ton
+            compte ; tes mains ne sont jamais supprimées si tu repasses sur
+            Starter.
           </p>
         </div>
       </section>
@@ -1330,15 +1805,30 @@
             <p class="eyebrow">Coachs et streamers</p>
             <h2>Tu coaches ou tu streames du MTT ?</h2>
             <p>
-              On cherche quelques coachs et streamers pour construire NutsIQ avec nous et façonner ses prochaines fonctions.
+              On cherche quelques coachs et streamers pour construire NutsIQ
+              avec nous et façonner ses prochaines fonctions.
             </p>
-            <p class="contact">Écris-nous : <code>partenaires@nutsiq.com</code></p>
+            <p class="contact">
+              Écris-nous : <code>partenaires@nutsiq.com</code>
+            </p>
           </div>
           <ul>
-            <li><strong>Accès Pro offert</strong> pour toi pendant la phase de test.</li>
-            <li><strong>Un code pour ta communauté</strong>, avec une remise sur l'abonnement.</li>
-            <li><strong>Un kit de marque</strong> prêt à l'emploi : logos, visuels, formats pour tes overlays et tes réseaux.</li>
-            <li><strong>Ta voix dans la roadmap</strong> : l'accès coach à tes élèves est la prochaine grande fonction.</li>
+            <li>
+              <strong>Accès Pro offert</strong> pour toi pendant la phase de
+              test.
+            </li>
+            <li>
+              <strong>Un code pour ta communauté</strong>, avec une remise sur
+              l'abonnement.
+            </li>
+            <li>
+              <strong>Un kit de marque</strong> prêt à l'emploi : logos,
+              visuels, formats pour tes overlays et tes réseaux.
+            </li>
+            <li>
+              <strong>Ta voix dans la roadmap</strong> : l'accès coach à tes
+              élèves est la prochaine grande fonction.
+            </li>
           </ul>
         </div>
       </section>
@@ -1353,54 +1843,65 @@
             <details>
               <summary>Quelles rooms sont prises en charge ?</summary>
               <p>
-                Winamax aujourd'hui, en tournois MTT. PokerStars et Betclic arrivent ensuite : NutsIQ est construit pour
-                accueillir d'autres rooms.
+                Winamax aujourd'hui, en tournois MTT. PokerStars et Betclic
+                arrivent ensuite : NutsIQ est construit pour accueillir d'autres
+                rooms.
               </p>
             </details>
             <details>
               <summary>Quels buy-ins sont pris en charge ?</summary>
               <p>
-                Tous : NutsIQ importe chaque tournoi, quel que soit son prix, et range tes résultats par tranche
-                de buy-in. Les repères de leaks et de ranges sont écrits pour le micro et le low stakes (jusqu'à
-                25 € environ) ; au-dessus, ils restent utiles mais moins exigeants que le niveau du field.
+                Tous : NutsIQ importe chaque tournoi, quel que soit son prix, et
+                range tes résultats par tranche de buy-in. Les repères de leaks
+                et de ranges sont écrits pour le micro et le low stakes (jusqu'à
+                25 € environ) ; au-dessus, ils restent utiles mais moins
+                exigeants que le niveau du field.
               </p>
             </details>
             <details>
               <summary>Faut-il installer quelque chose ?</summary>
               <p>
-                Non. Tout se passe dans le navigateur : tu importes le .zip de ton dossier d'historique. Une
-                application de bureau qui importe toute seule après chaque session est prévue.
+                Non. Tout se passe dans le navigateur : tu importes le .zip de
+                ton dossier d'historique. Une application de bureau qui importe
+                toute seule après chaque session est prévue.
               </p>
             </details>
             <details>
-              <summary>Est-ce que NutsIQ joue à ma place ou s'utilise pendant les parties ?</summary>
+              <summary>
+                Est-ce que NutsIQ joue à ma place ou s'utilise pendant les
+                parties ?
+              </summary>
               <p>
-                Non. NutsIQ analyse des mains déjà jouées, entre les sessions. Il n'affiche rien pendant que tu
-                joues.
+                Non. NutsIQ analyse des mains déjà jouées, entre les sessions.
+                Il n'affiche rien pendant que tu joues.
               </p>
             </details>
             <details>
               <summary>Que deviennent mes données ?</summary>
               <p>
-                Tes mains servent uniquement à calculer tes statistiques. Tu peux tout télécharger ou supprimer
-                ton compte à tout moment depuis la page Compte ; la suppression efface tout. Le coach IA ne
-                reçoit que des chiffres et des mains anonymisées.
+                Tes mains servent uniquement à calculer tes statistiques. Tu
+                peux tout télécharger ou supprimer ton compte à tout moment
+                depuis la page Compte ; la suppression efface tout. Le coach IA
+                ne reçoit que des chiffres et des mains anonymisées.
               </p>
             </details>
             <details>
               <summary>Que se passe-t-il si j'arrête mon abonnement ?</summary>
               <p>
-                Ton offre reste ouverte jusqu'à la fin de la période payée, puis ton compte repasse sur Starter.
-                Rien n'est effacé : tu retrouves tout ton historique si tu reviens.
+                Ton offre reste ouverte jusqu'à la fin de la période payée, puis
+                ton compte repasse sur Starter. Rien n'est effacé : tu retrouves
+                tout ton historique si tu reviens.
               </p>
             </details>
             <details>
               <summary>Comment marchent les crédits IA ?</summary>
               <p>
-                Chaque texte du coach a un coût réel, alors chaque offre a des crédits par mois : une explication
-                de leak coûte 1 crédit, un bilan 2, un débrief de tournoi 5. Avec Elite, 400 crédits, c'est par
-                exemple un débrief après chacun de tes tournois et des dizaines d'explications. Les crédits
-                repartent à zéro le 1er du mois.
+                Chaque texte du coach a un coût réel, alors chaque offre a des
+                crédits par mois : une explication de leak coûte 1 crédit, un
+                bilan 2, un débrief de tournoi 5. Avec Elite, 400 crédits, c'est
+                par exemple un débrief après chacun de tes tournois et des
+                dizaines d'explications. Les crédits repartent à zéro le 1er du
+                mois.
               </p>
             </details>
           </div>
@@ -1410,7 +1911,9 @@
       <section class="final">
         <div class="wrap">
           <h2>Ta prochaine session commence <em>par tes leaks.</em></h2>
-          <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Commencer gratuitement</a>
+          <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in"
+            >Commencer gratuitement</a
+          >
         </div>
       </section>
     </main>
@@ -1425,9 +1928,10 @@
           <a href="#coachs">Partenaires</a>
         </div>
         <p class="responsible">
-          Réservé aux plus de 18 ans. Jouer comporte des risques : endettement, isolement, dépendance. Pour
-          être aidé, appelle le 09 74 75 13 13 (appel non surtaxé). NutsIQ est un outil d'analyse
-          indépendant, sans lien avec les rooms de poker dont il lit les historiques.
+          Réservé aux plus de 18 ans. Jouer comporte des risques : endettement,
+          isolement, dépendance. Pour être aidé, appelle le 09 74 75 13 13
+          (appel non surtaxé). NutsIQ est un outil d'analyse indépendant, sans
+          lien avec les rooms de poker dont il lit les historiques.
         </p>
       </div>
     </footer>
@@ -1435,12 +1939,12 @@
     <script>
       // The range motif: a 13×13 hand chart, filled as the logo's rising staircase.
       (function () {
-        var grid = document.getElementById('range');
+        var grid = document.getElementById("range");
         if (!grid) return;
-        var html = '';
+        var html = "";
         for (var row = 0; row < 13; row++) {
           for (var col = 0; col < 13; col++) {
-            html += col + row >= 13 ? '<i class="on"></i>' : '<i></i>';
+            html += col + row >= 13 ? '<i class="on"></i>' : "<i></i>";
           }
         }
         grid.innerHTML = html;
@@ -1448,35 +1952,41 @@
 
       // Monthly / yearly prices. The amounts charged are Stripe's; these mirror them.
       (function () {
-        var month = document.getElementById('bill-month');
-        var year = document.getElementById('bill-year');
+        var month = document.getElementById("bill-month");
+        var year = document.getElementById("bill-year");
         function show(yearly) {
-          month.setAttribute('aria-pressed', String(!yearly));
-          year.setAttribute('aria-pressed', String(yearly));
-          document.querySelectorAll('[data-month]').forEach(function (el) {
-            el.textContent = yearly ? el.getAttribute('data-year') : el.getAttribute('data-month');
+          month.setAttribute("aria-pressed", String(!yearly));
+          year.setAttribute("aria-pressed", String(yearly));
+          document.querySelectorAll("[data-month]").forEach(function (el) {
+            el.textContent = yearly
+              ? el.getAttribute("data-year")
+              : el.getAttribute("data-month");
           });
-          document.querySelectorAll('.plan .per').forEach(function (el) {
-            el.textContent = yearly ? '/ an' : '/ mois';
+          document.querySelectorAll(".plan .per").forEach(function (el) {
+            el.textContent = yearly ? "/ an" : "/ mois";
           });
         }
-        month.addEventListener('click', function () { show(false); });
-        year.addEventListener('click', function () { show(true); });
+        month.addEventListener("click", function () {
+          show(false);
+        });
+        year.addEventListener("click", function () {
+          show(true);
+        });
       })();
 
       // Mobile nav toggle
       (function () {
-        var btn = document.querySelector('.menu-btn');
-        var nav = document.getElementById('main-nav');
+        var btn = document.querySelector(".menu-btn");
+        var nav = document.getElementById("main-nav");
         if (!btn || !nav) return;
-        btn.addEventListener('click', function () {
-          var open = nav.classList.toggle('open');
-          btn.setAttribute('aria-expanded', String(open));
+        btn.addEventListener("click", function () {
+          var open = nav.classList.toggle("open");
+          btn.setAttribute("aria-expanded", String(open));
         });
-        nav.querySelectorAll('a').forEach(function (a) {
-          a.addEventListener('click', function () {
-            nav.classList.remove('open');
-            btn.setAttribute('aria-expanded', 'false');
+        nav.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () {
+            nav.classList.remove("open");
+            btn.setAttribute("aria-expanded", "false");
           });
         });
       })();
