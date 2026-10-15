@@ -1059,6 +1059,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("date")
                         .HasColumnName("week_start");
 
+                    b.Property<int>("GameType")
+                        .HasColumnType("integer")
+                        .HasColumnName("game_type");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -1076,7 +1080,7 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("reference_version");
 
-                    b.HasKey("UserId", "WeekStart")
+                    b.HasKey("UserId", "WeekStart", "GameType")
                         .HasName("pk_weekly_plans");
 
                     b.ToTable("weekly_plans", "progress");

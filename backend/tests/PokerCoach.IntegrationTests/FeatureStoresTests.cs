@@ -10,6 +10,7 @@ using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
 using PokerCoach.Domain.Bankroll;
 using PokerCoach.Domain.Identity;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -58,19 +59,19 @@ public sealed class FeatureStoresTests(PostgresFixture fixture)
         var store = scope.ServiceProvider.GetRequiredService<IWeeklyPlanStore>();
         var week = new DateOnly(2026, 10, 5);
         var priority = new PlanPriority(LeakStat.Vpip, PokerPosition.Button, LeakDirection.TooLow, LeakConfidence.Confirmed, 0.31m, 120, 0.4m, 0.6m);
-        var first = new WeeklyPlan(week, TableFormat.FullRing, [priority], 2, new DateTimeOffset(2026, 10, 5, 8, 0, 0, TimeSpan.Zero));
+        var first = new WeeklyPlan(week, GameType.Tournament, TableFormat.FullRing, [priority], 2, new DateTimeOffset(2026, 10, 5, 8, 0, 0, TimeSpan.Zero));
 
         await store.AddIfAbsentAsync(userId, first, Ct);
         await store.AddIfAbsentAsync(userId, first with { Priorities = [], CreatedAt = first.CreatedAt.AddHours(1) }, Ct);
 
-        var stored = await store.GetAsync(userId, week, Ct);
+        var stored = await store.GetAsync(userId, week, GameType.Tournament, Ct);
         Assert.NotNull(stored);
         Assert.Equal(first.CreatedAt, stored.CreatedAt);
         Assert.Equal(priority, Assert.Single(stored.Priorities));
-        Assert.Equal(week, Assert.Single(await store.ListBeforeAsync(userId, week.AddDays(7), 4, Ct)).WeekStart);
+        Assert.Equal(week, Assert.Single(await store.ListBeforeAsync(userId, week.AddDays(7), GameType.Tournament, 4, Ct)).WeekStart);
 
-        await store.DeleteAsync(userId, week, Ct);
-        Assert.Null(await store.GetAsync(userId, week, Ct));
+        await store.DeleteAsync(userId, week, GameType.Tournament, Ct);
+        Assert.Null(await store.GetAsync(userId, week, GameType.Tournament, Ct));
     }
 
     [Fact]

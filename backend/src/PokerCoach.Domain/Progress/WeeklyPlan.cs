@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -23,7 +24,7 @@ public sealed record PlanPriority(
 /// towards. Progress against it is measured live on the week's hands.
 /// </summary>
 /// <param name="WeekStart">Monday of the week (UTC).</param>
-public sealed record WeeklyPlan(DateOnly WeekStart, TableFormat Format, IReadOnlyList<PlanPriority> Priorities, int ReferenceVersion, DateTimeOffset CreatedAt);
+public sealed record WeeklyPlan(DateOnly WeekStart, GameType GameType, TableFormat Format, IReadOnlyList<PlanPriority> Priorities, int ReferenceVersion, DateTimeOffset CreatedAt);
 
 public enum PriorityStatus
 {

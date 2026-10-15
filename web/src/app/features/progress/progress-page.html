@@ -2,6 +2,8 @@
   <ng-container *transloco="let t; prefix: 'pages.progress'">
     <app-page-header [heading]="t('title')" [description]="t('description')" />
 
+    <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
+
     @if (state() === 'error') {
       <app-empty-state
         [icon]="icons.CircleAlert"

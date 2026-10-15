@@ -7,9 +7,11 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
+import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
+import { GameType } from '../statistics/statistics-api';
 import { positionShort } from '../training/spot-table';
 import { Priority, ProgressApi, ProgressReport } from './progress-api';
 
@@ -25,7 +27,7 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
  */
 @Component({
   selector: 'app-progress-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, WeekReviewPanel],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, GameTypeToggle, WeekReviewPanel],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './progress-page.html',
@@ -35,6 +37,7 @@ export class ProgressPage {
   private readonly api = inject(ProgressApi);
   private readonly language = inject(LanguageService);
 
+  protected readonly gameType = signal<GameType>('tournament');
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<ProgressReport | null>(null);
   protected readonly rebuilding = signal(false);
@@ -79,6 +82,11 @@ export class ProgressPage {
     return weeks;
   });
 
+  protected setGameType(value: GameType): void {
+    this.gameType.set(value);
+    void this.load();
+  }
+
   protected retry(): void {
     void this.load();
   }
@@ -86,7 +94,7 @@ export class ProgressPage {
   protected async rebuild(): Promise<void> {
     this.rebuilding.set(true);
     try {
-      this.report.set(await this.api.rebuild());
+      this.report.set(await this.api.rebuild(this.gameType()));
     } catch {
       this.state.set('error');
     } finally {
@@ -151,7 +159,7 @@ export class ProgressPage {
   private async load(): Promise<void> {
     this.state.set('loading');
     try {
-      this.report.set(await this.api.get());
+      this.report.set(await this.api.get(this.gameType()));
       this.state.set('ready');
     } catch {
       this.state.set('error');

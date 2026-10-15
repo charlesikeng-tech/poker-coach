@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { LeakStat } from '../leaks/leaks-api';
-import { PokerPosition } from '../statistics/statistics-api';
+import { GameType, PokerPosition } from '../statistics/statistics-api';
 
 // Mirrors backend/src/PokerCoach.Api/Progress. Rates are ratios (0.22 = 22 %).
 
@@ -34,6 +34,7 @@ export interface Priority {
 export interface Week {
   /** Monday (UTC), "2026-10-05". */
   readonly weekStart: string;
+  readonly gameType: GameType;
   readonly format: TableFormat;
   readonly referenceVersion: number;
   readonly createdAt: string;
@@ -58,11 +59,19 @@ export interface ProgressReport {
 export class ProgressApi {
   private readonly http = inject(HttpClient);
 
-  get(): Promise<ProgressReport> {
-    return firstValueFrom(this.http.get<ProgressReport>('/api/progress'));
+  get(gameType: GameType = 'tournament'): Promise<ProgressReport> {
+    let params = new HttpParams();
+    if (gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
+    }
+    return firstValueFrom(this.http.get<ProgressReport>('/api/progress', { params }));
   }
 
-  rebuild(): Promise<ProgressReport> {
-    return firstValueFrom(this.http.post<ProgressReport>('/api/progress/plan/rebuild', {}));
+  rebuild(gameType: GameType = 'tournament'): Promise<ProgressReport> {
+    let params = new HttpParams();
+    if (gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
+    }
+    return firstValueFrom(this.http.post<ProgressReport>('/api/progress/plan/rebuild', {}, { params }));
   }
 }

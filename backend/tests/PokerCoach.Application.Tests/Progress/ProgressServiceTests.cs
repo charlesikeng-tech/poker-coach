@@ -3,6 +3,7 @@ using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Progress;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -54,7 +55,7 @@ public sealed class ProgressServiceTests
     {
         var userId = Guid.NewGuid();
         var plans = new MemoryPlans();
-        plans.Add(userId, new WeeklyPlan(new DateOnly(2026, 9, 28), TableFormat.SixMax, [], ReferenceRanges.Version, Friday.AddDays(-10)));
+        plans.Add(userId, new WeeklyPlan(new DateOnly(2026, 9, 28), GameType.Tournament, TableFormat.SixMax, [], ReferenceRanges.Version, Friday.AddDays(-10)));
         var stats = new StubStats(baseline: Counts(hands: 1000, vpip: 500, decisions: 1000), week: HeroStatCounts.Zero);
         var service = Service(stats, plans);
 
@@ -99,30 +100,30 @@ public sealed class ProgressServiceTests
 
     private sealed class MemoryPlans : IWeeklyPlanStore
     {
-        private readonly Dictionary<(Guid, DateOnly), WeeklyPlan> plans = [];
+        private readonly Dictionary<(Guid, DateOnly, GameType), WeeklyPlan> plans = [];
 
         public int Count => plans.Count;
 
-        public void Add(Guid userId, WeeklyPlan plan) => plans[(userId, plan.WeekStart)] = plan;
+        public void Add(Guid userId, WeeklyPlan plan) => plans[(userId, plan.WeekStart, plan.GameType)] = plan;
 
-        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, CancellationToken cancellationToken) =>
-            Task.FromResult(plans.GetValueOrDefault((userId, weekStart)));
+        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken) =>
+            Task.FromResult(plans.GetValueOrDefault((userId, weekStart, gameType)));
 
         public Task AddIfAbsentAsync(Guid userId, WeeklyPlan plan, CancellationToken cancellationToken)
         {
-            plans.TryAdd((userId, plan.WeekStart), plan);
+            plans.TryAdd((userId, plan.WeekStart, plan.GameType), plan);
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(Guid userId, DateOnly weekStart, CancellationToken cancellationToken)
+        public Task DeleteAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken)
         {
-            plans.Remove((userId, weekStart));
+            plans.Remove((userId, weekStart, gameType));
             return Task.CompletedTask;
         }
 
-        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, int count, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<WeeklyPlan>>(plans
-                .Where(p => p.Key.Item1 == userId && p.Key.Item2 < before)
+                .Where(p => p.Key.Item1 == userId && p.Key.Item2 < before && p.Key.Item3 == gameType)
                 .OrderByDescending(p => p.Key.Item2)
                 .Take(count)
                 .Select(p => p.Value)

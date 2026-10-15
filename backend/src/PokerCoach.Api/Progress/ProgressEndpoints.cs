@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Application.Progress;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -31,7 +32,7 @@ public sealed record PriorityResponse(
 
 /// <param name="WeekStart">Monday of the week (UTC), "2026-10-05".</param>
 /// <param name="Hands">Hands of that format played during the week (15+ BB).</param>
-public sealed record WeekResponse(DateOnly WeekStart, TableFormat Format, int ReferenceVersion, DateTimeOffset CreatedAt, IReadOnlyList<PriorityResponse> Priorities, int Hands);
+public sealed record WeekResponse(DateOnly WeekStart, GameType GameType, TableFormat Format, int ReferenceVersion, DateTimeOffset CreatedAt, IReadOnlyList<PriorityResponse> Priorities, int Hands);
 
 /// <param name="Current">Null until there is enough recent history (minBaselineHands) to build a plan.</param>
 /// <param name="BaselineHands">Recent hands available when no plan could be built yet.</param>
@@ -62,6 +63,7 @@ public static class ProgressEndpoints
     private static async Task<Results<Ok<ProgressResponse>, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         ProgressService progress,
+        GameType? gameType,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -69,12 +71,13 @@ public static class ProgressEndpoints
             return TypedResults.Unauthorized();
         }
 
-        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, cancellationToken)));
+        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, gameType ?? GameType.Tournament, cancellationToken)));
     }
 
     private static async Task<Results<Ok<ProgressResponse>, UnauthorizedHttpResult>> RebuildAsync(
         HttpContext context,
         ProgressService progress,
+        GameType? gameType,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -82,7 +85,7 @@ public static class ProgressEndpoints
             return TypedResults.Unauthorized();
         }
 
-        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, cancellationToken)));
+        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, gameType ?? GameType.Tournament, cancellationToken)));
     }
 
     private static ProgressResponse ToResponse(ProgressReport r) => new(
@@ -98,6 +101,7 @@ public static class ProgressEndpoints
 
     private static WeekResponse Week(WeekReport w) => new(
         w.Plan.WeekStart,
+        w.Plan.GameType,
         w.Plan.Format,
         w.Plan.ReferenceVersion,
         w.Plan.CreatedAt,

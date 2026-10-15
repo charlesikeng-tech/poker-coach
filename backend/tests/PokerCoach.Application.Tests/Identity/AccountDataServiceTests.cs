@@ -8,6 +8,7 @@ using PokerCoach.Application.Identity;
 using PokerCoach.Application.Progress;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Bankroll;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Progress;
 using PokerCoach.Domain.Tournaments;
 
@@ -126,13 +127,13 @@ public sealed class AccountDataServiceTests
 
     private sealed class NoPlans : IWeeklyPlanStore
     {
-        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, CancellationToken cancellationToken) => Task.FromResult<WeeklyPlan?>(null);
+        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken) => Task.FromResult<WeeklyPlan?>(null);
 
         public Task AddIfAbsentAsync(Guid userId, WeeklyPlan plan, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task DeleteAsync(Guid userId, DateOnly weekStart, CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task DeleteAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, int count, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<WeeklyPlan>>([]);
     }
 }

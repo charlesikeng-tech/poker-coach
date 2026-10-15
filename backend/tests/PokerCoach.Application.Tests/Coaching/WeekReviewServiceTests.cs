@@ -1,5 +1,6 @@
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Progress;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -43,7 +44,7 @@ public sealed class WeekReviewServiceTests
 
     private static WeekReviewService.WeekFacts Facts(PriorityProgress progress, bool weekOver)
     {
-        var plan = new WeeklyPlan(new DateOnly(2026, 10, 5), TableFormat.SixMax, [ButtonOpens], ReferenceRanges.Version, new DateTimeOffset(2026, 10, 5, 8, 0, 0, TimeSpan.Zero));
+        var plan = new WeeklyPlan(new DateOnly(2026, 10, 5), GameType.Tournament, TableFormat.SixMax, [ButtonOpens], ReferenceRanges.Version, new DateTimeOffset(2026, 10, 5, 8, 0, 0, TimeSpan.Zero));
         var week = new WeekReport(plan, [new PriorityReport(ButtonOpens, progress, null)], 400);
         var results = new PerformanceFigures(12, 12, 14, 2, 70m, 95m, 25m, 0.357m, null, null, 0.1429m);
         return new WeekReviewService.WeekFacts(week, weekOver, 5, 42, 30, 100, results, null);
