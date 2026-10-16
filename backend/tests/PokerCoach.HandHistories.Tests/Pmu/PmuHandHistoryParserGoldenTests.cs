@@ -167,9 +167,13 @@ public sealed class PmuHandHistoryParserGoldenTests
         Assert.Equal(5936, raises[2].RaiseTo);
 
         var allIns = hand.Actions.Where(a => a.IsAllIn).ToList();
-        Assert.Single(allIns);
-        Assert.Equal("Vilain 137", allIns[0].PlayerName);
-        Assert.Equal(ParsedActionType.Call, allIns[0].Type);
+        Assert.Equal(2, allIns.Count);
+        // Vilain 129 raises to their entire stack (59.36 = starting stack).
+        Assert.Equal("Vilain 129", allIns[0].PlayerName);
+        Assert.Equal(ParsedActionType.Raise, allIns[0].Type);
+        // Vilain 137 explicitly goes all-in (Allin keyword).
+        Assert.Equal("Vilain 137", allIns[1].PlayerName);
+        Assert.Equal(ParsedActionType.Call, allIns[1].Type);
 
         Assert.Equal(5, hand.Board.Count);
         Assert.Equal(2, hand.ShownCards.Count);

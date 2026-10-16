@@ -16,6 +16,7 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
     private readonly List<ParsedShownCards> shownCards = [];
     private readonly List<ParsedPotCollection> collections = [];
     private readonly Dictionary<string, long> streetContributions = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, long> remainingStacks = new(StringComparer.Ordinal);
 
     private Section section = Section.Header;
     private Street street = Street.Preflop;
@@ -231,6 +232,7 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
 
         seats.Add(new ParsedSeat(seatNumber, name, stack, null));
         streetContributions[name] = 0;
+        remainingStacks[name] = stack;
         return true;
     }
 
@@ -252,6 +254,7 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
             : ParsedActionType.PostBigBlind;
 
         AddToStreet(playerName, amount);
+        DeductStack(playerName, amount);
         AddAction(playerName, type, amount, raiseTo: null, isAllIn: false);
         return true;
     }
@@ -337,8 +340,10 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
 
+            var callAllIn = DetectAllIn(name, amount);
             AddToStreet(name, amount);
-            AddAction(name, ParsedActionType.Call, amount, raiseTo: null, isAllIn: false);
+            DeductStack(name, amount);
+            AddAction(name, ParsedActionType.Call, amount, raiseTo: null, callAllIn);
             return true;
         }
 
@@ -351,8 +356,10 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
 
+            var betAllIn = DetectAllIn(name, amount);
             AddToStreet(name, amount);
-            AddAction(name, ParsedActionType.Bet, amount, raiseTo: null, isAllIn: false);
+            DeductStack(name, amount);
+            AddAction(name, ParsedActionType.Bet, amount, raiseTo: null, betAllIn);
             return true;
         }
 
@@ -385,7 +392,9 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
             return Fail(ParseErrorCodes.InconsistentRaise, line);
         }
 
-        AddAction(name, ParsedActionType.Raise, increment, raiseTo, isAllIn);
+        var raiseAllIn = isAllIn || DetectAllIn(name, increment);
+        DeductStack(name, increment);
+        AddAction(name, ParsedActionType.Raise, increment, raiseTo, raiseAllIn);
         streetContributions[name] = raiseTo;
         currentBet = raiseTo;
         return true;
@@ -420,6 +429,7 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
             currentBet = playerTotal;
         }
 
+        DeductStack(name, amount);
         return true;
     }
 
@@ -530,6 +540,15 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
         var total = streetContributions[player] + amount;
         streetContributions[player] = total;
         currentBet = Math.Max(currentBet, total);
+    }
+
+    private bool DetectAllIn(string playerName, long amount) =>
+        remainingStacks.TryGetValue(playerName, out var remaining) && remaining > 0 && amount == remaining;
+
+    private void DeductStack(string playerName, long amount)
+    {
+        if (remainingStacks.TryGetValue(playerName, out var remaining))
+            remainingStacks[playerName] = Math.Max(0, remaining - amount);
     }
 
     private void AddAction(string player, ParsedActionType type, long amount, long? raiseTo, bool isAllIn) =>
