@@ -1891,7 +1891,8 @@
         "tasks": {
           "leakExplanation": "Leak explanation",
           "weekReview": "Weekly review",
-          "tournamentDebrief": "Tournament debrief"
+          "tournamentDebrief": "Tournament debrief",
+          "cashDebrief": "Cash game debrief"
         }
       }
     }
