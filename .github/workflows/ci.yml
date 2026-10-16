@@ -138,19 +138,3 @@ jobs:
             docker push "$image:$tag"
             docker push "$image-edge:$tag"
           done
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [image]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    environment: production
-    steps:
-      - name: Deploy to Scaleway
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd "${{ secrets.DEPLOY_DIR }}"
-            ./deploy.sh ${{ github.sha }}
