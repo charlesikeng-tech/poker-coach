@@ -64,8 +64,12 @@
   letter-spacing: -0.02em;
   line-height: 1;
 
-  &[data-sign='positive'] { color: var(--success); }
-  &[data-sign='negative'] { color: var(--danger); }
+  &[data-sign='positive'] {
+    color: var(--success);
+  }
+  &[data-sign='negative'] {
+    color: var(--danger);
+  }
 }
 
 .head__label {
@@ -122,8 +126,12 @@
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size-lg);
 
-    &[data-sign='positive'] { color: var(--success); }
-    &[data-sign='negative'] { color: var(--danger); }
+    &[data-sign='positive'] {
+      color: var(--success);
+    }
+    &[data-sign='negative'] {
+      color: var(--danger);
+    }
   }
 
   &--stats {
@@ -170,8 +178,14 @@
     background-color: var(--surface-hover);
   }
 
-  &[data-sign='positive'] .moment__number { background-color: color-mix(in srgb, var(--success) 15%, transparent); color: var(--success); }
-  &[data-sign='negative'] .moment__number { background-color: color-mix(in srgb, var(--danger) 15%, transparent); color: var(--danger); }
+  &[data-sign='positive'] .moment__number {
+    background-color: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+  }
+  &[data-sign='negative'] .moment__number {
+    background-color: color-mix(in srgb, var(--danger) 15%, transparent);
+    color: var(--danger);
+  }
 }
 
 .moment__number {
@@ -230,7 +244,9 @@
   color: var(--text-muted);
   font-size: var(--font-size-sm);
 
-  app-icon { flex-shrink: 0; }
+  app-icon {
+    flex-shrink: 0;
+  }
 }
 
 .skeletons {
@@ -245,7 +261,9 @@
   flex-direction: column;
   gap: var(--space-3);
 
-  &--tall { min-height: 12rem; }
+  &--tall {
+    min-height: 12rem;
+  }
 }
 
 @media (max-width: 768px) {

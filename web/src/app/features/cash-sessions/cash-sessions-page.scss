@@ -96,8 +96,12 @@
   font-weight: var(--font-weight-medium);
   white-space: nowrap;
 
-  &[data-sign='positive'] { color: var(--success); }
-  &[data-sign='negative'] { color: var(--danger); }
+  &[data-sign='positive'] {
+    color: var(--success);
+  }
+  &[data-sign='negative'] {
+    color: var(--danger);
+  }
 }
 
 .item__date {
@@ -112,8 +116,12 @@
   color: var(--text-muted);
   font-size: var(--font-size-xs);
 
-  [data-sign='positive'] { color: var(--success); }
-  [data-sign='negative'] { color: var(--danger); }
+  [data-sign='positive'] {
+    color: var(--success);
+  }
+  [data-sign='negative'] {
+    color: var(--danger);
+  }
 }
 
 .pager {

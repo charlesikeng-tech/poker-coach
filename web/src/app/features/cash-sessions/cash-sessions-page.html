@@ -53,10 +53,7 @@
                   >
                     <span class="item__top">
                       <span class="item__name">{{ session.stakes }}</span>
-                      <span
-                        class="item__profit numeric"
-                        [attr.data-sign]="sign(session.netMoney)"
-                      >
+                      <span class="item__profit numeric" [attr.data-sign]="sign(session.netMoney)">
                         {{ signedMoney(session.netMoney) }}
                       </span>
                     </span>
@@ -65,7 +62,9 @@
                       <span>{{ t('list.hands', { count: session.hands }) }}</span>
                       <span>{{ duration(session.durationMinutes) }}</span>
                       @if (session.bigBlindsPer100 !== null) {
-                        <span [attr.data-sign]="sign(session.bigBlindsPer100)">{{ bb100(session.bigBlindsPer100) }}</span>
+                        <span [attr.data-sign]="sign(session.bigBlindsPer100)">{{
+                          bb100(session.bigBlindsPer100)
+                        }}</span>
                       }
                     </span>
                   </a>

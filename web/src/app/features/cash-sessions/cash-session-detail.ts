@@ -15,11 +15,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ArrowLeft, CircleAlert, LoaderCircle, Radar } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
-import {
-  formatDateTime,
-  formatInteger,
-  formatSignedMoney,
-} from '../../shared/format/format';
+import { formatDateTime, formatInteger, formatSignedMoney } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
