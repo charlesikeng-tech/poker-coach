@@ -72,6 +72,8 @@ export class ProgressApi {
     if (gameType !== 'tournament') {
       params = params.set('gameType', gameType);
     }
-    return firstValueFrom(this.http.post<ProgressReport>('/api/progress/plan/rebuild', {}, { params }));
+    return firstValueFrom(
+      this.http.post<ProgressReport>('/api/progress/plan/rebuild', {}, { params }),
+    );
   }
 }

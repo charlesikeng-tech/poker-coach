@@ -122,7 +122,11 @@ export class AllInLuckPanel {
     return new Intl.DateTimeFormat(this.locale(), { dateStyle: 'medium' }).format(new Date(iso));
   }
 
-  private async load(from: string | undefined, completeOnly: boolean, gameType: GameType = 'tournament'): Promise<void> {
+  private async load(
+    from: string | undefined,
+    completeOnly: boolean,
+    gameType: GameType = 'tournament',
+  ): Promise<void> {
     const request = ++this.request;
     try {
       const luck = await this.api.allInLuck(from, completeOnly, gameType);

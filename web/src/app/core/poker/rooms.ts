@@ -7,7 +7,6 @@ export const SUPPORTED_ROOMS = ['winamax', 'betclic', 'pmu'] as const;
 
 export type SupportedRoom = (typeof SUPPORTED_ROOMS)[number];
 
-
 /** Brand names are the same in every language. */
 const ROOM_NAMES: Readonly<Record<string, string>> = {
   winamax: 'Winamax',

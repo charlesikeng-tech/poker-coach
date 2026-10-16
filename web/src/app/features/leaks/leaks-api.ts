@@ -85,7 +85,11 @@ export interface LeakExplanation {
 export class LeaksApi {
   private readonly http = inject(HttpClient);
 
-  get(from: string | undefined, format: TableFormat | null, gameType?: GameType): Promise<LeakAnalysis> {
+  get(
+    from: string | undefined,
+    format: TableFormat | null,
+    gameType?: GameType,
+  ): Promise<LeakAnalysis> {
     let params = from ? new HttpParams().set('from', from) : new HttpParams();
     if (format) {
       params = params.set('format', format);

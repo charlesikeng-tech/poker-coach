@@ -3,7 +3,18 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { Eye, EyeOff, History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X } from 'lucide';
+import {
+  Eye,
+  EyeOff,
+  History,
+  LogOut,
+  Menu,
+  Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Sun,
+  X,
+} from 'lucide';
 import { filter, map } from 'rxjs';
 
 import { BrandMark } from '../../shared/ui/brand-mark/brand-mark';
@@ -58,7 +69,18 @@ export class Shell {
       : SECONDARY_NAVIGATION,
   );
   protected readonly billing = inject(BillingService);
-  protected readonly icons = { Eye, EyeOff, History, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Sun, X };
+  protected readonly icons = {
+    Eye,
+    EyeOff,
+    History,
+    LogOut,
+    Menu,
+    Moon,
+    PanelLeftClose,
+    PanelLeftOpen,
+    Sun,
+    X,
+  };
 
   private readonly url = toSignal(
     inject(Router).events.pipe(

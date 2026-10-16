@@ -29,7 +29,12 @@ import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggl
 import { GameType } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
-import { CashPerformanceReport, PerformanceGroup, PerformanceReport, PerformanceApi } from './performance-api';
+import {
+  CashPerformanceReport,
+  PerformanceGroup,
+  PerformanceReport,
+  PerformanceApi,
+} from './performance-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
 
@@ -39,7 +44,17 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
 
 @Component({
   selector: 'app-performance-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, LineChart, StatTile, GameTypeToggle, CashDebriefPanel],
+  imports: [
+    TranslocoDirective,
+    RouterLink,
+    PageHeader,
+    EmptyState,
+    Button,
+    LineChart,
+    StatTile,
+    GameTypeToggle,
+    CashDebriefPanel,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './performance-page.html',
@@ -104,7 +119,12 @@ export class PerformancePage {
   protected readonly cashChartPoints = computed<LinePoint[]>(() => {
     const report = this.cashReport();
     const locale = this.locale();
-    const monthFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    const monthFmt = new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
     return (report?.curve ?? []).map((p, i) => ({
       x: i,
       y: p.cumulativeNetBigBlinds,
@@ -237,7 +257,11 @@ export class PerformancePage {
     if (isNaN(bb) || bb === 0) return bigBlindCents;
     const sb = bb / 2;
     const fmt = (v: number) =>
-      new Intl.NumberFormat(this.locale(), { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(v / 100);
+      new Intl.NumberFormat(this.locale(), {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+      }).format(v / 100);
     return `${fmt(sb)} / ${fmt(bb)}`;
   }
 

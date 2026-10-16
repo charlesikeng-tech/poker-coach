@@ -102,7 +102,11 @@ export class WeekReviewPanel {
     this.writing.set(true);
     this.writeError.set(null);
     try {
-      const review = await this.api.writeReview(week.weekStart, this.language.current(), this.gameType());
+      const review = await this.api.writeReview(
+        week.weekStart,
+        this.language.current(),
+        this.gameType(),
+      );
       this.state.set({ kind: 'ready', review });
     } catch (error) {
       this.writeError.set(coachErrorCode(error));
@@ -128,7 +132,11 @@ export class WeekReviewPanel {
     return formatDateTime(value, this.language.current());
   }
 
-  private async load(week: string, language: string, gameType: GameType = 'tournament'): Promise<void> {
+  private async load(
+    week: string,
+    language: string,
+    gameType: GameType = 'tournament',
+  ): Promise<void> {
     const request = ++this.request;
     this.state.set({ kind: 'loading' });
     this.writeError.set(null);

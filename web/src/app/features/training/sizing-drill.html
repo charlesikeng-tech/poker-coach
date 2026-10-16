@@ -147,82 +147,82 @@
   }
 
   @if (mode() !== 'real') {
-  <section class="played card glass">
-    <h2>{{ t('sizing.played.title') }}</h2>
-    @if (played(); as p) {
-      @if (p.pendingHands > 0) {
-        <p class="pending" role="status">
-          <app-icon class="spin" [icon]="icons.LoaderCircle" />
-          {{ t('sizing.played.pending', { count: p.pendingHands }) }}
-        </p>
-      }
-      @if (p.groups.length === 0) {
-        <p class="muted">{{ t('sizing.played.none') }}</p>
-      } @else {
-        <div class="played__scroll">
-          <table class="played__table">
-            <thead>
-              <tr>
-                <th scope="col">{{ t('sizing.played.spot') }}</th>
-                <th scope="col">{{ t('band') }}</th>
-                <th scope="col" class="numeric">{{ t('sizing.played.hands') }}</th>
-                <th scope="col" class="numeric">{{ t('sizing.played.typical') }}</th>
-                <th scope="col" class="numeric">{{ t('sizing.played.reference') }}</th>
-                <th scope="col" class="numeric">{{ t('sizing.played.inLine') }}</th>
-                <th scope="col">{{ t('sizing.played.off') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (g of p.groups; track g.kind + g.seat + g.inPosition + g.band) {
+    <section class="played card glass">
+      <h2>{{ t('sizing.played.title') }}</h2>
+      @if (played(); as p) {
+        @if (p.pendingHands > 0) {
+          <p class="pending" role="status">
+            <app-icon class="spin" [icon]="icons.LoaderCircle" />
+            {{ t('sizing.played.pending', { count: p.pendingHands }) }}
+          </p>
+        }
+        @if (p.groups.length === 0) {
+          <p class="muted">{{ t('sizing.played.none') }}</p>
+        } @else {
+          <div class="played__scroll">
+            <table class="played__table">
+              <thead>
                 <tr>
-                  <th scope="row">{{ groupLabel(g) }}</th>
-                  <td>{{ t('bands.' + g.band) }}</td>
-                  <td class="numeric">{{ g.hands }}</td>
-                  <td class="numeric">
-                    @if (g.typicalSize === null && g.allIns > 0) {
-                      {{ t('sizing.allIn') }}
-                    } @else {
-                      {{ groupSize(g, g.typicalSize) }}
-                      @if (g.allIns > 0) {
-                        <small class="muted">{{
-                          t('sizing.played.allIns', { count: g.allIns })
-                        }}</small>
-                      }
-                    }
-                  </td>
-                  <td class="numeric">
-                    {{ groupSize(g, g.reference.size, g.reference.allIn) }}
-                  </td>
-                  <td class="numeric" [class.ok]="g.inLine * 2 >= g.hands">
-                    {{ percent(g.inLine / g.hands) }}
-                  </td>
-                  <td class="off">
-                    @if (g.tooSmall > 0) {
-                      <span class="tag tag--small">{{
-                        t('sizing.played.tooSmall', { count: g.tooSmall })
-                      }}</span>
-                    }
-                    @if (g.tooBig > 0) {
-                      <span class="tag tag--big">{{
-                        t('sizing.played.tooBig', { count: g.tooBig })
-                      }}</span>
-                    }
-                    @for (id of g.offHands; track id; let i = $index) {
-                      <a [routerLink]="['/hands', id]">{{
-                        t('sizing.played.replay', { n: i + 1 })
-                      }}</a>
-                    }
-                  </td>
+                  <th scope="col">{{ t('sizing.played.spot') }}</th>
+                  <th scope="col">{{ t('band') }}</th>
+                  <th scope="col" class="numeric">{{ t('sizing.played.hands') }}</th>
+                  <th scope="col" class="numeric">{{ t('sizing.played.typical') }}</th>
+                  <th scope="col" class="numeric">{{ t('sizing.played.reference') }}</th>
+                  <th scope="col" class="numeric">{{ t('sizing.played.inLine') }}</th>
+                  <th scope="col">{{ t('sizing.played.off') }}</th>
                 </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                @for (g of p.groups; track g.kind + g.seat + g.inPosition + g.band) {
+                  <tr>
+                    <th scope="row">{{ groupLabel(g) }}</th>
+                    <td>{{ t('bands.' + g.band) }}</td>
+                    <td class="numeric">{{ g.hands }}</td>
+                    <td class="numeric">
+                      @if (g.typicalSize === null && g.allIns > 0) {
+                        {{ t('sizing.allIn') }}
+                      } @else {
+                        {{ groupSize(g, g.typicalSize) }}
+                        @if (g.allIns > 0) {
+                          <small class="muted">{{
+                            t('sizing.played.allIns', { count: g.allIns })
+                          }}</small>
+                        }
+                      }
+                    </td>
+                    <td class="numeric">
+                      {{ groupSize(g, g.reference.size, g.reference.allIn) }}
+                    </td>
+                    <td class="numeric" [class.ok]="g.inLine * 2 >= g.hands">
+                      {{ percent(g.inLine / g.hands) }}
+                    </td>
+                    <td class="off">
+                      @if (g.tooSmall > 0) {
+                        <span class="tag tag--small">{{
+                          t('sizing.played.tooSmall', { count: g.tooSmall })
+                        }}</span>
+                      }
+                      @if (g.tooBig > 0) {
+                        <span class="tag tag--big">{{
+                          t('sizing.played.tooBig', { count: g.tooBig })
+                        }}</span>
+                      }
+                      @for (id of g.offHands; track id; let i = $index) {
+                        <a [routerLink]="['/hands', id]">{{
+                          t('sizing.played.replay', { n: i + 1 })
+                        }}</a>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        <p class="muted">{{ t('sizing.played.note', { version: p.referenceVersion }) }}</p>
+      } @else {
+        <span class="skeleton played__skeleton"></span>
       }
-      <p class="muted">{{ t('sizing.played.note', { version: p.referenceVersion }) }}</p>
-    } @else {
-      <span class="skeleton played__skeleton"></span>
-    }
-  </section>
+    </section>
   }
 </ng-container>

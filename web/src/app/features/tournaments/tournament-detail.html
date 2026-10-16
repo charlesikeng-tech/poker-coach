@@ -186,7 +186,12 @@
                             <app-playing-card [card]="card" size="small" />
                           }
                         }
-                        <span>· {{ t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) }) }}</span>
+                        <span
+                          >·
+                          {{
+                            t('detail.moments.stack', { stack: bigBlinds(k.stackInBigBlinds) })
+                          }}</span
+                        >
                       </div>
                     </div>
                     <div class="moment__swing numeric">

@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { LoaderCircle, RefreshCw, Sparkles } from 'lucide';
@@ -17,7 +10,13 @@ import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
-import { CashDebrief, CashDebriefMoment, CoachingApi, coachErrorCode, notWrittenYet } from './coaching-api';
+import {
+  CashDebrief,
+  CashDebriefMoment,
+  CoachingApi,
+  coachErrorCode,
+  notWrittenYet,
+} from './coaching-api';
 
 export const MIN_CASH_DEBRIEF_HANDS = 20;
 

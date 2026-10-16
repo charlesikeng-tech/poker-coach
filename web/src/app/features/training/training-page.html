@@ -41,14 +41,18 @@
             [class.active]="sizingMode() === 'drill'"
             [attr.aria-pressed]="sizingMode() === 'drill'"
             (click)="sizingMode.set('drill')"
-          >{{ t('sizing.modeDrill') }}</button>
+          >
+            {{ t('sizing.modeDrill') }}
+          </button>
           <button
             type="button"
             class="seat-chip"
             [class.active]="sizingMode() === 'real'"
             [attr.aria-pressed]="sizingMode() === 'real'"
             (click)="sizingMode.set('real')"
-          >{{ t('sizing.modeReal') }}</button>
+          >
+            {{ t('sizing.modeReal') }}
+          </button>
         </div>
         @if (sizingMode() === 'drill') {
           <label>
@@ -107,7 +111,12 @@
       @if (sizingMode() === 'real' && !billing.allows('trainingOwnHands')) {
         <app-plan-lock feature="trainingOwnHands" />
       } @else {
-        <app-sizing-drill [format]="format()" [band]="sizingBand()" [filter]="sizingFilter()" [mode]="sizingMode()" />
+        <app-sizing-drill
+          [format]="format()"
+          [band]="sizingBand()"
+          [filter]="sizingFilter()"
+          [mode]="sizingMode()"
+        />
       }
     } @else if (locked() === 'trainingOwnHands') {
       <app-plan-lock feature="trainingOwnHands" />

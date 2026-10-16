@@ -93,6 +93,8 @@ export class PerformanceApi {
     if (timeZone) {
       params = params.set('timeZone', timeZone);
     }
-    return firstValueFrom(this.http.get<CashPerformanceReport>('/api/performance/cash', { params }));
+    return firstValueFrom(
+      this.http.get<CashPerformanceReport>('/api/performance/cash', { params }),
+    );
   }
 }

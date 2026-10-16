@@ -260,7 +260,12 @@ export class SizingDrill {
     return this.transloco.translate(`pages.training.${key}`, params);
   }
 
-  private async next(format: TableFormat, band: SizingBand, filter: SizingFilter, mode: 'drill' | 'real'): Promise<void> {
+  private async next(
+    format: TableFormat,
+    band: SizingBand,
+    filter: SizingFilter,
+    mode: 'drill' | 'real',
+  ): Promise<void> {
     this.busy.set(true);
     try {
       if (mode === 'real') {

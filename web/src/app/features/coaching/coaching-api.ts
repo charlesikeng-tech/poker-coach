@@ -122,7 +122,9 @@ export function notWrittenYet(error: unknown): boolean {
     return false;
   }
   const code = (error.error as { code?: unknown } | null)?.code;
-  return code === 'DEBRIEF_NOT_FOUND' || code === 'REVIEW_NOT_FOUND' || code === 'CASH_DEBRIEF_NOT_FOUND';
+  return (
+    code === 'DEBRIEF_NOT_FOUND' || code === 'REVIEW_NOT_FOUND' || code === 'CASH_DEBRIEF_NOT_FOUND'
+  );
 }
 
 @Injectable({ providedIn: 'root' })
@@ -154,9 +156,7 @@ export class CoachingApi {
   }
 
   writeCashDebrief(day: string, language: string): Promise<CashDebrief> {
-    return firstValueFrom(
-      this.http.post<CashDebrief>('/api/cash/debrief', { day, language }),
-    );
+    return firstValueFrom(this.http.post<CashDebrief>('/api/cash/debrief', { day, language }));
   }
 
   review(week: string, language: string, gameType: GameType = 'tournament'): Promise<WeekReview> {
@@ -164,12 +164,14 @@ export class CoachingApi {
     if (gameType !== 'tournament') {
       params = params.set('gameType', gameType);
     }
-    return firstValueFrom(
-      this.http.get<WeekReview>('/api/progress/review', { params }),
-    );
+    return firstValueFrom(this.http.get<WeekReview>('/api/progress/review', { params }));
   }
 
-  writeReview(week: string, language: string, gameType: GameType = 'tournament'): Promise<WeekReview> {
+  writeReview(
+    week: string,
+    language: string,
+    gameType: GameType = 'tournament',
+  ): Promise<WeekReview> {
     return firstValueFrom(
       this.http.post<WeekReview>('/api/progress/review', {
         week,

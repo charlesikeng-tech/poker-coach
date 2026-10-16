@@ -14,10 +14,7 @@
     @if (cashReport(); as report) {
       @if (report.totals.hands === 0 && period() === 'all') {
         <div class="filters">
-          <app-game-type-toggle
-            [value]="gameType()"
-            (changed)="setGameType($event)"
-          />
+          <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
         </div>
         <app-empty-state
           [icon]="icons.Upload"
@@ -28,10 +25,7 @@
         </app-empty-state>
       } @else {
         <div class="filters">
-          <app-game-type-toggle
-            [value]="gameType()"
-            (changed)="setGameType($event)"
-          />
+          <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
           <label>
             <span>{{ t('filters.period') }}</span>
             <select [value]="period()" (change)="setPeriod($any($event.target).value)">
@@ -126,10 +120,16 @@
                           <td class="num numeric" [attr.data-sign]="sign(group.figures.netMoney)">
                             {{ signedMoney(group.figures.netMoney) }}
                           </td>
-                          <td class="num numeric" [attr.data-sign]="sign(group.figures.netBigBlinds)">
+                          <td
+                            class="num numeric"
+                            [attr.data-sign]="sign(group.figures.netBigBlinds)"
+                          >
                             {{ bb(group.figures.netBigBlinds) }}
                           </td>
-                          <td class="num numeric" [attr.data-sign]="sign(group.figures.bigBlindsPer100)">
+                          <td
+                            class="num numeric"
+                            [attr.data-sign]="sign(group.figures.bigBlindsPer100)"
+                          >
                             {{ bb100(group.figures.bigBlindsPer100) }}
                           </td>
                         </tr>
@@ -169,10 +169,7 @@
       }
     } @else {
       <div class="filters">
-        <app-game-type-toggle
-          [value]="gameType()"
-          (changed)="setGameType($event)"
-        />
+        <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
       </div>
       <div role="status" [attr.aria-label]="t('loading')">
         <div class="totals">
@@ -188,10 +185,7 @@
     <!-- Tournament mode -->
     @if (report.totals.tournamentsWithResult === 0 && period() === 'all') {
       <div class="filters">
-        <app-game-type-toggle
-          [value]="gameType()"
-          (changed)="setGameType($event)"
-        />
+        <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
       </div>
       <app-empty-state
         [icon]="icons.Upload"
@@ -202,10 +196,7 @@
       </app-empty-state>
     } @else {
       <div class="filters">
-        <app-game-type-toggle
-          [value]="gameType()"
-          (changed)="setGameType($event)"
-        />
+        <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
         <label>
           <span>{{ t('filters.period') }}</span>
           <select [value]="period()" (change)="setPeriod($any($event.target).value)">
@@ -347,10 +338,7 @@
     }
   } @else {
     <div class="filters">
-      <app-game-type-toggle
-        [value]="gameType()"
-        (changed)="setGameType($event)"
-      />
+      <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
     </div>
     <div role="status" [attr.aria-label]="t('loading')">
       <div class="totals">

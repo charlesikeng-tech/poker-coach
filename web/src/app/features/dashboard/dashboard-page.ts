@@ -19,7 +19,11 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi } from '../import/import-api';
-import { CashPerformanceReport, PerformanceApi, PerformanceReport } from '../performance/performance-api';
+import {
+  CashPerformanceReport,
+  PerformanceApi,
+  PerformanceReport,
+} from '../performance/performance-api';
 import { TournamentPage, TournamentsApi } from '../tournaments/tournaments-api';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -136,7 +140,12 @@ export class DashboardPage {
   protected readonly cashChartPoints = computed<LinePoint[]>(() => {
     const data = this.data();
     const locale = this.locale();
-    const dayFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+    const dayFmt = new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
     return (data?.cash.curve ?? []).map((p, i) => ({
       x: i,
       y: p.cumulativeNetBigBlinds,
@@ -170,7 +179,10 @@ export class DashboardPage {
   protected bb(value: number | null): string {
     return value === null
       ? '—'
-      : new Intl.NumberFormat(this.locale(), { maximumFractionDigits: 1, signDisplay: 'exceptZero' }).format(value);
+      : new Intl.NumberFormat(this.locale(), {
+          maximumFractionDigits: 1,
+          signDisplay: 'exceptZero',
+        }).format(value);
   }
 
   private async load(): Promise<void> {

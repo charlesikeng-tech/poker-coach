@@ -166,7 +166,13 @@ export class RangesPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.formatChoice(), this.period(), this.band(), this.pushStack(), this.gameType()] as const;
+      const args = [
+        this.formatChoice(),
+        this.period(),
+        this.band(),
+        this.pushStack(),
+        this.gameType(),
+      ] as const;
       // The defence view loads its own data.
       if (this.spot() === 'open') {
         untracked(() => void this.load(...args));
@@ -208,7 +214,13 @@ export class RangesPage {
   }
 
   protected retry(): void {
-    void this.load(this.formatChoice(), this.period(), this.band(), this.pushStack(), this.gameType());
+    void this.load(
+      this.formatChoice(),
+      this.period(),
+      this.band(),
+      this.pushStack(),
+      this.gameType(),
+    );
   }
 
   protected gap(cell: RangeCell): GapKind {

@@ -96,7 +96,9 @@
               {{ writing() ? t('cashDebrief.writing') : t('cashDebrief.action') }}
             </button>
             @if (blocked(); as reason) {
-              <span class="hint">{{ t('cashDebrief.blocked.' + reason, { count: minHands }) }}</span>
+              <span class="hint">{{
+                t('cashDebrief.blocked.' + reason, { count: minHands })
+              }}</span>
             }
           </div>
         }

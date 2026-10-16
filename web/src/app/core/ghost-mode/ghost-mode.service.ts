@@ -8,7 +8,15 @@ import { LocalPreferenceStore } from '../storage/local-preference-store';
 const STORAGE_KEY = 'ghost-mode';
 
 /** Routes where ghost mode applies (result/analytics screens only). */
-const INCLUDED_PATHS = ['/dashboard', '/tournaments', '/performance', '/bankroll', '/statistics', '/leaks', '/ranges'];
+const INCLUDED_PATHS = [
+  '/dashboard',
+  '/tournaments',
+  '/performance',
+  '/bankroll',
+  '/statistics',
+  '/leaks',
+  '/ranges',
+];
 
 /** Blurs all .numeric values for demo use: toggle with the eye icon in the topbar. */
 @Injectable({ providedIn: 'root' })
@@ -22,7 +30,9 @@ export class GhostModeService {
 
   initialize(): void {
     this.active.set(this.store.read(STORAGE_KEY) === 'true');
-    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe(() => this.syncDom());
+    this.router.events
+      .pipe(filter((e) => e instanceof NavigationEnd))
+      .subscribe(() => this.syncDom());
     this.syncDom();
   }
 

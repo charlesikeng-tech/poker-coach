@@ -6,7 +6,12 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Download, KeyRound, Pencil, ShieldAlert, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
-import { AccountsApi, MIN_PASSWORD_LENGTH, accountErrorCode, retryWithToken } from '../../core/auth/accounts-api';
+import {
+  AccountsApi,
+  MIN_PASSWORD_LENGTH,
+  accountErrorCode,
+  retryWithToken,
+} from '../../core/auth/accounts-api';
 import { SessionService } from '../../core/auth/session.service';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -90,9 +95,7 @@ export class AccountPage {
     this.savingName.set(true);
     this.nameError.set(null);
     try {
-      await retryWithToken(this.session, () =>
-        this.accounts.changeDisplayName(this.newName()),
-      );
+      await retryWithToken(this.session, () => this.accounts.changeDisplayName(this.newName()));
       await this.session.load();
       this.editingName.set(false);
     } catch {

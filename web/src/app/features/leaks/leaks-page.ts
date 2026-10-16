@@ -176,7 +176,11 @@ export class LeaksPage {
     };
   }
 
-  private async load(period: PeriodFilter, format: TableFormat | null, gameType: GameType = 'tournament'): Promise<void> {
+  private async load(
+    period: PeriodFilter,
+    format: TableFormat | null,
+    gameType: GameType = 'tournament',
+  ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
     if (this.analysis() === null) {

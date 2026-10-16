@@ -140,7 +140,11 @@ export class StatisticsApi {
   }
 
   /** Every table format together: luck does not depend on the table size. */
-  allInLuck(from: string | undefined, completeOnly: boolean, gameType?: GameType): Promise<AllInLuck> {
+  allInLuck(
+    from: string | undefined,
+    completeOnly: boolean,
+    gameType?: GameType,
+  ): Promise<AllInLuck> {
     let params = new HttpParams();
     if (from) {
       params = params.set('from', from);

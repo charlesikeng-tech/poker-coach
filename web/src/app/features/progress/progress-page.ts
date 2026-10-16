@@ -27,7 +27,16 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
  */
 @Component({
   selector: 'app-progress-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, GameTypeToggle, WeekReviewPanel],
+  imports: [
+    TranslocoDirective,
+    RouterLink,
+    PageHeader,
+    EmptyState,
+    Button,
+    Icon,
+    GameTypeToggle,
+    WeekReviewPanel,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './progress-page.html',

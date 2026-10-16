@@ -184,7 +184,14 @@ export class DefenceRanges {
   }
 
   protected retry(): void {
-    void this.load(this.formatChoice(), this.period(), this.band(), this.defender(), this.opener(), this.gameType());
+    void this.load(
+      this.formatChoice(),
+      this.period(),
+      this.band(),
+      this.defender(),
+      this.opener(),
+      this.gameType(),
+    );
   }
 
   protected percent(value: number | null | undefined): string {
