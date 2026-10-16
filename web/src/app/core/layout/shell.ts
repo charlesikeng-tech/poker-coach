@@ -18,6 +18,7 @@ import {
 import { filter, map } from 'rxjs';
 
 import { BrandMark } from '../../shared/ui/brand-mark/brand-mark';
+import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
 import { SessionService } from '../auth/session.service';
 import { BillingService } from '../billing/billing.service';
@@ -31,6 +32,7 @@ import {
 } from '../navigation/navigation';
 import { LocalPreferenceStore } from '../storage/local-preference-store';
 import { ThemeService } from '../theme/theme.service';
+import { GameTypeService } from '../game-type/game-type.service';
 import { WelcomeIntro } from './welcome-intro';
 
 const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
@@ -47,6 +49,7 @@ const WINDOWED_PAGES = ['/statistics', '/leaks', '/ranges', '/tournaments', '/pe
     TranslocoDirective,
     Icon,
     BrandMark,
+    GameTypeToggle,
     LanguageSelect,
     WelcomeIntro,
   ],
@@ -60,6 +63,7 @@ export class Shell {
   private readonly document = inject(DOCUMENT);
   protected readonly theme = inject(ThemeService);
   protected readonly ghost = inject(GhostModeService);
+  protected readonly gameTypeService = inject(GameTypeService);
   protected readonly session = inject(SessionService);
 
   protected readonly primaryNavigation = PRIMARY_NAVIGATION;

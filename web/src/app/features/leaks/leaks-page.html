@@ -27,7 +27,6 @@
       }
 
       <div class="toolbar">
-        <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
         <app-format-toggle
           class="format"
           [value]="analysis.format"
@@ -43,7 +42,7 @@
           </select>
         </label>
         <p class="basis">
-          @if (gameType() === 'cashGame') {
+          @if (gameTypeService.current() === 'cashGame') {
             {{ t('basisCash', { hands: formats().integer(analysis.hands) }) }}
           } @else {
             {{

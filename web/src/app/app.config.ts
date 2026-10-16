@@ -25,6 +25,7 @@ import { TranslatedTitleStrategy } from './core/i18n/translated-title-strategy';
 import { TranslocoHttpLoader } from './core/i18n/transloco-http-loader';
 import { GhostModeService } from './core/ghost-mode/ghost-mode.service';
 import { ThemeService } from './core/theme/theme.service';
+import { GameTypeService } from './core/game-type/game-type.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -48,6 +49,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(async () => {
       inject(ThemeService).initialize();
       inject(GhostModeService).initialize();
+      inject(GameTypeService).initialize();
       const session = inject(SessionService);
       const language = inject(LanguageService);
       await session.load();

@@ -15,7 +15,6 @@ import { BillingService, Feature } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
-import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
@@ -58,7 +57,6 @@ const RANKS = 'AKQJT98765432';
     PlanLock,
     TranslocoDirective,
     FormatToggle,
-    GameTypeToggle,
     PageHeader,
     EmptyState,
     Button,
@@ -80,7 +78,7 @@ export class RangesPage {
   protected readonly spots: readonly RangeSpot[] = ['open', 'defence'];
   protected readonly spot = signal<RangeSpot>('open');
   protected readonly periods = PERIOD_FILTERS;
-  protected readonly gameType = signal<GameType>('tournament');
+  protected readonly gameTypeService = inject(GameTypeService);
   protected readonly bands = STACK_BANDS;
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
@@ -171,11 +169,17 @@ export class RangesPage {
         this.period(),
         this.band(),
         this.pushStack(),
-        this.gameType(),
+        this.gameTypeService.current(),
       ] as const;
       // The defence view loads its own data.
       if (this.spot() === 'open') {
         untracked(() => void this.load(...args));
+      }
+    });
+    // Switch to deep stack when entering cash game mode (push/fold band is irrelevant).
+    effect(() => {
+      if (this.gameTypeService.current() === 'cashGame') {
+        untracked(() => this.band.set('deep'));
       }
     });
     // Auto-select first valid shover when call view is entered or caller changes.
@@ -206,20 +210,13 @@ export class RangesPage {
     this.formatChoice.set(value);
   }
 
-  protected setGameType(value: GameType): void {
-    this.gameType.set(value);
-    if (value === 'cashGame') {
-      this.band.set('deep');
-    }
-  }
-
   protected retry(): void {
     void this.load(
       this.formatChoice(),
       this.period(),
       this.band(),
       this.pushStack(),
-      this.gameType(),
+      this.gameTypeService.current(),
     );
   }
 

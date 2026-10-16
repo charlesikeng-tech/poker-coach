@@ -17,7 +17,6 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
-import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -77,7 +76,6 @@ const PENDING_REFRESH_MS = 3000;
   imports: [
     PlanLock,
     FormatToggle,
-    GameTypeToggle,
     TranslocoDirective,
     RouterLink,
     PageHeader,
@@ -112,7 +110,7 @@ export class StatisticsPage {
   protected readonly phases = TOURNAMENT_PHASES;
   protected readonly phase = signal<TournamentPhase | 'all'>('all');
   protected readonly completeOnly = signal(false);
-  protected readonly gameType = signal<GameType>('tournament');
+  protected readonly gameTypeService = inject(GameTypeService);
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
@@ -124,7 +122,7 @@ export class StatisticsPage {
    * value, not a method: a new object on every check would reload the panel in a loop.
    */
   protected readonly breakdownQuery = computed<StatisticsQuery>(() => {
-    const gt = this.gameType();
+    const gt = this.gameTypeService.current();
     return {
       format: this.report()?.format,
       from: this.fromQuery(),
@@ -170,7 +168,7 @@ export class StatisticsPage {
         this.stack(),
         this.completeOnly(),
         this.phase(),
-        this.gameType(),
+        this.gameTypeService.current(),
       ] as const;
       untracked(() => void this.load(...args));
     });
@@ -193,10 +191,6 @@ export class StatisticsPage {
     this.phase.set(value as TournamentPhase | 'all');
   }
 
-  protected setGameType(value: GameType): void {
-    this.gameType.set(value);
-  }
-
   protected retry(): void {
     void this.load(
       this.formatChoice(),
@@ -204,7 +198,7 @@ export class StatisticsPage {
       this.stack(),
       this.completeOnly(),
       this.phase(),
-      this.gameType(),
+      this.gameTypeService.current(),
     );
   }
 

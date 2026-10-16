@@ -16,7 +16,6 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
-import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { GameType, PokerPosition } from '../statistics/statistics-api';
@@ -50,7 +49,7 @@ const RANKS = 'AKQJT98765432';
  */
 @Component({
   selector: 'app-defence-ranges',
-  imports: [TranslocoDirective, FormatToggle, GameTypeToggle, EmptyState, Button, Icon, PlanLock],
+  imports: [TranslocoDirective, FormatToggle, EmptyState, Button, Icon, PlanLock],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './defence-ranges.html',
   styleUrls: ['./ranges-page.scss', './defence-ranges.scss'],
@@ -70,7 +69,7 @@ export class DefenceRanges {
 
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly period = signal<PeriodFilter>('all');
-  protected readonly gameType = signal<GameType>('tournament');
+  protected readonly gameTypeService = inject(GameTypeService);
   protected readonly band = signal<DefenceBand>('mid');
   protected readonly defender = signal<PokerPosition | null>(null);
   protected readonly opener = signal<PokerPosition | null>(null);
@@ -145,7 +144,7 @@ export class DefenceRanges {
         this.band(),
         this.defender(),
         this.opener(),
-        this.gameType(),
+        this.gameTypeService.current(),
       ] as const;
       untracked(() => void this.load(...args));
     });
@@ -164,10 +163,6 @@ export class DefenceRanges {
 
   protected setPeriod(value: string): void {
     this.period.set(value as PeriodFilter);
-  }
-
-  protected setGameType(value: GameType): void {
-    this.gameType.set(value);
   }
 
   /** A new defender keeps the opener when it can face it; otherwise the server picks the busiest. */
@@ -190,7 +185,7 @@ export class DefenceRanges {
       this.band(),
       this.defender(),
       this.opener(),
-      this.gameType(),
+      this.gameTypeService.current(),
     );
   }
 

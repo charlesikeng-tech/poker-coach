@@ -99,6 +99,11 @@
           <app-icon [icon]="icons.Menu" />
         </button>
 
+        <app-game-type-toggle
+          [value]="gameTypeService.current()"
+          (changed)="gameTypeService.set($event)"
+        />
+
         <div class="topbar__spacer"></div>
 
         <app-language-select />

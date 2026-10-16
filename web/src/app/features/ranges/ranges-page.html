@@ -39,14 +39,13 @@
       }
 
       <div class="toolbar">
-        <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
         <app-format-toggle
           class="format"
           [value]="format()"
           [counts]="data.spots"
           (changed)="setFormat($event)"
         />
-        @if (gameType() !== 'cashGame') {
+        @if (gameTypeService.current() !== 'cashGame') {
           <label>
             <span>{{ t('band') }}</span>
             <select [value]="band()" (change)="setBand($any($event.target).value)">

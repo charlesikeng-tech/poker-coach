@@ -2,8 +2,6 @@
   <ng-container *transloco="let t; prefix: 'pages.progress'">
     <app-page-header [heading]="t('title')" [description]="t('description')" />
 
-    <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
-
     @if (state() === 'error') {
       <app-empty-state
         [icon]="icons.CircleAlert"
@@ -175,7 +173,11 @@
       }
 
       @if (r.current) {
-        <app-week-review-panel class="review" [weeks]="reviewWeeks()" [gameType]="gameType()" />
+        <app-week-review-panel
+          class="review"
+          [weeks]="reviewWeeks()"
+          [gameType]="gameTypeService.current()"
+        />
       }
 
       @if (r.history.length > 0) {

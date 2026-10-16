@@ -32,7 +32,6 @@
       }
 
       <div class="filters">
-        <app-game-type-toggle [value]="gameType()" (changed)="setGameType($event)" />
         <app-format-toggle
           class="format"
           [value]="report.format"
@@ -55,7 +54,7 @@
             }
           </select>
         </label>
-        @if (gameType() !== 'cashGame') {
+        @if (gameTypeService.current() !== 'cashGame') {
           <label>
             <span>{{ t('filters.phase') }}</span>
             <select [value]="phase()" (change)="setPhase($any($event.target).value)">
@@ -77,7 +76,7 @@
       </div>
 
       <p class="sample-line">
-        @if (gameType() === 'cashGame') {
+        @if (gameTypeService.current() === 'cashGame') {
           {{ t('basisCash', { hands: formats().integer(report.overall.hands) }) }}
         } @else {
           {{
@@ -184,7 +183,7 @@
         <app-all-in-luck
           [from]="fromQuery()"
           [completeOnly]="completeOnly()"
-          [gameType]="gameType()"
+          [gameType]="gameTypeService.current()"
           [refreshKey]="report.pendingHands"
         />
       } @else {

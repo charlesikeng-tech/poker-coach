@@ -25,7 +25,6 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
-import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { GameType } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
@@ -52,7 +51,6 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
     Button,
     LineChart,
     StatTile,
-    GameTypeToggle,
     CashDebriefPanel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,7 +65,7 @@ export class PerformancePage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
-  protected readonly gameType = signal<GameType>('tournament');
+  protected readonly gameTypeService = inject(GameTypeService);
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<PerformanceReport | null>(null);
   protected readonly cashReport = signal<CashPerformanceReport | null>(null);
@@ -172,7 +170,7 @@ export class PerformancePage {
   constructor() {
     effect(() => {
       const period = this.period();
-      const gt = this.gameType();
+      const gt = this.gameTypeService.current();
       untracked(() => {
         if (gt === 'cashGame') {
           void this.loadCash(period);
@@ -185,10 +183,6 @@ export class PerformancePage {
 
   protected setPeriod(value: string): void {
     this.period.set(value as PeriodFilter);
-  }
-
-  protected setGameType(value: GameType): void {
-    this.gameType.set(value);
   }
 
   protected selectDay(day: string | null): void {

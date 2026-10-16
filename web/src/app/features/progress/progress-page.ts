@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CircleAlert, Dumbbell, MessageCircle, RefreshCw, Upload } from 'lucide';
@@ -7,7 +15,6 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
-import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
@@ -27,16 +34,7 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
  */
 @Component({
   selector: 'app-progress-page',
-  imports: [
-    TranslocoDirective,
-    RouterLink,
-    PageHeader,
-    EmptyState,
-    Button,
-    Icon,
-    GameTypeToggle,
-    WeekReviewPanel,
-  ],
+  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, WeekReviewPanel],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './progress-page.html',
@@ -46,7 +44,7 @@ export class ProgressPage {
   private readonly api = inject(ProgressApi);
   private readonly language = inject(LanguageService);
 
-  protected readonly gameType = signal<GameType>('tournament');
+  protected readonly gameTypeService = inject(GameTypeService);
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<ProgressReport | null>(null);
   protected readonly rebuilding = signal(false);
@@ -74,7 +72,10 @@ export class ProgressPage {
   });
 
   constructor() {
-    void this.load();
+    effect(() => {
+      this.gameTypeService.current();
+      untracked(() => void this.load());
+    });
   }
 
   /** This week, then last week when it had a plan: what the coach can review. */
@@ -91,11 +92,6 @@ export class ProgressPage {
     return weeks;
   });
 
-  protected setGameType(value: GameType): void {
-    this.gameType.set(value);
-    void this.load();
-  }
-
   protected retry(): void {
     void this.load();
   }
@@ -103,7 +99,7 @@ export class ProgressPage {
   protected async rebuild(): Promise<void> {
     this.rebuilding.set(true);
     try {
-      this.report.set(await this.api.rebuild(this.gameType()));
+      this.report.set(await this.api.rebuild(this.gameTypeService.current()));
     } catch {
       this.state.set('error');
     } finally {
@@ -168,7 +164,7 @@ export class ProgressPage {
   private async load(): Promise<void> {
     this.state.set('loading');
     try {
-      this.report.set(await this.api.get(this.gameType()));
+      this.report.set(await this.api.get(this.gameTypeService.current()));
       this.state.set('ready');
     } catch {
       this.state.set('error');

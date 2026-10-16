@@ -17,13 +17,13 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
-import { GameTypeToggle } from '../../shared/ui/game-type-toggle/game-type-toggle';
 import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { GameType } from '../statistics/statistics-api';
+import { GameTypeService } from '../../core/game-type/game-type.service';
 import { ExampleHand, Leak, LeakAnalysis, LeakExplanation, LeaksApi } from './leaks-api';
 import { LeakTrend } from './leak-trend';
 import { RangeGauge } from './range-gauge';
@@ -42,7 +42,6 @@ const PENDING_REFRESH_MS = 3000;
   imports: [
     TranslocoDirective,
     FormatToggle,
-    GameTypeToggle,
     RouterLink,
     PageHeader,
     EmptyState,
@@ -63,7 +62,7 @@ export class LeaksPage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
-  protected readonly gameType = signal<GameType>('tournament');
+  protected readonly gameTypeService = inject(GameTypeService);
   /** The player's choice; null lets the server pick the format he plays most. */
   private readonly formatChoice = signal<TableFormat | null>(null);
   protected readonly state = signal<LoadState>('loading');
@@ -96,8 +95,11 @@ export class LeaksPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.period(), this.formatChoice(), this.gameType()] as const;
-      untracked(() => void this.load(...args));
+      const args = [this.period(), this.formatChoice(), this.gameTypeService.current()] as const;
+      untracked(() => {
+        this.coach.set({});
+        void this.load(...args);
+      });
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(this.refreshTimer));
   }
@@ -110,11 +112,6 @@ export class LeaksPage {
   protected setFormat(value: TableFormat): void {
     this.coach.set({});
     this.formatChoice.set(value);
-  }
-
-  protected setGameType(value: GameType): void {
-    this.coach.set({});
-    this.gameType.set(value);
   }
 
   protected key(leak: Leak): string {
@@ -160,7 +157,7 @@ export class LeaksPage {
   }
 
   protected retry(): void {
-    void this.load(this.period(), this.formatChoice(), this.gameType());
+    void this.load(this.period(), this.formatChoice(), this.gameTypeService.current());
   }
 
   /** Translation params shared by a leak's title and texts. */
