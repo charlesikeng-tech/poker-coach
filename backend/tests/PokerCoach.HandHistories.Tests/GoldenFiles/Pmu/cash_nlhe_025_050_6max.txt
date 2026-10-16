@@ -200,3 +200,23 @@ Total pot €44.29 Rake €3.00
 Vilain 137: Shows [H10 D10] Two Pair, Tens and Nines
 Vilain 129: Shows [DQ HQ] Two Pair, Queens and Nines
 Vilain 129: wins €44.29
+
+GAME #9000000001 Version:26.7.1.19 Uncalled:Y Texas Hold'em NL €0.25/€0.50 2026-10-01 10:00:00/CEST
+Table Info: Size: 6, Blinds: 0.25/0.50
+Table TestTable, 999999999
+Seat 1: Vilain 300 (€50.00 in chips)
+Seat 3: Vilain 301 (€50.00 in chips)
+Seat 5: Héros (€50.00 in chips)
+Seat 6: Vilain 302 (€50.00 in chips)  DEALER
+Vilain 300: Post SB €0.25
+Vilain 301: Post BB €0.50
+Vilain 302: Post BB €0.75
+*** HOLE CARDS ***
+Dealt to Héros [D6 S4]
+Héros: Fold
+Vilain 302: Raise (NF) €1.50
+Vilain 300: Fold
+Vilain 301: Fold
+*** SUMMARY ***
+Total pot €2.50 Rake €0.00
+Vilain 302: wins €2.50

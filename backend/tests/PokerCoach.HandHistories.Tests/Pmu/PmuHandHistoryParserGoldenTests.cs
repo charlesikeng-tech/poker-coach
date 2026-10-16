@@ -13,7 +13,7 @@ public sealed class PmuHandHistoryParserGoldenTests
         var result = parser.Parse(GoldenFiles.ReadPmu(GoldenFiles.PmuCash6Max));
 
         Assert.Empty(result.Errors);
-        Assert.Equal(7, result.Hands.Count);
+        Assert.Equal(8, result.Hands.Count);
     }
 
     [Fact]

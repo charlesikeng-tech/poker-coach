@@ -253,7 +253,18 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
             ? ParsedActionType.PostSmallBlind
             : ParsedActionType.PostBigBlind;
 
-        AddToStreet(playerName, amount);
+        // PMU encodes a dead combined blind (missed SB+BB) as a single "Post BB amount=SB+BB".
+        // The live portion for raise calculations is the BB only; the dead SB is excluded.
+        if (type == ParsedActionType.PostBigBlind && amount == smallBlind + bigBlind)
+        {
+            streetContributions[playerName] = bigBlind;
+            currentBet = Math.Max(currentBet, bigBlind);
+        }
+        else
+        {
+            AddToStreet(playerName, amount);
+        }
+
         DeductStack(playerName, amount);
         AddAction(playerName, type, amount, raiseTo: null, isAllIn: false);
         return true;
