@@ -91,8 +91,8 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
         var rejections = new List<ParseError>(result.Errors);
         var accounts = new Dictionary<string, Guid>(StringComparer.Ordinal);
         var tournaments = new Dictionary<(Guid, string), Guid>();
+        var handsToInsert = new List<HandToInsert>(result.Hands.Count);
         Guid? firstAccountId = null;
-        int imported = 0, alreadyPresent = 0;
 
         foreach (var hand in result.Hands)
         {
@@ -128,20 +128,16 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
                 tournamentId = tid;
             }
 
-            if (await store.TryInsertHandAsync(accountId, tournamentId, file.Id, hand, cancellationToken))
-            {
-                imported++;
-            }
-            else
-            {
-                alreadyPresent++;
-            }
+            handsToInsert.Add(new HandToInsert(accountId, tournamentId, file.Id, hand));
         }
 
-        if (imported + alreadyPresent == 0)
+        if (handsToInsert.Count == 0)
         {
             return Failed(ImportErrorCodes.NoValidHand, ImportFileKind.HandHistory, rejections);
         }
+
+        var imported = await store.BulkInsertHandsAsync(handsToInsert, cancellationToken);
+        var alreadyPresent = handsToInsert.Count - imported;
 
         return new FileOutcome(
             ImportFileStatus.Completed,

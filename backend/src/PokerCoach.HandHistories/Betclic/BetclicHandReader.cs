@@ -423,7 +423,7 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         var actionText = actionMatch.Groups["action"].Value;
 
         // Noise lines.
-        if (actionText is "Sits in" or "Sits out" or "Disconnected")
+        if (actionText is "Sits in" or "Sits out" or "Disconnected" or "Reconnected")
         {
             return true;
         }

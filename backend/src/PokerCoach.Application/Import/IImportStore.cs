@@ -40,9 +40,11 @@ public interface IImportStore
 
     Task UpsertTournamentSummaryAsync(Guid pokerAccountId, ParsedTournamentSummary summary, CancellationToken cancellationToken);
 
-    /// <returns>False when the account already has this hand (re-import, overlapping files).</returns>
-    Task<bool> TryInsertHandAsync(Guid pokerAccountId, Guid? tournamentId, Guid importedFileId, ParsedHand hand, CancellationToken cancellationToken);
+    /// <returns>Number of hands newly inserted; duplicates are silently skipped.</returns>
+    Task<int> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken);
 }
+
+public sealed record HandToInsert(Guid PokerAccountId, Guid? TournamentId, Guid ImportedFileId, ParsedHand Hand);
 
 /// <param name="ContentSha256">Lowercase hex SHA-256 of <paramref name="Content"/>: the file deduplication key.</param>
 public sealed record FileToImport(string FileName, byte[] Content, string ContentSha256);

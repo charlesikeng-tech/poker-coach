@@ -292,3 +292,31 @@ Vilain23 shows [Ad 9d] (Two Pair) [Td Tc 9d 9c Ad]
 *** SUMMARY ***
 Vilain12 wins main pot of €111.87
 Vilain12 wins 1st side pot of €12.08
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCVH8EMJED8PZB6V049NMF
+Hand ID: 01M4VEBKCD16RXR8G145Z6F5YA
+Date & Time: 2026-10-13 21:00:00 (UTC)
+Table ID: 01M4VCVH8EQM6XY5SD7GYB03C5
+Blinds: €0.25/€0.50
+Total Pot: €0.75
+Rake: €0.00
+*** PLAYERS ***
+Seat 1: Vilain30 (€50.00) [SB]
+Seat 2: Hero (€50.00) [BB Hero]
+Seat 3: Vilain31 (€50.00) [BTN]
+*** HOLE CARDS ***
+Hero: [Ah Kh]
+*** PRE-FLOP ***
+21:00:00 - Vilain30: Posts SB €0.25
+21:00:00 - Hero: Posts BB €0.50
+21:00:01 - Vilain31: Reconnected
+21:00:02 - Vilain31: Folds
+21:00:03 - Vilain30: Folds
+*** SUMMARY ***
+Hero wins main pot of €0.75

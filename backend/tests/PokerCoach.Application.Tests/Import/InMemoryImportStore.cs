@@ -77,10 +77,20 @@ internal sealed class InMemoryImportStore : IImportStore
         return Task.CompletedTask;
     }
 
-    public Task<bool> TryInsertHandAsync(Guid pokerAccountId, Guid? tournamentId, Guid importedFileId, ParsedHand hand, CancellationToken cancellationToken) =>
-        FailOnHandInsert is { } exception
-            ? Task.FromException<bool>(exception)
-            : Task.FromResult(Hands.Add((pokerAccountId, hand.ExternalHandId)));
+    public Task<int> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken)
+    {
+        if (FailOnHandInsert is { } exception)
+            return Task.FromException<int>(exception);
+
+        var inserted = 0;
+        foreach (var item in hands)
+        {
+            if (Hands.Add((item.PokerAccountId, item.Hand.ExternalHandId)))
+                inserted++;
+        }
+
+        return Task.FromResult(inserted);
+    }
 
     private Guid TournamentId(Guid accountId, string externalId)
     {

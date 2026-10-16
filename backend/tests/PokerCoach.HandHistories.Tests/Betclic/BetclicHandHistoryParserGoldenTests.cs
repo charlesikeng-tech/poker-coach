@@ -13,7 +13,7 @@ public sealed class BetclicHandHistoryParserGoldenTests
         var result = parser.Parse(GoldenFiles.ReadBetclic(GoldenFiles.BetclicCash6Max));
 
         Assert.Empty(result.Errors);
-        Assert.Equal(7, result.Hands.Count);
+        Assert.Equal(8, result.Hands.Count);
     }
 
     [Fact]

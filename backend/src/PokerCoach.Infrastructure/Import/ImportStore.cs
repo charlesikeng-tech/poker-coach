@@ -388,43 +388,69 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         }
     }
 
-    public async Task<bool> TryInsertHandAsync(Guid pokerAccountId, Guid? tournamentId, Guid importedFileId, ParsedHand hand, CancellationToken cancellationToken)
+    private const string InsertHandSql = """
+        INSERT INTO poker.hands
+            (id, poker_account_id, tournament_id, imported_file_id, game_type, external_hand_id, started_at, level, small_blind,
+             big_blind, ante, table_name, max_seats, button_seat, hero_seat, hero_stack, hero_cards, total_pot, rake, stakes, details, created_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
+        ON CONFLICT (poker_account_id, external_hand_id) DO NOTHING
+        """;
+
+    public async Task<int> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken)
     {
-        const string Sql = """
-            INSERT INTO poker.hands
-                (id, poker_account_id, tournament_id, imported_file_id, game_type, external_hand_id, started_at, level, small_blind,
-                 big_blind, ante, table_name, max_seats, button_seat, hero_seat, hero_stack, hero_cards, total_pot, rake, stakes, details, created_at)
-            VALUES (@id, @poker_account_id, @tournament_id, @imported_file_id, @game_type, @external_hand_id, @started_at, @level, @small_blind,
-                 @big_blind, @ante, @table_name, @max_seats, @button_seat, @hero_seat, @hero_stack, @hero_cards, @total_pot, @rake, @stakes, @details, @now)
-            ON CONFLICT (poker_account_id, external_hand_id) DO NOTHING
-            """;
+        if (hands.Count == 0) return 0;
 
-        var heroSeat = hand.HeroName is null ? null : hand.Seats.FirstOrDefault(s => s.PlayerName == hand.HeroName);
+        var connection = (NpgsqlConnection)db.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await db.Database.OpenConnectionAsync(cancellationToken);
+        }
 
-        await using var command = await CommandAsync(Sql, cancellationToken);
-        Add(command, "id", NpgsqlDbType.Uuid, Guid.CreateVersion7(time.GetUtcNow()));
-        Add(command, "poker_account_id", NpgsqlDbType.Uuid, pokerAccountId);
-        Add(command, "tournament_id", NpgsqlDbType.Uuid, tournamentId);
-        Add(command, "imported_file_id", NpgsqlDbType.Uuid, importedFileId);
-        Add(command, "game_type", NpgsqlDbType.Smallint, (short)hand.GameType);
-        Add(command, "external_hand_id", NpgsqlDbType.Text, hand.ExternalHandId);
-        Add(command, "started_at", NpgsqlDbType.TimestampTz, hand.StartedAt.ToUniversalTime());
-        Add(command, "level", NpgsqlDbType.Integer, hand.Level);
-        Add(command, "small_blind", NpgsqlDbType.Bigint, hand.SmallBlind);
-        Add(command, "big_blind", NpgsqlDbType.Bigint, hand.BigBlind);
-        Add(command, "ante", NpgsqlDbType.Bigint, hand.Ante);
-        Add(command, "table_name", NpgsqlDbType.Text, hand.TableName);
-        Add(command, "max_seats", NpgsqlDbType.Integer, hand.MaxSeats);
-        Add(command, "button_seat", NpgsqlDbType.Integer, hand.ButtonSeat);
-        Add(command, "hero_seat", NpgsqlDbType.Integer, heroSeat?.SeatNumber);
-        Add(command, "hero_stack", NpgsqlDbType.Bigint, heroSeat?.Stack);
-        Add(command, "hero_cards", NpgsqlDbType.Text, hand.HeroCards.Count == 0 ? null : string.Concat(hand.HeroCards));
-        Add(command, "total_pot", NpgsqlDbType.Bigint, hand.TotalPot);
-        Add(command, "rake", NpgsqlDbType.Bigint, hand.Rake);
-        Add(command, "stakes", NpgsqlDbType.Text, hand.Stakes);
-        Add(command, "details", NpgsqlDbType.Jsonb, HandDetailsDocument.From(hand).ToJson());
-        Add(command, "now", NpgsqlDbType.TimestampTz, time.GetUtcNow());
-        return await command.ExecuteNonQueryAsync(cancellationToken) == 1;
+        var now = time.GetUtcNow();
+        var totalInserted = 0;
+
+        // Process in chunks to keep batch message size bounded (~500 hands each).
+        const int ChunkSize = 500;
+        for (var offset = 0; offset < hands.Count; offset += ChunkSize)
+        {
+            var chunk = hands.Count - offset >= ChunkSize
+                ? hands.Skip(offset).Take(ChunkSize).ToList()
+                : hands.Skip(offset).ToList();
+
+            using var batch = new NpgsqlBatch(connection, transaction);
+            foreach (var item in chunk)
+            {
+                var cmd = new NpgsqlBatchCommand(InsertHandSql);
+                var heroSeat = item.Hand.HeroName is null ? null : item.Hand.Seats.FirstOrDefault(s => s.PlayerName == item.Hand.HeroName);
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Uuid, Value = Guid.CreateVersion7(now) });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Uuid, Value = item.PokerAccountId });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Uuid, Value = (object?)item.TournamentId ?? DBNull.Value });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Uuid, Value = item.ImportedFileId });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Smallint, Value = (short)item.Hand.GameType });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = item.Hand.ExternalHandId });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = item.Hand.StartedAt.ToUniversalTime() });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = item.Hand.Level });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = item.Hand.SmallBlind });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = item.Hand.BigBlind });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = (object?)item.Hand.Ante ?? DBNull.Value });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = item.Hand.TableName });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = item.Hand.MaxSeats });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = item.Hand.ButtonSeat });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = (object?)heroSeat?.SeatNumber ?? DBNull.Value });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = (object?)heroSeat?.Stack ?? DBNull.Value });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = item.Hand.HeroCards.Count == 0 ? DBNull.Value : (object)string.Concat(item.Hand.HeroCards) });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = item.Hand.TotalPot });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = item.Hand.Rake });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = (object?)item.Hand.Stakes ?? DBNull.Value });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Jsonb, Value = HandDetailsDocument.From(item.Hand).ToJson() });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = now });
+                batch.BatchCommands.Add(cmd);
+            }
+
+            totalInserted += await batch.ExecuteNonQueryAsync(cancellationToken);
+        }
+
+        return totalInserted;
     }
 
     private async Task<NpgsqlCommand> CommandAsync(string sql, CancellationToken cancellationToken)
