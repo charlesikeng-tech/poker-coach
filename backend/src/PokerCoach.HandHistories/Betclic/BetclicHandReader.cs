@@ -31,6 +31,8 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
     private long currentBet;
     private string? handId;
     private string? heroName;
+    private string? mandatorySbPlayer;
+    private string? mandatoryBbPlayer;
     private List<Card> heroCards = [];
     private HeaderInfo? header;
     private long? totalPot;
@@ -314,9 +316,11 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
         var tags = match.Groups["tags"].Value;
         if (tags.Contains("Hero", StringComparison.Ordinal))
-        {
             heroName = name;
-        }
+        if (tags.Contains("SB", StringComparison.Ordinal))
+            mandatorySbPlayer = name;
+        if (tags.Contains("BB", StringComparison.Ordinal))
+            mandatoryBbPlayer = name;
 
         seats.Add(new ParsedSeat(seatNumber, name, stack, null));
         streetContributions[name] = 0;
@@ -508,7 +512,27 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
             ? ParsedActionType.PostSmallBlind
             : ParsedActionType.PostBigBlind;
 
-        AddToStreet(playerName, amount);
+        // Dead blind detection: a player posting outside their mandatory position (seat tag)
+        // posts a dead blind. Dead blinds go to the pot (kept in actions) but the player's
+        // raise base is only their live portion — not the dead SB they already posted.
+        // Fallback to normal when seat tags are absent (mandatoryXxPlayer is null).
+        var isMandatory = type == ParsedActionType.PostSmallBlind
+            ? (mandatorySbPlayer is null || playerName == mandatorySbPlayer)
+            : (mandatoryBbPlayer is null || playerName == mandatoryBbPlayer);
+
+        if (isMandatory)
+        {
+            AddToStreet(playerName, amount);
+        }
+        else if (type == ParsedActionType.PostBigBlind)
+        {
+            // Non-mandatory BB (sitting-in player): BB is their live bet regardless of any
+            // dead SB they may have posted before. Reset contribution to BB only.
+            streetContributions[playerName] = amount;
+            currentBet = Math.Max(currentBet, amount);
+        }
+        // Non-mandatory SB: dead blind — no contribution to streetContributions.
+
         AddAction(playerName, type, amount, raiseTo: null, isAllIn: false);
         return true;
     }

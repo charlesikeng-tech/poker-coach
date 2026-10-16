@@ -320,3 +320,35 @@ Hero: [Ah Kh]
 21:00:03 - Vilain30: Folds
 *** SUMMARY ***
 Hero wins main pot of €0.75
+
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Cash Game
+Game Type: NL Texas Hold'em
+Game Name: NLHE 0.25/0.5 6 max Deep
+Game ID: 01M4VCVH8EMJED8PZB6V049NMG
+Hand ID: 01M4VEBKCD16RXR8G145Z6F5YB
+Date & Time: 2026-10-13 22:00:00 (UTC)
+Table ID: 01M4VCVH8EQM6XY5SD7GYB03C6
+Blinds: €0.25/€0.50
+Total Pot: €2.50
+Rake: €0.00
+*** PLAYERS ***
+Seat 1: Vilain40 (€50.00)
+Seat 2: Vilain41 (€50.00) [SB]
+Seat 3: Hero (€50.00) [BB Hero]
+Seat 4: Vilain42 (€50.00) [BTN]
+*** HOLE CARDS ***
+Hero: [As Ks]
+*** PRE-FLOP ***
+22:00:00 - Vilain40: Posts SB €0.25
+22:00:00 - Vilain41: Posts SB €0.25
+22:00:00 - Hero: Posts BB €0.50
+22:00:00 - Vilain40: Posts BB €0.50
+22:00:01 - Vilain42: Folds
+22:00:02 - Vilain40: Raises to €1.50
+22:00:03 - Vilain41: Folds
+22:00:04 - Hero: Folds
+*** SUMMARY ***
+Vilain40 wins main pot of €2.50
