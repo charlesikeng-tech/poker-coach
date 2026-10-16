@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: backend/global.json
-          cache: nuget
+          cache: true
           cache-dependency-path: backend/**/*.csproj
       - name: Restore
         run: dotnet restore PokerCoach.slnx
