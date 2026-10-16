@@ -25,6 +25,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
 import { BreakdownsPanel } from './breakdowns-panel';
+import { GameTypeService } from '../../core/game-type/game-type.service';
 import {
   GameType,
   STACK_FILTERS,

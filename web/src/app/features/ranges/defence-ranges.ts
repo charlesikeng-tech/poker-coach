@@ -30,6 +30,7 @@ import {
   RangesApi,
 } from './ranges-api';
 import { POSITION_SHORT, RangeView } from './ranges-shared';
+import { GameTypeService } from '../../core/game-type/game-type.service';
 
 type LoadState = 'loading' | 'ready' | 'error';
 

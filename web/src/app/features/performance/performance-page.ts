@@ -28,6 +28,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { GameType } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
+import { GameTypeService } from '../../core/game-type/game-type.service';
 import {
   CashPerformanceReport,
   PerformanceGroup,

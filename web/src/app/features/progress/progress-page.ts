@@ -21,6 +21,7 @@ import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
 import { GameType } from '../statistics/statistics-api';
 import { positionShort } from '../training/spot-table';
 import { Priority, ProgressApi, ProgressReport } from './progress-api';
+import { GameTypeService } from '../../core/game-type/game-type.service';
 
 type LoadState = 'loading' | 'ready' | 'error';
 
