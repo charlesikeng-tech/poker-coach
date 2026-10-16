@@ -440,7 +440,7 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = (object?)heroSeat?.Stack ?? DBNull.Value });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = item.Hand.HeroCards.Count == 0 ? DBNull.Value : (object)string.Concat(item.Hand.HeroCards) });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = item.Hand.TotalPot });
-                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = item.Hand.Rake });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Bigint, Value = (object?)item.Hand.Rake ?? DBNull.Value });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = (object?)item.Hand.Stakes ?? DBNull.Value });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Jsonb, Value = HandDetailsDocument.From(item.Hand).ToJson() });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = now });
