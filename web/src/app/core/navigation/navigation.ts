@@ -11,6 +11,7 @@ import {
   Trophy,
   Upload,
   Wallet,
+  Layers,
 } from 'lucide';
 
 import { IconNode } from '../../shared/ui/icon/icon';
@@ -41,6 +42,7 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
     labelKey: 'nav.sections.results',
     items: [
       { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy },
+      { path: '/cash-sessions', labelKey: 'nav.cashSessions', icon: Layers },
       { path: '/performance', labelKey: 'nav.performance', icon: TrendingUp },
       { path: '/bankroll', labelKey: 'nav.bankroll', icon: Wallet },
     ],

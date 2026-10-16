@@ -14,7 +14,7 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, ICashPerformanceReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, ICashPerformanceReadStore, ICashSessionReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
 {
     public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
@@ -373,6 +373,80 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards))
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<CashHandSummary>> ListSessionHandsAsync(
+        Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken)
+    {
+        var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
+        return await Filtered(userId, filter, factsVersion)
+            .OrderBy(x => x.StartedAt)
+            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<HeroStatCounts> GetCashSessionStatsAsync(
+        Guid userId, DateTimeOffset from, DateTimeOffset to, int factsVersion, CancellationToken cancellationToken)
+    {
+        var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
+        var row = await Filtered(userId, filter, factsVersion)
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                Hands = g.Count(),
+                PreflopDecisions = g.Count(x => x.F.HadPreflopDecision),
+                Vpip = g.Count(x => x.F.Vpip),
+                Pfr = g.Count(x => x.F.Pfr),
+                RfiOpportunities = g.Count(x => x.F.RfiOpportunity),
+                Rfi = g.Count(x => x.F.Rfi),
+                Limp = g.Count(x => x.F.Limp),
+                StealOpportunities = g.Count(x => x.F.StealOpportunity),
+                Steal = g.Count(x => x.F.Steal),
+                ThreeBetOpportunities = g.Count(x => x.F.ThreeBetOpportunity),
+                ThreeBet = g.Count(x => x.F.ThreeBet),
+                FoldToThreeBetOpportunities = g.Count(x => x.F.FoldToThreeBetOpportunity),
+                FoldToThreeBet = g.Count(x => x.F.FoldToThreeBet),
+                SawFlop = g.Count(x => x.F.SawFlop),
+                CbetFlopOpportunities = g.Count(x => x.F.CbetFlopOpportunity),
+                CbetFlop = g.Count(x => x.F.CbetFlop),
+                WentToShowdown = g.Count(x => x.F.WentToShowdown),
+                WonAtShowdown = g.Count(x => x.F.WonAtShowdown),
+                NetBigBlinds = g.Sum(x => x.F.NetBigBlinds),
+                FoldToCbetFlopOpportunities = g.Count(x => x.F.FoldToCbetFlopOpportunity),
+                FoldToCbetFlop = g.Count(x => x.F.FoldToCbetFlop),
+                RaiseCbetFlop = g.Count(x => x.F.RaiseCbetFlop),
+                CbetTurnOpportunities = g.Count(x => x.F.CbetTurnOpportunity),
+                CbetTurn = g.Count(x => x.F.CbetTurn),
+                CheckRaiseFlopOpportunities = g.Count(x => x.F.CheckRaiseFlopOpportunity),
+                CheckRaiseFlop = g.Count(x => x.F.CheckRaiseFlop),
+                WonWhenSawFlop = g.Count(x => x.F.WonWhenSawFlop),
+                PostflopAggressive = g.Sum(x => x.F.PostflopAggressive),
+                PostflopDecisions = g.Sum(x => x.F.PostflopDecisions),
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (row is null) return HeroStatCounts.Zero;
+        return new HeroStatCounts(
+            row.Hands, row.PreflopDecisions, row.Vpip, row.Pfr,
+            row.RfiOpportunities, row.Rfi, row.Limp,
+            row.StealOpportunities, row.Steal,
+            row.ThreeBetOpportunities, row.ThreeBet,
+            row.FoldToThreeBetOpportunities, row.FoldToThreeBet,
+            row.SawFlop, row.CbetFlopOpportunities, row.CbetFlop,
+            row.WentToShowdown, row.WonAtShowdown, row.NetBigBlinds,
+            row.FoldToCbetFlopOpportunities, row.FoldToCbetFlop, row.RaiseCbetFlop,
+            row.CbetTurnOpportunities, row.CbetTurn,
+            row.CheckRaiseFlopOpportunities, row.CheckRaiseFlop,
+            row.WonWhenSawFlop, row.PostflopAggressive, row.PostflopDecisions);
+    }
+
+    public Task<int> CountPendingCashAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) =>
+        (from h in db.Set<HandRecord>()
+         join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
+         join f in db.Set<HandHeroFactsRecord>() on h.Id equals f.HandId into facts
+         from f in facts.DefaultIfEmpty()
+         where a.UserId == userId && a.ConfirmedAt != null && h.GameType == GameType.CashGame
+               && (f == null || f.FactsVersion != factsVersion)
+         select h.Id).CountAsync(cancellationToken);
 
     public Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken) =>
         (from h in db.Set<HandRecord>()

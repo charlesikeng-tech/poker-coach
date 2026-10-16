@@ -19,7 +19,8 @@
       "results": "Résultats",
       "analysis": "Analyse",
       "improve": "Progresser"
-    }
+    },
+    "cashSessions": "Sessions Cash"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -1893,6 +1894,105 @@
           "weekReview": "Revue de la semaine",
           "tournamentDebrief": "Débrief de tournoi",
           "cashDebrief": "Débrief de cash game"
+        }
+      }
+    },
+    "cashSessions": {
+      "title": "Sessions Cash",
+      "description": "Tes sessions de cash game, avec leur résultat et les mains clés.",
+      "loading": "Chargement de tes sessions…",
+      "empty": {
+        "title": "Aucune session cash game",
+        "description": "Tes sessions apparaissent ici dès que des mains cash game sont importées.",
+        "action": "Importer des fichiers"
+      },
+      "noMatch": "Aucune session ne correspond à ces filtres.",
+      "error": {
+        "title": "Impossible de charger tes sessions",
+        "description": "NutsIQ n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
+        "retry": "Réessayer"
+      },
+      "filters": {
+        "period": "Période",
+        "periods": {
+          "all": "Depuis le début",
+          "7d": "7 derniers jours",
+          "30d": "30 derniers jours",
+          "90d": "90 derniers jours",
+          "year": "Cette année"
+        }
+      },
+      "list": {
+        "label": "Liste des sessions",
+        "count": "{{count}} session(s)",
+        "hands": "{{count}} mains"
+      },
+      "overview": {
+        "label": "Aperçu",
+        "pickTitle": "Choisis une session",
+        "pickDescription": "Tu verras sa courbe de stack, les mains clés et tes stats de la session."
+      },
+      "pager": {
+        "label": "Pages",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "position": "Page {{page}} sur {{count}}"
+      },
+      "detail": {
+        "back": "Toutes les sessions",
+        "profit": "Profit",
+        "netBb": "BB gagnées",
+        "hands": "{{count}} mains",
+        "duration": "Durée",
+        "handIndex": "Main {{index}}",
+        "synthesis": "Synthèse",
+        "pending": "{{count}} main(s) encore en cours d'analyse : moments clés et stats se complètent.",
+        "notFound": {
+          "title": "Session introuvable",
+          "description": "Elle n'existe pas ou n'appartient pas à l'un de tes comptes confirmés."
+        },
+        "error": {
+          "title": "Impossible de charger cette session"
+        },
+        "stack": {
+          "title": "Évolution du stack",
+          "hint": "Ton stack en BB au début de chaque main. Les numéros renvoient aux moments clés.",
+          "empty": "Pas assez de mains pour tracer une courbe."
+        },
+        "moments": {
+          "title": "Moments clés",
+          "hint": "Les mains avec le plus grand impact sur ton stack, en big blindes.",
+          "empty": "Aucune main ne dépasse le seuil de détection.",
+          "stack": "stack {{stack}}",
+          "kinds": {
+            "gain": "Gros pot gagné",
+            "loss": "Gros pot perdu"
+          }
+        },
+        "session": {
+          "title": "Stats de la session",
+          "sample": "Une seule session, c'est peu de mains : ces chiffres décrivent ta session, ils ne prouvent pas un leak.",
+          "leaks": "Voir tes leaks sur tout ton historique"
+        },
+        "stats": {
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal",
+          "cbetFlop": "C-bet flop",
+          "wentToShowdown": "Went to showdown"
+        },
+        "positions": {
+          "utg": "UTG",
+          "utg1": "UTG+1",
+          "utg2": "UTG+2",
+          "lojack": "Lojack",
+          "hijack": "Hijack",
+          "cutoff": "Cutoff",
+          "button": "Button",
+          "smallBlind": "Small blind",
+          "bigBlind": "Big blind",
+          "unknown": "Inconnue"
         }
       }
     }

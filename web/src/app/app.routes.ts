@@ -90,6 +90,22 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/bankroll/bankroll-page').then((m) => m.BankrollPage),
       },
+      {
+        path: 'cash-sessions',
+        title: 'nav.cashSessions',
+        loadComponent: () =>
+          import('./features/cash-sessions/cash-sessions-page').then((m) => m.CashSessionsPage),
+        children: [
+          { path: '', children: [] },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/cash-sessions/cash-session-detail').then(
+                (m) => m.CashSessionDetailPage,
+              ),
+          },
+        ],
+      },
       // The Sessions placeholder became the bankroll (roadmap step 1): keep old links working.
       { path: 'sessions', redirectTo: 'bankroll' },
       {

@@ -19,7 +19,8 @@
       "results": "Results",
       "analysis": "Analysis",
       "improve": "Improve"
-    }
+    },
+    "cashSessions": "Cash Sessions"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -1893,6 +1894,105 @@
           "weekReview": "Weekly review",
           "tournamentDebrief": "Tournament debrief",
           "cashDebrief": "Cash game debrief"
+        }
+      }
+    },
+    "cashSessions": {
+      "title": "Cash Sessions",
+      "description": "Your cash game sessions with results and key hands.",
+      "loading": "Loading your sessions…",
+      "empty": {
+        "title": "No cash game sessions yet",
+        "description": "Your sessions appear here as soon as cash game hands are imported.",
+        "action": "Import files"
+      },
+      "noMatch": "No session matches these filters.",
+      "error": {
+        "title": "Could not load your sessions",
+        "description": "NutsIQ could not respond. Your data is safe — please try again.",
+        "retry": "Retry"
+      },
+      "filters": {
+        "period": "Period",
+        "periods": {
+          "all": "All time",
+          "7d": "Last 7 days",
+          "30d": "Last 30 days",
+          "90d": "Last 90 days",
+          "year": "This year"
+        }
+      },
+      "list": {
+        "label": "Sessions list",
+        "count": "{{count}} session(s)",
+        "hands": "{{count}} hands"
+      },
+      "overview": {
+        "label": "Overview",
+        "pickTitle": "Pick a session",
+        "pickDescription": "You will see its stack curve, key hands and session stats."
+      },
+      "pager": {
+        "label": "Pages",
+        "previous": "Previous page",
+        "next": "Next page",
+        "position": "Page {{page}} of {{count}}"
+      },
+      "detail": {
+        "back": "All sessions",
+        "profit": "Profit",
+        "netBb": "Net BB",
+        "hands": "{{count}} hands",
+        "duration": "Duration",
+        "handIndex": "Hand {{index}}",
+        "synthesis": "Summary",
+        "pending": "{{count}} hand(s) still being analysed: key moments and stats are filling in.",
+        "notFound": {
+          "title": "Session not found",
+          "description": "It does not exist or does not belong to one of your confirmed accounts."
+        },
+        "error": {
+          "title": "Could not load this session"
+        },
+        "stack": {
+          "title": "Stack over time",
+          "hint": "Your stack in BB at the start of each hand. Numbers point to key moments.",
+          "empty": "Not enough hands to draw a curve."
+        },
+        "moments": {
+          "title": "Key moments",
+          "hint": "The hands with the largest impact on your stack, in big blinds.",
+          "empty": "No hand reached the detection threshold.",
+          "stack": "stack {{stack}}",
+          "kinds": {
+            "gain": "Big pot won",
+            "loss": "Big pot lost"
+          }
+        },
+        "session": {
+          "title": "Session stats",
+          "sample": "One session is a small sample: these figures describe your session, they do not prove a leak.",
+          "leaks": "View leaks across your full history"
+        },
+        "stats": {
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal",
+          "cbetFlop": "Flop c-bet",
+          "wentToShowdown": "Went to showdown"
+        },
+        "positions": {
+          "utg": "UTG",
+          "utg1": "UTG+1",
+          "utg2": "UTG+2",
+          "lojack": "Lojack",
+          "hijack": "Hijack",
+          "cutoff": "Cutoff",
+          "button": "Button",
+          "smallBlind": "Small blind",
+          "bigBlind": "Big blind",
+          "unknown": "Unknown"
         }
       }
     }

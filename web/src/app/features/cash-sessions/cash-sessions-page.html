@@ -1,0 +1,131 @@
+<ng-container *transloco="let t; prefix: 'pages.cashSessions'">
+  <app-page-header class="page-title" [heading]="t('title')" [description]="t('description')" />
+
+  @if (state() === 'error' && !data()) {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (data(); as data) {
+    @if (data.totalCount === 0 && period() === 'all') {
+      <app-empty-state
+        [icon]="icons.Upload"
+        [heading]="t('empty.title')"
+        [description]="t('empty.description')"
+      >
+        <a appButton variant="primary" routerLink="/import">{{ t('empty.action') }}</a>
+      </app-empty-state>
+    } @else {
+      <div class="workspace">
+        <!-- List pane -->
+        <section class="list glass" [attr.aria-label]="t('list.label')">
+          <div class="list__tools">
+            <div class="list__filters">
+              <select
+                [value]="period()"
+                [attr.aria-label]="t('filters.period')"
+                (change)="setPeriod($any($event.target).value)"
+              >
+                @for (option of periods; track option) {
+                  <option [value]="option">{{ t('filters.periods.' + option) }}</option>
+                }
+              </select>
+            </div>
+            <p class="list__summary numeric">
+              <span>{{ t('list.count', { count: data.totalCount }) }}</span>
+            </p>
+          </div>
+
+          @if (data.totalCount === 0) {
+            <p class="hint list__empty">{{ t('noMatch') }}</p>
+          } @else {
+            <ul class="list__items" [class.stale]="state() === 'loading'">
+              @for (session of data.items; track session.id) {
+                <li>
+                  <a
+                    class="item"
+                    [routerLink]="[session.id]"
+                    routerLinkActive="item--active"
+                    ariaCurrentWhenActive="page"
+                  >
+                    <span class="item__top">
+                      <span class="item__name">{{ session.stakes }}</span>
+                      <span
+                        class="item__profit numeric"
+                        [attr.data-sign]="sign(session.netMoney)"
+                      >
+                        {{ signedMoney(session.netMoney) }}
+                      </span>
+                    </span>
+                    <span class="item__date">{{ date(session.startedAt) }}</span>
+                    <span class="item__meta numeric">
+                      <span>{{ t('list.hands', { count: session.hands }) }}</span>
+                      <span>{{ duration(session.durationMinutes) }}</span>
+                      @if (session.bigBlindsPer100 !== null) {
+                        <span [attr.data-sign]="sign(session.bigBlindsPer100)">{{ bb100(session.bigBlindsPer100) }}</span>
+                      }
+                    </span>
+                  </a>
+                </li>
+              }
+            </ul>
+
+            @if (pageCount() > 1) {
+              <nav class="pager" [attr.aria-label]="t('pager.label')">
+                <button
+                  appButton
+                  variant="ghost"
+                  [disabled]="page() === 1"
+                  [attr.aria-label]="t('pager.previous')"
+                  (click)="page.set(page() - 1)"
+                >
+                  <app-icon [icon]="icons.ChevronLeft" />
+                </button>
+                <span class="numeric">{{
+                  t('pager.position', { page: page(), count: pageCount() })
+                }}</span>
+                <button
+                  appButton
+                  variant="ghost"
+                  [disabled]="page() >= pageCount()"
+                  [attr.aria-label]="t('pager.next')"
+                  (click)="page.set(page() + 1)"
+                >
+                  <app-icon [icon]="icons.ChevronRight" />
+                </button>
+              </nav>
+            }
+          }
+        </section>
+
+        <!-- Detail pane -->
+        <div class="detail">
+          <router-outlet />
+          @if (selectedId() === null) {
+            <section class="overview" [attr.aria-label]="t('overview.label')">
+              <div class="pick glass">
+                <app-icon [icon]="icons.MousePointerClick" />
+                <div>
+                  <h2>{{ t('overview.pickTitle') }}</h2>
+                  <p>{{ t('overview.pickDescription') }}</p>
+                </div>
+              </div>
+            </section>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <div class="workspace" role="status" [attr.aria-label]="t('loading')">
+      <div class="list glass skeleton-list">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+          <span class="skeleton"></span>
+        }
+      </div>
+      <div class="detail"></div>
+    </div>
+  }
+</ng-container>
