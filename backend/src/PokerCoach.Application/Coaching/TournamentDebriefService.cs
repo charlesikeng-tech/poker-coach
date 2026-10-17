@@ -33,8 +33,28 @@ public sealed record TournamentDebrief(
     IReadOnlyList<string> Strengths,
     IReadOnlyList<string> WorkOn);
 
+/// <summary>Tournament format family, used to select the coaching context.</summary>
+public enum TournamentSubFormat
+{
+    /// <summary>Multi-table tournament (standard or rebuys, field 50+).</summary>
+    Mtt,
+
+    /// <summary>Rebuy / add-on MTT: chip EV applies during the rebuy period.</summary>
+    RebuyMtt,
+
+    /// <summary>Sit-and-go: fixed small field (6–9 players), fast ICM from the first level.</summary>
+    Sng,
+}
+
 /// <summary>What the model is asked: our facts and the key hands' anonymous stories. No name, no id.</summary>
-public sealed record DebriefPrompt(string Language, string Facts, IReadOnlyList<(string Ref, string Story)> Moments);
+/// <param name="SubFormat">Tournament sub-format for coaching context selection.</param>
+/// <param name="IsBounty">True when players carry bounties (PKO, mystery bounty, etc.).</param>
+public sealed record DebriefPrompt(
+    string Language,
+    string Facts,
+    IReadOnlyList<(string Ref, string Story)> Moments,
+    TournamentSubFormat SubFormat = TournamentSubFormat.Mtt,
+    bool IsBounty = false);
 
 /// <summary>A key moment as Poker Coach measured it, shown next to the coach's note: our facts, not the model's.</summary>
 public sealed record DebriefMoment(
@@ -136,10 +156,19 @@ public sealed class TournamentDebriefService(
                 var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, ct);
                 var hands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct))
                     .ToDictionary(h => h.HandId);
+                var subFormat = detail.Mode switch
+                {
+                    "sng" => TournamentSubFormat.Sng,
+                    "mtt" => TournamentSubFormat.RebuyMtt,
+                    _ => TournamentSubFormat.Mtt,
+                };
+                var isBounty = detail.IsBounty;
                 var prompt = new DebriefPrompt(
                     language,
                     Facts(detail, moments, analysis.Report.Leaks),
-                    moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(hands[m.HandId]))).ToList());
+                    moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(hands[m.HandId]))).ToList(),
+                    subFormat,
+                    isBounty);
                 return await model.DebriefTournamentAsync(prompt, ct);
             },
             cancellationToken);

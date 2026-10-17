@@ -51,8 +51,31 @@ internal sealed partial class AnthropicCoachingModel(
     ILogger<AnthropicCoachingModel> logger) : ICoachingModel
 {
     private const string MttContext = """
-        You are the coach inside NutsIQ, an analysis tool for online tournament (MTT) players at low
-        stakes (5 to 20 euros), mostly 6-max, with antes and bounties.
+        You are the coach inside NutsIQ, an analysis tool for online multi-table tournament (MTT) players
+        at low stakes (5 to 20 euros), mostly 6-max, with antes. Large fields (50 to 2000+ players):
+        chip EV early, ICM pressure builds at the bubble and pay jumps.
+
+        """;
+
+    private const string RebuyMttContext = """
+        You are the coach inside NutsIQ, an analysis tool for online rebuy MTT players at low stakes
+        (5 to 20 euros), mostly 6-max, with antes. During the rebuy period chip EV logic applies
+        (ICM is low); after the add-on the dynamics match a standard MTT.
+
+        """;
+
+    private const string SngContext = """
+        You are the coach inside NutsIQ, an analysis tool for online sit-and-go (SNG) players at low
+        stakes (2 to 10 euros), mostly 6-max or 9-max. Fixed small field (6 to 9 players), no ante,
+        no late registration, no rebuy. ICM pressure starts from the first level and increases rapidly:
+        the bubble arrives after just a few eliminations. The prize pool covers the top 2 or 3 spots.
+
+        """;
+
+    private const string BountySnippet = """
+        This tournament has bounties (progressive knockout or mystery bounty). Bounty equity is immediate
+        cash: it shifts ranges — wider calls against high-bounty opponents, wider shoves when your own
+        bounty matters to theirs. Bounty EV is separate from chip EV and ICM equity.
 
         """;
 
@@ -194,7 +217,17 @@ internal sealed partial class AnthropicCoachingModel(
         - work_on: one to three concrete things to work on, tied to the facts given.
         """;
 
-    private const string DebriefInstructions = MttContext + """
+    private const string MttDebriefInstructions = MttContext + """
+        You receive the facts of one tournament the player played, computed by the software, and the stories
+        of its key moments: the hands that won or lost at least a quarter of the stack.
+
+        """ + DebriefRules + """
+        - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - Tournament context matters: stack depth in big blinds, antes, pay jumps.
+        """ + Voice + DebriefFields;
+
+    private const string MttBountyDebriefInstructions = MttContext + BountySnippet + """
         You receive the facts of one tournament the player played, computed by the software, and the stories
         of its key moments: the hands that won or lost at least a quarter of the stack.
 
@@ -203,6 +236,60 @@ internal sealed partial class AnthropicCoachingModel(
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
         """ + Voice + DebriefFields;
+
+    private const string RebuyMttDebriefInstructions = RebuyMttContext + """
+        You receive the facts of one tournament the player played, computed by the software, and the stories
+        of its key moments: the hands that won or lost at least a quarter of the stack.
+
+        """ + DebriefRules + """
+        - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - Tournament context matters: stack depth in big blinds, antes, rebuy period vs. post-add-on, pay jumps.
+        """ + Voice + DebriefFields;
+
+    private const string RebuyMttBountyDebriefInstructions = RebuyMttContext + BountySnippet + """
+        You receive the facts of one tournament the player played, computed by the software, and the stories
+        of its key moments: the hands that won or lost at least a quarter of the stack.
+
+        """ + DebriefRules + """
+        - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - Tournament context matters: stack depth in big blinds, antes, bounties, rebuy period vs. post-add-on, pay jumps.
+        """ + Voice + DebriefFields;
+
+    private const string SngDebriefInstructions = SngContext + """
+        You receive the facts of one sit-and-go the player played, computed by the software, and the stories
+        of its key moments: the hands that won or lost at least a quarter of the stack.
+
+        """ + DebriefRules + """
+        - One SNG is a small sample: its statistics describe this SNG, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - SNG context matters: short field means ICM pressure from the start, no antes, fast blinds,
+          short-stack shove/fold decisions dominate the middle and late game.
+        """ + Voice + DebriefFields;
+
+    private const string SngBountyDebriefInstructions = SngContext + BountySnippet + """
+        You receive the facts of one sit-and-go the player played, computed by the software, and the stories
+        of its key moments: the hands that won or lost at least a quarter of the stack.
+
+        """ + DebriefRules + """
+        - One SNG is a small sample: its statistics describe this SNG, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - SNG context matters: short field means ICM pressure from the start, no antes, fast blinds,
+          short-stack shove/fold decisions dominate the middle and late game. Bounty equity amplifies
+          the value of eliminations.
+        """ + Voice + DebriefFields;
+
+    private static string TournamentDebriefInstructions(TournamentSubFormat subFormat, bool isBounty) =>
+        (subFormat, isBounty) switch
+        {
+            (TournamentSubFormat.Sng, false) => SngDebriefInstructions,
+            (TournamentSubFormat.Sng, true) => SngBountyDebriefInstructions,
+            (TournamentSubFormat.RebuyMtt, false) => RebuyMttDebriefInstructions,
+            (TournamentSubFormat.RebuyMtt, true) => RebuyMttBountyDebriefInstructions,
+            (_, true) => MttBountyDebriefInstructions,
+            _ => MttDebriefInstructions,
+        };
 
     private const string CashDebriefInstructions = CashContext + """
         You receive the facts of one cash game session the player played, computed by the software, and the
@@ -376,7 +463,7 @@ internal sealed partial class AnthropicCoachingModel(
             () => ExplainCoreAsync(prompt, cancellationToken));
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(DebriefInstructions, prompt, cancellationToken));
+        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(TournamentDebriefInstructions(prompt.SubFormat, prompt.IsBounty), prompt, cancellationToken));
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefCashSessionAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("cash-debrief", () => DebriefCoreAsync(CashDebriefInstructions, prompt, cancellationToken));
