@@ -15,6 +15,7 @@ public sealed class WinamaxHandHistoryParserGoldenTests
     [InlineData(GoldenFiles.CassiopeiaHands, 72)]
     [InlineData(GoldenFiles.AcceleratorHands, 222)]
     [InlineData(GoldenFiles.AsteroidHands, 54)]
+    [InlineData(GoldenFiles.DoubleOrNothingHands, 17)]
     public void Every_hand_of_a_real_file_is_accepted(string fileName, int expectedHands)
     {
         var result = parser.Parse(GoldenFiles.Read(fileName));
@@ -27,6 +28,7 @@ public sealed class WinamaxHandHistoryParserGoldenTests
     [InlineData(GoldenFiles.CassiopeiaHands)]
     [InlineData(GoldenFiles.AcceleratorHands)]
     [InlineData(GoldenFiles.AsteroidHands)]
+    [InlineData(GoldenFiles.DoubleOrNothingHands)]
     public void Every_accepted_hand_balances_and_identifies_the_hero(string fileName)
     {
         var hands = parser.Parse(GoldenFiles.Read(fileName)).Hands;

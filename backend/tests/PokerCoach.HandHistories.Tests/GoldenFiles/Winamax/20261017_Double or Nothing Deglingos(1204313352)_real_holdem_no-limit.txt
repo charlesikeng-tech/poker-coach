@@ -1,0 +1,544 @@
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 1 - HandId: #5172486460976136193-1-1792240130 - Holdem no limit (10/20) - 2026/10/17 12:28:50 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (500)
+Seat 2: Hero (500)
+Seat 3: Villain02 (500)
+Seat 4: Villain03 (500)
+Seat 5: Villain04 (500)
+Seat 6: Villain05 (500)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 10
+Villain05 posts big blind 20
+Dealt to Hero [2c Jc]
+*** PRE-FLOP *** 
+Villain01 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 raises 30 to 50
+Villain05 folds
+Villain04 collected 70 from pot
+*** SUMMARY ***
+Total pot 70 | No rake
+Seat 5: Villain04 (small blind) won 70
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 1 - HandId: #5172486460976136193-2-1792240196 - Holdem no limit (10/20) - 2026/10/17 12:29:56 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (500)
+Seat 2: Hero (500)
+Seat 3: Villain02 (500)
+Seat 4: Villain03 (500)
+Seat 5: Villain04 (520)
+Seat 6: Villain05 (480)
+*** ANTE/BLINDS ***
+Villain05 posts small blind 10
+Villain01 posts big blind 20
+Dealt to Hero [Th Ks]
+*** PRE-FLOP *** 
+Hero raises 20 to 40
+Villain02 folds
+Villain03 folds
+Villain04 calls 40
+Villain05 folds
+Villain01 folds
+*** FLOP *** [3h 8s Ah]
+Hero checks
+Villain04 checks
+*** TURN *** [3h 8s Ah][7d]
+Hero checks
+Villain04 checks
+*** RIVER *** [3h 8s Ah 7d][2c]
+Hero bets 28
+Villain04 calls 28
+*** SHOW DOWN ***
+Hero shows [Th Ks] (High card : Ace)
+Villain04 shows [Kc Qh] (High card : Ace)
+Villain04 collected 166 from pot
+*** SUMMARY ***
+Total pot 166 | No rake
+Board: [3h 8s Ah 7d 2c]
+Seat 2: Hero showed [Th Ks] and lost with High card : Ace
+Seat 5: Villain04 (button) showed [Kc Qh] and won 166 with High card : Ace
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 1 - HandId: #5172486460976136193-3-1792240253 - Holdem no limit (10/20) - 2026/10/17 12:30:53 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (480)
+Seat 2: Hero (432)
+Seat 3: Villain02 (500)
+Seat 4: Villain03 (500)
+Seat 5: Villain04 (618)
+Seat 6: Villain05 (470)
+*** ANTE/BLINDS ***
+Villain01 posts small blind 10
+Hero posts big blind 20
+Dealt to Hero [3c 6s]
+*** PRE-FLOP *** 
+Villain02 calls 20
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain01 calls 10
+Hero checks
+*** FLOP *** [7c Jc 2c]
+Villain01 checks
+Hero checks
+Villain02 bets 60
+Villain01 folds
+Hero folds
+Villain02 collected 120 from pot
+*** SUMMARY ***
+Total pot 120 | No rake
+Board: [7c Jc 2c]
+Seat 3: Villain02 won 120
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 1 - HandId: #5172486460976136193-4-1792240281 - Holdem no limit (10/20) - 2026/10/17 12:31:21 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (460)
+Seat 2: Hero (412)
+Seat 3: Villain02 (540)
+Seat 4: Villain03 (500)
+Seat 5: Villain04 (618)
+Seat 6: Villain05 (470)
+*** ANTE/BLINDS ***
+Hero posts small blind 10
+Villain02 posts big blind 20
+Dealt to Hero [Qc 5c]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 raises 30 to 50
+Villain05 folds
+Villain01 folds
+Hero folds
+Villain02 folds
+Villain04 collected 80 from pot
+*** SUMMARY ***
+Total pot 80 | No rake
+Seat 5: Villain04 won 80
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 1 - HandId: #5172486460976136193-5-1792240305 - Holdem no limit (10/20) - 2026/10/17 12:31:45 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (460)
+Seat 2: Hero (402)
+Seat 3: Villain02 (520)
+Seat 4: Villain03 (500)
+Seat 5: Villain04 (648)
+Seat 6: Villain05 (470)
+*** ANTE/BLINDS ***
+Villain02 posts small blind 10
+Villain03 posts big blind 20
+Dealt to Hero [3s 7h]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain05 folds
+Villain01 folds
+Hero raises 20 to 40
+Villain02 folds
+Villain03 folds
+Hero collected 70 from pot
+*** SUMMARY ***
+Total pot 70 | No rake
+Seat 2: Hero (button) won 70
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 2 - HandId: #5172486460976136193-6-1792240353 - Holdem no limit (15/30) - 2026/10/17 12:32:33 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (460)
+Seat 2: Hero (432)
+Seat 3: Villain02 (510)
+Seat 4: Villain03 (480)
+Seat 5: Villain04 (648)
+Seat 6: Villain05 (470)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 15
+Villain04 posts big blind 30
+Dealt to Hero [Tc Jh]
+*** PRE-FLOP *** 
+Villain05 folds
+Villain01 folds
+Hero raises 30 to 60
+Villain02 calls 60
+Villain03 folds
+Villain04 calls 30
+*** FLOP *** [6d 8h 2c]
+Villain04 checks
+Hero checks
+Villain02 checks
+*** TURN *** [6d 8h 2c][6h]
+Villain04 checks
+Hero checks
+Villain02 checks
+*** RIVER *** [6d 8h 2c 6h][5h]
+Villain04 checks
+Hero checks
+Villain02 checks
+*** SHOW DOWN ***
+Hero shows [Tc Jh] (One pair : 6)
+Villain02 shows [Ts As] (One pair : 6)
+Villain04 shows [5s 4h] (Two pairs : 6 and 5)
+Villain04 collected 195 from pot
+*** SUMMARY ***
+Total pot 195 | No rake
+Board: [6d 8h 2c 6h 5h]
+Seat 2: Hero showed [Tc Jh] and lost with One pair : 6
+Seat 3: Villain02 (button) showed [Ts As] and lost with One pair : 6
+Seat 5: Villain04 (big blind) showed [5s 4h] and won 195 with Two pairs : 6 and 5
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 2 - HandId: #5172486460976136193-7-1792240412 - Holdem no limit (15/30) - 2026/10/17 12:33:32 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (460)
+Seat 2: Hero (372)
+Seat 3: Villain02 (450)
+Seat 4: Villain03 (465)
+Seat 5: Villain04 (783)
+Seat 6: Villain05 (470)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 15
+Villain05 posts big blind 30
+Dealt to Hero [Qs Ts]
+*** PRE-FLOP *** 
+Villain01 folds
+Hero raises 30 to 60
+Villain02 folds
+Villain03 folds
+Villain04 calls 45
+Villain05 folds
+*** FLOP *** [Ah 3c 6s]
+Villain04 checks
+Hero bets 53
+Villain04 calls 53
+*** TURN *** [Ah 3c 6s][Jd]
+Villain04 checks
+Hero checks
+*** RIVER *** [Ah 3c 6s Jd][5c]
+Villain04 bets 90
+Hero folds
+Villain04 collected 346 from pot
+*** SUMMARY ***
+Total pot 346 | No rake
+Board: [Ah 3c 6s Jd 5c]
+Seat 5: Villain04 (small blind) won 346
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 3 - HandId: #5172486460976136193-8-1792240517 - Holdem no limit (20/40) - 2026/10/17 12:35:17 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (460)
+Seat 2: Hero (259)
+Seat 3: Villain02 (450)
+Seat 4: Villain03 (465)
+Seat 5: Villain04 (926)
+Seat 6: Villain05 (440)
+*** ANTE/BLINDS ***
+Villain05 posts small blind 20
+Villain01 posts big blind 40
+Dealt to Hero [Qs 9d]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 raises 60 to 100
+Villain05 folds
+Villain01 raises 360 to 460 and is all-in
+Villain04 calls 360
+*** FLOP *** [9s 8h 2d]
+*** TURN *** [9s 8h 2d][Kd]
+*** RIVER *** [9s 8h 2d Kd][3s]
+*** SHOW DOWN ***
+Villain04 shows [7h 9h] (One pair : 9)
+Villain01 shows [Kc Kh] (Trips of Kings)
+Villain01 collected 940 from pot
+*** SUMMARY ***
+Total pot 940 | No rake
+Board: [9s 8h 2d Kd 3s]
+Seat 1: Villain01 (big blind) showed [Kc Kh] and won 940 with Trips of Kings
+Seat 5: Villain04 (button) showed [7h 9h] and lost with One pair : 9
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 3 - HandId: #5172486460976136193-9-1792240552 - Holdem no limit (20/40) - 2026/10/17 12:35:52 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (940)
+Seat 2: Hero (259)
+Seat 3: Villain02 (450)
+Seat 4: Villain03 (465)
+Seat 5: Villain04 (466)
+Seat 6: Villain05 (420)
+*** ANTE/BLINDS ***
+Villain01 posts small blind 20
+Hero posts big blind 40
+Dealt to Hero [Jc Qc]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain05 folds
+Villain01 folds
+Hero collected 60 from pot
+*** SUMMARY ***
+Total pot 60 | No rake
+Seat 2: Hero (big blind) won 60
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 3 - HandId: #5172486460976136193-10-1792240568 - Holdem no limit (20/40) - 2026/10/17 12:36:08 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (920)
+Seat 2: Hero (279)
+Seat 3: Villain02 (450)
+Seat 4: Villain03 (465)
+Seat 5: Villain04 (466)
+Seat 6: Villain05 (420)
+*** ANTE/BLINDS ***
+Hero posts small blind 20
+Villain02 posts big blind 40
+Dealt to Hero [7h 9c]
+*** PRE-FLOP *** 
+Villain03 raises 40 to 80
+Villain04 folds
+Villain05 calls 80
+Villain01 folds
+Hero folds
+Villain02 folds
+*** FLOP *** [9s Kd 3s]
+Villain03 bets 80
+Villain05 raises 260 to 340 and is all-in
+Villain03 calls 260
+*** TURN *** [9s Kd 3s][8c]
+*** RIVER *** [9s Kd 3s 8c][9h]
+*** SHOW DOWN ***
+Villain03 shows [Jc Js] (Two pairs : Jacks and 9)
+Villain05 shows [As Ac] (Two pairs : Aces and 9)
+Villain05 collected 900 from pot
+*** SUMMARY ***
+Total pot 900 | No rake
+Board: [9s Kd 3s 8c 9h]
+Seat 4: Villain03 showed [Jc Js] and lost with Two pairs : Jacks and 9
+Seat 6: Villain05 showed [As Ac] and won 900 with Two pairs : Aces and 9
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 3 - HandId: #5172486460976136193-11-1792240614 - Holdem no limit (20/40) - 2026/10/17 12:36:54 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (920)
+Seat 2: Hero (259)
+Seat 3: Villain02 (410)
+Seat 4: Villain03 (45)
+Seat 5: Villain04 (466)
+Seat 6: Villain05 (900)
+*** ANTE/BLINDS ***
+Villain02 posts small blind 20
+Villain03 posts big blind 40
+Dealt to Hero [3d 7s]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain05 folds
+Villain01 folds
+Hero folds
+Villain02 folds
+Villain03 collected 60 from pot
+*** SUMMARY ***
+Total pot 60 | No rake
+Seat 4: Villain03 (big blind) won 60
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 3 - HandId: #5172486460976136193-12-1792240641 - Holdem no limit (20/40) - 2026/10/17 12:37:21 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #3 is the button
+Seat 1: Villain01 (920)
+Seat 2: Hero (259)
+Seat 3: Villain02 (390)
+Seat 4: Villain03 (65)
+Seat 5: Villain04 (466)
+Seat 6: Villain05 (900)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 20
+Villain04 posts big blind 40
+Dealt to Hero [9c Ah]
+*** PRE-FLOP *** 
+Villain05 folds
+Villain01 folds
+Hero raises 40 to 80
+Villain02 folds
+Villain03 folds
+Villain04 calls 40
+*** FLOP *** [8c Ks Kd]
+Villain04 checks
+Hero bets 45
+Villain04 folds
+Hero collected 225 from pot
+*** SUMMARY ***
+Total pot 225 | No rake
+Board: [8c Ks Kd]
+Seat 2: Hero won 225
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 4 - HandId: #5172486460976136193-13-1792240676 - Holdem no limit (30/60) - 2026/10/17 12:37:56 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #4 is the button
+Seat 1: Villain01 (920)
+Seat 2: Hero (359)
+Seat 3: Villain02 (390)
+Seat 4: Villain03 (45)
+Seat 5: Villain04 (386)
+Seat 6: Villain05 (900)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 30
+Villain05 posts big blind 60
+Dealt to Hero [8c 2h]
+*** PRE-FLOP *** 
+Villain01 folds
+Hero folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain05 collected 90 from pot
+*** SUMMARY ***
+Total pot 90 | No rake
+Seat 6: Villain05 (big blind) won 90
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 4 - HandId: #5172486460976136193-14-1792240688 - Holdem no limit (30/60) - 2026/10/17 12:38:08 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #5 is the button
+Seat 1: Villain01 (920)
+Seat 2: Hero (359)
+Seat 3: Villain02 (390)
+Seat 4: Villain03 (45)
+Seat 5: Villain04 (356)
+Seat 6: Villain05 (930)
+*** ANTE/BLINDS ***
+Villain05 posts small blind 30
+Villain01 posts big blind 60
+Dealt to Hero [8h 3c]
+*** PRE-FLOP *** 
+Hero folds
+Villain02 folds
+Villain03 calls 45 and is all-in
+Villain04 folds
+Villain05 calls 30
+Villain01 checks
+*** FLOP *** [Ac Qc 9d]
+Villain05 checks
+Villain01 checks
+*** TURN *** [Ac Qc 9d][Ks]
+Villain05 checks
+Villain01 checks
+*** RIVER *** [Ac Qc 9d Ks][6h]
+Villain05 checks
+Villain01 checks
+*** SHOW DOWN ***
+Villain01 shows [Tc 2d] (High card : Ace)
+Villain03 shows [Ad 9s] (Two pairs : Aces and 9)
+Villain05 shows [Ts Qh] (One pair : Queens)
+Villain05 collected 30 from side pot 1
+Villain03 collected 135 from main pot
+*** SUMMARY ***
+Total pot 165 | No rake
+Board: [Ac Qc 9d Ks 6h]
+Seat 1: Villain01 (big blind) showed [Tc 2d] and lost with High card : Ace
+Seat 4: Villain03 showed [Ad 9s] and won 135 with Two pairs : Aces and 9
+Seat 6: Villain05 (small blind) showed [Ts Qh] and won 30 with One pair : Queens
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 4 - HandId: #5172486460976136193-15-1792240743 - Holdem no limit (30/60) - 2026/10/17 12:39:03 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #6 is the button
+Seat 1: Villain01 (860)
+Seat 2: Hero (359)
+Seat 3: Villain02 (390)
+Seat 4: Villain03 (135)
+Seat 5: Villain04 (356)
+Seat 6: Villain05 (900)
+*** ANTE/BLINDS ***
+Villain01 posts small blind 30
+Hero posts big blind 60
+Dealt to Hero [Js Jd]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 raises 90 to 150
+Villain05 folds
+Villain01 folds
+Hero raises 209 to 359 and is all-in
+Villain04 calls 206 and is all-in
+*** FLOP *** [2s 2h 7s]
+*** TURN *** [2s 2h 7s][Kd]
+*** RIVER *** [2s 2h 7s Kd][5d]
+*** SHOW DOWN ***
+Hero shows [Js Jd] (Two pairs : Jacks and 2)
+Villain04 shows [Qs Qh] (Two pairs : Queens and 2)
+Villain04 collected 742 from main pot
+Hero collected 3 from side pot 1
+*** SUMMARY ***
+Total pot 745 | No rake
+Board: [2s 2h 7s Kd 5d]
+Seat 2: Hero (big blind) showed [Js Jd] and won 3 with Two pairs : Jacks and 2
+Seat 5: Villain04 showed [Qs Qh] and won 742 with Two pairs : Queens and 2
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 4 - HandId: #5172486460976136193-16-1792240775 - Holdem no limit (30/60) - 2026/10/17 12:39:35 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #1 is the button
+Seat 1: Villain01 (830)
+Seat 2: Hero (3)
+Seat 3: Villain02 (390)
+Seat 4: Villain03 (135)
+Seat 5: Villain04 (742)
+Seat 6: Villain05 (900)
+*** ANTE/BLINDS ***
+Hero posts small blind 3 and is all-in
+Villain02 posts big blind 60
+Dealt to Hero [8s Jh]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 raises 90 to 150
+Villain05 folds
+Villain01 folds
+Villain02 folds
+*** FLOP *** [8c 3c Ks]
+*** TURN *** [8c 3c Ks][6d]
+*** RIVER *** [8c 3c Ks 6d][Kd]
+*** SHOW DOWN ***
+Hero shows [8s Jh] (Two pairs : Kings and 8)
+Villain04 shows [Js Ts] (One pair : Kings)
+Villain04 collected 204 from side pot 1
+Hero collected 9 from main pot
+*** SUMMARY ***
+Total pot 213 | No rake
+Board: [8c 3c Ks 6d Kd]
+Seat 2: Hero (small blind) showed [8s Jh] and won 9 with Two pairs : Kings and 8
+Seat 5: Villain04 showed [Js Ts] and won 204 with One pair : Kings
+
+
+Winamax Poker - Tournament "Double or Nothing Deglingos" buyIn: 0.47€ + 0.03€ level: 4 - HandId: #5172486460976136193-17-1792240811 - Holdem no limit (30/60) - 2026/10/17 12:40:11 UTC
+Table: 'Double or Nothing Deglingos(1204313352)#0' 6-max (real money) Seat #2 is the button
+Seat 1: Villain01 (830)
+Seat 2: Hero (9)
+Seat 3: Villain02 (330)
+Seat 4: Villain03 (135)
+Seat 5: Villain04 (796)
+Seat 6: Villain05 (900)
+*** ANTE/BLINDS ***
+Villain02 posts small blind 30
+Villain03 posts big blind 60
+Dealt to Hero [6s 6h]
+*** PRE-FLOP *** 
+Villain04 folds
+Villain05 raises 60 to 120
+Villain01 folds
+Hero calls 9 and is all-in
+Villain02 folds
+Villain03 raises 15 to 135 and is all-in
+Villain05 calls 15
+*** FLOP *** [Td Ts Qh]
+*** TURN *** [Td Ts Qh][5s]
+*** RIVER *** [Td Ts Qh 5s][Ac]
+*** SHOW DOWN ***
+Hero shows [6s 6h] (Two pairs : Tens and 6)
+Villain03 shows [Kd 7s] (One pair : Tens)
+Villain05 shows [Kc Jd] (Straight Ace high)
+Villain05 collected 309 from pot
+*** SUMMARY ***
+Total pot 309 | No rake
+Board: [Td Ts Qh 5s Ac]
+Seat 2: Hero (button) showed [6s 6h] and lost with Two pairs : Tens and 6
+Seat 4: Villain03 (big blind) showed [Kd 7s] and lost with One pair : Tens
+Seat 6: Villain05 showed [Kc Jd] and won 309 with Straight Ace high
+
+

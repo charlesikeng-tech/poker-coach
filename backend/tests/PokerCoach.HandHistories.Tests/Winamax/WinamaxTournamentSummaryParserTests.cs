@@ -221,4 +221,31 @@ public sealed class WinamaxTournamentSummaryParserTests
         Assert.Null(result.Summary);
         Assert.Equal(new ParseError(ParseErrorCodes.UnrecognizedFormat, 1, null), Assert.Single(result.Errors));
     }
+
+    [Fact]
+    public void Reads_a_sng_double_or_nothing_summary_finished_last()
+    {
+        var result = parser.Parse(GoldenFiles.Read(GoldenFiles.DoubleOrNothingSummary));
+
+        Assert.Empty(result.Errors);
+        var summary = Assert.IsType<ParsedTournamentSummary>(result.Summary);
+        Assert.Equal("1204313352", summary.ExternalTournamentId);
+        Assert.Equal("Double or Nothing Deglingos", summary.TournamentName);
+        Assert.Equal(0.47m, summary.PrizePoolBuyIn);
+        Assert.Null(summary.BountyBuyIn);
+        Assert.Equal(0.03m, summary.Fee);
+        Assert.Equal(6, summary.RegisteredPlayers);
+        Assert.Equal("sng", summary.Mode);
+        Assert.Equal("doubleornothing", summary.Type);
+        Assert.Equal("turbo", summary.Speed);
+        Assert.Equal(2.82m, summary.PrizePool);
+        // SNG without re-entries: inferred entries (prizePool / prizePoolBuyIn) equal registered players.
+        Assert.Equal(summary.RegisteredPlayers * summary.PrizePoolBuyIn, summary.PrizePool);
+        var entry = Assert.Single(summary.Entries);
+        Assert.False(entry.LateRegistration);
+        Assert.Equal(new TimeSpan(0, 12, 4), entry.PlayedDuration);
+        Assert.Equal(6, entry.FinishPosition);
+        Assert.Null(entry.PrizeWinnings);
+        Assert.Null(entry.BountyWinnings);
+    }
 }
