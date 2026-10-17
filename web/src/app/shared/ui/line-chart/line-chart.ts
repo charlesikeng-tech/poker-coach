@@ -85,7 +85,11 @@ export class LineChart {
     return { x, y, ticks, xMin, xMax, plotWidth, plotHeight };
   });
 
-  protected readonly pathEntry = computed(() => [this.path()]);
+  // Key changes only when the data changes, not when the chart is resized.
+  protected readonly pathEntry = computed(() => {
+    const pts = this.points();
+    return [pts.length > 0 ? `${pts.length}/${pts[0].x}/${pts[pts.length - 1].x}` : ''];
+  });
 
   protected readonly path = computed(() => {
     const { x, y } = this.scales();

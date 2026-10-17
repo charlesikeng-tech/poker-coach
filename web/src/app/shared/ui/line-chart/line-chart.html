@@ -55,9 +55,9 @@
   @if (referencePath()) {
     <path class="reference" [attr.d]="referencePath()" />
   }
-  @for (d of pathEntry(); track d) {
+  @for (_ of pathEntry(); track _) {
     <path class="area" [attr.d]="area()" [attr.fill]="'url(#' + gradientId + ')'" />
-    <path class="line" [attr.d]="d" pathLength="1" />
+    <path class="line" [attr.d]="path()" pathLength="1" />
   }
 
   @for (m of placedMarkers(); track m.pointIndex) {
