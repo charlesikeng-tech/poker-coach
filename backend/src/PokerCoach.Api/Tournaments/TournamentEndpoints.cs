@@ -87,6 +87,7 @@ public sealed record TournamentDetailResponse(
     TournamentResponse Tournament,
     string? Type,
     string? Speed,
+    string? Mode,
     int? HandsDurationMinutes,
     IReadOnlyList<StackPointResponse> Stack,
     IReadOnlyList<KeyMomentResponse> KeyMoments,
@@ -234,6 +235,7 @@ public static class TournamentEndpoints
             TournamentResponse.From(detail.Tournament),
             detail.Type,
             detail.Speed,
+            detail.Mode,
             detail.HandsDuration is { } duration ? (int)Math.Round(duration.TotalMinutes) : null,
             detail.Stack.Select(p => new StackPointResponse(p.Index, p.StartedAt, p.Level, p.Stack, p.StackInBigBlinds)).ToList(),
             detail.KeyMoments.Select(k => new KeyMomentResponse(

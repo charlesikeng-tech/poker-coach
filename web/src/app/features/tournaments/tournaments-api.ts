@@ -112,6 +112,7 @@ export interface TournamentDetail {
   readonly tournament: Tournament;
   readonly type: string | null;
   readonly speed: string | null;
+  readonly mode: string | null;
   readonly handsDurationMinutes: number | null;
   readonly stack: readonly StackPoint[];
   readonly keyMoments: readonly KeyMoment[];

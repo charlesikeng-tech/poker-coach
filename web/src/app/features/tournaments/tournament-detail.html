@@ -29,6 +29,9 @@
             <h2>{{ d.tournament.name }}</h2>
             <p class="head__meta">
               <span>{{ date(d.tournament.startedAt) }}</span>
+              @if (d.mode) {
+                <span class="tag">{{ d.mode }}</span>
+              }
               @if (d.type) {
                 <span class="tag">{{ d.type }}</span>
               }
