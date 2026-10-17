@@ -77,6 +77,8 @@ export interface TournamentQuery {
   readonly pageSize: number;
   /** Part of the tournament name, case-insensitive. */
   readonly search?: string;
+  /** "sng" or "mtt" to restrict to one format family. */
+  readonly mode?: string;
 }
 
 /** Hero's chips at the start of a hand. */
@@ -135,6 +137,9 @@ export class TournamentsApi {
     }
     if (query.search) {
       params = params.set('search', query.search);
+    }
+    if (query.mode) {
+      params = params.set('mode', query.mode);
     }
     return firstValueFrom(this.http.get<TournamentPage>('/api/tournaments', { params }));
   }

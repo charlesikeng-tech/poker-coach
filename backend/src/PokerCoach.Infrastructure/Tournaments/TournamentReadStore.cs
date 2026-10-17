@@ -79,6 +79,7 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.RegisteredPlayers,
                 t.TournamentType,
                 t.Speed,
+                t.Mode,
                 HasSummary = t.SummaryImportedAt != null,
             };
 
@@ -137,7 +138,8 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 // Outdated coverage is not shown: it is being recomputed.
                 t.Coverage is { } stored && stored.CoverageVersion == TournamentCoverage.Version ? stored.ToDomain() : null,
                 t.RebuyCost,
-                t.AddonCost))
+                t.AddonCost,
+                t.Mode))
             .ToList();
     }
 }

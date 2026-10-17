@@ -35,7 +35,15 @@ import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi } from '../import/import-api';
-import { BUY_IN_FILTERS, BuyInFilter, PERIOD_FILTERS, PeriodFilter, toQuery } from './filters';
+import {
+  BUY_IN_FILTERS,
+  BuyInFilter,
+  FORMAT_FILTERS,
+  FormatFilter,
+  PERIOD_FILTERS,
+  PeriodFilter,
+  toQuery,
+} from './filters';
 import { Tournament, TournamentPage, TournamentsApi } from './tournaments-api';
 
 const PAGE_SIZE = 25;
@@ -74,8 +82,10 @@ export class TournamentsPage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly buyIns = BUY_IN_FILTERS;
+  protected readonly formats = FORMAT_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
   protected readonly buyIn = signal<BuyInFilter>('all');
+  protected readonly format = signal<FormatFilter>('all');
   protected readonly search = signal('');
   protected readonly page = signal(1);
 
@@ -101,7 +111,11 @@ export class TournamentsPage {
   );
 
   protected readonly filtered = computed(
-    () => this.period() !== 'all' || this.buyIn() !== 'all' || this.search().trim() !== '',
+    () =>
+      this.period() !== 'all' ||
+      this.buyIn() !== 'all' ||
+      this.format() !== 'all' ||
+      this.search().trim() !== '',
   );
   protected readonly pageCount = computed(() => {
     const data = this.data();
@@ -133,7 +147,13 @@ export class TournamentsPage {
   constructor() {
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
-      const args = [this.period(), this.buyIn(), this.search(), this.page()] as const;
+      const args = [
+        this.period(),
+        this.buyIn(),
+        this.format(),
+        this.search(),
+        this.page(),
+      ] as const;
       untracked(() => void this.load(...args));
     });
     void this.checkAccounts();
@@ -150,6 +170,11 @@ export class TournamentsPage {
     this.page.set(1);
   }
 
+  protected setFormat(value: string): void {
+    this.format.set(value as FormatFilter);
+    this.page.set(1);
+  }
+
   /** Debounced: one request once the player stops typing. */
   protected setSearch(value: string): void {
     clearTimeout(this.searchTimer);
@@ -160,7 +185,7 @@ export class TournamentsPage {
   }
 
   protected retry(): void {
-    void this.load(this.period(), this.buyIn(), this.search(), this.page());
+    void this.load(this.period(), this.buyIn(), this.format(), this.search(), this.page());
   }
 
   protected money(value: number | null): string {
@@ -194,13 +219,14 @@ export class TournamentsPage {
   private async load(
     period: PeriodFilter,
     buyIn: BuyInFilter,
+    format: FormatFilter,
     search: string,
     page: number,
   ): Promise<void> {
     const request = ++this.request;
     this.state.set('loading');
     try {
-      const query = toQuery(period, buyIn, page, PAGE_SIZE, new Date());
+      const query = toQuery(period, buyIn, format, page, PAGE_SIZE, new Date());
       const data = await this.api.list({ ...query, search: search.trim() || undefined });
       if (request === this.request) {
         this.data.set(data);

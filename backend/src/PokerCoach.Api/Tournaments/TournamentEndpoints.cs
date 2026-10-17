@@ -163,7 +163,8 @@ public static class TournamentEndpoints
         decimal? maxBuyIn = null,
         int page = 1,
         int pageSize = 50,
-        string? search = null)
+        string? search = null,
+        string? mode = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -199,7 +200,7 @@ public static class TournamentEndpoints
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var result = await tournaments.ListAsync(
             userId,
-            new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize, search),
+            new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize, search, mode),
             cancellationToken);
 
         return TypedResults.Ok(new TournamentPageResponse(

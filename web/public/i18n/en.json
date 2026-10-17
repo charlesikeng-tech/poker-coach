@@ -254,6 +254,12 @@
           "upTo20": "Up to €20",
           "upTo50": "Up to €50",
           "over50": "Over €50"
+        },
+        "format": "Format",
+        "formats": {
+          "all": "All formats",
+          "sng": "SNG",
+          "mtt": "MTT"
         }
       },
       "totals": {

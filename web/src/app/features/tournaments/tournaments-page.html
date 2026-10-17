@@ -60,6 +60,15 @@
                   <option [value]="option">{{ t('filters.buyIns.' + option) }}</option>
                 }
               </select>
+              <select
+                [value]="format()"
+                [attr.aria-label]="t('filters.format')"
+                (change)="setFormat($any($event.target).value)"
+              >
+                @for (option of formats; track option) {
+                  <option [value]="option">{{ t('filters.formats.' + option) }}</option>
+                }
+              </select>
             </div>
             <p class="list__summary numeric">
               <span>{{ t('list.count', { count: data.totalCount }) }}</span>

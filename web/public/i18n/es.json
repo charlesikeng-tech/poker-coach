@@ -254,6 +254,12 @@
           "upTo20": "Hasta 20 €",
           "upTo50": "Hasta 50 €",
           "over50": "Más de 50 €"
+        },
+        "format": "Formato",
+        "formats": {
+          "all": "Todos los formatos",
+          "sng": "SNG",
+          "mtt": "MTT"
         }
       },
       "totals": {

@@ -21,7 +21,9 @@ public sealed record TournamentFacts(
     string? Speed = null,
     TournamentCoverage? Coverage = null,
     decimal? RebuyCost = null,
-    decimal? AddonCost = null);
+    decimal? AddonCost = null,
+    /// <summary>Raw provider format: "sng", "tt" (MTT), "mtt" (rebuy MTT). Null when no summary imported.</summary>
+    string? Mode = null);
 
 public interface ITournamentReadStore
 {
@@ -37,7 +39,8 @@ public interface ITournamentReadStore
 
 /// <param name="To">Exclusive upper bound.</param>
 /// <param name="Search">Part of the tournament name, case-insensitive; totals follow the search.</param>
-public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinBuyIn, decimal? MaxBuyIn, int Page, int PageSize, string? Search = null);
+/// <param name="Mode">"sng" or "mtt" to restrict to one format family; null means all.</param>
+public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinBuyIn, decimal? MaxBuyIn, int Page, int PageSize, string? Search = null, string? Mode = null);
 
 /// <param name="BuyIn">Price of one entry, fee included; null when unknown.</param>
 /// <param name="FinishPosition">Position of the last entry.</param>
@@ -69,6 +72,9 @@ public sealed class TournamentListService(ITournamentReadStore store)
 
         var facts = await store.ListAsync(userId, filter.From, filter.To, cancellationToken);
         var items = facts
+            .Where(f => filter.Mode is null
+                || (filter.Mode == "sng" && f.Mode == "sng")
+                || (filter.Mode == "mtt" && (f.Mode == "tt" || f.Mode == "mtt")))
             .Select(ToItem)
             .Where(i => filter.MinBuyIn is null || (i.BuyIn is { } b && b >= filter.MinBuyIn))
             .Where(i => filter.MaxBuyIn is null || (i.BuyIn is { } b && b <= filter.MaxBuyIn))
