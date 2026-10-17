@@ -6,6 +6,7 @@ using Npgsql;
 using NpgsqlTypes;
 using PokerCoach.Application.Import;
 using PokerCoach.Domain.Poker;
+using PokerCoach.Domain.Tournaments;
 using PokerCoach.HandHistories;
 using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Infrastructure.Poker;
@@ -315,16 +316,17 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         const string TournamentSql = """
             INSERT INTO poker.tournaments
                 (id, poker_account_id, external_tournament_id, name, currency, fee, prize_pool_buy_in, bounty_buy_in,
-                 rebuy_cost, addon_cost, registered_players, mode, tournament_type, speed, flight_id, prize_pool, started_at,
-                 summary_imported_at, created_at)
+                 rebuy_cost, addon_cost, registered_players, mode, sub_format, tournament_type, speed, flight_id, prize_pool,
+                 started_at, summary_imported_at, created_at)
             VALUES (@id, @poker_account_id, @external_id, @name, @currency, @fee, @prize_pool_buy_in, @bounty_buy_in,
-                 @rebuy_cost, @addon_cost, @registered_players, @mode, @tournament_type, @speed, @flight_id, @prize_pool,
-                 @started_at, @now, @now)
+                 @rebuy_cost, @addon_cost, @registered_players, @mode, @sub_format, @tournament_type, @speed, @flight_id,
+                 @prize_pool, @started_at, @now, @now)
             ON CONFLICT (poker_account_id, external_tournament_id) DO UPDATE
                 SET name = EXCLUDED.name, currency = EXCLUDED.currency, fee = EXCLUDED.fee,
                     prize_pool_buy_in = EXCLUDED.prize_pool_buy_in, bounty_buy_in = EXCLUDED.bounty_buy_in,
                     rebuy_cost = EXCLUDED.rebuy_cost, addon_cost = EXCLUDED.addon_cost,
                     registered_players = EXCLUDED.registered_players, mode = EXCLUDED.mode,
+                    sub_format = EXCLUDED.sub_format,
                     tournament_type = EXCLUDED.tournament_type, speed = EXCLUDED.speed, flight_id = EXCLUDED.flight_id,
                     prize_pool = EXCLUDED.prize_pool, started_at = EXCLUDED.started_at,
                     summary_imported_at = EXCLUDED.summary_imported_at
@@ -356,6 +358,14 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
             Add(command, "addon_cost", NpgsqlDbType.Numeric, summary.AddonCost);
             Add(command, "registered_players", NpgsqlDbType.Integer, summary.RegisteredPlayers);
             Add(command, "mode", NpgsqlDbType.Text, summary.Mode);
+            var subFormatValue = summary.Mode switch
+            {
+                "sng" => (int?)TournamentSubFormat.Sng,
+                "mtt" => (int?)TournamentSubFormat.RebuyMtt,
+                not null => (int?)TournamentSubFormat.Mtt,
+                _ => null,
+            };
+            Add(command, "sub_format", NpgsqlDbType.Integer, subFormatValue);
             Add(command, "tournament_type", NpgsqlDbType.Text, summary.Type);
             Add(command, "speed", NpgsqlDbType.Text, summary.Speed);
             Add(command, "flight_id", NpgsqlDbType.Text, summary.FlightId);
