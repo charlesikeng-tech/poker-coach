@@ -85,6 +85,8 @@ export class LineChart {
     return { x, y, ticks, xMin, xMax, plotWidth, plotHeight };
   });
 
+  protected readonly pathEntry = computed(() => [this.path()]);
+
   protected readonly path = computed(() => {
     const { x, y } = this.scales();
     return this.points()

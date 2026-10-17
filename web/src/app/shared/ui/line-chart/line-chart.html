@@ -55,7 +55,7 @@
   @if (referencePath()) {
     <path class="reference" [attr.d]="referencePath()" />
   }
-  @for (d of [path()]; track d) {
+  @for (d of pathEntry(); track d) {
     <path class="area" [attr.d]="area()" [attr.fill]="'url(#' + gradientId + ')'" />
     <path class="line" [attr.d]="d" pathLength="1" />
   }

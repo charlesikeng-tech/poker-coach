@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
+import { switchMap } from 'rxjs';
 
 /**
  * Route `title` values are translation keys. The document title is re-translated when the language
@@ -15,7 +16,10 @@ export class TranslatedTitleStrategy extends TitleStrategy {
 
   constructor() {
     super();
-    this.transloco.langChanges$.subscribe(() => this.render());
+    // langChanges$ fires before the file is loaded; selectTranslation waits for it.
+    this.transloco.langChanges$
+      .pipe(switchMap((lang) => this.transloco.selectTranslation(lang)))
+      .subscribe(() => this.render());
   }
 
   override updateTitle(snapshot: RouterStateSnapshot): void {
