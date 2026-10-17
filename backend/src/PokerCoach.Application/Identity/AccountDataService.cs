@@ -5,8 +5,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using PokerCoach.Application.Bankroll;
 using PokerCoach.Application.Progress;
-using PokerCoach.Domain.Poker;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Identity;
 
@@ -82,7 +83,10 @@ public sealed class AccountDataService(
         var movements = await bankroll.ListMovementsAsync(userId, cancellationToken);
         var tournamentPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.Tournament, null, int.MaxValue, cancellationToken);
         var cashPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.CashGame, null, int.MaxValue, cancellationToken);
-        var weeklyPlans = tournamentPlans.Concat(cashPlans).OrderByDescending(p => p.WeekStart).ToList();
+        var mttPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.Tournament, TournamentSubFormat.Mtt, int.MaxValue, cancellationToken);
+        var rebuyMttPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.Tournament, TournamentSubFormat.RebuyMtt, int.MaxValue, cancellationToken);
+        var sngPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.Tournament, TournamentSubFormat.Sng, int.MaxValue, cancellationToken);
+        var weeklyPlans = tournamentPlans.Concat(cashPlans).Concat(mttPlans).Concat(rebuyMttPlans).Concat(sngPlans).OrderByDescending(p => p.WeekStart).ToList();
         var page = await tournaments.ListAsync(userId, new TournamentFilter(null, null, null, null, 1, int.MaxValue), cancellationToken);
 
         using var zip = new ZipArchive(destination, ZipArchiveMode.Create, leaveOpen: true);
