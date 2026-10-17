@@ -111,17 +111,17 @@ const SUITS: Record<string, { symbol: string; name: string }> = {
       border: 1px solid rgb(233 185 73 / 0.4);
     }
     .back__mark {
-      width: 42%;
-      height: 42%;
-      opacity: 0.6;
+      width: 58%;
+      aspect-ratio: 1;
+      flex: none;
+      opacity: 0.8;
     }
     .back__mark rect {
-      fill: rgb(233 185 73 / 1);
+      fill: #e9b949;
     }
     :host(.small) .back__mark {
-      width: 38%;
-      height: 38%;
-      opacity: 0.5;
+      width: 52%;
+      opacity: 0.75;
     }
     .flip-in {
       animation: flip-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
