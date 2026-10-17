@@ -19,6 +19,7 @@ import {
   Plan,
 } from '../../core/billing/billing.service';
 import { Button } from '../../shared/ui/button/button';
+import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 
@@ -35,7 +36,7 @@ const ROWS = ['history', 'credits', 'leaks', 'ranges', 'training', 'reports'] as
  */
 @Component({
   selector: 'app-subscription-page',
-  imports: [TranslocoDirective, PageHeader, Button, Icon],
+  imports: [TranslocoDirective, PageHeader, Button, Icon, Spotlight],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './subscription-page.html',
@@ -64,8 +65,9 @@ export class SubscriptionPage implements OnDestroy {
   });
   /** Price in euros (tax included) per pack. */
   protected readonly topUpPacks = [
-    { credits: 50 as const, price: '4,99 €' },
-    { credits: 120 as const, price: '9,99 €' },
+    { credits: 50 as const, price: '4,99 €', key: 'recharge' as const },
+    { credits: 120 as const, price: '9,99 €', key: 'session' as const },
+    { credits: 250 as const, price: '19,99 €', key: 'series' as const },
   ];
   /** A live Stripe subscription: offer changes go through the portal, not a second checkout. */
   protected readonly subscribed = computed(() => this.summary()?.tier != null);
@@ -140,7 +142,7 @@ export class SubscriptionPage implements OnDestroy {
     await this.run(() => this.billing.portal());
   }
 
-  protected async buyTopUp(credits: 50 | 120): Promise<void> {
+  protected async buyTopUp(credits: 50 | 120 | 250): Promise<void> {
     await this.run(() => this.billing.topUp(credits));
   }
 

@@ -122,18 +122,7 @@ export class StatisticsPage {
   protected readonly icons = { CircleAlert, LoaderCircle, Upload };
   protected readonly accounts = signal<readonly PokerAccount[]>([]);
   protected readonly room = signal<string | null>(null);
-  protected readonly rooms = computed(() => {
-    if (this.gameTypeService.current() === 'cashGame') {
-      return [...(this.report()?.rooms ?? [])].sort();
-    }
-    return [
-      ...new Set(
-        this.accounts()
-          .filter((a) => a.confirmedAt)
-          .map((a) => a.room),
-      ),
-    ].sort();
-  });
+  protected readonly rooms = computed(() => [...(this.report()?.rooms ?? [])].sort());
   protected readonly roomName = roomName;
 
   /**

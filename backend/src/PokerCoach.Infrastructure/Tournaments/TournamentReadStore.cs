@@ -14,6 +14,20 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
     public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null) =>
         LoadAsync(userId, from, to, null, cancellationToken, room);
 
+    public async Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken)
+    {
+        var q = db.Set<TournamentRecord>().AsNoTracking()
+            .Join(db.Set<PokerAccountRecord>(), t => t.PokerAccountId, a => a.Id, (t, a) => new { t, a })
+            .Where(x => x.a.UserId == userId && x.a.ConfirmedAt != null);
+
+        if (from is { } lower)
+            q = q.Where(x => (x.t.StartedAt ?? x.t.FirstHandAt) >= lower);
+        if (to is { } upper)
+            q = q.Where(x => (x.t.StartedAt ?? x.t.FirstHandAt) < upper);
+
+        return await q.Select(x => x.a.Room).Distinct().ToListAsync(cancellationToken);
+    }
+
     public async Task<TournamentFacts?> FindAsync(Guid userId, Guid tournamentId, CancellationToken cancellationToken) =>
         (await LoadAsync(userId, null, null, tournamentId, cancellationToken)).SingleOrDefault();
 

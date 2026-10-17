@@ -48,16 +48,21 @@ public sealed class StripeTopUpPrices
     /// <summary>Price ID for the "Session" pack: 120 credits, 9,99 €.</summary>
     public string? Session { get; set; }
 
+    /// <summary>Price ID for the "Series" pack: 250 credits, 19,99 €.</summary>
+    public string? Series { get; set; }
+
     /// <summary>Credits for a given price ID; null if not a top-up price.</summary>
     public int? CreditsOf(string? priceId) =>
         !string.IsNullOrEmpty(priceId) && priceId == Recharge ? 50
         : !string.IsNullOrEmpty(priceId) && priceId == Session ? 120
+        : !string.IsNullOrEmpty(priceId) && priceId == Series ? 250
         : null;
 
     public string? For(int credits) => credits switch
     {
         50 => Recharge,
         120 => Session,
+        250 => Series,
         _ => null,
     };
 }

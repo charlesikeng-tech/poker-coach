@@ -133,7 +133,8 @@ public sealed record PerformanceResponse(
     IReadOnlyList<PerformanceGroupResponse> BySpeed,
     IReadOnlyList<PerformanceGroupResponse> ByMonth,
     IReadOnlyList<PerformanceGroupResponse> ByDayOfWeek,
-    IReadOnlyList<PerformanceGroupResponse> ByTimeSlot);
+    IReadOnlyList<PerformanceGroupResponse> ByTimeSlot,
+    IReadOnlyList<PokerRoom> Rooms);
 
 public static class TournamentEndpoints
 {
@@ -294,7 +295,8 @@ public static class TournamentEndpoints
             Groups(report.BySpeed),
             Groups(report.ByMonth),
             Groups(report.ByDayOfWeek),
-            Groups(report.ByTimeSlot)));
+            Groups(report.ByTimeSlot),
+            report.Rooms));
     }
 
     private static List<PerformanceGroupResponse> Groups(IReadOnlyList<PerformanceGroup> groups) =>

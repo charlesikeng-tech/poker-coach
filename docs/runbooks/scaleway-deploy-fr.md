@@ -139,6 +139,9 @@ ACME_EMAIL=contact@nutsiq.com
 | `Billing__Stripe__Prices__Pro__Yearly` | ID price Stripe |
 | `Billing__Stripe__Prices__Elite__Monthly` | ID price Stripe |
 | `Billing__Stripe__Prices__Elite__Yearly` | ID price Stripe |
+| `Billing__Stripe__TopUpPacks__Recharge` | ID price Stripe one-time 4,99 € (50 crédits) |
+| `Billing__Stripe__TopUpPacks__Session` | ID price Stripe one-time 9,99 € (120 crédits) |
+| `Billing__Stripe__TopUpPacks__Series` | ID price Stripe one-time 19,99 € (250 crédits) |
 | `Admin__Emails__0` | `charlesikeng@gmail.com` |
 
 Utiliser des clés **nouvelles pour la production** — jamais celles utilisées en local.

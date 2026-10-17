@@ -1822,9 +1822,32 @@
         "elite": "Elite"
       },
       "topup": {
+        "sectionTitle": "Nos Packs",
         "balance": "{{count}} crédit(s) achetés disponibles",
-        "hint": "Les crédits achetés ne expirent pas. Ils s'utilisent après avoir épuisé ton quota mensuel.",
-        "buy": "+{{credits}} crédits — {{price}}"
+        "cta": "Acheter des crédits",
+        "perk": {
+          "oneTime": "Achat unique",
+          "noExpiry": "Crédits sans expiration",
+          "noCommitment": "Aucun engagement"
+        },
+        "recharge": {
+          "label": "Pack Recharge",
+          "title": "Besoin de crédits sans abonnement ?",
+          "chip1": "50 crédits IA",
+          "chip2": "≈ 50 explications de leak"
+        },
+        "session": {
+          "label": "Pack Session",
+          "title": "Prêt à analyser plusieurs sessions ?",
+          "chip1": "120 crédits IA",
+          "chip2": "≈ 24 débriefs de session"
+        },
+        "series": {
+          "label": "Pack Séries",
+          "title": "Analyse toute une série de tournois.",
+          "chip1": "250 crédits IA",
+          "chip2": "≈ 50 débriefs de session"
+        }
       }
     },
     "admin": {

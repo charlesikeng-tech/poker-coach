@@ -39,7 +39,7 @@ public sealed record OfferResponse(Plan Plan, int? HistoryDays, int MonthlyCredi
 /// <param name="Plan">Pro or Elite.</param>
 public sealed record CheckoutRequestBody(Plan? Plan, BillingInterval? Interval);
 
-/// <param name="Credits">50 (Recharge) or 120 (Session).</param>
+/// <param name="Credits">50 (Recharge), 120 (Session) or 250 (Series).</param>
 public sealed record TopUpRequestBody(int Credits);
 
 /// <summary>A Stripe-hosted page to send the browser to.</summary>
@@ -135,9 +135,9 @@ public static partial class BillingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        if (request.Credits is not (50 or 120))
+        if (request.Credits is not (50 or 120 or 250))
         {
-            return ApiProblems.Validation("credits", "Must be 50 or 120.");
+            return ApiProblems.Validation("credits", "Must be 50, 120 or 250.");
         }
 
         var language = (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage ?? UserLanguages.Default;

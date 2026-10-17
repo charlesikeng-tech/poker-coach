@@ -1822,9 +1822,32 @@
         "elite": "Elite"
       },
       "topup": {
+        "sectionTitle": "Nuestros Packs",
         "balance": "{{count}} crédito(s) comprado(s) disponible(s)",
-        "hint": "Los créditos comprados no caducan. Se usan después de agotar tu cuota mensual.",
-        "buy": "+{{credits}} créditos — {{price}}"
+        "cta": "Comprar créditos",
+        "perk": {
+          "oneTime": "Compra única",
+          "noExpiry": "Créditos sin caducidad",
+          "noCommitment": "Sin compromiso"
+        },
+        "recharge": {
+          "label": "Pack Recarga",
+          "title": "¿Necesitas créditos sin suscripción?",
+          "chip1": "50 créditos IA",
+          "chip2": "≈ 50 explicaciones de leak"
+        },
+        "session": {
+          "label": "Pack Sesión",
+          "title": "¿Listo para analizar varias sesiones?",
+          "chip1": "120 créditos IA",
+          "chip2": "≈ 24 debriefs de sesión"
+        },
+        "series": {
+          "label": "Pack Series",
+          "title": "Analiza toda una serie de torneos.",
+          "chip1": "250 créditos IA",
+          "chip2": "≈ 50 debriefs de sesión"
+        }
       }
     },
     "admin": {

@@ -28,6 +28,8 @@ export interface PerformanceReport {
   readonly byMonth: readonly PerformanceGroup[];
   readonly byDayOfWeek: readonly PerformanceGroup[];
   readonly byTimeSlot: readonly PerformanceGroup[];
+  /** Rooms that have tournament data in the current period. */
+  readonly rooms: readonly string[];
 }
 
 export interface CashPerformanceFigures {

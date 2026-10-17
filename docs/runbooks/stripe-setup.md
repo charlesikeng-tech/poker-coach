@@ -5,6 +5,8 @@ redo it in **Live** mode at launch: test and live objects (prices, portal, webho
 
 ## 1. Products and prices
 
+### 1a. Subscription plans
+
 Product catalogue → two products, two recurring prices each:
 
 | Product | Monthly | Yearly |
@@ -13,6 +15,24 @@ Product catalogue → two products, two recurring prices each:
 | NutsIQ Elite | 29,90 € | 299 € |
 
 Keep the four **price ids** (`price_…`): the app derives the offer from them.
+
+### 1b. Credit top-up packs
+
+Two more products, **one-time** prices (not recurring):
+
+| Product | Price | Credits |
+|---|---|---|
+| NutsIQ Recharge | 4,99 € | 50 |
+| NutsIQ Session | 9,99 € | 120 |
+| NutsIQ Series | 19,99 € | 250 |
+
+Steps:
+1. Product catalogue → **Add product** → name "NutsIQ Recharge", one-time, 4,99 €. Copy the price id (`price_…`).
+2. Repeat for "NutsIQ Session" at 9,99 €. Copy that price id.
+3. Repeat for "NutsIQ Series" at 19,99 €. Copy that price id.
+
+> The credits value is stored in the Checkout **session metadata**, not in Stripe. The app matches
+> the price id to 50 or 120 credits via `Billing:Stripe:TopUpPacks:Recharge` / `Session`.
 
 ## 2. Customer portal
 
@@ -47,6 +67,9 @@ Subscriptions read. The full secret key is only for the Stripe CLI, if `stripe l
 | `Billing:Stripe:WebhookSecret` | `STRIPE_WEBHOOK_SECRET` |
 | `Billing:Stripe:Prices:Pro:Monthly` / `Yearly` | `STRIPE_PRICE_PRO_MONTHLY` / `STRIPE_PRICE_PRO_YEARLY` |
 | `Billing:Stripe:Prices:Elite:Monthly` / `Yearly` | `STRIPE_PRICE_ELITE_MONTHLY` / `STRIPE_PRICE_ELITE_YEARLY` |
+| `Billing:Stripe:TopUpPacks:Recharge` | `STRIPE_PRICE_TOPUP_RECHARGE` |
+| `Billing:Stripe:TopUpPacks:Session` | `STRIPE_PRICE_TOPUP_SESSION` |
+| `Billing:Stripe:TopUpPacks:Series` | `STRIPE_PRICE_TOPUP_SERIES` |
 
 Locally: `dotnet user-secrets set "<setting>" "<value>" --project src/PokerCoach.Api`. Without a secret key,
 billing is off and every account has Elite.
@@ -67,6 +90,9 @@ account that is **not** an administrator (administrators always have Elite):
 2. "Passer à Elite" → Stripe's confirmation page with a prorated amount → Elite.
 3. Cancel in the portal → still active until the end of the period.
 4. Card `4000 0000 0000 0341` → renewal fails → "paiement en retard".
+5. **Top-up**: once the monthly credits run out, click "Recharge" or "Session" on the subscription page →
+   Stripe Checkout (one-time) → back on the app → balance updated, CLI shows `[200]` on the webhook.
+   Clicking a second time with the same Stripe event ID must **not** double the balance (idempotency check).
 
 Troubleshooting: `[400]` = wrong `whsec`; CLI `403 Permission denied` = the CLI uses a key without rights
 (`stripe logout --all && stripe login`); several subscriptions on one customer = cancel the extra ones

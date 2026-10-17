@@ -79,19 +79,14 @@ export class PerformancePage {
   protected readonly room = signal<string | null>(null);
   /** Full list of cash rooms, updated only from unfiltered loads so it stays stable when a room is selected. */
   private readonly cashRoomsAll = signal<readonly string[]>([]);
-  /** Rooms with data for the active game type: cash rooms from the full list, tournament rooms from accounts. */
-  protected readonly rooms = computed(() => {
-    if (this.gameTypeService.current() === 'cashGame') {
-      return [...this.cashRoomsAll()].sort();
-    }
-    return [
-      ...new Set(
-        this.accounts()
-          .filter((a) => a.confirmedAt)
-          .map((a) => a.room),
-      ),
-    ].sort();
-  });
+  /** Full list of tournament rooms, updated only from unfiltered loads so it stays stable when a room is selected. */
+  private readonly tournamentRoomsAll = signal<readonly string[]>([]);
+  /** Rooms with data for the active game type, from the last unfiltered load. */
+  protected readonly rooms = computed(() =>
+    this.gameTypeService.current() === 'cashGame'
+      ? [...this.cashRoomsAll()].sort()
+      : [...this.tournamentRoomsAll()].sort(),
+  );
   protected readonly roomName = roomName;
 
   protected readonly cashDebriefPanel = viewChild<CashDebriefPanel>('cashDebriefPanel');
@@ -342,6 +337,9 @@ export class PerformancePage {
       );
       if (request === this.request) {
         this.report.set(report);
+        if (room === null) {
+          this.tournamentRoomsAll.set(report.rooms);
+        }
         this.state.set('ready');
       }
     } catch {

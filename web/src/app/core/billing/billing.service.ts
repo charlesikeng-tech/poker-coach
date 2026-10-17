@@ -139,7 +139,7 @@ export class BillingService {
   }
 
   /** One-time purchase of a credit pack (50 or 120 credits): sends the browser to Stripe Checkout. */
-  async topUp(credits: 50 | 120): Promise<string> {
+  async topUp(credits: 50 | 120 | 250): Promise<string> {
     return this.redirect(this.http.post<{ url: string }>('/api/billing/topup', { credits }));
   }
 

@@ -30,6 +30,9 @@ public interface ITournamentReadStore
     /// not count), started within the optional bounds, most recent first.
     /// </summary>
     Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null);
+
+    /// <summary>Distinct rooms that have tournaments in the period (room filter not applied, returns all rooms with data).</summary>
+    Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken);
 }
 
 /// <param name="To">Exclusive upper bound.</param>

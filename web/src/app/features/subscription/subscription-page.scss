@@ -22,11 +22,11 @@ h3 {
 }
 
 h2 {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-2xl);
 }
 
 h3 {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
 }
 
 .current {
@@ -84,11 +84,16 @@ h3 {
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: var(--space-5);
   align-items: stretch;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
 .plan {
   gap: var(--space-2);
+  transition: transform var(--motion-base) var(--easing-emphasized);
+
+  &:hover {
+    transform: translateY(-3px);
+  }
 
   button[appButton] {
     align-self: stretch;
@@ -262,6 +267,97 @@ h3 {
 .hint {
   color: var(--text-muted);
   font-size: var(--font-size-sm);
+}
+
+.topup-heading {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.topup__balance {
+  margin-bottom: var(--space-3);
+}
+
+.topup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.topup-pack {
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-start;
+  transition: transform var(--motion-base) var(--easing-emphasized);
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
+
+.topup-pack__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-self: stretch;
+}
+
+.topup-pack__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  padding: 2px var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.topup-pack__cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-self: stretch;
+  margin-top: auto;
+
+  button[appButton] {
+    align-self: stretch;
+  }
+}
+
+.topup-pack__price {
+  font-family: var(--font-display);
+  font-size: var(--font-size-metric);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.topup__perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-sm);
+
+  li {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    color: var(--text-secondary);
+  }
+
+  app-icon {
+    --icon-size: 1rem;
+    color: var(--accent-primary);
+  }
 }
 
 .spin {

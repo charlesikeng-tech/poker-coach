@@ -1822,9 +1822,32 @@
         "elite": "Elite"
       },
       "topup": {
+        "sectionTitle": "Our Packs",
         "balance": "{{count}} purchased credit(s) available",
-        "hint": "Purchased credits never expire. They are used after your monthly plan allowance runs out.",
-        "buy": "+{{credits}} credits — {{price}}"
+        "cta": "Buy credits",
+        "perk": {
+          "oneTime": "One-time purchase",
+          "noExpiry": "Credits never expire",
+          "noCommitment": "No commitment"
+        },
+        "recharge": {
+          "label": "Recharge Pack",
+          "title": "Need credits without a subscription?",
+          "chip1": "50 AI credits",
+          "chip2": "≈ 50 leak explanations"
+        },
+        "session": {
+          "label": "Session Pack",
+          "title": "Ready to analyse multiple sessions?",
+          "chip1": "120 AI credits",
+          "chip2": "≈ 24 session debriefs"
+        },
+        "series": {
+          "label": "Series Pack",
+          "title": "Analyse a full tournament series.",
+          "chip1": "250 AI credits",
+          "chip2": "≈ 50 session debriefs"
+        }
       }
     },
     "admin": {

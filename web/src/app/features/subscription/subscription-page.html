@@ -67,29 +67,6 @@
           </div>
           <p class="hint">{{ t('credits.costs') }}</p>
         </div>
-
-        @if (s.billingEnabled && s.source !== 'admin') {
-          <div class="topup">
-            <div class="topup__head">
-              <span class="topup__balance">
-                {{ t('topup.balance', { count: s.purchasedCreditsBalance }) }}
-              </span>
-              <p class="hint">{{ t('topup.hint') }}</p>
-            </div>
-            <div class="topup__packs">
-              @for (pack of topUpPacks; track pack.credits) {
-                <button
-                  appButton
-                  variant="secondary"
-                  [disabled]="busy()"
-                  (click)="buyTopUp(pack.credits)"
-                >
-                  {{ t('topup.buy', { credits: pack.credits, price: pack.price }) }}
-                </button>
-              }
-            </div>
-          </div>
-        }
       }
 
       @if (s.canManage) {
@@ -126,6 +103,7 @@
       <div class="plans">
         @for (plan of plans; track plan) {
           <section
+            appSpotlight
             class="card glass plan"
             [class.plan--featured]="plan === 'pro'"
             [class.plan--current]="plan === s.plan"
@@ -209,6 +187,45 @@
         }
       </div>
       <p class="hint">{{ t('offers.hint') }}</p>
+
+      <h2 class="topup-heading">{{ t('topup.sectionTitle') }}</h2>
+
+      @if (s.purchasedCreditsBalance > 0) {
+        <p class="topup__balance hint">
+          {{ t('topup.balance', { count: s.purchasedCreditsBalance }) }}
+        </p>
+      }
+
+      <div class="topup">
+        @for (pack of topUpPacks; track pack.credits) {
+          <article appSpotlight class="topup-pack card glass">
+            <div class="topup-pack__info">
+              <span class="badge">{{ t('topup.' + pack.key + '.label') }}</span>
+              <h3>{{ t('topup.' + pack.key + '.title') }}</h3>
+              <div class="topup-pack__chips">
+                <span class="chip">{{ t('topup.' + pack.key + '.chip1') }}</span>
+                <span class="chip">{{ t('topup.' + pack.key + '.chip2') }}</span>
+              </div>
+            </div>
+            <div class="topup-pack__cta">
+              <p class="topup-pack__price">{{ pack.price }}</p>
+              <button
+                appButton
+                variant="primary"
+                [disabled]="busy()"
+                (click)="buyTopUp(pack.credits)"
+              >
+                {{ t('topup.cta') }}
+              </button>
+            </div>
+          </article>
+        }
+        <ul class="topup__perks">
+          <li><app-icon [icon]="icons.Check" />{{ t('topup.perk.oneTime') }}</li>
+          <li><app-icon [icon]="icons.Check" />{{ t('topup.perk.noExpiry') }}</li>
+          <li><app-icon [icon]="icons.Check" />{{ t('topup.perk.noCommitment') }}</li>
+        </ul>
+      </div>
     }
 
     @if (error(); as code) {

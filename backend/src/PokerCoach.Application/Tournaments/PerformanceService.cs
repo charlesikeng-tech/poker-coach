@@ -17,7 +17,8 @@ public sealed record PerformanceReport(
     IReadOnlyList<PerformanceGroup> BySpeed,
     IReadOnlyList<PerformanceGroup> ByMonth,
     IReadOnlyList<PerformanceGroup> ByDayOfWeek,
-    IReadOnlyList<PerformanceGroup> ByTimeSlot);
+    IReadOnlyList<PerformanceGroup> ByTimeSlot,
+    IReadOnlyList<PokerRoom> Rooms);
 
 /// <summary>Performance screen: cumulative profit and the same figures split by buy-in and format.</summary>
 public sealed class PerformanceService(ITournamentReadStore store)
@@ -42,6 +43,7 @@ public sealed class PerformanceService(ITournamentReadStore store)
         var zone = timeZone ?? TimeZoneInfo.Utc;
         var facts = await store.ListAsync(userId, from, to, cancellationToken, room);
         var rows = facts.Select(f => (Facts: f, Item: TournamentListService.ToItem(f))).ToList();
+        var rooms = await store.ListRoomsAsync(userId, from, to, cancellationToken);
 
         return new PerformanceReport(
             PerformanceFigures.Of(rows.Select(r => r.Item.Result).ToList()),
@@ -51,7 +53,8 @@ public sealed class PerformanceService(ITournamentReadStore store)
             Group(rows, r => r.Facts.Speed, null),
             GroupByMonth(rows, zone),
             GroupByDayOfWeek(rows, zone),
-            GroupByTimeSlot(rows, zone));
+            GroupByTimeSlot(rows, zone),
+            rooms);
     }
 
     private static readonly string[] DayOrder =
