@@ -64,14 +64,14 @@ public sealed class FeatureStoresTests(PostgresFixture fixture)
         await store.AddIfAbsentAsync(userId, first, Ct);
         await store.AddIfAbsentAsync(userId, first with { Priorities = [], CreatedAt = first.CreatedAt.AddHours(1) }, Ct);
 
-        var stored = await store.GetAsync(userId, week, GameType.Tournament, Ct);
+        var stored = await store.GetAsync(userId, week, GameType.Tournament, null, Ct);
         Assert.NotNull(stored);
         Assert.Equal(first.CreatedAt, stored.CreatedAt);
         Assert.Equal(priority, Assert.Single(stored.Priorities));
-        Assert.Equal(week, Assert.Single(await store.ListBeforeAsync(userId, week.AddDays(7), GameType.Tournament, 4, Ct)).WeekStart);
+        Assert.Equal(week, Assert.Single(await store.ListBeforeAsync(userId, week.AddDays(7), GameType.Tournament, null, 4, Ct)).WeekStart);
 
-        await store.DeleteAsync(userId, week, GameType.Tournament, Ct);
-        Assert.Null(await store.GetAsync(userId, week, GameType.Tournament, Ct));
+        await store.DeleteAsync(userId, week, GameType.Tournament, null, Ct);
+        Assert.Null(await store.GetAsync(userId, week, GameType.Tournament, null, Ct));
     }
 
     [Fact]

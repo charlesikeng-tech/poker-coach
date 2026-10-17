@@ -20,7 +20,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
 import { GameType } from '../statistics/statistics-api';
 import { positionShort } from '../training/spot-table';
-import { Priority, ProgressApi, ProgressReport } from './progress-api';
+import { Priority, ProgressApi, ProgressReport, TournamentSubFormat } from './progress-api';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 
 type LoadState = 'loading' | 'ready' | 'error';
@@ -49,6 +49,7 @@ export class ProgressPage {
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<ProgressReport | null>(null);
   protected readonly rebuilding = signal(false);
+  protected readonly subFormat = signal<TournamentSubFormat | undefined>(undefined);
   protected readonly icons = { CircleAlert, Dumbbell, MessageCircle, RefreshCw, Upload };
   protected readonly short = positionShort;
   protected readonly ringLength = RING_LENGTH;
@@ -75,8 +76,13 @@ export class ProgressPage {
   constructor() {
     effect(() => {
       this.gameTypeService.current();
+      this.subFormat();
       untracked(() => void this.load());
     });
+  }
+
+  protected selectSubFormat(value: TournamentSubFormat | undefined): void {
+    this.subFormat.set(value);
   }
 
   /** This week, then last week when it had a plan: what the coach can review. */
@@ -100,7 +106,7 @@ export class ProgressPage {
   protected async rebuild(): Promise<void> {
     this.rebuilding.set(true);
     try {
-      this.report.set(await this.api.rebuild(this.gameTypeService.current()));
+      this.report.set(await this.api.rebuild(this.gameTypeService.current(), this.subFormat()));
     } catch {
       this.state.set('error');
     } finally {
@@ -165,7 +171,7 @@ export class ProgressPage {
   private async load(): Promise<void> {
     this.state.set('loading');
     try {
-      this.report.set(await this.api.get(this.gameTypeService.current()));
+      this.report.set(await this.api.get(this.gameTypeService.current(), this.subFormat()));
       this.state.set('ready');
     } catch {
       this.state.set('error');

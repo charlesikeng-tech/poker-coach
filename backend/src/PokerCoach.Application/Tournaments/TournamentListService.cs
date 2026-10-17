@@ -23,7 +23,9 @@ public sealed record TournamentFacts(
     decimal? RebuyCost = null,
     decimal? AddonCost = null,
     /// <summary>Raw provider format: "sng", "tt" (MTT), "mtt" (rebuy MTT). Null when no summary imported.</summary>
-    string? Mode = null);
+    string? Mode = null,
+    /// <summary>Normalized sub-format, derived from Mode at import time. Null when no summary imported.</summary>
+    TournamentSubFormat? SubFormat = null);
 
 public interface ITournamentReadStore
 {

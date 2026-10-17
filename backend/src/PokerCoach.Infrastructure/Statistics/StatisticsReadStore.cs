@@ -296,6 +296,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
             join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
             from c in coverage.DefaultIfEmpty()
+            join t in db.Set<TournamentRecord>() on h.TournamentId equals t.Id into tournament
+            from t in tournament.DefaultIfEmpty()
             where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
                   && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
             select new FilteredHand
@@ -309,6 +311,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 Level = h.Level,
                 Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
                 Room = a.Room,
+                SubFormat = t != null ? t.SubFormat : null,
             };
 
         if (filter.From is { } from)
@@ -352,6 +355,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         else if (filter.Format == TableFormat.FullRing)
         {
             query = query.Where(x => x.MaxSeats > 6);
+        }
+
+        if (filter.SubFormat is { } subFormat)
+        {
+            query = query.Where(x => x.SubFormat == subFormat);
         }
 
         return query;
@@ -483,5 +491,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         public bool Complete { get; init; }
 
         public PokerRoom Room { get; init; }
+
+        public TournamentSubFormat? SubFormat { get; init; }
     }
 }

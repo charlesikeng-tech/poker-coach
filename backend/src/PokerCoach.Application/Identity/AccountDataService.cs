@@ -80,8 +80,8 @@ public sealed class AccountDataService(
 
         var settings = await bankroll.GetSettingsAsync(userId, cancellationToken);
         var movements = await bankroll.ListMovementsAsync(userId, cancellationToken);
-        var tournamentPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.Tournament, int.MaxValue, cancellationToken);
-        var cashPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.CashGame, int.MaxValue, cancellationToken);
+        var tournamentPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.Tournament, null, int.MaxValue, cancellationToken);
+        var cashPlans = await plans.ListBeforeAsync(userId, DateOnly.MaxValue, GameType.CashGame, null, int.MaxValue, cancellationToken);
         var weeklyPlans = tournamentPlans.Concat(cashPlans).OrderByDescending(p => p.WeekStart).ToList();
         var page = await tournaments.ListAsync(userId, new TournamentFilter(null, null, null, null, 1, int.MaxValue), cancellationToken);
 

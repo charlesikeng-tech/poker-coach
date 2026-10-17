@@ -2,6 +2,7 @@ using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Statistics;
 
@@ -14,6 +15,7 @@ namespace PokerCoach.Application.Statistics;
 /// <param name="Phase">Only hands of that tournament phase (by blind level); null: all.</param>
 /// <param name="GameType">Tournament or CashGame; null defaults to Tournament.</param>
 /// <param name="Room">Only hands from accounts of this room; null: all rooms.</param>
+/// <param name="SubFormat">Only hands of tournaments with this sub-format; null: all sub-formats.</param>
 public sealed record StatisticsFilter(
     DateTimeOffset? From,
     DateTimeOffset? To,
@@ -23,7 +25,8 @@ public sealed record StatisticsFilter(
     TableFormat? Format = null,
     TournamentPhase? Phase = null,
     GameType? GameType = null,
-    PokerRoom? Room = null);
+    PokerRoom? Room = null,
+    TournamentSubFormat? SubFormat = null);
 
 /// <summary>Analysed hands per table format, within a filter (its own format ignored).</summary>
 public sealed record FormatCounts(int SixMax, int FullRing)

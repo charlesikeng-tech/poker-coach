@@ -31,10 +31,14 @@ export interface Priority {
   } | null;
 }
 
+export type TournamentSubFormat = 'mtt' | 'rebuyMtt' | 'sng';
+
 export interface Week {
   /** Monday (UTC), "2026-10-05". */
   readonly weekStart: string;
   readonly gameType: GameType;
+  /** Null when the plan covers all tournament sub-formats. */
+  readonly subFormat: TournamentSubFormat | null;
   readonly format: TableFormat;
   readonly referenceVersion: number;
   readonly createdAt: string;
@@ -59,18 +63,27 @@ export interface ProgressReport {
 export class ProgressApi {
   private readonly http = inject(HttpClient);
 
-  get(gameType: GameType = 'tournament'): Promise<ProgressReport> {
+  get(gameType: GameType = 'tournament', subFormat?: TournamentSubFormat): Promise<ProgressReport> {
     let params = new HttpParams();
     if (gameType !== 'tournament') {
       params = params.set('gameType', gameType);
     }
+    if (subFormat) {
+      params = params.set('subFormat', subFormat);
+    }
     return firstValueFrom(this.http.get<ProgressReport>('/api/progress', { params }));
   }
 
-  rebuild(gameType: GameType = 'tournament'): Promise<ProgressReport> {
+  rebuild(
+    gameType: GameType = 'tournament',
+    subFormat?: TournamentSubFormat,
+  ): Promise<ProgressReport> {
     let params = new HttpParams();
     if (gameType !== 'tournament') {
       params = params.set('gameType', gameType);
+    }
+    if (subFormat) {
+      params = params.set('subFormat', subFormat);
     }
     return firstValueFrom(
       this.http.post<ProgressReport>('/api/progress/plan/rebuild', {}, { params }),

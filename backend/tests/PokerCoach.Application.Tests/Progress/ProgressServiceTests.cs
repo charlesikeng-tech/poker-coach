@@ -8,6 +8,7 @@ using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Progress;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Tests.Progress;
 
@@ -100,30 +101,30 @@ public sealed class ProgressServiceTests
 
     private sealed class MemoryPlans : IWeeklyPlanStore
     {
-        private readonly Dictionary<(Guid, DateOnly, GameType), WeeklyPlan> plans = [];
+        private readonly Dictionary<(Guid, DateOnly, GameType, TournamentSubFormat?), WeeklyPlan> plans = [];
 
         public int Count => plans.Count;
 
-        public void Add(Guid userId, WeeklyPlan plan) => plans[(userId, plan.WeekStart, plan.GameType)] = plan;
+        public void Add(Guid userId, WeeklyPlan plan) => plans[(userId, plan.WeekStart, plan.GameType, plan.SubFormat)] = plan;
 
-        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken) =>
-            Task.FromResult(plans.GetValueOrDefault((userId, weekStart, gameType)));
+        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken) =>
+            Task.FromResult(plans.GetValueOrDefault((userId, weekStart, gameType, subFormat)));
 
         public Task AddIfAbsentAsync(Guid userId, WeeklyPlan plan, CancellationToken cancellationToken)
         {
-            plans.TryAdd((userId, plan.WeekStart, plan.GameType), plan);
+            plans.TryAdd((userId, plan.WeekStart, plan.GameType, plan.SubFormat), plan);
             return Task.CompletedTask;
         }
 
-        public Task DeleteAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken)
+        public Task DeleteAsync(Guid userId, DateOnly weekStart, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken)
         {
-            plans.Remove((userId, weekStart, gameType));
+            plans.Remove((userId, weekStart, gameType, subFormat));
             return Task.CompletedTask;
         }
 
-        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, int count, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, TournamentSubFormat? subFormat, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<WeeklyPlan>>(plans
-                .Where(p => p.Key.Item1 == userId && p.Key.Item2 < before && p.Key.Item3 == gameType)
+                .Where(p => p.Key.Item1 == userId && p.Key.Item2 < before && p.Key.Item3 == gameType && p.Key.Item4 == subFormat)
                 .OrderByDescending(p => p.Key.Item2)
                 .Take(count)
                 .Select(p => p.Value)

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Domain.Poker;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Infrastructure.Coaching;
 

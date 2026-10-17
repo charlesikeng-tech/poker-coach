@@ -139,7 +139,14 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.Coverage is { } stored && stored.CoverageVersion == TournamentCoverage.Version ? stored.ToDomain() : null,
                 t.RebuyCost,
                 t.AddonCost,
-                t.Mode))
+                t.Mode,
+                SubFormat: t.Mode switch
+                {
+                    "sng" => TournamentSubFormat.Sng,
+                    "mtt" => TournamentSubFormat.RebuyMtt,
+                    not null => TournamentSubFormat.Mtt,
+                    _ => (TournamentSubFormat?)null,
+                }))
             .ToList();
     }
 }

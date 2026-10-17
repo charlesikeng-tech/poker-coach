@@ -130,13 +130,13 @@ public sealed class AccountDataServiceTests
 
     private sealed class NoPlans : IWeeklyPlanStore
     {
-        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken) => Task.FromResult<WeeklyPlan?>(null);
+        public Task<WeeklyPlan?> GetAsync(Guid userId, DateOnly weekStart, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken) => Task.FromResult<WeeklyPlan?>(null);
 
         public Task AddIfAbsentAsync(Guid userId, WeeklyPlan plan, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task DeleteAsync(Guid userId, DateOnly weekStart, GameType gameType, CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task DeleteAsync(Guid userId, DateOnly weekStart, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, int count, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, TournamentSubFormat? subFormat, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<WeeklyPlan>>([]);
     }
 }

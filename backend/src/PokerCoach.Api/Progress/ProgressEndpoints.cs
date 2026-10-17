@@ -8,6 +8,7 @@ using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Progress;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Api.Progress;
 
@@ -33,8 +34,9 @@ public sealed record PriorityResponse(
     PriorityDrillResponse? Drill);
 
 /// <param name="WeekStart">Monday of the week (UTC), "2026-10-05".</param>
+/// <param name="SubFormat">Null when the plan covers all tournament sub-formats.</param>
 /// <param name="Hands">Hands of that format played during the week (15+ BB).</param>
-public sealed record WeekResponse(DateOnly WeekStart, GameType GameType, TableFormat Format, int ReferenceVersion, DateTimeOffset CreatedAt, IReadOnlyList<PriorityResponse> Priorities, int Hands);
+public sealed record WeekResponse(DateOnly WeekStart, GameType GameType, TournamentSubFormat? SubFormat, TableFormat Format, int ReferenceVersion, DateTimeOffset CreatedAt, IReadOnlyList<PriorityResponse> Priorities, int Hands);
 
 /// <param name="Current">Null until there is enough recent history (minBaselineHands) to build a plan.</param>
 /// <param name="BaselineHands">Recent hands available when no plan could be built yet.</param>
@@ -66,6 +68,7 @@ public static class ProgressEndpoints
         HttpContext context,
         ProgressService progress,
         string? gameType,
+        string? subFormat,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -78,13 +81,19 @@ public static class ProgressEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
-        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, parsedGameType ?? GameType.Tournament, cancellationToken)));
+        if (!TournamentSubFormatQuery.TryParse(subFormat, out var parsedSubFormat))
+        {
+            return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
+        }
+
+        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, cancellationToken)));
     }
 
     private static async Task<Results<Ok<ProgressResponse>, ProblemHttpResult, UnauthorizedHttpResult>> RebuildAsync(
         HttpContext context,
         ProgressService progress,
         string? gameType,
+        string? subFormat,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -97,7 +106,12 @@ public static class ProgressEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
-        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, parsedGameType ?? GameType.Tournament, cancellationToken)));
+        if (!TournamentSubFormatQuery.TryParse(subFormat, out var parsedSubFormat))
+        {
+            return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
+        }
+
+        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, cancellationToken)));
     }
 
     private static ProgressResponse ToResponse(ProgressReport r) => new(
@@ -114,6 +128,7 @@ public static class ProgressEndpoints
     private static WeekResponse Week(WeekReport w) => new(
         w.Plan.WeekStart,
         w.Plan.GameType,
+        w.Plan.SubFormat,
         w.Plan.Format,
         w.Plan.ReferenceVersion,
         w.Plan.CreatedAt,

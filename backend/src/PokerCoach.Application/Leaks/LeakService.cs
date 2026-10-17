@@ -3,6 +3,7 @@ using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Leaks;
 
@@ -40,17 +41,17 @@ public sealed record LeakCounts(TableFormat Format, HeroStatCounts Overall, IRea
 
 public interface ILeakService
 {
-    Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null);
-    Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null);
+    Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
+    Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
 }
 
 public sealed class LeakService(IStatisticsReadStore store) : ILeakService
 {
     /// <summary>Counts of one format over a period (15+ BB hands), for measuring statistics outside a full analysis.</summary>
     /// <param name="to">Exclusive upper bound.</param>
-    public async Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null)
+    public async Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null)
     {
-        var filter = new StatisticsFilter(from, to, ReferenceRanges.MinStackBigBlinds, null, Format: format, GameType: gameType);
+        var filter = new StatisticsFilter(from, to, ReferenceRanges.MinStackBigBlinds, null, Format: format, GameType: gameType, SubFormat: subFormat);
         var groups = await store.CountByPositionAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
         var (overall, byPosition) = Aggregate(groups, format);
         return new LeakCounts(format, overall, byPosition);
@@ -64,9 +65,10 @@ public sealed class LeakService(IStatisticsReadStore store) : ILeakService
         DateTimeOffset? from,
         DateTimeOffset? to,
         CancellationToken cancellationToken,
-        GameType? gameType = null)
+        GameType? gameType = null,
+        TournamentSubFormat? subFormat = null)
     {
-        var filter = new StatisticsFilter(from, to, ReferenceRanges.MinStackBigBlinds, null, GameType: gameType);
+        var filter = new StatisticsFilter(from, to, ReferenceRanges.MinStackBigBlinds, null, GameType: gameType, SubFormat: subFormat);
         var formats = await store.CountByFormatAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
         var shown = format ?? formats.Busiest;
         filter = filter with { Format = shown };

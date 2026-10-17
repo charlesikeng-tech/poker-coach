@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
+using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Infrastructure.Poker;
 
@@ -60,6 +61,9 @@ internal sealed class TournamentRecord
     public int? RegisteredPlayers { get; set; }
 
     public string? Mode { get; set; }
+
+    /// <summary>Normalized sub-format, derived from Mode at import time. Null when no summary imported.</summary>
+    public TournamentSubFormat? SubFormat { get; set; }
 
     public string? TournamentType { get; set; }
 
@@ -187,6 +191,7 @@ internal sealed class TournamentConfiguration : IEntityTypeConfiguration<Tournam
         builder.Property(t => t.Name).HasMaxLength(200).IsRequired();
         builder.Property(t => t.Currency).HasMaxLength(8);
         builder.Property(t => t.Mode).HasMaxLength(32);
+        builder.Property(t => t.SubFormat).HasConversion<int?>();
         builder.Property(t => t.TournamentType).HasMaxLength(32);
         builder.Property(t => t.Speed).HasMaxLength(32);
         builder.Property(t => t.FlightId).HasMaxLength(64);

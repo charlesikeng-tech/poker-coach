@@ -1078,6 +1078,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("started_at");
 
+                    b.Property<int?>("SubFormat")
+                        .HasColumnType("integer")
+                        .HasColumnName("sub_format");
+
                     b.Property<DateTimeOffset?>("SummaryImportedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("summary_imported_at");
@@ -1111,6 +1115,12 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("game_type");
 
+                    b.Property<int>("SubFormatKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sub_format_key");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -1128,7 +1138,7 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("reference_version");
 
-                    b.HasKey("UserId", "WeekStart", "GameType")
+                    b.HasKey("UserId", "WeekStart", "GameType", "SubFormatKey")
                         .HasName("pk_weekly_plans");
 
                     b.ToTable("weekly_plans", "progress");
