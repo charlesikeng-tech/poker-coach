@@ -46,8 +46,25 @@ internal sealed partial class AiUsageLedger(PokerCoachDbContext db, ILogger<AiUs
                 return (failure, snapshot.SpendThisMonthUsd);
             }
 
+            // If this call overflows the plan's monthly limit, consume the overflow from the purchased balance.
+            var purchasedDebit = 0;
+            if (request.MonthlyCredits is { } limit)
+            {
+                var overflow = Math.Max(0, snapshot.CreditsUsedThisMonth + request.Credits - limit);
+                purchasedDebit = Math.Min(overflow, snapshot.PurchasedCreditsBalance);
+            }
+            record.PurchasedCreditsReserved = purchasedDebit;
+
             db.Entry(record).State = EntityState.Added;
             await db.SaveChangesAsync(ct);
+
+            if (purchasedDebit > 0)
+            {
+                await db.Database.ExecuteSqlAsync(
+                    $"UPDATE coaching.user_credit_balances SET balance = balance - {purchasedDebit} WHERE user_id = {request.UserId}",
+                    ct);
+            }
+
             await transaction.CommitAsync(ct);
             db.Entry(record).State = EntityState.Detached;
             return ((CoachingFailure?)null, snapshot.SpendThisMonthUsd);
@@ -104,6 +121,20 @@ internal sealed partial class AiUsageLedger(PokerCoachDbContext db, ILogger<AiUs
         if (updated == 0)
         {
             LogSettledTwice(logger, reservationId);
+        }
+
+        // A failed call returns the purchased credits it consumed back to the user's balance.
+        if (!settlement.Succeeded && updated > 0)
+        {
+            await db.Database.ExecuteSqlAsync($"""
+                UPDATE coaching.user_credit_balances ucb
+                SET balance = ucb.balance + mu.purchased_credits_reserved
+                FROM coaching.model_usage mu
+                WHERE mu.id = {reservationId}
+                  AND mu.purchased_credits_reserved > 0
+                  AND mu.user_id IS NOT NULL
+                  AND ucb.user_id = mu.user_id
+                """, cancellationToken);
         }
     }
 
@@ -179,8 +210,45 @@ internal sealed partial class AiUsageLedger(PokerCoachDbContext db, ILogger<AiUs
 
         // Abandoned reservations keep counting at their ceiling: whether the provider billed them is unknown.
         var spend = await month.SumAsync(u => u.Status == AiUsageStatus.Reserved ? u.ReservedCostUsd : u.CostUsd, cancellationToken);
-        return new AiUsageSnapshot(credits, today, thisMonth, spend);
+        var purchased = await db.Set<UserCreditBalanceRecord>()
+            .AsNoTracking()
+            .Where(b => b.UserId == request.UserId)
+            .Select(b => b.Balance)
+            .FirstOrDefaultAsync(cancellationToken);
+        return new AiUsageSnapshot(credits, today, thisMonth, spend, purchased);
     }
+
+    public async Task AddPurchasedCreditsAsync(Guid userId, int credits, string stripeEventId, CancellationToken cancellationToken)
+    {
+        var strategy = db.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async ct =>
+        {
+            await using var transaction = await db.Database.BeginTransactionAsync(ct);
+            var inserted = await db.Database.ExecuteSqlAsync($"""
+                INSERT INTO coaching.credit_purchases (stripe_event_id, user_id, credits, created_at)
+                VALUES ({stripeEventId}, {userId}, {credits}, {DateTimeOffset.UtcNow})
+                ON CONFLICT (stripe_event_id) DO NOTHING
+                """, ct);
+            if (inserted == 0)
+            {
+                return;
+            }
+
+            await db.Database.ExecuteSqlAsync($"""
+                INSERT INTO coaching.user_credit_balances (user_id, balance)
+                VALUES ({userId}, {credits})
+                ON CONFLICT (user_id) DO UPDATE SET balance = user_credit_balances.balance + {credits}
+                """, ct);
+            await transaction.CommitAsync(ct);
+        }, cancellationToken);
+    }
+
+    public Task<int> PurchasedCreditsBalanceAsync(Guid userId, CancellationToken cancellationToken) =>
+        db.Set<UserCreditBalanceRecord>()
+            .AsNoTracking()
+            .Where(b => b.UserId == userId)
+            .Select(b => b.Balance)
+            .FirstOrDefaultAsync(cancellationToken);
 
     [LoggerMessage(Level = LogLevel.Warning, Message = "AI budget alert: this month's spend reaches {SpendUsd} USD, past the {AlertUsd} USD alert threshold.")]
     private static partial void LogBudgetAlert(ILogger logger, decimal spendUsd, decimal alertUsd);

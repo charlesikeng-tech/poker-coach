@@ -128,6 +128,15 @@ internal sealed class FakeBillingGateway(bool configured = true) : IBillingGatew
         return Task.CompletedTask;
     }
 
+    public List<TopUpRequest> TopUps { get; } = [];
+
+    public Task<Uri> CreateTopUpCheckoutAsync(TopUpRequest request, CancellationToken cancellationToken)
+    {
+        Fail();
+        TopUps.Add(request);
+        return Task.FromResult(new Uri($"https://checkout.stripe.test/topup/{request.Credits}"));
+    }
+
     public BillingEvent? ReadWebhook(string payload, string? signatureHeader) =>
         signatureHeader == "valid" ? new BillingEvent("evt_1", "customer.subscription.updated", payload.Length == 0 ? null : payload) : null;
 

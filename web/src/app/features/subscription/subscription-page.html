@@ -67,6 +67,29 @@
           </div>
           <p class="hint">{{ t('credits.costs') }}</p>
         </div>
+
+        @if (s.billingEnabled && s.source !== 'admin') {
+          <div class="topup">
+            <div class="topup__head">
+              <span class="topup__balance">
+                {{ t('topup.balance', { count: s.purchasedCreditsBalance }) }}
+              </span>
+              <p class="hint">{{ t('topup.hint') }}</p>
+            </div>
+            <div class="topup__packs">
+              @for (pack of topUpPacks; track pack.credits) {
+                <button
+                  appButton
+                  variant="secondary"
+                  [disabled]="busy()"
+                  (click)="buyTopUp(pack.credits)"
+                >
+                  {{ t('topup.buy', { credits: pack.credits, price: pack.price }) }}
+                </button>
+              }
+            </div>
+          </div>
+        }
       }
 
       @if (s.canManage) {

@@ -23,6 +23,9 @@ public sealed class StripeOptions
     /// <summary>Price ids per paid offer (ADR-0016).</summary>
     public StripePlanPrices Prices { get; set; } = new();
 
+    /// <summary>Price ids for one-time credit top-up packs.</summary>
+    public StripeTopUpPrices TopUpPacks { get; set; } = new();
+
     public Uri BaseUrl { get; set; } = new("https://api.stripe.com/");
 
     /// <summary>Webhooks signed longer ago than this are refused (replay protection).</summary>
@@ -35,6 +38,28 @@ public sealed class StripePrices
     public string? Monthly { get; set; }
 
     public string? Yearly { get; set; }
+}
+
+public sealed class StripeTopUpPrices
+{
+    /// <summary>Price ID for the "Recharge" pack: 50 credits, 4,99 €.</summary>
+    public string? Recharge { get; set; }
+
+    /// <summary>Price ID for the "Session" pack: 120 credits, 9,99 €.</summary>
+    public string? Session { get; set; }
+
+    /// <summary>Credits for a given price ID; null if not a top-up price.</summary>
+    public int? CreditsOf(string? priceId) =>
+        !string.IsNullOrEmpty(priceId) && priceId == Recharge ? 50
+        : !string.IsNullOrEmpty(priceId) && priceId == Session ? 120
+        : null;
+
+    public string? For(int credits) => credits switch
+    {
+        50 => Recharge,
+        120 => Session,
+        _ => null,
+    };
 }
 
 public sealed class StripePlanPrices
@@ -159,6 +184,34 @@ internal sealed partial class StripeBillingGateway(
         return new Uri(json.RootElement.GetProperty("url").GetString()!);
     }
 
+    public async Task<Uri> CreateTopUpCheckoutAsync(TopUpRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var price = Settings.TopUpPacks.For(request.Credits);
+        if (string.IsNullOrWhiteSpace(price))
+        {
+            throw new BillingGatewayException($"No Stripe price configured for top-up pack of {request.Credits} credits.");
+        }
+
+        using var json = await SendAsync(
+            HttpMethod.Post,
+            "v1/checkout/sessions",
+            [
+                new("mode", "payment"),
+                new("client_reference_id", request.UserId.ToString()),
+                new("metadata[user_id]", request.UserId.ToString()),
+                new("metadata[credits]", request.Credits.ToString(System.Globalization.CultureInfo.InvariantCulture)),
+                new("line_items[0][price]", price),
+                new("line_items[0][quantity]", "1"),
+                new("locale", request.Language),
+                new("success_url", request.SuccessUrl.ToString()),
+                new("cancel_url", request.CancelUrl.ToString()),
+            ],
+            idempotencyKey: null,
+            cancellationToken);
+        return new Uri(json.RootElement.GetProperty("url").GetString()!);
+    }
+
     public async Task<Uri> CreatePortalAsync(string customerId, Uri returnUrl, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(returnUrl);
@@ -206,11 +259,30 @@ internal sealed partial class StripeBillingGateway(
         {
             using var json = JsonDocument.Parse(payload);
             var root = json.RootElement;
+            var eventType = root.GetProperty("type").GetString()!;
             var data = root.GetProperty("data").GetProperty("object");
             var customer = data.TryGetProperty("object", out var kind) && kind.GetString() == "customer"
                 ? data.GetProperty("id").GetString()
                 : data.TryGetProperty("customer", out var c) && c.ValueKind == JsonValueKind.String ? c.GetString() : null;
-            return new BillingEvent(root.GetProperty("id").GetString()!, root.GetProperty("type").GetString()!, customer);
+
+            // One-time payment: extract our metadata for the credit top-up flow.
+            Guid? creditUserId = null;
+            int? credits = null;
+            if (eventType == "checkout.session.completed"
+                && data.TryGetProperty("mode", out var mode) && mode.GetString() == "payment"
+                && data.TryGetProperty("metadata", out var meta))
+            {
+                if (meta.TryGetProperty("user_id", out var uid) && Guid.TryParse(uid.GetString(), out var parsedId))
+                {
+                    creditUserId = parsedId;
+                }
+                if (meta.TryGetProperty("credits", out var cred) && int.TryParse(cred.GetString(), System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var parsedCredits))
+                {
+                    credits = parsedCredits;
+                }
+            }
+
+            return new BillingEvent(root.GetProperty("id").GetString()!, eventType, customer, creditUserId, credits);
         }
         catch (Exception exception) when (exception is JsonException or KeyNotFoundException or InvalidOperationException)
         {

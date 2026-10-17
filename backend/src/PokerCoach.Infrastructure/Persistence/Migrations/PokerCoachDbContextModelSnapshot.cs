@@ -431,6 +431,34 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.ToTable("reports", "coaching");
                 });
 
+            modelBuilder.Entity("PokerCoach.Infrastructure.Coaching.CreditPurchaseRecord", b =>
+                {
+                    b.Property<string>("StripeEventId")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("stripe_event_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Credits")
+                        .HasColumnType("integer")
+                        .HasColumnName("credits");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("StripeEventId")
+                        .HasName("pk_credit_purchases");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_credit_purchases_user_id");
+
+                    b.ToTable("credit_purchases", "coaching");
+                });
+
             modelBuilder.Entity("PokerCoach.Infrastructure.Coaching.LeakExplanationRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -520,6 +548,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("output_tokens");
 
+                    b.Property<int>("PurchasedCreditsReserved")
+                        .HasColumnType("integer")
+                        .HasColumnName("purchased_credits_reserved");
+
                     b.Property<string>("Purpose")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -559,6 +591,22 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ix_model_usage_user_id_purpose_created_at");
 
                     b.ToTable("model_usage", "coaching");
+                });
+
+            modelBuilder.Entity("PokerCoach.Infrastructure.Coaching.UserCreditBalanceRecord", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<int>("Balance")
+                        .HasColumnType("integer")
+                        .HasColumnName("balance");
+
+                    b.HasKey("UserId")
+                        .HasName("pk_user_credit_balances");
+
+                    b.ToTable("user_credit_balances", "coaching");
                 });
 
             modelBuilder.Entity("PokerCoach.Infrastructure.Import.ImportedFileRecord", b =>
@@ -1567,6 +1615,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasConstraintName("fk_reports_users_user_id");
                 });
 
+            modelBuilder.Entity("PokerCoach.Infrastructure.Coaching.CreditPurchaseRecord", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_credit_purchases_users_user_id");
+                });
+
             modelBuilder.Entity("PokerCoach.Infrastructure.Coaching.LeakExplanationRecord", b =>
                 {
                     b.HasOne("PokerCoach.Domain.Identity.User", null)
@@ -1584,6 +1642,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_model_usage_users_user_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Infrastructure.Coaching.UserCreditBalanceRecord", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_credit_balances_users_user_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Infrastructure.Import.ImportedFileRecord", b =>

@@ -15,6 +15,7 @@ namespace PokerCoach.Api.Billing;
 /// <param name="CurrentPeriodEnd">Renewal date, or end date when <paramref name="CancelAtPeriodEnd"/>.</param>
 /// <param name="Tier">The paid offer subscribed to, when a subscription is alive.</param>
 /// <param name="MonthlyCredits">AI credits of the current plan per calendar month (UTC).</param>
+/// <param name="PurchasedCreditsBalance">Remaining credits from one-time top-up packs.</param>
 /// <param name="Offers">Every offer with its limits, for the offer table.</param>
 public sealed record BillingResponse(
     bool BillingEnabled,
@@ -29,6 +30,7 @@ public sealed record BillingResponse(
     Plan? Tier,
     int MonthlyCredits,
     int CreditsUsedThisMonth,
+    int PurchasedCreditsBalance,
     IReadOnlyList<OfferResponse> Offers);
 
 /// <param name="HistoryDays">Null: the whole history.</param>
@@ -36,6 +38,9 @@ public sealed record OfferResponse(Plan Plan, int? HistoryDays, int MonthlyCredi
 
 /// <param name="Plan">Pro or Elite.</param>
 public sealed record CheckoutRequestBody(Plan? Plan, BillingInterval? Interval);
+
+/// <param name="Credits">50 (Recharge) or 120 (Session).</param>
+public sealed record TopUpRequestBody(int Credits);
 
 /// <summary>A Stripe-hosted page to send the browser to.</summary>
 public sealed record RedirectResponse(Uri Url);
@@ -48,6 +53,7 @@ public static partial class BillingEndpoints
         var group = endpoints.MapGroup("/api/billing").WithTags("Billing");
         group.MapGet("", GetAsync);
         group.MapPost("/checkout", CheckoutAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        group.MapPost("/topup", TopUpAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapPost("/portal", PortalAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapPost("/change", ChangeAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
 
@@ -80,6 +86,7 @@ public static partial class BillingEndpoints
             s.Tier,
             s.MonthlyCredits,
             s.CreditsUsedThisMonth,
+            s.PurchasedCreditsBalance,
             [.. s.Offers.Select(o => new OfferResponse(o.Plan, o.HistoryDays, o.MonthlyCredits))]));
     }
 
@@ -111,6 +118,30 @@ public static partial class BillingEndpoints
 
         var language = (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage ?? UserLanguages.Default;
         var result = await subscriptions.StartCheckoutAsync(userId, plan, interval, language, app.Value.BaseUrl(context, environment), cancellationToken);
+        return Respond(result);
+    }
+
+    private static async Task<Results<Ok<RedirectResponse>, ProblemHttpResult, UnauthorizedHttpResult>> TopUpAsync(
+        TopUpRequestBody request,
+        HttpContext context,
+        SubscriptionService subscriptions,
+        UserProfileService profiles,
+        IOptions<AppOptions> app,
+        IHostEnvironment environment,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (request.Credits is not (50 or 120))
+        {
+            return ApiProblems.Validation("credits", "Must be 50 or 120.");
+        }
+
+        var language = (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage ?? UserLanguages.Default;
+        var result = await subscriptions.StartTopUpAsync(userId, request.Credits, language, app.Value.BaseUrl(context, environment), cancellationToken);
         return Respond(result);
     }
 

@@ -70,6 +70,8 @@ export interface BillingSummary {
   /** AI credits of the current plan this month: an explanation costs 1, a review 2, a debrief 5. */
   readonly monthlyCredits: number;
   readonly creditsUsedThisMonth: number;
+  /** Remaining credits from one-time top-up packs. */
+  readonly purchasedCreditsBalance: number;
   readonly offers: readonly PlanOffer[];
 }
 
@@ -134,6 +136,11 @@ export class BillingService {
   /** Sends the browser to Stripe's customer portal (card, invoices, plan, cancellation). */
   async portal(): Promise<string> {
     return this.redirect(this.http.post<{ url: string }>('/api/billing/portal', {}));
+  }
+
+  /** One-time purchase of a credit pack (50 or 120 credits): sends the browser to Stripe Checkout. */
+  async topUp(credits: 50 | 120): Promise<string> {
+    return this.redirect(this.http.post<{ url: string }>('/api/billing/topup', { credits }));
   }
 
   private async redirect(request: ReturnType<HttpClient['post']>): Promise<string> {

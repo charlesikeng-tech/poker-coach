@@ -1820,6 +1820,11 @@
         "starter": "Starter",
         "pro": "Pro",
         "elite": "Elite"
+      },
+      "topup": {
+        "balance": "{{count}} crédito(s) comprado(s) disponible(s)",
+        "hint": "Los créditos comprados no caducan. Se usan después de agotar tu cuota mensual.",
+        "buy": "+{{credits}} créditos — {{price}}"
       }
     },
     "admin": {

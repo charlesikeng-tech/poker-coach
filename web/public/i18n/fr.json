@@ -1820,6 +1820,11 @@
         "starter": "Starter",
         "pro": "Pro",
         "elite": "Elite"
+      },
+      "topup": {
+        "balance": "{{count}} crédit(s) achetés disponibles",
+        "hint": "Les crédits achetés ne expirent pas. Ils s'utilisent après avoir épuisé ton quota mensuel.",
+        "buy": "+{{credits}} crédits — {{price}}"
       }
     },
     "admin": {

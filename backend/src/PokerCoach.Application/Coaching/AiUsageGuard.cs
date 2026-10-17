@@ -47,10 +47,12 @@ public static class AiTasks
 /// <param name="CallsToday">Calls of this task today, failed ones included: a provider failure loop still costs.</param>
 /// <param name="CallsThisMonth">Billed calls and live reservations of this task this month.</param>
 /// <param name="SpendThisMonthUsd">Every user: real cost of settled calls, reserved ceiling of the others.</param>
-public sealed record AiUsageSnapshot(int CreditsUsedThisMonth, int CallsToday, int CallsThisMonth, decimal SpendThisMonthUsd);
+/// <param name="PurchasedCreditsBalance">Remaining credits from one-time top-up purchases.</param>
+public sealed record AiUsageSnapshot(int CreditsUsedThisMonth, int CallsToday, int CallsThisMonth, decimal SpendThisMonthUsd, int PurchasedCreditsBalance = 0);
 
 /// <param name="LiveAfter">Reservations older than this are abandoned (crash): their credits are freed, their ceiling still counts as spent.</param>
 /// <param name="AlertAtUsd">The ledger warns when the month's spend crosses this.</param>
+/// <param name="MonthlyCredits">Plan monthly limit; null for admin accounts (no limit). Used to calculate how many purchased credits this call consumes.</param>
 public sealed record AiReservationRequest(
     Guid Id,
     Guid UserId,
@@ -61,7 +63,8 @@ public sealed record AiReservationRequest(
     DateTimeOffset MonthStart,
     DateTimeOffset DayStart,
     DateTimeOffset LiveAfter,
-    decimal AlertAtUsd);
+    decimal AlertAtUsd,
+    int? MonthlyCredits = null);
 
 /// <param name="Usage">Null when the provider's billing is unknown (network failure, timeout): the reserved ceiling stays as the cost.</param>
 public sealed record AiSettlement(bool Succeeded, int Credits, ModelUsage? Usage, decimal? CostUsd, DateTimeOffset At);
@@ -96,6 +99,12 @@ public interface IAiUsageLedger
     Task<int> CreditsUsedAsync(Guid userId, DateTimeOffset since, DateTimeOffset liveAfter, CancellationToken cancellationToken);
 
     Task<AiUsageReport> ReportAsync(DateTimeOffset since, int topUsers, CancellationToken cancellationToken);
+
+    /// <summary>Credits a user's purchased balance. Idempotent: a duplicate stripeEventId is a no-op.</summary>
+    Task AddPurchasedCreditsAsync(Guid userId, int credits, string stripeEventId, CancellationToken cancellationToken);
+
+    /// <summary>Remaining credits from one-time purchases (never negative).</summary>
+    Task<int> PurchasedCreditsBalanceAsync(Guid userId, CancellationToken cancellationToken);
 }
 
 /// <summary>The outcome of a guarded call: the model's answer, or why it was refused or failed.</summary>
@@ -124,6 +133,12 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
         var now = time.GetUtcNow();
         return ledger.CreditsUsedAsync(userId, MonthStart(now), now - ReservationLifetime, cancellationToken);
     }
+
+    public Task<int> PurchasedCreditsBalanceAsync(Guid userId, CancellationToken cancellationToken) =>
+        ledger.PurchasedCreditsBalanceAsync(userId, cancellationToken);
+
+    public Task AddPurchasedCreditsAsync(Guid userId, int credits, string stripeEventId, CancellationToken cancellationToken) =>
+        ledger.AddPurchasedCreditsAsync(userId, credits, stripeEventId, cancellationToken);
 
     public async Task<AiUsageOverview> MonthOverviewAsync(int topUsers, CancellationToken cancellationToken)
     {
@@ -155,6 +170,7 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
 
         var now = time.GetUtcNow();
         var ceiling = options.CostOf(model.Ceiling(task));
+        var monthlyCredits = access.Source == PlanSource.Admin ? (int?)null : plans.Limits.For(access.Plan).MonthlyCredits;
         var request = new AiReservationRequest(
             Guid.CreateVersion7(now),
             userId,
@@ -165,8 +181,8 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
             MonthStart(now),
             new DateTimeOffset(now.Date, TimeSpan.Zero),
             now - ReservationLifetime,
-            options.MonthlyBudgetUsd * AlertShare);
-        var monthlyCredits = access.Source == PlanSource.Admin ? (int?)null : plans.Limits.For(access.Plan).MonthlyCredits;
+            options.MonthlyBudgetUsd * AlertShare,
+            monthlyCredits);
 
         var refused = await ledger.ReserveAsync(request, usage => Decide(usage, task, access.Plan, monthlyCredits, ceiling), cancellationToken);
         if (refused is { } failure)
@@ -202,7 +218,7 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
             return CoachingFailure.PlanLimitReached;
         }
 
-        if (monthlyCredits is { } credits && usage.CreditsUsedThisMonth + task.Credits() > credits)
+        if (monthlyCredits is { } credits && usage.CreditsUsedThisMonth + task.Credits() > credits + usage.PurchasedCreditsBalance)
         {
             return CoachingFailure.PlanLimitReached;
         }

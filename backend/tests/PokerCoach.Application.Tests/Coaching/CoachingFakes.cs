@@ -49,6 +49,10 @@ internal sealed class InMemoryAiUsageLedger : IAiUsageLedger
 
     public List<Entry> Entries { get; } = [];
 
+    private readonly Dictionary<Guid, int> purchasedBalances = [];
+
+    private readonly HashSet<string> processedEvents = [];
+
     public IEnumerable<Entry> Billed => Entries.Where(e => e.Status == "Billed");
 
     /// <summary>Billed calls made before the test, at <paramref name="at"/>, costing nothing.</summary>
@@ -68,11 +72,13 @@ internal sealed class InMemoryAiUsageLedger : IAiUsageLedger
             var month = Entries.Where(e => e.CreatedAt >= request.MonthStart).ToList();
             var counted = month.Where(e => e.Status != "Reserved" || e.CreatedAt >= request.LiveAfter).ToList();
             var mine = counted.Where(e => e.UserId == request.UserId).ToList();
+            purchasedBalances.TryGetValue(request.UserId, out var purchasedBalance);
             var snapshot = new AiUsageSnapshot(
                 mine.Where(e => e.Status != "Failed").Sum(e => e.Credits),
                 mine.Count(e => e.Task == request.Task && e.CreatedAt >= request.DayStart),
                 mine.Count(e => e.Task == request.Task && e.Status != "Failed"),
-                month.Sum(e => e.Status == "Reserved" ? e.ReservedUsd : e.CostUsd));
+                month.Sum(e => e.Status == "Reserved" ? e.ReservedUsd : e.CostUsd),
+                purchasedBalance);
             if (decide(snapshot) is { } refused)
             {
                 return refused;
@@ -109,6 +115,18 @@ internal sealed class InMemoryAiUsageLedger : IAiUsageLedger
             .Sum(e => e.Credits));
 
     public Task<AiUsageReport> ReportAsync(DateTimeOffset since, int topUsers, CancellationToken cancellationToken) => throw new NotSupportedException();
+
+    public Task AddPurchasedCreditsAsync(Guid userId, int credits, string stripeEventId, CancellationToken cancellationToken)
+    {
+        if (processedEvents.Add(stripeEventId))
+        {
+            purchasedBalances[userId] = purchasedBalances.GetValueOrDefault(userId) + credits;
+        }
+        return Task.CompletedTask;
+    }
+
+    public Task<int> PurchasedCreditsBalanceAsync(Guid userId, CancellationToken cancellationToken) =>
+        Task.FromResult(purchasedBalances.GetValueOrDefault(userId));
 
     internal sealed record Entry(Guid Id, Guid UserId, AiTask Task, DateTimeOffset CreatedAt)
     {

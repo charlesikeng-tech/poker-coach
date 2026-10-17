@@ -98,9 +98,32 @@ internal sealed class ModelUsageRecord
     /// <summary>False when the call failed without the provider saying what it billed.</summary>
     public bool UsageKnown { get; set; }
 
+    /// <summary>Purchased credits consumed by this reservation; refunded on failure.</summary>
+    public int PurchasedCreditsReserved { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset? SettledAt { get; set; }
+}
+
+/// <summary>Current purchased credits balance per user. Decremented on reservation, refunded on failure, incremented on purchase.</summary>
+internal sealed class UserCreditBalanceRecord
+{
+    public Guid UserId { get; set; }
+
+    public int Balance { get; set; }
+}
+
+/// <summary>One-time credit purchase, keyed by Stripe event ID for idempotency.</summary>
+internal sealed class CreditPurchaseRecord
+{
+    public string StripeEventId { get; set; } = string.Empty;
+
+    public Guid UserId { get; set; }
+
+    public int Credits { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
 }
 
 internal sealed class LeakExplanationConfiguration : IEntityTypeConfiguration<LeakExplanationRecord>
@@ -154,5 +177,27 @@ internal sealed class ModelUsageConfiguration : IEntityTypeConfiguration<ModelUs
         builder.HasIndex(u => u.CreatedAt);
         builder.HasIndex(u => new { u.UserId, u.Purpose, u.CreatedAt });
         builder.HasOne<User>().WithMany().HasForeignKey(u => u.UserId).OnDelete(DeleteBehavior.SetNull);
+    }
+}
+
+internal sealed class UserCreditBalanceConfiguration : IEntityTypeConfiguration<UserCreditBalanceRecord>
+{
+    public void Configure(EntityTypeBuilder<UserCreditBalanceRecord> builder)
+    {
+        builder.ToTable("user_credit_balances", CoachingSchema.Name);
+        builder.HasKey(b => b.UserId);
+        builder.Property(b => b.UserId).ValueGeneratedNever();
+        builder.HasOne<User>().WithMany().HasForeignKey(b => b.UserId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
+internal sealed class CreditPurchaseConfiguration : IEntityTypeConfiguration<CreditPurchaseRecord>
+{
+    public void Configure(EntityTypeBuilder<CreditPurchaseRecord> builder)
+    {
+        builder.ToTable("credit_purchases", CoachingSchema.Name);
+        builder.HasKey(p => p.StripeEventId);
+        builder.Property(p => p.StripeEventId).HasMaxLength(64);
+        builder.HasOne<User>().WithMany().HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
     }
 }

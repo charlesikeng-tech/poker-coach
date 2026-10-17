@@ -94,7 +94,9 @@ public interface ISubscriptionStore
 
 /// <summary>A webhook whose signature checked out, reduced to what we act on.</summary>
 /// <param name="CustomerId">The customer the event is about; null for events about nothing we track.</param>
-public sealed record BillingEvent(string Id, string Type, string? CustomerId);
+/// <param name="CreditUserId">Set for checkout.session.completed with mode=payment: the user to credit.</param>
+/// <param name="Credits">Credits purchased in a one-time checkout.</param>
+public sealed record BillingEvent(string Id, string Type, string? CustomerId, Guid? CreditUserId = null, int? Credits = null);
 
 /// <summary>The payment provider failed or refused; the message names the provider's error, never card data.</summary>
 public sealed class BillingGatewayException(string message, Exception? inner = null) : Exception(message, inner);
@@ -111,6 +113,10 @@ public interface IBillingGateway
     /// <summary>A hosted checkout page for a paid offer at that interval.</summary>
     /// <exception cref="BillingGatewayException"/>
     Task<Uri> CreateCheckoutAsync(CheckoutRequest request, CancellationToken cancellationToken);
+
+    /// <summary>A one-time hosted checkout page for a credit top-up pack.</summary>
+    /// <exception cref="BillingGatewayException"/>
+    Task<Uri> CreateTopUpCheckoutAsync(TopUpRequest request, CancellationToken cancellationToken);
 
     /// <exception cref="BillingGatewayException"/>
     Task<Uri> CreatePortalAsync(string customerId, Uri returnUrl, CancellationToken cancellationToken);
@@ -142,6 +148,8 @@ public sealed record CheckoutRequest(
     string Language,
     Uri SuccessUrl,
     Uri CancelUrl);
+
+public sealed record TopUpRequest(Guid UserId, int Credits, string Language, Uri SuccessUrl, Uri CancelUrl);
 
 /// <summary>What an account has, and why.</summary>
 public sealed record PlanGrant(Plan Plan, PlanSource Source, DateTimeOffset? GrantEndsAt = null);

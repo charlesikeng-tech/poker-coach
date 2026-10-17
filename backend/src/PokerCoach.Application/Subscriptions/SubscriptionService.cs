@@ -22,6 +22,7 @@ public sealed record BillingSummary(
     Plan? Tier,
     int MonthlyCredits,
     int CreditsUsedThisMonth,
+    int PurchasedCreditsBalance,
     IReadOnlyList<PlanOffer> Offers);
 
 public enum BillingFailure
@@ -78,6 +79,7 @@ public sealed class SubscriptionService(
         }
 
         var used = await aiUsage.CreditsUsedThisMonthAsync(userId, cancellationToken);
+        var purchased = await aiUsage.PurchasedCreditsBalanceAsync(userId, cancellationToken);
         var access = await plans.GetAccessAsync(userId, cancellationToken);
         return new BillingSummary(
             gateway.IsConfigured,
@@ -92,6 +94,7 @@ public sealed class SubscriptionService(
             subscription?.IsAlive == true ? subscription.Plan : null,
             plans.Limits.For(access.Plan).MonthlyCredits,
             used,
+            purchased,
             [.. Enum.GetValues<Plan>().Select(p => new PlanOffer(p, plans.Limits.For(p).HistoryDays, plans.Limits.For(p).MonthlyCredits))]);
     }
 
@@ -219,6 +222,13 @@ public sealed class SubscriptionService(
             return WebhookOutcome.Rejected;
         }
 
+        // One-time payment: credit the user's purchased balance.
+        if (billingEvent.Credits > 0 && billingEvent.CreditUserId is { } creditUserId)
+        {
+            await aiUsage.AddPurchasedCreditsAsync(creditUserId, billingEvent.Credits.Value, billingEvent.Id, cancellationToken);
+            return WebhookOutcome.Synced;
+        }
+
         if (billingEvent.CustomerId is not { } customerId)
         {
             return WebhookOutcome.Ignored;
@@ -233,6 +243,31 @@ public sealed class SubscriptionService(
 
         await SyncAsync(subscription, cancellationToken);
         return WebhookOutcome.Synced;
+    }
+
+    public async Task<BillingRedirect> StartTopUpAsync(Guid userId, int credits, string language, Uri appUrl, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(appUrl);
+        if (!gateway.IsConfigured)
+        {
+            return BillingRedirect.Fail(BillingFailure.Unavailable);
+        }
+
+        try
+        {
+            return BillingRedirect.To(await gateway.CreateTopUpCheckoutAsync(
+                new TopUpRequest(
+                    userId,
+                    credits,
+                    language,
+                    new Uri(appUrl, "subscription?topup=success"),
+                    new Uri(appUrl, "subscription?topup=cancel")),
+                cancellationToken));
+        }
+        catch (BillingGatewayException)
+        {
+            return BillingRedirect.Fail(BillingFailure.ProviderFailed);
+        }
     }
 
     /// <summary>

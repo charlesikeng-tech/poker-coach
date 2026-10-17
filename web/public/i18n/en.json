@@ -1820,6 +1820,11 @@
         "starter": "Starter",
         "pro": "Pro",
         "elite": "Elite"
+      },
+      "topup": {
+        "balance": "{{count}} purchased credit(s) available",
+        "hint": "Purchased credits never expire. They are used after your monthly plan allowance runs out.",
+        "buy": "+{{credits}} credits — {{price}}"
       }
     },
     "admin": {

@@ -62,6 +62,11 @@ export class SubscriptionPage implements OnDestroy {
     const s = this.summary();
     return s ? Math.max(0, s.monthlyCredits - s.creditsUsedThisMonth) : 0;
   });
+  /** Price in euros (tax included) per pack. */
+  protected readonly topUpPacks = [
+    { credits: 50 as const, price: '4,99 €' },
+    { credits: 120 as const, price: '9,99 €' },
+  ];
   /** A live Stripe subscription: offer changes go through the portal, not a second checkout. */
   protected readonly subscribed = computed(() => this.summary()?.tier != null);
 
@@ -133,6 +138,10 @@ export class SubscriptionPage implements OnDestroy {
 
   protected async manage(): Promise<void> {
     await this.run(() => this.billing.portal());
+  }
+
+  protected async buyTopUp(credits: 50 | 120): Promise<void> {
+    await this.run(() => this.billing.topUp(credits));
   }
 
   private async run(action: () => Promise<string>): Promise<void> {
