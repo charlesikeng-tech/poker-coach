@@ -21,7 +21,8 @@ public sealed record WeekReview(string Headline, string Summary, IReadOnlyList<P
 
 /// <summary>What the model is asked: the week's plan and measured progress, written by us.</summary>
 /// <param name="GameType">Selects the coaching context (MTT or cash game instructions).</param>
-public sealed record WeekReviewPrompt(string Language, string Facts, GameType GameType = GameType.Tournament);
+/// <param name="SubFormat">When non-null, selects the sub-format instructions (SNG, rebuy MTT).</param>
+public sealed record WeekReviewPrompt(string Language, string Facts, GameType GameType = GameType.Tournament, TournamentSubFormat? SubFormat = null);
 
 /// <summary>A priority as measured, shown next to the coach's note: our figures, not the model's.</summary>
 public sealed record ReviewedPriority(
@@ -64,24 +65,24 @@ public sealed class WeekReviewService(
     public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
         => await GetAsync(userId, week, GameType.Tournament, language, cancellationToken);
 
-    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken)
+    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken, TournamentSubFormat? subFormat = null)
     {
-        var facts = await MeasureAsync(userId, week, gameType, cancellationToken);
+        var facts = await MeasureAsync(userId, week, gameType, subFormat, cancellationToken);
         if (facts is null)
         {
             return null;
         }
 
-        var stored = await reports.FindAsync<WeekReviewReport>(userId, Kind, Subject(facts.Week.Plan.WeekStart, gameType), language, cancellationToken);
+        var stored = await reports.FindAsync<WeekReviewReport>(userId, Kind, Subject(facts.Week.Plan.WeekStart, gameType, subFormat), language, cancellationToken);
         return stored is null ? null : View(stored, Fingerprint(facts, language));
     }
 
     public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
         => await GenerateAsync(userId, week, GameType.Tournament, language, cancellationToken);
 
-    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken)
+    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken, TournamentSubFormat? subFormat = null)
     {
-        var facts = await MeasureAsync(userId, week, gameType, cancellationToken);
+        var facts = await MeasureAsync(userId, week, gameType, subFormat, cancellationToken);
         if (facts is null)
         {
             return ReportOutcome<WeekReviewReport>.Fail(CoachingFailure.NotFound);
@@ -93,7 +94,7 @@ public sealed class WeekReviewService(
         }
 
         var fingerprint = Fingerprint(facts, language);
-        var subject = Subject(facts.Week.Plan.WeekStart, gameType);
+        var subject = Subject(facts.Week.Plan.WeekStart, gameType, subFormat);
         var stored = await reports.FindAsync<WeekReviewReport>(userId, Kind, subject, language, cancellationToken);
         if (stored is not null && stored.Fingerprint == fingerprint)
         {
@@ -117,7 +118,7 @@ public sealed class WeekReviewService(
         var outcome = await guard.RunAsync(
             userId,
             AiTask.WeekReview,
-            (model, ct) => model.ReviewWeekAsync(new WeekReviewPrompt(language, Facts(facts, priorities), facts.GameType), ct),
+            (model, ct) => model.ReviewWeekAsync(new WeekReviewPrompt(language, Facts(facts, priorities), facts.GameType, facts.Week.Plan.SubFormat), ct),
             cancellationToken);
         if (outcome.Answer is not { } answer)
         {
@@ -141,9 +142,9 @@ public sealed class WeekReviewService(
     /// <summary>Everything the review is written from, for this week or one of the history's weeks.</summary>
     internal sealed record WeekFacts(WeekReport Week, GameType GameType, bool WeekOver, int DayOfWeek, int DrillAttempts, int DrillCorrect, int DrillGoal, PerformanceFigures Results, CashPerformanceFigures? CashResults);
 
-    private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, GameType gameType, CancellationToken cancellationToken)
+    private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken)
     {
-        var report = await progress.GetAsync(userId, gameType, cancellationToken);
+        var report = await progress.GetAsync(userId, gameType, subFormat, cancellationToken);
         var current = week is null || week == report.WeekStart;
         var measured = current ? report.Current : report.History.FirstOrDefault(h => h.Plan.WeekStart == week);
         if (measured is null)
@@ -241,6 +242,7 @@ public sealed class WeekReviewService(
             (facts.CashResults?.Hands ?? 0).ToString(CultureInfo.InvariantCulture),
             facts.WeekOver.ToString(),
             facts.GameType.ToString(),
+            facts.Week.Plan.SubFormat?.ToString() ?? string.Empty,
             language);
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(key)));
     }
@@ -256,8 +258,10 @@ public sealed class WeekReviewService(
     private static ReportView<WeekReviewReport> View(StoredReport<WeekReviewReport> stored, string fingerprint) =>
         new(stored.Report, stored.Fingerprint != fingerprint, stored.Model, stored.CreatedAt);
 
-    private static string Subject(DateOnly week, GameType gameType) =>
-        gameType == GameType.Tournament
-            ? week.ToString("O", CultureInfo.InvariantCulture)
-            : $"{week.ToString("O", CultureInfo.InvariantCulture)}:{gameType}";
+    private static string Subject(DateOnly week, GameType gameType, TournamentSubFormat? subFormat = null) =>
+        subFormat is { } sf
+            ? $"{week.ToString("O", CultureInfo.InvariantCulture)}:{sf}"
+            : gameType == GameType.Tournament
+                ? week.ToString("O", CultureInfo.InvariantCulture)
+                : $"{week.ToString("O", CultureInfo.InvariantCulture)}:{gameType}";
 }

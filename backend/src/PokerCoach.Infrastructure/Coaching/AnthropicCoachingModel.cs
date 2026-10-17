@@ -328,6 +328,18 @@ internal sealed partial class AnthropicCoachingModel(
 
         """ + ReviewRules + Voice + ReviewFields;
 
+    private const string RebuyMttReviewInstructions = RebuyMttContext + """
+        You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
+        the week's hands, the drills done and the results, all computed by the software.
+
+        """ + ReviewRules + Voice + ReviewFields;
+
+    private const string SngReviewInstructions = SngContext + """
+        You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
+        the week's hands, the drills done and the results, all computed by the software.
+
+        """ + ReviewRules + Voice + ReviewFields;
+
     private const string CashReviewInstructions = CashContext + """
         You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
         the week's hands, the drills done and the results, all computed by the software.
@@ -537,7 +549,14 @@ internal sealed partial class AnthropicCoachingModel(
     private async Task<ModelAnswer<WeekReview>> ReviewCoreAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
-        var instructions = prompt.GameType == GameType.CashGame ? CashReviewInstructions : ReviewInstructions;
+        var instructions = prompt.GameType == GameType.CashGame
+            ? CashReviewInstructions
+            : prompt.SubFormat switch
+            {
+                TournamentSubFormat.Sng => SngReviewInstructions,
+                TournamentSubFormat.RebuyMtt => RebuyMttReviewInstructions,
+                _ => ReviewInstructions,
+            };
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
         var (answer, usage) = await CallAsync<ReviewAnswer>(instructions, ReviewSchema, user, ReviewMaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
