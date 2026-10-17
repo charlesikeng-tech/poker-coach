@@ -196,7 +196,7 @@
             </section>
           }
 
-          @if ((report.byPosition?.length ?? 0) > 0) {
+          @if (report.byPosition.length > 0) {
             <section class="panel glass">
               <h2>{{ t('cash.breakdown.position') }}</h2>
               <div class="table-wrap">

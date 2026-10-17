@@ -122,15 +122,18 @@ export class StatisticsPage {
   protected readonly icons = { CircleAlert, LoaderCircle, Upload };
   protected readonly accounts = signal<readonly PokerAccount[]>([]);
   protected readonly room = signal<string | null>(null);
-  protected readonly rooms = computed(() =>
-    [
+  protected readonly rooms = computed(() => {
+    if (this.gameTypeService.current() === 'cashGame') {
+      return [...(this.report()?.rooms ?? [])].sort();
+    }
+    return [
       ...new Set(
         this.accounts()
           .filter((a) => a.confirmedAt)
           .map((a) => a.room),
       ),
-    ].sort(),
-  );
+    ].sort();
+  });
   protected readonly roomName = roomName;
 
   /**
@@ -179,6 +182,13 @@ export class StatisticsPage {
 
   constructor() {
     void this.importApi.listAccounts().then((accounts) => this.accounts.set(accounts));
+    effect(() => {
+      const rooms = this.rooms();
+      const room = this.room();
+      if (room !== null && !rooms.includes(room)) {
+        untracked(() => this.room.set(null));
+      }
+    });
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
       const args = [

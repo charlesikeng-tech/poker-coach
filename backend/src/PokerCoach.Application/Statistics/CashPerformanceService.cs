@@ -103,7 +103,7 @@ public sealed class CashPerformanceService(ICashPerformanceReadStore store, ISta
             .OrderBy(r => r.Position.HasValue ? (int)r.Position.Value : int.MaxValue)
             .Select(r => new PositionStatLine(r.Position, StatLine.From(r.Counts)))
             .ToList();
-        var rooms = rows.Select(r => r.Room).Distinct().OrderBy(r => r).ToList();
+        var rooms = await stats.ListRoomsAsync(userId, new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame), HeroHandFacts.Version, cancellationToken);
 
         return new CashPerformanceReport(
             totals,

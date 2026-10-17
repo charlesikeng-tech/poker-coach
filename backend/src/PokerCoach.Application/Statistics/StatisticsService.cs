@@ -54,6 +54,10 @@ public interface IStatisticsReadStore
 
     /// <summary>Hands of the user's confirmed accounts whose facts are missing or outdated (still being computed).</summary>
     Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken);
+
+    /// <summary>Distinct rooms that have hands matching the filter (Room field ignored).</summary>
+    Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
+        => Task.FromResult<IReadOnlyList<PokerRoom>>([]);
 }
 
 /// <param name="Rate">Made / opportunities; null without opportunity. Never a guess.</param>
@@ -117,7 +121,8 @@ public sealed record StatisticsReport(
     int PendingHands,
     StatisticsSample Sample,
     TableFormat Format,
-    FormatCounts HandsByFormat);
+    FormatCounts HandsByFormat,
+    IReadOnlyList<PokerRoom> Rooms);
 
 /// <param name="Position">Null when the position could not be named.</param>
 public sealed record PositionStatLine(PokerPosition? Position, StatLine Line);
@@ -159,7 +164,8 @@ public sealed class StatisticsService(IStatisticsReadStore store)
             .OrderBy(g => g.Position is { } p ? Array.IndexOf(Order, p) : int.MaxValue)
             .Select(g => new PositionStatLine(g.Position, StatLine.From(g.Counts)))
             .ToList();
-        return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample, format, formats);
+        var rooms = await store.ListRoomsAsync(userId, filter with { Room = null }, HeroHandFacts.Version, cancellationToken);
+        return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample, format, formats, rooms);
     }
 
     /// <summary>Months shown when the filter has no start: a year is enough to see a trend.</summary>

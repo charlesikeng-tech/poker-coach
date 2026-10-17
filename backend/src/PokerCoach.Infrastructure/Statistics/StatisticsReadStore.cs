@@ -457,6 +457,13 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
          where a.UserId == userId && a.ConfirmedAt != null && (f == null || f.FactsVersion != factsVersion)
          select h.Id).CountAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+        await Filtered(userId, filter with { Room = null }, factsVersion)
+            .Select(x => x.Room)
+            .Distinct()
+            .OrderBy(r => r)
+            .ToListAsync(cancellationToken);
+
     private sealed class FilteredHand
     {
         public required HandHeroFactsRecord F { get; init; }

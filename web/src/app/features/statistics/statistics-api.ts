@@ -50,6 +50,8 @@ export interface StatisticsReport {
   /** Table format of the figures; positions are named within it. */
   readonly format: TableFormat;
   readonly handsByFormat: Readonly<Record<TableFormat, number>>;
+  /** Rooms with hands matching the current filter (game type and period), as camelCase strings. */
+  readonly rooms: readonly string[];
 }
 
 export type GameType = 'tournament' | 'cashGame';

@@ -4,6 +4,7 @@ using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -77,7 +78,8 @@ public sealed record StatisticsResponse(
     int PendingHands,
     StatisticsSampleResponse Sample,
     TableFormat Format,
-    FormatCountsResponse HandsByFormat);
+    FormatCountsResponse HandsByFormat,
+    IReadOnlyList<PokerRoom> Rooms);
 
 public sealed record PhaseStatLineResponse(TournamentPhase Phase, StatLineResponse Line);
 
@@ -235,7 +237,8 @@ public static class StatisticsEndpoints
             report.PendingHands,
             new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
             report.Format,
-            new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing)));
+            new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing),
+            report.Rooms));
     }
 
     /// <summary>The statistics by tournament phase and by month, with the same filters as the main view.</summary>

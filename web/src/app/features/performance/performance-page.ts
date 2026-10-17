@@ -77,10 +77,12 @@ export class PerformancePage {
   protected readonly icons = { CircleAlert, Upload };
   protected readonly accounts = signal<readonly PokerAccount[]>([]);
   protected readonly room = signal<string | null>(null);
-  /** Rooms with data for the active game type: cash rooms from the report, tournament rooms from accounts. */
+  /** Full list of cash rooms, updated only from unfiltered loads so it stays stable when a room is selected. */
+  private readonly cashRoomsAll = signal<readonly string[]>([]);
+  /** Rooms with data for the active game type: cash rooms from the full list, tournament rooms from accounts. */
   protected readonly rooms = computed(() => {
     if (this.gameTypeService.current() === 'cashGame') {
-      return [...(this.cashReport()?.rooms ?? [])].sort();
+      return [...this.cashRoomsAll()].sort();
     }
     return [
       ...new Set(
@@ -360,6 +362,9 @@ export class PerformancePage {
       );
       if (request === this.request) {
         this.cashReport.set(report);
+        if (room === null) {
+          this.cashRoomsAll.set(report.rooms);
+        }
         this.state.set('ready');
       }
     } catch {
