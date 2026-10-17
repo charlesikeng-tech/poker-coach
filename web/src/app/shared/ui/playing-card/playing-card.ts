@@ -27,7 +27,16 @@ const SUITS: Record<string, { symbol: string; name: string }> = {
         <span class="suit" aria-hidden="true">{{ f.symbol }}</span>
       </span>
     } @else {
-      <span class="back"></span>
+      <span class="back">
+        <svg class="back__mark" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
+          <rect x="16" y="0" width="6" height="6" rx="1.25" />
+          <rect x="8" y="8" width="6" height="6" rx="1.25" />
+          <rect x="16" y="8" width="6" height="6" rx="1.25" />
+          <rect x="0" y="16" width="6" height="6" rx="1.25" />
+          <rect x="8" y="16" width="6" height="6" rx="1.25" />
+          <rect x="16" y="16" width="6" height="6" rx="1.25" />
+        </svg>
+      </span>
     }
   `,
   styles: `
@@ -93,9 +102,26 @@ const SUITS: Record<string, { symbol: string; name: string }> = {
     }
     /* Face down: the felt's gold accent, never mistaken for a known card. */
     .back {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background:
-        repeating-linear-gradient(45deg, transparent 0 4px, rgb(233 185 73 / 0.18) 4px 5px), #1c2a24;
-      border: 1px solid rgb(233 185 73 / 0.35);
+        radial-gradient(ellipse at 50% 40%, rgb(233 185 73 / 0.08), transparent 65%),
+        repeating-linear-gradient(45deg, transparent 0 4px, rgb(233 185 73 / 0.12) 4px 5px), #1c2a24;
+      border: 1px solid rgb(233 185 73 / 0.4);
+    }
+    .back__mark {
+      width: 42%;
+      height: 42%;
+      opacity: 0.6;
+    }
+    .back__mark rect {
+      fill: rgb(233 185 73 / 1);
+    }
+    :host(.small) .back__mark {
+      width: 38%;
+      height: 38%;
+      opacity: 0.5;
     }
     .flip-in {
       animation: flip-in 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
