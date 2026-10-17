@@ -113,6 +113,9 @@ public sealed class BankrollServiceTests
     {
         public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null) =>
             Task.FromResult<IReadOnlyList<TournamentFacts>>(facts.OrderByDescending(f => f.StartedAt).ToList());
+
+        public Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<PokerRoom>>([]);
     }
 
     private sealed class FixedTime(DateTimeOffset now) : TimeProvider

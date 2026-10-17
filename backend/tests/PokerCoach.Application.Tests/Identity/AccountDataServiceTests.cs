@@ -108,6 +108,9 @@ public sealed class AccountDataServiceTests
     {
         public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null) =>
             Task.FromResult<IReadOnlyList<TournamentFacts>>(facts);
+
+        public Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<PokerRoom>>([]);
     }
 
     private sealed class StubBankroll : IBankrollStore
