@@ -20,12 +20,14 @@ import {
   formatSignedMoney,
   formatSignedPercent,
 } from '../../shared/format/format';
+import { roomName } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { GameType } from '../statistics/statistics-api';
+import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
 import { GameTypeService } from '../../core/game-type/game-type.service';
@@ -61,6 +63,7 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
 })
 export class PerformancePage {
   private readonly api = inject(PerformanceApi);
+  private readonly importApi = inject(ImportApi);
   private readonly language = inject(LanguageService);
   private readonly transloco = inject(TranslocoService);
 
@@ -72,6 +75,22 @@ export class PerformancePage {
   protected readonly cashReport = signal<CashPerformanceReport | null>(null);
   protected readonly selectedDay = signal<string | null>(null);
   protected readonly icons = { CircleAlert, Upload };
+  protected readonly accounts = signal<readonly PokerAccount[]>([]);
+  protected readonly room = signal<string | null>(null);
+  /** Rooms with data for the active game type: cash rooms from the report, tournament rooms from accounts. */
+  protected readonly rooms = computed(() => {
+    if (this.gameTypeService.current() === 'cashGame') {
+      return [...(this.cashReport()?.rooms ?? [])].sort();
+    }
+    return [
+      ...new Set(
+        this.accounts()
+          .filter((a) => a.confirmedAt)
+          .map((a) => a.room),
+      ),
+    ].sort();
+  });
+  protected readonly roomName = roomName;
 
   protected readonly cashDebriefPanel = viewChild<CashDebriefPanel>('cashDebriefPanel');
 
@@ -169,14 +188,23 @@ export class PerformancePage {
   });
 
   constructor() {
+    void this.importApi.listAccounts().then((accounts) => this.accounts.set(accounts));
+    effect(() => {
+      const rooms = this.rooms();
+      const room = this.room();
+      if (room !== null && !rooms.includes(room)) {
+        untracked(() => this.room.set(null));
+      }
+    });
     effect(() => {
       const period = this.period();
       const gt = this.gameTypeService.current();
+      const room = this.room();
       untracked(() => {
         if (gt === 'cashGame') {
-          void this.loadCash(period);
+          void this.loadCash(period, room);
         } else {
-          void this.load(period);
+          void this.load(period, room);
         }
       });
     });
@@ -184,6 +212,10 @@ export class PerformancePage {
 
   protected setPeriod(value: string): void {
     this.period.set(value as PeriodFilter);
+  }
+
+  protected setRoom(value: string): void {
+    this.room.set(value || null);
   }
 
   protected selectDay(day: string | null): void {
@@ -197,7 +229,12 @@ export class PerformancePage {
   }
 
   protected retry(): void {
-    void this.load(this.period());
+    const gt = this.gameTypeService.current();
+    if (gt === 'cashGame') {
+      void this.loadCash(this.period(), this.room());
+    } else {
+      void this.load(this.period(), this.room());
+    }
   }
 
   protected money(value: number | null): string {
@@ -276,20 +313,31 @@ export class PerformancePage {
     return known ? `groups.${dimension}.${group.key}` : null;
   }
 
+  protected positionLabel(position: string | null): string {
+    const key = position ?? 'unknown';
+    return this.transloco.translate(`pages.statistics.positions.${key}`);
+  }
+
   protected monthLabel(key: string | null): string {
     if (!key) {
       return '—';
     }
-    return new Intl.DateTimeFormat(this.locale(), { month: 'long', year: 'numeric' }).format(
-      new Date(key),
-    );
+    return new Intl.DateTimeFormat(this.locale(), {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(key));
   }
 
-  private async load(period: PeriodFilter): Promise<void> {
+  private async load(period: PeriodFilter, room: string | null = null): Promise<void> {
     const request = ++this.request;
     this.state.set('loading');
     try {
-      const report = await this.api.get(toQuery(period, 'all', 1, 1, new Date()).from);
+      const report = await this.api.get(
+        toQuery(period, 'all', 1, 1, new Date()).from,
+        undefined,
+        room ?? undefined,
+      );
       if (request === this.request) {
         this.report.set(report);
         this.state.set('ready');
@@ -301,11 +349,15 @@ export class PerformancePage {
     }
   }
 
-  private async loadCash(period: PeriodFilter): Promise<void> {
+  private async loadCash(period: PeriodFilter, room: string | null = null): Promise<void> {
     const request = ++this.request;
     this.state.set('loading');
     try {
-      const report = await this.api.getCash(toQuery(period, 'all', 1, 1, new Date()).from);
+      const report = await this.api.getCash(
+        toQuery(period, 'all', 1, 1, new Date()).from,
+        undefined,
+        room ?? undefined,
+      );
       if (request === this.request) {
         this.cashReport.set(report);
         this.state.set('ready');

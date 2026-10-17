@@ -73,6 +73,17 @@
             <span>{{ t('filters.completeOnly') }}</span>
           </label>
         }
+        @if (rooms().length > 1) {
+          <label>
+            <span>{{ t('filters.room') }}</span>
+            <select [value]="room() ?? ''" (change)="setRoom($any($event.target).value)">
+              <option value="">{{ t('filters.allRooms') }}</option>
+              @for (r of rooms(); track r) {
+                <option [value]="r">{{ roomName(r) }}</option>
+              }
+            </select>
+          </label>
+        }
       </div>
 
       <p class="sample-line">

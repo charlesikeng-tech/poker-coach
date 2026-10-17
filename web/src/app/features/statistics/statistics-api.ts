@@ -81,6 +81,8 @@ export interface StatisticsQuery {
   readonly phase?: TournamentPhase;
   /** Omitted or tournament: tournament hands only. cashGame: cash hands only. */
   readonly gameType?: GameType;
+  /** Only hands from accounts of this room; omitted: all rooms. */
+  readonly room?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -110,6 +112,9 @@ export class StatisticsApi {
     if (query.gameType && query.gameType !== 'tournament') {
       params = params.set('gameType', query.gameType);
     }
+    if (query.room) {
+      params = params.set('room', query.room);
+    }
     return firstValueFrom(this.http.get<StatisticsReport>('/api/statistics', { params }));
   }
 
@@ -133,6 +138,9 @@ export class StatisticsApi {
     }
     if (query.gameType && query.gameType !== 'tournament') {
       params = params.set('gameType', query.gameType);
+    }
+    if (query.room) {
+      params = params.set('room', query.room);
     }
     return firstValueFrom(
       this.http.get<StatisticsBreakdowns>('/api/statistics/breakdowns', { params }),

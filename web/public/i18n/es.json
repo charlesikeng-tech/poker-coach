@@ -113,7 +113,9 @@
           "30d": "Últimos 30 días",
           "90d": "Últimos 90 días",
           "year": "Este año"
-        }
+        },
+        "room": "Sala",
+        "allRooms": "Todas las salas"
       },
       "totals": {
         "profit": "Beneficio",
@@ -185,6 +187,7 @@
       },
       "cash": {
         "bb100": "BB/100",
+        "allInAdjBb100": "EV aj. BB/100",
         "profit": "Beneficio €",
         "netBb": "BB ganados",
         "hands": "manos",
@@ -196,13 +199,20 @@
           "stakes": "Por stakes",
           "month": "Por mes",
           "dayOfWeek": "Por día de la semana",
-          "timeSlot": "Por franja horaria"
+          "timeSlot": "Por franja horaria",
+          "position": "Por posición"
         },
         "columns": {
           "hands": "Manos",
           "profit": "Beneficio €",
           "netBb": "BB netas",
-          "bb100": "BB/100"
+          "bb100": "BB/100",
+          "allInAdjBb100": "EV aj.",
+          "position": "Posición",
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal"
         },
         "debrief": {
           "title": "Resumen de sesión",
@@ -518,7 +528,9 @@
           "over15": "15 BB o más"
         },
         "completeOnly": "Solo historiales completos",
-        "phase": "Fase"
+        "phase": "Fase",
+        "room": "Sala",
+        "allRooms": "Todas las salas"
       },
       "hands": "Manos",
       "bb100": "BB ganadas / 100 manos",
@@ -874,6 +886,7 @@
         "label": "Explicación IA",
         "hands": "En tus manos",
         "hand": "{{date}} · nivel {{level}} · {{position}} · {{cards}} · {{stack}} BB",
+        "focus": "Observa en la mesa:",
         "disclaimer": "Texto escrito por una IA a partir de tus cifras y de manos anonimizadas. Las mediciones vienen de NutsIQ, no de la IA.",
         "errors": {
           "LEAK_NOT_FOUND": "Este leak ya no aparece en tus datos recientes. Recarga la página.",

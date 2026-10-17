@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Tournaments;
 using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Infrastructure.Poker;
@@ -10,8 +11,8 @@ namespace PokerCoach.Infrastructure.Tournaments;
 /// <summary>Three projections (tournaments, entries, hand counts), joined in memory: no N+1, no large graph.</summary>
 internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentReadStore, ITournamentDetailStore
 {
-    public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken) =>
-        LoadAsync(userId, from, to, null, cancellationToken);
+    public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null) =>
+        LoadAsync(userId, from, to, null, cancellationToken, room);
 
     public async Task<TournamentFacts?> FindAsync(Guid userId, Guid tournamentId, CancellationToken cancellationToken) =>
         (await LoadAsync(userId, null, null, tournamentId, cancellationToken)).SingleOrDefault();
@@ -38,14 +39,15 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
         DateTimeOffset? from,
         DateTimeOffset? to,
         Guid? tournamentId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        PokerRoom? room = null)
     {
         var query =
             from t in db.Set<TournamentRecord>().AsNoTracking()
             join a in db.Set<PokerAccountRecord>() on t.PokerAccountId equals a.Id
             join c in db.Set<TournamentCoverageRecord>() on t.Id equals c.TournamentId into coverage
             from c in coverage.DefaultIfEmpty()
-            where a.UserId == userId && a.ConfirmedAt != null
+            where a.UserId == userId && a.ConfirmedAt != null && (room == null || a.Room == room)
             select new
             {
                 Coverage = c,

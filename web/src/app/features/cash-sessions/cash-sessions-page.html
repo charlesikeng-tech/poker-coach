@@ -66,6 +66,14 @@
                           bb100(session.bigBlindsPer100)
                         }}</span>
                       }
+                      @if (
+                        session.allInAdjBigBlindsPer100 != null &&
+                        session.allInAdjBigBlindsPer100 !== session.bigBlindsPer100
+                      ) {
+                        <span [attr.data-sign]="sign(session.allInAdjBigBlindsPer100)"
+                          >(EV {{ bb100(session.allInAdjBigBlindsPer100) }})</span
+                        >
+                      }
                     </span>
                   </a>
                 </li>

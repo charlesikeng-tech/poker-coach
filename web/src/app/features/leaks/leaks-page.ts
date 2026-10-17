@@ -127,7 +127,13 @@ export class LeaksPage {
     try {
       const from = toQuery(this.period(), 'all', 1, 1, new Date()).from;
       const format = this.analysis()?.format ?? 'sixMax';
-      const explanation = await this.api.explain(leak, format, from, this.language.current());
+      const explanation = await this.api.explain(
+        leak,
+        format,
+        from,
+        this.language.current(),
+        this.gameTypeService.current(),
+      );
       this.setCoach(key, { status: 'ready', explanation });
     } catch (error) {
       this.setCoach(key, { status: 'error', code: coachErrorCode(error) });

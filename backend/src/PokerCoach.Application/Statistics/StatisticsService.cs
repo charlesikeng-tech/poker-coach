@@ -13,6 +13,7 @@ namespace PokerCoach.Application.Statistics;
 /// full-ring UTG); null: every format, raw position names.</param>
 /// <param name="Phase">Only hands of that tournament phase (by blind level); null: all.</param>
 /// <param name="GameType">Tournament or CashGame; null defaults to Tournament.</param>
+/// <param name="Room">Only hands from accounts of this room; null: all rooms.</param>
 public sealed record StatisticsFilter(
     DateTimeOffset? From,
     DateTimeOffset? To,
@@ -21,7 +22,8 @@ public sealed record StatisticsFilter(
     bool CompleteHistoryOnly = false,
     TableFormat? Format = null,
     TournamentPhase? Phase = null,
-    GameType? GameType = null);
+    GameType? GameType = null,
+    PokerRoom? Room = null);
 
 /// <summary>Analysed hands per table format, within a filter (its own format ignored).</summary>
 public sealed record FormatCounts(int SixMax, int FullRing)

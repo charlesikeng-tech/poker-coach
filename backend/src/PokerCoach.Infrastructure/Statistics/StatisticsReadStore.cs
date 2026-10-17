@@ -297,7 +297,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
             from c in coverage.DefaultIfEmpty()
             where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
-                  && h.GameType == gameType
+                  && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
             select new FilteredHand
             {
                 F = f,
@@ -308,6 +308,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 BigBlind = h.BigBlind,
                 Level = h.Level,
                 Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
+                Room = a.Room,
             };
 
         if (filter.From is { } from)
@@ -357,11 +358,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
     }
 
     public async Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(
-        Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken)
+        Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken, PokerRoom? room = null)
     {
-        var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
+        var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame, Room: room);
         return await Filtered(userId, filter, factsVersion)
-            .Select(x => new CashHandRow(x.StartedAt, x.BigBlind, x.F.NetBigBlinds))
+            .Select(x => new CashHandRow(x.StartedAt, x.BigBlind, x.F.NetBigBlinds, x.F.AllInExpectedNetChips, x.Room))
             .ToListAsync(cancellationToken);
     }
 
@@ -370,7 +371,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
     {
         var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
         return await Filtered(userId, filter, factsVersion)
-            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards))
+            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards, x.F.AllInExpectedNetChips))
             .ToListAsync(cancellationToken);
     }
 
@@ -380,7 +381,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
         return await Filtered(userId, filter, factsVersion)
             .OrderBy(x => x.StartedAt)
-            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards))
+            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards, x.F.AllInExpectedNetChips))
             .ToListAsync(cancellationToken);
     }
 
@@ -473,5 +474,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         public int Level { get; init; }
 
         public bool Complete { get; init; }
+
+        public PokerRoom Room { get; init; }
     }
 }

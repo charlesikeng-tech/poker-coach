@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Tournaments;
@@ -36,10 +37,10 @@ public sealed class PerformanceService(ITournamentReadStore store)
 
     /// <param name="timeZone">The player's time zone: days and time slots are his, not UTC (a Sunday 00:30 start in
     /// Paris is a Saturday evening in UTC). Null: UTC.</param>
-    public async Task<PerformanceReport> GetAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, TimeZoneInfo? timeZone = null)
+    public async Task<PerformanceReport> GetAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, TimeZoneInfo? timeZone = null, PokerRoom? room = null)
     {
         var zone = timeZone ?? TimeZoneInfo.Utc;
-        var facts = await store.ListAsync(userId, from, to, cancellationToken);
+        var facts = await store.ListAsync(userId, from, to, cancellationToken, room);
         var rows = facts.Select(f => (Facts: f, Item: TournamentListService.ToItem(f))).ToList();
 
         return new PerformanceReport(

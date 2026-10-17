@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { PerformanceFigures } from '../tournaments/tournaments-api';
+import { PokerPosition, StatLine } from '../statistics/statistics-api';
 
 export interface ProfitPoint {
   readonly index: number;
@@ -34,6 +35,14 @@ export interface CashPerformanceFigures {
   readonly netBigBlinds: number;
   readonly bigBlindsPer100: number | null;
   readonly netMoney: number;
+  readonly allInAdjBigBlindsPer100: number | null;
+  readonly bigBlindsPer100Low: number | null;
+  readonly bigBlindsPer100High: number | null;
+}
+
+export interface CashPositionStatLine {
+  readonly position: PokerPosition | null;
+  readonly line: StatLine;
 }
 
 export interface CashPerformanceGroup {
@@ -57,7 +66,10 @@ export interface CashPerformanceReport {
   readonly byMonth: readonly CashPerformanceGroup[];
   readonly byDayOfWeek: readonly CashPerformanceGroup[];
   readonly byTimeSlot: readonly CashPerformanceGroup[];
+  readonly byPosition: readonly CashPositionStatLine[];
   readonly pendingHands: number;
+  /** Rooms that have cash hands in the current period, as camelCase strings (winamax, betclic…). */
+  readonly rooms: readonly string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -65,7 +77,7 @@ export class PerformanceApi {
   private readonly http = inject(HttpClient);
 
   /** `to` is exclusive. */
-  get(from: string | undefined, to?: string): Promise<PerformanceReport> {
+  get(from: string | undefined, to?: string, room?: string): Promise<PerformanceReport> {
     let params = new HttpParams();
     if (from) {
       params = params.set('from', from);
@@ -78,10 +90,13 @@ export class PerformanceApi {
     if (timeZone) {
       params = params.set('timeZone', timeZone);
     }
+    if (room) {
+      params = params.set('room', room);
+    }
     return firstValueFrom(this.http.get<PerformanceReport>('/api/performance', { params }));
   }
 
-  getCash(from: string | undefined, to?: string): Promise<CashPerformanceReport> {
+  getCash(from: string | undefined, to?: string, room?: string): Promise<CashPerformanceReport> {
     let params = new HttpParams();
     if (from) {
       params = params.set('from', from);
@@ -92,6 +107,9 @@ export class PerformanceApi {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (timeZone) {
       params = params.set('timeZone', timeZone);
+    }
+    if (room) {
+      params = params.set('room', room);
     }
     return firstValueFrom(
       this.http.get<CashPerformanceReport>('/api/performance/cash', { params }),

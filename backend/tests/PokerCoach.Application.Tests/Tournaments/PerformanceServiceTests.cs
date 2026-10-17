@@ -1,4 +1,5 @@
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Tests.Tournaments;
@@ -66,7 +67,7 @@ public sealed class PerformanceServiceTests
 
     private sealed class StubStore(params TournamentFacts[] facts) : ITournamentReadStore
     {
-        public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null) =>
             Task.FromResult<IReadOnlyList<TournamentFacts>>(facts);
     }
 }

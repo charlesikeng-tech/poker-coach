@@ -18,7 +18,8 @@ public sealed record CashSessionSummary(
     long BigBlind,
     decimal NetBigBlinds,
     decimal? BigBlindsPer100,
-    decimal NetMoney);
+    decimal NetMoney,
+    decimal? AllInAdjBigBlindsPer100);
 
 public sealed record CashSessionStackPoint(int Index, DateTimeOffset StartedAt, decimal StackInBigBlinds);
 
@@ -135,6 +136,7 @@ public sealed class CashSessionService(ICashSessionReadStore store)
         var stakes = $"{bigBlind / 200m:0.##}/{bigBlind / 100m:0.##}";
         var duration = (int)Math.Round((last.StartedAt - first.StartedAt).TotalMinutes);
 
+        var adjNetBb = hands.Sum(h => h.AllInAdjNetBigBlinds);
         return new CashSessionSummary(
             id,
             first.StartedAt,
@@ -145,7 +147,8 @@ public sealed class CashSessionService(ICashSessionReadStore store)
             bigBlind,
             Math.Round(netBb, 2),
             hands.Count == 0 ? null : Math.Round(netBb / hands.Count * 100m, 2),
-            netMoney);
+            netMoney,
+            hands.Count == 0 ? null : Math.Round(adjNetBb / hands.Count * 100m, 2));
     }
 
     private static List<CashSessionKeyMoment> SelectKeyMoments(List<CashHandSummary> hands) =>

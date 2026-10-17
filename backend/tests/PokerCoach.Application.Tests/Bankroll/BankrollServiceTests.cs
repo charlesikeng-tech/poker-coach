@@ -1,6 +1,7 @@
 using PokerCoach.Application.Bankroll;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Bankroll;
 using PokerCoach.Domain.Tournaments;
 
@@ -110,7 +111,7 @@ public sealed class BankrollServiceTests
 
     private sealed class StubTournaments(TournamentFacts[] facts) : ITournamentReadStore
     {
-        public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null) =>
             Task.FromResult<IReadOnlyList<TournamentFacts>>(facts.OrderByDescending(f => f.StartedAt).ToList());
     }
 
@@ -121,7 +122,7 @@ public sealed class BankrollServiceTests
 
     private sealed class StubCash(params CashHandRow[] rows) : ICashPerformanceReadStore
     {
-        public Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyList<CashHandRow>> ListCashHandsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, int factsVersion, CancellationToken cancellationToken, PokerRoom? room = null) =>
             Task.FromResult<IReadOnlyList<CashHandRow>>(rows);
 
         public Task<IReadOnlyList<CashHandSummary>> ListCashHandSummariesAsync(Guid userId, DateTimeOffset from, DateTimeOffset to, int factsVersion, CancellationToken cancellationToken) =>

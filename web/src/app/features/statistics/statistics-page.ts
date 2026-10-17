@@ -15,6 +15,7 @@ import { CircleAlert, LoaderCircle, Upload } from 'lucide';
 import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatInteger } from '../../shared/format/format';
+import { roomName } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
@@ -22,6 +23,7 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
 import { BreakdownsPanel } from './breakdowns-panel';
@@ -94,6 +96,7 @@ const PENDING_REFRESH_MS = 3000;
 })
 export class StatisticsPage {
   private readonly api = inject(StatisticsApi);
+  private readonly importApi = inject(ImportApi);
   protected readonly billing = inject(BillingService);
   private readonly language = inject(LanguageService);
 
@@ -117,6 +120,18 @@ export class StatisticsPage {
   protected readonly state = signal<LoadState>('loading');
   protected readonly report = signal<StatisticsReport | null>(null);
   protected readonly icons = { CircleAlert, LoaderCircle, Upload };
+  protected readonly accounts = signal<readonly PokerAccount[]>([]);
+  protected readonly room = signal<string | null>(null);
+  protected readonly rooms = computed(() =>
+    [
+      ...new Set(
+        this.accounts()
+          .filter((a) => a.confirmedAt)
+          .map((a) => a.room),
+      ),
+    ].sort(),
+  );
+  protected readonly roomName = roomName;
 
   /**
    * The breakdown panel's query: the page's filters in the format shown, without the phase. A computed
@@ -124,12 +139,14 @@ export class StatisticsPage {
    */
   protected readonly breakdownQuery = computed<StatisticsQuery>(() => {
     const gt = this.gameTypeService.current();
+    const room = this.room();
     return {
       format: this.report()?.format,
       from: this.fromQuery(),
       ...stackBounds(this.stack()),
       completeOnly: gt !== 'cashGame' && this.completeOnly(),
       gameType: gt,
+      room: room ?? undefined,
     };
   });
 
@@ -161,6 +178,7 @@ export class StatisticsPage {
   });
 
   constructor() {
+    void this.importApi.listAccounts().then((accounts) => this.accounts.set(accounts));
     effect(() => {
       // Only the signals read here trigger a reload: load() reads state it also writes, untracked.
       const args = [
@@ -170,6 +188,7 @@ export class StatisticsPage {
         this.completeOnly(),
         this.phase(),
         this.gameTypeService.current(),
+        this.room(),
       ] as const;
       untracked(() => void this.load(...args));
     });
@@ -192,6 +211,10 @@ export class StatisticsPage {
     this.phase.set(value as TournamentPhase | 'all');
   }
 
+  protected setRoom(value: string): void {
+    this.room.set(value || null);
+  }
+
   protected retry(): void {
     void this.load(
       this.formatChoice(),
@@ -200,6 +223,7 @@ export class StatisticsPage {
       this.completeOnly(),
       this.phase(),
       this.gameTypeService.current(),
+      this.room(),
     );
   }
 
@@ -218,6 +242,7 @@ export class StatisticsPage {
     completeOnly: boolean,
     phase: TournamentPhase | 'all',
     gameType: GameType = 'tournament',
+    room: string | null = null,
   ): Promise<void> {
     clearTimeout(this.refreshTimer);
     const request = ++this.request;
@@ -233,6 +258,7 @@ export class StatisticsPage {
         completeOnly: !isCash && completeOnly,
         phase: !isCash && phase !== 'all' ? phase : undefined,
         gameType,
+        room: room ?? undefined,
       });
       if (request !== this.request) {
         return;
@@ -241,7 +267,7 @@ export class StatisticsPage {
       this.state.set('ready');
       if (report.pendingHands > 0) {
         this.refreshTimer = setTimeout(
-          () => void this.load(report.format, period, stack, completeOnly, phase, gameType),
+          () => void this.load(report.format, period, stack, completeOnly, phase, gameType, room),
           PENDING_REFRESH_MS,
         );
       }

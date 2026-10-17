@@ -103,7 +103,11 @@ internal sealed partial class AnthropicCoachingModel(
         Fill the fields:
         - summary: one or two sentences, what the leak is for this player.
         - why_it_costs: two or three sentences, why it loses chips or money in these games.
-        - actions: two or three short, specific things to do differently.
+        - actions: two or three concrete things to do differently, each with three parts:
+          - spot: one sentence describing the specific situation or trigger.
+          - advice: one sentence on the concrete action to take.
+          - why: one sentence on why it helps in these games.
+        - next_session_focus (optional): one sentence on the one thing to notice or track at the table in the next session. Omit if nothing specific stands out.
         - hands: for each cited hand, one or two sentences on what to do instead and why.
         """;
 
@@ -116,7 +120,23 @@ internal sealed partial class AnthropicCoachingModel(
         {
             ["summary"] = new JsonObject { ["type"] = "string" },
             ["why_it_costs"] = new JsonObject { ["type"] = "string" },
-            ["actions"] = new JsonObject { ["type"] = "array", ["items"] = new JsonObject { ["type"] = "string" } },
+            ["actions"] = new JsonObject
+            {
+                ["type"] = "array",
+                ["items"] = new JsonObject
+                {
+                    ["type"] = "object",
+                    ["additionalProperties"] = false,
+                    ["required"] = new JsonArray("spot", "advice", "why"),
+                    ["properties"] = new JsonObject
+                    {
+                        ["spot"] = new JsonObject { ["type"] = "string" },
+                        ["advice"] = new JsonObject { ["type"] = "string" },
+                        ["why"] = new JsonObject { ["type"] = "string" },
+                    },
+                },
+            },
+            ["next_session_focus"] = new JsonObject { ["type"] = "string" },
             ["hands"] = new JsonObject
             {
                 ["type"] = "array",
@@ -245,18 +265,19 @@ internal sealed partial class AnthropicCoachingModel(
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
     };
 
-    private static readonly string[] TranslatedPokerTerms =
+    /// <summary>Translated poker terms that must not appear in answers, mapped to their correct English equivalent.</summary>
+    private static readonly (string Translated, string English)[] TranslatedPokerTerms =
     [
-        "fuite", "fuga",
-        "mise de continuation", "mise de continuación", "apuesta de continuación", "apuesta continuada",
-        "sur-relance", "surrelance", "re-relance", "resubida",
-        "éventail de mains", "rango de manos",
-        "tapis", "farol", "semi-farol",
-        "mise de valeur", "apuesta de valor",
-        "carte gratuite", "carta gratis",
-        "grosse blinde", "gran ciega", "petite blinde", "ciega pequeña",
-        "hors position", "fuera de posición",
-        "limper", "limpear",
+        ("fuite", "leak"), ("fuga", "leak"),
+        ("mise de continuation", "c-bet"), ("mise de continuación", "c-bet"), ("apuesta de continuación", "c-bet"), ("apuesta continuada", "c-bet"),
+        ("sur-relance", "3-bet"), ("surrelance", "3-bet"), ("re-relance", "3-bet"), ("resubida", "3-bet"),
+        ("éventail de mains", "range"), ("rango de manos", "range"),
+        ("tapis", "all-in"), ("farol", "bluff"), ("semi-farol", "semi-bluff"),
+        ("mise de valeur", "value bet"), ("apuesta de valor", "value bet"),
+        ("carte gratuite", "free card"), ("carta gratis", "free card"),
+        ("grosse blinde", "big blind"), ("gran ciega", "big blind"), ("petite blinde", "small blind"), ("ciega pequeña", "small blind"),
+        ("hors position", "out of position"), ("fuera de posición", "out of position"),
+        ("limper", "limp"), ("limpear", "limp"),
     ];
 
     private const int MaxCorrectionAttempts = 1;
@@ -339,12 +360,18 @@ internal sealed partial class AnthropicCoachingModel(
             throw new CoachingModelException("The model answer misses required fields.", usage);
         }
 
+        var actions = (answer.Actions ?? [])
+            .Where(a => !string.IsNullOrWhiteSpace(a.Spot) && !string.IsNullOrWhiteSpace(a.Advice) && !string.IsNullOrWhiteSpace(a.Why))
+            .Select(a => new ActionStep(a.Spot!.Trim(), a.Advice!.Trim(), a.Why!.Trim()))
+            .Take(3)
+            .ToList();
         return new ModelAnswer<LeakExplanation>(
             new LeakExplanation(
                 answer.Summary.Trim(),
                 answer.WhyItCosts.Trim(),
-                Clean(answer.Actions, 5),
-                (answer.Hands ?? []).Where(h => h.Ref is not null && h.Note is not null).Select(h => new HandNote(h.Ref!, h.Note!.Trim())).Take(3).ToList()),
+                actions,
+                (answer.Hands ?? []).Where(h => h.Ref is not null && h.Note is not null).Select(h => new HandNote(h.Ref!, h.Note!.Trim())).Take(3).ToList(),
+                string.IsNullOrWhiteSpace(answer.NextSessionFocus) ? null : answer.NextSessionFocus.Trim()),
             usage);
     }
 
@@ -562,8 +589,9 @@ internal sealed partial class AnthropicCoachingModel(
                 var translatedTerms = FindTranslatedPokerTerms(repaired);
                 if (translatedTerms.Count > 0)
                 {
+                    var termList = translatedTerms.Select(t => $"'{t.Translated}' (use '{t.English}' instead)");
                     throw new AnswerRejectedException(
-                        $"Translated poker term(s) detected: {string.Join(", ", translatedTerms)}. "
+                        $"Translated poker term(s) detected: {string.Join(", ", termList)}. "
                         + "Use the standard English poker term(s) instead.");
                 }
 
@@ -575,11 +603,11 @@ internal sealed partial class AnthropicCoachingModel(
 
     internal static bool ContainsTranslatedPokerTerm(string text) => FindTranslatedPokerTerms(text).Count > 0;
 
-    private static List<string> FindTranslatedPokerTerms(string text) =>
+    private static List<(string Translated, string English)> FindTranslatedPokerTerms(string text) =>
         TranslatedPokerTerms
-            .Where(term => Regex.IsMatch(
+            .Where(t => Regex.IsMatch(
                 text,
-                $@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(term)}(?![\p{{L}}\p{{N}}])",
+                $@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(t.Translated)}(?![\p{{L}}\p{{N}}])",
                 RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
             .ToList();
 
@@ -641,7 +669,9 @@ internal sealed partial class AnthropicCoachingModel(
     {
     }
 
-    private sealed record Answer(string Summary, string WhyItCosts, IReadOnlyList<string>? Actions, IReadOnlyList<AnswerHand>? Hands);
+    private sealed record Answer(string Summary, string WhyItCosts, IReadOnlyList<AnswerAction>? Actions, IReadOnlyList<AnswerHand>? Hands, string? NextSessionFocus);
+
+    private sealed record AnswerAction(string? Spot, string? Advice, string? Why);
 
     private sealed record AnswerHand(string? Ref, string? Note);
 

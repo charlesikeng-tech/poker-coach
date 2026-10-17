@@ -17,7 +17,8 @@ public sealed record CashSessionSummaryResponse(
     long BigBlind,
     decimal NetBigBlinds,
     decimal? BigBlindsPer100,
-    decimal NetMoney);
+    decimal NetMoney,
+    decimal? AllInAdjBigBlindsPer100);
 
 public sealed record CashSessionStackPointResponse(int Index, DateTimeOffset StartedAt, decimal StackInBigBlinds);
 
@@ -116,5 +117,5 @@ public static class CashSessionEndpoints
     }
 
     private static CashSessionSummaryResponse ToResponse(CashSessionSummary s) =>
-        new(s.Id, s.StartedAt, s.EndedAt, s.DurationMinutes, s.Hands, s.Stakes, s.BigBlind, s.NetBigBlinds, s.BigBlindsPer100, s.NetMoney);
+        new(s.Id, s.StartedAt, s.EndedAt, s.DurationMinutes, s.Hands, s.Stakes, s.BigBlind, s.NetBigBlinds, s.BigBlindsPer100, s.NetMoney, s.AllInAdjBigBlindsPer100);
 }

@@ -184,7 +184,7 @@ public sealed class LeakCoachServiceTests
             }
 
             return Task.FromResult(new ModelAnswer<LeakExplanation>(
-                new LeakExplanation("summary", "why", ["act"], Cite.Select(c => new HandNote(c, "note " + c)).ToList()),
+                new LeakExplanation("summary", "why", [new ActionStep("spot", "act", "why")], Cite.Select(c => new HandNote(c, "note " + c)).ToList()),
                 new ModelUsage("test-model", 6_000, 1_000, 0, 0)));
         }
 

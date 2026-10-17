@@ -71,12 +71,19 @@ export interface ExampleHand {
   readonly note: string;
 }
 
+export interface ActionStep {
+  readonly spot: string;
+  readonly advice: string;
+  readonly why: string;
+}
+
 /** AI-written text: always displayed as such, never as a measurement. */
 export interface LeakExplanation {
   readonly summary: string;
   readonly whyItCosts: string;
-  readonly actions: readonly string[];
+  readonly actions: readonly ActionStep[];
   readonly hands: readonly ExampleHand[];
+  readonly nextSessionFocus: string | null;
   readonly model: string;
   readonly createdAt: string;
 }
@@ -106,6 +113,7 @@ export class LeaksApi {
     format: TableFormat,
     from: string | undefined,
     language: string,
+    gameType: GameType = 'tournament',
   ): Promise<LeakExplanation> {
     return firstValueFrom(
       this.http.post<LeakExplanation>('/api/leaks/explanations', {
@@ -115,6 +123,7 @@ export class LeaksApi {
         format,
         from: from ?? null,
         language,
+        gameType,
       }),
     );
   }

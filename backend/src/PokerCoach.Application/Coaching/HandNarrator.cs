@@ -76,14 +76,24 @@ public static class HandNarrator
             }
 
             text.Append(": ");
-            text.AppendJoin("; ", actions.Select(a => a.Kind switch
+            var streetHigh = street == Street.Preflop ? hand.BigBlind : 0L;
+            var parts = new List<string>(actions.Count);
+            foreach (var a in actions)
             {
-                ActionKind.Fold => $"{Name(a.Player)} folds",
-                ActionKind.Check => $"{Name(a.Player)} checks",
-                ActionKind.Call => $"{Name(a.Player)} calls {Bb(a.Amount)}",
-                ActionKind.Bet => $"{Name(a.Player)} bets {Bb(a.Amount)}",
-                _ => $"{Name(a.Player)} raises by {Bb(a.Amount)}",
-            } + (a.IsAllIn ? " (all-in)" : string.Empty)));
+                if (a.Kind == ActionKind.Bet) streetHigh = a.Amount;
+                else if (a.Kind is not ActionKind.Fold and not ActionKind.Check and not ActionKind.Call) streetHigh += a.Amount;
+                var part = a.Kind switch
+                {
+                    ActionKind.Fold => $"{Name(a.Player)} folds",
+                    ActionKind.Check => $"{Name(a.Player)} checks",
+                    ActionKind.Call => $"{Name(a.Player)} calls {Bb(a.Amount)}",
+                    ActionKind.Bet => $"{Name(a.Player)} bets {Bb(a.Amount)}",
+                    _ => $"{Name(a.Player)} raises to {Bb(streetHigh)}",
+                };
+                parts.Add(part + (a.IsAllIn ? " (all-in)" : string.Empty));
+            }
+
+            text.AppendJoin("; ", parts);
             text.AppendLine(".");
         }
 

@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Tournaments;
 
 namespace PokerCoach.Application.Tournaments;
@@ -28,7 +29,7 @@ public interface ITournamentReadStore
     /// Tournaments of the user's confirmed poker accounts only (ADR-0005: an unconfirmed pseudonym does
     /// not count), started within the optional bounds, most recent first.
     /// </summary>
-    Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken);
+    Task<IReadOnlyList<TournamentFacts>> ListAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, PokerRoom? room = null);
 }
 
 /// <param name="To">Exclusive upper bound.</param>

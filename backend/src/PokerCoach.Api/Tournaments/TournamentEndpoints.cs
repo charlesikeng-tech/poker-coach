@@ -4,6 +4,7 @@ using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 
@@ -258,7 +259,8 @@ public static class TournamentEndpoints
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
-        string? timeZone = null)
+        string? timeZone = null,
+        string? room = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -276,9 +278,14 @@ public static class TournamentEndpoints
             return ApiProblems.Validation("timeZone", "Must be an IANA time zone, like Europe/Paris.");
         }
 
+        if (!PokerRoomQuery.TryParse(room, out var parsedRoom))
+        {
+            return ApiProblems.Validation("room", "Must be a valid room name (winamax, pokerStars, betclic, pmu).");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var report = await performance.GetAsync(userId, from, to, cancellationToken, zone);
+        var report = await performance.GetAsync(userId, from, to, cancellationToken, zone, parsedRoom);
         return TypedResults.Ok(new PerformanceResponse(
             PerformanceFiguresResponse.From(report.Totals),
             report.Curve.Select(p => new ProfitPointResponse(p.Index, p.StartedAt, p.Name, p.Profit, p.CumulativeProfit)).ToList(),

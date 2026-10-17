@@ -55,23 +55,28 @@ public sealed record LeakAnalysisResponse(
 /// <param name="Format">The table format the leak was shown for, as returned by GET /api/leaks.</param>
 /// <param name="From">The period the leak was shown for, as in GET /api/leaks.</param>
 /// <param name="Language">fr, en or es; defaults to the account's language.</param>
+/// <param name="GameType">tournament or cashGame; defaults to tournament.</param>
 public sealed record ExplainLeakRequest(
     LeakStat? Stat,
     PokerPosition? Position,
     LeakDirection? Direction,
     TableFormat? Format,
     DateTimeOffset? From,
-    string? Language);
+    string? Language,
+    GameType? GameType = null);
 
 /// <summary>An example hand as Poker Coach knows it (facts), next to the coach's note about it.</summary>
 public sealed record ExampleHandResponse(string Ref, Guid HandId, DateTimeOffset StartedAt, int Level, PokerPosition? Position, string? HeroCards, decimal StackInBigBlinds, string Note);
+
+public sealed record ActionStepResponse(string Spot, string Advice, string Why);
 
 /// <summary>AI-written text: label it as such in the UI. Figures shown next to it come from the analysis.</summary>
 public sealed record LeakExplanationResponse(
     string Summary,
     string WhyItCosts,
-    IReadOnlyList<string> Actions,
+    IReadOnlyList<ActionStepResponse> Actions,
     IReadOnlyList<ExampleHandResponse> Hands,
+    string? NextSessionFocus,
     string Model,
     DateTimeOffset CreatedAt);
 
@@ -186,18 +191,19 @@ public static class LeakEndpoints
             ?? UserLanguages.Default;
         // The leak is the one the page shows: same history window (ADR-0014).
         var from = await plans.ClampFromAsync(userId, request.From, cancellationToken);
-        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, from, answerLanguage, cancellationToken);
+        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, from, answerLanguage, cancellationToken, request.GameType);
         if (outcome.Explanation is { } explanation)
         {
             var notes = explanation.Explanation.Hands.ToDictionary(h => h.Ref, h => h.Note, StringComparer.Ordinal);
             return TypedResults.Ok(new LeakExplanationResponse(
                 explanation.Explanation.Summary,
                 explanation.Explanation.WhyItCosts,
-                explanation.Explanation.Actions,
+                explanation.Explanation.Actions.Select(a => new ActionStepResponse(a.Spot, a.Advice, a.Why)).ToList(),
                 explanation.Hands
                     .Where(h => notes.ContainsKey(h.Ref))
                     .Select(h => new ExampleHandResponse(h.Ref, h.HandId, h.StartedAt, h.Level, h.Position, h.HeroCards, h.StackInBigBlinds, notes[h.Ref]))
                     .ToList(),
+                explanation.Explanation.NextSessionFocus,
                 explanation.Model,
                 explanation.CreatedAt));
         }

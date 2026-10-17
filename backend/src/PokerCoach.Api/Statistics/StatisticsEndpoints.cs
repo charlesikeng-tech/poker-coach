@@ -188,7 +188,8 @@ public static class StatisticsEndpoints
         bool completeOnly = false,
         string? format = null,
         string? phase = null,
-        string? gameType = null)
+        string? gameType = null,
+        string? room = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -220,9 +221,14 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
+        if (!PokerRoomQuery.TryParse(room, out var parsedRoom))
+        {
+            return ApiProblems.Validation("room", "Must be a valid room name (winamax, pokerStars, betclic, pmu).");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase, parsedGameType), cancellationToken);
+        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase, parsedGameType, parsedRoom), cancellationToken);
         return TypedResults.Ok(new StatisticsResponse(
             StatLineResponse.From(report.Overall),
             report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
@@ -247,7 +253,8 @@ public static class StatisticsEndpoints
         decimal? maxStackBb = null,
         bool completeOnly = false,
         string? format = null,
-        string? gameType = null)
+        string? gameType = null,
+        string? room = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -274,9 +281,14 @@ public static class StatisticsEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
+        if (!PokerRoomQuery.TryParse(room, out var parsedRoom))
+        {
+            return ApiProblems.Validation("room", "Must be a valid room name (winamax, pokerStars, betclic, pmu).");
+        }
+
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, GameType: parsedGameType), time.GetUtcNow(), cancellationToken);
+        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, GameType: parsedGameType, Room: parsedRoom), time.GetUtcNow(), cancellationToken);
         return TypedResults.Ok(new StatisticsBreakdownsResponse(
             b.Format,
             b.ByPhase.Select(p => new PhaseStatLineResponse(p.Phase, StatLineResponse.From(p.Line))).ToList(),

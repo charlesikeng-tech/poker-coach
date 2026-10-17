@@ -52,8 +52,11 @@ public sealed record ExplanationPrompt(string Language, string Facts, IReadOnlyL
 
 public sealed record HandNote(string Ref, string Note);
 
+/// <summary>One concrete action step: the situation, what to do, and why it works.</summary>
+public sealed record ActionStep(string Spot, string Advice, string Why);
+
 /// <summary>The model's answer, after schema validation.</summary>
-public sealed record LeakExplanation(string Summary, string WhyItCosts, IReadOnlyList<string> Actions, IReadOnlyList<HandNote> Hands);
+public sealed record LeakExplanation(string Summary, string WhyItCosts, IReadOnlyList<ActionStep> Actions, IReadOnlyList<HandNote> Hands, string? NextSessionFocus = null);
 
 public sealed record ModelUsage(string Model, int InputTokens, int OutputTokens, int CacheWriteTokens, int CacheReadTokens);
 

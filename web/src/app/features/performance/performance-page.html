@@ -30,6 +30,17 @@
               }
             </select>
           </label>
+          @if (rooms().length > 1) {
+            <label>
+              <span>{{ t('filters.room') }}</span>
+              <select [value]="room() ?? ''" (change)="setRoom($any($event.target).value)">
+                <option value="">{{ t('filters.allRooms') }}</option>
+                @for (r of rooms(); track r) {
+                  <option [value]="r">{{ roomName(r) }}</option>
+                }
+              </select>
+            </label>
+          }
         </div>
 
         <div [class.stale]="state() === 'loading'">
@@ -38,6 +49,22 @@
               class="stat-tile--hero"
               [label]="t('cash.bb100')"
               [value]="report.totals.bigBlindsPer100"
+              [format]="formats().bb100"
+              [signed]="true"
+            >
+              @if (
+                report.totals.bigBlindsPer100Low !== null &&
+                report.totals.bigBlindsPer100High !== null
+              ) {
+                <span class="roi-ci">
+                  {{ bb100(report.totals.bigBlindsPer100Low) }} /
+                  {{ bb100(report.totals.bigBlindsPer100High) }}
+                </span>
+              }
+            </app-stat-tile>
+            <app-stat-tile
+              [label]="t('cash.allInAdjBb100')"
+              [value]="report.totals.allInAdjBigBlindsPer100 ?? null"
               [format]="formats().bb100"
               [signed]="true"
             />
@@ -98,6 +125,7 @@
                         <th scope="col" class="num">{{ t('cash.columns.profit') }}</th>
                         <th scope="col" class="num">{{ t('cash.columns.netBb') }}</th>
                         <th scope="col" class="num">{{ t('cash.columns.bb100') }}</th>
+                        <th scope="col" class="num">{{ t('cash.columns.allInAdjBb100') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -127,6 +155,12 @@
                             [attr.data-sign]="sign(group.figures.bigBlindsPer100)"
                           >
                             {{ bb100(group.figures.bigBlindsPer100) }}
+                          </td>
+                          <td
+                            class="num numeric"
+                            [attr.data-sign]="sign(group.figures.allInAdjBigBlindsPer100 ?? null)"
+                          >
+                            {{ bb100(group.figures.allInAdjBigBlindsPer100 ?? null) }}
                           </td>
                         </tr>
                       }
@@ -159,6 +193,42 @@
                   [handsCount]="selectedDayHands()"
                 />
               }
+            </section>
+          }
+
+          @if ((report.byPosition?.length ?? 0) > 0) {
+            <section class="panel glass">
+              <h2>{{ t('cash.breakdown.position') }}</h2>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">{{ t('cash.columns.position') }}</th>
+                      <th scope="col" class="num">{{ t('cash.columns.hands') }}</th>
+                      <th scope="col" class="num">{{ t('cash.columns.bb100') }}</th>
+                      <th scope="col" class="num">{{ t('cash.columns.vpip') }}</th>
+                      <th scope="col" class="num">{{ t('cash.columns.pfr') }}</th>
+                      <th scope="col" class="num">{{ t('cash.columns.threeBet') }}</th>
+                      <th scope="col" class="num">{{ t('cash.columns.steal') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of report.byPosition; track row.position) {
+                      <tr>
+                        <th scope="row">{{ positionLabel(row.position) }}</th>
+                        <td class="num numeric">{{ integer(row.line.hands) }}</td>
+                        <td class="num numeric" [attr.data-sign]="sign(row.line.bigBlindsPer100)">
+                          {{ bb100(row.line.bigBlindsPer100) }}
+                        </td>
+                        <td class="num numeric">{{ share(row.line.vpip.rate) }}</td>
+                        <td class="num numeric">{{ share(row.line.pfr.rate) }}</td>
+                        <td class="num numeric">{{ share(row.line.threeBet.rate) }}</td>
+                        <td class="num numeric">{{ share(row.line.steal.rate) }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
             </section>
           }
         </div>
@@ -194,6 +264,17 @@
             }
           </select>
         </label>
+        @if (rooms().length > 1) {
+          <label>
+            <span>{{ t('filters.room') }}</span>
+            <select [value]="room() ?? ''" (change)="setRoom($any($event.target).value)">
+              <option value="">{{ t('filters.allRooms') }}</option>
+              @for (r of rooms(); track r) {
+                <option [value]="r">{{ roomName(r) }}</option>
+              }
+            </select>
+          </label>
+        }
       </div>
 
       <div [class.stale]="state() === 'loading'">

@@ -123,9 +123,18 @@
                     @if (e.actions.length > 0) {
                       <ul class="coach-actions">
                         @for (action of e.actions; track $index) {
-                          <li>{{ action }}</li>
+                          <li>
+                            <span class="coach-action-spot">{{ action.spot }}</span>
+                            <span class="coach-action-advice">{{ action.advice }}</span>
+                            <span class="coach-action-why">{{ action.why }}</span>
+                          </li>
                         }
                       </ul>
+                    }
+                    @if (e.nextSessionFocus) {
+                      <p class="coach-focus">
+                        <strong>{{ t('coach.focus') }}</strong> {{ e.nextSessionFocus }}
+                      </p>
                     }
                     @if (e.hands.length > 0) {
                       <h4>{{ t('coach.hands') }}</h4>

@@ -15,6 +15,7 @@ export interface CashSessionSummary {
   readonly netBigBlinds: number;
   readonly bigBlindsPer100: number | null;
   readonly netMoney: number;
+  readonly allInAdjBigBlindsPer100: number | null;
 }
 
 export interface CashSessionStackPoint {

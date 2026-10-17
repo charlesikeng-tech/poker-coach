@@ -113,7 +113,9 @@
           "30d": "Last 30 days",
           "90d": "Last 90 days",
           "year": "This year"
-        }
+        },
+        "room": "Room",
+        "allRooms": "All rooms"
       },
       "totals": {
         "profit": "Profit",
@@ -185,6 +187,7 @@
       },
       "cash": {
         "bb100": "BB/100",
+        "allInAdjBb100": "EV adj. BB/100",
         "profit": "Profit €",
         "netBb": "BB won",
         "hands": "hands",
@@ -196,13 +199,20 @@
           "stakes": "By stakes",
           "month": "By month",
           "dayOfWeek": "By day of the week",
-          "timeSlot": "By time slot"
+          "timeSlot": "By time slot",
+          "position": "By position"
         },
         "columns": {
           "hands": "Hands",
           "profit": "Profit €",
           "netBb": "Net BB",
-          "bb100": "BB/100"
+          "bb100": "BB/100",
+          "allInAdjBb100": "EV adj.",
+          "position": "Position",
+          "vpip": "VPIP",
+          "pfr": "PFR",
+          "threeBet": "3-bet",
+          "steal": "Steal"
         },
         "debrief": {
           "title": "Session debrief",
@@ -518,7 +528,9 @@
           "over15": "15 BB and more"
         },
         "completeOnly": "Complete histories only",
-        "phase": "Phase"
+        "phase": "Phase",
+        "room": "Room",
+        "allRooms": "All rooms"
       },
       "hands": "Hands",
       "bb100": "BB won / 100 hands",
@@ -874,6 +886,7 @@
         "label": "AI explanation",
         "hands": "In your hands",
         "hand": "{{date}} · level {{level}} · {{position}} · {{cards}} · {{stack}} BB",
+        "focus": "Watch at the table:",
         "disclaimer": "Written by an AI from your figures and anonymised hands. Measurements come from NutsIQ, not from the AI.",
         "errors": {
           "LEAK_NOT_FOUND": "This leak no longer shows in your latest data. Reload the page.",

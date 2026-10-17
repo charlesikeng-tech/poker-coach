@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using PokerCoach.Application.Leaks;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -68,9 +69,10 @@ public sealed class LeakCoachService(
         TableFormat? format,
         DateTimeOffset? from,
         string language,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        GameType? gameType = null)
     {
-        var analysis = await leaks.GetAsync(userId, format, from, null, cancellationToken);
+        var analysis = await leaks.GetAsync(userId, format, from, null, cancellationToken, gameType);
         var leak = analysis.Report.Leaks.FirstOrDefault(l => l.Stat == stat && l.Position == position && l.Direction == direction);
         if (leak is null)
         {
@@ -82,6 +84,16 @@ public sealed class LeakCoachService(
         if (cached is not null)
         {
             return CoachingOutcome.Of(cached);
+        }
+
+        IReadOnlyDictionary<PokerPosition, (int Made, int Opportunities)>? positionRates = null;
+        if (leak.Position is null)
+        {
+            var counts = await leaks.CountAsync(userId, analysis.Format, from, null, cancellationToken, gameType);
+            positionRates = counts.ByPosition
+                .Select(kvp => (Position: kvp.Key, Measure: LeakDetector.Measure(stat, kvp.Value)))
+                .Where(x => x.Measure.Opportunities >= 10)
+                .ToDictionary(x => x.Position, x => x.Measure);
         }
 
         var situation = new LeakSituation(stat, position, direction, ReferenceRanges.MinStackBigBlinds, analysis.Format);
@@ -101,7 +113,7 @@ public sealed class LeakCoachService(
                     .ToList();
                 var prompt = new ExplanationPrompt(
                     language,
-                    Facts(leak, analysis.Format),
+                    Facts(leak, analysis.Format, positionRates),
                     examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList());
                 return await model.ExplainAsync(prompt, ct);
             },
@@ -124,25 +136,39 @@ public sealed class LeakCoachService(
     }
 
     /// <summary>The leak in plain facts, all computed by us.</summary>
-    internal static string Facts(Leak leak, TableFormat format)
+    internal static string Facts(Leak leak, TableFormat format, IReadOnlyDictionary<PokerPosition, (int Made, int Opportunities)>? byPosition = null)
     {
         string Pct(decimal ratio) => (ratio * 100m).ToString("0.#", CultureInfo.InvariantCulture) + " %";
         var where = leak.Position is { } p ? $" from {HandNarrator.Label(p)}" : string.Empty;
-        return $"Statistic: {leak.Stat}{where}, {(format == TableFormat.SixMax ? "6-max" : "full-ring")} tables. "
+        var result = $"Statistic: {leak.Stat}{where}, {(format == TableFormat.SixMax ? "6-max" : "full-ring")} tables. "
             + $"Player's rate: {Pct(leak.Rate)} over {leak.Opportunities} situations "
             + $"(95 % interval {Pct(leak.IntervalLow)}–{Pct(leak.IntervalHigh)}). "
             + $"Reference for solid low-stakes MTT regulars: {Pct(leak.Range.Min)}–{Pct(leak.Range.Max)}. "
             + $"Direction: {(leak.Direction == LeakDirection.TooHigh ? "too high" : "too low")}; "
             + $"confidence: {(leak.Confidence == LeakConfidence.Confirmed ? "confirmed" : "possible, sample still small")}. "
             + "Only hands with 15+ big blinds are counted.";
+        if (byPosition is { Count: > 0 })
+        {
+            var lines = byPosition
+                .Where(kvp => kvp.Value.Opportunities > 0)
+                .Select(kvp => $"{HandNarrator.Label(kvp.Key)} {Pct((decimal)kvp.Value.Made / kvp.Value.Opportunities)}")
+                .ToList();
+            if (lines.Count > 0)
+            {
+                result += $"\nBreakdown by position: {string.Join(", ", lines)}.";
+            }
+        }
+
+        return result;
     }
 
     /// <summary>
     /// Bump when the coach's instructions change in a way the player would see (wording, tone): stored
     /// explanations written under the old ones are then written again. 2: informal address, English poker
     /// terms ("leak" never translated). 3: accents checked (mojibake repaired or rejected, ModelText).
+    /// 4: structured actions (spot/advice/why), next_session_focus, raises narrated with total amount.
     /// </summary>
-    internal const int ExplanationVersion = 3;
+    internal const int ExplanationVersion = 4;
 
     /// <summary>
     /// What makes an explanation still valid: the leak, its confidence and its rate to the percent. A few
