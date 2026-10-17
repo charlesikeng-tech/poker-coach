@@ -48,7 +48,8 @@ public sealed class CoachingOptions
 /// <param name="Language">BCP-47 code of the answer language (fr, en, es).</param>
 /// <param name="Facts">The leak and its figures, written by us.</param>
 /// <param name="Hands">Example hands: a short reference ("H1") and their anonymized story.</param>
-public sealed record ExplanationPrompt(string Language, string Facts, IReadOnlyList<(string Ref, string Story)> Hands);
+/// <param name="GameType">Selects the coaching context (MTT or cash game instructions).</param>
+public sealed record ExplanationPrompt(string Language, string Facts, IReadOnlyList<(string Ref, string Story)> Hands, GameType GameType = GameType.Tournament);
 
 public sealed record HandNote(string Ref, string Note);
 
@@ -80,6 +81,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<TournamentDebrief>> DebriefCashSessionAsync(DebriefPrompt prompt, CancellationToken cancellationToken);
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken);

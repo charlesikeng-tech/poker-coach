@@ -34,6 +34,13 @@ internal sealed class ScriptedModel : ICoachingModel
         return Task.FromResult(new ModelAnswer<TournamentDebrief>(Debrief, new ModelUsage("test-model", 7_000, 1_200, 0, 0)));
     }
 
+    public Task<ModelAnswer<TournamentDebrief>> DebriefCashSessionAsync(DebriefPrompt prompt, CancellationToken cancellationToken)
+    {
+        Calls++;
+        LastDebrief = prompt;
+        return Task.FromResult(new ModelAnswer<TournamentDebrief>(Debrief, new ModelUsage("test-model", 7_000, 1_200, 0, 0)));
+    }
+
     public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken)
     {
         Calls++;

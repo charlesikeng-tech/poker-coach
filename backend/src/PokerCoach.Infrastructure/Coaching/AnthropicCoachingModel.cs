@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PokerCoach.Application.Coaching;
+using PokerCoach.Domain.Poker;
 
 namespace PokerCoach.Infrastructure.Coaching;
 
@@ -49,9 +50,15 @@ internal sealed partial class AnthropicCoachingModel(
     IOptions<AnthropicOptions> options,
     ILogger<AnthropicCoachingModel> logger) : ICoachingModel
 {
-    private const string Context = """
+    private const string MttContext = """
         You are the coach inside NutsIQ, an analysis tool for online tournament (MTT) players at low
         stakes (5 to 20 euros), mostly 6-max, with antes and bounties.
+
+        """;
+
+    private const string CashContext = """
+        You are the coach inside NutsIQ, an analysis tool for online cash game players at low
+        stakes (0.01€/0.02€ to 0.25€/0.50€), mostly 6-max, no antes.
 
         """;
 
@@ -86,7 +93,7 @@ internal sealed partial class AnthropicCoachingModel(
         the spot; do not invent terminology or substitute an inaccurate term.
         """;
 
-    private const string Instructions = Context + """
+    private const string LeakRules = """
         You receive one leak: a statistic where the player differs from solid regulars, with figures that
         were computed by the software, and a few of the player's own hands where the leak shows.
 
@@ -97,9 +104,10 @@ internal sealed partial class AnthropicCoachingModel(
         - Reference hands only by their id (H1, H2...), at most three, choosing the most instructive ones.
         - Be concrete and practical, for a recreational player who wants to improve: no jargon without a
           short explanation, no moralising, no generic advice that would fit any leak.
-        - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
         - If the sample is small ("possible"), say so plainly and frame the advice as something to check.
-        """ + Voice + """
+        """;
+
+    private const string LeakFields = """
         Fill the fields:
         - summary: one or two sentences, what the leak is for this player.
         - why_it_costs: two or three sentences, why it loses chips or money in these games.
@@ -110,6 +118,14 @@ internal sealed partial class AnthropicCoachingModel(
         - next_session_focus (optional): one sentence on the one thing to notice or track at the table in the next session. Omit if nothing specific stands out.
         - hands: for each cited hand, one or two sentences on what to do instead and why.
         """;
+
+    private const string Instructions = MttContext + LeakRules + """
+        - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
+        """ + Voice + LeakFields;
+
+    private const string CashInstructions = CashContext + LeakRules + """
+        - Cash game context: effective stacks in big blinds (typically 50–100 BB), rake, no antes or bounties. BB/100 is the key profit metric.
+        """ + Voice + LeakFields;
 
     private static readonly JsonObject Schema = new()
     {
@@ -155,45 +171,61 @@ internal sealed partial class AnthropicCoachingModel(
         },
     };
 
-    private const string DebriefInstructions = Context + """
-        You receive the facts of one tournament the player played, computed by the software, and the stories
-        of its key moments: the hands that won or lost at least a quarter of the stack.
-
+    private const string DebriefRules = """
         Rules:
         - Use only the figures given. Never compute, estimate or invent a statistic, a percentage, a finish
           or an amount of money. If the result is unknown, do not talk about the finish or the money.
         - Talk about the hands only through the facts given (positions, stacks in big blinds, actions, board,
           cards). Opponents are known only by position, and their cards only if they were shown.
-        - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
-          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Judge decisions, not results: a lost all-in can be well played, a won pot can be a mistake.
         - Verdict "variance" only for a preflop all-in whose computed equity is given and whose result went
           against it. When the facts are not enough to judge a decision, use "standard".
         - Be concrete and practical, for a recreational player who wants to improve: no jargon without a
-          short explanation, no moralising, no generic advice that would fit any tournament.
-        - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
-        """ + Voice + """
+          short explanation, no moralising, no generic advice that would fit any single session.
+        """;
+
+    private const string DebriefFields = """
         Fill the fields:
-        - headline: one sentence that sums up the tournament.
-        - story: three to five sentences on how the tournament went, from the stack and the key moments.
+        - headline: one sentence that sums up the session.
+        - story: three to five sentences on how the session went, from the stack and the key moments.
         - moments: the key moments worth a comment (at most six), each with its ref (M1, M2...), a verdict
           and a note of one or two sentences: what happened and what to do next time.
         - strengths: one to three things the player did well, tied to the facts given.
         - work_on: one to three concrete things to work on, tied to the facts given.
         """;
 
-    private const string ReviewInstructions = Context + """
-        You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
-        the week's hands, the drills done and the results, all computed by the software.
+    private const string DebriefInstructions = MttContext + """
+        You receive the facts of one tournament the player played, computed by the software, and the stories
+        of its key moments: the hands that won or lost at least a quarter of the stack.
 
+        """ + DebriefRules + """
+        - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
+        """ + Voice + DebriefFields;
+
+    private const string CashDebriefInstructions = CashContext + """
+        You receive the facts of one cash game session the player played, computed by the software, and the
+        stories of its key moments: the hands with the largest absolute result in big blinds.
+
+        """ + DebriefRules + """
+        - One session is a small sample: its statistics describe this session, they never prove a leak.
+          Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
+        - Cash game context: effective stacks in big blinds, rake, no antes, no bounties, no pay jumps.
+          There is no buy-in, no prize pool, no finish position. BB/100 is the performance metric.
+        """ + Voice + DebriefFields;
+
+    private const string ReviewRules = """
         Rules:
         - Use only the figures given. Never compute, estimate or invent a statistic or a percentage.
         - The status given for each priority is the measurement: do not contradict it. "Not judged" means too
           few spots: encourage playing or drilling that spot, draw no conclusion.
-        - Money over a week is mostly variance: never judge the player's level or the plan from it.
+        - Results over a week are mostly variance: never judge the player's level or the plan from them.
         - If the week is in progress, write a mid-week check and what to do in the days left.
         - Be concrete and encouraging without flattery: name what improved, what did not, and the next step.
-        """ + Voice + """
+        """;
+
+    private const string ReviewFields = """
         Fill the fields:
         - headline: one sentence on the week.
         - summary: two to four sentences on the week against the plan.
@@ -201,6 +233,18 @@ internal sealed partial class AnthropicCoachingModel(
           next concrete step (a drill, a spot to watch at the table).
         - next_steps: two or three concrete actions for the coming days.
         """;
+
+    private const string ReviewInstructions = MttContext + """
+        You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
+        the week's hands, the drills done and the results, all computed by the software.
+
+        """ + ReviewRules + Voice + ReviewFields;
+
+    private const string CashReviewInstructions = CashContext + """
+        You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
+        the week's hands, the drills done and the results, all computed by the software.
+
+        """ + ReviewRules + Voice + ReviewFields;
 
     private static readonly JsonObject Text = new() { ["type"] = "string" };
 
@@ -327,10 +371,15 @@ internal sealed partial class AnthropicCoachingModel(
     }
 
     public Task<ModelAnswer<LeakExplanation>> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("leak-explanation", () => ExplainCoreAsync(prompt, cancellationToken));
+        LoggedAsync(
+            prompt.GameType == GameType.CashGame ? "cash-leak-explanation" : "leak-explanation",
+            () => ExplainCoreAsync(prompt, cancellationToken));
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(prompt, cancellationToken));
+        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(DebriefInstructions, prompt, cancellationToken));
+
+    public Task<ModelAnswer<TournamentDebrief>> DebriefCashSessionAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("cash-debrief", () => DebriefCoreAsync(CashDebriefInstructions, prompt, cancellationToken));
 
     public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("week-review", () => ReviewCoreAsync(prompt, cancellationToken));
@@ -352,9 +401,10 @@ internal sealed partial class AnthropicCoachingModel(
     private async Task<ModelAnswer<LeakExplanation>> ExplainCoreAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
+        var instructions = prompt.GameType == GameType.CashGame ? CashInstructions : Instructions;
         var user = $"Answer language: {prompt.Language}.\n\nLeak:\n{prompt.Facts}\n\n"
             + string.Join("\n\n", prompt.Hands.Select(h => $"Hand {h.Ref}:\n{h.Story}"));
-        var (answer, usage) = await CallAsync<Answer>(Instructions, Schema, user, options.Value.MaxOutputTokens, Reasoning.Writing, cancellationToken);
+        var (answer, usage) = await CallAsync<Answer>(instructions, Schema, user, options.Value.MaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Summary) || string.IsNullOrWhiteSpace(answer.WhyItCosts))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);
@@ -375,12 +425,12 @@ internal sealed partial class AnthropicCoachingModel(
             usage);
     }
 
-    private async Task<ModelAnswer<TournamentDebrief>> DebriefCoreAsync(DebriefPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<TournamentDebrief>> DebriefCoreAsync(string instructions, DebriefPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}\n\n"
             + string.Join("\n\n", prompt.Moments.Select(m => $"Key moment {m.Ref}:\n{m.Story}"));
-        var (answer, usage) = await CallAsync<DebriefAnswer>(DebriefInstructions, DebriefSchema, user, DebriefMaxOutputTokens, Reasoning.Judging, cancellationToken);
+        var (answer, usage) = await CallAsync<DebriefAnswer>(instructions, DebriefSchema, user, DebriefMaxOutputTokens, Reasoning.Judging, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Story))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);
@@ -399,8 +449,9 @@ internal sealed partial class AnthropicCoachingModel(
     private async Task<ModelAnswer<WeekReview>> ReviewCoreAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
+        var instructions = prompt.GameType == GameType.CashGame ? CashReviewInstructions : ReviewInstructions;
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
-        var (answer, usage) = await CallAsync<ReviewAnswer>(ReviewInstructions, ReviewSchema, user, ReviewMaxOutputTokens, Reasoning.Writing, cancellationToken);
+        var (answer, usage) = await CallAsync<ReviewAnswer>(instructions, ReviewSchema, user, ReviewMaxOutputTokens, Reasoning.Writing, cancellationToken);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);

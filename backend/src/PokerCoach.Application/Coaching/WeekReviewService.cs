@@ -20,7 +20,8 @@ public sealed record PriorityNote(string Ref, string Note);
 public sealed record WeekReview(string Headline, string Summary, IReadOnlyList<PriorityNote> Priorities, IReadOnlyList<string> NextSteps);
 
 /// <summary>What the model is asked: the week's plan and measured progress, written by us.</summary>
-public sealed record WeekReviewPrompt(string Language, string Facts);
+/// <param name="GameType">Selects the coaching context (MTT or cash game instructions).</param>
+public sealed record WeekReviewPrompt(string Language, string Facts, GameType GameType = GameType.Tournament);
 
 /// <summary>A priority as measured, shown next to the coach's note: our figures, not the model's.</summary>
 public sealed record ReviewedPriority(
@@ -116,7 +117,7 @@ public sealed class WeekReviewService(
         var outcome = await guard.RunAsync(
             userId,
             AiTask.WeekReview,
-            (model, ct) => model.ReviewWeekAsync(new WeekReviewPrompt(language, Facts(facts, priorities)), ct),
+            (model, ct) => model.ReviewWeekAsync(new WeekReviewPrompt(language, Facts(facts, priorities), facts.GameType), ct),
             cancellationToken);
         if (outcome.Answer is not { } answer)
         {

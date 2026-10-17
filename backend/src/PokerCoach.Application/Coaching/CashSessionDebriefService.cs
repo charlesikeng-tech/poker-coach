@@ -95,7 +95,7 @@ public sealed class CashSessionDebriefService(
                     language,
                     Facts(day, hands, moments),
                     moments.Where(m => narratedHands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(narratedHands[m.HandId]))).ToList());
-                return await model.DebriefTournamentAsync(prompt, ct);
+                return await model.DebriefCashSessionAsync(prompt, ct);
             },
             cancellationToken);
 
@@ -150,9 +150,6 @@ public sealed class CashSessionDebriefService(
             .Select(g => $"{g.Key} ({g.Count()} hands)")
             .ToList();
         text.AppendLine(CultureInfo.InvariantCulture, $"- Format: {string.Join(", ", tableFormats)}.");
-
-        text.AppendLine();
-        text.AppendLine("This is a cash game session, not a tournament. There is no buy-in, no prize, no finish position. The player's goal is to maximize profit in big blinds (BB/100). Do not refer to tournament concepts.");
 
         text.AppendLine();
         text.AppendLine(moments.Count == 0

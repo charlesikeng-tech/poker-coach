@@ -114,7 +114,8 @@ public sealed class LeakCoachService(
                 var prompt = new ExplanationPrompt(
                     language,
                     Facts(leak, analysis.Format, positionRates),
-                    examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList());
+                    examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList(),
+                    gameType ?? GameType.Tournament);
                 return await model.ExplainAsync(prompt, ct);
             },
             cancellationToken);

@@ -191,6 +191,9 @@ public sealed class LeakCoachServiceTests
         public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
+        public Task<ModelAnswer<TournamentDebrief>> DebriefCashSessionAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }
