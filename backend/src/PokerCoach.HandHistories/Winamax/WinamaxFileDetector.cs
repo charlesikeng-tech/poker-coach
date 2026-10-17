@@ -21,6 +21,7 @@ public static class WinamaxFileDetector
             }
 
             return line.StartsWith(WinamaxValues.HandHeaderPrefix, StringComparison.Ordinal)
+                || line.StartsWith(WinamaxValues.CashHandHeaderPrefix, StringComparison.Ordinal)
                 ? HandHistoryFileKind.HandHistory
                 : HandHistoryFileKind.Unknown;
         }

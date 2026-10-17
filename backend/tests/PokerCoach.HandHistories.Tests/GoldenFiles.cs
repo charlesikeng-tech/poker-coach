@@ -48,6 +48,9 @@ internal static class GoldenFiles
 
     public const string DoubleOrNothingSummary = "20261017_Double or Nothing Deglingos(1204313352)_real_holdem_no-limit_summary.txt";
 
+    /// <summary>0.01€/0.02€ NL Hold'em cash game, 5-max, 64 hands. Multiple villains enter mid-session (OOP BB posts), rake and no-rake pots, showdowns.</summary>
+    public const string AalenCashHands = "20261017_Aalen 09_real_holdem_no-limit.txt";
+
     /// <summary>7 hands: fold preflop, raise + flop, hero wins, 5-max, showdown, all-in, side pot.</summary>
     public const string BetclicCash6Max = "cash_nlhe_025_050_6max.txt";
 

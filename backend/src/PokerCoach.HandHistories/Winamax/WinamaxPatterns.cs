@@ -59,6 +59,40 @@ internal static partial class WinamaxPatterns
     [GeneratedRegex(@"^Seat [0-9]+: .+$", Options)]
     internal static partial Regex SummarySeat();
 
+    // Cash game hand history.
+
+    [GeneratedRegex(
+        @"^Winamax Poker - CashGame - HandId: #(?<id>[0-9]+-[0-9]+-[0-9]+) - Holdem no limit \((?<sb>[0-9]+(?:\.[0-9]+)?)€/(?<bb>[0-9]+(?:\.[0-9]+)?)€\) - (?<date>[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) UTC$",
+        Options)]
+    internal static partial Regex CashHandHeader();
+
+    /// <summary>Cash game seat line: "Seat 1: KidOfPok (2.19€)".</summary>
+    [GeneratedRegex(@"^Seat (?<seat>[0-9]+): (?<name>.+) \((?<stack>[0-9]+(?:\.[0-9]+)?)€\)$", Options)]
+    internal static partial Regex CashSeatLine();
+
+    /// <summary>Supports "out of position" suffix for late-entry blind posts.</summary>
+    [GeneratedRegex(
+        @"^posts (?<kind>ante|small blind|big blind) (?<amount>[0-9]+(?:\.[0-9]+)?)€(?<allIn> and is all-in)?(?<oop> out of position)?$",
+        Options)]
+    internal static partial Regex CashPost();
+
+    [GeneratedRegex(@"^(?<kind>calls|bets) (?<amount>[0-9]+(?:\.[0-9]+)?)€(?<allIn> and is all-in)?$", Options)]
+    internal static partial Regex CashCallOrBet();
+
+    [GeneratedRegex(@"^raises (?<by>[0-9]+(?:\.[0-9]+)?)€ to (?<to>[0-9]+(?:\.[0-9]+)?)€(?<allIn> and is all-in)?$", Options)]
+    internal static partial Regex CashRaise();
+
+    [GeneratedRegex(
+        @"^collected (?<amount>[0-9]+(?:\.[0-9]+)?)€ from (?:(?<main>main pot)|side pot (?<side>[0-9]+)|pot)$",
+        Options)]
+    internal static partial Regex CashCollected();
+
+    /// <summary>"Total pot 0.17€ | Rake 0.01€" or "Total pot 0.07€ | No rake".</summary>
+    [GeneratedRegex(
+        @"^Total pot (?<amount>[0-9]+(?:\.[0-9]+)?)€ \| (?:Rake (?<rake>[0-9]+(?:\.[0-9]+)?)€|No rake)$",
+        Options)]
+    internal static partial Regex CashTotalPot();
+
     // Tournament summary file.
 
     // Known suffixes only: an unknown one rejects the summary rather than being silently ignored.

@@ -23,7 +23,8 @@ public sealed class WinamaxHandHistoryParser : IHandHistoryParser
         for (var index = 0; index < lines.Length; index++)
         {
             var line = new SourceLine(index + 1, lines[index]);
-            if (line.Text.StartsWith(WinamaxValues.HandHeaderPrefix, StringComparison.Ordinal))
+            if (line.Text.StartsWith(WinamaxValues.HandHeaderPrefix, StringComparison.Ordinal)
+                || line.Text.StartsWith(WinamaxValues.CashHandHeaderPrefix, StringComparison.Ordinal))
             {
                 current = [line];
                 blocks.Add(current);
@@ -52,7 +53,10 @@ public sealed class WinamaxHandHistoryParser : IHandHistoryParser
         var errors = new List<ParseError>();
         foreach (var block in blocks)
         {
-            var (hand, error) = new WinamaxHandReader(block).Read();
+            var isCashGame = block[0].Text.StartsWith(WinamaxValues.CashHandHeaderPrefix, StringComparison.Ordinal);
+            var (hand, error) = isCashGame
+                ? new WinamaxCashGameHandReader(block).Read()
+                : new WinamaxHandReader(block).Read();
             if (hand is not null)
             {
                 hands.Add(hand);

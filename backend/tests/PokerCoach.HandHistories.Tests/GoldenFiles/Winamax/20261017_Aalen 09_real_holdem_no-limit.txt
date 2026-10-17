@@ -1,0 +1,1667 @@
+Winamax Poker - CashGame - HandId: #23060035-715-1792240332 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:32:12 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain01 (2.19€)
+Seat 2: Villain02 (2.46€)
+Seat 3: Villain03 (1.90€)
+Seat 4: Villain04 (2.26€)
+Seat 5: Hero (2€)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Hero posts big blind 0.02€ out of position
+Dealt to Hero [6d Jh]
+*** PRE-FLOP *** 
+Hero checks
+Villain02 folds
+Villain03 folds
+Villain04 checks
+*** FLOP *** [9c As Qh]
+Villain04 checks
+Hero checks
+*** TURN *** [9c As Qh][Kc]
+Villain04 checks
+Hero bets 0.03€
+Villain04 raises 0.07€ to 0.10€
+Hero folds
+Villain04 collected 0.17€ from pot
+*** SUMMARY ***
+Total pot 0.17€ | Rake 0.01€
+Board: [9c As Qh Kc]
+Seat 4: Villain04 (big blind) won 0.17€
+
+
+Winamax Poker - CashGame - HandId: #23060035-716-1792240375 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:32:55 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain01 (2.19€)
+Seat 2: Villain02 (2.46€)
+Seat 3: Villain03 (1.89€)
+Seat 4: Villain04 (2.31€)
+Seat 5: Hero (1.95€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [2d Ks]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 calls 0.02€
+Villain04 folds
+Hero checks
+*** FLOP *** [5c 6s 9h]
+Hero checks
+Villain03 bets 0.02€
+Hero folds
+Villain03 collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Board: [5c 6s 9h]
+Seat 3: Villain03 (button) won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-717-1792240404 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:33:24 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain02 (2.46€)
+Seat 3: Villain03 (1.92€)
+Seat 4: Villain04 (2.30€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [2c 8h]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 folds
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 (button) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-718-1792240412 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:33:32 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain02 (2.46€)
+Seat 3: Villain03 (1.92€)
+Seat 4: Villain04 (2.33€)
+Seat 5: Hero (1.92€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain02 posts big blind 0.02€
+Dealt to Hero [6c 7s]
+*** PRE-FLOP *** 
+Villain03 raises 0.02€ to 0.04€
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain02 calls 0.02€
+*** FLOP *** [5d 9h Kh]
+Villain02 checks
+Villain03 checks
+*** TURN *** [5d 9h Kh][8h]
+Villain02 bets 0.09€
+Villain03 calls 0.09€
+*** RIVER *** [5d 9h Kh 8h][Kd]
+Villain02 bets 2.33€ and is all-in
+Villain03 folds
+Villain02 collected 2.58€ from pot
+*** SUMMARY ***
+Total pot 2.58€ | Rake 0.02€
+Board: [5d 9h Kh 8h Kd]
+Seat 2: Villain02 (big blind) won 2.58€
+
+
+Winamax Poker - CashGame - HandId: #23060035-719-1792240459 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:34:19 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain02 (2.58€)
+Seat 3: Villain03 (1.79€)
+Seat 4: Villain04 (2.33€)
+Seat 5: Hero (1.92€)
+*** ANTE/BLINDS ***
+Villain02 posts small blind 0.01€
+Villain03 posts big blind 0.02€
+Dealt to Hero [Ts 2h]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain02 calls 0.04€
+Villain03 calls 0.03€
+*** FLOP *** [Kc 2d 6s]
+Villain02 checks
+Villain03 checks
+Villain 05 x bets 0.05€
+Villain02 folds
+Villain03 folds
+Villain 05 x collected 0.19€ from pot
+*** SUMMARY ***
+Total pot 0.19€ | Rake 0.01€
+Board: [Kc 2d 6s]
+Seat 1: Villain 05 x (button) won 0.19€
+
+
+Winamax Poker - CashGame - HandId: #23060035-720-1792240502 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:35:02 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.09€)
+Seat 2: Villain02 (2.53€)
+Seat 3: Villain03 (1.74€)
+Seat 4: Villain04 (2.33€)
+Seat 5: Hero (1.92€)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [6h 4h]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x folds
+Villain02 raises 0.04€ to 0.06€
+Villain03 folds
+Villain04 folds
+Villain02 collected 0.09€ from pot
+*** SUMMARY ***
+Total pot 0.09€ | No rake
+Seat 2: Villain02 (button) won 0.09€
+
+
+Winamax Poker - CashGame - HandId: #23060035-721-1792240524 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:35:24 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.09€)
+Seat 2: Villain02 (2.56€)
+Seat 3: Villain03 (1.73€)
+Seat 4: Villain04 (2.31€)
+Seat 5: Hero (1.92€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [8h Tc]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain02 folds
+Villain03 raises 0.02€ to 0.04€
+Villain04 folds
+Hero folds
+Villain03 collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Seat 3: Villain03 (button) won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-722-1792240540 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:35:40 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.09€)
+Seat 2: Villain02 (2.56€)
+Seat 3: Villain03 (1.76€)
+Seat 4: Villain04 (2.30€)
+Seat 5: Hero (1.90€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [5h Ad]
+*** PRE-FLOP *** 
+Villain02 calls 0.02€
+Villain03 folds
+Villain04 folds
+Hero raises 0.04€ to 0.06€
+Villain 05 x folds
+Villain02 calls 0.04€
+*** FLOP *** [7d 7s Kd]
+Hero checks
+Villain02 checks
+*** TURN *** [7d 7s Kd][Jc]
+Hero checks
+Villain02 bets 0.14€
+Hero folds
+Villain02 collected 0.27€ from pot
+*** SUMMARY ***
+Total pot 0.27€ | Rake 0.01€
+Board: [7d 7s Kd Jc]
+Seat 2: Villain02 won 0.27€
+
+
+Winamax Poker - CashGame - HandId: #23060035-723-1792240604 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:36:44 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.07€)
+Seat 2: Villain02 (2.63€)
+Seat 3: Villain03 (1.76€)
+Seat 4: Villain04 (2.30€)
+Seat 5: Hero (1.84€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain02 posts big blind 0.02€
+Dealt to Hero [2d 4s]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain02 collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 2: Villain02 (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-724-1792240630 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:37:10 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.06€)
+Seat 2: Villain02 (2.64€)
+Seat 3: Villain03 (1.76€)
+Seat 4: Villain04 (2.30€)
+Seat 5: Hero (1.84€)
+*** ANTE/BLINDS ***
+Villain02 posts small blind 0.01€
+Villain03 posts big blind 0.02€
+Dealt to Hero [Qh 8s]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain02 folds
+Villain03 calls 0.03€
+*** FLOP *** [As 8c 7h]
+Villain03 checks
+Villain 05 x bets 0.05€
+Villain03 folds
+Villain 05 x collected 0.15€ from pot
+*** SUMMARY ***
+Total pot 0.15€ | Rake 0.01€
+Board: [As 8c 7h]
+Seat 1: Villain 05 x (button) won 0.15€
+
+
+Winamax Poker - CashGame - HandId: #23060035-725-1792240675 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:37:55 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.11€)
+Seat 2: Villain02 (2.63€)
+Seat 3: Villain03 (1.71€)
+Seat 4: Villain04 (2.30€)
+Seat 5: Hero (1.84€)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [3c 2c]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Villain 05 x collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 1: Villain 05 x won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-726-1792240705 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:38:25 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.14€)
+Seat 2: Villain02 (2.63€)
+Seat 3: Villain03 (1.70€)
+Seat 4: Villain04 (2.28€)
+Seat 5: Hero (1.84€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [7s 4c]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Hero collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 5: Hero (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-727-1792240731 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:38:51 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.14€)
+Seat 2: Villain02 (2.63€)
+Seat 3: Villain03 (1.70€)
+Seat 4: Villain04 (2.27€)
+Seat 5: Hero (1.85€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Ah 9s]
+*** PRE-FLOP *** 
+Villain02 folds
+Villain03 raises 0.02€ to 0.04€
+Villain04 folds
+Hero raises 0.08€ to 0.12€
+Villain 05 x folds
+Villain03 calls 0.08€
+*** FLOP *** [8c 3s 8h]
+Hero checks
+Villain03 bets 0.21€
+Hero folds
+Villain03 collected 0.46€ from pot
+*** SUMMARY ***
+Total pot 0.46€ | Rake 0.01€
+Board: [8c 3s 8h]
+Seat 3: Villain03 won 0.46€
+
+
+Winamax Poker - CashGame - HandId: #23060035-728-1792240788 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:39:48 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.12€)
+Seat 2: Villain02 (2.63€)
+Seat 3: Villain03 (1.83€)
+Seat 4: Villain04 (2.27€)
+Seat 5: Hero (1.73€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain02 posts big blind 0.02€
+Dealt to Hero [Jd 3c]
+*** PRE-FLOP *** 
+Villain03 calls 0.02€
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain02 checks
+*** FLOP *** [As 2c Ac]
+Villain02 checks
+Villain03 checks
+*** TURN *** [As 2c Ac][3h]
+Villain02 checks
+Villain03 checks
+*** RIVER *** [As 2c Ac 3h][Kh]
+Villain02 checks
+Villain03 checks
+*** SHOW DOWN ***
+Villain02 shows [9s 2s] (Two pairs : Aces and 2)
+Villain03 shows [Kc Tc] (Two pairs : Aces and Kings)
+Villain03 collected 0.05€ from pot
+*** SUMMARY ***
+Total pot 0.05€ | No rake
+Board: [As 2c Ac 3h Kh]
+Seat 2: Villain02 (big blind) showed [9s 2s] and lost with Two pairs : Aces and 2
+Seat 3: Villain03 showed [Kc Tc] and won 0.05€ with Two pairs : Aces and Kings
+
+
+Winamax Poker - CashGame - HandId: #23060035-729-1792240814 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:40:14 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.11€)
+Seat 2: Villain02 (2.61€)
+Seat 3: Villain03 (1.86€)
+Seat 4: Villain04 (2.27€)
+Seat 5: Hero (1.73€)
+*** ANTE/BLINDS ***
+Villain02 posts small blind 0.01€
+Villain03 posts big blind 0.02€
+Dealt to Hero [7h 3d]
+*** PRE-FLOP *** 
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x folds
+Villain02 folds
+Villain03 folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-730-1792240831 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:40:31 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.11€)
+Seat 2: Villain02 (2.60€)
+Seat 3: Villain03 (1.84€)
+Seat 4: Villain04 (2.30€)
+Seat 5: Hero (1.73€)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [9d 2d]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain02 folds
+Villain03 folds
+Villain04 calls 0.03€
+*** FLOP *** [Ts Qd 9c]
+Villain04 bets 0.08€
+Villain 05 x calls 0.08€
+*** TURN *** [Ts Qd 9c][6h]
+Villain04 bets 0.32€
+Villain 05 x calls 0.32€
+*** RIVER *** [Ts Qd 9c 6h][Jh]
+Villain04 bets 0.23€
+Villain 05 x calls 0.23€
+*** SHOW DOWN ***
+Villain 05 x shows [Qh 9h] (Two pairs : Queens and 9)
+Villain04 shows [Qs Js] (Two pairs : Queens and Jacks)
+Villain04 collected 1.29€ from pot
+*** SUMMARY ***
+Total pot 1.29€ | Rake 0.08€
+Board: [Ts Qd 9c 6h Jh]
+Seat 1: Villain 05 x showed [Qh 9h] and lost with Two pairs : Queens and 9
+Seat 4: Villain04 (big blind) showed [Qs Js] and won 1.29€ with Two pairs : Queens and Jacks
+
+
+Winamax Poker - CashGame - HandId: #23060035-731-1792240929 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:42:09 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain02 (2.60€)
+Seat 3: Villain03 (1.83€)
+Seat 4: Villain04 (2.91€)
+Seat 5: Hero (1.73€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [8s Kc]
+*** PRE-FLOP *** 
+Villain 05 x raises 0.03€ to 0.05€
+Villain02 folds
+Villain03 folds
+Villain04 folds
+Hero calls 0.03€
+*** FLOP *** [7d 9h 9c]
+Hero checks
+Villain 05 x checks
+*** TURN *** [7d 9h 9c][Kh]
+Hero bets 0.06€
+Villain 05 x folds
+Hero collected 0.16€ from pot
+*** SUMMARY ***
+Total pot 0.16€ | Rake 0.01€
+Board: [7d 9h 9c Kh]
+Seat 5: Hero (big blind) won 0.16€
+
+
+Winamax Poker - CashGame - HandId: #23060035-732-1792241010 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:43:30 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2€)
+Seat 3: Villain03 (1.83€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.78€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [6d 5h]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 folds
+Hero folds
+Villain 05 x collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 1: Villain 05 x (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-733-1792241021 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:43:41 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.01€)
+Seat 3: Villain03 (1.83€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.77€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain03 posts big blind 0.02€
+Dealt to Hero [Kd Th]
+*** PRE-FLOP *** 
+Villain04 raises 0.03€ to 0.05€
+Hero raises 0.10€ to 0.15€
+Villain 05 x folds
+Villain03 folds
+Villain04 folds
+Hero collected 0.23€ from pot
+*** SUMMARY ***
+Total pot 0.23€ | No rake
+Seat 5: Hero (button) won 0.23€
+
+
+Winamax Poker - CashGame - HandId: #23060035-734-1792241046 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:44:06 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2€)
+Seat 3: Villain03 (1.81€)
+Seat 4: Villain04 (2.85€)
+Seat 5: Hero (1.85€)
+*** ANTE/BLINDS ***
+Villain03 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [5c 8s]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain03 calls 0.04€
+Villain04 folds
+*** FLOP *** [9s 9d 6h]
+Villain03 checks
+Villain 05 x checks
+*** TURN *** [9s 9d 6h][9c]
+Villain03 checks
+Villain 05 x checks
+*** RIVER *** [9s 9d 6h 9c][Kd]
+Villain03 checks
+Villain 05 x checks
+*** SHOW DOWN ***
+Villain03 shows [Qh 5h] (Trips of 9)
+Villain 05 x shows [2s Ac] (Trips of 9)
+Villain 05 x collected 0.11€ from pot
+*** SUMMARY ***
+Total pot 0.11€ | Rake 0.01€
+Board: [9s 9d 6h 9c Kd]
+Seat 1: Villain 05 x (button) showed [2s Ac] and won 0.11€ with Trips of 9
+Seat 3: Villain03 (small blind) showed [Qh 5h] and lost with Trips of 9
+
+
+Winamax Poker - CashGame - HandId: #23060035-735-1792241086 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:44:46 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.06€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.76€)
+Seat 4: Villain04 (2.83€)
+Seat 5: Hero (1.85€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Villain-06 posts big blind 0.02€ out of position
+Dealt to Hero [4h 9d]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 checks
+Villain03 calls 0.02€
+Villain04 folds
+Hero checks
+*** FLOP *** [Qc 6h 8c]
+Hero checks
+Villain-06 checks
+Villain03 checks
+*** TURN *** [Qc 6h 8c][9c]
+Hero checks
+Villain-06 checks
+Villain03 checks
+*** RIVER *** [Qc 6h 8c 9c][As]
+Hero checks
+Villain-06 bets 0.02€
+Villain03 folds
+Hero folds
+Villain-06 collected 0.09€ from pot
+*** SUMMARY ***
+Total pot 0.09€ | No rake
+Board: [Qc 6h 8c 9c As]
+Seat 2: Villain-06 won 0.09€
+
+
+Winamax Poker - CashGame - HandId: #23060035-736-1792241122 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:45:22 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.06€)
+Seat 2: Villain-06 (2.05€)
+Seat 3: Villain03 (1.74€)
+Seat 4: Villain04 (2.82€)
+Seat 5: Hero (1.83€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [9c 7d]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain03 raises 0.02€ to 0.04€
+Villain04 folds
+Hero folds
+Villain 05 x calls 0.02€
+*** FLOP *** [8s 6h 7h]
+Villain 05 x checks
+Villain03 checks
+*** TURN *** [8s 6h 7h][4c]
+Villain 05 x checks
+Villain03 checks
+*** RIVER *** [8s 6h 7h 4c][9s]
+Villain 05 x checks
+Villain03 checks
+*** SHOW DOWN ***
+Villain 05 x shows [Jd Qc] (High card : Queen)
+Villain03 shows [Ac Kh] (High card : Ace)
+Villain03 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | Rake 0.01€
+Board: [8s 6h 7h 4c 9s]
+Seat 1: Villain 05 x (big blind) showed [Jd Qc] and lost with High card : Queen
+Seat 3: Villain03 showed [Ac Kh] and won 0.08€ with High card : Ace
+
+
+Winamax Poker - CashGame - HandId: #23060035-737-1792241166 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:46:06 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.02€)
+Seat 2: Villain-06 (2.05€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.82€)
+Seat 5: Hero (1.82€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [4s Kc]
+*** PRE-FLOP *** 
+Villain03 folds
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x folds
+Villain-06 folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-738-1792241288 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:48:08 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.01€)
+Seat 2: Villain-06 (2.03€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.85€)
+Seat 5: Hero (1.82€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [9d Qd]
+*** PRE-FLOP *** 
+Hero raises 0.02€ to 0.04€
+Villain 05 x folds
+Villain-06 calls 0.03€
+Villain04 folds
+*** FLOP *** [4c Ac As]
+Villain-06 checks
+Hero bets 0.03€
+Villain-06 folds
+Hero collected 0.12€ from pot
+*** SUMMARY ***
+Total pot 0.12€ | Rake 0.01€
+Board: [4c Ac As]
+Seat 5: Hero won 0.12€
+
+
+Winamax Poker - CashGame - HandId: #23060035-739-1792241321 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:48:41 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.01€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.83€)
+Seat 5: Hero (1.87€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [6h 6d]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 raises 0.03€ to 0.05€
+Villain04 raises 0.15€ to 0.20€
+Hero folds
+Villain-06 folds
+Villain04 collected 0.27€ from pot
+*** SUMMARY ***
+Total pot 0.27€ | No rake
+Seat 4: Villain04 (small blind) won 0.27€
+
+
+Winamax Poker - CashGame - HandId: #23060035-740-1792241354 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:49:14 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.01€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.85€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [7c Kc]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain04 folds
+Hero raises 0.04€ to 0.06€
+Villain 05 x calls 0.04€
+*** FLOP *** [Kh Td As]
+Hero bets 0.04€
+Villain 05 x folds
+Hero collected 0.15€ from pot
+*** SUMMARY ***
+Total pot 0.15€ | Rake 0.01€
+Board: [Kh Td As]
+Seat 5: Hero (small blind) won 0.15€
+
+
+Winamax Poker - CashGame - HandId: #23060035-741-1792241393 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:49:53 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.90€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [Ac 8c]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero raises 0.02€ to 0.04€
+Villain 05 x folds
+Villain-06 folds
+Hero collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Seat 5: Hero (button) won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-742-1792241408 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:50:08 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [Kc 2d]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain-06 folds
+Villain04 folds
+Villain 05 x collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 1: Villain 05 x (button) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-743-1792241420 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:50:20 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.03€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.88€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [6c 9d]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 folds
+Villain04 raises 0.04€ to 0.06€
+Hero folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-744-1792241432 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:50:32 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.03€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.91€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [4d 9h]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 (button) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-745-1792241444 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:50:44 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.01€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.93€)
+Seat 5: Hero (1.90€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [9h Ah]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero raises 0.02€ to 0.04€
+Villain 05 x folds
+Villain-06 folds
+Hero collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Seat 5: Hero (button) won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-746-1792241469 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:51:09 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.93€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [6d 3d]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x folds
+Villain-06 raises 0.04€ to 0.06€
+Villain04 folds
+Villain-06 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 2: Villain-06 (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-747-1792241480 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:51:20 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain-06 (2.02€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.91€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [5s Ac]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 folds
+Villain04 folds
+Hero collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 5: Hero (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-748-1792241489 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:51:29 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain-06 (2.02€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.94€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Kd 4c]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 (button) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-749-1792241495 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:51:35 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2€)
+Seat 2: Villain-06 (2.02€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.93€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [4s Jc]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero folds
+Villain 05 x raises 0.04€ to 0.06€
+Villain-06 folds
+Villain 05 x collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 1: Villain 05 x (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-750-1792241510 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:51:50 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.02€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.93€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [4c 7h]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain-06 calls 0.04€
+Villain04 folds
+*** FLOP *** [2c 8d 4d]
+Villain-06 checks
+Villain 05 x checks
+*** TURN *** [2c 8d 4d][As]
+Villain-06 checks
+Villain 05 x checks
+*** RIVER *** [2c 8d 4d As][Qs]
+Villain-06 bets 0.06€
+Villain 05 x calls 0.06€
+*** SHOW DOWN ***
+Villain-06 shows [Qd Js] (One pair : Queens)
+Villain 05 x shows [Ts Ah] (One pair : Aces)
+Villain 05 x collected 0.23€ from pot
+*** SUMMARY ***
+Total pot 0.23€ | Rake 0.01€
+Board: [2c 8d 4d As Qs]
+Seat 1: Villain 05 x (button) showed [Ts Ah] and won 0.23€ with One pair : Aces
+Seat 2: Villain-06 (small blind) showed [Qd Js] and lost with One pair : Queens
+
+
+Winamax Poker - CashGame - HandId: #23060035-751-1792241577 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:52:57 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.14€)
+Seat 2: Villain-06 (1.89€)
+Seat 3: Villain03 (1.78€)
+Seat 4: Villain04 (2.91€)
+Seat 5: Hero (1.93€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [6d 7c]
+*** PRE-FLOP *** 
+Villain 05 x raises 0.03€ to 0.05€
+Villain04 folds
+Hero folds
+Villain 05 x collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 1: Villain 05 x won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-752-1792241589 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:53:09 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.17€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.90€)
+Seat 5: Hero (1.91€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Kh Qd]
+*** PRE-FLOP *** 
+Villain04 raises 0.03€ to 0.05€
+Hero raises 0.10€ to 0.15€
+Villain 05 x folds
+Villain04 folds
+Hero collected 0.22€ from pot
+*** SUMMARY ***
+Total pot 0.22€ | No rake
+Seat 5: Hero (small blind) won 0.22€
+
+
+Winamax Poker - CashGame - HandId: #23060035-753-1792241611 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:53:31 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.15€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.85€)
+Seat 5: Hero (1.98€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [Ks 2c]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x folds
+Villain04 collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 4: Villain04 (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-754-1792241616 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:53:36 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.14€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.86€)
+Seat 5: Hero (1.98€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [9d Ks]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain04 folds
+Hero collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 5: Hero (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-755-1792241626 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:53:46 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.14€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.85€)
+Seat 5: Hero (1.99€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Tc Jd]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero raises 0.04€ to 0.06€
+Villain 05 x calls 0.04€
+*** FLOP *** [5s 4d Th]
+Hero bets 0.09€
+Villain 05 x folds
+Hero collected 0.20€ from pot
+*** SUMMARY ***
+Total pot 0.20€ | Rake 0.01€
+Board: [5s 4d Th]
+Seat 5: Hero (small blind) won 0.20€
+
+
+Winamax Poker - CashGame - HandId: #23060035-756-1792241656 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:54:16 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.08€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.85€)
+Seat 5: Hero (2.04€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [Kh 5s]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x folds
+Villain04 collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 4: Villain04 (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-757-1792241671 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:54:31 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.07€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.86€)
+Seat 5: Hero (2.04€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [8d 9c]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain04 raises 0.04€ to 0.06€
+Hero folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-758-1792241684 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:54:44 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.07€)
+Seat 2: Villain-06 (1.89€)
+Seat 4: Villain04 (2.88€)
+Seat 5: Hero (2.02€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Qc 5c]
+*** PRE-FLOP *** 
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x calls 0.03€
+*** FLOP *** [6s 5s Ks]
+Villain 05 x checks
+Villain04 checks
+*** TURN *** [6s 5s Ks][9s]
+Villain 05 x bets 0.06€
+Villain04 calls 0.06€
+*** RIVER *** [6s 5s Ks 9s][Qh]
+Villain 05 x bets 0.23€
+Villain04 calls 0.23€
+*** SHOW DOWN ***
+Villain04 shows [Tc Qs] (Flush King high)
+Villain 05 x shows [6h As] (Flush Ace high)
+Villain 05 x collected 0.65€ from pot
+*** SUMMARY ***
+Total pot 0.65€ | Rake 0.04€
+Board: [6s 5s Ks 9s Qh]
+Seat 1: Villain 05 x (big blind) showed [6h As] and won 0.65€ with Flush Ace high
+Seat 4: Villain04 (button) showed [Tc Qs] and lost with Flush King high
+
+
+Winamax Poker - CashGame - HandId: #23060035-759-1792241759 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:55:59 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.38€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.54€)
+Seat 5: Hero (2.01€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [Td Jc]
+*** PRE-FLOP *** 
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x folds
+Villain-06 calls 0.03€
+*** FLOP *** [7h 7d 6d]
+Villain-06 checks
+Villain04 checks
+*** TURN *** [7h 7d 6d][As]
+Villain-06 checks
+Villain04 bets 0.06€
+Villain-06 folds
+Villain04 collected 0.16€ from pot
+*** SUMMARY ***
+Total pot 0.16€ | Rake 0.01€
+Board: [7h 7d 6d As]
+Seat 4: Villain04 won 0.16€
+
+
+Winamax Poker - CashGame - HandId: #23060035-760-1792241801 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:56:41 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.37€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.59€)
+Seat 5: Hero (2.01€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain.07 posts big blind 0.02€
+Dealt to Hero [2d 7d]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain-06 folds
+Villain.07 collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 3: Villain.07 (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-761-1792241815 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:56:55 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.37€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.01€)
+Seat 4: Villain04 (2.59€)
+Seat 5: Hero (2.01€)
+*** ANTE/BLINDS ***
+Villain.07 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [4h Ac]
+*** PRE-FLOP *** 
+Hero raises 0.02€ to 0.04€
+Villain 05 x folds
+Villain-06 folds
+Villain.07 folds
+Villain04 folds
+Hero collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Seat 5: Hero won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-762-1792241845 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:57:25 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.37€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.57€)
+Seat 5: Hero (2.04€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [7s 8h]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 folds
+Villain.07 raises 0.02€ to 0.04€
+Villain04 folds
+Hero folds
+Villain.07 collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Seat 3: Villain.07 (button) won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-763-1792241858 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:57:38 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.37€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.03€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.02€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [9d 2d]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain.07 raises 0.02€ to 0.04€
+Villain04 folds
+Hero folds
+Villain 05 x calls 0.02€
+*** FLOP *** [8h 4s 2c]
+Villain 05 x checks
+Villain.07 checks
+*** TURN *** [8h 4s 2c][Tc]
+Villain 05 x checks
+Villain.07 checks
+*** RIVER *** [8h 4s 2c Tc][3c]
+Villain 05 x checks
+Villain.07 checks
+*** SHOW DOWN ***
+Villain 05 x shows [7s Js] (High card : Jack)
+Villain.07 shows [Ad Jh] (High card : Ace)
+Villain.07 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | Rake 0.01€
+Board: [8h 4s 2c Tc 3c]
+Seat 1: Villain 05 x (big blind) showed [7s Js] and lost with High card : Jack
+Seat 3: Villain.07 showed [Ad Jh] and won 0.08€ with High card : Ace
+
+
+Winamax Poker - CashGame - HandId: #23060035-764-1792241912 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:58:32 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.33€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.07€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.01€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [Qd 5c]
+*** PRE-FLOP *** 
+Villain.07 raises 0.02€ to 0.04€
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain-06 folds
+Villain.07 collected 0.07€ from pot
+*** SUMMARY ***
+Total pot 0.07€ | No rake
+Seat 3: Villain.07 won 0.07€
+
+
+Winamax Poker - CashGame - HandId: #23060035-765-1792241921 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:58:41 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.32€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.10€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.01€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain.07 posts big blind 0.02€
+Dealt to Hero [Th Kd]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero raises 0.02€ to 0.04€
+Villain 05 x folds
+Villain-06 folds
+Villain.07 calls 0.02€
+*** FLOP *** [7s 6h Ks]
+Villain.07 checks
+Hero bets 0.03€
+Villain.07 calls 0.03€
+*** TURN *** [7s 6h Ks][6c]
+Villain.07 checks
+Hero bets 0.06€
+Villain.07 folds
+Hero collected 0.20€ from pot
+*** SUMMARY ***
+Total pot 0.20€ | Rake 0.01€
+Board: [7s 6h Ks 6c]
+Seat 5: Hero won 0.20€
+
+
+Winamax Poker - CashGame - HandId: #23060035-766-1792241967 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:59:27 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.32€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.03€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.08€)
+*** ANTE/BLINDS ***
+Villain.07 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [7d Td]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x raises 0.03€ to 0.05€
+Villain-06 folds
+Villain.07 folds
+Villain04 folds
+Villain 05 x collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 1: Villain 05 x won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-767-1792241981 - Holdem no limit (0.01€/0.02€) - 2026/10/17 12:59:41 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.35€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.02€)
+Seat 4: Villain04 (2.54€)
+Seat 5: Hero (2.08€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [Js 8c]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 folds
+Villain.07 folds
+Villain04 raises 0.04€ to 0.06€
+Hero folds
+Villain04 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 4: Villain04 (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-768-1792242004 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:00:04 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.35€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.02€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.06€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [7c Kd]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain.07 folds
+Villain04 folds
+Hero raises 0.04€ to 0.06€
+Villain 05 x folds
+Hero collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 5: Hero (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-769-1792242036 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:00:36 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.33€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.02€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.08€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [9c Js]
+*** PRE-FLOP *** 
+Villain.07 folds
+Villain04 folds
+Hero folds
+Villain 05 x raises 0.04€ to 0.06€
+Villain-06 folds
+Villain 05 x collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 1: Villain 05 x (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-770-1792242051 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:00:51 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.35€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.02€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.08€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain.07 posts big blind 0.02€
+Dealt to Hero [9s 3s]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain-06 raises 0.04€ to 0.06€
+Villain.07 folds
+Villain-06 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 2: Villain-06 (small blind) won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-771-1792242063 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:01:03 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.35€)
+Seat 2: Villain-06 (2.02€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.56€)
+Seat 5: Hero (2.08€)
+*** ANTE/BLINDS ***
+Villain.07 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [Ts 9c]
+*** PRE-FLOP *** 
+Hero folds
+Villain 05 x folds
+Villain-06 folds
+Villain.07 raises 0.02€ to 0.04€
+Villain04 folds
+Villain.07 collected 0.06€ from pot
+*** SUMMARY ***
+Total pot 0.06€ | No rake
+Seat 3: Villain.07 (small blind) won 0.06€
+
+
+Winamax Poker - CashGame - HandId: #23060035-772-1792242079 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:01:19 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.35€)
+Seat 2: Villain-06 (2.02€)
+Seat 3: Villain.07 (2.02€)
+Seat 4: Villain04 (2.54€)
+Seat 5: Hero (2.08€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [Ks 4d]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 raises 0.03€ to 0.05€
+Villain.07 raises 0.13€ to 0.18€
+Villain04 folds
+Hero folds
+Villain-06 folds
+Villain.07 collected 0.26€ from pot
+*** SUMMARY ***
+Total pot 0.26€ | No rake
+Seat 3: Villain.07 (button) won 0.26€
+
+
+Winamax Poker - CashGame - HandId: #23060035-773-1792242093 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:01:33 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.35€)
+Seat 2: Villain-06 (2€)
+Seat 3: Villain.07 (2.10€)
+Seat 4: Villain04 (2.53€)
+Seat 5: Hero (2.06€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Th 7d]
+*** PRE-FLOP *** 
+Villain-06 raises 0.03€ to 0.05€
+Villain.07 folds
+Villain04 folds
+Hero folds
+Villain 05 x calls 0.03€
+*** FLOP *** [4h 8h Ad]
+Villain 05 x checks
+Villain-06 bets 0.04€
+Villain 05 x calls 0.04€
+*** TURN *** [4h 8h Ad][7c]
+Villain 05 x checks
+Villain-06 bets 0.10€
+Villain 05 x calls 0.10€
+*** RIVER *** [4h 8h Ad 7c][Kh]
+Villain 05 x checks
+Villain-06 checks
+*** SHOW DOWN ***
+Villain 05 x shows [9c Ah] (One pair : Aces)
+Villain-06 shows [Tc As] (One pair : Aces)
+Villain-06 collected 0.37€ from pot
+*** SUMMARY ***
+Total pot 0.37€ | Rake 0.02€
+Board: [4h 8h Ad 7c Kh]
+Seat 1: Villain 05 x (big blind) showed [9c Ah] and lost with One pair : Aces
+Seat 2: Villain-06 showed [Tc As] and won 0.37€ with One pair : Aces
+
+
+Winamax Poker - CashGame - HandId: #23060035-774-1792242159 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:02:39 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #5 is the button
+Seat 1: Villain 05 x (2.16€)
+Seat 2: Villain-06 (2.18€)
+Seat 3: Villain.07 (2.10€)
+Seat 4: Villain04 (2.53€)
+Seat 5: Hero (2.05€)
+*** ANTE/BLINDS ***
+Villain 05 x posts small blind 0.01€
+Villain-06 posts big blind 0.02€
+Dealt to Hero [8s 5h]
+*** PRE-FLOP *** 
+Villain.07 folds
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain-06 collected 0.03€ from pot
+*** SUMMARY ***
+Total pot 0.03€ | No rake
+Seat 2: Villain-06 (big blind) won 0.03€
+
+
+Winamax Poker - CashGame - HandId: #23060035-775-1792242173 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:02:53 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #1 is the button
+Seat 1: Villain 05 x (2.15€)
+Seat 2: Villain-06 (2.19€)
+Seat 3: Villain.07 (2.10€)
+Seat 4: Villain04 (2.53€)
+Seat 5: Hero (2.05€)
+*** ANTE/BLINDS ***
+Villain-06 posts small blind 0.01€
+Villain.07 posts big blind 0.02€
+Dealt to Hero [4s 3c]
+*** PRE-FLOP *** 
+Villain04 folds
+Hero folds
+Villain 05 x folds
+Villain-06 raises 0.04€ to 0.06€
+Villain.07 calls 0.04€
+*** FLOP *** [9c As Ts]
+Villain-06 checks
+Villain.07 checks
+*** TURN *** [9c As Ts][Js]
+Villain-06 bets 0.05€
+Villain.07 calls 0.05€
+*** RIVER *** [9c As Ts Js][Qc]
+Villain-06 bets 0.22€
+Villain.07 folds
+Villain-06 collected 0.43€ from pot
+*** SUMMARY ***
+Total pot 0.43€ | Rake 0.01€
+Board: [9c As Ts Js Qc]
+Seat 2: Villain-06 (small blind) won 0.43€
+
+
+Winamax Poker - CashGame - HandId: #23060035-776-1792242211 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:03:31 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #2 is the button
+Seat 1: Villain 05 x (2.15€)
+Seat 2: Villain-06 (2.29€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.53€)
+Seat 5: Hero (2.05€)
+*** ANTE/BLINDS ***
+Villain.07 posts small blind 0.01€
+Villain04 posts big blind 0.02€
+Dealt to Hero [Js Kh]
+*** PRE-FLOP *** 
+Hero raises 0.02€ to 0.04€
+Villain 05 x folds
+Villain-06 folds
+Villain.07 folds
+Villain04 calls 0.02€
+*** FLOP *** [Qh Jd 8s]
+Villain04 checks
+Hero bets 0.03€
+Villain04 calls 0.03€
+*** TURN *** [Qh Jd 8s][5s]
+Villain04 checks
+Hero bets 0.06€
+Villain04 folds
+Hero collected 0.20€ from pot
+*** SUMMARY ***
+Total pot 0.20€ | Rake 0.01€
+Board: [Qh Jd 8s 5s]
+Seat 5: Hero won 0.20€
+
+
+Winamax Poker - CashGame - HandId: #23060035-777-1792242246 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:04:06 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #3 is the button
+Seat 1: Villain 05 x (2.15€)
+Seat 2: Villain-06 (2.29€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.46€)
+Seat 5: Hero (2.12€)
+*** ANTE/BLINDS ***
+Villain04 posts small blind 0.01€
+Hero posts big blind 0.02€
+Dealt to Hero [6s 7d]
+*** PRE-FLOP *** 
+Villain 05 x folds
+Villain-06 raises 0.03€ to 0.05€
+Villain04 folds
+Hero folds
+Villain-06 collected 0.08€ from pot
+*** SUMMARY ***
+Total pot 0.08€ | No rake
+Seat 2: Villain-06 won 0.08€
+
+
+Winamax Poker - CashGame - HandId: #23060035-778-1792242264 - Holdem no limit (0.01€/0.02€) - 2026/10/17 13:04:24 UTC
+Table: 'Aalen 09' 5-max (real money) Seat #4 is the button
+Seat 1: Villain 05 x (2.15€)
+Seat 2: Villain-06 (2.32€)
+Seat 3: Villain.07 (2€)
+Seat 4: Villain04 (2.45€)
+Seat 5: Hero (2.10€)
+*** ANTE/BLINDS ***
+Hero posts small blind 0.01€
+Villain 05 x posts big blind 0.02€
+Dealt to Hero [Qh 4d]
+*** PRE-FLOP *** 
+Villain-06 folds
+Villain04 raises 0.03€ to 0.05€
+Hero folds
+Villain 05 x calls 0.03€
+*** FLOP *** [Ad 5h Ac]
+Villain 05 x checks
+Villain04 checks
+*** TURN *** [Ad 5h Ac][Kc]
+Villain 05 x bets 0.05€
+Villain04 calls 0.05€
+*** RIVER *** [Ad 5h Ac Kc][5c]
+Villain 05 x bets 0.13€
+Villain04 folds
+Villain 05 x collected 0.33€ from pot
+*** SUMMARY ***
+Total pot 0.33€ | Rake 0.01€
+Board: [Ad 5h Ac Kc 5c]
+Seat 1: Villain 05 x (big blind) won 0.33€
+
+

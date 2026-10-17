@@ -17,12 +17,18 @@ import pathlib
 import re
 import sys
 
-SEAT = re.compile(r'^(Seat \d+: )(.+?)( \(\d+(?:, [\d.]+€ bounty)?\))$')
+_AMOUNT = r'(?:\d+(?:\.[0-9]+)?€|\d+)'  # "42" (chips) or "0.42€" (cash game euros)
+SEAT = re.compile(r'^(Seat \d+: )(.+?)( \((?:' + _AMOUNT + r'(?:, [\d.]+€ bounty)?)\))$')
 SUMMARY_SEAT = re.compile(r'^(Seat \d+: )(.+?)( \((?:button|small blind|big blind)\))?( (?:won|showed) .*)$')
 DEALT = re.compile(r'^(Dealt to )(.+?)( \[[^\]]+\])$')
 PLAYER_LINE = re.compile(
-    r'^(.+?)( (?:folds|checks|calls \d+|bets \d+|raises \d+ to \d+|posts (?:ante|small blind|big blind) \d+'
-    r'|shows \[|collected \d+ from|mucks|sits out|is (?:dis)?connected).*)$')
+    r'^(.+?)( (?:folds|checks'
+    r'|calls ' + _AMOUNT +
+    r'|bets ' + _AMOUNT +
+    r'|raises ' + _AMOUNT + r' to ' + _AMOUNT +
+    r'|posts (?:ante|small blind|big blind) ' + _AMOUNT +
+    r'|shows \[|collected ' + _AMOUNT + r' from'
+    r'|mucks|sits out|is (?:dis)?connected).*)$')
 SUMMARY_PLAYER = re.compile(r'^(Player : )(.+)$')
 
 

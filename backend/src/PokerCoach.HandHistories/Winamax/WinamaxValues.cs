@@ -9,6 +9,7 @@ internal static class WinamaxValues
     internal const string Currency = "EUR";
     internal const char EuroSign = '€';
     internal const string HandHeaderPrefix = "Winamax Poker - Tournament \"";
+    internal const string CashHandHeaderPrefix = "Winamax Poker - CashGame - HandId: #";
     internal const string SummaryHeaderPrefix = "Winamax Poker - Tournament summary : ";
 
     /// <summary>
