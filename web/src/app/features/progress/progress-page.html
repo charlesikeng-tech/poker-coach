@@ -16,6 +16,18 @@
           <p class="week-title">{{ t('week', { date: weekLabel(r.weekStart) }) }}</p>
           <p class="muted">{{ t('daysLeft', { count: daysLeft() }) }}</p>
         </div>
+        @if (gameTypeService.current() === 'tournament') {
+          <select
+            [value]="subFormat() ?? ''"
+            [attr.aria-label]="t('subFormat.label')"
+            (change)="selectSubFormat($any($event.target).value || undefined)"
+          >
+            <option value="">{{ t('subFormat.all') }}</option>
+            <option value="mtt">{{ t('subFormat.mtt') }}</option>
+            <option value="rebuyMtt">{{ t('subFormat.rebuyMtt') }}</option>
+            <option value="sng">{{ t('subFormat.sng') }}</option>
+          </select>
+        }
         @if (r.current) {
           <button appButton variant="ghost" [disabled]="rebuilding()" (click)="rebuild()">
             <app-icon [icon]="icons.RefreshCw" [class.spin]="rebuilding()" />{{ t('rebuild') }}

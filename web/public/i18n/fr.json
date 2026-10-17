@@ -1531,6 +1531,13 @@
       "week": "Semaine du {{date}}",
       "daysLeft": "Encore {{count}} jour(s)",
       "rebuild": "Recalculer le plan",
+      "subFormat": {
+        "label": "Format",
+        "all": "Tous les tournois",
+        "mtt": "MTT",
+        "rebuyMtt": "MTT rebuy",
+        "sng": "SNG"
+      },
       "notYet": {
         "title": "Pas encore assez de mains récentes",
         "description": "Le plan se construit sur tes 90 derniers jours : {{hands}} mains pour l'instant, il en faut {{needed}} (15 BB et plus) pour qu'il ne repose pas sur du bruit.",
