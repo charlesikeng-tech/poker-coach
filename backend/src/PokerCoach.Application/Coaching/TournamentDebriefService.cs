@@ -143,12 +143,7 @@ public sealed class TournamentDebriefService(
                 var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, ct);
                 var hands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct))
                     .ToDictionary(h => h.HandId);
-                var subFormat = detail.Mode switch
-                {
-                    "sng" => TournamentSubFormat.Sng,
-                    "mtt" => TournamentSubFormat.RebuyMtt,
-                    _ => TournamentSubFormat.Mtt,
-                };
+                var subFormat = detail.SubFormat ?? TournamentSubFormat.Mtt;
                 var isBounty = detail.IsBounty;
                 var prompt = new DebriefPrompt(
                     language,
