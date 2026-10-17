@@ -331,7 +331,7 @@ export class PerformancePage {
     this.state.set('loading');
     try {
       const report = await this.api.get(
-        toQuery(period, 'all', 1, 1, new Date()).from,
+        toQuery(period, 'all', 'all', 1, 1, new Date()).from,
         undefined,
         room ?? undefined,
       );
@@ -354,7 +354,7 @@ export class PerformancePage {
     this.state.set('loading');
     try {
       const report = await this.api.getCash(
-        toQuery(period, 'all', 1, 1, new Date()).from,
+        toQuery(period, 'all', 'all', 1, 1, new Date()).from,
         undefined,
         room ?? undefined,
       );

@@ -82,7 +82,7 @@ export class TournamentsPage {
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly buyIns = BUY_IN_FILTERS;
-  protected readonly formats = FORMAT_FILTERS;
+  protected readonly formatOptions = FORMAT_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
   protected readonly buyIn = signal<BuyInFilter>('all');
   protected readonly format = signal<FormatFilter>('all');

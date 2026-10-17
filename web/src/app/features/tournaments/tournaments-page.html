@@ -65,7 +65,7 @@
                 [attr.aria-label]="t('filters.format')"
                 (change)="setFormat($any($event.target).value)"
               >
-                @for (option of formats; track option) {
+                @for (option of formatOptions; track option) {
                   <option [value]="option">{{ t('filters.formats.' + option) }}</option>
                 }
               </select>

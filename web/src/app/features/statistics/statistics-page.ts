@@ -108,7 +108,7 @@ export class StatisticsPage {
   protected readonly period = signal<PeriodFilter>('all');
   /** The period as the API's lower bound, shared with the all-in panel. */
   protected readonly fromQuery = computed(
-    () => toQuery(this.period(), 'all', 1, 1, new Date()).from,
+    () => toQuery(this.period(), 'all', 'all', 1, 1, new Date()).from,
   );
   protected readonly stack = signal<StackFilter>('all');
   protected readonly phases = TOURNAMENT_PHASES;
@@ -252,7 +252,7 @@ export class StatisticsPage {
       const isCash = gameType === 'cashGame';
       const report = await this.api.get({
         format: format ?? undefined,
-        from: toQuery(period, 'all', 1, 1, new Date()).from,
+        from: toQuery(period, 'all', 'all', 1, 1, new Date()).from,
         ...stackBounds(stack),
         completeOnly: !isCash && completeOnly,
         phase: !isCash && phase !== 'all' ? phase : undefined,

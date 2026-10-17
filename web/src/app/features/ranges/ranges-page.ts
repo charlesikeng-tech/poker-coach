@@ -281,7 +281,7 @@ export class RangesPage {
         format: format ?? undefined,
         band,
         stack: band === 'push' ? pushStack : undefined,
-        from: toQuery(period, 'all', 1, 1, new Date()).from,
+        from: toQuery(period, 'all', 'all', 1, 1, new Date()).from,
         gameType: gameType !== 'tournament' ? gameType : undefined,
       });
       if (request !== this.request) {

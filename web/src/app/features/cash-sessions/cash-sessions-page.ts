@@ -132,7 +132,7 @@ export class CashSessionsPage {
     const request = ++this.request;
     this.state.set('loading');
     try {
-      const query = toQuery(period, 'all', page, PAGE_SIZE, new Date());
+      const query = toQuery(period, 'all', 'all', page, PAGE_SIZE, new Date());
       const data = await this.api.list(query.from, page, PAGE_SIZE);
       if (request === this.request) {
         this.data.set(data);

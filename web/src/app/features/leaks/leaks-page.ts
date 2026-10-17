@@ -125,7 +125,7 @@ export class LeaksPage {
     }
     this.setCoach(key, { status: 'loading' });
     try {
-      const from = toQuery(this.period(), 'all', 1, 1, new Date()).from;
+      const from = toQuery(this.period(), 'all', 'all', 1, 1, new Date()).from;
       const format = this.analysis()?.format ?? 'sixMax';
       const explanation = await this.api.explain(
         leak,
@@ -190,7 +190,7 @@ export class LeaksPage {
       this.state.set('loading');
     }
     try {
-      const from = toQuery(period, 'all', 1, 1, new Date()).from;
+      const from = toQuery(period, 'all', 'all', 1, 1, new Date()).from;
       this.from.set(from);
       const analysis = await this.api.get(from, format, gameType);
       if (request !== this.request) {
