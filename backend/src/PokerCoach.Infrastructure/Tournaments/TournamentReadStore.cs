@@ -80,6 +80,7 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.TournamentType,
                 t.Speed,
                 t.Mode,
+                t.SubFormat,
                 HasSummary = t.SummaryImportedAt != null,
             };
 
@@ -140,13 +141,7 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.RebuyCost,
                 t.AddonCost,
                 t.Mode,
-                SubFormat: t.Mode switch
-                {
-                    "sng" => TournamentSubFormat.Sng,
-                    "mtt" => TournamentSubFormat.RebuyMtt,
-                    not null => TournamentSubFormat.Mtt,
-                    _ => (TournamentSubFormat?)null,
-                }))
+                SubFormat: t.SubFormat))
             .ToList();
     }
 }
