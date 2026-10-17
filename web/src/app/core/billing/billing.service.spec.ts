@@ -22,6 +22,7 @@ const FREE: BillingSummary = {
   currentPeriodEnd: null,
   cancelAtPeriodEnd: false,
   canManage: false,
+  purchasedCreditsBalance: 0,
 };
 
 describe('BillingService', () => {

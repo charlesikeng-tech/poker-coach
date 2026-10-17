@@ -23,6 +23,7 @@ function report(profit: number, withResult: number): PerformanceReport {
     byMonth: [],
     byDayOfWeek: [],
     byTimeSlot: [],
+    rooms: [],
   };
 }
 
