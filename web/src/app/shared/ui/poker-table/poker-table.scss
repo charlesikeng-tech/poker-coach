@@ -197,6 +197,21 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.watermark {
+  position: absolute;
+  bottom: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: color-mix(in srgb, var(--accent-primary) 16%, transparent);
+  font-size: 0.65rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
 @media (max-width: 767px) {
   .felt {
     min-height: 18rem;
