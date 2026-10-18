@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutsIQ — UI Overview</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f0f11;
+      color: #e4e4e7;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 3rem 2rem 2rem;
+      border-bottom: 1px solid #27272a;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+    header p  { color: #a1a1aa; margin-top: .35rem; font-size: .95rem; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
+    section { margin-bottom: 3.5rem; }
+    section h2 {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #71717a;
+      margin-bottom: 1.25rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 1.5rem;
+    }
+    .grid.single { grid-template-columns: 1fr; max-width: 700px; }
+
+    .card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color .15s;
+    }
+    .card:hover { border-color: #52525b; }
+
+    .card img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .card-body {
+      padding: .85rem 1rem;
+      border-top: 1px solid #27272a;
+    }
+    .card-body strong { font-size: .875rem; color: #f4f4f5; }
+    .card-body p     { font-size: .8rem; color: #71717a; margin-top: .2rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>NutsIQ — UI Overview</h1>
+  <p>Screenshots of every screen. Generated from the running app with mocked data.</p>
+</header>
+
+<main>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section>
+    <h2>Access</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="screenshots/sign-in.png" alt="Sign-in page" loading="lazy" />
+        <div class="card-body">
+          <strong>Sign-in</strong>
+          <p>Entry point for new and returning users. Google OAuth or email + password. Switches to sign-up mode inline.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/forgot-password.png" alt="Forgot-password page" loading="lazy" />
+        <div class="card-body">
+          <strong>Forgot password</strong>
+          <p>Sends a reset link to the address on file. Works even for accounts originally created with Google.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section>
+    <h2>Dashboard</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="screenshots/dashboard.png" alt="Dashboard" loading="lazy" />
+        <div class="card-body">
+          <strong>Dashboard</strong>
+          <p>Rolling summary of results: profit, ROI, ITM, cumulative profit curve, recent tournaments, cash game figures.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section>
+    <h2>Results</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="screenshots/tournaments.png" alt="Tournaments" loading="lazy" />
+        <div class="card-body">
+          <strong>Tournaments</strong>
+          <p>Paginated list of all imported tournaments with results, buy-ins, finish positions and hand coverage.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/cash-sessions.png" alt="Cash Sessions" loading="lazy" />
+        <div class="card-body">
+          <strong>Cash Sessions</strong>
+          <p>List of cash game sessions with net BB, net money and hand counts. Master–detail layout.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/performance.png" alt="Performance" loading="lazy" />
+        <div class="card-body">
+          <strong>Performance</strong>
+          <p>Profit and ROI broken down by buy-in band, tournament type, speed, month and day of week.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/bankroll.png" alt="Bankroll" loading="lazy" />
+        <div class="card-body">
+          <strong>Bankroll</strong>
+          <p>Balance curve, deposit/withdrawal history, ROI confidence interval and buy-in limit rule.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section>
+    <h2>Analysis</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="screenshots/statistics.png" alt="Statistics" loading="lazy" />
+        <div class="card-body">
+          <strong>Statistics</strong>
+          <p>Full stat line (VPIP, PFR, RFI, steal, 3-bet, C-bet…) overall and by position, with phase and month breakdowns.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/leaks.png" alt="Leaks" loading="lazy" />
+        <div class="card-body">
+          <strong>Leaks</strong>
+          <p>Stats outside the reference range, with confidence intervals. Confirmed vs. possible leaks. AI explanation on demand.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/ranges.png" alt="Ranges" loading="lazy" />
+        <div class="card-body">
+          <strong>Ranges</strong>
+          <p>Opening and defence ranges by position and stack depth, derived from the player's own hand history.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section>
+    <h2>Improvement</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="screenshots/progress.png" alt="Weekly plan" loading="lazy" />
+        <div class="card-body">
+          <strong>Weekly plan</strong>
+          <p>2–3 priorities drawn from recent leaks, frozen for the week. Tracks in-week progress and drill completion.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/training.png" alt="Training" loading="lazy" />
+        <div class="card-body">
+          <strong>Training</strong>
+          <p>Opening and sizing drills tied to the weekly plan. Instant feedback with reference ranges.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <section>
+    <h2>Settings &amp; Account</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="screenshots/import.png" alt="Import" loading="lazy" />
+        <div class="card-body">
+          <strong>Import</strong>
+          <p>Drag-and-drop upload for hand histories and tournament summaries. Supports Winamax and PokerStars formats.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/subscription.png" alt="Subscription" loading="lazy" />
+        <div class="card-body">
+          <strong>Subscription</strong>
+          <p>Plan details, AI credits used this month, upgrade and billing portal access.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/account.png" alt="Account" loading="lazy" />
+        <div class="card-body">
+          <strong>Account</strong>
+          <p>Display name, email, password change, full GDPR data export and account deletion.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="screenshots/privacy.png" alt="Privacy" loading="lazy" />
+        <div class="card-body">
+          <strong>Privacy</strong>
+          <p>What is stored, why, by whom, and how long. Links to export and account deletion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
