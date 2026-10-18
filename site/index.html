@@ -905,6 +905,34 @@
         border-radius: var(--radius-md);
       }
 
+      @media (prefers-reduced-motion: no-preference) {
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes rangeReveal {
+          from { opacity: 0; transform: scale(0.6); }
+          to   { opacity: 0.85; transform: scale(1); }
+        }
+        @keyframes gaugeIn {
+          from { left: 0; }
+        }
+
+        .hero h1       { animation: fadeUp 0.65s cubic-bezier(0.2, 0, 0, 1) both; }
+        .hero .lede    { animation: fadeUp 0.65s 0.12s cubic-bezier(0.2, 0, 0, 1) both; }
+        .hero .ctas    { animation: fadeUp 0.65s 0.22s cubic-bezier(0.2, 0, 0, 1) both; }
+        .hero .reassure { animation: fadeUp 0.65s 0.32s cubic-bezier(0.2, 0, 0, 1) both; }
+        .hero .stage   { animation: fadeUp 0.75s 0.08s cubic-bezier(0.2, 0, 0, 1) both; }
+
+        .range i.on {
+          animation: rangeReveal 0.3s calc(var(--i, 0) * 14ms) cubic-bezier(0.2, 0, 0, 1) both;
+        }
+
+        .gauge-dot {
+          animation: gaugeIn 1.1s 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+      }
+
       @media (max-width: 900px) {
         .hero .wrap,
         .truth .wrap,
@@ -1157,6 +1185,7 @@
               <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in"
                 >Commencer gratuitement</a
               >
+              <a class="btn btn--ghost" href="/demo.html">Voir l'appli</a>
               <a class="btn btn--ghost" href="#tarifs">Voir les tarifs</a>
             </div>
             <p class="reassure">
@@ -1944,9 +1973,14 @@
         var grid = document.getElementById("range");
         if (!grid) return;
         var html = "";
+        var onIndex = 0;
         for (var row = 0; row < 13; row++) {
           for (var col = 0; col < 13; col++) {
-            html += col + row >= 13 ? '<i class="on"></i>' : "<i></i>";
+            if (col + row >= 13) {
+              html += '<i class="on" style="--i:' + (onIndex++) + '"></i>';
+            } else {
+              html += "<i></i>";
+            }
           }
         }
         grid.innerHTML = html;

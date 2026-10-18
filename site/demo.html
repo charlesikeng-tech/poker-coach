@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>NutsIQ — Visite guidée</title>
+    <meta
+      name="description"
+      content="Découvrez NutsIQ en images : analyses de leaks, statistiques, plan hebdo et entraînement."
+    />
+    <link rel="canonical" href="https://nutsiq.com/demo.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="preload"
+      href="/fonts/sora-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/ibm-plex-sans-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <style>
+      @font-face {
+        font-family: "Sora Variable";
+        src: url("/fonts/sora-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 800;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "IBM Plex Sans Variable";
+        src: url("/fonts/ibm-plex-sans-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 700;
+        font-display: swap;
+      }
+
+      :root {
+        color-scheme: dark;
+        --felt: #0b1411;
+        --felt-raised: #0f1a16;
+        --felt-high: #1b2b24;
+        --ink: #ecf2ee;
+        --ink-2: #a9b8b0;
+        --ink-3: #87978e;
+        --gold: #e9b949;
+        --gold-hi: #f3ca68;
+        --on-gold: #1a1405;
+        --line: rgb(214 236 224 / 0.1);
+        --line-strong: rgb(214 236 224 / 0.18);
+        --gold-wash: rgb(233 185 73 / 0.12);
+        --gold-glow: rgb(233 185 73 / 0.35);
+        --display: "Sora Variable", "Sora", system-ui, sans-serif;
+        --body: "IBM Plex Sans Variable", "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; }
+
+      body {
+        background: var(--felt);
+        color: var(--ink);
+        font: 400 1rem/1.5 var(--body);
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* ---- Header ---- */
+      header {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 max(1rem, 3vw);
+        height: 3.5rem;
+        border-bottom: 1px solid var(--line);
+        background: rgb(11 20 17 / 0.92);
+        backdrop-filter: blur(14px);
+        z-index: 2;
+      }
+
+      .brand {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+        font: 700 1.2rem/1 var(--display);
+        letter-spacing: -0.02em;
+        text-decoration: none;
+        color: var(--ink);
+      }
+      .brand b { color: var(--gold); font-weight: inherit; }
+      .brand svg { width: 1.2rem; height: 1.2rem; }
+
+      .btn-gold {
+        display: inline-flex;
+        align-items: center;
+        height: 2.4rem;
+        padding: 0 1.1rem;
+        border-radius: 8px;
+        border: none;
+        background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+        color: var(--on-gold);
+        font: 600 0.88rem/1 var(--body);
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 1px 3px rgb(0 0 0 / 0.3);
+        transition: box-shadow 200ms;
+      }
+      .btn-gold:hover {
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 0 0 1px var(--gold-glow), 0 6px 20px var(--gold-glow);
+      }
+
+      /* ---- Progress bar ---- */
+      .progress-bar {
+        flex: none;
+        height: 2px;
+        background: var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .progress-fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        background: var(--gold);
+        width: 0%;
+        transition: width 0.08s linear;
+      }
+
+      /* ---- Main layout ---- */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: clamp(0.75rem, 2vh, 1.5rem) max(1rem, 3vw);
+        gap: clamp(0.75rem, 1.5vh, 1.25rem);
+      }
+
+      /* ---- Slideshow ---- */
+      .slideshow {
+        flex: 1;
+        position: relative;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.45s cubic-bezier(0.2, 0, 0, 1);
+      }
+      .slide.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .slide img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 10px;
+        border: 1px solid var(--line-strong);
+        box-shadow:
+          0 0 0 1px rgb(255 255 255 / 0.04),
+          0 24px 64px rgb(0 0 0 / 0.55),
+          0 4px 16px rgb(0 0 0 / 0.3);
+        display: block;
+      }
+
+      /* ---- Caption ---- */
+      .caption {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        text-align: center;
+        min-height: 3.5rem;
+      }
+
+      .caption-section {
+        font: 600 0.68rem/1 var(--body);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+
+      .caption-title {
+        font: 600 1.05rem/1.2 var(--display);
+        letter-spacing: -0.015em;
+        color: var(--ink);
+      }
+
+      .caption-desc {
+        font-size: 0.88rem;
+        color: var(--ink-2);
+        max-width: 52ch;
+      }
+
+      /* ---- Controls ---- */
+      .controls {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+      }
+
+      .ctrl-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border: 1px solid var(--line-strong);
+        border-radius: 50%;
+        background: rgb(22 36 30 / 0.5);
+        color: var(--ink-2);
+        cursor: pointer;
+        transition: border-color 150ms, color 150ms;
+      }
+      .ctrl-btn:hover { border-color: var(--gold-glow); color: var(--ink); }
+
+      .dots {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--line-strong);
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition: background 200ms, transform 200ms;
+      }
+      .dot.active {
+        background: var(--gold);
+        transform: scale(1.35);
+      }
+
+      .ctrl-play {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border: 1px solid var(--line-strong);
+        border-radius: 50%;
+        background: rgb(22 36 30 / 0.5);
+        color: var(--ink-2);
+        cursor: pointer;
+        transition: border-color 150ms, color 150ms;
+      }
+      .ctrl-play:hover { border-color: var(--gold-glow); color: var(--ink); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .slide { transition: none; }
+        .progress-fill { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/" aria-label="NutsIQ, accueil">
+        <svg viewBox="0 0 22 22" aria-hidden="true">
+          <g fill="#e9b949">
+            <rect x="16" y="0" width="6" height="6" rx="1.25" />
+            <rect x="8" y="8" width="6" height="6" rx="1.25" />
+            <rect x="16" y="8" width="6" height="6" rx="1.25" />
+            <rect x="0" y="16" width="6" height="6" rx="1.25" />
+            <rect x="8" y="16" width="6" height="6" rx="1.25" />
+            <rect x="16" y="16" width="6" height="6" rx="1.25" />
+          </g>
+          <g fill="#ecf2ee" fill-opacity="0.14">
+            <rect x="0" y="0" width="6" height="6" rx="1.25" />
+            <rect x="8" y="0" width="6" height="6" rx="1.25" />
+            <rect x="0" y="8" width="6" height="6" rx="1.25" />
+          </g>
+        </svg>
+        <span>Nuts<b>IQ</b></span>
+      </a>
+      <a class="btn-gold" href="https://app.nutsiq.com/sign-in">Essayer gratuitement</a>
+    </header>
+
+    <div class="progress-bar" role="progressbar" aria-label="Progression">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <main>
+      <div class="slideshow" id="slideshow" aria-live="polite" aria-atomic="true"></div>
+
+      <div class="caption" id="caption">
+        <span class="caption-section" id="cap-section"></span>
+        <strong class="caption-title" id="cap-title"></strong>
+        <p class="caption-desc" id="cap-desc"></p>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" id="btn-prev" aria-label="Précédent">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+
+        <div class="dots" id="dots" role="tablist" aria-label="Slides"></div>
+
+        <button class="ctrl-play" id="btn-play" aria-label="Pause" aria-pressed="false">
+          <svg id="icon-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <svg id="icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none">
+            <path d="M6 19h4V5H6zM14 19h4V5h-4z" />
+          </svg>
+        </button>
+
+        <button class="ctrl-btn" id="btn-next" aria-label="Suivant">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <script>
+      var SLIDES = [
+        {
+          section: "Tableau de bord",
+          title: "Vue d'ensemble de tes résultats",
+          desc: "Profit, ROI, ITM et courbe cumulative au premier coup d'œil.",
+          img: "dashboard",
+        },
+        {
+          section: "Analyse",
+          title: "Tes leaks, classés par impact",
+          desc: "Chaque leak est calculé sur tes mains réelles, avec un intervalle de confiance.",
+          img: "leaks",
+        },
+        {
+          section: "Analyse",
+          title: "Statistiques par position",
+          desc: "VPIP, PFR, 3-bet, C-bet par position et profondeur de stack, comparés aux repères.",
+          img: "statistics",
+        },
+        {
+          section: "Progression",
+          title: "Plan de travail hebdo",
+          desc: "2–3 priorités tirées de tes leaks, gelées pour la semaine, avec suivi en temps réel.",
+          img: "progress",
+        },
+        {
+          section: "Progression",
+          title: "Entraînement ciblé",
+          desc: "Exercices d'ouverture et de défense construits sur tes propres spots.",
+          img: "training",
+        },
+        {
+          section: "Résultats",
+          title: "Performance par buy-in",
+          desc: "ROI et profit ventilés par tranche, type, vitesse de tournoi et par mois.",
+          img: "performance",
+        },
+        {
+          section: "Résultats",
+          title: "Gestion de bankroll",
+          desc: "Courbe de balance, limite de buy-in automatique et indice de confiance ROI.",
+          img: "bankroll",
+        },
+        {
+          section: "Résultats",
+          title: "Historique de tournois",
+          desc: "Tous tes tournois importés avec résultats, positions et couverture des mains.",
+          img: "tournaments",
+        },
+        {
+          section: "Analyse",
+          title: "Ranges d'ouverture",
+          desc: "Tes ranges réelles face aux références, position par position et profondeur de stack.",
+          img: "ranges",
+        },
+        {
+          section: "Import",
+          title: "Dépose ton .zip, NutsIQ fait le reste",
+          desc: "Les doublons sont ignorés automatiquement — tu peux importer le même dossier chaque semaine.",
+          img: "import",
+        },
+      ];
+
+      var INTERVAL = 4500;
+
+      var current = 0;
+      var playing = true;
+      var timer = null;
+      var tickStart = null;
+      var elapsed = 0;
+
+      var showEl = document.getElementById("slideshow");
+      var dotsEl = document.getElementById("dots");
+      var progressEl = document.getElementById("progress");
+      var capSection = document.getElementById("cap-section");
+      var capTitle = document.getElementById("cap-title");
+      var capDesc = document.getElementById("cap-desc");
+      var btnPlay = document.getElementById("btn-play");
+      var iconPlay = document.getElementById("icon-play");
+      var iconPause = document.getElementById("icon-pause");
+
+      // Build slides
+      var slideEls = SLIDES.map(function (s, i) {
+        var el = document.createElement("div");
+        el.className = "slide";
+        el.setAttribute("role", "tabpanel");
+        el.setAttribute("aria-label", s.title);
+        var img = document.createElement("img");
+        img.src = "screenshots/" + s.img + ".png";
+        img.alt = s.title;
+        img.loading = i === 0 ? "eager" : "lazy";
+        el.appendChild(img);
+        showEl.appendChild(el);
+        return el;
+      });
+
+      // Build dots
+      var dotEls = SLIDES.map(function (s, i) {
+        var btn = document.createElement("button");
+        btn.className = "dot";
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-label", "Slide " + (i + 1) + " : " + s.title);
+        btn.setAttribute("aria-selected", "false");
+        btn.addEventListener("click", function () { goTo(i); });
+        dotsEl.appendChild(btn);
+        return btn;
+      });
+
+      function goTo(idx) {
+        slideEls[current].classList.remove("active");
+        dotEls[current].classList.remove("active");
+        dotEls[current].setAttribute("aria-selected", "false");
+        current = (idx + SLIDES.length) % SLIDES.length;
+        slideEls[current].classList.add("active");
+        dotEls[current].classList.add("active");
+        dotEls[current].setAttribute("aria-selected", "true");
+        var s = SLIDES[current];
+        capSection.textContent = s.section;
+        capTitle.textContent = s.title;
+        capDesc.textContent = s.desc;
+        elapsed = 0;
+        tickStart = Date.now();
+        progressEl.style.width = "0%";
+      }
+
+      function tick() {
+        if (!playing) return;
+        var now = Date.now();
+        var delta = now - tickStart;
+        var pct = Math.min((delta / INTERVAL) * 100, 100);
+        progressEl.style.width = pct + "%";
+        if (delta >= INTERVAL) {
+          goTo(current + 1);
+        }
+        timer = requestAnimationFrame(tick);
+      }
+
+      function startPlay() {
+        playing = true;
+        tickStart = Date.now();
+        iconPlay.style.display = "none";
+        iconPause.style.display = "";
+        btnPlay.setAttribute("aria-label", "Pause");
+        btnPlay.setAttribute("aria-pressed", "true");
+        timer = requestAnimationFrame(tick);
+      }
+
+      function stopPlay() {
+        playing = false;
+        cancelAnimationFrame(timer);
+        iconPlay.style.display = "";
+        iconPause.style.display = "none";
+        btnPlay.setAttribute("aria-label", "Lecture");
+        btnPlay.setAttribute("aria-pressed", "false");
+        progressEl.style.width = "0%";
+      }
+
+      document.getElementById("btn-prev").addEventListener("click", function () {
+        stopPlay();
+        goTo(current - 1);
+      });
+      document.getElementById("btn-next").addEventListener("click", function () {
+        stopPlay();
+        goTo(current + 1);
+      });
+      btnPlay.addEventListener("click", function () {
+        if (playing) stopPlay(); else startPlay();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") { stopPlay(); goTo(current - 1); }
+        else if (e.key === "ArrowRight") { stopPlay(); goTo(current + 1); }
+        else if (e.key === " ") { e.preventDefault(); if (playing) stopPlay(); else startPlay(); }
+      });
+
+      // Pause on hover
+      showEl.addEventListener("mouseenter", function () { if (playing) { cancelAnimationFrame(timer); elapsed = Date.now() - tickStart; } });
+      showEl.addEventListener("mouseleave", function () { if (playing) { tickStart = Date.now() - elapsed; timer = requestAnimationFrame(tick); } });
+
+      goTo(0);
+      startPlay();
+    </script>
+  </body>
+</html>
