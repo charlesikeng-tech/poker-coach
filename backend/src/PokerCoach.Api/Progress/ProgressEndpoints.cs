@@ -114,7 +114,7 @@ public static class ProgressEndpoints
         return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, cancellationToken)));
     }
 
-    private static ProgressResponse ToResponse(ProgressReport r) => new(
+    internal static ProgressResponse ToResponse(ProgressReport r) => new(
         r.WeekStart,
         r.Current is null ? null : Week(r.Current),
         r.BaselineHands,

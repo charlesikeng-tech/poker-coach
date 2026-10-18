@@ -22,6 +22,43 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PokerCoach.Domain.Identity.CoachInvitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset?>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("label");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("student_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_coach_invitations");
+
+                    b.HasIndex("StudentId")
+                        .HasDatabaseName("ix_coach_invitations_student_id");
+
+                    b.ToTable("coach_invitations", "identity");
+                });
+
             modelBuilder.Entity("PokerCoach.Domain.Identity.EmailToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1543,6 +1580,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasFilter("source_hand_id IS NOT NULL");
 
                     b.ToTable("sizing_attempts", "training");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Identity.CoachInvitation", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_coach_invitations_users_student_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Domain.Identity.EmailToken", b =>

@@ -231,15 +231,17 @@ public static class StatisticsEndpoints
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase, parsedGameType, parsedRoom), cancellationToken);
-        return TypedResults.Ok(new StatisticsResponse(
-            StatLineResponse.From(report.Overall),
-            report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
-            report.PendingHands,
-            new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
-            report.Format,
-            new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing),
-            report.Rooms));
+        return TypedResults.Ok(ToResponse(report));
     }
+
+    internal static StatisticsResponse ToResponse(StatisticsReport report) => new(
+        StatLineResponse.From(report.Overall),
+        report.ByPosition.Select(p => new PositionStatLineResponse(p.Position, StatLineResponse.From(p.Line))).ToList(),
+        report.PendingHands,
+        new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
+        report.Format,
+        new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing),
+        report.Rooms);
 
     /// <summary>The statistics by tournament phase and by month, with the same filters as the main view.</summary>
     /// <param name="to">Exclusive upper bound on the hand start time.</param>

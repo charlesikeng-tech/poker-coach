@@ -8,6 +8,7 @@ using PokerCoach.Api.Analytics;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Bankroll;
 using PokerCoach.Api.Billing;
+using PokerCoach.Api.CoachAccess;
 using PokerCoach.Api.Coaching;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Hands;
@@ -70,6 +71,7 @@ builder.Services.AddRateLimiter(options =>
         context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
 });
+builder.Services.AddScoped<CoachInvitationService>();
 builder.Services.AddScoped<UserProfileService>();
 builder.Services.AddScoped<AccountDataService>();
 
@@ -196,6 +198,7 @@ app.MapSizingEndpoints();
 app.MapBankrollEndpoints();
 app.MapProgressEndpoints();
 app.MapLeakEndpoints();
+app.MapCoachAccessEndpoints();
 app.MapCoachingEndpoints();
 app.MapBillingEndpoints();
 app.MapAdminEndpoints();

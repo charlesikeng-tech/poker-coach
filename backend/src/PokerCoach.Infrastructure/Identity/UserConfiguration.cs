@@ -40,6 +40,21 @@ internal sealed class ExternalIdentityConfiguration : IEntityTypeConfiguration<E
     }
 }
 
+internal sealed class CoachInvitationConfiguration : IEntityTypeConfiguration<CoachInvitation>
+{
+    public void Configure(EntityTypeBuilder<CoachInvitation> builder)
+    {
+        builder.ToTable("coach_invitations", IdentitySchema.Name);
+        builder.HasKey(i => i.Id);
+        builder.Property(i => i.Id).ValueGeneratedNever();
+        builder.Property(i => i.Label).HasMaxLength(CoachInvitation.MaxLabelLength).IsRequired();
+        builder.Property(i => i.CreatedAt).IsRequired();
+
+        builder.HasIndex(i => i.StudentId);
+        builder.HasOne<User>().WithMany().HasForeignKey(i => i.StudentId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
 internal static class IdentitySchema
 {
     public const string Name = "identity";
