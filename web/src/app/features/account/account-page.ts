@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Download, KeyRound, Pencil, ShieldAlert, Trash2 } from 'lucide';
+import { Copy, Download, KeyRound, Link2, Pencil, Plus, ShieldAlert, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -12,6 +12,7 @@ import {
   accountErrorCode,
   retryWithToken,
 } from '../../core/auth/accounts-api';
+import { CoachApi, CoachInvitation } from '../../core/coach/coach-api';
 import { SessionService } from '../../core/auth/session.service';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
@@ -37,9 +38,23 @@ export class AccountPage {
   private readonly router = inject(Router);
   protected readonly session = inject(SessionService);
 
-  protected readonly icons = { Download, KeyRound, Pencil, ShieldAlert, Trash2 };
+  private readonly coachApi = inject(CoachApi);
+
+  protected readonly icons = { Copy, Download, KeyRound, Link2, Pencil, Plus, ShieldAlert, Trash2 };
   protected readonly minPassword = MIN_PASSWORD_LENGTH;
   protected readonly maxNameLength = 50;
+
+  // Coach invitations
+  protected readonly invitations = signal<CoachInvitation[]>([]);
+  protected readonly invitationsLoading = signal(false);
+  protected readonly creating = signal(false);
+  protected readonly newLabel = signal('');
+  protected readonly copiedId = signal<string | null>(null);
+  protected readonly revokingId = signal<string | null>(null);
+
+  constructor() {
+    void this.loadInvitations();
+  }
 
   // Change display name
   protected readonly editingName = signal(false);
@@ -124,6 +139,46 @@ export class AccountPage {
     } finally {
       this.changingPassword.set(false);
     }
+  }
+
+  protected async loadInvitations(): Promise<void> {
+    this.invitationsLoading.set(true);
+    try {
+      this.invitations.set(await this.coachApi.listInvitations());
+    } finally {
+      this.invitationsLoading.set(false);
+    }
+  }
+
+  protected async createInvitation(event: Event): Promise<void> {
+    event.preventDefault();
+    if (this.creating() || this.newLabel().trim().length === 0) return;
+    this.creating.set(true);
+    try {
+      const inv = await this.coachApi.createInvitation(this.newLabel().trim(), null);
+      this.invitations.update((list) => [inv, ...list]);
+      this.newLabel.set('');
+    } finally {
+      this.creating.set(false);
+    }
+  }
+
+  protected async revokeInvitation(id: string): Promise<void> {
+    if (this.revokingId()) return;
+    this.revokingId.set(id);
+    try {
+      await this.coachApi.revokeInvitation(id);
+      this.invitations.update((list) => list.filter((i) => i.id !== id));
+    } finally {
+      this.revokingId.set(null);
+    }
+  }
+
+  protected copyLink(invitation: CoachInvitation): void {
+    const url = `${this.document.location.origin}/coach/${invitation.id}`;
+    void this.document.defaultView?.navigator.clipboard.writeText(url);
+    this.copiedId.set(invitation.id);
+    setTimeout(() => this.copiedId.set(null), 2000);
   }
 
   protected async delete(): Promise<void> {

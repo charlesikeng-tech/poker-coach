@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  max-width: 46rem;
+}
+
+.plan-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-2);
+}
+
+.hands-count {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-5);
+}
+
+.state-message {
+  color: var(--text-secondary);
+  margin-top: var(--space-5);
+
+  &.error {
+    color: var(--danger);
+  }
+}
+
+.leak-group {
+  margin-bottom: var(--space-5);
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-3);
+    color: var(--text-primary);
+  }
+}
+
+.leak-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--glass-fill);
+  border: 1px solid var(--border-default);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.leak-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--space-3);
+}
+
+.leak-card {
+  padding: var(--space-3);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--color-danger, var(--danger));
+  border-radius: var(--radius-md);
+  background: var(--glass-fill);
+
+  &.too-high {
+    border-left-color: var(--color-warning, #f59e0b);
+  }
+
+  &.possible {
+    opacity: 0.75;
+  }
+}
+
+.leak-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.leak-stat {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  line-height: 1.3;
+}
+
+.leak-arrow {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  color: var(--danger);
+
+  .too-high & {
+    color: #f59e0b;
+  }
+}
+
+.leak-figures {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.leak-rate {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.leak-range,
+.leak-sample {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}

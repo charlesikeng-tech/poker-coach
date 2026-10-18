@@ -1,0 +1,70 @@
+<ng-container *transloco="let t; prefix: 'pages.coach'">
+  <app-page-header [heading]="heading()" />
+
+  @if (loading()) {
+    <p class="state-message">{{ t('loading') }}</p>
+  } @else if (error()) {
+    <p class="state-message error">{{ t('loadError') }}</p>
+  } @else if (analysis(); as a) {
+    @if (student(); as s) {
+      <p class="plan-badge">{{ t('plan', { plan: s.plan }) }}</p>
+    }
+    <p class="hands-count">{{ t('hands', { count: a.hands }) }}</p>
+
+    @if (a.leaks.length === 0) {
+      <p class="state-message">{{ t('noLeaks') }}</p>
+    } @else {
+      @if (confirmedLeaks().length > 0) {
+        <section class="leak-group">
+          <h2>
+            {{ t('confirmed') }}
+            <span class="leak-count">{{ confirmedLeaks().length }}</span>
+          </h2>
+          <ul class="leak-list">
+            @for (leak of confirmedLeaks(); track leak.stat + (leak.position ?? '')) {
+              <li class="leak-card" [class.too-high]="leak.direction === 'tooHigh'">
+                <div class="leak-header">
+                  <span class="leak-stat">{{ statName(leak) }}</span>
+                  <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
+                </div>
+                <div class="leak-figures">
+                  <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
+                  <span class="leak-range"
+                    >{{ t('reference') }} {{ formatRange(leak.range.min, leak.range.max) }}</span
+                  >
+                </div>
+                <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (possibleLeaks().length > 0) {
+        <section class="leak-group">
+          <h2>
+            {{ t('possible') }}
+            <span class="leak-count">{{ possibleLeaks().length }}</span>
+          </h2>
+          <ul class="leak-list">
+            @for (leak of possibleLeaks(); track leak.stat + (leak.position ?? '')) {
+              <li class="leak-card possible" [class.too-high]="leak.direction === 'tooHigh'">
+                <div class="leak-header">
+                  <span class="leak-stat">{{ statName(leak) }}</span>
+                  <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
+                </div>
+                <div class="leak-figures">
+                  <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
+                  <span class="leak-range"
+                    >{{ t('reference') }} {{ formatRange(leak.range.min, leak.range.max) }}</span
+                  >
+                </div>
+                <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+  }
+</ng-container>

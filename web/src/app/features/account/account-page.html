@@ -140,6 +140,60 @@
     </p>
   </section>
 
+  <section class="card glass">
+    <h2><app-icon [icon]="icons.Link2" />{{ t('coachAccess.title') }}</h2>
+    <p>{{ t('coachAccess.description') }}</p>
+
+    @if (invitationsLoading()) {
+      <p class="hint">{{ t('coachAccess.loading') }}</p>
+    } @else if (invitations().length > 0) {
+      <ul class="invitation-list">
+        @for (inv of invitations(); track inv.id) {
+          <li class="invitation-item">
+            <span class="invitation-label">{{ inv.label }}</span>
+            <div class="invitation-actions">
+              <button appButton variant="secondary" type="button" (click)="copyLink(inv)">
+                <app-icon [icon]="icons.Copy" />
+                {{ copiedId() === inv.id ? t('coachAccess.copied') : t('coachAccess.copy') }}
+              </button>
+              <button
+                appButton
+                variant="secondary"
+                type="button"
+                [disabled]="revokingId() === inv.id"
+                (click)="revokeInvitation(inv.id)"
+              >
+                <app-icon [icon]="icons.Trash2" />
+                {{ t(revokingId() === inv.id ? 'coachAccess.revoking' : 'coachAccess.revoke') }}
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="hint">{{ t('coachAccess.empty') }}</p>
+    }
+
+    <form class="invitation-form" (submit)="createInvitation($event)" novalidate>
+      <input
+        type="text"
+        [attr.placeholder]="t('coachAccess.labelPlaceholder')"
+        [attr.maxlength]="100"
+        [value]="newLabel()"
+        (input)="newLabel.set(value($event))"
+      />
+      <button
+        appButton
+        variant="primary"
+        type="submit"
+        [disabled]="creating() || newLabel().trim().length === 0"
+      >
+        <app-icon [icon]="icons.Plus" />
+        {{ t(creating() ? 'coachAccess.creating' : 'coachAccess.create') }}
+      </button>
+    </form>
+  </section>
+
   <section class="card glass danger">
     <h2><app-icon [icon]="icons.ShieldAlert" />{{ t('delete.title') }}</h2>
     <p>{{ t('delete.description') }}</p>

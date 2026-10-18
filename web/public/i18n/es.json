@@ -1627,6 +1627,19 @@
         "action": "Eliminar definitivamente",
         "deleting": "Eliminando…",
         "error": "No se pudo eliminar. Inténtalo de nuevo."
+      },
+      "coachAccess": {
+        "title": "Acceso coach",
+        "description": "Genera un enlace de solo lectura para compartir tus datos con un coach. El coach debe tener una cuenta en NutsIQ.",
+        "loading": "Cargando…",
+        "empty": "Ningún enlace de momento.",
+        "copy": "Copiar enlace",
+        "copied": "¡Copiado!",
+        "revoke": "Revocar",
+        "revoking": "Revocando…",
+        "labelPlaceholder": "Nombre del coach (ej.: Juan)",
+        "create": "Crear enlace",
+        "creating": "Creando…"
       }
     },
     "privacy": {
@@ -2049,6 +2062,18 @@
           "unknown": "Desconocida"
         }
       }
+    },
+    "coach": {
+      "title": "Vista coach",
+      "viewing": "Datos de {{name}}",
+      "plan": "Plan: {{plan}}",
+      "loading": "Cargando…",
+      "loadError": "Este enlace no es válido o ha sido revocado.",
+      "noLeaks": "Ningún leak detectado.",
+      "confirmed": "Leaks confirmados",
+      "possible": "A vigilar",
+      "reference": "Referencia",
+      "hands": "{{count}} manos analizadas"
     }
   },
   "welcome": {

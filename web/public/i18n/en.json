@@ -1627,6 +1627,19 @@
         "action": "Delete for good",
         "deleting": "Deleting…",
         "error": "The deletion did not go through. Try again."
+      },
+      "coachAccess": {
+        "title": "Coach access",
+        "description": "Generate a read-only link to share your data with a coach. The coach must have a NutsIQ account.",
+        "loading": "Loading…",
+        "empty": "No links yet.",
+        "copy": "Copy link",
+        "copied": "Copied!",
+        "revoke": "Revoke",
+        "revoking": "Revoking…",
+        "labelPlaceholder": "Coach name (e.g. John)",
+        "create": "Create link",
+        "creating": "Creating…"
       }
     },
     "privacy": {
@@ -2049,6 +2062,18 @@
           "unknown": "Unknown"
         }
       }
+    },
+    "coach": {
+      "title": "Coach view",
+      "viewing": "{{name}}'s data",
+      "plan": "Plan: {{plan}}",
+      "loading": "Loading…",
+      "loadError": "This link is invalid or has been revoked.",
+      "noLeaks": "No leaks detected.",
+      "confirmed": "Confirmed leaks",
+      "possible": "To watch",
+      "reference": "Reference",
+      "hands": "{{count}} hands analysed"
     }
   },
   "welcome": {
