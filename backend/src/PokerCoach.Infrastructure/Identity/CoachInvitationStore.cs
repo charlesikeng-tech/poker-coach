@@ -18,7 +18,7 @@ internal sealed class CoachInvitationStore(PokerCoachDbContext db) : ICoachInvit
 
     public async Task<IReadOnlyList<CoachInvitation>> ListByStudentAsync(Guid studentId, CancellationToken cancellationToken) =>
         await db.Set<CoachInvitation>()
-            .Where(i => i.StudentId == studentId)
+            .Where(i => i.StudentId == studentId && i.RevokedAt == null)
             .OrderByDescending(i => i.CreatedAt)
             .ToListAsync(cancellationToken);
 

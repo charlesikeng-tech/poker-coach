@@ -121,14 +121,14 @@ public sealed class CoachInvitationServiceTests
     }
 
     [Fact]
-    public async Task List_includes_revoked_invitations()
+    public async Task List_excludes_revoked_invitations()
     {
         var inv = await Service().CreateAsync(StudentId, "Coach", null, Ct);
         await Service().RevokeAsync(StudentId, inv.Id, Ct);
 
         var list = await Service().ListAsync(StudentId, Ct);
 
-        Assert.Single(list);
+        Assert.Empty(list);
     }
 
     [Fact]

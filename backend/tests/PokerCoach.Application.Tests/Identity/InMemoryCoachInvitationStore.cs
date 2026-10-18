@@ -22,7 +22,7 @@ internal sealed class InMemoryCoachInvitationStore : ICoachInvitationStore
     public Task<IReadOnlyList<CoachInvitation>> ListByStudentAsync(Guid studentId, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<CoachInvitation>>(
             invitations
-                .Where(i => i.StudentId == studentId)
+                .Where(i => i.StudentId == studentId && i.RevokedAt == null)
                 .OrderByDescending(i => i.CreatedAt)
                 .ToList());
 
