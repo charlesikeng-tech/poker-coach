@@ -17,6 +17,9 @@ Thumbs.db
 # backend/tests/**/GoldenFiles and are added explicitly.
 hand-histories/
 
+# Generated documentation screenshots
+docs/screenshots/
+
 # Local setup logs (tools/dev-setup.command)
 .dev-setup.log
 .dev-setup-migration.sql
