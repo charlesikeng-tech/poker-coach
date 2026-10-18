@@ -2073,7 +2073,49 @@
       "confirmed": "Leaks confirmés",
       "possible": "À surveiller",
       "reference": "Repère",
-      "hands": "{{count}} mains analysées"
+      "hands": "{{count}} mains",
+      "tabs": {
+        "leaks": "Leaks",
+        "statistics": "Statistiques",
+        "progress": "Progression"
+      },
+      "bb100": "BB/100",
+      "byPosition": "Par position",
+      "position": "Position",
+      "weekHands": "{{count}} mains · semaine du {{date}}",
+      "baseline": "Baseline",
+      "thisWeek": "Cette semaine",
+      "noProgress": "Pas encore assez de mains pour un plan de progression.",
+      "noPriorities": "Aucune priorité cette semaine.",
+      "positions": {
+        "utg": "UTG",
+        "utg1": "UTG+1",
+        "utg2": "UTG+2",
+        "lojack": "lojack",
+        "hijack": "hijack",
+        "cutoff": "cutoff",
+        "button": "button",
+        "smallBlind": "SB",
+        "bigBlind": "BB"
+      },
+      "stats": {
+        "vpip": "VPIP",
+        "pfr": "PFR",
+        "threeBet": "3-bet",
+        "steal": "Steal",
+        "rfi": "Open",
+        "limp": "Limp",
+        "foldToThreeBet": "Fold to 3-bet",
+        "cbetFlop": "C-bet flop",
+        "wentToShowdown": "WTSD",
+        "wonAtShowdown": "W$SD"
+      },
+      "status": {
+        "inRange": "✓ Dans la cible",
+        "improving": "↗ En progrès",
+        "offTrack": "↘ Hors cible",
+        "notEnoughSpots": "Trop peu de spots"
+      }
     }
   },
   "welcome": {

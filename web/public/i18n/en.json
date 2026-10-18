@@ -2073,7 +2073,49 @@
       "confirmed": "Confirmed leaks",
       "possible": "To watch",
       "reference": "Reference",
-      "hands": "{{count}} hands analysed"
+      "hands": "{{count}} hands",
+      "tabs": {
+        "leaks": "Leaks",
+        "statistics": "Statistics",
+        "progress": "Progress"
+      },
+      "bb100": "BB/100",
+      "byPosition": "By position",
+      "position": "Position",
+      "weekHands": "{{count}} hands · week of {{date}}",
+      "baseline": "Baseline",
+      "thisWeek": "This week",
+      "noProgress": "Not enough hands yet for a progress plan.",
+      "noPriorities": "No priorities this week.",
+      "positions": {
+        "utg": "UTG",
+        "utg1": "UTG+1",
+        "utg2": "UTG+2",
+        "lojack": "lojack",
+        "hijack": "hijack",
+        "cutoff": "cutoff",
+        "button": "button",
+        "smallBlind": "SB",
+        "bigBlind": "BB"
+      },
+      "stats": {
+        "vpip": "VPIP",
+        "pfr": "PFR",
+        "threeBet": "3-bet",
+        "steal": "Steal",
+        "rfi": "RFI",
+        "limp": "Limp",
+        "foldToThreeBet": "Fold to 3-bet",
+        "cbetFlop": "Cbet flop",
+        "wentToShowdown": "WTSD",
+        "wonAtShowdown": "W$SD"
+      },
+      "status": {
+        "inRange": "✓ On target",
+        "improving": "↗ Improving",
+        "offTrack": "↘ Off track",
+        "notEnoughSpots": "Not enough spots"
+      }
     }
   },
   "welcome": {

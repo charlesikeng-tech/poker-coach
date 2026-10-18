@@ -3,6 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { LeakAnalysis } from '../../features/leaks/leaks-api';
+import { ProgressReport } from '../../features/progress/progress-api';
+import { StatisticsReport } from '../../features/statistics/statistics-api';
 
 export interface CoachInvitation {
   id: string;
@@ -42,11 +44,11 @@ export class CoachApi {
     return firstValueFrom(this.http.get<LeakAnalysis>(`/api/coach/${token}/leaks`));
   }
 
-  getStatistics(token: string): Promise<unknown> {
-    return firstValueFrom(this.http.get(`/api/coach/${token}/statistics`));
+  getStatistics(token: string): Promise<StatisticsReport> {
+    return firstValueFrom(this.http.get<StatisticsReport>(`/api/coach/${token}/statistics`));
   }
 
-  getProgress(token: string): Promise<unknown> {
-    return firstValueFrom(this.http.get(`/api/coach/${token}/progress`));
+  getProgress(token: string): Promise<ProgressReport> {
+    return firstValueFrom(this.http.get<ProgressReport>(`/api/coach/${token}/progress`));
   }
 }

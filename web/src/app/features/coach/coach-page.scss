@@ -1,6 +1,6 @@
 :host {
   display: block;
-  max-width: 46rem;
+  max-width: 52rem;
 }
 
 .plan-badge {
@@ -11,13 +11,13 @@
   color: var(--accent);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
 }
 
 .hands-count {
   color: var(--text-muted);
   font-size: var(--font-size-sm);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 
 .state-message {
@@ -29,6 +29,59 @@
   }
 }
 
+// --- Tabs ---
+
+.tab-nav {
+  display: flex;
+  gap: 2px;
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-default);
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition:
+      color var(--motion-fast),
+      border-color var(--motion-fast);
+
+    &[aria-selected='true'] {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent);
+    }
+
+    &:hover:not([aria-selected='true']) {
+      color: var(--text-secondary);
+    }
+  }
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--glass-fill);
+  border: 1px solid var(--border-default);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-normal);
+}
+
+// --- Leaks tab ---
+
 .leak-group {
   margin-bottom: var(--space-5);
 
@@ -39,7 +92,6 @@
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
     margin-bottom: var(--space-3);
-    color: var(--text-primary);
   }
 }
 
@@ -69,12 +121,12 @@
 .leak-card {
   padding: var(--space-3);
   border: 1px solid var(--border-default);
-  border-left: 3px solid var(--color-danger, var(--danger));
+  border-left: 3px solid var(--danger);
   border-radius: var(--radius-md);
   background: var(--glass-fill);
 
   &.too-high {
-    border-left-color: var(--color-warning, #f59e0b);
+    border-left-color: #f59e0b;
   }
 
   &.possible {
@@ -123,4 +175,185 @@
 .leak-sample {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
+}
+
+// --- Statistics tab ---
+
+.bb100-banner {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  margin-bottom: var(--space-4);
+
+  &.positive {
+    background: color-mix(in srgb, var(--success, #22c55e) 12%, transparent);
+    border-color: color-mix(in srgb, var(--success, #22c55e) 30%, transparent);
+  }
+}
+
+.bb100-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.bb100-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.stat-cell {
+  padding: var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--glass-fill);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-sample {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.section-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-3);
+}
+
+.position-table-wrap {
+  overflow-x: auto;
+  margin-bottom: var(--space-5);
+}
+
+.position-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+
+  th {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-muted);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid color-mix(in srgb, var(--border-default) 50%, transparent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+// --- Progress tab ---
+
+.priority-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.priority-item {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--glass-fill);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.priority-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.priority-stat {
+  font-weight: var(--font-weight-medium);
+}
+
+.priority-arrow {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--danger);
+
+  &.too-high {
+    color: #f59e0b;
+  }
+}
+
+.priority-rates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.priority-range {
+  color: var(--text-muted);
+}
+
+.priority-week {
+  color: var(--text-primary);
+}
+
+.priority-status {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  align-self: flex-start;
+
+  &.status-good {
+    background: color-mix(in srgb, var(--success, #22c55e) 15%, transparent);
+    color: var(--success, #22c55e);
+  }
+
+  &.status-bad {
+    background: color-mix(in srgb, var(--danger) 15%, transparent);
+    color: var(--danger);
+  }
+
+  &.status-muted {
+    background: var(--glass-fill);
+    color: var(--text-muted);
+    border: 1px solid var(--border-default);
+  }
 }

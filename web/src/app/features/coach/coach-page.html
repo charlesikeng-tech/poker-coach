@@ -5,65 +5,201 @@
     <p class="state-message">{{ t('loading') }}</p>
   } @else if (error()) {
     <p class="state-message error">{{ t('loadError') }}</p>
-  } @else if (analysis(); as a) {
+  } @else {
     @if (student(); as s) {
       <p class="plan-badge">{{ t('plan', { plan: s.plan }) }}</p>
     }
-    <p class="hands-count">{{ t('hands', { count: a.hands }) }}</p>
 
-    @if (a.leaks.length === 0) {
-      <p class="state-message">{{ t('noLeaks') }}</p>
-    } @else {
-      @if (confirmedLeaks().length > 0) {
-        <section class="leak-group">
-          <h2>
-            {{ t('confirmed') }}
-            <span class="leak-count">{{ confirmedLeaks().length }}</span>
-          </h2>
-          <ul class="leak-list">
-            @for (leak of confirmedLeaks(); track leak.stat + (leak.position ?? '')) {
-              <li class="leak-card" [class.too-high]="leak.direction === 'tooHigh'">
-                <div class="leak-header">
-                  <span class="leak-stat">{{ statName(leak) }}</span>
-                  <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
-                </div>
-                <div class="leak-figures">
-                  <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
-                  <span class="leak-range"
-                    >{{ t('reference') }} {{ formatRange(leak.range.min, leak.range.max) }}</span
-                  >
-                </div>
-                <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
-              </li>
-            }
-          </ul>
-        </section>
+    <nav class="tab-nav" role="tablist">
+      <button
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'leaks'"
+        (click)="activeTab.set('leaks')"
+      >
+        {{ t('tabs.leaks') }}
+        @if (analysis(); as a) {
+          <span class="tab-count">{{ a.leaks.length }}</span>
+        }
+      </button>
+      <button
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'statistics'"
+        (click)="activeTab.set('statistics')"
+      >
+        {{ t('tabs.statistics') }}
+        @if (statsReport(); as r) {
+          <span class="tab-count">{{ r.overall.hands }}</span>
+        }
+      </button>
+      <button
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'progress'"
+        (click)="activeTab.set('progress')"
+      >
+        {{ t('tabs.progress') }}
+        @if (currentWeek(); as w) {
+          <span class="tab-count">{{ w.priorities.length }}</span>
+        }
+      </button>
+    </nav>
+
+    <!-- Leaks tab -->
+    @if (activeTab() === 'leaks') {
+      @if (analysis(); as a) {
+        <p class="hands-count">{{ t('hands', { count: a.hands }) }}</p>
+
+        @if (a.leaks.length === 0) {
+          <p class="state-message">{{ t('noLeaks') }}</p>
+        } @else {
+          @if (confirmedLeaks().length > 0) {
+            <section class="leak-group">
+              <h2>
+                {{ t('confirmed') }}
+                <span class="leak-count">{{ confirmedLeaks().length }}</span>
+              </h2>
+              <ul class="leak-list">
+                @for (leak of confirmedLeaks(); track leak.stat + (leak.position ?? '')) {
+                  <li class="leak-card" [class.too-high]="leak.direction === 'tooHigh'">
+                    <div class="leak-header">
+                      <span class="leak-stat">{{ statName(leak) }}</span>
+                      <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
+                    </div>
+                    <div class="leak-figures">
+                      <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
+                      <span class="leak-range"
+                        >{{ t('reference') }}
+                        {{ formatRange(leak.range.min, leak.range.max) }}</span
+                      >
+                    </div>
+                    <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+
+          @if (possibleLeaks().length > 0) {
+            <section class="leak-group">
+              <h2>
+                {{ t('possible') }}
+                <span class="leak-count">{{ possibleLeaks().length }}</span>
+              </h2>
+              <ul class="leak-list">
+                @for (leak of possibleLeaks(); track leak.stat + (leak.position ?? '')) {
+                  <li class="leak-card possible" [class.too-high]="leak.direction === 'tooHigh'">
+                    <div class="leak-header">
+                      <span class="leak-stat">{{ statName(leak) }}</span>
+                      <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
+                    </div>
+                    <div class="leak-figures">
+                      <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
+                      <span class="leak-range"
+                        >{{ t('reference') }}
+                        {{ formatRange(leak.range.min, leak.range.max) }}</span
+                      >
+                    </div>
+                    <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+        }
       }
+    }
 
-      @if (possibleLeaks().length > 0) {
-        <section class="leak-group">
-          <h2>
-            {{ t('possible') }}
-            <span class="leak-count">{{ possibleLeaks().length }}</span>
-          </h2>
-          <ul class="leak-list">
-            @for (leak of possibleLeaks(); track leak.stat + (leak.position ?? '')) {
-              <li class="leak-card possible" [class.too-high]="leak.direction === 'tooHigh'">
-                <div class="leak-header">
-                  <span class="leak-stat">{{ statName(leak) }}</span>
-                  <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
+    <!-- Statistics tab -->
+    @if (activeTab() === 'statistics') {
+      @if (statsReport(); as r) {
+        @if (r.overall.bigBlindsPer100 !== null) {
+          <div class="bb100-banner" [class.positive]="r.overall.bigBlindsPer100 > 0">
+            <span class="bb100-value">{{ formatBb100(r.overall.bigBlindsPer100) }}</span>
+            <span class="bb100-label">{{ t('bb100') }}</span>
+          </div>
+        }
+
+        <div class="stats-grid">
+          @for (key of statKeys; track key) {
+            <div class="stat-cell">
+              <span class="stat-label">{{ t('stats.' + key) }}</span>
+              <span class="stat-value">{{ formatPercent(statRate(r.overall, key).rate) }}</span>
+              <span class="stat-sample">{{ statRate(r.overall, key).opportunities }}</span>
+            </div>
+          }
+        </div>
+
+        @if (positionRows().length > 0) {
+          <h2 class="section-title">{{ t('byPosition') }}</h2>
+          <div class="position-table-wrap">
+            <table class="position-table">
+              <thead>
+                <tr>
+                  <th>{{ t('position') }}</th>
+                  <th>VPIP</th>
+                  <th>PFR</th>
+                  <th>3-bet</th>
+                  <th>{{ t('hands') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of positionRows(); track row.position) {
+                  <tr>
+                    <td>
+                      {{ row.position ? t('positions.' + row.position) : '—' }}
+                    </td>
+                    <td>{{ formatPercent(row.line.vpip.rate) }}</td>
+                    <td>{{ formatPercent(row.line.pfr.rate) }}</td>
+                    <td>{{ formatPercent(row.line.threeBet.rate) }}</td>
+                    <td>{{ row.line.hands }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+    }
+
+    <!-- Progress tab -->
+    @if (activeTab() === 'progress') {
+      @if (currentWeek(); as week) {
+        <p class="hands-count">
+          {{ t('weekHands', { count: week.hands, date: week.weekStart }) }}
+        </p>
+        @if (week.priorities.length === 0) {
+          <p class="state-message">{{ t('noPriorities') }}</p>
+        } @else {
+          <ul class="priority-list">
+            @for (p of week.priorities; track p.stat + (p.position ?? '')) {
+              <li class="priority-item">
+                <div class="priority-header">
+                  <span class="priority-stat">{{ priorityStatName(p) }}</span>
+                  <span class="priority-arrow" [class.too-high]="p.direction === 'tooHigh'">
+                    {{ p.direction === 'tooHigh' ? '↑' : '↓' }}
+                  </span>
                 </div>
-                <div class="leak-figures">
-                  <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
-                  <span class="leak-range"
-                    >{{ t('reference') }} {{ formatRange(leak.range.min, leak.range.max) }}</span
-                  >
+                <div class="priority-rates">
+                  <span class="priority-baseline">
+                    {{ t('baseline') }} {{ formatPercent(p.baselineRate) }}
+                    <span class="priority-range">({{ formatRange(p.min, p.max) }})</span>
+                  </span>
+                  @if (p.weekRate !== null) {
+                    <span class="priority-week">
+                      {{ t('thisWeek') }} {{ formatPercent(p.weekRate) }} · {{ p.weekMade }}/{{
+                        p.weekOpportunities
+                      }}
+                    </span>
+                  }
                 </div>
-                <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
+                <span class="priority-status" [class]="statusClass(p.status)">
+                  {{ t('status.' + p.status) }}
+                </span>
               </li>
             }
           </ul>
-        </section>
+        }
+      } @else {
+        <p class="state-message">{{ t('noProgress') }}</p>
       }
     }
   }
