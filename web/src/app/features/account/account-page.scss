@@ -105,6 +105,23 @@
   overflow-wrap: anywhere;
 }
 
+.invitation-item--revoked {
+  opacity: 0.5;
+
+  .invitation-label {
+    text-decoration: line-through;
+  }
+}
+
+.invitation-revoked-badge {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  flex-shrink: 0;
+}
+
 .invitation-actions {
   display: flex;
   gap: var(--space-2);

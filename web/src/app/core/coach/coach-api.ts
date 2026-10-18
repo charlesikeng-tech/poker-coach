@@ -11,6 +11,7 @@ export interface CoachInvitation {
   label: string;
   createdAt: string;
   expiresAt: string | null;
+  revokedAt: string | null;
 }
 
 export interface CoachStudent {

@@ -1639,7 +1639,8 @@
         "revoking": "Revoking…",
         "labelPlaceholder": "Coach name (e.g. John)",
         "create": "Create link",
-        "creating": "Creating…"
+        "creating": "Creating…",
+        "revoked": "Revoked"
       }
     },
     "privacy": {

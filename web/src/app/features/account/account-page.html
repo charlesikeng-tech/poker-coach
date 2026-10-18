@@ -149,24 +149,28 @@
     } @else if (invitations().length > 0) {
       <ul class="invitation-list">
         @for (inv of invitations(); track inv.id) {
-          <li class="invitation-item">
+          <li class="invitation-item" [class.invitation-item--revoked]="inv.revokedAt">
             <span class="invitation-label">{{ inv.label }}</span>
-            <div class="invitation-actions">
-              <button appButton variant="secondary" type="button" (click)="copyLink(inv)">
-                <app-icon [icon]="icons.Copy" />
-                {{ copiedId() === inv.id ? t('coachAccess.copied') : t('coachAccess.copy') }}
-              </button>
-              <button
-                appButton
-                variant="secondary"
-                type="button"
-                [disabled]="revokingId() === inv.id"
-                (click)="revokeInvitation(inv.id)"
-              >
-                <app-icon [icon]="icons.Trash2" />
-                {{ t(revokingId() === inv.id ? 'coachAccess.revoking' : 'coachAccess.revoke') }}
-              </button>
-            </div>
+            @if (inv.revokedAt) {
+              <span class="invitation-revoked-badge">{{ t('coachAccess.revoked') }}</span>
+            } @else {
+              <div class="invitation-actions">
+                <button appButton variant="secondary" type="button" (click)="copyLink(inv)">
+                  <app-icon [icon]="icons.Copy" />
+                  {{ copiedId() === inv.id ? t('coachAccess.copied') : t('coachAccess.copy') }}
+                </button>
+                <button
+                  appButton
+                  variant="secondary"
+                  type="button"
+                  [disabled]="revokingId() === inv.id"
+                  (click)="revokeInvitation(inv.id)"
+                >
+                  <app-icon [icon]="icons.Trash2" />
+                  {{ t(revokingId() === inv.id ? 'coachAccess.revoking' : 'coachAccess.revoke') }}
+                </button>
+              </div>
+            }
           </li>
         }
       </ul>

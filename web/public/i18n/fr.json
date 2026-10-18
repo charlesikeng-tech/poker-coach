@@ -1639,7 +1639,8 @@
         "revoking": "Révocation…",
         "labelPlaceholder": "Nom du coach (ex. : Jean-Pierre)",
         "create": "Créer le lien",
-        "creating": "Création…"
+        "creating": "Création…",
+        "revoked": "Révoqué"
       }
     },
     "privacy": {

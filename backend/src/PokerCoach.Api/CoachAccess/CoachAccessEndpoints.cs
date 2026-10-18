@@ -24,7 +24,8 @@ public sealed record CoachStudentResponse(string StudentName, string Plan);
 
 /// <param name="Label">Human label the student gave this invitation.</param>
 /// <param name="ExpiresAt">Null means no expiry.</param>
-public sealed record CoachInvitationResponse(Guid Id, string Label, DateTimeOffset CreatedAt, DateTimeOffset? ExpiresAt);
+/// <param name="RevokedAt">Non-null once the student has revoked this invitation.</param>
+public sealed record CoachInvitationResponse(Guid Id, string Label, DateTimeOffset CreatedAt, DateTimeOffset? ExpiresAt, DateTimeOffset? RevokedAt);
 
 public sealed record CreateInvitationRequest(string? Label, DateTimeOffset? ExpiresAt);
 
@@ -265,5 +266,5 @@ public static class CoachAccessEndpoints
     }
 
     private static CoachInvitationResponse ToResponse(Domain.Identity.CoachInvitation i) =>
-        new(i.Id, i.Label, i.CreatedAt, i.ExpiresAt);
+        new(i.Id, i.Label, i.CreatedAt, i.ExpiresAt, i.RevokedAt);
 }
