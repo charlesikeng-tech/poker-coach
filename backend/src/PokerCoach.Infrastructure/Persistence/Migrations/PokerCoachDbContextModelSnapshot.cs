@@ -242,6 +242,26 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.ToTable("users", "identity");
                 });
 
+            modelBuilder.Entity("PokerCoach.Domain.Notifications.WeeklyNotification", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateOnly>("WeekStart")
+                        .HasColumnType("date")
+                        .HasColumnName("week_start");
+
+                    b.Property<DateTimeOffset>("SentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at");
+
+                    b.HasKey("UserId", "WeekStart")
+                        .HasName("pk_weekly_notifications");
+
+                    b.ToTable("weekly_notifications", "notifications");
+                });
+
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1620,6 +1640,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_password_credentials_users_user_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Notifications.WeeklyNotification", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_weekly_notifications_users_user_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>

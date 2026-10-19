@@ -104,6 +104,13 @@ internal sealed class WeeklyPlanStore(PokerCoachDbContext db) : IWeeklyPlanStore
         return records.Select(ToDomain).ToList();
     }
 
+    public async Task<IReadOnlyList<Guid>> ListUserIdsWithPlanAsync(DateOnly weekStart, CancellationToken cancellationToken) =>
+        await db.Set<WeeklyPlanRecord>().AsNoTracking()
+            .Where(p => p.WeekStart == weekStart)
+            .Select(p => p.UserId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
     private static int ToKey(TournamentSubFormat? subFormat) => subFormat.HasValue ? (int)subFormat.Value : 0;
 
     private static TournamentSubFormat? FromKey(int key) => key == 0 ? null : (TournamentSubFormat)key;

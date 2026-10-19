@@ -19,6 +19,9 @@ public interface IWeeklyPlanStore
 
     /// <summary>Plans of weeks before <paramref name="before"/>, most recent first.</summary>
     Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, TournamentSubFormat? subFormat, int count, CancellationToken cancellationToken);
+
+    /// <summary>User IDs that have at least one plan for <paramref name="weekStart"/> (any game type), deduplicated.</summary>
+    Task<IReadOnlyList<Guid>> ListUserIdsWithPlanAsync(DateOnly weekStart, CancellationToken cancellationToken);
 }
 
 /// <param name="Drill">The training-room drill for it; null when it is worked on hands and the coach.</param>

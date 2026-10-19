@@ -138,5 +138,8 @@ public sealed class AccountDataServiceTests
 
         public Task<IReadOnlyList<WeeklyPlan>> ListBeforeAsync(Guid userId, DateOnly before, GameType gameType, TournamentSubFormat? subFormat, int count, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<WeeklyPlan>>([]);
+
+        public Task<IReadOnlyList<Guid>> ListUserIdsWithPlanAsync(DateOnly weekStart, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<Guid>>([]);
     }
 }

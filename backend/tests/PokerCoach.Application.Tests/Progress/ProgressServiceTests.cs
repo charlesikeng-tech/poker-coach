@@ -129,6 +129,9 @@ public sealed class ProgressServiceTests
                 .Take(count)
                 .Select(p => p.Value)
                 .ToList());
+
+        public Task<IReadOnlyList<Guid>> ListUserIdsWithPlanAsync(DateOnly weekStart, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<Guid>>(plans.Keys.Where(k => k.Item2 == weekStart).Select(k => k.Item1).Distinct().ToList());
     }
 
     private sealed class NoTraining : ITrainingStore
