@@ -3,7 +3,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { Percent } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
-import { Button } from '../../shared/ui/button/button';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 
 @Component({
@@ -11,7 +10,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
   templateUrl: './pot-odds-page.html',
   styleUrl: './pot-odds-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslocoDirective, PageHeader, Button],
+  imports: [TranslocoDirective, PageHeader],
 })
 export class PotOddsPage {
   private readonly language = inject(LanguageService);
