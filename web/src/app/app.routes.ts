@@ -158,6 +158,27 @@ export const routes: Routes = [
         loadComponent: () => import('./features/import/import-page').then((m) => m.ImportPage),
       },
       {
+        path: 'tools/icm',
+        title: 'nav.icm',
+        loadComponent: () =>
+          import('./features/tools/icm-calculator-page').then((m) => m.IcmCalculatorPage),
+      },
+      {
+        path: 'tools/pot-odds',
+        title: 'nav.potOdds',
+        loadComponent: () => import('./features/tools/pot-odds-page').then((m) => m.PotOddsPage),
+      },
+      {
+        path: 'tools/m-ratio',
+        title: 'nav.mRatio',
+        loadComponent: () => import('./features/tools/m-ratio-page').then((m) => m.MRatioPage),
+      },
+      {
+        path: 'tools/equity',
+        title: 'nav.equity',
+        loadComponent: () => import('./features/tools/equity-page').then((m) => m.EquityPage),
+      },
+      {
         path: '**',
         title: 'pages.notFound.title',
         loadComponent: () =>

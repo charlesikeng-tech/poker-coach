@@ -1,0 +1,41 @@
+<ng-container *transloco="let t; prefix: 'rangeSelector'">
+  <div class="selector-header">
+    <div class="combos-badge">
+      <span class="combos-count">{{ selectedCombos() }}</span>
+      <span class="combos-label">{{ t('combos') }}</span>
+      <span class="combos-pct">{{ selectedPct() }}%</span>
+    </div>
+
+    <div class="presets">
+      <button appButton type="button" variant="ghost" (click)="clearAll()">
+        {{ t('clear') }}
+      </button>
+      <button appButton type="button" variant="ghost" (click)="selectPremium()">
+        {{ t('premium') }}
+      </button>
+      <button appButton type="button" variant="ghost" (click)="selectTop10()">
+        {{ t('top10') }}
+      </button>
+      <button appButton type="button" variant="ghost" (click)="selectAll()">
+        {{ t('all') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="grid" [class.grid--dragging]="isDragging()">
+    @for (cell of cells; track cell.index) {
+      <button
+        type="button"
+        class="cell"
+        [class.cell--on]="cellActive()[cell.index]"
+        [class.cell--pair]="cell.isPair"
+        [class.cell--in-drag]="dragRect().has(cell.index)"
+        (mousedown)="onCellMouseDown(cell.index, $event)"
+        (mouseenter)="onCellMouseEnter(cell.index)"
+        tabindex="-1"
+      >
+        <span class="cell__hand">{{ cell.name }}</span>
+      </button>
+    }
+  </div>
+</ng-container>

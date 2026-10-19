@@ -1,0 +1,83 @@
+<ng-container *transloco="let t; prefix: 'pages.potOdds'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <section class="glass panel inputs">
+      <h2>{{ t('inputs') }}</h2>
+
+      <div class="fields">
+        <label class="field">
+          <span>{{ t('pot') }}</span>
+          <input
+            type="number"
+            inputmode="decimal"
+            min="0"
+            step="1"
+            [value]="pot()"
+            (change)="update('pot', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('call') }}</span>
+          <input
+            type="number"
+            inputmode="decimal"
+            min="1"
+            step="1"
+            [value]="call()"
+            (change)="update('call', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('equity') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0"
+              max="100"
+              step="0.5"
+              [value]="equity()"
+              (change)="update('equity', $any($event.target).value)"
+            />
+            <span class="unit">%</span>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <section class="glass panel results">
+      <h2>{{ t('results') }}</h2>
+
+      <dl class="metrics">
+        <div class="metric">
+          <dt>{{ t('potOdds') }}</dt>
+          <dd>{{ fmtPct(potOdds()) }}</dd>
+        </div>
+        <div class="metric">
+          <dt>{{ t('breakEven') }}</dt>
+          <dd>{{ fmtPct(breakEven()) }}</dd>
+        </div>
+        <div class="metric metric--ev" [attr.data-positive]="isPositiveEv()">
+          <dt>{{ t('ev') }}</dt>
+          <dd>{{ ev() !== null ? (isPositiveEv() ? '+' : '') + fmt(ev()!) : '—' }}</dd>
+        </div>
+      </dl>
+
+      <p class="verdict" [attr.data-positive]="isPositiveEv()">
+        @if (ev() !== null) {
+          {{ isPositiveEv() ? t('verdictCall') : t('verdictFold') }}
+        }
+      </p>
+    </section>
+  </div>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>

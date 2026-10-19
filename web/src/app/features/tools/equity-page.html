@@ -1,0 +1,116 @@
+<ng-container *transloco="let t; prefix: 'pages.equity'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <div class="grid-col">
+      <div class="player-tabs">
+        @for (i of playerIndices(); track i) {
+          <button
+            type="button"
+            class="player-tab"
+            [class.player-tab--active]="activePlayer() === i"
+            [style.--tab-color]="playerColors[i]"
+            (click)="selectPlayer(i)"
+          >
+            {{ t('playerN', { n: i + 1 }) }}
+            @if (results(); as res) {
+              <span class="tab-equity">{{ fmtPct(res[i].equity) }}</span>
+            }
+          </button>
+        }
+
+        @if (canAddPlayer()) {
+          <button
+            type="button"
+            class="player-tab player-tab--add"
+            (click)="addPlayer()"
+            [attr.aria-label]="t('addPlayer')"
+          >
+            +
+          </button>
+        }
+
+        @if (canRemovePlayer()) {
+          <button
+            type="button"
+            class="player-tab player-tab--remove"
+            (click)="removePlayer()"
+            [attr.aria-label]="t('removePlayer')"
+          >
+            −
+          </button>
+        }
+      </div>
+
+      <div class="range-wrap glass">
+        <app-range-selector [selected]="currentRange()" (selectedChange)="onRangeChange($event)" />
+      </div>
+    </div>
+
+    <div class="side-col">
+      <section class="glass panel">
+        <h2>{{ t('board') }}</h2>
+        <input
+          type="text"
+          autocomplete="off"
+          [placeholder]="t('boardPlaceholder')"
+          [value]="boardInput()"
+          (input)="updateBoard($any($event.target).value)"
+        />
+        <p class="hint">{{ t('boardHint') }}</p>
+      </section>
+
+      <div class="calculate-row">
+        <button
+          appButton
+          type="button"
+          variant="primary"
+          [disabled]="state() === 'loading'"
+          (click)="calculate()"
+        >
+          @if (state() === 'loading') {
+            {{ t('calculating') }}
+          } @else {
+            {{ t('calculate') }}
+          }
+        </button>
+        @if (state() === 'error-empty') {
+          <p class="error">{{ t('errorEmpty') }}</p>
+        }
+        @if (state() === 'error-board') {
+          <p class="error">{{ t('errorBoard') }}</p>
+        }
+        @if (state() === 'error-server') {
+          <p class="error">{{ t('errorServer') }}</p>
+        }
+      </div>
+
+      @if (results(); as players) {
+        <section class="glass panel results-panel">
+          <h2>{{ t('results') }}</h2>
+          <div class="equity-bars">
+            @for (player of players; track $index) {
+              <div class="equity-row" [style.--player-color]="playerColors[$index]">
+                <span class="equity-label">{{ t('playerN', { n: $index + 1 }) }}</span>
+                <div class="bar-track">
+                  <div class="bar-fill" [style.width.%]="player.equity * 100"></div>
+                </div>
+                <span class="equity-value">{{ fmtPct(player.equity) }}</span>
+              </div>
+            }
+          </div>
+          <p class="simulation-note">{{ t('simulationNote') }}</p>
+        </section>
+      }
+    </div>
+  </div>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using PokerCoach.Api.Account;
 using PokerCoach.Api.Admin;
 using PokerCoach.Api.Analytics;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Bankroll;
 using PokerCoach.Api.Billing;
@@ -123,6 +124,8 @@ builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<PlanOptions>>
 builder.Services.AddOptions<AdminOptions>().BindConfiguration(AdminOptions.SectionName);
 builder.Services.AddOptions<CleanupOptions>().BindConfiguration(CleanupOptions.SectionName);
 builder.Services.AddHostedService<UnconfirmedAccountCleanupService>();
+builder.Services.AddScoped<WeeklyNotificationService>();
+builder.Services.AddHostedService<WeeklyNotificationBackgroundService>();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AdminOptions>>().Value);
 builder.Services.AddScoped<PlanAccess>();
 builder.Services.AddScoped<AdminService>();
@@ -202,6 +205,8 @@ app.MapCoachAccessEndpoints();
 app.MapCoachingEndpoints();
 app.MapBillingEndpoints();
 app.MapAdminEndpoints();
+app.MapIcmEndpoints();
+app.MapEquityEndpoints();
 if (servesWebApp)
 {
     app.MapWebAppFallback();

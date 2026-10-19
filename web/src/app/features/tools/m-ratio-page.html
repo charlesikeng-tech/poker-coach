@@ -1,0 +1,101 @@
+<ng-container *transloco="let t; prefix: 'pages.mRatio'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <section class="glass panel inputs">
+      <h2>{{ t('inputs') }}</h2>
+
+      <div class="fields">
+        <label class="field">
+          <span>{{ t('stack') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="100"
+            [value]="stack()"
+            (change)="update('stack', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('sb') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="25"
+            [value]="sb()"
+            (change)="update('sb', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('bb') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="25"
+            [value]="bb()"
+            (change)="update('bb', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('ante') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="25"
+            [value]="ante()"
+            (change)="update('ante', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('players') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="2"
+            max="10"
+            step="1"
+            [value]="players()"
+            (change)="update('players', $any($event.target).value)"
+          />
+        </label>
+      </div>
+    </section>
+
+    <section class="glass panel results">
+      <h2>{{ t('results') }}</h2>
+
+      <dl class="metrics">
+        <div class="metric">
+          <dt>{{ t('orbitCost') }}</dt>
+          <dd>{{ fmt(orbitCost()) }}</dd>
+        </div>
+        <div class="metric metric--large">
+          <dt>M</dt>
+          <dd>{{ fmt(mRatio()) }}</dd>
+        </div>
+        <div class="metric">
+          <dt>{{ t('effectiveM') }}</dt>
+          <dd>{{ fmt(effectiveM()) }}</dd>
+        </div>
+      </dl>
+
+      <div class="zone" [attr.data-zone]="zone()">
+        <span class="zone-label">{{ t('zone.' + zone()) }}</span>
+        <p class="zone-advice">{{ t('advice.' + zone()) }}</p>
+      </div>
+    </section>
+  </div>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>

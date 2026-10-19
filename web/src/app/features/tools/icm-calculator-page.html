@@ -1,0 +1,165 @@
+<ng-container *transloco="let t; prefix: 'pages.icm'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <!-- ── Inputs ───────────────────────────────────────────────────── -->
+    <div class="inputs">
+      <!-- Players -->
+      <section class="glass panel">
+        <div class="section-header">
+          <h2>{{ t('players') }}</h2>
+          <div class="section-actions">
+            <button
+              appButton
+              type="button"
+              variant="ghost"
+              [disabled]="!canRemovePlayer()"
+              (click)="removePlayer()"
+            >
+              {{ t('removePlayer') }}
+            </button>
+            <button
+              appButton
+              type="button"
+              variant="ghost"
+              [disabled]="!canAddPlayer()"
+              (click)="addPlayer()"
+            >
+              {{ t('addPlayer') }}
+            </button>
+          </div>
+        </div>
+
+        <div class="player-rows">
+          @for (i of range(stacks().length); track i) {
+            <label class="player-row">
+              <span class="player-label">{{ t('playerN', { n: i + 1 }) }}</span>
+              <input
+                type="number"
+                inputmode="numeric"
+                min="1"
+                step="1"
+                [value]="stacks()[i]"
+                (change)="updateStack(i, $any($event.target).value)"
+                [attr.aria-label]="t('stackLabel')"
+              />
+            </label>
+          }
+        </div>
+      </section>
+
+      <!-- Payouts -->
+      <section class="glass panel">
+        <div class="section-header">
+          <h2>{{ t('payouts') }}</h2>
+          <div class="section-actions">
+            <button
+              appButton
+              type="button"
+              variant="ghost"
+              [disabled]="!canRemovePayout()"
+              (click)="removePayout()"
+            >
+              {{ t('removePayout') }}
+            </button>
+            <button
+              appButton
+              type="button"
+              variant="ghost"
+              [disabled]="!canAddPayout()"
+              (click)="addPayout()"
+            >
+              {{ t('addPayout') }}
+            </button>
+          </div>
+        </div>
+
+        <div class="player-rows">
+          @for (i of range(payouts().length); track i) {
+            <label class="player-row">
+              <span class="player-label">{{
+                i === 0 ? t('firstPlace') : t('positionN', { n: i + 1 })
+              }}</span>
+              <input
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="1"
+                [value]="payouts()[i]"
+                (change)="updatePayout(i, $any($event.target).value)"
+              />
+            </label>
+          }
+        </div>
+
+        <!-- Presets -->
+        <div class="presets">
+          <span class="presets-label">{{ t('presets') }}</span>
+          <div class="preset-buttons">
+            @for (preset of presets; track preset.labelKey) {
+              <button appButton type="button" variant="secondary" (click)="applyPreset(preset)">
+                {{ t(preset.labelKey) }}
+              </button>
+            }
+          </div>
+        </div>
+      </section>
+
+      <div class="calculate-row">
+        <button
+          appButton
+          type="button"
+          variant="primary"
+          [disabled]="state() === 'loading'"
+          (click)="calculate()"
+        >
+          @if (state() === 'loading') {
+            <app-icon [icon]="icons.Calculator" />
+          }
+          {{ t('calculate') }}
+        </button>
+
+        @if (state() === 'error-invalid') {
+          <p class="error">{{ t('errorInvalid') }}</p>
+        }
+        @if (state() === 'error-server') {
+          <p class="error">{{ t('errorServer') }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- ── Results ─────────────────────────────────────────────────── -->
+    @if (results(); as players) {
+      <section class="glass panel results-panel">
+        <h2>{{ t('results') }}</h2>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>{{ t('player') }}</th>
+              <th class="num">{{ t('chipShare') }}</th>
+              <th class="num">{{ t('icmEquity') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (player of players; track $index) {
+              <tr>
+                <td>{{ t('playerN', { n: $index + 1 }) }}</td>
+                <td class="num">{{ formatChipShare(player.chipShare) }}</td>
+                <td class="num equity">{{ formatEquity(player.icmEquity) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+    }
+  </div>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>
