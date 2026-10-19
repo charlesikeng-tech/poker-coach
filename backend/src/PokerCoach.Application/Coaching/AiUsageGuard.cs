@@ -10,6 +10,7 @@ public enum AiTask
     WeekReview,
     TournamentDebrief,
     CashDebrief,
+    BankrollCoach,
 }
 
 public static class AiTasks
@@ -20,6 +21,7 @@ public static class AiTasks
         AiTask.TournamentDebrief => "tournament-debrief",
         AiTask.CashDebrief => "cash-debrief",
         AiTask.WeekReview => "week-review",
+        AiTask.BankrollCoach => "bankroll-coach",
         _ => "leak-explanation",
     };
 
@@ -29,6 +31,7 @@ public static class AiTasks
         AiTask.TournamentDebrief => 5,
         AiTask.CashDebrief => 5,
         AiTask.WeekReview => 2,
+        AiTask.BankrollCoach => 1,
         _ => 1,
     };
 

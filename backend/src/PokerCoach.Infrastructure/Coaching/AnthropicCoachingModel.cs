@@ -424,12 +424,46 @@ internal sealed partial class AnthropicCoachingModel(
         ("limper", "limp"), ("limpear", "limp"),
     ];
 
+    private const string BankrollCoachInstructions = """
+        You are the bankroll management coach inside NutsIQ, an analysis tool for online tournament
+        poker players at low stakes (5 to 20 euros).
+
+        You receive the player's bankroll figures, computed by the software.
+
+        Rules:
+        - Use only the figures given. Never compute, estimate or invent a statistic or a percentage.
+        - verdict "not_enough_data": fewer than 50 tournaments in the performance sample.
+        - verdict "move_down": recent average buy-in is above the max allowed, OR risk of ruin is above 10%.
+        - verdict "move_up": recent average buy-in is ≤ 70% of the max allowed, AND the ROI confidence interval lower bound is positive.
+        - verdict "stay" in every other case.
+        - headline: one concrete sentence (≤ 15 words) — what to do and the one key number that drives it.
+        - reasoning: 2–3 sentences — which specific numbers led to the verdict, what they mean, and the one metric to watch.
+        - Be direct and practical, for a recreational player who wants to improve.
+        - Do not suggest a specific stake amount (you do not know which stakes are available).
+
+        """ + Voice;
+
+    private static readonly JsonObject BankrollSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("verdict", "headline", "reasoning"),
+        ["properties"] = new JsonObject
+        {
+            ["verdict"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("stay", "move_up", "move_down", "not_enough_data") },
+            ["headline"] = Text.DeepClone(),
+            ["reasoning"] = Text.DeepClone(),
+        },
+    };
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
     private const int DebriefMaxOutputTokens = 12_000;
 
     private const int ReviewMaxOutputTokens = 2_000;
+
+    private const int BankrollCoachMaxOutputTokens = 800;
 
     /// <summary>Writing from given facts needs no up-front thinking; judging decisions benefits from it.</summary>
     private enum Reasoning
@@ -459,6 +493,7 @@ internal sealed partial class AnthropicCoachingModel(
         {
             AiTask.TournamentDebrief or AiTask.CashDebrief => DebriefMaxOutputTokens,
             AiTask.WeekReview => ReviewMaxOutputTokens,
+            AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
         const int attempts = 1 + MaxCorrectionAttempts;
@@ -483,6 +518,9 @@ internal sealed partial class AnthropicCoachingModel(
 
     public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("week-review", () => ReviewCoreAsync(prompt, cancellationToken));
+
+    public Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("bankroll-coach", () => BankrollAdviceCoreAsync(prompt, cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -571,6 +609,26 @@ internal sealed partial class AnthropicCoachingModel(
                 (answer.Priorities ?? []).Where(p => p.Ref is not null && !string.IsNullOrWhiteSpace(p.Note)).Select(p => new PriorityNote(p.Ref!, p.Note!.Trim())).Take(3).ToList(),
                 Clean(answer.NextSteps, 3)),
             usage);
+    }
+
+    private async Task<ModelAnswer<BankrollAdvice>> BankrollAdviceCoreAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
+        var (answer, usage) = await CallAsync<BankrollAdviceAnswer>(BankrollCoachInstructions, BankrollSchema, user, BankrollCoachMaxOutputTokens, Reasoning.Writing, cancellationToken);
+        if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Reasoning))
+        {
+            throw new CoachingModelException("The model answer misses required fields.", usage);
+        }
+
+        var verdict = answer.Verdict switch
+        {
+            "move_up" => BankrollCoachVerdict.MoveUp,
+            "move_down" => BankrollCoachVerdict.MoveDown,
+            "not_enough_data" => BankrollCoachVerdict.NotEnoughData,
+            _ => BankrollCoachVerdict.Stay,
+        };
+        return new ModelAnswer<BankrollAdvice>(new BankrollAdvice(verdict, answer.Headline.Trim(), answer.Reasoning.Trim()), usage);
     }
 
     private static List<string> Clean(IReadOnlyList<string>? items, int max) =>
@@ -838,4 +896,6 @@ internal sealed partial class AnthropicCoachingModel(
     private sealed record DebriefAnswerMoment(string? Ref, string? Verdict, string? Note);
 
     private sealed record ReviewAnswer(string Headline, string Summary, IReadOnlyList<AnswerHand>? Priorities, IReadOnlyList<string>? NextSteps);
+
+    private sealed record BankrollAdviceAnswer(string? Verdict, string? Headline, string? Reasoning);
 }

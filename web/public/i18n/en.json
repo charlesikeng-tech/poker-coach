@@ -502,6 +502,24 @@
         "title": "Could not load your bankroll",
         "description": "NutsIQ did not respond. Your data is not lost: try again.",
         "retry": "Try again"
+      },
+      "coaching": {
+        "title": "AI Bankroll Advice",
+        "description": "NutsIQ analyses your bankroll and tells you whether to stay at your current stakes, move up, or move down.",
+        "generate": "Analyse my bankroll",
+        "refresh": "Update",
+        "stale": "Your figures have changed since this analysis. Update it.",
+        "verdicts": {
+          "stay": "Stay at your limit",
+          "moveUp": "Move up in stakes",
+          "moveDown": "Move down in stakes",
+          "notEnoughData": "Not enough data"
+        },
+        "errors": {
+          "notEnoughData": "You need at least 30 tournaments with results for the coach to analyse your bankroll.",
+          "planLimit": "You have reached the free plan monthly limit. Come back next month.",
+          "unknown": "The coach could not answer. Try again in a moment."
+        }
       }
     },
     "statistics": {

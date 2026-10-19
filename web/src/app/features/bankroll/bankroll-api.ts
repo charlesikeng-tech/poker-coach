@@ -86,6 +86,17 @@ export interface Bankroll {
   readonly summary: BankrollSummary | null;
 }
 
+export type BankrollCoachVerdict = 'stay' | 'moveUp' | 'moveDown' | 'notEnoughData';
+
+export interface BankrollCoachReport {
+  readonly verdict: BankrollCoachVerdict;
+  readonly headline: string;
+  readonly reasoning: string;
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 export interface SettingsRequest {
   readonly startingAmount: number;
   readonly startedOn: string;
@@ -117,5 +128,21 @@ export class BankrollApi {
 
   deleteMovement(id: string): Promise<void> {
     return firstValueFrom(this.http.delete<void>(`/api/bankroll/movements/${id}`));
+  }
+
+  getCoaching(language?: string): Promise<BankrollCoachReport | null> {
+    const params = language ? { language } : {};
+    return firstValueFrom(
+      this.http.get<BankrollCoachReport>('/api/bankroll/coaching', { params }),
+    ).catch((err) => {
+      if (err?.status === 404) return null;
+      throw err;
+    });
+  }
+
+  generateCoaching(language: string): Promise<BankrollCoachReport> {
+    return firstValueFrom(
+      this.http.post<BankrollCoachReport>('/api/bankroll/coaching', { language }),
+    );
   }
 }

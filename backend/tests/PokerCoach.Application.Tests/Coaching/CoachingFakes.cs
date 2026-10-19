@@ -47,6 +47,9 @@ internal sealed class ScriptedModel : ICoachingModel
         LastReview = prompt;
         return Task.FromResult(new ModelAnswer<WeekReview>(Review, new ModelUsage("test-model", 3_000, 800, 0, 0)));
     }
+
+    public Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken) =>
+        throw new NotSupportedException();
 }
 
 /// <summary>The AI usage ledger in memory, with the same counting rules as the PostgreSQL one (ADR-0017).</summary>

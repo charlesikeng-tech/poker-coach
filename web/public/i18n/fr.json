@@ -502,6 +502,24 @@
         "title": "Impossible de charger ta bankroll",
         "description": "NutsIQ n'a pas pu répondre. Tes données ne sont pas perdues : réessaie.",
         "retry": "Réessayer"
+      },
+      "coaching": {
+        "title": "Conseil bankroll IA",
+        "description": "NutsIQ analyse ta bankroll et te dit si tu dois rester à ta limite, monter ou descendre de stakes.",
+        "generate": "Analyser ma bankroll",
+        "refresh": "Mettre à jour",
+        "stale": "Tes chiffres ont changé depuis cette analyse. Mets-la à jour.",
+        "verdicts": {
+          "stay": "Continue à ta limite",
+          "moveUp": "Monte de stakes",
+          "moveDown": "Descends de stakes",
+          "notEnoughData": "Pas assez de données"
+        },
+        "errors": {
+          "notEnoughData": "Il te faut au moins 30 tournois avec résultat pour que le coach puisse analyser ta bankroll.",
+          "planLimit": "Tu as atteint la limite mensuelle du plan gratuit. Reviens le mois prochain.",
+          "unknown": "Le coach n'a pas pu répondre. Réessaie dans un moment."
+        }
       }
     },
     "statistics": {

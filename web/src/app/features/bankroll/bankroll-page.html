@@ -286,6 +286,67 @@
         }
       </section>
 
+      <section class="panel glass coaching">
+        <h2><app-icon [icon]="icons.BrainCircuit" /> {{ t('coaching.title') }}</h2>
+
+        @if (coaching(); as report) {
+          <div class="coaching-verdict" [attr.data-verdict]="report.verdict">
+            <span class="coaching-verdict-label">{{
+              t('coaching.verdicts.' + report.verdict)
+            }}</span>
+          </div>
+          <p class="coaching-headline">{{ report.headline }}</p>
+          <p class="coaching-reasoning">{{ report.reasoning }}</p>
+          @if (report.stale) {
+            <p class="hint">{{ t('coaching.stale') }}</p>
+          }
+          <div class="coaching-actions">
+            <button
+              appButton
+              type="button"
+              variant="ghost"
+              [disabled]="coachingLoading()"
+              (click)="generateCoaching()"
+            >
+              @if (coachingLoading()) {
+                <app-icon [icon]="icons.LoaderCircle" class="spin" />
+              } @else {
+                <app-icon [icon]="icons.RefreshCw" />
+              }
+              {{ t('coaching.refresh') }}
+            </button>
+          </div>
+        } @else {
+          <p class="hint">{{ t('coaching.description') }}</p>
+          @if (coachingError(); as code) {
+            <p class="error" role="alert">
+              {{
+                t(
+                  'coaching.errors.' +
+                    (code === 'NOT_ENOUGH_HANDS'
+                      ? 'notEnoughData'
+                      : code === 'PLAN_LIMIT_REACHED'
+                        ? 'planLimit'
+                        : 'unknown')
+                )
+              }}
+            </p>
+          }
+          <button
+            appButton
+            type="button"
+            variant="primary"
+            [disabled]="coachingLoading()"
+            (click)="generateCoaching()"
+          >
+            @if (coachingLoading()) {
+              <app-icon [icon]="icons.LoaderCircle" class="spin" />
+            }
+            {{ t('coaching.generate') }}
+          </button>
+        }
+      </section>
+
       <section class="panel glass">
         <h2>{{ t('movements.title') }}</h2>
         <form class="movement-form" (submit)="$event.preventDefault(); addMovement()">

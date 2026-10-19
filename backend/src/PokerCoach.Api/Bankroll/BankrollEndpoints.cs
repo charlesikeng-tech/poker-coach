@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
+using PokerCoach.Api.Coaching;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Bankroll;
+using PokerCoach.Application.Coaching;
+using PokerCoach.Application.Identity;
 using PokerCoach.Domain.Bankroll;
 
 namespace PokerCoach.Api.Bankroll;
@@ -53,6 +56,16 @@ public sealed record BankrollSummaryResponse(
 /// <summary>Settings and summary are null until the player sets up his bankroll.</summary>
 public sealed record BankrollResponse(BankrollSettingsResponse? Settings, BankrollSummaryResponse? Summary);
 
+public sealed record BankrollCoachResponse(
+    BankrollCoachVerdict Verdict,
+    string Headline,
+    string Reasoning,
+    bool Stale,
+    string Model,
+    DateTimeOffset CreatedAt);
+
+public sealed record BankrollCoachRequest(string? Language);
+
 public sealed record BankrollSettingsRequest(decimal? StartingAmount, DateTimeOffset? StartedOn, BuyInRule? Rule);
 
 /// <param name="Amount">Positive for deposits and withdrawals; signed for adjustments.</param>
@@ -63,6 +76,7 @@ public static class BankrollEndpoints
 {
     public const string NotConfigured = "BANKROLL_NOT_CONFIGURED";
     public const string MovementNotFound = "BANKROLL_MOVEMENT_NOT_FOUND";
+    public const string NoCoachingReport = "BANKROLL_NO_COACHING_REPORT";
 
     /// <summary>Far above any real bankroll: catches a typo (an extra zero row) without limiting anyone.</summary>
     private const decimal MaxAmount = 10_000_000m;
@@ -77,6 +91,8 @@ public static class BankrollEndpoints
         group.MapPut("/settings", SaveSettingsAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapPost("/movements", AddMovementAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapDelete("/movements/{id:guid}", DeleteMovementAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
+        group.MapGet("/coaching", GetCoachingAsync);
+        group.MapPost("/coaching", GenerateCoachingAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         return endpoints;
     }
 
@@ -185,6 +201,52 @@ public static class BankrollEndpoints
             ? TypedResults.NoContent()
             : ApiProblems.WithCode(StatusCodes.Status404NotFound, MovementNotFound, "Movement not found.");
     }
+
+    private static async Task<Results<Ok<BankrollCoachResponse>, NotFound, UnauthorizedHttpResult>> GetCoachingAsync(
+        HttpContext context,
+        BankrollCoachService coaching,
+        UserProfileService profiles,
+        string? language,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, _) = await CoachingEndpoints.LanguageAsync(language, userId, profiles, cancellationToken);
+        var view = await coaching.GetAsync(userId, answerLanguage!, cancellationToken);
+        return view is not null
+            ? TypedResults.Ok(ToCoachingResponse(view))
+            : TypedResults.NotFound();
+    }
+
+    private static async Task<Results<Ok<BankrollCoachResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GenerateCoachingAsync(
+        BankrollCoachRequest? request,
+        HttpContext context,
+        BankrollCoachService coaching,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await CoachingEndpoints.LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var outcome = await coaching.GenerateAsync(userId, answerLanguage!, cancellationToken);
+        return outcome.View is { } view
+            ? TypedResults.Ok(ToCoachingResponse(view))
+            : CoachingEndpoints.Problem(outcome.Failure!.Value, NotConfigured);
+    }
+
+    private static BankrollCoachResponse ToCoachingResponse(ReportView<BankrollAdvice> view) =>
+        new(view.Report.Verdict, view.Report.Headline, view.Report.Reasoning, view.Stale, view.Model, view.CreatedAt);
 
     private static BankrollResponse ToResponse(BankrollOverview o)
     {

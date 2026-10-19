@@ -64,6 +64,11 @@ public sealed record ModelUsage(string Model, int InputTokens, int OutputTokens,
 /// <summary>A validated answer of the model and what it cost.</summary>
 public sealed record ModelAnswer<T>(T Value, ModelUsage Usage);
 
+/// <summary>What the model is asked for bankroll coaching. No player name or id.</summary>
+/// <param name="Language">BCP-47 code of the answer language (fr, en, es).</param>
+/// <param name="Facts">Bankroll figures assembled by <c>BankrollCoachService</c>.</param>
+public sealed record BankrollCoachPrompt(string Language, string Facts);
+
 /// <summary>Port to the language model (Infrastructure adapter per provider).</summary>
 public interface ICoachingModel
 {
@@ -87,6 +92,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken);
 }
 
 /// <summary>The provider failed or answered outside the schema.</summary>

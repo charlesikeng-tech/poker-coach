@@ -488,7 +488,76 @@ input:not([type='radio']) {
   .settings {
     padding: var(--space-4);
   }
+}
 
+// Coaching section ------------------------------------------------------------------------------------
+
+h2 app-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: var(--space-2);
+  color: var(--accent-primary);
+}
+
+.coaching-verdict {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+
+  &[data-verdict='moveDown'] {
+    background: color-mix(in srgb, var(--danger) 12%, transparent);
+    color: var(--danger);
+  }
+
+  &[data-verdict='moveUp'] {
+    background: color-mix(in srgb, var(--success) 14%, transparent);
+    color: var(--success);
+  }
+
+  &[data-verdict='notEnoughData'] {
+    background: color-mix(in srgb, var(--text-muted) 10%, transparent);
+    color: var(--text-muted);
+  }
+}
+
+.coaching-headline {
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+}
+
+.coaching-reasoning {
+  margin-bottom: var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-body);
+}
+
+.coaching-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive
+@media (max-width: 639px) {
   .rules,
   .totals,
   .grid,

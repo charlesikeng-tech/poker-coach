@@ -3,7 +3,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { CircleAlert, Settings2, Trash2, Wallet } from 'lucide';
+import {
+  BrainCircuit,
+  CircleAlert,
+  LoaderCircle,
+  RefreshCw,
+  Settings2,
+  Trash2,
+  Wallet,
+} from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import {
@@ -23,6 +31,7 @@ import {
   BUY_IN_RULES,
   Bankroll,
   BankrollApi,
+  BankrollCoachReport,
   BankrollMovement,
   BuyInRule,
   MOVEMENT_KINDS,
@@ -74,7 +83,15 @@ export class BankrollPage {
   private readonly language = inject(LanguageService);
   private readonly transloco = inject(TranslocoService);
 
-  protected readonly icons = { CircleAlert, Settings2, Trash2, Wallet };
+  protected readonly icons = {
+    BrainCircuit,
+    CircleAlert,
+    LoaderCircle,
+    RefreshCw,
+    Settings2,
+    Trash2,
+    Wallet,
+  };
   protected readonly rules = BUY_IN_RULES;
   protected readonly ruleBuyIns = RULE_BUY_INS;
   protected readonly kinds = MOVEMENT_KINDS;
@@ -86,6 +103,10 @@ export class BankrollPage {
   protected readonly saving = signal(false);
   /** Error code of the last failed write (VALIDATION_FAILED, BANKROLL_NOT_CONFIGURED…), or 'unknown'. */
   protected readonly writeError = signal<string | null>(null);
+
+  protected readonly coaching = signal<BankrollCoachReport | null>(null);
+  protected readonly coachingLoading = signal(false);
+  protected readonly coachingError = signal<string | null>(null);
 
   // Settings form.
   protected readonly startingAmount = signal('');
@@ -212,6 +233,21 @@ export class BankrollPage {
     void this.load();
   }
 
+  protected async generateCoaching(): Promise<void> {
+    if (this.coachingLoading()) {
+      return;
+    }
+    this.coachingLoading.set(true);
+    this.coachingError.set(null);
+    try {
+      this.coaching.set(await this.api.generateCoaching(this.language.current()));
+    } catch (error) {
+      this.coachingError.set(errorCode(error));
+    } finally {
+      this.coachingLoading.set(false);
+    }
+  }
+
   protected retry(): void {
     void this.load();
   }
@@ -331,7 +367,12 @@ export class BankrollPage {
       this.state.set('loading');
     }
     try {
-      this.bankroll.set(await this.api.get());
+      const [bankroll, coaching] = await Promise.all([
+        this.api.get(),
+        this.api.getCoaching(this.language.current()),
+      ]);
+      this.bankroll.set(bankroll);
+      this.coaching.set(coaching);
       this.state.set('ready');
     } catch {
       if (!quiet) {
