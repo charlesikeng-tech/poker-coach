@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Regenerate CHANGELOG.md from conventional commits before each commit.
+# Requires git-cliff: brew install git-cliff
+git cliff -o CHANGELOG.md && git add CHANGELOG.md

@@ -9,7 +9,8 @@
     "test": "ng test",
     "e2e": "playwright test",
     "e2e:report": "playwright show-report",
-    "screenshots": "tsx tools/screenshots.ts"
+    "screenshots": "tsx tools/screenshots.ts",
+    "prepare": "test -d ../.git && git -C .. config core.hooksPath .husky || true"
   },
   "private": true,
   "packageManager": "npm@11.21.0",
