@@ -131,9 +131,10 @@ export class BankrollApi {
   }
 
   getCoaching(language?: string): Promise<BankrollCoachReport | null> {
-    const params = language ? { language } : {};
     return firstValueFrom(
-      this.http.get<BankrollCoachReport>('/api/bankroll/coaching', { params }),
+      this.http.get<BankrollCoachReport>('/api/bankroll/coaching', {
+        params: language ? { language } : undefined,
+      }),
     ).catch((err) => {
       if (err?.status === 404) return null;
       throw err;
