@@ -13,6 +13,10 @@
     />
     <meta name="theme-color" content="#0b1411" />
     <link rel="canonical" href="https://nutsiq.com/" />
+    <link rel="alternate" hreflang="fr" href="https://nutsiq.com/" />
+    <link rel="alternate" hreflang="en" href="https://nutsiq.com/en/" />
+    <link rel="alternate" hreflang="es" href="https://nutsiq.com/es/" />
+    <link rel="alternate" hreflang="x-default" href="https://nutsiq.com/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
     <meta property="og:type" content="website" />
@@ -1000,6 +1004,73 @@
           transition: none !important;
         }
       }
+
+      /* Language switcher dropdown */
+      .lang-switch {
+        position: relative;
+      }
+      .lang-btn {
+        display: inline-flex;
+        gap: 0.4rem;
+        align-items: center;
+        padding: 0.3rem 0.6rem;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-md);
+        background: none;
+        color: var(--ink-2);
+        font: 600 0.85rem/1 var(--body);
+        cursor: pointer;
+        transition: border-color 140ms, color 140ms;
+      }
+      .lang-btn:hover {
+        border-color: var(--gold-glow);
+        color: var(--ink);
+      }
+      .lang-btn svg {
+        width: 0.7rem;
+        height: 0.7rem;
+        transition: transform 200ms;
+      }
+      .lang-btn[aria-expanded="true"] svg {
+        transform: rotate(180deg);
+      }
+      .lang-menu {
+        position: absolute;
+        top: calc(100% + 0.4rem);
+        right: 0;
+        z-index: 20;
+        display: none;
+        min-width: 9rem;
+        margin: 0;
+        padding: 0.3rem;
+        list-style: none;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-md);
+        background: rgb(15 26 22 / 0.95);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+      }
+      .lang-menu.open {
+        display: block;
+      }
+      .lang-menu a {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--radius-sm);
+        color: var(--ink-2);
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: background-color 120ms, color 120ms;
+      }
+      .lang-menu a:hover {
+        background: var(--felt-high);
+        color: var(--ink);
+      }
+      .lang-menu a[aria-current="true"] {
+        color: var(--gold);
+      }
     </style>
     <script type="application/ld+json">
       {
@@ -1166,12 +1237,23 @@
             target="_blank"
             rel="noopener"
             aria-label="Rejoindre le Discord NutsIQ"
-            style="padding: 0 0.65rem; min-height: 2.75rem;"
+            style="display:none; padding: 0 0.65rem; min-height: 2.75rem;"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
             </svg>
           </a>
+          <div class="lang-switch">
+            <button class="lang-btn" aria-expanded="false" aria-haspopup="listbox" aria-label="Langue">
+              🇫🇷 FR
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <ul class="lang-menu" role="listbox">
+              <li><a href="/" hreflang="fr" aria-current="true">🇫🇷 Français</a></li>
+              <li><a href="/en/" hreflang="en">🇬🇧 English</a></li>
+              <li><a href="/es/" hreflang="es">🇪🇸 Español</a></li>
+            </ul>
+          </div>
           <a class="signin" href="https://app.nutsiq.com/sign-in"
             >Se connecter</a
           >
@@ -1989,7 +2071,7 @@
           <a href="/cgv.html">Conditions de vente</a>
           <a href="https://app.nutsiq.com/privacy">Confidentialité</a>
           <a href="#coachs">Partenaires</a>
-          <a href="https://discord.gg/INVITE_CODE" target="_blank" rel="noopener" aria-label="Discord NutsIQ" style="display:inline-flex;align-items:center;gap:0.35rem;">
+          <a href="https://discord.gg/INVITE_CODE" target="_blank" rel="noopener" aria-label="Discord NutsIQ" style="display:none;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
             Discord
           </a>
@@ -2060,6 +2142,22 @@
             nav.classList.remove("open");
             btn.setAttribute("aria-expanded", "false");
           });
+        });
+      })();
+
+      // Language dropdown
+      (function () {
+        var btn = document.querySelector(".lang-btn");
+        var menu = document.querySelector(".lang-menu");
+        if (!btn || !menu) return;
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var open = menu.classList.toggle("open");
+          btn.setAttribute("aria-expanded", String(open));
+        });
+        document.addEventListener("click", function () {
+          menu.classList.remove("open");
+          btn.setAttribute("aria-expanded", "false");
         });
       })();
     </script>
