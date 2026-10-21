@@ -23,6 +23,7 @@
 - **tools**: Supprimer l'import Button inutilisé dans PotOddsPage
 - **bankroll**: Corriger le type de params dans getCoaching
 - **tests**: Désactiver Sentry dans ApiFactory pour éviter ArgumentNullException
+- **sentry**: Désactiver proprement Sentry quand le DSN n'est pas configuré
 
 ### Documentation
 
