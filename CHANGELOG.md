@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.21-4d7ea67] — 2026-10-21
+
+### Documentation
+
+- **legal**: Rédiger les CGV et compléter les mentions légales
+
 ## [2026.10.21-bfbd727] — 2026-10-21
 
 ### Fonctionnalités
