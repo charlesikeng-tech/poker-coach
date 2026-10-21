@@ -65,6 +65,7 @@
 - **statistics**: Statistiques postflop détaillées avec détection de leaks
 - **cd**: Déploiement automatique sur Scaleway après CI
 - **coaching**: Rapport mensuel IA et correction wording pot odds
+- **ci**: GitHub Release automatique après chaque déploiement
 
 ### Maintenance
 

@@ -14,6 +14,7 @@ import {
   withComponentInputBinding,
   withPreloading,
 } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 import * as Sentry from '@sentry/angular';
 import { provideTransloco } from '@jsverse/transloco';
 
@@ -45,6 +46,10 @@ export const appConfig: ApplicationConfig = {
       loader: TranslocoHttpLoader,
     }),
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
     // Who is signed in decides the first screen and the language: both are known before the first render.
     provideAppInitializer(async () => {
       inject(ThemeService).initialize();

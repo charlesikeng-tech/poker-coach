@@ -1,0 +1,14 @@
+{
+  "name": "NutsIQ — Coach Poker IA",
+  "short_name": "NutsIQ",
+  "description": "Importe tes mains, trouve tes leaks, progresse avec l'IA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1411",
+  "theme_color": "#0b1411",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
