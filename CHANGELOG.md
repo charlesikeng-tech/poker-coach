@@ -1,10 +1,14 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.21-bfbd727] — 2026-10-21
 
 ### Fonctionnalités
 
 - **coaching**: Sélection de tournois IA (backend + frontend)
+
+### Refactoring
+
+- **nav**: Regrouper les calculateurs dans un sous-menu Outils collapsible
 
 ## [2026.10.21-24980ca] — 2026-10-21
 
