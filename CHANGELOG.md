@@ -66,6 +66,7 @@
 - **cd**: Déploiement automatique sur Scaleway après CI
 - **coaching**: Rapport mensuel IA et correction wording pot odds
 - **ci**: GitHub Release automatique après chaque déploiement
+- **pwa**: Transformer NutsIQ en Progressive Web App installable
 
 ### Maintenance
 

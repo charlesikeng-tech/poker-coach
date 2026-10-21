@@ -93,6 +93,27 @@
         "chartTitle": "Cumulative profit in BB",
         "chartAria": "Cash game profit curve: {{bb}} BB",
         "chartNotEnough": "Play at least two days of cash game in the last {{days}} days to see the curve."
+      },
+      "onboarding": {
+        "welcome": {
+          "title": "Welcome to NutsIQ",
+          "titleName": "Welcome, {{name}}",
+          "description": "NutsIQ is your AI-powered poker coach. Import your hand histories and get a personalized analysis of your game: leaks, improvement areas and a tailored study plan."
+        },
+        "import": {
+          "title": "Import your first hands",
+          "description": "Export your hand histories from your poker room (Winamax, PokerStars…) and import them here. NutsIQ will analyze each decision to identify your strengths and leaks.",
+          "action": "Import files"
+        },
+        "explore": {
+          "title": "Explore the tools",
+          "description": "While waiting for your first import, you can already use these tools to sharpen your game:"
+        },
+        "nav": {
+          "previous": "Previous",
+          "next": "Next"
+        },
+        "step": "Step {{n}} of {{total}}"
       }
     },
     "performance": {

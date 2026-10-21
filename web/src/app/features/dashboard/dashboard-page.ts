@@ -18,7 +18,9 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { SessionService } from '../../core/auth/session.service';
 import { ImportApi } from '../import/import-api';
+import { OnboardingWizard } from './onboarding-wizard';
 import {
   CashPerformanceReport,
   PerformanceApi,
@@ -57,6 +59,7 @@ type LoadState = 'loading' | 'ready' | 'error';
     StatTile,
     LineChart,
     Spotlight,
+    OnboardingWizard,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -67,6 +70,7 @@ export class DashboardPage {
   private readonly tournamentsApi = inject(TournamentsApi);
   private readonly performanceApi = inject(PerformanceApi);
   private readonly importApi = inject(ImportApi);
+  private readonly session = inject(SessionService);
   private readonly language = inject(LanguageService);
   private readonly transloco = inject(TranslocoService);
 
@@ -74,6 +78,9 @@ export class DashboardPage {
   protected readonly data = signal<DashboardData | null>(null);
   protected readonly icons = { CircleAlert, FileWarning, Upload, UserRound };
   protected readonly windowDays = WINDOW_DAYS;
+  protected readonly firstName = computed(
+    () => this.session.user()?.displayName.trim().split(/\s+/)[0] ?? '',
+  );
 
   private readonly locale = computed(() => this.language.current());
 

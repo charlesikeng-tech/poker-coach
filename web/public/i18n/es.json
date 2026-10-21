@@ -93,6 +93,27 @@
         "chartTitle": "Beneficio acumulado en BB",
         "chartAria": "Curva de beneficio cash game: {{bb}} BB",
         "chartNotEnough": "Juega al menos dos días de cash game en los últimos {{days}} días para ver la curva."
+      },
+      "onboarding": {
+        "welcome": {
+          "title": "Bienvenido a NutsIQ",
+          "titleName": "Bienvenido, {{name}}",
+          "description": "NutsIQ es tu coach de póker con IA. Importa tus historiales de manos y recibe un análisis personalizado: leaks, ejes de mejora y un plan de estudio adaptado."
+        },
+        "import": {
+          "title": "Importa tus primeras manos",
+          "description": "Exporta tus historiales de manos desde tu sala (Winamax, PokerStars…) e impórtalos aquí. NutsIQ analizará cada decisión para identificar tus fortalezas y leaks.",
+          "action": "Importar archivos"
+        },
+        "explore": {
+          "title": "Explora las herramientas",
+          "description": "Mientras esperas tu primera importación, ya puedes usar estas herramientas para mejorar tu juego:"
+        },
+        "nav": {
+          "previous": "Anterior",
+          "next": "Siguiente"
+        },
+        "step": "Paso {{n}} de {{total}}"
       }
     },
     "performance": {
