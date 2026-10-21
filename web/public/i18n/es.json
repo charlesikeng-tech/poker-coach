@@ -2376,9 +2376,22 @@
       "network": "No hay conexión. Revisa tu red.",
       "unknown": "Ha ocurrido un error inesperado.",
       "PLAN_REQUIRED": "Esta función está incluida en Pro.",
-      "PLAN_LIMIT_REACHED": "Ya has usado tus créditos de IA del mes (o, en Pro, el balance del mes ya está escrito)."
+      "PLAN_LIMIT_REACHED": "Ya has usado tus créditos de IA del mes (o, en Pro, el balance del mes ya está escrito).",
+      "MONTHLY_REPORT_NOT_FOUND": "Sin informe mensual para este mes.",
+      "MONTH_NOT_FOUND": "No hay suficientes datos para este mes."
     },
-    "upgrade": "Hazte Pro"
+    "upgrade": "Hazte Pro",
+    "monthly": {
+      "title": "Informe mensual",
+      "which": "Mes a analizar",
+      "intro": "El coach analiza tu mes: resultados, leaks, entrenamiento y recomendaciones para el mes siguiente.",
+      "action": "Escribir el informe",
+      "writing": "El coach analiza tu mes…",
+      "stale": "Se han importado nuevos datos desde este informe.",
+      "progress": "Lo que mejoró",
+      "weakPoints": "Puntos débiles",
+      "nextMonth": "Para el mes siguiente"
+    }
   },
   "planLock": {
     "cta": "Pasar a {{plan}}",

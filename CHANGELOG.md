@@ -62,6 +62,7 @@
 - **landing**: Versions EN et ES de la landing page avec sélecteur de langue
 - Intégration Sentry backend et nettoyage modèle IA
 - **statistics**: Statistiques postflop détaillées avec détection de leaks
+- **cd**: Déploiement automatique sur Scaleway après CI
 
 ### Maintenance
 

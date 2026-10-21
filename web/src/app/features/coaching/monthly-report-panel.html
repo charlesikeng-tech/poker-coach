@@ -1,0 +1,112 @@
+<ng-container *transloco="let tr">
+  <ng-container *transloco="let t; prefix: 'coach'">
+    <section class="coach-panel glass" aria-live="polite" [attr.aria-busy]="writing()">
+      <header class="coach-head">
+        <h3><app-icon [icon]="icons.Sparkles" />{{ t('monthly.title') }}</h3>
+        @if (months().length > 1) {
+          <div class="segmented" role="group" [attr.aria-label]="t('monthly.which')">
+            @for (m of months(); track m.month; let i = $index) {
+              <button
+                type="button"
+                [class.active]="selected() === i"
+                [attr.aria-pressed]="selected() === i"
+                (click)="select(i)"
+              >
+                {{ m.label }}
+              </button>
+            }
+          </div>
+        } @else {
+          <span class="ai-tag">{{ t('aiTag') }}</span>
+        }
+      </header>
+
+      @switch (state().kind) {
+        @case ('loading') {
+          <span class="skeleton" role="status" [attr.aria-label]="t('loading')"></span>
+        }
+        @case ('ready') {
+          @let r = $any(state()).report;
+          @if (r.stale) {
+            <p class="stale">
+              <span>{{ t('monthly.stale') }}</span>
+              <button appButton variant="ghost" [disabled]="writing()" (click)="write()">
+                <app-icon [icon]="icons.RefreshCw" [class.spin]="writing()" />{{ t('update') }}
+              </button>
+            </p>
+          }
+          <p class="headline">{{ r.headline }}</p>
+          <p class="story">{{ r.summary }}</p>
+
+          @if (r.progress.length > 0) {
+            <div class="columns">
+              <div>
+                <h4>{{ t('monthly.progress') }}</h4>
+                <ul>
+                  @for (item of r.progress; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+
+          @if (r.weakPoints.length > 0) {
+            <div class="columns">
+              <div>
+                <h4>{{ t('monthly.weakPoints') }}</h4>
+                <ul>
+                  @for (item of r.weakPoints; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+
+          @if (r.nextMonth.length > 0) {
+            <div class="columns">
+              <div>
+                <h4>{{ t('monthly.nextMonth') }}</h4>
+                <ul>
+                  @for (item of r.nextMonth; track $index) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          }
+
+          <p class="disclaimer">{{ t('disclaimer', { date: date(r.createdAt) }) }}</p>
+        }
+        @default {
+          <p class="intro">
+            {{ state().kind === 'failed' ? t('loadFailed') : t('monthly.intro') }}
+          </p>
+          @if (!billing.allows('monthlyReport')) {
+            <app-plan-lock feature="monthlyReport" [compact]="true" />
+          } @else {
+            <div class="write">
+              <button appButton variant="secondary" [disabled]="writing()" (click)="write()">
+                <app-icon
+                  [class.spin]="writing()"
+                  [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+                />
+                {{ writing() ? t('monthly.writing') : t('monthly.action') }}
+              </button>
+            </div>
+          }
+        }
+      }
+
+      @if (writeError(); as code) {
+        <p class="coach-error" role="alert">
+          {{ t('errors.' + code) }}
+          @if (code === 'PLAN_REQUIRED') {
+            <a routerLink="/subscription">{{ t('upgrade') }}</a>
+          }
+        </p>
+      }
+    </section>
+  </ng-container>
+</ng-container>

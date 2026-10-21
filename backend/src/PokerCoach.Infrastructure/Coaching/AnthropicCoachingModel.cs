@@ -470,6 +470,46 @@ internal sealed partial class AnthropicCoachingModel(
         },
     };
 
+    private const string MonthlyReportRules = """
+        Rules:
+        - Use only the figures given. Never compute, estimate or invent a statistic or a percentage.
+        - A month of results is mostly variance: never judge the player's level from the money alone.
+        - Focus on leak trends (more or fewer leaks than last month) and training consistency.
+        - Be concrete and encouraging without flattery: name what improved, what did not, and the recommendation.
+        """;
+
+    private const string MonthlyReportFields = """
+        Fill the fields:
+        - headline: one sentence on the month.
+        - summary: three to five sentences on the month's performance, leaks and training.
+        - progress: two or three concrete things the player did well or improved.
+        - weak_points: two or three things that remain fragile or got worse.
+        - next_month: two or three concrete recommendations for the next month.
+        """;
+
+    private const string MonthlyReportInstructions = MttContext + """
+        You receive the player's monthly summary: tournament and cash results, leaks compared to the
+        previous month, and training activity, all computed by the software.
+
+        """ + MonthlyReportRules + Voice + MonthlyReportFields;
+
+    private static readonly JsonObject MonthlyReportSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("headline", "summary", "progress", "weak_points", "next_month"),
+        ["properties"] = new JsonObject
+        {
+            ["headline"] = Text.DeepClone(),
+            ["summary"] = Text.DeepClone(),
+            ["progress"] = Texts.DeepClone(),
+            ["weak_points"] = Texts.DeepClone(),
+            ["next_month"] = Texts.DeepClone(),
+        },
+    };
+
+    private const int MonthlyReportMaxOutputTokens = 2_500;
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
@@ -511,6 +551,7 @@ internal sealed partial class AnthropicCoachingModel(
         {
             AiTask.TournamentDebrief or AiTask.CashDebrief => DebriefMaxOutputTokens,
             AiTask.WeekReview => ReviewMaxOutputTokens,
+            AiTask.MonthlyReport => MonthlyReportMaxOutputTokens,
             AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
@@ -549,6 +590,9 @@ internal sealed partial class AnthropicCoachingModel(
 
     public Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("bankroll-coach", () => BankrollAdviceCoreAsync(prompt, ModelFor(AiTask.BankrollCoach), cancellationToken));
+
+    public Task<ModelAnswer<MonthlyReport>> ReviewMonthAsync(MonthlyReportPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("monthly-report", () => MonthlyReportCoreAsync(prompt, ModelFor(AiTask.MonthlyReport), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -930,4 +974,26 @@ internal sealed partial class AnthropicCoachingModel(
     private sealed record ReviewAnswer(string Headline, string Summary, IReadOnlyList<AnswerHand>? Priorities, IReadOnlyList<string>? NextSteps);
 
     private sealed record BankrollAdviceAnswer(string? Verdict, string? Headline, string? Reasoning);
+
+    private sealed record MonthlyReportAnswer(string Headline, string Summary, IReadOnlyList<string>? Progress, IReadOnlyList<string>? WeakPoints, IReadOnlyList<string>? NextMonth);
+
+    private async Task<ModelAnswer<MonthlyReport>> MonthlyReportCoreAsync(MonthlyReportPrompt prompt, string model, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
+        var (answer, usage) = await CallAsync<MonthlyReportAnswer>(MonthlyReportInstructions, MonthlyReportSchema, user, MaxOutputTokensFor(AiTask.MonthlyReport), Reasoning.Writing, cancellationToken, model: model);
+        if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
+        {
+            throw new CoachingModelException("The model answer misses required fields.", usage);
+        }
+
+        return new ModelAnswer<MonthlyReport>(
+            new MonthlyReport(
+                answer.Headline.Trim(),
+                answer.Summary.Trim(),
+                Clean(answer.Progress, 3),
+                Clean(answer.WeakPoints, 3),
+                Clean(answer.NextMonth, 3)),
+            usage);
+    }
 }

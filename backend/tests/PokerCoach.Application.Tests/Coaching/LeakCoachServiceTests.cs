@@ -199,6 +199,9 @@ public sealed class LeakCoachServiceTests
 
         public Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+
+        public Task<ModelAnswer<MonthlyReport>> ReviewMonthAsync(MonthlyReportPrompt prompt, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class FakeStore : ICoachingStore

@@ -230,6 +230,9 @@ public enum Feature
 
     /// <summary>Defence against an open (call, 3-bet) against the references (ADR-0018).</summary>
     DefenceRanges,
+
+    /// <summary>The coach's monthly report: progress, leaks evolution, recommendation for next month.</summary>
+    MonthlyReport,
 }
 
 /// <summary>The offer matrix (ADR-0016): the lowest plan that opens each feature.</summary>
@@ -237,7 +240,7 @@ public static class PlanFeatures
 {
     public static Plan MinimumPlan(Feature feature) => feature switch
     {
-        Feature.OpeningRanges or Feature.DefenceRanges or Feature.TrainingDrills or Feature.WeekReview => Plan.Pro,
+        Feature.OpeningRanges or Feature.DefenceRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport => Plan.Pro,
         _ => Plan.Elite,
     };
 

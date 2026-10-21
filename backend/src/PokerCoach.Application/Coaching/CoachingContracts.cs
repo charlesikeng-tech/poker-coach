@@ -64,6 +64,12 @@ public sealed record ModelUsage(string Model, int InputTokens, int OutputTokens,
 /// <summary>A validated answer of the model and what it cost.</summary>
 public sealed record ModelAnswer<T>(T Value, ModelUsage Usage);
 
+/// <summary>The model's monthly report, after schema validation.</summary>
+public sealed record MonthlyReport(string Headline, string Summary, IReadOnlyList<string> Progress, IReadOnlyList<string> WeakPoints, IReadOnlyList<string> NextMonth);
+
+/// <summary>What the model is asked for the monthly report. No player name or id.</summary>
+public sealed record MonthlyReportPrompt(string Language, string Facts);
+
 /// <summary>What the model is asked for bankroll coaching. No player name or id.</summary>
 /// <param name="Language">BCP-47 code of the answer language (fr, en, es).</param>
 /// <param name="Facts">Bankroll figures assembled by <c>BankrollCoachService</c>.</param>
@@ -95,6 +101,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<MonthlyReport>> ReviewMonthAsync(MonthlyReportPrompt prompt, CancellationToken cancellationToken);
 }
 
 /// <summary>The provider failed or answered outside the schema.</summary>

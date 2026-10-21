@@ -192,6 +192,10 @@
         />
       }
 
+      @if (reportableMonths().length > 0) {
+        <app-monthly-report-panel class="review" [months]="reportableMonths()" />
+      }
+
       @if (r.history.length > 0) {
         <section class="history glass">
           <h2>{{ t('history.title') }}</h2>

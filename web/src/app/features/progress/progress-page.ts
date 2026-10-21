@@ -17,6 +17,7 @@ import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { MonthlyReportPanel, ReportableMonth } from '../coaching/monthly-report-panel';
 import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
 import { GameType } from '../statistics/statistics-api';
 import { positionShort } from '../training/spot-table';
@@ -35,7 +36,16 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
  */
 @Component({
   selector: 'app-progress-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, EmptyState, Button, Icon, WeekReviewPanel],
+  imports: [
+    TranslocoDirective,
+    RouterLink,
+    PageHeader,
+    EmptyState,
+    Button,
+    Icon,
+    WeekReviewPanel,
+    MonthlyReportPanel,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './progress-page.html',
@@ -97,6 +107,23 @@ export class ProgressPage {
       weeks.push({ weekStart: last.weekStart, hands: last.hands });
     }
     return weeks;
+  });
+
+  protected readonly reportableMonths = computed<readonly ReportableMonth[]>(() => {
+    const report = this.report();
+    if (!report) return [];
+    const now = new Date();
+    const months: ReportableMonth[] = [];
+    for (let i = 1; i <= 2; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const month = d.toISOString().slice(0, 10);
+      const label = new Intl.DateTimeFormat(this.locale(), {
+        month: 'long',
+        year: 'numeric',
+      }).format(d);
+      months.push({ month, label });
+    }
+    return months;
   });
 
   protected retry(): void {

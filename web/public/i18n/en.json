@@ -2376,9 +2376,22 @@
       "network": "Cannot connect. Check your network.",
       "unknown": "An unexpected error occurred.",
       "PLAN_REQUIRED": "This feature is part of Pro.",
-      "PLAN_LIMIT_REACHED": "Your AI credits for this month are used up (or, on Pro, this month's review is already written)."
+      "PLAN_LIMIT_REACHED": "Your AI credits for this month are used up (or, on Pro, this month's review is already written).",
+      "MONTHLY_REPORT_NOT_FOUND": "No monthly report for this month yet.",
+      "MONTH_NOT_FOUND": "Not enough data for this month."
     },
-    "upgrade": "Go Pro"
+    "upgrade": "Go Pro",
+    "monthly": {
+      "title": "Monthly report",
+      "which": "Month to review",
+      "intro": "The coach reviews your month: results, leaks, training and recommendations for next month.",
+      "action": "Write the report",
+      "writing": "The coach is reviewing your month…",
+      "stale": "New data has been imported since this report.",
+      "progress": "What improved",
+      "weakPoints": "Weak points",
+      "nextMonth": "For next month"
+    }
   },
   "planLock": {
     "cta": "Go {{plan}}",

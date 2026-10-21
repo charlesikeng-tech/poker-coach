@@ -2221,7 +2221,7 @@
     },
     "potOdds": {
       "title": "Pot Odds / EV",
-      "description": "Est-ce que l'appel est rentable ? Saisis le pot, la mise à payer et ton équité estimée.",
+      "description": "Est-ce que le call est rentable ? Saisis le pot, la mise à payer et ton équité estimée.",
       "inputs": "Paramètres",
       "pot": "Pot actuel",
       "call": "Mise à payer",
@@ -2229,11 +2229,11 @@
       "results": "Résultats",
       "potOdds": "Pot odds",
       "breakEven": "Équité seuil",
-      "ev": "EV de l'appel",
-      "verdictCall": "L'appel est +EV — rentable sur le long terme.",
-      "verdictFold": "Le fold est +EV — l'appel est perdant sur le long terme.",
+      "ev": "EV du call",
+      "verdictCall": "Le call est +EV — rentable sur le long terme.",
+      "verdictFold": "Le fold est +EV — le call est perdant sur le long terme.",
       "insightHead": "En pratique",
-      "insight1": "Pot de 100, call de 50 → pot odds 33 %. Si ton équité est supérieure à 33 %, l'appel est rentable à long terme.",
+      "insight1": "Pot de 100, call de 50 → pot odds 33 %. Si ton équité est supérieure à 33 %, le call est rentable à long terme.",
       "insight2": "L'EV peut être positif même si tu perds la main la plupart du temps — c'est ton profit espéré sur des milliers de répétitions.",
       "insight3": "Pour évaluer un bluff : si l'adversaire fold plus souvent que tes pot odds immédiats, le bluff est profitable même avec 0 % d'équité."
     },
@@ -2376,9 +2376,22 @@
       "network": "Connexion impossible. Vérifie ton réseau.",
       "unknown": "Une erreur inattendue est survenue.",
       "PLAN_REQUIRED": "Cette fonction est incluse dans Pro.",
-      "PLAN_LIMIT_REACHED": "Tes crédits IA du mois sont utilisés (ou ton bilan du mois est déjà écrit en Pro)."
+      "PLAN_LIMIT_REACHED": "Tes crédits IA du mois sont utilisés (ou ton bilan du mois est déjà écrit en Pro).",
+      "MONTHLY_REPORT_NOT_FOUND": "Aucun bilan mensuel pour ce mois.",
+      "MONTH_NOT_FOUND": "Pas assez de données pour ce mois."
     },
-    "upgrade": "Passer Pro"
+    "upgrade": "Passer Pro",
+    "monthly": {
+      "title": "Bilan mensuel",
+      "which": "Mois à analyser",
+      "intro": "Le coach fait le bilan de ton mois : résultats, leaks, entraînement et recommandations pour le mois suivant.",
+      "action": "Écrire le bilan",
+      "writing": "Le coach analyse ton mois…",
+      "stale": "De nouvelles données ont été importées depuis ce bilan.",
+      "progress": "Ce qui a progressé",
+      "weakPoints": "Points fragiles",
+      "nextMonth": "Pour le mois prochain"
+    }
   },
   "planLock": {
     "cta": "Passer {{plan}}",

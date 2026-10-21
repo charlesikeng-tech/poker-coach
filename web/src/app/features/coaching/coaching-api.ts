@@ -89,6 +89,27 @@ export interface CashDebrief {
   readonly createdAt: string;
 }
 
+export interface MonthlyReport {
+  readonly month: string;
+  readonly headline: string;
+  readonly summary: string;
+  readonly progress: readonly string[];
+  readonly weakPoints: readonly string[];
+  readonly nextMonth: readonly string[];
+  readonly hands: number;
+  readonly tournaments: number;
+  readonly profit: number;
+  readonly roi: number | null;
+  readonly cashHands: number;
+  readonly cashBbPer100: number | null;
+  readonly leakCount: number;
+  readonly drillAttempts: number;
+  readonly drillCorrect: number;
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 /** Error codes the coach panels explain; anything else is shown as a generic failure. */
 const COACH_ERRORS = new Set([
   'HANDS_PENDING',
@@ -96,6 +117,8 @@ const COACH_ERRORS = new Set([
   'TOURNAMENT_NOT_FOUND',
   'WEEK_NOT_FOUND',
   'CASH_SESSION_NOT_FOUND',
+  'MONTHLY_REPORT_NOT_FOUND',
+  'MONTH_NOT_FOUND',
   'COACHING_DAILY_LIMIT',
   'PLAN_REQUIRED',
   'PLAN_LIMIT_REACHED',
@@ -123,7 +146,10 @@ export function notWrittenYet(error: unknown): boolean {
   }
   const code = (error.error as { code?: unknown } | null)?.code;
   return (
-    code === 'DEBRIEF_NOT_FOUND' || code === 'REVIEW_NOT_FOUND' || code === 'CASH_DEBRIEF_NOT_FOUND'
+    code === 'DEBRIEF_NOT_FOUND' ||
+    code === 'REVIEW_NOT_FOUND' ||
+    code === 'CASH_DEBRIEF_NOT_FOUND' ||
+    code === 'MONTHLY_REPORT_NOT_FOUND'
   );
 }
 
@@ -178,6 +204,20 @@ export class CoachingApi {
         language,
         ...(gameType !== 'tournament' ? { gameType } : {}),
       }),
+    );
+  }
+
+  monthlyReport(month: string, language: string): Promise<MonthlyReport> {
+    return firstValueFrom(
+      this.http.get<MonthlyReport>('/api/progress/monthly-report', {
+        params: new HttpParams().set('month', month).set('language', language),
+      }),
+    );
+  }
+
+  writeMonthlyReport(month: string, language: string): Promise<MonthlyReport> {
+    return firstValueFrom(
+      this.http.post<MonthlyReport>('/api/progress/monthly-report', { month, language }),
     );
   }
 }

@@ -11,6 +11,7 @@ public enum AiTask
     TournamentDebrief,
     CashDebrief,
     BankrollCoach,
+    MonthlyReport,
 }
 
 public static class AiTasks
@@ -22,6 +23,7 @@ public static class AiTasks
         AiTask.CashDebrief => "cash-debrief",
         AiTask.WeekReview => "week-review",
         AiTask.BankrollCoach => "bankroll-coach",
+        AiTask.MonthlyReport => "monthly-report",
         _ => "leak-explanation",
     };
 
@@ -31,6 +33,7 @@ public static class AiTasks
         AiTask.TournamentDebrief => 5,
         AiTask.CashDebrief => 5,
         AiTask.WeekReview => 2,
+        AiTask.MonthlyReport => 3,
         AiTask.BankrollCoach => 1,
         _ => 1,
     };
@@ -41,6 +44,7 @@ public static class AiTasks
         AiTask.TournamentDebrief => Domain.Subscriptions.Feature.TournamentDebrief,
         AiTask.CashDebrief => Domain.Subscriptions.Feature.TournamentDebrief,
         AiTask.WeekReview => Domain.Subscriptions.Feature.WeekReview,
+        AiTask.MonthlyReport => Domain.Subscriptions.Feature.MonthlyReport,
         _ => null,
     };
 }
@@ -122,6 +126,7 @@ public sealed record AiOutcome<T>(ModelAnswer<T>? Answer, CoachingFailure? Failu
 public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, CoachingOptions options, PlanAccess plans, TimeProvider time)
 {
     public const int ProReviewsPerMonth = 1;
+    public const int ProMonthlyReportsPerMonth = 1;
 
     /// <summary>Longer than any provider call (timeouts included); then the reservation is considered abandoned.</summary>
     public static readonly TimeSpan ReservationLifetime = TimeSpan.FromMinutes(10);
@@ -216,6 +221,11 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
 
     private CoachingFailure? Decide(AiUsageSnapshot usage, AiTask task, Plan plan, int? monthlyCredits, decimal ceiling)
     {
+        if (task == AiTask.MonthlyReport && plan == Plan.Pro && usage.CallsThisMonth >= ProMonthlyReportsPerMonth)
+        {
+            return CoachingFailure.PlanLimitReached;
+        }
+
         if (task == AiTask.WeekReview && plan == Plan.Pro && usage.CallsThisMonth >= ProReviewsPerMonth)
         {
             return CoachingFailure.PlanLimitReached;
@@ -237,7 +247,7 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
     private int DailyLimit(AiTask task) => task switch
     {
         AiTask.TournamentDebrief or AiTask.CashDebrief => options.DailyDebriefsPerUser,
-        AiTask.WeekReview => options.DailyWeekReviewsPerUser,
+        AiTask.WeekReview or AiTask.MonthlyReport => options.DailyWeekReviewsPerUser,
         _ => options.DailyExplanationsPerUser,
     };
 

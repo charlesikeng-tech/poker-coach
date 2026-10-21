@@ -24,6 +24,9 @@ public sealed record GenerateCashDebriefRequest(DateOnly Day, string? Language);
 /// <param name="SubFormat">mtt, rebuyMtt or sng; null for the combined tournament plan.</param>
 public sealed record GenerateWeekReviewRequest(DateOnly? Week, string? Language, string? GameType, string? SubFormat = null);
 
+/// <param name="Month">First day of the month ("2026-09-01"); previous month when omitted.</param>
+public sealed record GenerateMonthlyReportRequest(DateOnly? Month, string? Language);
+
 /// <summary>A key moment: our figures; <c>verdict</c> and <c>note</c> are the coach's, null when not commented.</summary>
 public sealed record DebriefMomentResponse(
     string Ref,
@@ -100,6 +103,27 @@ public sealed record WeekReviewResponse(
     string Model,
     DateTimeOffset CreatedAt);
 
+/// <summary>AI-written monthly report.</summary>
+public sealed record MonthlyReportResponse(
+    DateOnly Month,
+    string Headline,
+    string Summary,
+    IReadOnlyList<string> Progress,
+    IReadOnlyList<string> WeakPoints,
+    IReadOnlyList<string> NextMonth,
+    int Hands,
+    int Tournaments,
+    decimal Profit,
+    decimal? Roi,
+    int CashHands,
+    decimal? CashBbPer100,
+    int LeakCount,
+    int DrillAttempts,
+    int DrillCorrect,
+    bool Stale,
+    string Model,
+    DateTimeOffset CreatedAt);
+
 /// <summary>
 /// The coach's reports (ADR-0012): tournament debrief and weekly review. GET reads the stored report for
 /// free; POST writes it (a paid model call) unless the stored one is still up to date.
@@ -116,6 +140,9 @@ public static class CoachingEndpoints
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         endpoints.MapGet("/api/progress/review", GetReviewAsync).WithTags("Coaching");
         endpoints.MapPost("/api/progress/review", GenerateReviewAsync).WithTags("Coaching")
+            .AddEndpointFilter<AntiforgeryValidationFilter>();
+        endpoints.MapGet("/api/progress/monthly-report", GetMonthlyReportAsync).WithTags("Coaching");
+        endpoints.MapPost("/api/progress/monthly-report", GenerateMonthlyReportAsync).WithTags("Coaching")
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         return endpoints;
     }
@@ -312,6 +339,79 @@ public static class CoachingEndpoints
 
         var outcome = await debriefs.GenerateAsync(userId, request.Day, answerLanguage!, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToCashResponse(request.Day, view)) : Problem(outcome.Failure!.Value, "CASH_SESSION_NOT_FOUND");
+    }
+
+    private static async Task<Results<Ok<MonthlyReportResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetMonthlyReportAsync(
+        DateOnly? month,
+        string? language,
+        HttpContext context,
+        MonthlyReportService monthly,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var view = await monthly.GetAsync(userId, month, answerLanguage!, cancellationToken);
+        return view is null
+            ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "MONTHLY_REPORT_NOT_FOUND", "No monthly report written for this month yet.")
+            : TypedResults.Ok(ToMonthlyResponse(view));
+    }
+
+    private static async Task<Results<Ok<MonthlyReportResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GenerateMonthlyReportAsync(
+        GenerateMonthlyReportRequest? request,
+        HttpContext context,
+        MonthlyReportService monthly,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var outcome = await monthly.GenerateAsync(userId, request?.Month, answerLanguage!, cancellationToken);
+        return outcome.View is { } view ? TypedResults.Ok(ToMonthlyResponse(view)) : Problem(outcome.Failure!.Value, "MONTH_NOT_FOUND");
+    }
+
+    private static MonthlyReportResponse ToMonthlyResponse(ReportView<MonthlyReportData> view)
+    {
+        var data = view.Report;
+        var r = data.Report;
+        var f = data.Figures;
+        return new MonthlyReportResponse(
+            data.Month,
+            r.Headline,
+            r.Summary,
+            r.Progress,
+            r.WeakPoints,
+            r.NextMonth,
+            f.Hands,
+            f.Tournaments,
+            f.Profit,
+            f.Roi,
+            f.CashHands,
+            f.CashBbPer100,
+            f.LeakCount,
+            f.DrillAttempts,
+            f.DrillCorrect,
+            view.Stale,
+            view.Model,
+            view.CreatedAt);
     }
 
     private static CashDebriefResponse ToCashResponse(DateOnly day, ReportView<CashDebriefReport> view)
