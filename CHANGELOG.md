@@ -22,6 +22,7 @@
 - **identity**: Exclure les invitations révoquées de ListByStudentAsync
 - **tools**: Supprimer l'import Button inutilisé dans PotOddsPage
 - **bankroll**: Corriger le type de params dans getCoaching
+- **tests**: Désactiver Sentry dans ApiFactory pour éviter ArgumentNullException
 
 ### Documentation
 

@@ -47,6 +47,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseSentry(o =>
 {
+    o.Dsn ??= "";
     o.TracesSampleRate = 0.1;
     o.SendDefaultPii = false;
 });
