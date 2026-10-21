@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.21-8b1f399] — 2026-10-21
 
 ### CI/CD
 
@@ -25,6 +25,7 @@
 - **tests**: Désactiver Sentry dans ApiFactory pour éviter ArgumentNullException
 - **sentry**: Désactiver proprement Sentry quand le DSN n'est pas configuré
 - **i18n**: Ajouter le libellé monthlyReport dans la page admin
+- **ci**: Gérer l'absence de tag lors de la première GitHub Release
 
 ### Documentation
 
