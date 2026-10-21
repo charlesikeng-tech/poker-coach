@@ -67,6 +67,7 @@
 - **coaching**: Rapport mensuel IA et correction wording pot odds
 - **ci**: GitHub Release automatique après chaque déploiement
 - **pwa**: Transformer NutsIQ en Progressive Web App installable
+- **onboarding**: Wizard 3 étapes pour les nouveaux utilisateurs
 
 ### Maintenance
 
