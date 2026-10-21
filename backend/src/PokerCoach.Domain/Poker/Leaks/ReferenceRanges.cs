@@ -21,6 +21,9 @@ public enum LeakStat
     CheckRaiseFlop,
     WonWhenSawFlop,
     PostflopAggression,
+    FoldToCbetTurn,
+    DonkBetFlop,
+    ProbeBetTurn,
 }
 
 /// <summary>
@@ -30,13 +33,13 @@ public enum LeakStat
 public sealed record ReferenceRange(LeakStat Stat, PokerPosition? Position, decimal Min, decimal Max);
 
 /// <summary>
-/// Reference ranges, version 2 (ADR-0007; 2 adds the postflop statistics): usual figures for solid regulars in low-stakes online MTTs
+/// Reference ranges, version 3 (ADR-0007; 2 adds the postflop statistics; 3 adds fold to turn c-bet, donk bet, probe bet): usual figures for solid regulars in low-stakes online MTTs
 /// (€5–20, mostly 6-max), with 15+ big blinds. They are conventions to compare against, not truths;
 /// they will become adjustable, then derived from the platform's players.
 /// </summary>
 public static class ReferenceRanges
 {
-    public const int Version = 2;
+    public const int Version = 3;
 
     /// <summary>Hands with fewer big blinds are push/fold poker: other references would apply.</summary>
     public const decimal MinStackBigBlinds = 15m;
@@ -63,6 +66,12 @@ public static class ReferenceRanges
         new(LeakStat.WonWhenSawFlop, null, 0.42m, 0.54m),
         // Bets and raises over bets, raises, calls and folds after the flop.
         new(LeakStat.PostflopAggression, null, 0.35m, 0.52m),
+        // Folding the turn after calling the flop c-bet: the classic "call one and done" pattern.
+        new(LeakStat.FoldToCbetTurn, null, 0.38m, 0.55m),
+        // Betting into the preflop raiser: usually a fundamental mistake at these stakes.
+        new(LeakStat.DonkBetFlop, null, 0.00m, 0.08m),
+        // Betting when the PFR checks back the flop: punishing the missed c-bet.
+        new(LeakStat.ProbeBetTurn, null, 0.25m, 0.40m),
 
         // Opening ranges widen towards the button.
         new(LeakStat.Rfi, PokerPosition.Utg, 0.11m, 0.20m),
@@ -98,6 +107,9 @@ public static class ReferenceRanges
         new(LeakStat.CheckRaiseFlop, null, 0.06m, 0.14m),
         new(LeakStat.WonWhenSawFlop, null, 0.44m, 0.54m),
         new(LeakStat.PostflopAggression, null, 0.38m, 0.52m),
+        new(LeakStat.FoldToCbetTurn, null, 0.35m, 0.50m),
+        new(LeakStat.DonkBetFlop, null, 0.00m, 0.05m),
+        new(LeakStat.ProbeBetTurn, null, 0.28m, 0.42m),
 
         // 6-max cash RFI: wider than MTT at every seat (no ICM, deeper stacks).
         new(LeakStat.Rfi, PokerPosition.Utg, 0.15m, 0.22m),
@@ -121,5 +133,8 @@ public static class LeakStats
         or LeakStat.CbetTurn
         or LeakStat.CheckRaiseFlop
         or LeakStat.WonWhenSawFlop
-        or LeakStat.PostflopAggression;
+        or LeakStat.PostflopAggression
+        or LeakStat.FoldToCbetTurn
+        or LeakStat.DonkBetFlop
+        or LeakStat.ProbeBetTurn;
 }

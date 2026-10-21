@@ -30,7 +30,13 @@ public sealed record HeroStatCounts(
     int CheckRaiseFlop = 0,
     int WonWhenSawFlop = 0,
     int PostflopAggressive = 0,
-    int PostflopDecisions = 0)
+    int PostflopDecisions = 0,
+    int FoldToCbetTurnOpportunities = 0,
+    int FoldToCbetTurn = 0,
+    int DonkBetFlopOpportunities = 0,
+    int DonkBetFlop = 0,
+    int ProbeBetTurnOpportunities = 0,
+    int ProbeBetTurn = 0)
 {
     public static readonly HeroStatCounts Zero = new(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0m);
 
@@ -68,7 +74,13 @@ public sealed record HeroStatCounts(
             One(facts.CheckRaiseFlop),
             One(facts.WonWhenSawFlop),
             facts.PostflopAggressive,
-            facts.PostflopDecisions);
+            facts.PostflopDecisions,
+            One(facts.FoldToCbetTurnOpportunity),
+            One(facts.FoldToCbetTurn),
+            One(facts.DonkBetFlopOpportunity),
+            One(facts.DonkBetFlop),
+            One(facts.ProbeBetTurnOpportunity),
+            One(facts.ProbeBetTurn));
     }
 
     public HeroStatCounts Add(HeroStatCounts other)
@@ -103,6 +115,12 @@ public sealed record HeroStatCounts(
             CheckRaiseFlop + other.CheckRaiseFlop,
             WonWhenSawFlop + other.WonWhenSawFlop,
             PostflopAggressive + other.PostflopAggressive,
-            PostflopDecisions + other.PostflopDecisions);
+            PostflopDecisions + other.PostflopDecisions,
+            FoldToCbetTurnOpportunities + other.FoldToCbetTurnOpportunities,
+            FoldToCbetTurn + other.FoldToCbetTurn,
+            DonkBetFlopOpportunities + other.DonkBetFlopOpportunities,
+            DonkBetFlop + other.DonkBetFlop,
+            ProbeBetTurnOpportunities + other.ProbeBetTurnOpportunities,
+            ProbeBetTurn + other.ProbeBetTurn);
     }
 }

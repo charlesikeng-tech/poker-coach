@@ -103,6 +103,18 @@ internal sealed class HandHeroFactsRecord
 
     public bool ThreeBetAllIn { get; set; }
 
+    public bool FoldToCbetTurnOpportunity { get; set; }
+
+    public bool FoldToCbetTurn { get; set; }
+
+    public bool DonkBetFlopOpportunity { get; set; }
+
+    public bool DonkBetFlop { get; set; }
+
+    public bool ProbeBetTurnOpportunity { get; set; }
+
+    public bool ProbeBetTurn { get; set; }
+
     public void Apply(HeroHandFacts facts, int version)
     {
         FactsVersion = version;
@@ -149,6 +161,12 @@ internal sealed class HandHeroFactsRecord
         FacingOpenEffectiveStack = facts.FacingOpenEffectiveStack;
         ThreeBetToBigBlinds = facts.ThreeBetToBigBlinds;
         ThreeBetAllIn = facts.ThreeBetAllIn;
+        FoldToCbetTurnOpportunity = facts.FoldToCbetTurnOpportunity;
+        FoldToCbetTurn = facts.FoldToCbetTurn;
+        DonkBetFlopOpportunity = facts.DonkBetFlopOpportunity;
+        DonkBetFlop = facts.DonkBetFlop;
+        ProbeBetTurnOpportunity = facts.ProbeBetTurnOpportunity;
+        ProbeBetTurn = facts.ProbeBetTurn;
     }
 
     public HeroHandFacts ToDomain() => new(
@@ -194,7 +212,13 @@ internal sealed class HandHeroFactsRecord
         FacingOpenToBigBlinds,
         FacingOpenEffectiveStack,
         ThreeBetToBigBlinds,
-        ThreeBetAllIn);
+        ThreeBetAllIn,
+        FoldToCbetTurnOpportunity,
+        FoldToCbetTurn,
+        DonkBetFlopOpportunity,
+        DonkBetFlop,
+        ProbeBetTurnOpportunity,
+        ProbeBetTurn);
 }
 
 internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<HandHeroFactsRecord>

@@ -128,6 +128,9 @@ public static class LeakDetector
         LeakStat.CheckRaiseFlop => (c.CheckRaiseFlop, c.CheckRaiseFlopOpportunities),
         LeakStat.WonWhenSawFlop => (c.WonWhenSawFlop, c.SawFlop),
         LeakStat.PostflopAggression => (c.PostflopAggressive, c.PostflopDecisions),
+        LeakStat.FoldToCbetTurn => (c.FoldToCbetTurn, c.FoldToCbetTurnOpportunities),
+        LeakStat.DonkBetFlop => (c.DonkBetFlop, c.DonkBetFlopOpportunities),
+        LeakStat.ProbeBetTurn => (c.ProbeBetTurn, c.ProbeBetTurnOpportunities),
         _ => throw new ArgumentOutOfRangeException(nameof(stat), stat, null),
     };
 

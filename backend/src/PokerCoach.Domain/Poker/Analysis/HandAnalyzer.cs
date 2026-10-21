@@ -83,7 +83,13 @@ public static class HandAnalyzer
             InBigBlinds(preflop.FacingOpenTo, hand.BigBlind),
             InBigBlinds(preflop.FacingOpenEffectiveStack, hand.BigBlind),
             InBigBlinds(preflop.ThreeBetTo, hand.BigBlind),
-            preflop.ThreeBetAllIn);
+            preflop.ThreeBetAllIn,
+            play.FoldToCbetTurnOpportunity,
+            play.FoldToCbetTurn,
+            play.DonkBetFlopOpportunity,
+            play.DonkBetFlop,
+            play.ProbeBetTurnOpportunity,
+            play.ProbeBetTurn);
     }
 
     private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position, IReadOnlyDictionary<string, PokerPosition> positions)

@@ -65,11 +65,17 @@ public sealed record HeroHandFacts(
     decimal? FacingOpenToBigBlinds = null,
     decimal? FacingOpenEffectiveStack = null,
     decimal? ThreeBetToBigBlinds = null,
-    bool ThreeBetAllIn = false)
+    bool ThreeBetAllIn = false,
+    bool FoldToCbetTurnOpportunity = false,
+    bool FoldToCbetTurn = false,
+    bool DonkBetFlopOpportunity = false,
+    bool DonkBetFlop = false,
+    bool ProbeBetTurnOpportunity = false,
+    bool ProbeBetTurn = false)
 {
     /// <summary>Bump on any change of a definition below or in <see cref="HandAnalyzer"/>.</summary>
-    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018). 5: open and 3-bet sizes (ADR-0020).</remarks>
-    public const int Version = 5;
+    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018). 5: open and 3-bet sizes (ADR-0020). 6: fold to turn c-bet, donk bet, probe bet.</remarks>
+    public const int Version = 6;
 
     /// <summary>Expected result of an all-in in big blinds, comparable across levels and tournaments.</summary>
     public decimal? AllInExpectedNetBigBlinds(long bigBlind) =>

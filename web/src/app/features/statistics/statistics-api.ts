@@ -33,6 +33,9 @@ export interface StatLine {
   readonly wonWhenSawFlop: StatRate;
   /** Bets and raises over bets, raises, calls and folds after the flop. */
   readonly postflopAggression: StatRate;
+  readonly foldToCbetTurn: StatRate;
+  readonly donkBetFlop: StatRate;
+  readonly probeBetTurn: StatRate;
 }
 
 export type PokerPosition =

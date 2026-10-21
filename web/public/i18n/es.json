@@ -602,7 +602,13 @@
         "wonWhenSawFlop": "Ganado tras el flop",
         "wonWhenSawFlopHint": "Ganó fichas tras ver el flop, con o sin showdown",
         "postflopAggression": "Agresión postflop",
-        "postflopAggressionHint": "Apuestas y subidas sobre todas las decisiones tras el flop (apuestas, subidas, calls, folds)"
+        "postflopAggressionHint": "Apuestas y subidas sobre todas las decisiones tras el flop (apuestas, subidas, calls, folds)",
+        "foldToCbetTurn": "Fold al c-bet turn",
+        "foldToCbetTurnHint": "Fold en el turn ante el segundo barril del preflop raiser",
+        "donkBetFlop": "Donk bet flop",
+        "donkBetFlopHint": "Apostó contra el preflop raiser en el flop (lead bet)",
+        "probeBetTurn": "Probe bet turn",
+        "probeBetTurnHint": "Apostó en el turn cuando el preflop raiser pasó en el flop"
       },
       "short": {
         "vpip": "VPIP",
@@ -621,7 +627,10 @@
         "cbetTurn": "CB T",
         "checkRaiseFlop": "XR",
         "wonWhenSawFlop": "WWSF",
-        "postflopAggression": "AFq"
+        "postflopAggression": "AFq",
+        "foldToCbetTurn": "FCB T",
+        "donkBetFlop": "Donk",
+        "probeBetTurn": "Probe"
       },
       "positions": {
         "utg": "UTG",
@@ -968,7 +977,10 @@
         "cbetTurn": "C-bet en el turn",
         "checkRaiseFlop": "Check-raise en el flop",
         "wonWhenSawFlop": "Ganado tras el flop",
-        "postflopAggression": "Agresión postflop"
+        "postflopAggression": "Agresión postflop",
+        "foldToCbetTurn": "Fold al c-bet del turn",
+        "donkBetFlop": "Donk bet flop",
+        "probeBetTurn": "Probe bet turn"
       },
       "items": {
         "vpip": {
@@ -1161,6 +1173,42 @@
             "title": "Eres demasiado pasivo tras el flop",
             "why": "Solo el {{rate}} de tus decisiones tras el flop son apuestas o subidas (referencia {{min}}–{{max}}). Pagar en lugar de apostar te quita fold equity.",
             "work": "Apuesta tus manos fuertes por valor y tus proyectos como semifarol en lugar de pagar."
+          }
+        },
+        "foldToCbetTurn": {
+          "tooHigh": {
+            "title": "Pasas demasiado ante el segundo barril",
+            "why": "Pasas el {{rate}} de las veces cuando el preflop raiser apuesta el turn después del flop (referencia {{min}}–{{max}}). Los oponentes pueden hacer doble barril como farol de forma rentable.",
+            "work": "Defiende más el turn con pares medios y proyectos — no dejes que te roben el bote con dos barriles."
+          },
+          "tooLow": {
+            "title": "Rara vez pasas ante el segundo barril",
+            "why": "Solo pasas el {{rate}} ante el c-bet del turn (referencia {{min}}–{{max}}). Estás pagando demasiadas apuestas del turn con manos débiles.",
+            "work": "Suelta pares bajos y manos sin potencial de mejora ante el segundo barril."
+          }
+        },
+        "donkBetFlop": {
+          "tooHigh": {
+            "title": "Haces donk bet en el flop con demasiada frecuencia",
+            "why": "Apuestas contra el preflop raiser en el flop el {{rate}} de las veces (referencia {{min}}–{{max}}). El donk bet renuncia a la ventaja del check-raise y da información gratis.",
+            "work": "Pasa al preflop raiser y usa check-raise o check-call según tu mano y el board."
+          },
+          "tooLow": {
+            "title": "Casi nunca haces donk bet",
+            "why": "Solo haces donk bet el {{rate}} en el flop (referencia {{min}}–{{max}}). Un porcentaje bajo es normal: la mayoría de jugadores sólidos prefieren pasar al raiser.",
+            "work": "Es un buen hábito. Algunos boards muy conectados pueden justificar un lead ocasional."
+          }
+        },
+        "probeBetTurn": {
+          "tooHigh": {
+            "title": "Haces probe bet en el turn con demasiada frecuencia",
+            "why": "Cuando el preflop raiser pasa en el flop, apuestas el turn el {{rate}} de las veces (referencia {{min}}–{{max}}). Demasiados probes hacen tu rango transparente.",
+            "work": "Pasa más con manos medias y solo haz probe con manos de valor y semifaroles seleccionados."
+          },
+          "tooLow": {
+            "title": "Rara vez haces probe bet en el turn",
+            "why": "Cuando el preflop raiser pasa en el flop, solo apuestas el turn el {{rate}} de las veces (referencia {{min}}–{{max}}). Les das cartas gratis cuando muestran debilidad.",
+            "work": "Apuesta el turn por valor y como farol cuando el PFR renunció al c-bet — suelen tener un rango débil."
           }
         }
       },
@@ -1983,7 +2031,8 @@
           "leakExplanation": "Explicación de leak",
           "weekReview": "Revisión semanal",
           "tournamentDebrief": "Debrief de torneo",
-          "cashDebrief": "Debrief de cash game"
+          "cashDebrief": "Debrief de cash game",
+          "bankrollCoach": "Consejo bankroll"
         }
       }
     },

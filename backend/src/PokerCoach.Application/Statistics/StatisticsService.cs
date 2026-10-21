@@ -88,7 +88,10 @@ public sealed record StatLine(
     StatRate CbetTurn,
     StatRate CheckRaiseFlop,
     StatRate WonWhenSawFlop,
-    StatRate PostflopAggression)
+    StatRate PostflopAggression,
+    StatRate FoldToCbetTurn,
+    StatRate DonkBetFlop,
+    StatRate ProbeBetTurn)
 {
     public static StatLine From(HeroStatCounts c)
     {
@@ -111,7 +114,10 @@ public sealed record StatLine(
             StatRate.Of(c.CbetTurn, c.CbetTurnOpportunities),
             StatRate.Of(c.CheckRaiseFlop, c.CheckRaiseFlopOpportunities),
             StatRate.Of(c.WonWhenSawFlop, c.SawFlop),
-            StatRate.Of(c.PostflopAggressive, c.PostflopDecisions));
+            StatRate.Of(c.PostflopAggressive, c.PostflopDecisions),
+            StatRate.Of(c.FoldToCbetTurn, c.FoldToCbetTurnOpportunities),
+            StatRate.Of(c.DonkBetFlop, c.DonkBetFlopOpportunities),
+            StatRate.Of(c.ProbeBetTurn, c.ProbeBetTurnOpportunities));
     }
 }
 

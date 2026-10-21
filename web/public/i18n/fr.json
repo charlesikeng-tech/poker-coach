@@ -602,7 +602,13 @@
         "wonWhenSawFlop": "Won when saw flop",
         "wonWhenSawFlopHint": "A ramassé des chips après avoir vu le flop, showdown ou non",
         "postflopAggression": "Postflop aggression",
-        "postflopAggressionHint": "Bets et raises sur toutes les décisions postflop (bets, raises, calls, folds)"
+        "postflopAggressionHint": "Bets et raises sur toutes les décisions postflop (bets, raises, calls, folds)",
+        "foldToCbetTurn": "Fold to c-bet turn",
+        "foldToCbetTurnHint": "A fold sur la turn face au 2nd barrel du preflop raiser",
+        "donkBetFlop": "Donk bet flop",
+        "donkBetFlopHint": "A bet dans le preflop raiser au flop (lead bet)",
+        "probeBetTurn": "Probe bet turn",
+        "probeBetTurnHint": "A bet la turn quand le preflop raiser a check-back le flop"
       },
       "short": {
         "vpip": "VPIP",
@@ -621,7 +627,10 @@
         "cbetTurn": "CB T",
         "checkRaiseFlop": "XR",
         "wonWhenSawFlop": "WWSF",
-        "postflopAggression": "AFq"
+        "postflopAggression": "AFq",
+        "foldToCbetTurn": "FCB T",
+        "donkBetFlop": "Donk",
+        "probeBetTurn": "Probe"
       },
       "positions": {
         "utg": "UTG",
@@ -968,7 +977,10 @@
         "cbetTurn": "C-bet turn",
         "checkRaiseFlop": "Check-raise flop",
         "wonWhenSawFlop": "Won when saw flop",
-        "postflopAggression": "Postflop aggression"
+        "postflopAggression": "Postflop aggression",
+        "foldToCbetTurn": "Fold to c-bet turn",
+        "donkBetFlop": "Donk bet flop",
+        "probeBetTurn": "Probe bet turn"
       },
       "items": {
         "vpip": {
@@ -1161,6 +1173,42 @@
             "title": "Tu es trop passif postflop",
             "why": "Seules {{rate}} de tes décisions postflop sont des bets ou des raises (repère {{min}}–{{max}}). Call plutôt que bet te prive de la fold equity.",
             "work": "Bet tes mains fortes pour value et tes draws en semi-bluff au lieu de call."
+          }
+        },
+        "foldToCbetTurn": {
+          "tooHigh": {
+            "title": "Tu fold trop souvent face au 2nd barrel",
+            "why": "Tu fold {{rate}} du temps quand le preflop raiser bet la turn après le flop (repère {{min}}–{{max}}). Les adversaires peuvent double-barrel en bluff et ça marche.",
+            "work": "Défends davantage la turn avec tes paires moyennes et tes draws : ne laisse pas tes adversaires te voler le pot avec deux barils."
+          },
+          "tooLow": {
+            "title": "Tu fold rarement face au 2nd barrel",
+            "why": "Tu ne fold que {{rate}} face au 2nd barrel turn (repère {{min}}–{{max}}). Tu paies trop de bets sur la turn avec des mains faibles.",
+            "work": "Lâche tes bottom pairs et tes mains sans potentiel d'amélioration face au second barrel."
+          }
+        },
+        "donkBetFlop": {
+          "tooHigh": {
+            "title": "Tu donk bet trop souvent au flop",
+            "why": "Tu bet dans le preflop raiser au flop {{rate}} du temps (repère {{min}}–{{max}}). Donk bet abandonne l'avantage du check-raise et donne de l'information gratuitement.",
+            "work": "Check au preflop raiser et utilise le check-raise ou le check-call selon ta main et le board."
+          },
+          "tooLow": {
+            "title": "Tu ne donk bet presque jamais",
+            "why": "Tu ne donk bet que {{rate}} au flop (repère {{min}}–{{max}}). Un taux bas est normal : la plupart des joueurs solides préfèrent checker au raiser.",
+            "work": "C'est une bonne habitude. Certains boards très connectés peuvent justifier un lead occasionnel."
+          }
+        },
+        "probeBetTurn": {
+          "tooHigh": {
+            "title": "Tu probe bet trop souvent la turn",
+            "why": "Quand le preflop raiser check-back le flop, tu bet la turn {{rate}} du temps (repère {{min}}–{{max}}). Trop de probes rend ton range transparent et te fait bluffer avec des mains qui pouvaient check-call.",
+            "work": "Check davantage tes mains moyennes et ne probe que tes value hands et tes semi-bluffs sélectionnés."
+          },
+          "tooLow": {
+            "title": "Tu probe bet rarement la turn",
+            "why": "Quand le preflop raiser check-back le flop, tu ne bet la turn que {{rate}} du temps (repère {{min}}–{{max}}). Tu laisses tes adversaires voir des cartes gratuites quand ils montrent de la faiblesse.",
+            "work": "Bet la turn pour value et en bluff quand le PFR a renoncé au c-bet — il a souvent un range faible."
           }
         }
       },
@@ -1983,7 +2031,8 @@
           "leakExplanation": "Explication de leak",
           "weekReview": "Revue de la semaine",
           "tournamentDebrief": "Débrief de tournoi",
-          "cashDebrief": "Débrief de cash game"
+          "cashDebrief": "Débrief de cash game",
+          "bankrollCoach": "Conseil bankroll"
         }
       }
     },

@@ -58,6 +58,7 @@
 - **tools**: Calculateurs ICM, Pot Odds, M-Ratio et Équité des ranges
 - **bankroll**: Conseil IA de gestion de bankroll
 - **landing**: Versions EN et ES de la landing page avec sélecteur de langue
+- Intégration Sentry backend et nettoyage modèle IA
 
 ### Maintenance
 

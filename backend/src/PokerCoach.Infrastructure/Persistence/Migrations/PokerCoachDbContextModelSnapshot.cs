@@ -1241,6 +1241,14 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("check_raise_flop_opportunity");
 
+                    b.Property<bool>("DonkBetFlop")
+                        .HasColumnType("boolean")
+                        .HasColumnName("donk_bet_flop");
+
+                    b.Property<bool>("DonkBetFlopOpportunity")
+                        .HasColumnType("boolean")
+                        .HasColumnName("donk_bet_flop_opportunity");
+
                     b.Property<bool>("FacingOpenCall")
                         .HasColumnType("boolean")
                         .HasColumnName("facing_open_call");
@@ -1274,6 +1282,14 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<bool>("FoldToCbetFlopOpportunity")
                         .HasColumnType("boolean")
                         .HasColumnName("fold_to_cbet_flop_opportunity");
+
+                    b.Property<bool>("FoldToCbetTurn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("fold_to_cbet_turn");
+
+                    b.Property<bool>("FoldToCbetTurnOpportunity")
+                        .HasColumnType("boolean")
+                        .HasColumnName("fold_to_cbet_turn_opportunity");
 
                     b.Property<bool>("FoldToThreeBet")
                         .HasColumnType("boolean")
@@ -1332,6 +1348,14 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<int>("PostflopDecisions")
                         .HasColumnType("integer")
                         .HasColumnName("postflop_decisions");
+
+                    b.Property<bool>("ProbeBetTurn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("probe_bet_turn");
+
+                    b.Property<bool>("ProbeBetTurnOpportunity")
+                        .HasColumnType("boolean")
+                        .HasColumnName("probe_bet_turn_opportunity");
 
                     b.Property<bool>("RaiseCbetFlop")
                         .HasColumnType("boolean")

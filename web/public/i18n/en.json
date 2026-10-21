@@ -602,7 +602,13 @@
         "wonWhenSawFlop": "Won when saw flop",
         "wonWhenSawFlopHint": "Collected chips after seeing the flop, showdown or not",
         "postflopAggression": "Postflop aggression",
-        "postflopAggressionHint": "Bets and raises over every decision after the flop (bets, raises, calls, folds)"
+        "postflopAggressionHint": "Bets and raises over every decision after the flop (bets, raises, calls, folds)",
+        "foldToCbetTurn": "Fold to c-bet turn",
+        "foldToCbetTurnHint": "Folded on the turn facing a second barrel from the preflop raiser",
+        "donkBetFlop": "Donk bet flop",
+        "donkBetFlopHint": "Bet into the preflop raiser on the flop (lead bet)",
+        "probeBetTurn": "Probe bet turn",
+        "probeBetTurnHint": "Bet the turn when the preflop raiser checked back the flop"
       },
       "short": {
         "vpip": "VPIP",
@@ -621,7 +627,10 @@
         "cbetTurn": "CB T",
         "checkRaiseFlop": "XR",
         "wonWhenSawFlop": "WWSF",
-        "postflopAggression": "AFq"
+        "postflopAggression": "AFq",
+        "foldToCbetTurn": "FCB T",
+        "donkBetFlop": "Donk",
+        "probeBetTurn": "Probe"
       },
       "positions": {
         "utg": "UTG",
@@ -968,7 +977,10 @@
         "cbetTurn": "Turn c-bet",
         "checkRaiseFlop": "Flop check-raise",
         "wonWhenSawFlop": "Won when saw flop",
-        "postflopAggression": "Postflop aggression"
+        "postflopAggression": "Postflop aggression",
+        "foldToCbetTurn": "Fold to turn c-bet",
+        "donkBetFlop": "Donk bet flop",
+        "probeBetTurn": "Probe bet turn"
       },
       "items": {
         "vpip": {
@@ -1161,6 +1173,42 @@
             "title": "You are too passive after the flop",
             "why": "Only {{rate}} of your decisions after the flop are bets or raises (reference {{min}}–{{max}}). Calling instead of betting gives up fold equity.",
             "work": "Bet strong hands for value and draws as semi-bluffs instead of calling."
+          }
+        },
+        "foldToCbetTurn": {
+          "tooHigh": {
+            "title": "You fold too often to the second barrel",
+            "why": "You fold {{rate}} of the time when the preflop raiser bets the turn after the flop (reference {{min}}–{{max}}). Opponents can double-barrel bluff you profitably.",
+            "work": "Defend the turn more with medium pairs and draws — don't let opponents steal the pot with two barrels."
+          },
+          "tooLow": {
+            "title": "You rarely fold to the second barrel",
+            "why": "You only fold {{rate}} facing a turn c-bet (reference {{min}}–{{max}}). You're calling too many turn bets with weak hands.",
+            "work": "Let go of bottom pairs and hands with no improvement potential when facing the second barrel."
+          }
+        },
+        "donkBetFlop": {
+          "tooHigh": {
+            "title": "You donk bet the flop too often",
+            "why": "You bet into the preflop raiser on the flop {{rate}} of the time (reference {{min}}–{{max}}). Donk betting gives up the check-raise advantage and reveals information for free.",
+            "work": "Check to the preflop raiser and use check-raise or check-call depending on your hand and the board."
+          },
+          "tooLow": {
+            "title": "You almost never donk bet",
+            "why": "You only donk bet {{rate}} on the flop (reference {{min}}–{{max}}). A low rate is normal: most solid players prefer checking to the raiser.",
+            "work": "This is a good habit. Some highly connected boards may justify an occasional lead."
+          }
+        },
+        "probeBetTurn": {
+          "tooHigh": {
+            "title": "You probe bet the turn too often",
+            "why": "When the preflop raiser checks back the flop, you bet the turn {{rate}} of the time (reference {{min}}–{{max}}). Too many probes make your range transparent.",
+            "work": "Check more with medium hands and only probe with value hands and selected semi-bluffs."
+          },
+          "tooLow": {
+            "title": "You rarely probe bet the turn",
+            "why": "When the preflop raiser checks back the flop, you only bet the turn {{rate}} of the time (reference {{min}}–{{max}}). You're giving free cards when opponents show weakness.",
+            "work": "Bet the turn for value and as a bluff when the PFR gave up the c-bet — they often have a weak range."
           }
         }
       },
@@ -1983,7 +2031,8 @@
           "leakExplanation": "Leak explanation",
           "weekReview": "Weekly review",
           "tournamentDebrief": "Tournament debrief",
-          "cashDebrief": "Cash game debrief"
+          "cashDebrief": "Cash game debrief",
+          "bankrollCoach": "Bankroll advice"
         }
       }
     },

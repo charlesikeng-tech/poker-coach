@@ -19,6 +19,8 @@ public sealed record StatRateResponse(int Made, int Opportunities, decimal? Rate
 /// <param name="BigBlindsPer100">Big blinds won per 100 hands; null without hands.</param>
 /// <param name="RaiseCbetFlop">Raises of a flop c-bet, over the same spots as <paramref name="FoldToCbetFlop"/>.</param>
 /// <param name="PostflopAggression">Bets and raises over bets, raises, calls and folds after the flop.</param>
+/// <param name="DonkBetFlop">Bet into the preflop raiser on the flop (lead bet).</param>
+/// <param name="ProbeBetTurn">Bet when the preflop raiser checked back the flop.</param>
 public sealed record StatLineResponse(
     int Hands,
     StatRateResponse Vpip,
@@ -37,7 +39,10 @@ public sealed record StatLineResponse(
     StatRateResponse CbetTurn,
     StatRateResponse CheckRaiseFlop,
     StatRateResponse WonWhenSawFlop,
-    StatRateResponse PostflopAggression)
+    StatRateResponse PostflopAggression,
+    StatRateResponse FoldToCbetTurn,
+    StatRateResponse DonkBetFlop,
+    StatRateResponse ProbeBetTurn)
 {
     public static StatLineResponse From(StatLine l) => new(
         l.Hands,
@@ -57,7 +62,10 @@ public sealed record StatLineResponse(
         Rate(l.CbetTurn),
         Rate(l.CheckRaiseFlop),
         Rate(l.WonWhenSawFlop),
-        Rate(l.PostflopAggression));
+        Rate(l.PostflopAggression),
+        Rate(l.FoldToCbetTurn),
+        Rate(l.DonkBetFlop),
+        Rate(l.ProbeBetTurn));
 
     private static StatRateResponse Rate(StatRate r) => new(r.Made, r.Opportunities, r.Rate);
 }

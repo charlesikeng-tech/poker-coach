@@ -23,7 +23,10 @@ export type LeakStat =
   | 'cbetTurn'
   | 'checkRaiseFlop'
   | 'wonWhenSawFlop'
-  | 'postflopAggression';
+  | 'postflopAggression'
+  | 'foldToCbetTurn'
+  | 'donkBetFlop'
+  | 'probeBetTurn';
 
 export interface Leak {
   readonly stat: LeakStat;

@@ -27,7 +27,13 @@ internal sealed record PostflopPlayFacts(
     bool CheckRaiseFlop,
     bool WonWhenSawFlop,
     int Aggressive,
-    int Decisions);
+    int Decisions,
+    bool FoldToCbetTurnOpportunity,
+    bool FoldToCbetTurn,
+    bool DonkBetFlopOpportunity,
+    bool DonkBetFlop,
+    bool ProbeBetTurnOpportunity,
+    bool ProbeBetTurn);
 
 internal static class PostflopPlay
 {
@@ -35,7 +41,7 @@ internal static class PostflopPlay
     {
         if (!sawFlop)
         {
-            return new PostflopPlayFacts(false, false, false, false, false, false, false, false, 0, 0);
+            return new PostflopPlayFacts(false, false, false, false, false, false, false, false, 0, 0, false, false, false, false, false, false);
         }
 
         var flop = hand.Actions.Where(a => a.Street == Street.Flop).ToList();
@@ -44,6 +50,9 @@ internal static class PostflopPlay
         var (facingCbet, foldToCbet, raiseCbet) = AgainstCbet(flop, hero, preflopRaiser);
         var (checkRaiseOpportunity, checkRaise) = CheckRaise(flop, hero);
         var (turnOpportunity, turnCbet) = SecondBarrel(flop, turn, hero, heroCbetFlop);
+        var (foldToCbetTurnOpportunity, foldToCbetTurn) = AgainstSecondBarrel(flop, turn, hero, preflopRaiser);
+        var (donkOpportunity, donk) = DonkBet(flop, hero, preflopRaiser);
+        var (probeOpportunity, probe) = ProbeBet(flop, turn, hero, preflopRaiser);
 
         var postflop = hand.Actions.Where(a => a.Street != Street.Preflop && a.Player == hero).ToList();
         var aggressive = postflop.Count(a => a.Kind is ActionKind.Bet or ActionKind.Raise);
@@ -59,7 +68,13 @@ internal static class PostflopPlay
             checkRaise,
             hand.Collected.GetValueOrDefault(hero) > 0,
             aggressive,
-            decisions);
+            decisions,
+            foldToCbetTurnOpportunity,
+            foldToCbetTurn,
+            donkOpportunity,
+            donk,
+            probeOpportunity,
+            probe);
     }
 
     private static (bool Opportunity, bool Fold, bool Raise) AgainstCbet(List<HandAction> flop, string hero, string? preflopRaiser)
@@ -134,7 +149,148 @@ internal static class PostflopPlay
 
             if (action.Kind is ActionKind.Bet or ActionKind.Raise)
             {
-                // Someone bet into him: no chance to barrel.
+                return (false, false);
+            }
+        }
+
+        return (false, false);
+    }
+
+    /// <summary>
+    /// Hero called the flop c-bet, faces a turn bet from the same preflop raiser (second barrel), and
+    /// has to answer it without anyone raising before him.
+    /// </summary>
+    private static (bool Opportunity, bool Fold) AgainstSecondBarrel(List<HandAction> flop, List<HandAction> turn, string hero, string? preflopRaiser)
+    {
+        if (preflopRaiser is null || preflopRaiser == hero)
+        {
+            return (false, false);
+        }
+
+        // The hero must have called a flop c-bet (not folded, not raised).
+        var calledFlopCbet = false;
+        var flopCbetSeen = false;
+        foreach (var action in flop)
+        {
+            if (!flopCbetSeen && action.Kind == ActionKind.Bet && action.Player == preflopRaiser)
+            {
+                flopCbetSeen = true;
+                continue;
+            }
+
+            if (flopCbetSeen && action.Player == hero)
+            {
+                calledFlopCbet = action.Kind == ActionKind.Call;
+                break;
+            }
+
+            if (flopCbetSeen && action.Kind is ActionKind.Raise)
+            {
+                break;
+            }
+        }
+
+        if (!calledFlopCbet)
+        {
+            return (false, false);
+        }
+
+        // On the turn: the PFR bets again, hero faces it.
+        var turnBetSeen = false;
+        foreach (var action in turn)
+        {
+            if (!turnBetSeen && action.Kind == ActionKind.Bet && action.Player == preflopRaiser)
+            {
+                turnBetSeen = true;
+                continue;
+            }
+
+            if (turnBetSeen && action.Player == hero)
+            {
+                return (true, action.Kind == ActionKind.Fold);
+            }
+
+            if (turnBetSeen && action.Kind is ActionKind.Raise)
+            {
+                return (false, false);
+            }
+        }
+
+        return (false, false);
+    }
+
+    /// <summary>
+    /// Hero is not the preflop raiser and bets into the PFR on the flop (lead/donk bet) when checked to
+    /// or acting first.
+    /// </summary>
+    private static (bool Opportunity, bool Made) DonkBet(List<HandAction> flop, string hero, string? preflopRaiser)
+    {
+        if (preflopRaiser is null || preflopRaiser == hero || flop.Count == 0)
+        {
+            return (false, false);
+        }
+
+        foreach (var action in flop)
+        {
+            if (action.Player == hero)
+            {
+                return action.Kind is ActionKind.Bet or ActionKind.Check
+                    ? (true, action.Kind == ActionKind.Bet)
+                    : (false, false);
+            }
+
+            if (action.Kind is ActionKind.Bet or ActionKind.Raise)
+            {
+                return (false, false);
+            }
+        }
+
+        return (false, false);
+    }
+
+    /// <summary>
+    /// The PFR checked back the flop (no c-bet), and on the turn the hero bets when checked to or
+    /// acting first: a probe bet to punish the missed c-bet.
+    /// </summary>
+    private static (bool Opportunity, bool Made) ProbeBet(List<HandAction> flop, List<HandAction> turn, string hero, string? preflopRaiser)
+    {
+        if (preflopRaiser is null || preflopRaiser == hero || turn.Count == 0)
+        {
+            return (false, false);
+        }
+
+        // The PFR must have checked the flop (no bet from anyone on the flop).
+        var pfrCheckedFlop = false;
+        foreach (var action in flop)
+        {
+            if (action.Kind is ActionKind.Bet or ActionKind.Raise)
+            {
+                return (false, false);
+            }
+
+            if (action.Player == preflopRaiser && action.Kind == ActionKind.Check)
+            {
+                pfrCheckedFlop = true;
+            }
+        }
+
+        if (!pfrCheckedFlop)
+        {
+            return (false, false);
+        }
+
+        // On the turn, the hero acts before anyone bets.
+        foreach (var action in turn)
+        {
+            if (action.Player == hero)
+            {
+                return action.Kind is ActionKind.Bet or ActionKind.Check
+                    ? (true, action.Kind == ActionKind.Bet)
+                    : (false, false);
+            }
+
+            if (action.Kind is ActionKind.Bet or ActionKind.Raise)
+            {
                 return (false, false);
             }
         }
