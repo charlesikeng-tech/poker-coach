@@ -59,6 +59,10 @@
 - **bankroll**: Conseil IA de gestion de bankroll
 - **landing**: Versions EN et ES de la landing page avec sélecteur de langue
 
+### Maintenance
+
+- Mise en place du changelog automatique via git-cliff
+
 ### Performance
 
 - **stats**: JOIN TournamentRecord uniquement quand subFormat est filtré

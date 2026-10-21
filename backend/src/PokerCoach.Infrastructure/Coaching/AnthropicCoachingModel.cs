@@ -20,9 +20,23 @@ public sealed class AnthropicOptions
 
     public string Model { get; set; } = "claude-sonnet-5-5";
 
+    /// <summary>
+    /// Optional per-task model overrides. Key is the <see cref="AiTask"/> name (e.g. "LeakExplanation").
+    /// Falls back to <see cref="Model"/> when absent. Note: <see cref="WritingThinking"/> and
+    /// <see cref="DebriefEffort"/> are model-specific; ensure they are compatible with any overridden model.
+    /// </summary>
+    public Dictionary<string, string> ModelOverrides { get; set; } = new();
+
     public Uri BaseUrl { get; set; } = new("https://api.anthropic.com/");
 
     public int MaxOutputTokens { get; set; } = 2_000;
+
+    /// <summary>
+    /// Optional per-task max output token overrides. Key is the <see cref="AiTask"/> name.
+    /// Useful when a task model override (e.g. Haiku, which does not use thinking tokens) needs a
+    /// larger visible output budget than the global <see cref="MaxOutputTokens"/>.
+    /// </summary>
+    public Dictionary<string, int> MaxOutputTokensOverrides { get; set; } = new();
 
     /// <summary>
     /// Thinking setting for tasks that only write from given facts (leak explanation, weekly review).
@@ -482,6 +496,26 @@ internal sealed partial class AnthropicCoachingModel(
 
     public bool IsAvailable => !string.IsNullOrWhiteSpace(options.Value.ApiKey);
 
+    private string ModelFor(AiTask task)
+    {
+        var settings = options.Value;
+        return settings.ModelOverrides.TryGetValue(task.ToString(), out var m) ? m : settings.Model;
+    }
+
+    private int MaxOutputTokensFor(AiTask task)
+    {
+        var settings = options.Value;
+        if (settings.MaxOutputTokensOverrides.TryGetValue(task.ToString(), out var o))
+            return o;
+        return task switch
+        {
+            AiTask.TournamentDebrief or AiTask.CashDebrief => DebriefMaxOutputTokens,
+            AiTask.WeekReview => ReviewMaxOutputTokens,
+            AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
+            _ => settings.MaxOutputTokens,
+        };
+    }
+
     /// <summary>
     /// Every attempt at full output, and every input at the cache-write rate (the dearest): a correction resends the
     /// prompt plus the rejected answer.
@@ -489,16 +523,10 @@ internal sealed partial class AnthropicCoachingModel(
     public ModelUsage Ceiling(AiTask task)
     {
         var settings = options.Value;
-        var output = task switch
-        {
-            AiTask.TournamentDebrief or AiTask.CashDebrief => DebriefMaxOutputTokens,
-            AiTask.WeekReview => ReviewMaxOutputTokens,
-            AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
-            _ => settings.MaxOutputTokens,
-        };
+        var output = MaxOutputTokensFor(task);
         const int attempts = 1 + MaxCorrectionAttempts;
         return new ModelUsage(
-            settings.Model,
+            ModelFor(task),
             InputTokens: 0,
             OutputTokens: attempts * output,
             CacheWriteTokens: (attempts * settings.CeilingInputTokens) + (MaxCorrectionAttempts * output),
@@ -508,19 +536,19 @@ internal sealed partial class AnthropicCoachingModel(
     public Task<ModelAnswer<LeakExplanation>> ExplainAsync(ExplanationPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync(
             prompt.GameType == GameType.CashGame ? "cash-leak-explanation" : "leak-explanation",
-            () => ExplainCoreAsync(prompt, cancellationToken));
+            () => ExplainCoreAsync(prompt, ModelFor(AiTask.LeakExplanation), cancellationToken));
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefTournamentAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(TournamentDebriefInstructions(prompt.SubFormat, prompt.IsBounty), prompt, cancellationToken));
+        LoggedAsync("tournament-debrief", () => DebriefCoreAsync(TournamentDebriefInstructions(prompt.SubFormat, prompt.IsBounty), prompt, AiTask.TournamentDebrief, cancellationToken));
 
     public Task<ModelAnswer<TournamentDebrief>> DebriefCashSessionAsync(DebriefPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("cash-debrief", () => DebriefCoreAsync(CashDebriefInstructions, prompt, cancellationToken));
+        LoggedAsync("cash-debrief", () => DebriefCoreAsync(CashDebriefInstructions, prompt, AiTask.CashDebrief, cancellationToken));
 
     public Task<ModelAnswer<WeekReview>> ReviewWeekAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("week-review", () => ReviewCoreAsync(prompt, cancellationToken));
+        LoggedAsync("week-review", () => ReviewCoreAsync(prompt, ModelFor(AiTask.WeekReview), cancellationToken));
 
     public Task<ModelAnswer<BankrollAdvice>> AdviseOnBankrollAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken) =>
-        LoggedAsync("bankroll-coach", () => BankrollAdviceCoreAsync(prompt, cancellationToken));
+        LoggedAsync("bankroll-coach", () => BankrollAdviceCoreAsync(prompt, ModelFor(AiTask.BankrollCoach), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -536,13 +564,13 @@ internal sealed partial class AnthropicCoachingModel(
         }
     }
 
-    private async Task<ModelAnswer<LeakExplanation>> ExplainCoreAsync(ExplanationPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<LeakExplanation>> ExplainCoreAsync(ExplanationPrompt prompt, string model, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var instructions = prompt.GameType == GameType.CashGame ? CashInstructions : Instructions;
         var user = $"Answer language: {prompt.Language}.\n\nLeak:\n{prompt.Facts}\n\n"
             + string.Join("\n\n", prompt.Hands.Select(h => $"Hand {h.Ref}:\n{h.Story}"));
-        var (answer, usage) = await CallAsync<Answer>(instructions, Schema, user, options.Value.MaxOutputTokens, Reasoning.Writing, cancellationToken);
+        var (answer, usage) = await CallAsync<Answer>(instructions, Schema, user, MaxOutputTokensFor(AiTask.LeakExplanation), Reasoning.Writing, cancellationToken, model: model);
         if (string.IsNullOrWhiteSpace(answer.Summary) || string.IsNullOrWhiteSpace(answer.WhyItCosts))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);
@@ -563,12 +591,12 @@ internal sealed partial class AnthropicCoachingModel(
             usage);
     }
 
-    private async Task<ModelAnswer<TournamentDebrief>> DebriefCoreAsync(string instructions, DebriefPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<TournamentDebrief>> DebriefCoreAsync(string instructions, DebriefPrompt prompt, AiTask task, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}\n\n"
             + string.Join("\n\n", prompt.Moments.Select(m => $"Key moment {m.Ref}:\n{m.Story}"));
-        var (answer, usage) = await CallAsync<DebriefAnswer>(instructions, DebriefSchema, user, DebriefMaxOutputTokens, Reasoning.Judging, cancellationToken);
+        var (answer, usage) = await CallAsync<DebriefAnswer>(instructions, DebriefSchema, user, MaxOutputTokensFor(task), Reasoning.Judging, cancellationToken, model: ModelFor(task));
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Story))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);
@@ -584,7 +612,7 @@ internal sealed partial class AnthropicCoachingModel(
             usage);
     }
 
-    private async Task<ModelAnswer<WeekReview>> ReviewCoreAsync(WeekReviewPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<WeekReview>> ReviewCoreAsync(WeekReviewPrompt prompt, string model, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var instructions = prompt.GameType == GameType.CashGame
@@ -596,7 +624,7 @@ internal sealed partial class AnthropicCoachingModel(
                 _ => ReviewInstructions,
             };
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
-        var (answer, usage) = await CallAsync<ReviewAnswer>(instructions, ReviewSchema, user, ReviewMaxOutputTokens, Reasoning.Writing, cancellationToken);
+        var (answer, usage) = await CallAsync<ReviewAnswer>(instructions, ReviewSchema, user, MaxOutputTokensFor(AiTask.WeekReview), Reasoning.Writing, cancellationToken, model: model);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);
@@ -611,11 +639,11 @@ internal sealed partial class AnthropicCoachingModel(
             usage);
     }
 
-    private async Task<ModelAnswer<BankrollAdvice>> BankrollAdviceCoreAsync(BankrollCoachPrompt prompt, CancellationToken cancellationToken)
+    private async Task<ModelAnswer<BankrollAdvice>> BankrollAdviceCoreAsync(BankrollCoachPrompt prompt, string model, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
         var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
-        var (answer, usage) = await CallAsync<BankrollAdviceAnswer>(BankrollCoachInstructions, BankrollSchema, user, BankrollCoachMaxOutputTokens, Reasoning.Writing, cancellationToken);
+        var (answer, usage) = await CallAsync<BankrollAdviceAnswer>(BankrollCoachInstructions, BankrollSchema, user, MaxOutputTokensFor(AiTask.BankrollCoach), Reasoning.Writing, cancellationToken, model: model);
         if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Reasoning))
         {
             throw new CoachingModelException("The model answer misses required fields.", usage);
@@ -642,13 +670,15 @@ internal sealed partial class AnthropicCoachingModel(
         int maxTokens,
         Reasoning reasoning,
         CancellationToken cancellationToken,
-        int correctionAttempts = 0)
+        int correctionAttempts = 0,
+        string? model = null)
         where T : class
     {
         var settings = options.Value;
+        var effectiveModel = model ?? settings.Model;
         var body = new JsonObject
         {
-            ["model"] = settings.Model,
+            ["model"] = effectiveModel,
             ["max_tokens"] = maxTokens,
             ["system"] = new JsonArray(new JsonObject
             {
@@ -662,11 +692,12 @@ internal sealed partial class AnthropicCoachingModel(
                 ["format"] = new JsonObject { ["type"] = "json_schema", ["schema"] = schema.DeepClone() },
             },
         };
-        if (reasoning == Reasoning.Writing && settings.WritingThinking is { Length: > 0 } thinking)
+        var supportsThinking = !effectiveModel.Contains("haiku", StringComparison.OrdinalIgnoreCase);
+        if (supportsThinking && reasoning == Reasoning.Writing && settings.WritingThinking is { Length: > 0 } thinking)
         {
             body["thinking"] = new JsonObject { ["type"] = thinking };
         }
-        else if (reasoning == Reasoning.Judging && settings.DebriefEffort is { Length: > 0 } effort)
+        else if (supportsThinking && reasoning == Reasoning.Judging && settings.DebriefEffort is { Length: > 0 } effort)
         {
             ((JsonObject)body["output_config"]!)["effort"] = effort;
         }
@@ -691,7 +722,7 @@ internal sealed partial class AnthropicCoachingModel(
                 httpResponse.Headers.TryGetValues("request-id", out var requestIds);
                 LogFailure(logger, (int)httpResponse.StatusCode, type, message, requestIds?.FirstOrDefault() ?? "-");
                 // An error status is not billed by the provider.
-                throw new CoachingModelException($"The model provider answered {(int)httpResponse.StatusCode}.", new ModelUsage(settings.Model, 0, 0, 0, 0));
+                throw new CoachingModelException($"The model provider answered {(int)httpResponse.StatusCode}.", new ModelUsage(effectiveModel, 0, 0, 0, 0));
             }
 
             response = await httpResponse.Content.ReadFromJsonAsync<MessagesResponse>(JsonOptions, cancellationToken)
@@ -711,7 +742,7 @@ internal sealed partial class AnthropicCoachingModel(
         }
 
         var usage = new ModelUsage(
-            response.Model ?? settings.Model,
+            response.Model ?? effectiveModel,
             response.Usage?.InputTokens ?? 0,
             response.Usage?.OutputTokens ?? 0,
             response.Usage?.CacheCreationInputTokens ?? 0,
@@ -748,7 +779,8 @@ internal sealed partial class AnthropicCoachingModel(
                     maxTokens,
                     reasoning,
                     cancellationToken,
-                    correctionAttempts + 1);
+                    correctionAttempts + 1,
+                    model);
                 return (correctedAnswer, CombineUsage(usage, correctionUsage));
             }
             catch (CoachingModelException failed)

@@ -45,6 +45,12 @@ using PokerCoach.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseSentry(o =>
+{
+    o.TracesSampleRate = 0.1;
+    o.SendDefaultPii = false;
+});
+
 builder.Services.AddOpenApi();
 // Enums travel as camelCase strings ("pending", "winamax"): readable and stable when members are added.
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -151,6 +157,7 @@ if (args is ["migrate"])
 }
 
 app.UseExceptionHandler();
+app.UseSentryTracing();
 app.UseStatusCodePages();
 if (!app.Environment.IsDevelopment())
 {
