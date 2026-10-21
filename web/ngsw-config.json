@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
+  "navigationUrls": ["/**", "!/**/*.*", "!/**/.*", "!/api/**", "!/signin-*"],
   "assetGroups": [
     {
       "name": "app",
@@ -14,12 +15,7 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": [
-          "/icon-*.png",
-          "/apple-touch-icon.png",
-          "/favicon.svg",
-          "/i18n/*.json"
-        ]
+        "files": ["/icon-*.png", "/apple-touch-icon.png", "/favicon.svg", "/i18n/*.json"]
       }
     }
   ],

@@ -1,6 +1,18 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.21-9b2197a] — 2026-10-21
+
+### Correctifs
+
+- **ci**: Gérer l'absence de tag lors de la première GitHub Release
+- **pwa**: Exclure /api/** des navigation URLs du service worker
+
+### Fonctionnalités
+
+- **pwa**: Transformer NutsIQ en Progressive Web App installable
+- **onboarding**: Wizard 3 étapes pour les nouveaux utilisateurs
+
+## [2026.10.21-d0b85f7] — 2026-10-21
 
 ### CI/CD
 
@@ -66,8 +78,6 @@
 - **cd**: Déploiement automatique sur Scaleway après CI
 - **coaching**: Rapport mensuel IA et correction wording pot odds
 - **ci**: GitHub Release automatique après chaque déploiement
-- **pwa**: Transformer NutsIQ en Progressive Web App installable
-- **onboarding**: Wizard 3 étapes pour les nouveaux utilisateurs
 
 ### Maintenance
 
