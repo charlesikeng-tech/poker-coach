@@ -2032,7 +2032,8 @@
           "weekReview": "Revue de la semaine",
           "tournamentDebrief": "Débrief de tournoi",
           "cashDebrief": "Débrief de cash game",
-          "bankrollCoach": "Conseil bankroll"
+          "bankrollCoach": "Conseil bankroll",
+          "monthlyReport": "Bilan mensuel"
         }
       }
     },
