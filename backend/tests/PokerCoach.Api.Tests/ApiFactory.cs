@@ -34,6 +34,7 @@ internal sealed class ApiFactory(
                 ["Authentication:Google:ClientSecret"] = "test-client-secret",
                 ["Import:WorkerEnabled"] = "false",
                 ["App:PublicUrl"] = publicUrl,
+                ["Sentry:Dsn"] = "",
             }));
 
         // Keys in memory: the database-backed key store would open the unused database.
