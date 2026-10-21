@@ -19,6 +19,7 @@
     "potOdds": "Pot Odds / EV",
     "mRatio": "M-Ratio",
     "equity": "Hand Equity",
+    "tools": "Tools",
     "sections": {
       "results": "Results",
       "analysis": "Analysis",

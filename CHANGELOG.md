@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **coaching**: Sélection de tournois IA (backend + frontend)
+
 ## [2026.10.21-24980ca] — 2026-10-21
 
 ### Correctifs

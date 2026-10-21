@@ -33,17 +33,51 @@
             <ul [attr.aria-labelledby]="section.labelKey ? 'nav-section-' + $index : null">
               @for (item of section.items; track item.path) {
                 <li>
-                  <a
-                    class="nav-link"
-                    [routerLink]="item.path"
-                    routerLinkActive="nav-link--active"
-                    ariaCurrentWhenActive="page"
-                    [attr.title]="collapsed() ? t(item.labelKey) : null"
-                    (click)="closeMobileNavigation()"
-                  >
-                    <app-icon [icon]="item.icon" />
-                    <span class="rail-hidden">{{ t(item.labelKey) }}</span>
-                  </a>
+                  @if (item.children) {
+                    <button
+                      type="button"
+                      class="nav-link nav-group__toggle"
+                      [class.nav-group__toggle--open]="isGroupExpanded(item)"
+                      [attr.aria-expanded]="isGroupExpanded(item)"
+                      [attr.title]="collapsed() ? t(item.labelKey) : null"
+                      (click)="toggleGroup(item)"
+                    >
+                      <app-icon [icon]="item.icon" />
+                      <span class="rail-hidden">{{ t(item.labelKey) }}</span>
+                      <app-icon class="nav-group__chevron rail-hidden" [icon]="icons.ChevronDown" />
+                    </button>
+                    @if (isGroupExpanded(item)) {
+                      <ul class="nav-group__children">
+                        @for (child of item.children; track child.path) {
+                          <li>
+                            <a
+                              class="nav-link nav-link--child"
+                              [routerLink]="child.path"
+                              routerLinkActive="nav-link--active"
+                              ariaCurrentWhenActive="page"
+                              [attr.title]="collapsed() ? t(child.labelKey) : null"
+                              (click)="closeMobileNavigation()"
+                            >
+                              <app-icon [icon]="child.icon" />
+                              <span class="rail-hidden">{{ t(child.labelKey) }}</span>
+                            </a>
+                          </li>
+                        }
+                      </ul>
+                    }
+                  } @else {
+                    <a
+                      class="nav-link"
+                      [routerLink]="item.path"
+                      routerLinkActive="nav-link--active"
+                      ariaCurrentWhenActive="page"
+                      [attr.title]="collapsed() ? t(item.labelKey) : null"
+                      (click)="closeMobileNavigation()"
+                    >
+                      <app-icon [icon]="item.icon" />
+                      <span class="rail-hidden">{{ t(item.labelKey) }}</span>
+                    </a>
+                  }
                 </li>
               }
             </ul>

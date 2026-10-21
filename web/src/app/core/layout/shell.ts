@@ -27,6 +27,8 @@ import { GhostModeService } from '../ghost-mode/ghost-mode.service';
 import { LanguageSelect } from '../i18n/language-select';
 import {
   ADMIN_NAVIGATION,
+  CHEVRON_DOWN,
+  NavigationItem,
   PRIMARY_NAVIGATION,
   SECONDARY_NAVIGATION,
 } from '../navigation/navigation';
@@ -74,6 +76,7 @@ export class Shell {
   );
   protected readonly billing = inject(BillingService);
   protected readonly icons = {
+    ChevronDown: CHEVRON_DOWN,
     Eye,
     EyeOff,
     History,
@@ -85,6 +88,8 @@ export class Shell {
     Sun,
     X,
   };
+
+  private readonly expandedGroups = signal<ReadonlySet<string>>(new Set());
 
   private readonly url = toSignal(
     inject(Router).events.pipe(
@@ -112,6 +117,25 @@ export class Shell {
 
   constructor() {
     void this.billing.load();
+  }
+
+  protected isGroupExpanded(item: NavigationItem): boolean {
+    return (
+      this.expandedGroups().has(item.path) ||
+      !!item.children?.some((child) => this.url().split('?')[0].startsWith(child.path))
+    );
+  }
+
+  protected toggleGroup(item: NavigationItem): void {
+    this.expandedGroups.update((set) => {
+      const next = new Set(set);
+      if (next.has(item.path)) {
+        next.delete(item.path);
+      } else {
+        next.add(item.path);
+      }
+      return next;
+    });
   }
 
   protected toggleCollapsed(): void {

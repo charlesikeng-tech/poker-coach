@@ -153,6 +153,30 @@ ul {
   }
 }
 
+// Collapsible tool group: chevron rotates on open, children indent under the parent.
+.nav-group__toggle {
+  font-size: inherit;
+}
+
+.nav-group__chevron {
+  --icon-size: 0.875rem;
+  margin-left: auto;
+  transition: transform var(--motion-fast) var(--easing-standard);
+}
+
+.nav-group__toggle--open .nav-group__chevron {
+  transform: rotate(180deg);
+}
+
+.nav-group__children {
+  padding-left: var(--space-6);
+}
+
+.nav-link--child {
+  height: 2rem;
+  font-size: var(--font-size-sm);
+}
+
 // The active page is marked like a chip on the felt: gold bar, warm glow.
 .nav-link--active {
   background: linear-gradient(90deg, var(--surface-selected), transparent);

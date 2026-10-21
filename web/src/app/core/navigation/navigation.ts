@@ -1,10 +1,12 @@
 import {
-  Grid3x3,
   Calculator,
   ChartColumn,
+  ChevronDown,
   Crown,
   Dumbbell,
+  Grid3x3,
   LayoutDashboard,
+  Layers,
   Percent,
   Radar,
   ShieldCheck,
@@ -15,7 +17,7 @@ import {
   Trophy,
   Upload,
   Wallet,
-  Layers,
+  Wrench,
 } from 'lucide';
 
 import { IconNode } from '../../shared/ui/icon/icon';
@@ -24,6 +26,7 @@ export interface NavigationItem {
   readonly path: string;
   readonly labelKey: string;
   readonly icon: IconNode;
+  readonly children?: readonly NavigationItem[];
 }
 
 export interface NavigationSection {
@@ -31,6 +34,8 @@ export interface NavigationSection {
   readonly labelKey: string | null;
   readonly items: readonly NavigationItem[];
 }
+
+export const CHEVRON_DOWN = ChevronDown;
 
 /**
  * Main navigation, in the order a player uses it: what happened (results), why (analysis), what to do about
@@ -57,10 +62,17 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
       { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },
       { path: '/leaks', labelKey: 'nav.leaks', icon: Radar },
       { path: '/ranges', labelKey: 'nav.ranges', icon: Grid3x3 },
-      { path: '/tools/icm', labelKey: 'nav.icm', icon: Calculator },
-      { path: '/tools/pot-odds', labelKey: 'nav.potOdds', icon: Percent },
-      { path: '/tools/m-ratio', labelKey: 'nav.mRatio', icon: Timer },
-      { path: '/tools/equity', labelKey: 'nav.equity', icon: Shuffle },
+      {
+        path: '/tools',
+        labelKey: 'nav.tools',
+        icon: Wrench,
+        children: [
+          { path: '/tools/icm', labelKey: 'nav.icm', icon: Calculator },
+          { path: '/tools/pot-odds', labelKey: 'nav.potOdds', icon: Percent },
+          { path: '/tools/m-ratio', labelKey: 'nav.mRatio', icon: Timer },
+          { path: '/tools/equity', labelKey: 'nav.equity', icon: Shuffle },
+        ],
+      },
     ],
   },
   {
