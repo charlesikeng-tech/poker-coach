@@ -30,6 +30,7 @@ import { GameType } from '../statistics/statistics-api';
 import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
+import { TournamentSelectionPanel } from '../coaching/tournament-selection-panel';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 import {
   CashPerformanceReport,
@@ -55,6 +56,7 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
     LineChart,
     StatTile,
     CashDebriefPanel,
+    TournamentSelectionPanel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -90,6 +92,7 @@ export class PerformancePage {
   protected readonly roomName = roomName;
 
   protected readonly cashDebriefPanel = viewChild<CashDebriefPanel>('cashDebriefPanel');
+  protected readonly selectionPanel = viewChild<TournamentSelectionPanel>('selectionPanel');
 
   protected readonly cashDays = computed(() => {
     const report = this.cashReport();

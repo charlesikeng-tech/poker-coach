@@ -75,6 +75,12 @@ public sealed record MonthlyReportPrompt(string Language, string Facts);
 /// <param name="Facts">Bankroll figures assembled by <c>BankrollCoachService</c>.</param>
 public sealed record BankrollCoachPrompt(string Language, string Facts);
 
+/// <summary>What the model is asked for tournament selection. No player name or id.</summary>
+public sealed record TournamentSelectionPrompt(string Language, string Facts);
+
+/// <summary>The model's tournament selection recommendation, after schema validation.</summary>
+public sealed record TournamentSelectionAdvice(string Headline, string Summary, IReadOnlyList<string> Strengths, IReadOnlyList<string> Avoid, IReadOnlyList<string> Recommendations);
+
 /// <summary>Port to the language model (Infrastructure adapter per provider).</summary>
 public interface ICoachingModel
 {
@@ -104,6 +110,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<MonthlyReport>> ReviewMonthAsync(MonthlyReportPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<TournamentSelectionAdvice>> AdviseTournamentSelectionAsync(TournamentSelectionPrompt prompt, CancellationToken cancellationToken);
 }
 
 /// <summary>The provider failed or answered outside the schema.</summary>

@@ -12,6 +12,7 @@ public enum AiTask
     CashDebrief,
     BankrollCoach,
     MonthlyReport,
+    TournamentSelection,
 }
 
 public static class AiTasks
@@ -24,6 +25,7 @@ public static class AiTasks
         AiTask.WeekReview => "week-review",
         AiTask.BankrollCoach => "bankroll-coach",
         AiTask.MonthlyReport => "monthly-report",
+        AiTask.TournamentSelection => "tournament-selection",
         _ => "leak-explanation",
     };
 
@@ -35,6 +37,7 @@ public static class AiTasks
         AiTask.WeekReview => 2,
         AiTask.MonthlyReport => 3,
         AiTask.BankrollCoach => 1,
+        AiTask.TournamentSelection => 2,
         _ => 1,
     };
 

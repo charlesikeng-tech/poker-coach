@@ -510,6 +510,43 @@ internal sealed partial class AnthropicCoachingModel(
 
     private const int MonthlyReportMaxOutputTokens = 2_500;
 
+    private const string TournamentSelectionInstructions = MttContext + """
+        You receive the player's performance figures broken down by buy-in band, tournament type and
+        speed, all computed by the software over the player's entire history.
+
+        Rules:
+        - Use only the figures given. Never compute, estimate or invent a statistic or a percentage.
+        - Groups with fewer than 20 tournaments are unreliable: mention the uncertainty explicitly.
+        - Focus on where the player is most profitable (positive ROI, good ITM) and where they lose.
+        - Be concrete: name the buy-in bands, types and speeds.
+        - Do not suggest a specific stake amount or room.
+
+        Fill the fields:
+        - headline: one sentence on the overall recommendation.
+        - summary: three to five sentences analysing the player's strengths and weaknesses by tournament type.
+        - strengths: two or three tournament categories where the player performs best, with the key figure.
+        - avoid: one or two tournament categories the player should reduce or avoid, with the key figure.
+        - recommendations: two or three concrete, actionable suggestions for tournament selection.
+
+        """ + Voice;
+
+    private static readonly JsonObject TournamentSelectionSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("headline", "summary", "strengths", "avoid", "recommendations"),
+        ["properties"] = new JsonObject
+        {
+            ["headline"] = Text.DeepClone(),
+            ["summary"] = Text.DeepClone(),
+            ["strengths"] = Texts.DeepClone(),
+            ["avoid"] = Texts.DeepClone(),
+            ["recommendations"] = Texts.DeepClone(),
+        },
+    };
+
+    private const int TournamentSelectionMaxOutputTokens = 1_500;
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
@@ -553,6 +590,7 @@ internal sealed partial class AnthropicCoachingModel(
             AiTask.WeekReview => ReviewMaxOutputTokens,
             AiTask.MonthlyReport => MonthlyReportMaxOutputTokens,
             AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
+            AiTask.TournamentSelection => TournamentSelectionMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
     }
@@ -593,6 +631,9 @@ internal sealed partial class AnthropicCoachingModel(
 
     public Task<ModelAnswer<MonthlyReport>> ReviewMonthAsync(MonthlyReportPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("monthly-report", () => MonthlyReportCoreAsync(prompt, ModelFor(AiTask.MonthlyReport), cancellationToken));
+
+    public Task<ModelAnswer<TournamentSelectionAdvice>> AdviseTournamentSelectionAsync(TournamentSelectionPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("tournament-selection", () => TournamentSelectionCoreAsync(prompt, ModelFor(AiTask.TournamentSelection), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -994,6 +1035,28 @@ internal sealed partial class AnthropicCoachingModel(
                 Clean(answer.Progress, 3),
                 Clean(answer.WeakPoints, 3),
                 Clean(answer.NextMonth, 3)),
+            usage);
+    }
+
+    private sealed record TournamentSelectionAnswer(string? Headline, string? Summary, IReadOnlyList<string>? Strengths, IReadOnlyList<string>? Avoid, IReadOnlyList<string>? Recommendations);
+
+    private async Task<ModelAnswer<TournamentSelectionAdvice>> TournamentSelectionCoreAsync(TournamentSelectionPrompt prompt, string model, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
+        var (answer, usage) = await CallAsync<TournamentSelectionAnswer>(TournamentSelectionInstructions, TournamentSelectionSchema, user, MaxOutputTokensFor(AiTask.TournamentSelection), Reasoning.Writing, cancellationToken, model: model);
+        if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Summary))
+        {
+            throw new CoachingModelException("The model answer misses required fields.", usage);
+        }
+
+        return new ModelAnswer<TournamentSelectionAdvice>(
+            new TournamentSelectionAdvice(
+                answer.Headline.Trim(),
+                answer.Summary.Trim(),
+                Clean(answer.Strengths, 3),
+                Clean(answer.Avoid, 2),
+                Clean(answer.Recommendations, 3)),
             usage);
     }
 }

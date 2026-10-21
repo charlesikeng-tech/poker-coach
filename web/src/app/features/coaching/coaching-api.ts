@@ -110,6 +110,17 @@ export interface MonthlyReport {
   readonly createdAt: string;
 }
 
+export interface TournamentSelection {
+  readonly headline: string;
+  readonly summary: string;
+  readonly strengths: readonly string[];
+  readonly avoid: readonly string[];
+  readonly recommendations: readonly string[];
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 /** Error codes the coach panels explain; anything else is shown as a generic failure. */
 const COACH_ERRORS = new Set([
   'HANDS_PENDING',
@@ -149,7 +160,8 @@ export function notWrittenYet(error: unknown): boolean {
     code === 'DEBRIEF_NOT_FOUND' ||
     code === 'REVIEW_NOT_FOUND' ||
     code === 'CASH_DEBRIEF_NOT_FOUND' ||
-    code === 'MONTHLY_REPORT_NOT_FOUND'
+    code === 'MONTHLY_REPORT_NOT_FOUND' ||
+    code === 'TOURNAMENT_SELECTION_NOT_FOUND'
   );
 }
 
@@ -218,6 +230,20 @@ export class CoachingApi {
   writeMonthlyReport(month: string, language: string): Promise<MonthlyReport> {
     return firstValueFrom(
       this.http.post<MonthlyReport>('/api/progress/monthly-report', { month, language }),
+    );
+  }
+
+  tournamentSelection(language: string): Promise<TournamentSelection> {
+    return firstValueFrom(
+      this.http.get<TournamentSelection>('/api/coaching/tournament-selection', {
+        params: new HttpParams().set('language', language),
+      }),
+    );
+  }
+
+  writeTournamentSelection(language: string): Promise<TournamentSelection> {
+    return firstValueFrom(
+      this.http.post<TournamentSelection>('/api/coaching/tournament-selection', { language }),
     );
   }
 }

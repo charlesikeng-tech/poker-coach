@@ -144,6 +144,7 @@ builder.Services.AddScoped<CashSessionDebriefService>();
 builder.Services.AddScoped<WeekReviewService>();
 builder.Services.AddScoped<BankrollCoachService>();
 builder.Services.AddScoped<MonthlyReportService>();
+builder.Services.AddScoped<TournamentSelectionService>();
 builder.Services.AddSingleton<FeatureUsageTracker>();
 
 // Behind the platform's TLS-terminating proxy, ASPNETCORE_FORWARDEDHEADERS_ENABLED=true makes the app see

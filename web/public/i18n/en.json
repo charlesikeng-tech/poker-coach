@@ -2054,7 +2054,8 @@
           "tournamentDebrief": "Tournament debrief",
           "cashDebrief": "Cash game debrief",
           "bankrollCoach": "Bankroll advice",
-          "monthlyReport": "Monthly report"
+          "monthlyReport": "Monthly report",
+          "tournamentSelection": "Tournament selection"
         }
       }
     },
@@ -2413,6 +2414,16 @@
       "progress": "What improved",
       "weakPoints": "Weak points",
       "nextMonth": "For next month"
+    },
+    "selection": {
+      "title": "Tournament selection",
+      "intro": "The coach analyses your results by tournament category and recommends those where you perform best.",
+      "action": "Analyse my selection",
+      "writing": "The coach is analysing your results…",
+      "stale": "New data has been imported since this analysis.",
+      "strengths": "Your strengths",
+      "avoid": "Avoid",
+      "recommendations": "Recommendations"
     }
   },
   "planLock": {

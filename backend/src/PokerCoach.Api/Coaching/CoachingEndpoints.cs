@@ -103,6 +103,19 @@ public sealed record WeekReviewResponse(
     string Model,
     DateTimeOffset CreatedAt);
 
+/// <summary>AI-written tournament selection recommendation.</summary>
+public sealed record TournamentSelectionResponse(
+    string Headline,
+    string Summary,
+    IReadOnlyList<string> Strengths,
+    IReadOnlyList<string> Avoid,
+    IReadOnlyList<string> Recommendations,
+    bool Stale,
+    string Model,
+    DateTimeOffset CreatedAt);
+
+public sealed record GenerateTournamentSelectionRequest(string? Language);
+
 /// <summary>AI-written monthly report.</summary>
 public sealed record MonthlyReportResponse(
     DateOnly Month,
@@ -143,6 +156,9 @@ public static class CoachingEndpoints
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         endpoints.MapGet("/api/progress/monthly-report", GetMonthlyReportAsync).WithTags("Coaching");
         endpoints.MapPost("/api/progress/monthly-report", GenerateMonthlyReportAsync).WithTags("Coaching")
+            .AddEndpointFilter<AntiforgeryValidationFilter>();
+        endpoints.MapGet("/api/coaching/tournament-selection", GetTournamentSelectionAsync).WithTags("Coaching");
+        endpoints.MapPost("/api/coaching/tournament-selection", GenerateTournamentSelectionAsync).WithTags("Coaching")
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         return endpoints;
     }
@@ -386,6 +402,58 @@ public static class CoachingEndpoints
 
         var outcome = await monthly.GenerateAsync(userId, request?.Month, answerLanguage!, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToMonthlyResponse(view)) : Problem(outcome.Failure!.Value, "MONTH_NOT_FOUND");
+    }
+
+    private static async Task<Results<Ok<TournamentSelectionResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetTournamentSelectionAsync(
+        string? language,
+        HttpContext context,
+        TournamentSelectionService selection,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var view = await selection.GetAsync(userId, answerLanguage!, cancellationToken);
+        return view is null
+            ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "TOURNAMENT_SELECTION_NOT_FOUND", "No tournament selection advice written yet.")
+            : TypedResults.Ok(ToSelectionResponse(view));
+    }
+
+    private static async Task<Results<Ok<TournamentSelectionResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GenerateTournamentSelectionAsync(
+        GenerateTournamentSelectionRequest? request,
+        HttpContext context,
+        TournamentSelectionService selection,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var outcome = await selection.GenerateAsync(userId, answerLanguage!, cancellationToken);
+        return outcome.View is { } view ? TypedResults.Ok(ToSelectionResponse(view)) : Problem(outcome.Failure!.Value, "NO_TOURNAMENTS");
+    }
+
+    private static TournamentSelectionResponse ToSelectionResponse(ReportView<TournamentSelectionAdvice> view)
+    {
+        var a = view.Report;
+        return new TournamentSelectionResponse(a.Headline, a.Summary, a.Strengths, a.Avoid, a.Recommendations, view.Stale, view.Model, view.CreatedAt);
     }
 
     private static MonthlyReportResponse ToMonthlyResponse(ReportView<MonthlyReportData> view)

@@ -2054,7 +2054,8 @@
           "tournamentDebrief": "Débrief de tournoi",
           "cashDebrief": "Débrief de cash game",
           "bankrollCoach": "Conseil bankroll",
-          "monthlyReport": "Bilan mensuel"
+          "monthlyReport": "Bilan mensuel",
+          "tournamentSelection": "Sélection de tournois"
         }
       }
     },
@@ -2413,6 +2414,16 @@
       "progress": "Ce qui a progressé",
       "weakPoints": "Points fragiles",
       "nextMonth": "Pour le mois prochain"
+    },
+    "selection": {
+      "title": "Sélection de tournois",
+      "intro": "Le coach analyse tes résultats par catégorie de tournoi et te recommande ceux où tu performes le mieux.",
+      "action": "Analyser ma sélection",
+      "writing": "Le coach analyse tes résultats…",
+      "stale": "De nouvelles données ont été importées depuis cette analyse.",
+      "strengths": "Tes points forts",
+      "avoid": "À éviter",
+      "recommendations": "Recommandations"
     }
   },
   "planLock": {

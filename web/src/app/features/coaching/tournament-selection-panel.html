@@ -1,0 +1,92 @@
+<ng-container *transloco="let t; prefix: 'coach'">
+  <section class="coach-panel glass" aria-live="polite" [attr.aria-busy]="writing()">
+    <header class="coach-head">
+      <h3><app-icon [icon]="icons.Sparkles" />{{ t('selection.title') }}</h3>
+      <span class="ai-tag">{{ t('aiTag') }}</span>
+    </header>
+
+    @switch (state().kind) {
+      @case ('loading') {
+        <span class="skeleton" role="status" [attr.aria-label]="t('loading')"></span>
+      }
+      @case ('ready') {
+        @let a = $any(state()).advice;
+        @if (a.stale) {
+          <p class="stale">
+            <span>{{ t('selection.stale') }}</span>
+            <button appButton variant="ghost" [disabled]="writing()" (click)="write()">
+              <app-icon [icon]="icons.RefreshCw" [class.spin]="writing()" />{{ t('update') }}
+            </button>
+          </p>
+        }
+        <p class="headline">{{ a.headline }}</p>
+        <p class="story">{{ a.summary }}</p>
+
+        <div class="columns">
+          @if (a.strengths.length > 0) {
+            <div>
+              <h4>{{ t('selection.strengths') }}</h4>
+              <ul>
+                @for (item of a.strengths; track $index) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          }
+          @if (a.avoid.length > 0) {
+            <div>
+              <h4>{{ t('selection.avoid') }}</h4>
+              <ul>
+                @for (item of a.avoid; track $index) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+
+        @if (a.recommendations.length > 0) {
+          <div class="columns">
+            <div>
+              <h4>{{ t('selection.recommendations') }}</h4>
+              <ul>
+                @for (item of a.recommendations; track $index) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+
+        <p class="disclaimer">{{ t('disclaimer', { date: date(a.createdAt) }) }}</p>
+      }
+      @default {
+        <p class="intro">
+          {{ state().kind === 'failed' ? t('loadFailed') : t('selection.intro') }}
+        </p>
+        @if (!billing.allows('tournamentDebrief')) {
+          <app-plan-lock feature="tournamentDebrief" [compact]="true" />
+        } @else {
+          <div class="write">
+            <button appButton variant="secondary" [disabled]="writing()" (click)="write()">
+              <app-icon
+                [class.spin]="writing()"
+                [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+              />
+              {{ writing() ? t('selection.writing') : t('selection.action') }}
+            </button>
+          </div>
+        }
+      }
+    }
+
+    @if (writeError(); as code) {
+      <p class="coach-error" role="alert">
+        {{ t('errors.' + code) }}
+        @if (code === 'PLAN_REQUIRED') {
+          <a routerLink="/subscription">{{ t('upgrade') }}</a>
+        }
+      </p>
+    }
+  </section>
+</ng-container>
