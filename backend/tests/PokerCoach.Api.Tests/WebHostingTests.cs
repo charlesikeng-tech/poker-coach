@@ -25,7 +25,7 @@ public sealed class WebHostingTests : IDisposable
         var response = await client.GetAsync(new Uri("/api/me", UriKind.Relative), Ct);
 
         var csp = Assert.Single(response.Headers.GetValues("Content-Security-Policy"));
-        Assert.Contains("script-src 'self';", csp, StringComparison.Ordinal);
+        Assert.Contains("script-src 'self' https://challenges.cloudflare.com;", csp, StringComparison.Ordinal);
         Assert.Contains("frame-ancestors 'none'", csp, StringComparison.Ordinal);
         Assert.Equal("nosniff", Assert.Single(response.Headers.GetValues("X-Content-Type-Options")));
         Assert.Equal("DENY", Assert.Single(response.Headers.GetValues("X-Frame-Options")));
