@@ -30,7 +30,7 @@ import { PokerChip } from '../../shared/ui/poker-chip/poker-chip';
 
 /** Time for the button's chip to spin up before the browser leaves for Google. */
 const LAUNCH_MS = 650;
-const TURNSTILE_SITE_KEY = '0x4AAAAAAFgx48pMbzyPBXzn';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFg7r_FOSNXcZG8Y';
 
 type Mode = 'signIn' | 'signUp';
 

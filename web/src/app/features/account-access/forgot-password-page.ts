@@ -18,7 +18,7 @@ import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { AccessShell } from './access-shell';
 
-const TURNSTILE_SITE_KEY = '0x4AAAAAAFgx48pMbzyPBXzn';
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFg7r_FOSNXcZG8Y';
 
 /** Asks for a reset link. The answer is the same whether or not the email has an account. */
 @Component({

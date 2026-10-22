@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-1f83649] — 2026-10-22
 
 ### Correctifs
 
 - **csp**: Allow Cloudflare Turnstile script and frame
+- **test**: Update CSP assertion to include Cloudflare Turnstile domain
 
 ### Fonctionnalités
 
