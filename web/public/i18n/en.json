@@ -27,7 +27,8 @@
       "improve": "Improve"
     },
     "cashSessions": "Cash Sessions",
-    "pushFold": "Push / Fold Nash"
+    "pushFold": "Push / Fold Nash",
+    "bounty": "Bounty PKO"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -2391,6 +2392,32 @@
       "insight1": "These ranges are Nash approximations for a first-in push (no one has opened before you). If a player has already raised, tighten significantly.",
       "insight2": "In the SB, the push range is very wide since you only face one opponent. The earlier your position, the tighter the range.",
       "insight3": "Below 10 BB, preflop play often comes down to push or fold. Between 10 and 20 BB, a standard open-raise is still viable with the strongest hands."
+    },
+    "bounty": {
+      "title": "Bounty PKO Calculator",
+      "description": "Calculate the bounty adjustment on your call/fold decisions in Progressive Knockout tournaments.",
+      "inputs": "Spot parameters",
+      "pot": "Current pot (chips)",
+      "call": "Amount to call (chips)",
+      "equity": "Estimated equity",
+      "opponentBounty": "Opponent bounty",
+      "buyIn": "Tournament buy-in",
+      "startingStack": "Starting stack (chips)",
+      "results": "Bounty adjustment",
+      "standardEquity": "Required equity (standard)",
+      "adjustedEquity": "Required equity (bounty)",
+      "discount": "Bounty discount",
+      "evWithout": "EV without bounty",
+      "evWith": "EV with bounty",
+      "verdict": {
+        "profitable": "Profitable call — the bounty makes this decision clearly +EV.",
+        "marginal": "Marginal spot — the bounty improves the call but the edge is thin.",
+        "unprofitable": "Unprofitable call — even with the bounty, equity is insufficient."
+      },
+      "insightHead": "In practice",
+      "insight1": "In PKO, you receive half the opponent's bounty as immediate cash. The other half is added to your own bounty (indirect value estimated at ~50% of face).",
+      "insight2": "The higher the bounty-to-buy-in ratio, the wider you can call. At PKO final tables, bounties inflate and calls become very wide.",
+      "insight3": "This calculation assumes you cover the opponent (you eliminate them if you win). If they cover you, the bounty doesn't apply to this spot."
     }
   },
   "rangeSelector": {

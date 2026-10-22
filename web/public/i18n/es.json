@@ -27,7 +27,8 @@
       "improve": "Progresar"
     },
     "cashSessions": "Sesiones Cash",
-    "pushFold": "Push / Fold Nash"
+    "pushFold": "Push / Fold Nash",
+    "bounty": "Bounty PKO"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -2391,6 +2392,32 @@
       "insight1": "Estos rangos son aproximaciones Nash para un push first-in (nadie ha abierto antes). Si un jugador ya subió, ajusta significativamente.",
       "insight2": "En la SB, el rango de push es muy amplio ya que solo enfrentas a un oponente. Cuanto más temprana sea tu posición, más ajustado el rango.",
       "insight3": "Por debajo de 10 BB, el juego preflop a menudo se reduce a push o fold. Entre 10 y 20 BB, un open-raise estándar sigue siendo viable con las manos más fuertes."
+    },
+    "bounty": {
+      "title": "Calculadora Bounty PKO",
+      "description": "Calcula el ajuste de bounty en tus decisiones call/fold en torneos Progressive Knockout.",
+      "inputs": "Parámetros del spot",
+      "pot": "Bote actual (fichas)",
+      "call": "Cantidad a pagar (fichas)",
+      "equity": "Equidad estimada",
+      "opponentBounty": "Bounty del rival",
+      "buyIn": "Buy-in del torneo",
+      "startingStack": "Stack inicial (fichas)",
+      "results": "Ajuste de bounty",
+      "standardEquity": "Equidad requerida (estándar)",
+      "adjustedEquity": "Equidad requerida (bounty)",
+      "discount": "Descuento bounty",
+      "evWithout": "EV sin bounty",
+      "evWith": "EV con bounty",
+      "verdict": {
+        "profitable": "Call rentable — el bounty hace esta decisión claramente +EV.",
+        "marginal": "Spot marginal — el bounty mejora el call pero la ventaja es pequeña.",
+        "unprofitable": "Call no rentable — incluso con el bounty, la equidad es insuficiente."
+      },
+      "insightHead": "En la práctica",
+      "insight1": "En PKO, recibes la mitad del bounty rival en efectivo inmediato. La otra mitad se suma a tu propio bounty (valor indirecto estimado en ~50% de su valor nominal).",
+      "insight2": "Cuanto mayor sea la relación bounty/buy-in, más amplio puedes hacer call. En las mesas finales PKO, los bounties se inflan y los calls se vuelven muy amplios.",
+      "insight3": "Este cálculo asume que cubres al rival (lo eliminas si ganas). Si él te cubre a ti, el bounty no aplica en este spot."
     }
   },
   "rangeSelector": {

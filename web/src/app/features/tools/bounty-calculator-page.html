@@ -1,0 +1,134 @@
+<ng-container *transloco="let t; prefix: 'pages.bounty'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <section class="glass panel inputs">
+      <h2>{{ t('inputs') }}</h2>
+
+      <div class="fields">
+        <label class="field">
+          <span>{{ t('pot') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="100"
+            [value]="pot()"
+            (change)="update('pot', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('call') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="100"
+            [value]="callAmount()"
+            (change)="update('callAmount', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('equity') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0"
+              max="100"
+              step="0.5"
+              [value]="equityPct()"
+              (change)="update('equityPct', $any($event.target).value)"
+            />
+            <span class="unit">%</span>
+          </div>
+        </label>
+
+        <div class="field-separator"></div>
+
+        <label class="field">
+          <span>{{ t('opponentBounty') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0"
+              step="0.5"
+              [value]="opponentBounty()"
+              (change)="update('opponentBounty', $any($event.target).value)"
+            />
+            <span class="unit">€</span>
+          </div>
+        </label>
+        <label class="field">
+          <span>{{ t('buyIn') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="1"
+              [value]="buyIn()"
+              (change)="update('buyIn', $any($event.target).value)"
+            />
+            <span class="unit">€</span>
+          </div>
+        </label>
+        <label class="field">
+          <span>{{ t('startingStack') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="1000"
+            [value]="startingStack()"
+            (change)="update('startingStack', $any($event.target).value)"
+          />
+        </label>
+      </div>
+    </section>
+
+    <section class="glass panel results">
+      <h2>{{ t('results') }}</h2>
+
+      <dl class="metrics">
+        <div class="metric">
+          <dt>{{ t('standardEquity') }}</dt>
+          <dd>{{ fmt(standardRequired()) }}%</dd>
+        </div>
+        <div class="metric metric--highlight">
+          <dt>{{ t('adjustedEquity') }}</dt>
+          <dd>{{ fmt(adjustedRequired()) }}%</dd>
+        </div>
+        <div class="metric">
+          <dt>{{ t('discount') }}</dt>
+          <dd class="discount">−{{ fmt(equityDiscount()) }}%</dd>
+        </div>
+      </dl>
+
+      <div class="ev-comparison">
+        <div class="ev-row" [attr.data-positive]="evWithout() >= 0">
+          <span class="ev-label">{{ t('evWithout') }}</span>
+          <span class="ev-value">{{ fmtSigned(evWithout()) }}</span>
+        </div>
+        <div class="ev-row ev-row--main" [attr.data-positive]="evWith() >= 0">
+          <span class="ev-label">{{ t('evWith') }}</span>
+          <span class="ev-value">{{ fmtSigned(evWith()) }}</span>
+        </div>
+      </div>
+
+      <p class="verdict" [attr.data-verdict]="verdict()">
+        {{ t('verdict.' + verdict()) }}
+      </p>
+    </section>
+  </div>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>

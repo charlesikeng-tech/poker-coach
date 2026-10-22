@@ -190,6 +190,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/tools/push-fold-page').then((m) => m.PushFoldPage),
       },
       {
+        path: 'tools/bounty',
+        title: 'nav.bounty',
+        loadComponent: () =>
+          import('./features/tools/bounty-calculator-page').then((m) => m.BountyCalculatorPage),
+      },
+      {
         path: '**',
         title: 'pages.notFound.title',
         loadComponent: () =>

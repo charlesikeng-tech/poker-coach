@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **tools**: Add Nash push/fold reference charts
+
 ## [2026.10.22-9db8085] — 2026-10-22
 
 ### Fonctionnalités
