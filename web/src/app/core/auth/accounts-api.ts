@@ -45,14 +45,33 @@ export class AccountsApi {
     password: string,
     language: string,
     turnstileToken: string | null,
+    website: string,
   ): Promise<unknown> {
     return firstValueFrom(
-      this.http.post('/api/auth/register', { email, password, language, turnstileToken }),
+      this.http.post('/api/auth/register', {
+        email,
+        password,
+        language,
+        turnstileToken,
+        website,
+      }),
     );
   }
 
-  signIn(email: string, password: string): Promise<unknown> {
-    return firstValueFrom(this.http.post('/api/auth/password/login', { email, password }));
+  signIn(
+    email: string,
+    password: string,
+    turnstileToken: string | null,
+    website: string,
+  ): Promise<unknown> {
+    return firstValueFrom(
+      this.http.post('/api/auth/password/login', {
+        email,
+        password,
+        turnstileToken,
+        website,
+      }),
+    );
   }
 
   /** The emailed link plus the password chosen at sign-up. */
@@ -64,8 +83,10 @@ export class AccountsApi {
     return firstValueFrom(this.http.post('/api/auth/email/resend', { email, language }));
   }
 
-  forgotPassword(email: string, language: string): Promise<unknown> {
-    return firstValueFrom(this.http.post('/api/auth/password/forgot', { email, language }));
+  forgotPassword(email: string, language: string, website = ''): Promise<unknown> {
+    return firstValueFrom(
+      this.http.post('/api/auth/password/forgot', { email, language, website }),
+    );
   }
 
   resetPassword(token: string, password: string): Promise<unknown> {

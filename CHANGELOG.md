@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **csp**: Allow Cloudflare Turnstile script and frame
+
 ## [2026.10.22-f5fba9c] — 2026-10-22
 
 ### Fonctionnalités

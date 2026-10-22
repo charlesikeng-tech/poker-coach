@@ -37,11 +37,11 @@ public sealed class AppOptions
     }
 }
 
-public sealed record RegisterRequest(string? Email, string? Password, string? DisplayName, string? Language, string? TurnstileToken);
+public sealed record RegisterRequest(string? Email, string? Password, string? DisplayName, string? Language, string? TurnstileToken, string? Website);
 
-public sealed record SignInRequest(string? Email, string? Password);
+public sealed record SignInRequest(string? Email, string? Password, string? TurnstileToken, string? Website);
 
-public sealed record EmailRequest(string? Email, string? Language);
+public sealed record EmailRequest(string? Email, string? Language, string? Website);
 
 /// <param name="Password">Confirming requires the password chosen at sign-up (ADR-0013).</param>
 public sealed record ConfirmEmailRequest(string? Token, string? Password);
@@ -83,6 +83,9 @@ public static class LocalAccountEndpoints
         IHostEnvironment environment,
         CancellationToken cancellationToken)
     {
+        if (IsHoneypotFilled(request.Website))
+            return TypedResults.Accepted((string?)null);
+
         var remoteIp = context.Connection.RemoteIpAddress?.ToString();
         if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
         {
@@ -108,8 +111,16 @@ public static class LocalAccountEndpoints
         SignInRequest request,
         HttpContext context,
         LocalAccountService accounts,
+        TurnstileService turnstile,
         CancellationToken cancellationToken)
     {
+        if (IsHoneypotFilled(request.Website))
+            return ApiProblems.WithCode(StatusCodes.Status401Unauthorized, "INVALID_CREDENTIALS", "Wrong email or password.");
+
+        var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
+            return ApiProblems.WithCode(StatusCodes.Status400BadRequest, "CAPTCHA_FAILED", "Bot verification failed.");
+
         var outcome = await accounts.SignInAsync(request.Email ?? string.Empty, request.Password ?? string.Empty, cancellationToken);
         return await CompleteAsync(context, outcome);
     }
@@ -144,6 +155,9 @@ public static class LocalAccountEndpoints
         IHostEnvironment environment,
         CancellationToken cancellationToken)
     {
+        if (IsHoneypotFilled(request.Website))
+            return TypedResults.Accepted((string?)null);
+
         await accounts.ForgotPasswordAsync(request.Email ?? string.Empty, Language(request.Language), Links(context, app.Value, environment), cancellationToken);
         return TypedResults.Accepted((string?)null);
     }
@@ -186,6 +200,8 @@ public static class LocalAccountEndpoints
             "WEAK_PASSWORD",
             "The password is too weak.",
             new Dictionary<string, object?> { ["minLength"] = LocalAccountService.MinPasswordLength });
+
+    private static bool IsHoneypotFilled(string? website) => !string.IsNullOrWhiteSpace(website);
 
     private static string Language(string? language) => UserLanguages.IsSupported(language) ? language! : UserLanguages.Default;
 

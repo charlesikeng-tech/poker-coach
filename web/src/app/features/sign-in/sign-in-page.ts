@@ -71,6 +71,9 @@ export class SignInPage implements AfterViewInit {
   protected readonly turnstileToken = signal<string | null>(null);
   private turnstileWidgetId: string | null = null;
 
+  // Honeypot: invisible field that only bots fill.
+  protected readonly honeypot = signal('');
+
   // Email and password (ADR-0013).
   protected readonly mode = signal<Mode>('signIn');
   protected readonly email = signal('');
@@ -150,17 +153,12 @@ export class SignInPage implements AfterViewInit {
   }
 
   protected switchMode(mode: Mode): void {
-    if (this.mode() === 'signUp' && mode !== 'signUp') {
-      this.turnstileWidgetId = null;
-      this.turnstileToken.set(null);
-    }
     this.mode.set(mode);
     this.formError.set(null);
     this.sentTo.set(null);
-    if (mode === 'signUp') {
-      this.turnstileToken.set(null);
-      setTimeout(() => this.renderTurnstile());
-    }
+    this.turnstileWidgetId = null;
+    this.turnstileToken.set(null);
+    setTimeout(() => this.renderTurnstile());
   }
 
   protected async submit(event: Event): Promise<void> {
@@ -172,15 +170,18 @@ export class SignInPage implements AfterViewInit {
     this.formError.set(null);
     this.resent.set(false);
     try {
+      const token = this.turnstileToken();
+      const hp = this.honeypot();
       await retryWithToken(this.session, () =>
         this.mode() === 'signUp'
           ? this.accounts.register(
               this.email(),
               this.password(),
               this.language.current(),
-              this.turnstileToken(),
+              token,
+              hp,
             )
-          : this.accounts.signIn(this.email(), this.password()),
+          : this.accounts.signIn(this.email(), this.password(), token, hp),
       );
       if (this.mode() === 'signUp') {
         this.sentTo.set(this.email().trim());
@@ -198,9 +199,7 @@ export class SignInPage implements AfterViewInit {
         this.sentTo.set(this.email().trim());
       }
       this.formError.set(code);
-      if (this.mode() === 'signUp') {
-        this.resetTurnstile();
-      }
+      this.resetTurnstile();
     } finally {
       this.busy.set(false);
     }

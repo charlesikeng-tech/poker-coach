@@ -247,6 +247,16 @@
   --size: 1.6rem;
 }
 
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .turnstile {
   margin: var(--space-3) 0;
 }

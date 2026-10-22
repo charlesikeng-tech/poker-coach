@@ -96,6 +96,16 @@
           </div>
         } @else {
           <form class="auth-form" (submit)="submit($event)" novalidate>
+            <input
+              type="text"
+              name="website"
+              autocomplete="off"
+              tabindex="-1"
+              aria-hidden="true"
+              class="hp"
+              [value]="honeypot()"
+              (input)="honeypot.set($any($event.target).value)"
+            />
             <label class="field">
               <span>{{ t('email') }}</span>
               <input
@@ -143,15 +153,13 @@
               </div>
             }
 
-            @if (mode() === 'signUp') {
-              <div #turnstileWidget class="turnstile"></div>
-            }
+            <div #turnstileWidget class="turnstile"></div>
 
             <button
               appButton
               variant="primary"
               type="submit"
-              [disabled]="busy() || (mode() === 'signUp' && !turnstileToken())"
+              [disabled]="busy() || !turnstileToken()"
             >
               {{ t(mode() === 'signUp' ? 'signUp.action' : 'passwordAction') }}
             </button>
