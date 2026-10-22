@@ -143,7 +143,16 @@
               </div>
             }
 
-            <button appButton variant="primary" type="submit" [disabled]="busy()">
+            @if (mode() === 'signUp') {
+              <div #turnstileWidget class="turnstile"></div>
+            }
+
+            <button
+              appButton
+              variant="primary"
+              type="submit"
+              [disabled]="busy() || (mode() === 'signUp' && !turnstileToken())"
+            >
               {{ t(mode() === 'signUp' ? 'signUp.action' : 'passwordAction') }}
             </button>
           </form>

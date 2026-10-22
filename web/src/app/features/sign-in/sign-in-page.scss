@@ -247,6 +247,10 @@
   --size: 1.6rem;
 }
 
+.turnstile {
+  margin: var(--space-3) 0;
+}
+
 // "or" between Google and the email form.
 .or {
   display: flex;

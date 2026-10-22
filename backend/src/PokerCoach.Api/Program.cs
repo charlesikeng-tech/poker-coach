@@ -63,6 +63,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<ExternalSignInService>();
 builder.Services.AddScoped<LocalAccountService>();
+builder.Services.AddOptions<TurnstileOptions>()
+    .BindConfiguration(TurnstileOptions.SectionName);
+builder.Services.AddHttpClient(nameof(TurnstileService));
+builder.Services.AddScoped(sp =>
+    new TurnstileService(
+        sp.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(TurnstileService)),
+        sp.GetRequiredService<IOptions<TurnstileOptions>>().Value));
 builder.Services.AddOptions<AppOptions>()
     .BindConfiguration(AppOptions.SectionName)
     .Validate(

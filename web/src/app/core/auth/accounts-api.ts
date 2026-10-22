@@ -18,6 +18,7 @@ const ACCOUNT_ERRORS = new Set([
   'NO_PASSWORD_ACCOUNT',
   'RATE_LIMITED',
   'INVALID_ANTIFORGERY_TOKEN',
+  'CAPTCHA_FAILED',
 ]);
 
 export function accountErrorCode(error: unknown): string {
@@ -39,8 +40,15 @@ export class AccountsApi {
   private readonly http = inject(HttpClient);
 
   /** Always 202 when the input is valid: the answer never says whether the email had an account. */
-  register(email: string, password: string, language: string): Promise<unknown> {
-    return firstValueFrom(this.http.post('/api/auth/register', { email, password, language }));
+  register(
+    email: string,
+    password: string,
+    language: string,
+    turnstileToken: string | null,
+  ): Promise<unknown> {
+    return firstValueFrom(
+      this.http.post('/api/auth/register', { email, password, language, turnstileToken }),
+    );
   }
 
   signIn(email: string, password: string): Promise<unknown> {

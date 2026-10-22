@@ -1,12 +1,15 @@
 import { DOCUMENT } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   computed,
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -27,8 +30,19 @@ import { PokerChip } from '../../shared/ui/poker-chip/poker-chip';
 
 /** Time for the button's chip to spin up before the browser leaves for Google. */
 const LAUNCH_MS = 650;
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFgx48pMbzyPBXzn';
 
 type Mode = 'signIn' | 'signUp';
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render(container: HTMLElement, options: Record<string, unknown>): string;
+      reset(widgetId: string): void;
+      remove(widgetId: string): void;
+    };
+  }
+}
 
 @Component({
   selector: 'app-sign-in-page',
@@ -37,7 +51,7 @@ type Mode = 'signIn' | 'signUp';
   styleUrl: './sign-in-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SignInPage {
+export class SignInPage implements AfterViewInit {
   /** Bound from the query string (withComponentInputBinding). */
   readonly returnUrl = input<string>();
   readonly error = input<string>();
@@ -51,6 +65,11 @@ export class SignInPage {
   private timer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly launching = signal(false);
+
+  // Turnstile CAPTCHA
+  protected readonly turnstileContainer = viewChild<ElementRef<HTMLElement>>('turnstileWidget');
+  protected readonly turnstileToken = signal<string | null>(null);
+  private turnstileWidgetId: string | null = null;
 
   // Email and password (ADR-0013).
   protected readonly mode = signal<Mode>('signIn');
@@ -74,7 +93,37 @@ export class SignInPage {
   protected readonly providerFailed = computed(() => this.error() === 'google');
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
+    inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.timer);
+      if (this.turnstileWidgetId !== null) {
+        this.window?.turnstile?.remove(this.turnstileWidgetId);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.renderTurnstile();
+  }
+
+  private renderTurnstile(): void {
+    const container = this.turnstileContainer()?.nativeElement;
+    if (!container || !this.window?.turnstile) return;
+    if (this.turnstileWidgetId !== null) return;
+
+    this.turnstileWidgetId = this.window.turnstile.render(container, {
+      sitekey: TURNSTILE_SITE_KEY,
+      theme: 'dark',
+      callback: (token: string) => this.turnstileToken.set(token),
+      'expired-callback': () => this.turnstileToken.set(null),
+      'error-callback': () => this.turnstileToken.set(null),
+    });
+  }
+
+  private resetTurnstile(): void {
+    this.turnstileToken.set(null);
+    if (this.turnstileWidgetId !== null && this.window?.turnstile) {
+      this.window.turnstile.reset(this.turnstileWidgetId);
+    }
   }
 
   /**
@@ -101,9 +150,17 @@ export class SignInPage {
   }
 
   protected switchMode(mode: Mode): void {
+    if (this.mode() === 'signUp' && mode !== 'signUp') {
+      this.turnstileWidgetId = null;
+      this.turnstileToken.set(null);
+    }
     this.mode.set(mode);
     this.formError.set(null);
     this.sentTo.set(null);
+    if (mode === 'signUp') {
+      this.turnstileToken.set(null);
+      setTimeout(() => this.renderTurnstile());
+    }
   }
 
   protected async submit(event: Event): Promise<void> {
@@ -117,12 +174,18 @@ export class SignInPage {
     try {
       await retryWithToken(this.session, () =>
         this.mode() === 'signUp'
-          ? this.accounts.register(this.email(), this.password(), this.language.current())
+          ? this.accounts.register(
+              this.email(),
+              this.password(),
+              this.language.current(),
+              this.turnstileToken(),
+            )
           : this.accounts.signIn(this.email(), this.password()),
       );
       if (this.mode() === 'signUp') {
         this.sentTo.set(this.email().trim());
         this.password.set('');
+        this.resetTurnstile();
         return;
       }
       this.welcome.arm();
@@ -135,6 +198,9 @@ export class SignInPage {
         this.sentTo.set(this.email().trim());
       }
       this.formError.set(code);
+      if (this.mode() === 'signUp') {
+        this.resetTurnstile();
+      }
     } finally {
       this.busy.set(false);
     }

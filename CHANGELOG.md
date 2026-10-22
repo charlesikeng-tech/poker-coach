@@ -1,5 +1,12 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **account**: Refactor settings page into tabbed layout with Google icon
+- **auth**: Add Cloudflare Turnstile CAPTCHA on registration
+
 ## [2026.10.22-b04e152] — 2026-10-22
 
 ### Correctifs

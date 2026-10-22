@@ -37,7 +37,7 @@ public sealed class AppOptions
     }
 }
 
-public sealed record RegisterRequest(string? Email, string? Password, string? DisplayName, string? Language);
+public sealed record RegisterRequest(string? Email, string? Password, string? DisplayName, string? Language, string? TurnstileToken);
 
 public sealed record SignInRequest(string? Email, string? Password);
 
@@ -78,10 +78,17 @@ public static class LocalAccountEndpoints
         RegisterRequest request,
         HttpContext context,
         LocalAccountService accounts,
+        TurnstileService turnstile,
         IOptions<AppOptions> app,
         IHostEnvironment environment,
         CancellationToken cancellationToken)
     {
+        var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
+        {
+            return ApiProblems.WithCode(StatusCodes.Status400BadRequest, "CAPTCHA_FAILED", "Bot verification failed.");
+        }
+
         var result = await accounts.RegisterAsync(
             request.Email ?? string.Empty,
             request.Password ?? string.Empty,
