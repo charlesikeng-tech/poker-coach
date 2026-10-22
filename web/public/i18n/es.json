@@ -905,7 +905,8 @@
         "INVALID_ANTIFORGERY_TOKEN": "La página ha caducado. Recárgala e inténtalo de nuevo.",
         "MISMATCH": "Las dos contraseñas no coinciden.",
         "network": "No hay conexión. Revisa tu red.",
-        "unknown": "Ha ocurrido un error inesperado."
+        "unknown": "Ha ocurrido un error inesperado.",
+        "CAPTCHA_FAILED": "La verificación anti-robot falló. Inténtalo de nuevo."
       },
       "product": "NutsIQ",
       "launching": "Rumbo a Google…",
@@ -1776,6 +1777,28 @@
         "create": "Crear enlace",
         "creating": "Creando…",
         "revoked": "Revocado"
+      },
+      "tabs": {
+        "account": "Cuenta",
+        "security": "Seguridad",
+        "data": "Datos",
+        "coach": "Coach"
+      },
+      "profile": {
+        "title": "Mi cuenta"
+      },
+      "plan": {
+        "title": "Plan y facturación",
+        "monthly": "Suscripción mensual",
+        "yearly": "Suscripción anual",
+        "renewsAt": "Próxima renovación:",
+        "endsAt": "Fin del acceso:",
+        "manage": "Gestionar suscripción"
+      },
+      "security": {
+        "title": "Seguridad",
+        "connected": "Conectado",
+        "emailPassword": "Email / Contraseña"
       }
     },
     "privacy": {

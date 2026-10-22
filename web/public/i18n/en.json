@@ -905,7 +905,8 @@
         "INVALID_ANTIFORGERY_TOKEN": "The page has expired. Reload it and try again.",
         "MISMATCH": "The two passwords do not match.",
         "network": "Cannot connect. Check your network.",
-        "unknown": "An unexpected error occurred."
+        "unknown": "An unexpected error occurred.",
+        "CAPTCHA_FAILED": "Bot verification failed. Please try again."
       },
       "product": "NutsIQ",
       "launching": "Off to Google…",
@@ -1776,6 +1777,28 @@
         "create": "Create link",
         "creating": "Creating…",
         "revoked": "Revoked"
+      },
+      "tabs": {
+        "account": "Account",
+        "security": "Security",
+        "data": "Data",
+        "coach": "Coach"
+      },
+      "profile": {
+        "title": "My account"
+      },
+      "plan": {
+        "title": "Plan & billing",
+        "monthly": "Monthly subscription",
+        "yearly": "Yearly subscription",
+        "renewsAt": "Next renewal:",
+        "endsAt": "Access ends:",
+        "manage": "Manage subscription"
+      },
+      "security": {
+        "title": "Security",
+        "connected": "Connected",
+        "emailPassword": "Email / Password"
       }
     },
     "privacy": {

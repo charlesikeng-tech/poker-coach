@@ -905,7 +905,8 @@
         "INVALID_ANTIFORGERY_TOKEN": "La page a expiré. Recharge-la et réessaie.",
         "MISMATCH": "Les deux mots de passe ne sont pas identiques.",
         "network": "Connexion impossible. Vérifie ton réseau.",
-        "unknown": "Une erreur inattendue est survenue."
+        "unknown": "Une erreur inattendue est survenue.",
+        "CAPTCHA_FAILED": "La vérification anti-robot a échoué. Réessaie."
       },
       "product": "NutsIQ",
       "launching": "Direction Google…",
@@ -1776,6 +1777,28 @@
         "create": "Créer le lien",
         "creating": "Création…",
         "revoked": "Révoqué"
+      },
+      "tabs": {
+        "account": "Compte",
+        "security": "Sécurité",
+        "data": "Données",
+        "coach": "Coach"
+      },
+      "profile": {
+        "title": "Mon compte"
+      },
+      "plan": {
+        "title": "Plan et facturation",
+        "monthly": "Abonnement mensuel",
+        "yearly": "Abonnement annuel",
+        "renewsAt": "Prochain renouvellement :",
+        "endsAt": "Fin de l'accès :",
+        "manage": "Gérer mon abonnement"
+      },
+      "security": {
+        "title": "Sécurité",
+        "connected": "Connecté",
+        "emailPassword": "E-mail / Mot de passe"
       }
     },
     "privacy": {

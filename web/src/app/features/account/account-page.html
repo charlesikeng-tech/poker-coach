@@ -1,12 +1,29 @@
 <ng-container *transloco="let t; prefix: 'pages.account'">
   <app-page-header [heading]="t('title')" [description]="t('description')" />
 
-  @if (session.user(); as user) {
-    <section class="card glass profile">
-      <dl>
-        <div>
-          <dt>{{ t('name') }}</dt>
-          <dd>
+  <nav class="tabs" role="tablist">
+    @for (tab of tabs; track tab) {
+      <button
+        type="button"
+        class="tab"
+        role="tab"
+        [class.tab--active]="activeTab() === tab"
+        [attr.aria-selected]="activeTab() === tab"
+        (click)="activeTab.set(tab)"
+      >
+        {{ t('tabs.' + tab) }}
+      </button>
+    }
+  </nav>
+
+  <!-- ── Compte ────────────────────────────────────────── -->
+  @if (activeTab() === 'account') {
+    @if (session.user(); as user) {
+      <section class="card glass">
+        <h2>{{ t('profile.title') }}</h2>
+        <div class="profile-row">
+          <div class="avatar">{{ initials() }}</div>
+          <div class="profile-info">
             @if (editingName()) {
               <form class="inline-form" (submit)="saveName($event)" novalidate>
                 <input
@@ -33,190 +50,256 @@
                 }
               </form>
             } @else {
-              {{ user.displayName }}
-              <button
-                appButton
-                variant="secondary"
-                class="edit-btn"
-                type="button"
-                (click)="startEditName()"
-              >
-                <app-icon [icon]="icons.Pencil" />{{ t('nameEdit.edit') }}
-              </button>
+              <span class="profile-name">{{ user.displayName }}</span>
+              <span class="profile-email">{{ user.email ?? '—' }}</span>
             }
-          </dd>
+          </div>
+          @if (!editingName()) {
+            <button appButton variant="secondary" type="button" (click)="startEditName()">
+              <app-icon [icon]="icons.Pencil" />{{ t('nameEdit.edit') }}
+            </button>
+          }
         </div>
-        <div>
-          <dt>{{ t('email') }}</dt>
-          <dd>{{ user.email ?? '—' }}</dd>
-        </div>
-        <div>
-          <dt>{{ t('signIn') }}</dt>
-          <dd>
-            @if (user.hasGoogle && user.hasPassword) {
-              Google · E-mail
-            } @else if (user.hasGoogle) {
-              Google
-            } @else if (user.hasPassword) {
-              E-mail
-            } @else {
-              —
+      </section>
+
+      <section class="card glass">
+        <h2>{{ t('plan.title') }}</h2>
+        <div class="plan-row">
+          <div class="plan-badge" [attr.data-plan]="billing.plan()">
+            {{ planLabel() }}
+          </div>
+          <div class="plan-info">
+            @if (billing.summary(); as summary) {
+              @if (summary.tier && summary.interval) {
+                <span class="plan-price">
+                  {{ summary.interval === 'month' ? t('plan.monthly') : t('plan.yearly') }}
+                </span>
+              }
+              @if (summary.currentPeriodEnd) {
+                <span class="plan-renewal">
+                  {{ t(summary.cancelAtPeriodEnd ? 'plan.endsAt' : 'plan.renewsAt') }}
+                  {{ summary.currentPeriodEnd | date: 'dd/MM/yyyy' }}
+                </span>
+              }
             }
-          </dd>
+          </div>
+          <a appButton variant="secondary" routerLink="/subscription">
+            {{ t('plan.manage') }}
+          </a>
         </div>
-      </dl>
+      </section>
+
+      <section class="card glass">
+        <h2>{{ t('security.title') }}</h2>
+        <div class="auth-methods">
+          @if (user.hasGoogle) {
+            <div class="auth-method">
+              <div class="auth-method__info">
+                <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  />
+                </svg>
+                <div>
+                  <span class="auth-method__label">Google</span>
+                  <span class="auth-method__status auth-method__status--ok">{{
+                    t('security.connected')
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          }
+          @if (user.hasPassword) {
+            <div class="auth-method">
+              <div class="auth-method__info">
+                <app-icon [icon]="icons.KeyRound" />
+                <div>
+                  <span class="auth-method__label">{{ t('security.emailPassword') }}</span>
+                  <span class="auth-method__status auth-method__status--ok">{{
+                    t('security.connected')
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+
+  <!-- ── Sécurité ──────────────────────────────────────── -->
+  @if (activeTab() === 'security') {
+    <section class="card glass">
+      <h2><app-icon [icon]="icons.KeyRound" />{{ t('password.title') }}</h2>
+      <p>{{ t('password.description') }}</p>
+      <form (submit)="changePassword($event)" novalidate>
+        <label class="field">
+          <span>{{ t('password.current') }}</span>
+          <input
+            type="password"
+            name="currentPassword"
+            autocomplete="current-password"
+            required
+            [value]="currentPassword()"
+            (input)="currentPassword.set(value($event))"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('password.new', { count: minPassword }) }}</span>
+          <input
+            type="password"
+            name="newPassword"
+            autocomplete="new-password"
+            required
+            [value]="newPassword()"
+            (input)="newPassword.set(value($event))"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('password.repeat') }}</span>
+          <input
+            type="password"
+            name="repeatPassword"
+            autocomplete="new-password"
+            required
+            [value]="repeatPassword()"
+            (input)="repeatPassword.set(value($event))"
+            [attr.aria-invalid]="passwordMismatch() || null"
+          />
+        </label>
+        @if (passwordMismatch()) {
+          <p class="error" role="alert">{{ t('password.mismatch') }}</p>
+        } @else if (passwordError(); as code) {
+          <p class="error" role="alert">
+            {{ t('password.errors.' + code, { count: minPassword }) }}
+          </p>
+        }
+        <button
+          appButton
+          variant="primary"
+          type="submit"
+          [disabled]="changingPassword() || passwordMismatch()"
+        >
+          {{ t(changingPassword() ? 'password.updating' : 'password.action') }}
+        </button>
+      </form>
+      <p class="hint">{{ t('password.hint') }}</p>
     </section>
   }
 
-  <section class="card glass">
-    <h2><app-icon [icon]="icons.KeyRound" />{{ t('password.title') }}</h2>
-    <p>{{ t('password.description') }}</p>
-    <form (submit)="changePassword($event)" novalidate>
-      <label class="field">
-        <span>{{ t('password.current') }}</span>
-        <input
-          type="password"
-          name="currentPassword"
-          autocomplete="current-password"
-          required
-          [value]="currentPassword()"
-          (input)="currentPassword.set(value($event))"
-        />
-      </label>
-      <label class="field">
-        <span>{{ t('password.new', { count: minPassword }) }}</span>
-        <input
-          type="password"
-          name="newPassword"
-          autocomplete="new-password"
-          required
-          [value]="newPassword()"
-          (input)="newPassword.set(value($event))"
-        />
-      </label>
-      <label class="field">
-        <span>{{ t('password.repeat') }}</span>
-        <input
-          type="password"
-          name="repeatPassword"
-          autocomplete="new-password"
-          required
-          [value]="repeatPassword()"
-          (input)="repeatPassword.set(value($event))"
-          [attr.aria-invalid]="passwordMismatch() || null"
-        />
-      </label>
-      @if (passwordMismatch()) {
-        <p class="error" role="alert">{{ t('password.mismatch') }}</p>
-      } @else if (passwordError(); as code) {
-        <p class="error" role="alert">{{ t('password.errors.' + code, { count: minPassword }) }}</p>
-      }
-      <button
-        appButton
-        variant="primary"
-        type="submit"
-        [disabled]="changingPassword() || passwordMismatch()"
-      >
-        {{ t(changingPassword() ? 'password.updating' : 'password.action') }}
-      </button>
-    </form>
-    <p class="hint">{{ t('password.hint') }}</p>
-  </section>
-
-  <section class="card glass">
-    <h2>{{ t('export.title') }}</h2>
-    <p>{{ t('export.description') }}</p>
-    <ul class="contents">
-      <li>{{ t('export.uploads') }}</li>
-      <li>{{ t('export.tournaments') }}</li>
-      <li>{{ t('export.account') }}</li>
-    </ul>
-    <a appButton variant="primary" href="/api/me/export" download>
-      <app-icon [icon]="icons.Download" />{{ t('export.action') }}
-    </a>
-    <p class="hint">{{ t('export.hint') }}</p>
-    <p class="hint">
-      <a routerLink="/privacy">{{ t('export.privacy') }}</a>
-    </p>
-  </section>
-
-  <section class="card glass">
-    <h2><app-icon [icon]="icons.Link2" />{{ t('coachAccess.title') }}</h2>
-    <p>{{ t('coachAccess.description') }}</p>
-
-    @if (invitationsLoading()) {
-      <p class="hint">{{ t('coachAccess.loading') }}</p>
-    } @else if (invitations().length > 0) {
-      <ul class="invitation-list">
-        @for (inv of invitations(); track inv.id) {
-          <li class="invitation-item" [class.invitation-item--revoked]="inv.revokedAt">
-            <span class="invitation-label">{{ inv.label }}</span>
-            @if (inv.revokedAt) {
-              <span class="invitation-revoked-badge">{{ t('coachAccess.revoked') }}</span>
-            } @else {
-              <div class="invitation-actions">
-                <button appButton variant="secondary" type="button" (click)="copyLink(inv)">
-                  <app-icon [icon]="icons.Copy" />
-                  {{ copiedId() === inv.id ? t('coachAccess.copied') : t('coachAccess.copy') }}
-                </button>
-                <button
-                  appButton
-                  variant="secondary"
-                  type="button"
-                  [disabled]="revokingId() === inv.id"
-                  (click)="revokeInvitation(inv.id)"
-                >
-                  <app-icon [icon]="icons.Trash2" />
-                  {{ t(revokingId() === inv.id ? 'coachAccess.revoking' : 'coachAccess.revoke') }}
-                </button>
-              </div>
-            }
-          </li>
-        }
+  <!-- ── Données ───────────────────────────────────────── -->
+  @if (activeTab() === 'data') {
+    <section class="card glass">
+      <h2><app-icon [icon]="icons.Download" />{{ t('export.title') }}</h2>
+      <p>{{ t('export.description') }}</p>
+      <ul class="contents">
+        <li>{{ t('export.uploads') }}</li>
+        <li>{{ t('export.tournaments') }}</li>
+        <li>{{ t('export.account') }}</li>
       </ul>
-    } @else {
-      <p class="hint">{{ t('coachAccess.empty') }}</p>
-    }
+      <a appButton variant="primary" href="/api/me/export" download>
+        <app-icon [icon]="icons.Download" />{{ t('export.action') }}
+      </a>
+      <p class="hint">{{ t('export.hint') }}</p>
+      <p class="hint">
+        <a routerLink="/privacy">{{ t('export.privacy') }}</a>
+      </p>
+    </section>
 
-    <form class="invitation-form" (submit)="createInvitation($event)" novalidate>
-      <input
-        type="text"
-        [attr.placeholder]="t('coachAccess.labelPlaceholder')"
-        [attr.maxlength]="100"
-        [value]="newLabel()"
-        (input)="newLabel.set(value($event))"
-      />
-      <button
-        appButton
-        variant="primary"
-        type="submit"
-        [disabled]="creating() || newLabel().trim().length === 0"
-      >
-        <app-icon [icon]="icons.Plus" />
-        {{ t(creating() ? 'coachAccess.creating' : 'coachAccess.create') }}
+    <section class="card glass danger">
+      <h2><app-icon [icon]="icons.ShieldAlert" />{{ t('delete.title') }}</h2>
+      <p>{{ t('delete.description') }}</p>
+      <p class="hint">{{ t('delete.advice') }}</p>
+      <label class="field">
+        <span>{{ t('delete.type', { word: word() }) }}</span>
+        <input
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          [value]="confirmation()"
+          (input)="confirmation.set(value($event))"
+        />
+      </label>
+      @if (failed()) {
+        <p class="error" role="alert">{{ t('delete.error') }}</p>
+      }
+      <button type="button" class="delete-button" [disabled]="!canDelete()" (click)="delete()">
+        <app-icon [icon]="icons.Trash2" />{{ t(deleting() ? 'delete.deleting' : 'delete.action') }}
       </button>
-    </form>
-  </section>
+    </section>
+  }
 
-  <section class="card glass danger">
-    <h2><app-icon [icon]="icons.ShieldAlert" />{{ t('delete.title') }}</h2>
-    <p>{{ t('delete.description') }}</p>
-    <p class="hint">{{ t('delete.advice') }}</p>
-    <label class="field">
-      <span>{{ t('delete.type', { word: word() }) }}</span>
-      <input
-        type="text"
-        autocomplete="off"
-        spellcheck="false"
-        [value]="confirmation()"
-        (input)="confirmation.set(value($event))"
-      />
-    </label>
-    @if (failed()) {
-      <p class="error" role="alert">{{ t('delete.error') }}</p>
-    }
-    <button type="button" class="delete-button" [disabled]="!canDelete()" (click)="delete()">
-      <app-icon [icon]="icons.Trash2" />{{ t(deleting() ? 'delete.deleting' : 'delete.action') }}
-    </button>
-  </section>
+  <!-- ── Coach ─────────────────────────────────────────── -->
+  @if (activeTab() === 'coach') {
+    <section class="card glass">
+      <h2><app-icon [icon]="icons.Link2" />{{ t('coachAccess.title') }}</h2>
+      <p>{{ t('coachAccess.description') }}</p>
+
+      @if (invitationsLoading()) {
+        <p class="hint">{{ t('coachAccess.loading') }}</p>
+      } @else if (invitations().length > 0) {
+        <ul class="invitation-list">
+          @for (inv of invitations(); track inv.id) {
+            <li class="invitation-item" [class.invitation-item--revoked]="inv.revokedAt">
+              <span class="invitation-label">{{ inv.label }}</span>
+              @if (inv.revokedAt) {
+                <span class="invitation-revoked-badge">{{ t('coachAccess.revoked') }}</span>
+              } @else {
+                <div class="invitation-actions">
+                  <button appButton variant="secondary" type="button" (click)="copyLink(inv)">
+                    <app-icon [icon]="icons.Copy" />
+                    {{ copiedId() === inv.id ? t('coachAccess.copied') : t('coachAccess.copy') }}
+                  </button>
+                  <button
+                    appButton
+                    variant="secondary"
+                    type="button"
+                    [disabled]="revokingId() === inv.id"
+                    (click)="revokeInvitation(inv.id)"
+                  >
+                    <app-icon [icon]="icons.Trash2" />
+                    {{ t(revokingId() === inv.id ? 'coachAccess.revoking' : 'coachAccess.revoke') }}
+                  </button>
+                </div>
+              }
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="hint">{{ t('coachAccess.empty') }}</p>
+      }
+
+      <form class="invitation-form" (submit)="createInvitation($event)" novalidate>
+        <input
+          type="text"
+          [attr.placeholder]="t('coachAccess.labelPlaceholder')"
+          [attr.maxlength]="100"
+          [value]="newLabel()"
+          (input)="newLabel.set(value($event))"
+        />
+        <button
+          appButton
+          variant="primary"
+          type="submit"
+          [disabled]="creating() || newLabel().trim().length === 0"
+        >
+          <app-icon [icon]="icons.Plus" />
+          {{ t(creating() ? 'coachAccess.creating' : 'coachAccess.create') }}
+        </button>
+      </form>
+    </section>
+  }
 </ng-container>

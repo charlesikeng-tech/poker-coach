@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.22-b04e152] — 2026-10-22
+
+### Correctifs
+
+- **shell**: Allow collapsing tools submenu on active route
+
 ## [2026.10.22-7060fd7] — 2026-10-22
 
 ### Fonctionnalités

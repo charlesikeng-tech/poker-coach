@@ -1,9 +1,9 @@
-import { DOCUMENT } from '@angular/common';
+import { DatePipe, DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Copy, Download, KeyRound, Link2, Pencil, Plus, ShieldAlert, Trash2 } from 'lucide';
+import { Copy, Download, KeyRound, Link2, Pencil, Plus, ShieldAlert, Trash2, User } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -12,6 +12,7 @@ import {
   accountErrorCode,
   retryWithToken,
 } from '../../core/auth/accounts-api';
+import { BillingService } from '../../core/billing/billing.service';
 import { CoachApi, CoachInvitation } from '../../core/coach/coach-api';
 import { SessionService } from '../../core/auth/session.service';
 import { Button } from '../../shared/ui/button/button';
@@ -24,7 +25,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
  */
 @Component({
   selector: 'app-account-page',
-  imports: [TranslocoDirective, RouterLink, PageHeader, Button, Icon],
+  imports: [DatePipe, TranslocoDirective, RouterLink, PageHeader, Button, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './account-page.html',
@@ -37,10 +38,36 @@ export class AccountPage {
   private readonly accounts = inject(AccountsApi);
   private readonly router = inject(Router);
   protected readonly session = inject(SessionService);
+  protected readonly billing = inject(BillingService);
 
   private readonly coachApi = inject(CoachApi);
 
-  protected readonly icons = { Copy, Download, KeyRound, Link2, Pencil, Plus, ShieldAlert, Trash2 };
+  protected readonly icons = {
+    Copy,
+    Download,
+    KeyRound,
+    Link2,
+    Pencil,
+    Plus,
+    ShieldAlert,
+    Trash2,
+    User,
+  };
+
+  protected readonly tabs = ['account', 'security', 'data', 'coach'] as const;
+  protected readonly activeTab = signal<(typeof this.tabs)[number]>('account');
+
+  protected readonly initials = computed(() => {
+    const name = this.session.user()?.displayName ?? '';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+  });
+
+  protected readonly planLabel = computed(() => {
+    const plan = this.billing.plan();
+    return plan.charAt(0).toUpperCase() + plan.slice(1);
+  });
   protected readonly minPassword = MIN_PASSWORD_LENGTH;
   protected readonly maxNameLength = 50;
 
