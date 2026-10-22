@@ -229,7 +229,7 @@
                   [attr.aria-pressed]="unit() === 'chips'"
                   (click)="unit.set('chips')"
                 >
-                  {{ t('chips') }}
+                  {{ isCashGame() ? '€' : t('chips') }}
                 </button>
               </div>
             </div>

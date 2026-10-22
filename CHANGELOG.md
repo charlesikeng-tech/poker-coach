@@ -2,6 +2,10 @@
 
 ## [Non publié]
 
+### Correctifs
+
+- **hands**: Include uncalled bet return in Betclic and PMU parser collections
+
 ### Fonctionnalités
 
 - **ranges**: Add custom user-defined ranges (backend + API + types)

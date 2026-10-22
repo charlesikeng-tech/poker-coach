@@ -256,24 +256,36 @@ export class HandReplayPage {
     inject(DestroyRef).onDestroy(() => this.stop());
   }
 
+  protected readonly isCashGame = computed(() => this.hand()?.tournamentId === null);
+
   /** Formatter for animated figures; rebuilt when the unit or language changes. */
   protected readonly chipsFormat = computed(() => {
     const locale = this.locale();
     const unit = this.unit();
-    const bigBlind = this.hand()?.bigBlind ?? 1;
+    const hand = this.hand();
+    const bigBlind = hand?.bigBlind ?? 1;
+    const cash = hand?.tournamentId === null;
     const integer = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
+    const euros = new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' });
     const bb = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
     return (value: number | null) =>
       value === null
         ? '—'
         : unit === 'chips'
-          ? integer.format(value)
+          ? cash
+            ? euros.format(value / 100)
+            : integer.format(value)
           : `${bb.format(value / bigBlind)} BB`;
   });
 
   protected amount(chips: number): string {
     const hand = this.hand();
     if (this.unit() === 'chips' || !hand) {
+      if (this.isCashGame()) {
+        return new Intl.NumberFormat(this.locale(), { style: 'currency', currency: 'EUR' }).format(
+          chips / 100,
+        );
+      }
       return new Intl.NumberFormat(this.locale()).format(chips);
     }
     return `${new Intl.NumberFormat(this.locale(), { maximumFractionDigits: 1 }).format(chips / hand.bigBlind)} BB`;
