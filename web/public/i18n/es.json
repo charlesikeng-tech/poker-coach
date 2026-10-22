@@ -1505,6 +1505,22 @@
           "otherAction": "Jugada de otra forma que la referencia"
         },
         "method": "Spot contado: tu primera decisión ante una sola subida (no all-in), sin limp ni call antes que tú; se excluyen squeezes y open-shoves. Conteo separado 6-max / full ring; un UTG 6-max se trata como el LJ de una mesa full ring. Referencia v{{version}} para 25 BB o más (ADR-0018)."
+      },
+      "custom": {
+        "edit": "Personalizar objetivo",
+        "title": {
+          "opening": "Rango objetivo · {{position}}",
+          "defence": "Defensa objetivo · {{defender}} vs {{opener}}"
+        },
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
+        "loading": "Cargando…",
+        "loadReference": "Cargar la referencia estándar",
+        "callTab": "Call",
+        "threeBetTab": "3-bet",
+        "indicator": "Objetivo personalizado"
       }
     },
     "training": {

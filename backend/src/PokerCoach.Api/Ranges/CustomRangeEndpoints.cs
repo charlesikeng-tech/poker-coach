@@ -3,23 +3,24 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Ranges;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Api.Ranges;
 
-public sealed record SaveCustomOpeningRangeRequest(TableFormat Format, StackBand Band, PokerPosition Position, int[] Hands);
+public sealed record SaveCustomOpeningRangeRequest(TableFormat Format, StackBand Band, PokerPosition Position, GameType GameType, int[] Hands);
 
 public sealed record SaveCustomDefenceRangeRequest(
     TableFormat Format, StackBand Band, PokerPosition Defender, PokerPosition Opener,
-    int[] CallHands, int[] ThreeBetHands);
+    GameType GameType, int[] CallHands, int[] ThreeBetHands);
 
-public sealed record CustomOpeningRangeResponse(TableFormat Format, StackBand Band, PokerPosition Position, int[] Hands, decimal Share);
+public sealed record CustomOpeningRangeResponse(TableFormat Format, StackBand Band, PokerPosition Position, GameType GameType, int[] Hands, decimal Share);
 
 public sealed record CustomDefenceRangeResponse(
     TableFormat Format, StackBand Band, PokerPosition Defender, PokerPosition Opener,
-    int[] CallHands, int[] ThreeBetHands, decimal CallShare, decimal ThreeBetShare);
+    GameType GameType, int[] CallHands, int[] ThreeBetHands, decimal CallShare, decimal ThreeBetShare);
 
 public sealed record CustomOpeningSlotResponse(TableFormat Format, StackBand Band, PokerPosition Position);
 
@@ -52,18 +53,19 @@ public static class CustomRangeEndpoints
         CancellationToken cancellationToken,
         TableFormat format = TableFormat.SixMax,
         StackBand band = StackBand.Mid,
-        PokerPosition position = PokerPosition.Button)
+        PokerPosition position = PokerPosition.Button,
+        GameType gameType = GameType.Tournament)
     {
         if (!context.User.TryGetUserId(out var userId))
             return TypedResults.Unauthorized();
 
-        var range = await service.GetOpeningAsync(userId, format, band, position, cancellationToken);
+        var range = await service.GetOpeningAsync(userId, format, band, position, gameType, cancellationToken);
         if (range is null)
             return TypedResults.NotFound();
 
         var handSet = range.ToHandClassSet();
         return TypedResults.Ok(new CustomOpeningRangeResponse(
-            range.Format, range.Band, range.Position,
+            range.Format, range.Band, range.Position, range.GameType,
             ToIndices(range.Hands),
             ReferenceOpeningRanges.ComboShare(handSet)));
     }
@@ -82,7 +84,7 @@ public static class CustomRangeEndpoints
             return error;
 
         var indices = request.Hands.ToHashSet();
-        await service.SaveOpeningAsync(userId, request.Format, request.Band, request.Position, indices, time.GetUtcNow(), cancellationToken);
+        await service.SaveOpeningAsync(userId, request.Format, request.Band, request.Position, request.GameType, indices, time.GetUtcNow(), cancellationToken);
         return TypedResults.NoContent();
     }
 
@@ -92,12 +94,13 @@ public static class CustomRangeEndpoints
         CancellationToken cancellationToken,
         TableFormat format = TableFormat.SixMax,
         StackBand band = StackBand.Mid,
-        PokerPosition position = PokerPosition.Button)
+        PokerPosition position = PokerPosition.Button,
+        GameType gameType = GameType.Tournament)
     {
         if (!context.User.TryGetUserId(out var userId))
             return TypedResults.Unauthorized();
 
-        return await service.DeleteOpeningAsync(userId, format, band, position, cancellationToken)
+        return await service.DeleteOpeningAsync(userId, format, band, position, gameType, cancellationToken)
             ? TypedResults.NoContent()
             : TypedResults.NotFound();
     }
@@ -107,12 +110,13 @@ public static class CustomRangeEndpoints
         CustomRangeService service,
         CancellationToken cancellationToken,
         TableFormat format = TableFormat.SixMax,
-        StackBand band = StackBand.Mid)
+        StackBand band = StackBand.Mid,
+        GameType gameType = GameType.Tournament)
     {
         if (!context.User.TryGetUserId(out var userId))
             return TypedResults.Unauthorized();
 
-        var ranges = await service.ListOpeningsAsync(userId, format, band, cancellationToken);
+        var ranges = await service.ListOpeningsAsync(userId, format, band, gameType, cancellationToken);
         var slots = ranges.Select(r => new CustomOpeningSlotResponse(r.Format, r.Band, r.Position)).ToList();
         return TypedResults.Ok<IReadOnlyList<CustomOpeningSlotResponse>>(slots);
     }
@@ -124,18 +128,19 @@ public static class CustomRangeEndpoints
         TableFormat format = TableFormat.SixMax,
         StackBand band = StackBand.Mid,
         PokerPosition defender = PokerPosition.BigBlind,
-        PokerPosition opener = PokerPosition.Button)
+        PokerPosition opener = PokerPosition.Button,
+        GameType gameType = GameType.Tournament)
     {
         if (!context.User.TryGetUserId(out var userId))
             return TypedResults.Unauthorized();
 
-        var range = await service.GetDefenceAsync(userId, format, band, defender, opener, cancellationToken);
+        var range = await service.GetDefenceAsync(userId, format, band, defender, opener, gameType, cancellationToken);
         if (range is null)
             return TypedResults.NotFound();
 
         var reference = range.ToDefenceReference();
         return TypedResults.Ok(new CustomDefenceRangeResponse(
-            range.Format, range.Band, range.Defender, range.Opener,
+            range.Format, range.Band, range.Defender, range.Opener, range.GameType,
             ToIndices(range.CallHands), ToIndices(range.ThreeBetHands),
             ReferenceOpeningRanges.ComboShare(reference.Call),
             ReferenceOpeningRanges.ComboShare(reference.ThreeBet)));
@@ -162,7 +167,7 @@ public static class CustomRangeEndpoints
         if (callSet.Overlaps(threeBetSet))
             return ApiProblems.Validation("threeBetHands", "A hand cannot be in both call and 3-bet sets.");
 
-        await service.SaveDefenceAsync(userId, request.Format, request.Band, request.Defender, request.Opener, callSet, threeBetSet, time.GetUtcNow(), cancellationToken);
+        await service.SaveDefenceAsync(userId, request.Format, request.Band, request.Defender, request.Opener, request.GameType, callSet, threeBetSet, time.GetUtcNow(), cancellationToken);
         return TypedResults.NoContent();
     }
 
@@ -173,12 +178,13 @@ public static class CustomRangeEndpoints
         TableFormat format = TableFormat.SixMax,
         StackBand band = StackBand.Mid,
         PokerPosition defender = PokerPosition.BigBlind,
-        PokerPosition opener = PokerPosition.Button)
+        PokerPosition opener = PokerPosition.Button,
+        GameType gameType = GameType.Tournament)
     {
         if (!context.User.TryGetUserId(out var userId))
             return TypedResults.Unauthorized();
 
-        return await service.DeleteDefenceAsync(userId, format, band, defender, opener, cancellationToken)
+        return await service.DeleteDefenceAsync(userId, format, band, defender, opener, gameType, cancellationToken)
             ? TypedResults.NoContent()
             : TypedResults.NotFound();
     }
@@ -188,12 +194,13 @@ public static class CustomRangeEndpoints
         CustomRangeService service,
         CancellationToken cancellationToken,
         TableFormat format = TableFormat.SixMax,
-        StackBand band = StackBand.Mid)
+        StackBand band = StackBand.Mid,
+        GameType gameType = GameType.Tournament)
     {
         if (!context.User.TryGetUserId(out var userId))
             return TypedResults.Unauthorized();
 
-        var ranges = await service.ListDefencesAsync(userId, format, band, cancellationToken);
+        var ranges = await service.ListDefencesAsync(userId, format, band, gameType, cancellationToken);
         var slots = ranges.Select(r => new CustomDefenceSlotResponse(r.Format, r.Band, r.Defender, r.Opener)).ToList();
         return TypedResults.Ok<IReadOnlyList<CustomDefenceSlotResponse>>(slots);
     }

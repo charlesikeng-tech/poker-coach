@@ -29,6 +29,7 @@ import {
   ADMIN_NAVIGATION,
   CHEVRON_DOWN,
   NavigationItem,
+  NavigationSection,
   PRIMARY_NAVIGATION,
   SECONDARY_NAVIGATION,
 } from '../navigation/navigation';
@@ -68,7 +69,9 @@ export class Shell {
   protected readonly gameTypeService = inject(GameTypeService);
   protected readonly session = inject(SessionService);
 
-  protected readonly primaryNavigation = PRIMARY_NAVIGATION;
+  protected readonly primaryNavigation = computed(() =>
+    filterNavigation(PRIMARY_NAVIGATION, this.gameTypeService.current()),
+  );
   protected readonly secondaryNavigation = computed(() =>
     this.session.user()?.isAdmin
       ? [...SECONDARY_NAVIGATION, ADMIN_NAVIGATION]
@@ -167,4 +170,27 @@ export class Shell {
   protected skipToContent(): void {
     this.document.getElementById('main-content')?.focus();
   }
+}
+
+function filterNavigation(
+  sections: readonly NavigationSection[],
+  gameType: string,
+): readonly NavigationSection[] {
+  return sections
+    .map((section) => {
+      const items = section.items
+        .filter((item) => !item.visibleFor || item.visibleFor === gameType)
+        .map((item) =>
+          item.children
+            ? {
+                ...item,
+                children: item.children.filter(
+                  (child) => !child.visibleFor || child.visibleFor === gameType,
+                ),
+              }
+            : item,
+        );
+      return { ...section, items };
+    })
+    .filter((section) => section.items.length > 0);
 }

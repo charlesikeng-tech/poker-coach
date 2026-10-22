@@ -494,3 +494,18 @@
   color: var(--accent-primary);
   font-weight: var(--font-weight-medium);
 }
+
+// Custom range indicators
+
+.custom-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+}
+
+.edit-target {
+  align-self: stretch;
+  font-size: var(--font-size-sm);
+}

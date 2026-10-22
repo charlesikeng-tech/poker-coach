@@ -1505,6 +1505,22 @@
           "otherAction": "Jouée autrement que le repère"
         },
         "method": "Spot compté : ta première décision face à une seule relance (pas un tapis), sans limp ni call avant toi ; les squeezes et les open-shoves sont exclus. Comptage séparé 6-max / full ring ; un UTG 6-max est traité comme le LJ d'une table full ring. Repère v{{version}} pour 25 BB et plus (ADR-0018)."
+      },
+      "custom": {
+        "edit": "Personnaliser le repère",
+        "title": {
+          "opening": "Range cible · {{position}}",
+          "defence": "Défense cible · {{defender}} vs {{opener}}"
+        },
+        "save": "Enregistrer",
+        "saving": "Enregistrement…",
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "loading": "Chargement…",
+        "loadReference": "Charger le repère standard",
+        "callTab": "Call",
+        "threeBetTab": "3-bet",
+        "indicator": "Repère personnalisé"
       }
     },
     "training": {

@@ -1,5 +1,6 @@
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 
@@ -108,14 +109,14 @@ public sealed class DefenceRangeServiceTests
 
     private sealed class NoCustomRanges : ICustomRangeStore
     {
-        public Task<CustomOpeningRange?> FindOpeningAsync(Guid userId, TableFormat format, StackBand band, PokerPosition position, CancellationToken ct) => Task.FromResult<CustomOpeningRange?>(null);
-        public Task<IReadOnlyList<CustomOpeningRange>> ListOpeningsAsync(Guid userId, TableFormat format, StackBand band, CancellationToken ct) => Task.FromResult<IReadOnlyList<CustomOpeningRange>>([]);
+        public Task<CustomOpeningRange?> FindOpeningAsync(Guid userId, TableFormat format, StackBand band, PokerPosition position, GameType gameType, CancellationToken ct) => Task.FromResult<CustomOpeningRange?>(null);
+        public Task<IReadOnlyList<CustomOpeningRange>> ListOpeningsAsync(Guid userId, TableFormat format, StackBand band, GameType gameType, CancellationToken ct) => Task.FromResult<IReadOnlyList<CustomOpeningRange>>([]);
         public Task SaveOpeningAsync(CustomOpeningRange range, CancellationToken ct) => Task.CompletedTask;
-        public Task<bool> DeleteOpeningAsync(Guid userId, TableFormat format, StackBand band, PokerPosition position, CancellationToken ct) => Task.FromResult(false);
-        public Task<CustomDefenceRange?> FindDefenceAsync(Guid userId, TableFormat format, StackBand band, PokerPosition defender, PokerPosition opener, CancellationToken ct) => Task.FromResult<CustomDefenceRange?>(null);
-        public Task<IReadOnlyList<CustomDefenceRange>> ListDefencesAsync(Guid userId, TableFormat format, StackBand band, CancellationToken ct) => Task.FromResult<IReadOnlyList<CustomDefenceRange>>([]);
+        public Task<bool> DeleteOpeningAsync(Guid userId, TableFormat format, StackBand band, PokerPosition position, GameType gameType, CancellationToken ct) => Task.FromResult(false);
+        public Task<CustomDefenceRange?> FindDefenceAsync(Guid userId, TableFormat format, StackBand band, PokerPosition defender, PokerPosition opener, GameType gameType, CancellationToken ct) => Task.FromResult<CustomDefenceRange?>(null);
+        public Task<IReadOnlyList<CustomDefenceRange>> ListDefencesAsync(Guid userId, TableFormat format, StackBand band, GameType gameType, CancellationToken ct) => Task.FromResult<IReadOnlyList<CustomDefenceRange>>([]);
         public Task SaveDefenceAsync(CustomDefenceRange range, CancellationToken ct) => Task.CompletedTask;
-        public Task<bool> DeleteDefenceAsync(Guid userId, TableFormat format, StackBand band, PokerPosition defender, PokerPosition opener, CancellationToken ct) => Task.FromResult(false);
+        public Task<bool> DeleteDefenceAsync(Guid userId, TableFormat format, StackBand band, PokerPosition defender, PokerPosition opener, GameType gameType, CancellationToken ct) => Task.FromResult(false);
     }
 
     private sealed class NoPending : IStatisticsReadStore

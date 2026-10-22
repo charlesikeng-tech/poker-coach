@@ -23,7 +23,7 @@
       </div>
 
       <nav class="sidebar__nav" [attr.aria-label]="t('shell.mainNavigation')">
-        @for (section of primaryNavigation; track $index) {
+        @for (section of primaryNavigation(); track $index) {
           <div class="nav-section">
             @if (section.labelKey; as label) {
               <p class="nav-section__label rail-hidden" [id]="'nav-section-' + $index">

@@ -7,6 +7,7 @@ import {
   inject,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CircleAlert, LoaderCircle } from 'lucide';
@@ -20,6 +21,7 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { RangeGauge } from '../leaks/range-gauge';
+import { CustomRangeEditor } from './custom-range-editor';
 import { DefenceRanges } from './defence-ranges';
 import { GameType, PokerPosition } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
@@ -64,6 +66,7 @@ const RANKS = 'AKQJT98765432';
     Icon,
     RangeGauge,
     DefenceRanges,
+    CustomRangeEditor,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
@@ -113,6 +116,7 @@ export class RangesPage {
   protected readonly ranks = RANKS.split('');
   protected readonly short = POSITION_SHORT;
   protected readonly thinSample = THIN_SAMPLE;
+  protected readonly editor = viewChild(CustomRangeEditor);
 
   private readonly locale = computed(() => this.language.current());
   private request = 0;
@@ -252,6 +256,24 @@ export class RangesPage {
 
   protected limpShare(cell: RangeCell): number {
     return cell.dealt === 0 ? 0 : cell.limps / cell.dealt;
+  }
+
+  protected editCustomRange(): void {
+    const r = this.range();
+    const d = this.data();
+    if (!r || !d) return;
+    const ref = new Set(r.cells.flatMap((c, i) => (c.inReference ? [i] : [])));
+    this.editor()?.openForOpening(
+      d.format,
+      this.band(),
+      r.position,
+      this.gameTypeService.current(),
+      ref,
+    );
+  }
+
+  protected onCustomRangeChanged(): void {
+    this.retry();
   }
 
   /** Diagonal wave: the grid fills from the aces corner when a position is shown. */

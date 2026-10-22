@@ -89,6 +89,20 @@
             <span class="numeric">{{ percent(o.defenceRate.rate) }}</span>
           </button>
         }
+        @if (billing.allows('customRanges') && shownView() === 'reference') {
+          <button
+            appButton
+            type="button"
+            variant="secondary"
+            class="edit-target"
+            (click)="editCustomRange()"
+          >
+            @if (s.isCustomRange) {
+              <span class="custom-dot"></span>
+            }
+            {{ t('custom.edit') }}
+          </button>
+        }
       </nav>
 
       <div class="layout">
@@ -147,25 +161,36 @@
             @case ('reference') {
               <section class="card glass">
                 <h2>
-                  {{
-                    t('defence.reference.title', {
-                      defender: short[s.pair.defender],
-                      opener: short[s.pair.opener],
-                      version: data.referenceVersion,
-                    })
-                  }}
+                  @if (s.isCustomRange) {
+                    {{ t('custom.indicator') }} · {{ short[s.pair.defender] }} vs
+                    {{ short[s.pair.opener] }}
+                  } @else {
+                    {{
+                      t('defence.reference.title', {
+                        defender: short[s.pair.defender],
+                        opener: short[s.pair.opener],
+                        version: data.referenceVersion,
+                      })
+                    }}
+                  }
                 </h2>
                 <p class="line">
                   <span class="swatch swatch--open"></span>
                   {{ t('defence.reference.threeBet', { share: percent(s.threeBetShare) }) }}
                 </p>
-                <code class="notation">{{ s.threeBetNotation }}</code>
+                @if (s.threeBetNotation) {
+                  <code class="notation">{{ s.threeBetNotation }}</code>
+                }
                 <p class="line">
                   <span class="swatch swatch--limp"></span>
                   {{ t('defence.reference.call', { share: percent(s.callShare) }) }}
                 </p>
-                <code class="notation">{{ s.callNotation }}</code>
-                <p class="muted">{{ t('defence.reference.note') }}</p>
+                @if (s.callNotation) {
+                  <code class="notation">{{ s.callNotation }}</code>
+                }
+                @if (!s.isCustomRange) {
+                  <p class="muted">{{ t('defence.reference.note') }}</p>
+                }
               </section>
             }
             @case ('gap') {
@@ -330,4 +355,6 @@
       <div class="grid glass skeleton-grid"><span class="skeleton"></span></div>
     </div>
   }
+
+  <app-custom-range-editor (saved)="onCustomRangeChanged()" (deleted)="onCustomRangeChanged()" />
 </ng-container>

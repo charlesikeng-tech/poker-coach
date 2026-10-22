@@ -25,12 +25,15 @@ import {
 } from 'lucide';
 
 import { IconNode } from '../../shared/ui/icon/icon';
+import { GameType } from '../../features/statistics/statistics-api';
 
 export interface NavigationItem {
   readonly path: string;
   readonly labelKey: string;
   readonly icon: IconNode;
   readonly children?: readonly NavigationItem[];
+  /** When set, the item is only shown for this game type. Undefined = always visible. */
+  readonly visibleFor?: GameType;
 }
 
 export interface NavigationSection {
@@ -54,8 +57,13 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
   {
     labelKey: 'nav.sections.results',
     items: [
-      { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy },
-      { path: '/cash-sessions', labelKey: 'nav.cashSessions', icon: Layers },
+      { path: '/tournaments', labelKey: 'nav.tournaments', icon: Trophy, visibleFor: 'tournament' },
+      {
+        path: '/cash-sessions',
+        labelKey: 'nav.cashSessions',
+        icon: Layers,
+        visibleFor: 'cashGame',
+      },
       { path: '/performance', labelKey: 'nav.performance', icon: TrendingUp },
       { path: '/bankroll', labelKey: 'nav.bankroll', icon: Wallet },
     ],
@@ -71,14 +79,29 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
         labelKey: 'nav.tools',
         icon: Wrench,
         children: [
-          { path: '/tools/icm', labelKey: 'nav.icm', icon: Calculator },
+          { path: '/tools/icm', labelKey: 'nav.icm', icon: Calculator, visibleFor: 'tournament' },
           { path: '/tools/pot-odds', labelKey: 'nav.potOdds', icon: Percent },
-          { path: '/tools/m-ratio', labelKey: 'nav.mRatio', icon: Timer },
+          { path: '/tools/m-ratio', labelKey: 'nav.mRatio', icon: Timer, visibleFor: 'tournament' },
           { path: '/tools/equity', labelKey: 'nav.equity', icon: Shuffle },
           { path: '/tools/ev', labelKey: 'nav.ev', icon: Scale },
-          { path: '/tools/push-fold', labelKey: 'nav.pushFold', icon: Swords },
-          { path: '/tools/bounty', labelKey: 'nav.bounty', icon: Crosshair },
-          { path: '/tools/variance', labelKey: 'nav.variance', icon: Activity },
+          {
+            path: '/tools/push-fold',
+            labelKey: 'nav.pushFold',
+            icon: Swords,
+            visibleFor: 'tournament',
+          },
+          {
+            path: '/tools/bounty',
+            labelKey: 'nav.bounty',
+            icon: Crosshair,
+            visibleFor: 'tournament',
+          },
+          {
+            path: '/tools/variance',
+            labelKey: 'nav.variance',
+            icon: Activity,
+            visibleFor: 'tournament',
+          },
         ],
       },
     ],

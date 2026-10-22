@@ -289,6 +289,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("format");
 
+                    b.Property<int>("GameType")
+                        .HasColumnType("integer")
+                        .HasColumnName("game_type");
+
                     b.Property<int>("Opener")
                         .HasColumnType("integer")
                         .HasColumnName("opener");
@@ -309,9 +313,9 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_custom_defence_ranges");
 
-                    b.HasIndex("UserId", "Format", "Band", "Defender", "Opener")
+                    b.HasIndex("UserId", "Format", "Band", "Defender", "Opener", "GameType")
                         .IsUnique()
-                        .HasDatabaseName("ux_custom_defence_ranges_user_id_format_band_defender_opener");
+                        .HasDatabaseName("ux_custom_defence_ranges_user_id_format_band_defender_opener_game_type");
 
                     b.ToTable("custom_defence_ranges", "ranges");
                 });
@@ -334,6 +338,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("format");
 
+                    b.Property<int>("GameType")
+                        .HasColumnType("integer")
+                        .HasColumnName("game_type");
+
                     b.Property<byte[]>("Hands")
                         .IsRequired()
                         .HasColumnType("bytea")
@@ -354,9 +362,9 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_custom_opening_ranges");
 
-                    b.HasIndex("UserId", "Format", "Band", "Position")
+                    b.HasIndex("UserId", "Format", "Band", "Position", "GameType")
                         .IsUnique()
-                        .HasDatabaseName("ux_custom_opening_ranges_user_id_format_band_position");
+                        .HasDatabaseName("ux_custom_opening_ranges_user_id_format_band_position_game_type");
 
                     b.ToTable("custom_opening_ranges", "ranges");
                 });

@@ -124,6 +124,9 @@
               (click)="selected.set(p.position)"
             >
               <strong>{{ short[p.position] }}</strong>
+              @if (p.isCustomRange) {
+                <span class="custom-dot" [attr.title]="t('custom.indicator')"></span>
+              }
               <span class="numeric">
                 @if (view() === 'reference') {
                   {{ percent(p.referenceShare) }}
@@ -131,6 +134,20 @@
                   {{ percent(p.openRate.rate) }}
                 }
               </span>
+            </button>
+          }
+          @if (billing.allows('customRanges') && view() === 'reference') {
+            <button
+              appButton
+              type="button"
+              variant="secondary"
+              class="edit-target"
+              (click)="editCustomRange()"
+            >
+              @if (range()?.isCustomRange) {
+                <span class="custom-dot"></span>
+              }
+              {{ t('custom.edit') }}
             </button>
           }
         </nav>
@@ -258,19 +275,23 @@
               @case ('reference') {
                 <section class="card glass">
                   <h2>
-                    {{
-                      t('reference.title', {
-                        position: short[r.position],
-                        version: data.referenceVersion,
-                      })
-                    }}
+                    @if (r.isCustomRange) {
+                      {{ t('custom.indicator') }} · {{ short[r.position] }}
+                    } @else {
+                      {{
+                        t('reference.title', {
+                          position: short[r.position],
+                          version: data.referenceVersion,
+                        })
+                      }}
+                    }
                   </h2>
                   <p class="big numeric">{{ percent(r.referenceShare) }}</p>
                   <p class="muted">{{ t('reference.share') }}</p>
                   @if (r.referenceNotation) {
                     <code class="notation">{{ r.referenceNotation }}</code>
                     <p class="muted">{{ t('reference.note') }}</p>
-                  } @else {
+                  } @else if (!r.isCustomRange) {
                     <p class="nash">{{ t('reference.nash', { stack: data.pushStack }) }}</p>
                     <p class="muted">{{ t('reference.nashNote') }}</p>
                   }
@@ -405,4 +426,6 @@
       </div>
     }
   }
+
+  <app-custom-range-editor (saved)="onCustomRangeChanged()" (deleted)="onCustomRangeChanged()" />
 </ng-container>

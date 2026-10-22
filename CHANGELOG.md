@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **ranges**: Add custom user-defined ranges (backend + API + types)
+
 ## [2026.10.22-131fa42] — 2026-10-22
 
 ### Correctifs

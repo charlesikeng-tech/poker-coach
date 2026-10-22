@@ -112,7 +112,9 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         var stack = band == StackBand.Push ? pushStack ?? ReferenceOpeningRanges.DefaultPushStack : (int?)null;
         var callRanges = stack is { } s ? BuildCallRanges(shown, s) : [];
 
-        var customs = await customRanges.ListOpeningsAsync(userId, shown, band, cancellationToken);
+        var customs = gameType is { } gt
+            ? await customRanges.ListOpeningsAsync(userId, shown, band, gt, cancellationToken)
+            : [];
         var customByPosition = customs.Count > 0
             ? customs.ToDictionary(r => r.Position, r => r.ToHandClassSet())
             : null;

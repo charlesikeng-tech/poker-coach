@@ -74,7 +74,9 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
             f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
 
-        var customs = await customRanges.ListDefencesAsync(userId, shown, band, cancellationToken);
+        var customs = gameType is { } gt
+            ? await customRanges.ListDefencesAsync(userId, shown, band, gt, cancellationToken)
+            : [];
         var customByPair = customs.Count > 0
             ? customs.ToDictionary(r => (r.Defender, r.Opener))
             : null;

@@ -1,0 +1,121 @@
+dialog {
+  width: min(38rem, 90vw);
+  max-height: 90vh;
+  padding: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  overflow: auto;
+}
+
+.editor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    color: var(--text-primary);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.editor__close {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xl);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--easing-standard);
+
+  &:hover {
+    background: var(--surface-secondary);
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+  }
+}
+
+.editor__tabs {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+
+  button {
+    padding: var(--space-1) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: background-color var(--motion-fast) var(--easing-standard);
+
+    &.active {
+      background: color-mix(in srgb, var(--accent-primary) 18%, transparent);
+      color: var(--accent-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--focus-ring);
+    }
+  }
+}
+
+.editor__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  color: var(--text-muted);
+}
+
+.editor__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.editor__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.editor__delete {
+  color: var(--danger) !important;
+
+  &:hover:not(:disabled) {
+    color: var(--danger) !important;
+  }
+}

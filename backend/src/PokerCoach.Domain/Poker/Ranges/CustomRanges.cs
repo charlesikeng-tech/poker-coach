@@ -62,6 +62,8 @@ public sealed class CustomOpeningRange
 
     public PokerPosition Position { get; private set; }
 
+    public GameType GameType { get; private set; }
+
     public byte[] Hands { get; private set; } = [];
 
     public DateTimeOffset CreatedAt { get; private set; }
@@ -72,7 +74,7 @@ public sealed class CustomOpeningRange
 
     public static CustomOpeningRange Create(
         Guid userId, TableFormat format, StackBand band, PokerPosition position,
-        IReadOnlySet<int> indices, DateTimeOffset now)
+        GameType gameType, IReadOnlySet<int> indices, DateTimeOffset now)
     {
         return new CustomOpeningRange
         {
@@ -81,6 +83,7 @@ public sealed class CustomOpeningRange
             Format = format,
             Band = band,
             Position = position,
+            GameType = gameType,
             Hands = HandBitset.FromIndices(indices),
             CreatedAt = now,
             UpdatedAt = now,
@@ -116,6 +119,8 @@ public sealed class CustomDefenceRange
 
     public PokerPosition Opener { get; private set; }
 
+    public GameType GameType { get; private set; }
+
     public byte[] CallHands { get; private set; } = [];
 
     public byte[] ThreeBetHands { get; private set; } = [];
@@ -129,6 +134,7 @@ public sealed class CustomDefenceRange
     public static CustomDefenceRange Create(
         Guid userId, TableFormat format, StackBand band,
         PokerPosition defender, PokerPosition opener,
+        GameType gameType,
         IReadOnlySet<int> callIndices, IReadOnlySet<int> threeBetIndices,
         DateTimeOffset now)
     {
@@ -141,6 +147,7 @@ public sealed class CustomDefenceRange
             Band = band,
             Defender = defender,
             Opener = opener,
+            GameType = gameType,
             CallHands = HandBitset.FromIndices(callIndices),
             ThreeBetHands = HandBitset.FromIndices(threeBetIndices),
             CreatedAt = now,

@@ -7,6 +7,7 @@ import {
   inject,
   signal,
   untracked,
+  viewChild,
 } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { CircleAlert, LoaderCircle } from 'lucide';
@@ -18,6 +19,7 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { FormatToggle, TableFormat } from '../../shared/ui/format-toggle/format-toggle';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
+import { CustomRangeEditor } from './custom-range-editor';
 import { GameType, PokerPosition } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import {
@@ -50,7 +52,15 @@ const RANKS = 'AKQJT98765432';
  */
 @Component({
   selector: 'app-defence-ranges',
-  imports: [TranslocoDirective, FormatToggle, EmptyState, Button, Icon, PlanLock],
+  imports: [
+    TranslocoDirective,
+    FormatToggle,
+    EmptyState,
+    Button,
+    Icon,
+    PlanLock,
+    CustomRangeEditor,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './defence-ranges.html',
   styleUrls: ['./ranges-page.scss', './defence-ranges.scss'],
@@ -79,6 +89,7 @@ export class DefenceRanges {
   protected readonly data = signal<DefenceData | null>(null);
   protected readonly hovered = signal<DefenceCell | null>(null);
   protected readonly locked = computed(() => !this.billing.allows('defenceRanges'));
+  protected readonly editor = viewChild(CustomRangeEditor);
 
   protected readonly format = computed(() => this.data()?.format ?? this.formatChoice());
   protected readonly spot = computed(() => this.data()?.selected ?? null);
@@ -222,6 +233,31 @@ export class DefenceRanges {
       return 'tooLoose';
     }
     return mine === 'fold' ? 'tooTight' : 'otherAction';
+  }
+
+  protected editCustomRange(): void {
+    const s = this.spot();
+    const d = this.data();
+    if (!s || !d) return;
+    const refCall = new Set<number>();
+    const refThreeBet = new Set<number>();
+    for (let i = 0; i < s.cells.length; i++) {
+      if (s.cells[i].reference === 'call') refCall.add(i);
+      if (s.cells[i].reference === 'threeBet') refThreeBet.add(i);
+    }
+    this.editor()?.openForDefence(
+      d.format,
+      this.band(),
+      s.pair.defender,
+      s.pair.opener,
+      this.gameTypeService.current(),
+      refCall,
+      refThreeBet,
+    );
+  }
+
+  protected onCustomRangeChanged(): void {
+    this.retry();
   }
 
   protected delay(index: number): number {

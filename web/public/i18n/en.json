@@ -1505,6 +1505,22 @@
           "otherAction": "Played differently from the reference"
         },
         "method": "Spot counted: your first decision facing a single raise (not all-in), nobody having limped or called before you; squeezes and open-shoves are left out. Counted separately for 6-max and full ring; a 6-max UTG is treated as a full-ring LJ. Reference v{{version}} for 25 BB and more (ADR-0018)."
+      },
+      "custom": {
+        "edit": "Customize target",
+        "title": {
+          "opening": "Target range · {{position}}",
+          "defence": "Defence target · {{defender}} vs {{opener}}"
+        },
+        "save": "Save",
+        "saving": "Saving…",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "loading": "Loading…",
+        "loadReference": "Load standard reference",
+        "callTab": "Call",
+        "threeBetTab": "3-bet",
+        "indicator": "Custom target"
       }
     },
     "training": {

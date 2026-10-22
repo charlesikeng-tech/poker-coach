@@ -1,0 +1,94 @@
+<dialog #dialog (click)="onBackdropClick($event)">
+  @if (openingSlot() || defenceSlot()) {
+    <div class="editor" *transloco="let t; prefix: 'pages.ranges.custom'">
+      <header class="editor__header">
+        @if (mode() === 'opening') {
+          <h2>{{ t('title.opening', { position: short[openingSlot()!.position] }) }}</h2>
+        } @else {
+          <h2>
+            {{
+              t('title.defence', {
+                defender: short[defenceSlot()!.defender],
+                opener: short[defenceSlot()!.opener],
+              })
+            }}
+          </h2>
+        }
+        <button
+          type="button"
+          class="editor__close"
+          (click)="close()"
+          [attr.aria-label]="t('cancel')"
+        >
+          &times;
+        </button>
+      </header>
+
+      @if (loading()) {
+        <div class="editor__loading">
+          <p>{{ t('loading') }}</p>
+        </div>
+      } @else {
+        @if (mode() === 'defence') {
+          <div class="editor__tabs" role="group">
+            <button
+              type="button"
+              [class.active]="defenceTab() === 'call'"
+              [attr.aria-pressed]="defenceTab() === 'call'"
+              (click)="defenceTab.set('call')"
+            >
+              {{ t('callTab') }} · {{ callPct() }}%
+            </button>
+            <button
+              type="button"
+              [class.active]="defenceTab() === 'threeBet'"
+              [attr.aria-pressed]="defenceTab() === 'threeBet'"
+              (click)="defenceTab.set('threeBet')"
+            >
+              {{ t('threeBetTab') }} · {{ threeBetPct() }}%
+            </button>
+          </div>
+        }
+
+        <app-range-selector
+          [selected]="currentSelection()"
+          (selectedChange)="onSelectionChange($event)"
+        />
+
+        <footer class="editor__footer">
+          @if (hasReference()) {
+            <button appButton type="button" variant="ghost" (click)="loadReference()">
+              {{ t('loadReference') }}
+            </button>
+          }
+          <div class="editor__actions">
+            @if (hasExisting()) {
+              <button
+                appButton
+                type="button"
+                variant="ghost"
+                class="editor__delete"
+                (click)="deleteRange()"
+                [disabled]="saving()"
+              >
+                {{ t('delete') }}
+              </button>
+            }
+            <button
+              appButton
+              type="button"
+              variant="secondary"
+              (click)="close()"
+              [disabled]="saving()"
+            >
+              {{ t('cancel') }}
+            </button>
+            <button appButton type="button" (click)="save()" [disabled]="saving()">
+              {{ saving() ? t('saving') : t('save') }}
+            </button>
+          </div>
+        </footer>
+      }
+    </div>
+  }
+</dialog>

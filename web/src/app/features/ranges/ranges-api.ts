@@ -141,6 +141,7 @@ export interface CustomOpeningRange {
   readonly format: TableFormat;
   readonly band: StackBand;
   readonly position: PokerPosition;
+  readonly gameType: GameType;
   readonly hands: readonly number[];
   readonly share: number;
 }
@@ -150,6 +151,7 @@ export interface CustomDefenceRange {
   readonly band: DefenceBand;
   readonly defender: PokerPosition;
   readonly opener: PokerPosition;
+  readonly gameType: GameType;
   readonly callHands: readonly number[];
   readonly threeBetHands: readonly number[];
   readonly callShare: number;
@@ -188,10 +190,11 @@ export class RangesApi {
     format: TableFormat,
     band: StackBand,
     position: PokerPosition,
+    gameType: GameType,
   ): Promise<CustomOpeningRange> {
     return firstValueFrom(
       this.http.get<CustomOpeningRange>('/api/ranges/custom/opening', {
-        params: toParams({ format, band, position }),
+        params: toParams({ format, band, position, gameType }),
       }),
     );
   }
@@ -200,6 +203,7 @@ export class RangesApi {
     format: TableFormat;
     band: StackBand;
     position: PokerPosition;
+    gameType: GameType;
     hands: readonly number[];
   }): Promise<void> {
     return firstValueFrom(this.http.put<void>('/api/ranges/custom/opening', request));
@@ -209,18 +213,23 @@ export class RangesApi {
     format: TableFormat,
     band: StackBand,
     position: PokerPosition,
+    gameType: GameType,
   ): Promise<void> {
     return firstValueFrom(
       this.http.delete<void>('/api/ranges/custom/opening', {
-        params: toParams({ format, band, position }),
+        params: toParams({ format, band, position, gameType }),
       }),
     );
   }
 
-  listCustomOpenings(format: TableFormat, band: StackBand): Promise<readonly CustomOpeningSlot[]> {
+  listCustomOpenings(
+    format: TableFormat,
+    band: StackBand,
+    gameType: GameType,
+  ): Promise<readonly CustomOpeningSlot[]> {
     return firstValueFrom(
       this.http.get<readonly CustomOpeningSlot[]>('/api/ranges/custom/opening/list', {
-        params: toParams({ format, band }),
+        params: toParams({ format, band, gameType }),
       }),
     );
   }
@@ -230,10 +239,11 @@ export class RangesApi {
     band: DefenceBand,
     defender: PokerPosition,
     opener: PokerPosition,
+    gameType: GameType,
   ): Promise<CustomDefenceRange> {
     return firstValueFrom(
       this.http.get<CustomDefenceRange>('/api/ranges/custom/defence', {
-        params: toParams({ format, band, defender, opener }),
+        params: toParams({ format, band, defender, opener, gameType }),
       }),
     );
   }
@@ -243,6 +253,7 @@ export class RangesApi {
     band: DefenceBand;
     defender: PokerPosition;
     opener: PokerPosition;
+    gameType: GameType;
     callHands: readonly number[];
     threeBetHands: readonly number[];
   }): Promise<void> {
@@ -254,10 +265,11 @@ export class RangesApi {
     band: DefenceBand,
     defender: PokerPosition,
     opener: PokerPosition,
+    gameType: GameType,
   ): Promise<void> {
     return firstValueFrom(
       this.http.delete<void>('/api/ranges/custom/defence', {
-        params: toParams({ format, band, defender, opener }),
+        params: toParams({ format, band, defender, opener, gameType }),
       }),
     );
   }
@@ -265,10 +277,11 @@ export class RangesApi {
   listCustomDefences(
     format: TableFormat,
     band: DefenceBand,
+    gameType: GameType,
   ): Promise<readonly CustomDefenceSlot[]> {
     return firstValueFrom(
       this.http.get<readonly CustomDefenceSlot[]>('/api/ranges/custom/defence/list', {
-        params: toParams({ format, band }),
+        params: toParams({ format, band, gameType }),
       }),
     );
   }
