@@ -1,11 +1,12 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-7060fd7] — 2026-10-22
 
 ### Fonctionnalités
 
 - **tools**: Add Nash push/fold reference charts
 - **tools**: Add Bounty PKO calculator for progressive knockout decisions
+- **tools**: Add variance calculator for downswing analysis
 
 ## [2026.10.22-9db8085] — 2026-10-22
 

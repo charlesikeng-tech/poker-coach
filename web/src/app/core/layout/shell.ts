@@ -90,6 +90,7 @@ export class Shell {
   };
 
   private readonly expandedGroups = signal<ReadonlySet<string>>(new Set());
+  private readonly collapsedGroups = signal<ReadonlySet<string>>(new Set());
 
   private readonly url = toSignal(
     inject(Router).events.pipe(
@@ -120,6 +121,7 @@ export class Shell {
   }
 
   protected isGroupExpanded(item: NavigationItem): boolean {
+    if (this.collapsedGroups().has(item.path)) return false;
     return (
       this.expandedGroups().has(item.path) ||
       !!item.children?.some((child) => this.url().split('?')[0].startsWith(child.path))
@@ -127,15 +129,22 @@ export class Shell {
   }
 
   protected toggleGroup(item: NavigationItem): void {
-    this.expandedGroups.update((set) => {
-      const next = new Set(set);
-      if (next.has(item.path)) {
+    const isOpen = this.isGroupExpanded(item);
+    if (isOpen) {
+      this.collapsedGroups.update((set) => new Set(set).add(item.path));
+      this.expandedGroups.update((set) => {
+        const next = new Set(set);
         next.delete(item.path);
-      } else {
-        next.add(item.path);
-      }
-      return next;
-    });
+        return next;
+      });
+    } else {
+      this.collapsedGroups.update((set) => {
+        const next = new Set(set);
+        next.delete(item.path);
+        return next;
+      });
+      this.expandedGroups.update((set) => new Set(set).add(item.path));
+    }
   }
 
   protected toggleCollapsed(): void {
