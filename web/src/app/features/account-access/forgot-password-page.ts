@@ -124,6 +124,7 @@ export class ForgotPasswordPage implements AfterViewInit {
     this.turnstileWidgetId = this.window.turnstile.render(container, {
       sitekey: TURNSTILE_SITE_KEY,
       theme: 'dark',
+      action: 'forgot',
       callback: (token: string) => this.turnstileToken.set(token),
       'expired-callback': () => this.turnstileToken.set(null),
       'error-callback': () => this.turnstileToken.set(null),

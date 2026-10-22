@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **auth**: Update Turnstile site key
+
 ## [2026.10.22-1f83649] — 2026-10-22
 
 ### Correctifs

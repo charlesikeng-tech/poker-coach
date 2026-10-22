@@ -116,6 +116,7 @@ export class SignInPage implements AfterViewInit {
     this.turnstileWidgetId = this.window.turnstile.render(container, {
       sitekey: TURNSTILE_SITE_KEY,
       theme: 'dark',
+      action: this.mode(),
       callback: (token: string) => this.turnstileToken.set(token),
       'expired-callback': () => this.turnstileToken.set(null),
       'error-callback': () => this.turnstileToken.set(null),

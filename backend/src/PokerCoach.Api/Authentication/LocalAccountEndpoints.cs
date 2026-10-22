@@ -87,7 +87,7 @@ public static class LocalAccountEndpoints
             return TypedResults.Accepted((string?)null);
 
         var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
+        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, "signUp", cancellationToken))
         {
             return ApiProblems.WithCode(StatusCodes.Status400BadRequest, "CAPTCHA_FAILED", "Bot verification failed.");
         }
@@ -118,7 +118,7 @@ public static class LocalAccountEndpoints
             return ApiProblems.WithCode(StatusCodes.Status401Unauthorized, "INVALID_CREDENTIALS", "Wrong email or password.");
 
         var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
+        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, "signIn", cancellationToken))
             return ApiProblems.WithCode(StatusCodes.Status400BadRequest, "CAPTCHA_FAILED", "Bot verification failed.");
 
         var outcome = await accounts.SignInAsync(request.Email ?? string.Empty, request.Password ?? string.Empty, cancellationToken);
@@ -160,7 +160,7 @@ public static class LocalAccountEndpoints
             return TypedResults.Accepted((string?)null);
 
         var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
+        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, "forgot", cancellationToken))
             return TypedResults.Accepted((string?)null);
 
         await accounts.ForgotPasswordAsync(request.Email ?? string.Empty, Language(request.Language), Links(context, app.Value, environment), cancellationToken);
