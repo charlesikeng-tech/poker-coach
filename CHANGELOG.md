@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **account,tools**: Add account data reset and cash variance calculator
+
 ## [2026.10.22-076a231] — 2026-10-22
 
 ### Correctifs

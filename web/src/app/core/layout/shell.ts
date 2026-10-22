@@ -36,6 +36,7 @@ import {
 import { LocalPreferenceStore } from '../storage/local-preference-store';
 import { ThemeService } from '../theme/theme.service';
 import { GameTypeService } from '../game-type/game-type.service';
+import { GameType } from '../../features/statistics/statistics-api';
 import { WelcomeIntro } from './welcome-intro';
 
 const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
@@ -68,6 +69,7 @@ export class Shell {
   protected readonly ghost = inject(GhostModeService);
   protected readonly gameTypeService = inject(GameTypeService);
   protected readonly session = inject(SessionService);
+  private readonly router = inject(Router);
 
   protected readonly primaryNavigation = computed(() =>
     filterNavigation(PRIMARY_NAVIGATION, this.gameTypeService.current()),
@@ -161,6 +163,12 @@ export class Shell {
 
   protected closeMobileNavigation(): void {
     this.mobileNavigationOpen.set(false);
+  }
+
+  protected switchGameType(type: GameType): void {
+    if (type === this.gameTypeService.current()) return;
+    this.gameTypeService.set(type);
+    void this.router.navigate(['/dashboard']);
   }
 
   protected signOut(): void {

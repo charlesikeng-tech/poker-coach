@@ -135,7 +135,7 @@
 
         <app-game-type-toggle
           [value]="gameTypeService.current()"
-          (changed)="gameTypeService.set($event)"
+          (changed)="switchGameType($event)"
         />
 
         <div class="topbar__spacer"></div>
