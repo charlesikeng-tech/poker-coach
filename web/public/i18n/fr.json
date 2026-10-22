@@ -26,7 +26,8 @@
       "analysis": "Analyse",
       "improve": "Progresser"
     },
-    "cashSessions": "Sessions Cash"
+    "cashSessions": "Sessions Cash",
+    "pushFold": "Push / Fold Nash"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -2377,6 +2378,19 @@
       "insight1": "L'EV du fold est toujours 0 : tu ne gagnes ni ne perds rien. C'est la référence pour évaluer les autres actions.",
       "insight2": "L'EV du call dépend uniquement de ton équité face à la range adverse. Si tu gagnes plus de pot odds / (pot odds + 1), le call est profitable.",
       "insight3": "L'EV du raise intègre la fold equity : même avec une main faible, relancer peut être +EV si l'adversaire fold suffisamment souvent."
+    },
+    "pushFold": {
+      "title": "Push / Fold Nash",
+      "description": "Tables de référence Nash push/fold par position et stack effectif. Indispensable pour les décisions short-stack en MTT.",
+      "position": "Position",
+      "stack": "Stack effectif",
+      "combos": "combos",
+      "push": "Push (all-in)",
+      "fold": "Fold",
+      "insightHead": "En pratique",
+      "insight1": "Ces ranges sont des approximations Nash pour un push first-in (personne n'a ouvert avant vous). Si un joueur a déjà relancé, resserrez significativement.",
+      "insight2": "En SB, le push est très large car vous ne faites face qu'à un seul adversaire. Plus vous êtes en position précoce, plus la range se resserre.",
+      "insight3": "En dessous de 10 BB, le jeu preflop se résume souvent à push ou fold. Entre 10 et 20 BB, un open-raise classique reste possible avec les mains les plus fortes."
     }
   },
   "rangeSelector": {

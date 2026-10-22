@@ -1,5 +1,17 @@
 # Changelog
 
+## [2026.10.22-9db8085] — 2026-10-22
+
+### Fonctionnalités
+
+- **tools**: Add EV calculator comparing fold, call and raise
+
+## [2026.10.22-1bc5536] — 2026-10-22
+
+### Maintenance
+
+- **deps**: Bump @modelcontextprotocol/sdk
+
 ## [2026.10.22-3777e11] — 2026-10-22
 
 ### Correctifs

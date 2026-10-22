@@ -185,6 +185,11 @@ export const routes: Routes = [
           import('./features/tools/ev-calculator-page').then((m) => m.EvCalculatorPage),
       },
       {
+        path: 'tools/push-fold',
+        title: 'nav.pushFold',
+        loadComponent: () => import('./features/tools/push-fold-page').then((m) => m.PushFoldPage),
+      },
+      {
         path: '**',
         title: 'pages.notFound.title',
         loadComponent: () =>

@@ -1,0 +1,73 @@
+<ng-container *transloco="let t; prefix: 'pages.pushFold'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="controls glass">
+    <div class="control-group">
+      <span class="control-label">{{ t('position') }}</span>
+      <div class="position-pills" role="radiogroup" [attr.aria-label]="t('position')">
+        @for (pos of positions; track pos) {
+          <button
+            type="button"
+            class="pill"
+            [class.pill--active]="pos === position()"
+            [attr.aria-pressed]="pos === position()"
+            (click)="setPosition(pos)"
+          >
+            {{ pos }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label" for="stack-select">{{ t('stack') }}</label>
+      <select
+        id="stack-select"
+        class="stack-select"
+        [value]="stackBB()"
+        (change)="setStack($any($event.target).value)"
+      >
+        @for (s of stackSizes; track s) {
+          <option [value]="s">{{ s }} BB</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="combos-badge">
+        <span class="combos-count">{{ pushCombos() }}</span>
+        <span class="combos-label">{{ t('combos') }}</span>
+        <span class="combos-pct">{{ pushPct() }}%</span>
+      </div>
+      <span class="chart-context">{{ position() }} · {{ stackBB() }} BB</span>
+    </div>
+
+    <div class="grid">
+      @for (cell of cells; track cell.index) {
+        <div
+          class="cell"
+          [class.cell--push]="pushRange().has(cell.index)"
+          [class.cell--pair]="cell.isPair"
+        >
+          <span class="cell__hand">{{ cell.name }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="legend">
+      <span class="legend-item legend-item--push">{{ t('push') }}</span>
+      <span class="legend-item legend-item--fold">{{ t('fold') }}</span>
+    </div>
+  </section>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>
