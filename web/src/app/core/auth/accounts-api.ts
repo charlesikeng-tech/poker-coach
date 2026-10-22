@@ -83,9 +83,14 @@ export class AccountsApi {
     return firstValueFrom(this.http.post('/api/auth/email/resend', { email, language }));
   }
 
-  forgotPassword(email: string, language: string, website = ''): Promise<unknown> {
+  forgotPassword(
+    email: string,
+    language: string,
+    turnstileToken: string | null = null,
+    website = '',
+  ): Promise<unknown> {
     return firstValueFrom(
-      this.http.post('/api/auth/password/forgot', { email, language, website }),
+      this.http.post('/api/auth/password/forgot', { email, language, turnstileToken, website }),
     );
   }
 

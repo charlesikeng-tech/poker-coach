@@ -6,6 +6,10 @@
 
 - **csp**: Allow Cloudflare Turnstile script and frame
 
+### Fonctionnalités
+
+- **auth**: Extend Turnstile to login and add honeypot on all auth forms
+
 ## [2026.10.22-f5fba9c] — 2026-10-22
 
 ### Fonctionnalités

@@ -41,7 +41,7 @@ public sealed record RegisterRequest(string? Email, string? Password, string? Di
 
 public sealed record SignInRequest(string? Email, string? Password, string? TurnstileToken, string? Website);
 
-public sealed record EmailRequest(string? Email, string? Language, string? Website);
+public sealed record EmailRequest(string? Email, string? Language, string? TurnstileToken, string? Website);
 
 /// <param name="Password">Confirming requires the password chosen at sign-up (ADR-0013).</param>
 public sealed record ConfirmEmailRequest(string? Token, string? Password);
@@ -151,11 +151,16 @@ public static class LocalAccountEndpoints
         EmailRequest request,
         HttpContext context,
         LocalAccountService accounts,
+        TurnstileService turnstile,
         IOptions<AppOptions> app,
         IHostEnvironment environment,
         CancellationToken cancellationToken)
     {
         if (IsHoneypotFilled(request.Website))
+            return TypedResults.Accepted((string?)null);
+
+        var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+        if (!await turnstile.VerifyAsync(request.TurnstileToken, remoteIp, cancellationToken))
             return TypedResults.Accepted((string?)null);
 
         await accounts.ForgotPasswordAsync(request.Email ?? string.Empty, Language(request.Language), Links(context, app.Value, environment), cancellationToken);
