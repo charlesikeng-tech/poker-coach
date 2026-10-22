@@ -19,6 +19,7 @@
     "potOdds": "Pot Odds / EV",
     "mRatio": "M-Ratio",
     "equity": "Équité des mains",
+    "ev": "Calculateur d'EV",
     "tools": "Outils",
     "sections": {
       "results": "Résultats",
@@ -2351,6 +2352,31 @@
       "insight1": "Compare ta range de 3-bet face à la range d'appel adverse : tu visualises immédiatement si ton aggression préflop est justifiée ou surévaluée.",
       "insight2": "Ajoute un board pour voir comment l'équité se redistribue sur différentes textures — sec, coordiné ou monotone.",
       "insight3": "Teste ta défense BB : ta range d'appel face à un open UTG doit conserver assez d'équité pour que les c-bets automatiques ne soient pas profitables."
+    },
+    "ev": {
+      "title": "Calculateur d'EV",
+      "description": "Compare l'expected value de chaque action (fold, call, raise) pour prendre la décision la plus rentable.",
+      "inputs": "Paramètres du spot",
+      "pot": "Pot actuel",
+      "call": "Mise à payer",
+      "winPct": "Probabilité de gain",
+      "raise": "Montant du raise",
+      "foldEquity": "Fold equity",
+      "results": "Expected Value",
+      "action": {
+        "fold": "EV Fold",
+        "call": "EV Call",
+        "raise": "EV Raise"
+      },
+      "verdict": {
+        "fold": "Fold est la meilleure option — call et raise sont perdants ici.",
+        "call": "Call est l'action la plus rentable dans ce spot.",
+        "raise": "Raise est l'action la plus rentable — la fold equity compense le risque."
+      },
+      "insightHead": "En pratique",
+      "insight1": "L'EV du fold est toujours 0 : tu ne gagnes ni ne perds rien. C'est la référence pour évaluer les autres actions.",
+      "insight2": "L'EV du call dépend uniquement de ton équité face à la range adverse. Si tu gagnes plus de pot odds / (pot odds + 1), le call est profitable.",
+      "insight3": "L'EV du raise intègre la fold equity : même avec une main faible, relancer peut être +EV si l'adversaire fold suffisamment souvent."
     }
   },
   "rangeSelector": {

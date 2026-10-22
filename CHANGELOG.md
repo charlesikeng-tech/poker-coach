@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-3777e11] — 2026-10-22
 
 ### Correctifs
 
 - **import**: Corriger le guard du guide Betclic et compléter les étapes
+- **ci**: Retry npm audit to absorb transient registry failures
 
 ## [2026.10.22-f33af29] — 2026-10-22
 

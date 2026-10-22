@@ -19,6 +19,7 @@
     "potOdds": "Pot Odds / EV",
     "mRatio": "M-Ratio",
     "equity": "Equidad de manos",
+    "ev": "Calculadora de EV",
     "tools": "Herramientas",
     "sections": {
       "results": "Resultados",
@@ -2351,6 +2352,31 @@
       "insight1": "Compara tu rango de 3-bet con el rango de call del rival: verás de inmediato si tu agresión preflop está justificada o sobreextendida.",
       "insight2": "Añade un board para ver cómo cambia la equidad según la textura: seco, coordinado o monocoloreado cambia todo.",
       "insight3": "Prueba tu defensa BB: tu rango de call ante un open UTG necesita suficiente equidad para que los c-bets automáticos no sean rentables."
+    },
+    "ev": {
+      "title": "Calculadora de EV",
+      "description": "Compara el valor esperado de cada acción (fold, call, raise) para tomar la decisión más rentable.",
+      "inputs": "Parámetros del spot",
+      "pot": "Bote actual",
+      "call": "Cantidad a pagar",
+      "winPct": "Probabilidad de ganar",
+      "raise": "Cantidad del raise",
+      "foldEquity": "Fold equity",
+      "results": "Expected Value",
+      "action": {
+        "fold": "EV Fold",
+        "call": "EV Call",
+        "raise": "EV Raise"
+      },
+      "verdict": {
+        "fold": "Fold es la mejor opción — call y raise pierden dinero aquí.",
+        "call": "Call es la acción más rentable en este spot.",
+        "raise": "Raise es la acción más rentable — la fold equity compensa el riesgo."
+      },
+      "insightHead": "En la práctica",
+      "insight1": "El EV del fold siempre es 0: no ganas ni pierdes nada. Es la referencia para evaluar las demás acciones.",
+      "insight2": "El EV del call depende solo de tu equidad frente al rango rival. Si ganas más que pot odds / (pot odds + 1), el call es rentable.",
+      "insight3": "El EV del raise incluye la fold equity: incluso con una mano débil, subir puede ser +EV si el rival se retira con suficiente frecuencia."
     }
   },
   "rangeSelector": {

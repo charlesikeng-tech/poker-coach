@@ -19,6 +19,7 @@
     "potOdds": "Pot Odds / EV",
     "mRatio": "M-Ratio",
     "equity": "Hand Equity",
+    "ev": "EV Calculator",
     "tools": "Tools",
     "sections": {
       "results": "Results",
@@ -2351,6 +2352,31 @@
       "insight1": "Compare your 3-bet range against your opponent's calling range — you immediately see whether your preflop aggression is justified or overextended.",
       "insight2": "Add a board to see how equity shifts across different textures: dry, connected, or monotone boards change everything.",
       "insight3": "Test your BB defence: your calling range facing a UTG open needs enough equity so that automatic c-bets are not profitable for the opener."
+    },
+    "ev": {
+      "title": "EV Calculator",
+      "description": "Compare the expected value of each action (fold, call, raise) to make the most profitable decision.",
+      "inputs": "Spot parameters",
+      "pot": "Current pot",
+      "call": "Amount to call",
+      "winPct": "Win probability",
+      "raise": "Raise amount",
+      "foldEquity": "Fold equity",
+      "results": "Expected Value",
+      "action": {
+        "fold": "EV Fold",
+        "call": "EV Call",
+        "raise": "EV Raise"
+      },
+      "verdict": {
+        "fold": "Fold is the best option — both call and raise lose money here.",
+        "call": "Call is the most profitable action in this spot.",
+        "raise": "Raise is the most profitable action — fold equity compensates for the risk."
+      },
+      "insightHead": "In practice",
+      "insight1": "Fold EV is always 0: you neither win nor lose anything. It's the baseline for evaluating other actions.",
+      "insight2": "Call EV depends only on your equity against the opponent's range. If you win more than pot odds / (pot odds + 1), the call is profitable.",
+      "insight3": "Raise EV includes fold equity: even with a weak hand, raising can be +EV if your opponent folds often enough."
     }
   },
   "rangeSelector": {

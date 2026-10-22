@@ -179,6 +179,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/tools/equity-page').then((m) => m.EquityPage),
       },
       {
+        path: 'tools/ev',
+        title: 'nav.ev',
+        loadComponent: () =>
+          import('./features/tools/ev-calculator-page').then((m) => m.EvCalculatorPage),
+      },
+      {
         path: '**',
         title: 'pages.notFound.title',
         loadComponent: () =>
