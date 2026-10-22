@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **import**: Corriger le guard du guide Betclic et compléter les étapes
+
 ## [2026.10.22-f33af29] — 2026-10-22
 
 ### Fonctionnalités

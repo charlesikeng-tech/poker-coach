@@ -59,7 +59,13 @@ jobs:
       - name: Test
         run: npm test -- --watch=false
       - name: Audit (production dependencies)
-        run: npm audit --omit=dev --audit-level=high
+        run: |
+          for attempt in 1 2 3; do
+            npm audit --omit=dev --audit-level=high && exit 0
+            echo "::warning::npm audit attempt $attempt failed, retrying in 10s…"
+            sleep 10
+          done
+          exit 1
 
   # The production image (ADR-0011): built on every run, smoke-tested against a real PostgreSQL
   # (migrations + readiness), published to GHCR from main only.
