@@ -13,6 +13,7 @@ import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 import { AccountsApi, accountErrorCode, retryWithToken } from '../../core/auth/accounts-api';
+import { loadTurnstile } from '../../core/auth/turnstile';
 import { SessionService } from '../../core/auth/session.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
@@ -116,10 +117,17 @@ export class ForgotPasswordPage implements AfterViewInit {
     this.renderTurnstile();
   }
 
-  private renderTurnstile(): void {
+  private async renderTurnstile(): Promise<void> {
     const container = this.turnstileContainer()?.nativeElement;
-    if (!container || !this.window?.turnstile) return;
+    if (!container) return;
     if (this.turnstileWidgetId !== null) return;
+
+    try {
+      await loadTurnstile();
+    } catch {
+      return;
+    }
+    if (!this.window?.turnstile || !container.isConnected) return;
 
     this.turnstileWidgetId = this.window.turnstile.render(container, {
       sitekey: TURNSTILE_SITE_KEY,

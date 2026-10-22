@@ -21,6 +21,7 @@ import {
   retryWithToken,
 } from '../../core/auth/accounts-api';
 import { SessionService, isLocalPath } from '../../core/auth/session.service';
+import { loadTurnstile } from '../../core/auth/turnstile';
 import { WelcomeService } from '../../core/auth/welcome';
 import { LanguageSelect } from '../../core/i18n/language-select';
 import { LanguageService } from '../../core/i18n/language.service';
@@ -108,10 +109,17 @@ export class SignInPage implements AfterViewInit {
     this.renderTurnstile();
   }
 
-  private renderTurnstile(): void {
+  private async renderTurnstile(): Promise<void> {
     const container = this.turnstileContainer()?.nativeElement;
-    if (!container || !this.window?.turnstile) return;
+    if (!container) return;
     if (this.turnstileWidgetId !== null) return;
+
+    try {
+      await loadTurnstile();
+    } catch {
+      return;
+    }
+    if (!this.window?.turnstile || !container.isConnected) return;
 
     this.turnstileWidgetId = this.window.turnstile.render(container, {
       sitekey: TURNSTILE_SITE_KEY,

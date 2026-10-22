@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **csp**: Add Cloudflare Turnstile to connect-src
+
 ## [2026.10.22-9f7a919] — 2026-10-22
 
 ### Fonctionnalités
