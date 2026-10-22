@@ -30,6 +30,7 @@ using PokerCoach.Infrastructure.Persistence;
 using PokerCoach.Infrastructure.Platform;
 using PokerCoach.Infrastructure.Poker;
 using PokerCoach.Infrastructure.Progress;
+using PokerCoach.Infrastructure.Ranges;
 using PokerCoach.Infrastructure.Statistics;
 using PokerCoach.Infrastructure.Tournaments;
 using PokerCoach.Infrastructure.Training;
@@ -86,6 +87,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IAiUsageLedger, AiUsageLedger>();
         services.AddScoped<ICoachingReportStore, CoachingReportStore>();
         services.AddScoped<IFeatureUsageStore, FeatureUsageStore>();
+        services.AddScoped<ICustomRangeStore, CustomRangeStore>();
 
         // No API key = coaching unavailable, not a startup failure (ADR-0008).
         services.AddOptions<AnthropicOptions>().BindConfiguration(AnthropicOptions.SectionName);

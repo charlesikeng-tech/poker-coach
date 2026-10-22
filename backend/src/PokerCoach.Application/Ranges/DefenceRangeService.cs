@@ -19,13 +19,15 @@ public sealed record DefencePair(PokerPosition Defender, PokerPosition Opener, i
 
 /// <param name="CallShare">Share of all two-card holdings the reference calls; null without a reference.</param>
 /// <param name="Cells">The 169 starting hands in grid order.</param>
+/// <param name="IsCustomRange">True when the comparison uses a user-defined range instead of the built-in reference.</param>
 public sealed record DefenceSpot(
     DefencePair Pair,
     string? CallNotation,
     string? ThreeBetNotation,
     decimal? CallShare,
     decimal? ThreeBetShare,
-    IReadOnlyList<DefenceCell> Cells);
+    IReadOnlyList<DefenceCell> Cells,
+    bool IsCustomRange = false);
 
 /// <param name="SpotsByFormat">Spots facing an open in each format, for the band and period.</param>
 /// <param name="Pairs">Every defender–opener pair of the format, opener first to act first, even without spots.</param>
@@ -43,7 +45,7 @@ public sealed record DefenceRanges(
 /// The player's defence against a single open next to the reference (ADR-0018): for a defender and an opener,
 /// how often each starting hand was called, 3-bet or folded. Only counts, never extrapolated.
 /// </summary>
-public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadStore statistics)
+public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadStore statistics, ICustomRangeStore customRanges)
 {
     /// <param name="band">Short, mid or deep; push/fold has no open to defend against.</param>
     /// <param name="defender">Null, or not a valid pair with <paramref name="opener"/>: the big blind's busiest spot.</param>
@@ -72,18 +74,24 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
             f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
 
+        var customs = await customRanges.ListDefencesAsync(userId, shown, band, cancellationToken);
+        var customByPair = customs.Count > 0
+            ? customs.ToDictionary(r => (r.Defender, r.Opener))
+            : null;
+
         var cellsByPair = Cells(shown, counts);
         var pairs = Pairs(shown)
             .Select(p =>
             {
                 var cells = cellsByPair.GetValueOrDefault(p) ?? [];
+                var hasCustom = customByPair is not null && customByPair.ContainsKey(p);
                 return new DefencePair(
                     p.Defender,
                     p.Opener,
                     cells.Sum(c => c.Value.Dealt),
                     cells.Sum(c => c.Value.Calls),
                     cells.Sum(c => c.Value.ThreeBets),
-                    ReferenceDefenceRanges.For(band, shown, p.Defender, p.Opener) is not null);
+                    hasCustom || ReferenceDefenceRanges.For(band, shown, p.Defender, p.Opener) is not null);
             })
             .ToList();
 
@@ -91,12 +99,13 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
         var selected = pairs.FirstOrDefault(p => p.Defender == defender && p.Opener == opener)
             ?? (bigBlind.MaxBy(p => p.Dealt) is { Dealt: > 0 } busiest ? busiest : bigBlind.First(p => p.Opener == PokerPosition.Button));
 
+        var selectedCustom = customByPair?.GetValueOrDefault((selected.Defender, selected.Opener));
         return new DefenceRanges(
             shown,
             band,
             spots,
             pairs,
-            Spot(band, shown, selected, cellsByPair.GetValueOrDefault((selected.Defender, selected.Opener))),
+            Spot(band, shown, selected, cellsByPair.GetValueOrDefault((selected.Defender, selected.Opener)), selectedCustom),
             pending,
             ReferenceDefenceRanges.Version);
     }
@@ -131,9 +140,13 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
                     h => h.Key,
                     h => (h.Sum(x => x.Count.Dealt), h.Sum(x => x.Count.Calls), h.Sum(x => x.Count.ThreeBets))));
 
-    private static DefenceSpot Spot(StackBand band, TableFormat format, DefencePair pair, Dictionary<HandClass, (int Dealt, int Calls, int ThreeBets)>? counts)
+    private static DefenceSpot Spot(
+        StackBand band, TableFormat format, DefencePair pair,
+        Dictionary<HandClass, (int Dealt, int Calls, int ThreeBets)>? counts,
+        CustomDefenceRange? custom = null)
     {
-        var reference = ReferenceDefenceRanges.For(band, format, pair.Defender, pair.Opener);
+        var isCustom = custom is not null;
+        var reference = isCustom ? custom!.ToDefenceReference() : ReferenceDefenceRanges.For(band, format, pair.Defender, pair.Opener);
         var cells = HandClass.All
             .Select(hand =>
             {
@@ -143,10 +156,11 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
             .ToList();
         return new DefenceSpot(
             pair,
-            reference?.CallNotation,
-            reference?.ThreeBetNotation,
+            isCustom ? null : reference?.CallNotation,
+            isCustom ? null : reference?.ThreeBetNotation,
             reference is null ? null : ReferenceOpeningRanges.ComboShare(reference.Call),
             reference is null ? null : ReferenceOpeningRanges.ComboShare(reference.ThreeBet),
-            cells);
+            cells,
+            isCustom);
     }
 }

@@ -25,6 +25,7 @@ public sealed record RangeCellResponse(string Hand, int Dealt, int Opens, int Li
 /// <param name="ReferenceShare">Share of all two-card holdings the reference opens (ratio).</param>
 /// <param name="Cells">The 169 starting hands in grid order: row by row from aces, pairs on the diagonal,
 /// suited above, offsuit below.</param>
+/// <param name="IsCustomRange">True when the comparison uses a user-defined range instead of the built-in reference.</param>
 public sealed record PositionRangeResponse(
     PokerPosition Position,
     int Dealt,
@@ -34,7 +35,8 @@ public sealed record PositionRangeResponse(
     ReferenceRangeResponse? ReferenceRate,
     string? ReferenceNotation,
     decimal? ReferenceShare,
-    IReadOnlyList<RangeCellResponse> Cells);
+    IReadOnlyList<RangeCellResponse> Cells,
+    bool IsCustomRange);
 
 /// <param name="Caller">The seat considering the call.</param>
 /// <param name="Shover">The seat that shoved all-in.</param>
@@ -71,13 +73,15 @@ public sealed record DefencePairResponse(
 
 /// <param name="CallShare">Share of all two-card holdings the reference calls (ratio); null without a reference.</param>
 /// <param name="Cells">The 169 starting hands in grid order.</param>
+/// <param name="IsCustomRange">True when the comparison uses a user-defined range instead of the built-in reference.</param>
 public sealed record DefenceSpotResponse(
     DefencePairResponse Pair,
     string? CallNotation,
     string? ThreeBetNotation,
     decimal? CallShare,
     decimal? ThreeBetShare,
-    IReadOnlyList<DefenceCellResponse> Cells);
+    IReadOnlyList<DefenceCellResponse> Cells,
+    bool IsCustomRange);
 
 /// <param name="Pairs">Every defender–opener pair of the format with its counts, openers first to act first.</param>
 public sealed record DefenceRangesResponse(
@@ -95,6 +99,7 @@ public static class RangeEndpoints
     {
         endpoints.MapGet("/api/ranges/opening", GetOpeningAsync).WithTags("Ranges").RequiresFeature(Feature.OpeningRanges);
         endpoints.MapGet("/api/ranges/defence", GetDefenceAsync).WithTags("Ranges").RequiresFeature(Feature.DefenceRanges);
+        endpoints.MapCustomRangeEndpoints();
         return endpoints;
     }
 
@@ -171,7 +176,8 @@ public static class RangeEndpoints
                 p.ReferenceRate is { } r ? new ReferenceRangeResponse(r.Min, r.Max) : null,
                 p.ReferenceNotation,
                 p.ReferenceShare,
-                p.Cells.Select(c => new RangeCellResponse(c.Hand.ToString(), c.Dealt, c.Opens, c.Limps, c.InReference)).ToList())).ToList(),
+                p.Cells.Select(c => new RangeCellResponse(c.Hand.ToString(), c.Dealt, c.Opens, c.Limps, c.InReference)).ToList(),
+                p.IsCustomRange)).ToList(),
             result.CallRanges.Select(cr => new PushCallRangeResponse(cr.Caller, cr.Shover, cr.Cells)).ToList(),
             result.PendingHands,
             result.ReferenceVersion));
@@ -245,7 +251,8 @@ public static class RangeEndpoints
                 selected.ThreeBetNotation,
                 selected.CallShare,
                 selected.ThreeBetShare,
-                selected.Cells.Select(c => new DefenceCellResponse(c.Hand.ToString(), c.Dealt, c.Calls, c.ThreeBets, c.Reference)).ToList()),
+                selected.Cells.Select(c => new DefenceCellResponse(c.Hand.ToString(), c.Dealt, c.Calls, c.ThreeBets, c.Reference)).ToList(),
+                selected.IsCustomRange),
             result.PendingHands,
             result.ReferenceVersion));
     }

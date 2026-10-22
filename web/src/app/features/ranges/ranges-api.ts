@@ -31,12 +31,14 @@ export interface PositionRange {
   readonly openRate: StatRate;
   /** The position's reference opening rate (ADR-0007). */
   readonly referenceRate: { readonly min: number; readonly max: number } | null;
-  /** The reference range as written ("22+, A2s+, …"); null for the computed push/fold range. */
+  /** The reference range as written ("22+, A2s+, …"); null for the computed push/fold range or custom ranges. */
   readonly referenceNotation: string | null;
   /** Share of all two-card holdings the reference opens. */
   readonly referenceShare: number | null;
   /** 169 hands in grid order: row by row from aces, pairs on the diagonal, suited above. */
   readonly cells: readonly RangeCell[];
+  /** True when the comparison uses a user-defined range instead of the built-in reference. */
+  readonly isCustomRange: boolean;
 }
 
 /** Push band: equilibrium calling range for one (caller, shover) pair. */
@@ -108,6 +110,8 @@ export interface DefenceSpot {
   readonly callShare: number | null;
   readonly threeBetShare: number | null;
   readonly cells: readonly DefenceCell[];
+  /** True when the comparison uses a user-defined range instead of the built-in reference. */
+  readonly isCustomRange: boolean;
 }
 
 /** Mirrors GET /api/ranges/defence (ADR-0018). */
@@ -131,6 +135,40 @@ export interface DefenceQuery {
   readonly gameType?: GameType;
 }
 
+// Custom user-defined ranges (Elite feature).
+
+export interface CustomOpeningRange {
+  readonly format: TableFormat;
+  readonly band: StackBand;
+  readonly position: PokerPosition;
+  readonly hands: readonly number[];
+  readonly share: number;
+}
+
+export interface CustomDefenceRange {
+  readonly format: TableFormat;
+  readonly band: DefenceBand;
+  readonly defender: PokerPosition;
+  readonly opener: PokerPosition;
+  readonly callHands: readonly number[];
+  readonly threeBetHands: readonly number[];
+  readonly callShare: number;
+  readonly threeBetShare: number;
+}
+
+export interface CustomOpeningSlot {
+  readonly format: TableFormat;
+  readonly band: StackBand;
+  readonly position: PokerPosition;
+}
+
+export interface CustomDefenceSlot {
+  readonly format: TableFormat;
+  readonly band: DefenceBand;
+  readonly defender: PokerPosition;
+  readonly opener: PokerPosition;
+}
+
 @Injectable({ providedIn: 'root' })
 export class RangesApi {
   private readonly http = inject(HttpClient);
@@ -143,6 +181,95 @@ export class RangesApi {
   defence(query: DefenceQuery): Promise<DefenceRanges> {
     return firstValueFrom(
       this.http.get<DefenceRanges>('/api/ranges/defence', { params: toParams(query) }),
+    );
+  }
+
+  getCustomOpening(
+    format: TableFormat,
+    band: StackBand,
+    position: PokerPosition,
+  ): Promise<CustomOpeningRange> {
+    return firstValueFrom(
+      this.http.get<CustomOpeningRange>('/api/ranges/custom/opening', {
+        params: toParams({ format, band, position }),
+      }),
+    );
+  }
+
+  saveCustomOpening(request: {
+    format: TableFormat;
+    band: StackBand;
+    position: PokerPosition;
+    hands: readonly number[];
+  }): Promise<void> {
+    return firstValueFrom(this.http.put<void>('/api/ranges/custom/opening', request));
+  }
+
+  deleteCustomOpening(
+    format: TableFormat,
+    band: StackBand,
+    position: PokerPosition,
+  ): Promise<void> {
+    return firstValueFrom(
+      this.http.delete<void>('/api/ranges/custom/opening', {
+        params: toParams({ format, band, position }),
+      }),
+    );
+  }
+
+  listCustomOpenings(format: TableFormat, band: StackBand): Promise<readonly CustomOpeningSlot[]> {
+    return firstValueFrom(
+      this.http.get<readonly CustomOpeningSlot[]>('/api/ranges/custom/opening/list', {
+        params: toParams({ format, band }),
+      }),
+    );
+  }
+
+  getCustomDefence(
+    format: TableFormat,
+    band: DefenceBand,
+    defender: PokerPosition,
+    opener: PokerPosition,
+  ): Promise<CustomDefenceRange> {
+    return firstValueFrom(
+      this.http.get<CustomDefenceRange>('/api/ranges/custom/defence', {
+        params: toParams({ format, band, defender, opener }),
+      }),
+    );
+  }
+
+  saveCustomDefence(request: {
+    format: TableFormat;
+    band: DefenceBand;
+    defender: PokerPosition;
+    opener: PokerPosition;
+    callHands: readonly number[];
+    threeBetHands: readonly number[];
+  }): Promise<void> {
+    return firstValueFrom(this.http.put<void>('/api/ranges/custom/defence', request));
+  }
+
+  deleteCustomDefence(
+    format: TableFormat,
+    band: DefenceBand,
+    defender: PokerPosition,
+    opener: PokerPosition,
+  ): Promise<void> {
+    return firstValueFrom(
+      this.http.delete<void>('/api/ranges/custom/defence', {
+        params: toParams({ format, band, defender, opener }),
+      }),
+    );
+  }
+
+  listCustomDefences(
+    format: TableFormat,
+    band: DefenceBand,
+  ): Promise<readonly CustomDefenceSlot[]> {
+    return firstValueFrom(
+      this.http.get<readonly CustomDefenceSlot[]>('/api/ranges/custom/defence/list', {
+        params: toParams({ format, band }),
+      }),
     );
   }
 }

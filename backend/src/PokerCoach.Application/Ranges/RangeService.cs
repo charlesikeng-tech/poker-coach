@@ -47,6 +47,7 @@ public sealed record RangeCell(HandClass Hand, int Dealt, int Opens, int Limps, 
 /// <param name="ReferenceNotation">The reference range as written ("22+, A2s+, …").</param>
 /// <param name="ReferenceShare">Share of all two-card holdings the reference range opens.</param>
 /// <param name="Cells">The 169 starting hands, in grid order.</param>
+/// <param name="IsCustomRange">True when the comparison uses a user-defined range instead of the built-in reference.</param>
 public sealed record PositionRange(
     PokerPosition Position,
     int Dealt,
@@ -56,7 +57,8 @@ public sealed record PositionRange(
     ReferenceRange? ReferenceRate,
     string? ReferenceNotation,
     decimal? ReferenceShare,
-    IReadOnlyList<RangeCell> Cells);
+    IReadOnlyList<RangeCell> Cells,
+    bool IsCustomRange = false);
 
 /// <param name="Caller">The seat considering the call.</param>
 /// <param name="Shover">The seat that shoved.</param>
@@ -86,7 +88,7 @@ public sealed record OpeningRanges(
 /// position, how often each of the 169 starting hands is raised first in, and whether the reference opens
 /// it. Only counts, never extrapolated.
 /// </summary>
-public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore statistics)
+public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore statistics, ICustomRangeStore customRanges)
 {
     /// <param name="format">Null: the format with the most spots (6-max on a tie or without hands).</param>
     public async Task<OpeningRanges> GetOpeningAsync(
@@ -109,7 +111,13 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
         var stack = band == StackBand.Push ? pushStack ?? ReferenceOpeningRanges.DefaultPushStack : (int?)null;
         var callRanges = stack is { } s ? BuildCallRanges(shown, s) : [];
-        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stack), callRanges, pending, ReferenceOpeningRanges.Version);
+
+        var customs = await customRanges.ListOpeningsAsync(userId, shown, band, cancellationToken);
+        var customByPosition = customs.Count > 0
+            ? customs.ToDictionary(r => r.Position, r => r.ToHandClassSet())
+            : null;
+
+        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stack, customByPosition), callRanges, pending, ReferenceOpeningRanges.Version);
     }
 
     internal static List<PushCallRange> BuildCallRanges(TableFormat format, int stackBb)
@@ -132,12 +140,13 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         return result;
     }
 
-    internal static List<PositionRange> Build(TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts, int? pushStack = null)
+    internal static List<PositionRange> Build(
+        TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts, int? pushStack = null,
+        IReadOnlyDictionary<PokerPosition, IReadOnlySet<HandClass>>? customRanges = null)
     {
         var byPosition = counts
             .Where(c => TableFormats.Of(c.MaxSeats) == format)
             .Select(c => (Count: c, Ok: HandClass.TryParseHoldings(c.HeroCards, out var hand), Hand: hand))
-            // Unreadable hero cards are left out rather than guessed.
             .Where(x => x.Ok)
             .ToLookup(x => OpeningSeat.Canonical(x.Count.Position, x.Count.PlayersDealt, format));
 
@@ -149,7 +158,9 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     .ToDictionary(
                         h => h.Key,
                         h => (Dealt: h.Sum(x => x.Count.Dealt), Opens: h.Sum(x => x.Count.Opens), Limps: h.Sum(x => x.Count.Limps)));
-                var reference = ReferenceOpeningRanges.For(band, format, position, pushStack);
+                IReadOnlySet<HandClass>? custom = null;
+                var isCustom = customRanges is not null && customRanges.TryGetValue(position, out custom);
+                var reference = isCustom ? custom : ReferenceOpeningRanges.For(band, format, position, pushStack);
                 var cells = HandClass.All
                     .Select(hand =>
                     {
@@ -167,9 +178,10 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     StatRate.Of(opens, dealt),
                     ReferenceRanges.LowStakesMtt.FirstOrDefault(
                         r => r.Stat == LeakStat.Rfi && r.Position == OpeningSeat.FullRingEquivalent(position, format)),
-                    ReferenceOpeningRanges.NotationFor(band, format, position),
+                    isCustom ? null : ReferenceOpeningRanges.NotationFor(band, format, position),
                     reference is null ? null : ReferenceOpeningRanges.ComboShare(reference),
-                    cells);
+                    cells,
+                    isCustom);
             })
             .ToList();
     }

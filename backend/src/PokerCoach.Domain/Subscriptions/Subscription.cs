@@ -233,6 +233,9 @@ public enum Feature
 
     /// <summary>The coach's monthly report: progress, leaks evolution, recommendation for next month.</summary>
     MonthlyReport,
+
+    /// <summary>Custom user-defined ranges for opening and defence, replacing or supplementing the reference.</summary>
+    CustomRanges,
 }
 
 /// <summary>The offer matrix (ADR-0016): the lowest plan that opens each feature.</summary>

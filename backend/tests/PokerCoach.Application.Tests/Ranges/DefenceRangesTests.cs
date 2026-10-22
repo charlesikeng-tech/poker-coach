@@ -67,7 +67,7 @@ public sealed class DefenceRangeServiceTests
             new DefenceHoldingCount(PokerPosition.BigBlind, PokerPosition.Button, 6, 6, "??", 5, 5, 0),
             new DefenceHoldingCount(PokerPosition.BigBlind, PokerPosition.Button, 9, 9, "AhKd", 7, 7, 0));
 
-        var result = await new DefenceRangeService(store, new NoPending()).GetAsync(Guid.NewGuid(), TableFormat.SixMax, StackBand.Mid, null, null, null, null, Ct);
+        var result = await new DefenceRangeService(store, new NoPending(), new NoCustomRanges()).GetAsync(Guid.NewGuid(), TableFormat.SixMax, StackBand.Mid, null, null, null, null, Ct);
 
         // 6-max: UTG faced by four seats, then the hijack by three… 15 pairs.
         Assert.Equal(15, result.Pairs.Count);
@@ -88,7 +88,7 @@ public sealed class DefenceRangeServiceTests
     {
         var store = new Store(new DefenceHoldingCount(PokerPosition.SmallBlind, PokerPosition.Button, 6, 6, "AhKd", 1, 0, 1));
 
-        var result = await new DefenceRangeService(store, new NoPending()).GetAsync(
+        var result = await new DefenceRangeService(store, new NoPending(), new NoCustomRanges()).GetAsync(
             Guid.NewGuid(), TableFormat.SixMax, StackBand.Short, PokerPosition.SmallBlind, PokerPosition.Button, null, null, Ct);
 
         Assert.Equal(PokerPosition.SmallBlind, result.Selected.Pair.Defender);
@@ -104,6 +104,18 @@ public sealed class DefenceRangeServiceTests
 
         public Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+    }
+
+    private sealed class NoCustomRanges : ICustomRangeStore
+    {
+        public Task<CustomOpeningRange?> FindOpeningAsync(Guid userId, TableFormat format, StackBand band, PokerPosition position, CancellationToken ct) => Task.FromResult<CustomOpeningRange?>(null);
+        public Task<IReadOnlyList<CustomOpeningRange>> ListOpeningsAsync(Guid userId, TableFormat format, StackBand band, CancellationToken ct) => Task.FromResult<IReadOnlyList<CustomOpeningRange>>([]);
+        public Task SaveOpeningAsync(CustomOpeningRange range, CancellationToken ct) => Task.CompletedTask;
+        public Task<bool> DeleteOpeningAsync(Guid userId, TableFormat format, StackBand band, PokerPosition position, CancellationToken ct) => Task.FromResult(false);
+        public Task<CustomDefenceRange?> FindDefenceAsync(Guid userId, TableFormat format, StackBand band, PokerPosition defender, PokerPosition opener, CancellationToken ct) => Task.FromResult<CustomDefenceRange?>(null);
+        public Task<IReadOnlyList<CustomDefenceRange>> ListDefencesAsync(Guid userId, TableFormat format, StackBand band, CancellationToken ct) => Task.FromResult<IReadOnlyList<CustomDefenceRange>>([]);
+        public Task SaveDefenceAsync(CustomDefenceRange range, CancellationToken ct) => Task.CompletedTask;
+        public Task<bool> DeleteDefenceAsync(Guid userId, TableFormat format, StackBand band, PokerPosition defender, PokerPosition opener, CancellationToken ct) => Task.FromResult(false);
     }
 
     private sealed class NoPending : IStatisticsReadStore

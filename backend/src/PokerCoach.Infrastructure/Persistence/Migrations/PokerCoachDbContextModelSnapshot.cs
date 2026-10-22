@@ -262,6 +262,105 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.ToTable("weekly_notifications", "notifications");
                 });
 
+            modelBuilder.Entity("PokerCoach.Domain.Poker.Ranges.CustomDefenceRange", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Band")
+                        .HasColumnType("integer")
+                        .HasColumnName("band");
+
+                    b.Property<byte[]>("CallHands")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("call_hands");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Defender")
+                        .HasColumnType("integer")
+                        .HasColumnName("defender");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("integer")
+                        .HasColumnName("format");
+
+                    b.Property<int>("Opener")
+                        .HasColumnType("integer")
+                        .HasColumnName("opener");
+
+                    b.Property<byte[]>("ThreeBetHands")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("three_bet_hands");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_custom_defence_ranges");
+
+                    b.HasIndex("UserId", "Format", "Band", "Defender", "Opener")
+                        .IsUnique()
+                        .HasDatabaseName("ux_custom_defence_ranges_user_id_format_band_defender_opener");
+
+                    b.ToTable("custom_defence_ranges", "ranges");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Poker.Ranges.CustomOpeningRange", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Band")
+                        .HasColumnType("integer")
+                        .HasColumnName("band");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("integer")
+                        .HasColumnName("format");
+
+                    b.Property<byte[]>("Hands")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("hands");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer")
+                        .HasColumnName("position");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_custom_opening_ranges");
+
+                    b.HasIndex("UserId", "Format", "Band", "Position")
+                        .IsUnique()
+                        .HasDatabaseName("ux_custom_opening_ranges_user_id_format_band_position");
+
+                    b.ToTable("custom_opening_ranges", "ranges");
+                });
+
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1674,6 +1773,26 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_weekly_notifications_users_user_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Poker.Ranges.CustomDefenceRange", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_custom_defence_ranges_users_user_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Poker.Ranges.CustomOpeningRange", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_custom_opening_ranges_users_user_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>

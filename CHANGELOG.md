@@ -1,11 +1,12 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-131fa42] — 2026-10-22
 
 ### Correctifs
 
 - **csp**: Add Cloudflare Turnstile to connect-src
 - **auth**: Load Turnstile script dynamically to avoid service worker interception
+- **auth**: Bypass Angular service worker for Turnstile script load
 
 ## [2026.10.22-9f7a919] — 2026-10-22
 

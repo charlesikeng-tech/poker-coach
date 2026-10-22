@@ -109,6 +109,7 @@ builder.Services.AddScoped<TournamentDetailService>();
 builder.Services.AddScoped<HandReplayService>();
 builder.Services.AddScoped<RangeService>();
 builder.Services.AddScoped<DefenceRangeService>();
+builder.Services.AddScoped<CustomRangeService>();
 builder.Services.AddScoped<OpeningTrainingService>();
 builder.Services.AddScoped<SizingTrainingService>();
 // Thread-safe shared generator: drills only need variety, not cryptographic randomness.

@@ -18,7 +18,8 @@ export type Feature =
   | 'weekReview'
   | 'tournamentDebrief'
   | 'defenceRanges'
-  | 'monthlyReport';
+  | 'monthlyReport'
+  | 'customRanges';
 
 const PLAN_ORDER: readonly Plan[] = ['starter', 'pro', 'elite'];
 
@@ -33,6 +34,7 @@ export const MINIMUM_PLAN: Readonly<Record<Feature, PaidPlan>> = {
   advancedLeaks: 'elite',
   trainingOwnHands: 'elite',
   tournamentDebrief: 'elite',
+  customRanges: 'elite',
 };
 
 export interface PlanOffer {
