@@ -1,4 +1,5 @@
-const SCRIPT_URL = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+const SCRIPT_URL =
+  'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&ngsw-bypass=true';
 
 let loading: Promise<void> | null = null;
 

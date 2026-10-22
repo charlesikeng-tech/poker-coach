@@ -5,6 +5,7 @@
 ### Correctifs
 
 - **csp**: Add Cloudflare Turnstile to connect-src
+- **auth**: Load Turnstile script dynamically to avoid service worker interception
 
 ## [2026.10.22-9f7a919] — 2026-10-22
 
