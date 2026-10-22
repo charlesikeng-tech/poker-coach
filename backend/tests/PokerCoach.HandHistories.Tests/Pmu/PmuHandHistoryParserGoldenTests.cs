@@ -23,7 +23,7 @@ public sealed class PmuHandHistoryParserGoldenTests
 
         Assert.All(hands, hand =>
         {
-            Assert.True(hand.Actions.Sum(a => a.Amount) >= hand.TotalPot);
+            Assert.Equal(hand.Actions.Sum(a => a.Amount), hand.TotalPot);
             Assert.Equal(hand.TotalPot, hand.Collections.Sum(c => c.Amount) + (hand.Rake ?? 0));
             Assert.Equal("Héros", hand.HeroName);
             Assert.Equal(2, hand.HeroCards.Count);
@@ -66,7 +66,7 @@ public sealed class PmuHandHistoryParserGoldenTests
         Assert.Equal("Héros", hand.HeroName);
         Assert.Equal([new Card(Rank.Six, Suit.Spades), new Card(Rank.Nine, Suit.Clubs)], hand.HeroCards);
 
-        Assert.Equal(100, hand.TotalPot);
+        Assert.Equal(200, hand.TotalPot);
         Assert.Empty(hand.Board);
         Assert.Empty(hand.ShownCards);
     }
@@ -77,7 +77,7 @@ public sealed class PmuHandHistoryParserGoldenTests
         var hand = parser.Parse(GoldenFiles.ReadPmu(GoldenFiles.PmuCash6Max)).Hands[1];
 
         Assert.Equal(91, hand.Rake);
-        Assert.Equal(1278 + 91, hand.TotalPot);
+        Assert.Equal(2269, hand.TotalPot);
         Assert.Equal(4, hand.Board.Count);
         Assert.Equal(new Card(Rank.Two, Suit.Spades), hand.Board[0]);
         Assert.Equal(new Card(Rank.Five, Suit.Diamonds), hand.Board[3]);
@@ -97,7 +97,7 @@ public sealed class PmuHandHistoryParserGoldenTests
         Assert.Equal("Héros", hand.HeroName);
         Assert.Equal(5, hand.Seats.Count);
         Assert.Equal(0, hand.Rake);
-        Assert.Equal(50, hand.TotalPot);
+        Assert.Equal(75, hand.TotalPot);
         Assert.Empty(hand.Board);
     }
 
@@ -106,11 +106,13 @@ public sealed class PmuHandHistoryParserGoldenTests
     {
         var hand = parser.Parse(GoldenFiles.ReadPmu(GoldenFiles.PmuCash6Max)).Hands[3];
 
-        Assert.Single(hand.Collections);
+        Assert.Equal(2, hand.Collections.Count);
         Assert.Equal("Héros", hand.Collections[0].PlayerName);
         Assert.Equal(327, hand.Collections[0].Amount);
+        Assert.Equal("Héros", hand.Collections[1].PlayerName);
+        Assert.Equal(262, hand.Collections[1].Amount);
         Assert.Equal(23, hand.Rake);
-        Assert.Equal(327 + 23, hand.TotalPot);
+        Assert.Equal(612, hand.TotalPot);
 
         Assert.Equal(4, hand.Board.Count);
         Assert.Empty(hand.ShownCards);
@@ -132,9 +134,11 @@ public sealed class PmuHandHistoryParserGoldenTests
         Assert.Equal("Vilain 124", hand.ShownCards[1].PlayerName);
         Assert.Equal("Three of a Kind, Aces", hand.ShownCards[1].HandDescription);
 
-        Assert.Single(hand.Collections);
+        Assert.Equal(2, hand.Collections.Count);
         Assert.Equal("Vilain 124", hand.Collections[0].PlayerName);
         Assert.Equal(5413, hand.Collections[0].Amount);
+        Assert.Equal("Vilain 124", hand.Collections[1].PlayerName);
+        Assert.Equal(2045, hand.Collections[1].Amount);
         Assert.Equal(300, hand.Rake);
     }
 

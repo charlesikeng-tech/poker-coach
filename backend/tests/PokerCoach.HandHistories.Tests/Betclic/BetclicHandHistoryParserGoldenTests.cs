@@ -23,7 +23,7 @@ public sealed class BetclicHandHistoryParserGoldenTests
 
         Assert.All(hands, hand =>
         {
-            Assert.True(hand.Actions.Sum(a => a.Amount) >= hand.TotalPot);
+            Assert.Equal(hand.Actions.Sum(a => a.Amount), hand.TotalPot);
             Assert.Equal(hand.TotalPot, hand.Collections.Sum(c => c.Amount) + (hand.Rake ?? 0));
             Assert.Equal("Hero", hand.HeroName);
             Assert.Equal(2, hand.HeroCards.Count);
@@ -126,13 +126,16 @@ public sealed class BetclicHandHistoryParserGoldenTests
     {
         var hand = parser.Parse(GoldenFiles.ReadBetclic(GoldenFiles.BetclicCash6Max)).Hands[6];
 
-        Assert.Equal(2, hand.Collections.Count);
+        Assert.Equal(3, hand.Collections.Count);
         Assert.Equal(PotKind.Main, hand.Collections[0].Kind);
         Assert.Equal("Vilain12", hand.Collections[0].PlayerName);
         Assert.Equal(11187, hand.Collections[0].Amount);
         Assert.Equal(PotKind.Side, hand.Collections[1].Kind);
         Assert.Equal(1, hand.Collections[1].SidePotNumber);
         Assert.Equal(1208, hand.Collections[1].Amount);
+        Assert.Equal(PotKind.Single, hand.Collections[2].Kind);
+        Assert.Equal("Vilain12", hand.Collections[2].PlayerName);
+        Assert.Equal(747, hand.Collections[2].Amount);
 
         Assert.Equal(3, hand.ShownCards.Count);
         Assert.Equal("Straight Flush", hand.ShownCards[1].HandDescription);

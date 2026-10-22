@@ -62,6 +62,8 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
             return (null, error);
         }
 
+        NormalizeUncalledBetReturn();
+
         var hand = new ParsedHand
         {
             Room = PokerRoom.Pmu,
@@ -560,6 +562,46 @@ internal sealed class PmuHandReader(IReadOnlyList<SourceLine> block)
     {
         if (remainingStacks.TryGetValue(playerName, out var remaining))
             remainingStacks[playerName] = Math.Max(0, remaining - amount);
+    }
+
+    /// <summary>
+    /// PMU does not include uncalled bet returns in its collected lines. This adds the excess
+    /// to the collections and adjusts the total pot so that the ParsedHand contract holds:
+    /// TotalPot = Actions.Sum() = Collections.Sum() + Rake.
+    /// </summary>
+    private void NormalizeUncalledBetReturn()
+    {
+        long invested = 0;
+        foreach (var action in actions)
+            invested += action.Amount;
+
+        var excess = invested - totalPot;
+        if (excess <= 0)
+            return;
+
+        string? returnTo = null;
+        long max = 0;
+        var perPlayer = new Dictionary<string, long>(StringComparer.Ordinal);
+        foreach (var action in actions)
+        {
+            perPlayer.TryGetValue(action.PlayerName, out var current);
+            perPlayer[action.PlayerName] = current + action.Amount;
+        }
+
+        foreach (var (player, total) in perPlayer)
+        {
+            if (total > max)
+            {
+                max = total;
+                returnTo = player;
+            }
+        }
+
+        if (returnTo is not null)
+        {
+            collections.Add(new ParsedPotCollection(returnTo, excess, PotKind.Single, null));
+            totalPot = invested;
+        }
     }
 
     private void AddAction(string player, ParsedActionType type, long amount, long? raiseTo, bool isAllIn) =>

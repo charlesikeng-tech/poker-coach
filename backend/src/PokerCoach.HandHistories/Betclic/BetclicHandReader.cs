@@ -67,6 +67,8 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
             return (null, error);
         }
 
+        pot = NormalizeUncalledBetReturn(pot);
+
         var hand = new ParsedHand
         {
             Room = PokerRoom.Betclic,
@@ -655,6 +657,48 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         var total = streetContributions[player] + amount;
         streetContributions[player] = total;
         currentBet = Math.Max(currentBet, total);
+    }
+
+    /// <summary>
+    /// Betclic does not include uncalled bet returns in its collected lines. This adds the excess
+    /// to the collections and adjusts the total pot so that the ParsedHand contract holds:
+    /// TotalPot = Actions.Sum() = Collections.Sum() + Rake.
+    /// </summary>
+    private long NormalizeUncalledBetReturn(long pot)
+    {
+        long invested = 0;
+        foreach (var action in actions)
+            invested += action.Amount;
+
+        var excess = invested - pot;
+        if (excess <= 0)
+            return pot;
+
+        string? returnTo = null;
+        long max = 0;
+        var perPlayer = new Dictionary<string, long>(StringComparer.Ordinal);
+        foreach (var action in actions)
+        {
+            perPlayer.TryGetValue(action.PlayerName, out var current);
+            perPlayer[action.PlayerName] = current + action.Amount;
+        }
+
+        foreach (var (player, total) in perPlayer)
+        {
+            if (total > max)
+            {
+                max = total;
+                returnTo = player;
+            }
+        }
+
+        if (returnTo is not null)
+        {
+            collections.Add(new ParsedPotCollection(returnTo, excess, PotKind.Single, null));
+            return invested;
+        }
+
+        return pot;
     }
 
     private void AddAction(string player, ParsedActionType type, long amount, long? raiseTo, bool isAllIn) =>

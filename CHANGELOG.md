@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - **ranges**: Add custom user-defined ranges (backend + API + types)
+- **ranges,nav**: Add GameType to custom ranges and hide MTT-only tools in Cash Game
 
 ## [2026.10.22-131fa42] — 2026-10-22
 
