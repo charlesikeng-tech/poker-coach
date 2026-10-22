@@ -16,9 +16,9 @@ public static partial class WebHosting
     /// navigation, not a form or a frame, so it needs no exception.
     /// </summary>
     private const string ContentSecurityPolicy =
-        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
-        + "font-src 'self'; connect-src 'self' https://*.ingest.de.sentry.io; object-src 'none'; base-uri 'self'; form-action 'self'; "
-        + "frame-ancestors 'none'";
+        "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
+        + "font-src 'self'; connect-src 'self' https://*.ingest.de.sentry.io; frame-src https://challenges.cloudflare.com; "
+        + "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
 
     private const string Immutable = "public, max-age=31536000, immutable";
 

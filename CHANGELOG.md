@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-f5fba9c] — 2026-10-22
 
 ### Fonctionnalités
 
