@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.22-f33af29] — 2026-10-22
+
+### Fonctionnalités
+
+- **import**: Stepper, historique des imports et bandeau confiance
+
 ## [2026.10.21-89591d7] — 2026-10-21
 
 ### Correctifs

@@ -769,10 +769,14 @@
               "text": "En el sitio web de Betclic, accede a la sección Poker de tu cuenta."
             },
             "2": {
-              "title": "Descarga el historial",
-              "text": "Ve a Poker → Historial de manos y exporta tus manos en formato .txt."
+              "title": "Accede al historial de manos",
+              "text": "Ve a Poker → Historial de manos y selecciona el período deseado."
             },
             "3": {
+              "title": "Descarga tus archivos",
+              "text": "Exporta las manos en formato .txt. Betclic genera un archivo por sesión de cash game."
+            },
+            "4": {
               "title": "Suelta los archivos en NutsIQ",
               "text": "Suelta los archivos .txt descargados directamente en la zona de arriba."
             }

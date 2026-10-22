@@ -292,7 +292,7 @@
     <ol class="drawer__steps">
       @for (step of [1, 2, 3, 4]; track step) {
         @if (t('guide.steps.' + guideRoom() + '.' + step + '.title'); as title) {
-          @if (title !== 'guide.steps.' + guideRoom() + '.' + step + '.title') {
+          @if (!title.endsWith('.' + step + '.title')) {
             <li class="drawer__step">
               <span class="drawer__step-number">{{ step }}</span>
               <div>

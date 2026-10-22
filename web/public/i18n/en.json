@@ -769,10 +769,14 @@
               "text": "On the Betclic website, go to the Poker section of your account."
             },
             "2": {
-              "title": "Download your hand history",
-              "text": "Go to Poker → Hand History and export your hands as .txt."
+              "title": "Go to hand history",
+              "text": "Navigate to Poker → Hand History and select the desired date range."
             },
             "3": {
+              "title": "Download your files",
+              "text": "Export your hands as .txt. Betclic generates one file per cash game session."
+            },
+            "4": {
               "title": "Drop the files into NutsIQ",
               "text": "Drop the downloaded .txt files directly into the zone above."
             }
