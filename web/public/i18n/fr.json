@@ -741,7 +741,8 @@
         "tip": {
           "label": "Astuce",
           "winamax": "Tournois : il faut le fichier de mains (HH) + le résumé (_summary.txt). Cash game : le fichier de mains suffit. Tu peux déposer un dossier entier, NutsIQ détecte et trie automatiquement.",
-          "betclic": "Betclic fournit un fichier .txt par session de cash game. Dépose tous les fichiers d'un coup, NutsIQ détecte et trie automatiquement."
+          "betclic": "Betclic fournit un fichier .txt par session de cash game. Dépose tous les fichiers d'un coup, NutsIQ détecte et trie automatiquement.",
+          "pmu": "PMU Poker fournit un fichier .txt par session. Dépose tous les fichiers d'un coup, NutsIQ détecte et trie automatiquement."
         },
         "steps": {
           "winamax": {
@@ -774,6 +775,24 @@
             "3": {
               "title": "Dépose les fichiers dans NutsIQ",
               "text": "Dépose les fichiers .txt téléchargés directement dans la zone ci-dessus."
+            }
+          },
+          "pmu": {
+            "1": {
+              "title": "Connecte-toi à PMU Poker",
+              "text": "Ouvre l'application PMU Poker sur ton ordinateur et connecte-toi à ton compte."
+            },
+            "2": {
+              "title": "Accède aux paramètres",
+              "text": "Dans le lobby, clique sur l'icône ⚙ (engrenage) pour ouvrir les paramètres."
+            },
+            "3": {
+              "title": "Localise le dossier d'historiques",
+              "text": "Dans les options, repère la section « Historique des mains » et note l'emplacement du dossier sur ton disque."
+            },
+            "4": {
+              "title": "Dépose les fichiers dans NutsIQ",
+              "text": "Ouvre le dossier d'historiques et dépose les fichiers .txt directement dans la zone ci-dessus."
             }
           }
         }
@@ -834,7 +853,23 @@
         "error": "Impossible de charger ou de modifier tes comptes de poker. Réessaie.",
         "unlink": "Délier"
       },
-      "rooms": "Rooms prises en charge :"
+      "rooms": "Rooms prises en charge :",
+      "history": {
+        "title": "Derniers imports",
+        "empty": "Aucun import pour le moment.",
+        "hands": "mains",
+        "tournaments": "tournois",
+        "files": "fichiers",
+        "status": {
+          "completed": "Terminé",
+          "inProgress": "En cours",
+          "failed": "Erreur"
+        }
+      },
+      "trust": {
+        "title": "Sécurité et confidentialité",
+        "description": "Tes fichiers sont analysés de manière sécurisée et supprimés après traitement. Nous ne partageons jamais tes données."
+      }
     },
     "notFound": {
       "title": "Page introuvable",

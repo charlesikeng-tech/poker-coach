@@ -35,4 +35,7 @@ public sealed class ImportService(IImportStore store, ImportOptions options, Tim
 
     public Task<IReadOnlyList<ImportedFileView>> GetBatchAsync(Guid userId, Guid batchId, CancellationToken cancellationToken) =>
         store.GetBatchAsync(userId, batchId, cancellationToken);
+
+    public Task<IReadOnlyList<ImportBatchSummary>> GetRecentBatchesAsync(Guid userId, int limit, CancellationToken cancellationToken) =>
+        store.GetRecentBatchesAsync(userId, limit, cancellationToken);
 }

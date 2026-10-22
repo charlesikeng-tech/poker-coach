@@ -741,7 +741,8 @@
         "tip": {
           "label": "Tip",
           "winamax": "Tournaments: you need the hand history file (HH) + the summary (_summary.txt). Cash game: the hand history file is enough. You can drop a whole folder — NutsIQ detects and sorts files automatically.",
-          "betclic": "Betclic provides a .txt file per cash game session. Drop all files at once — NutsIQ detects and sorts them automatically."
+          "betclic": "Betclic provides a .txt file per cash game session. Drop all files at once — NutsIQ detects and sorts them automatically.",
+          "pmu": "PMU Poker provides a .txt file per session. Drop all files at once — NutsIQ detects and sorts them automatically."
         },
         "steps": {
           "winamax": {
@@ -774,6 +775,24 @@
             "3": {
               "title": "Drop the files into NutsIQ",
               "text": "Drop the downloaded .txt files directly into the zone above."
+            }
+          },
+          "pmu": {
+            "1": {
+              "title": "Log in to PMU Poker",
+              "text": "Open the PMU Poker app on your computer and log in to your account."
+            },
+            "2": {
+              "title": "Open settings",
+              "text": "In the lobby, click the ⚙ (gear) icon to open settings."
+            },
+            "3": {
+              "title": "Find the hand history folder",
+              "text": "In the options, locate the \"Hand History\" section and note the folder path on your disk."
+            },
+            "4": {
+              "title": "Drop the files into NutsIQ",
+              "text": "Open the hand history folder and drop the .txt files directly into the zone above."
             }
           }
         }
@@ -834,7 +853,23 @@
         "error": "Your poker accounts could not be loaded or changed. Try again.",
         "unlink": "Unlink"
       },
-      "rooms": "Supported rooms:"
+      "rooms": "Supported rooms:",
+      "history": {
+        "title": "Recent imports",
+        "empty": "No imports yet.",
+        "hands": "hands",
+        "tournaments": "tournaments",
+        "files": "files",
+        "status": {
+          "completed": "Completed",
+          "inProgress": "In progress",
+          "failed": "Error"
+        }
+      },
+      "trust": {
+        "title": "Security and privacy",
+        "description": "Your files are processed securely and deleted after analysis. We never share your data."
+      }
     },
     "notFound": {
       "title": "Page not found",

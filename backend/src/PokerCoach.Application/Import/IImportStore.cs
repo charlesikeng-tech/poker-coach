@@ -30,6 +30,8 @@ public interface IImportStore
     /// <summary>Gives a claimed file back after an unexpected error: queued again later, or failed after <paramref name="maxAttempts"/>.</summary>
     Task ReleaseAfterErrorAsync(Guid fileId, int maxAttempts, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<ImportBatchSummary>> GetRecentBatchesAsync(Guid userId, int limit, CancellationToken cancellationToken);
+
     /// <summary>Runs <paramref name="work"/> in one database transaction; the store's other methods join it.</summary>
     Task<T> InTransactionAsync<T>(Func<CancellationToken, Task<T>> work, CancellationToken cancellationToken);
 
@@ -92,3 +94,18 @@ public sealed record ImportedFileView(
     int? HandsRejected,
     DateTimeOffset CreatedAt,
     DateTimeOffset? CompletedAt);
+
+public sealed record ImportBatchSummary(
+    Guid BatchId,
+    DateTimeOffset CreatedAt,
+    int TotalFiles,
+    int TotalHands,
+    int TotalTournaments,
+    ImportBatchStatus Status);
+
+public enum ImportBatchStatus
+{
+    InProgress,
+    Completed,
+    Failed,
+}

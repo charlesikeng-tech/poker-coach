@@ -30,6 +30,14 @@ public sealed record ImportedFileResponse(
 /// <param name="IsComplete">True when every file is completed or failed: the client stops polling.</param>
 public sealed record BatchResponse(Guid BatchId, bool IsComplete, IReadOnlyList<ImportedFileResponse> Files);
 
+public sealed record ImportBatchSummaryResponse(
+    Guid BatchId,
+    DateTimeOffset CreatedAt,
+    int TotalFiles,
+    int TotalHands,
+    int TotalTournaments,
+    string Status);
+
 public static class ImportEndpoints
 {
     public static IEndpointRouteBuilder MapImportEndpoints(this IEndpointRouteBuilder endpoints)
@@ -44,6 +52,7 @@ public static class ImportEndpoints
             .Accepts<IFormFileCollection>("multipart/form-data");
 
         group.MapGet("/batches/{batchId:guid}", GetBatchAsync);
+        group.MapGet("/history", GetHistoryAsync);
 
         return endpoints;
     }
@@ -110,6 +119,34 @@ public static class ImportEndpoints
         return result.HasQueuedFiles
             ? TypedResults.Accepted($"/api/import/batches/{result.BatchId}", response)
             : TypedResults.Ok(response);
+    }
+
+    private static async Task<Results<Ok<IReadOnlyList<ImportBatchSummaryResponse>>, UnauthorizedHttpResult>> GetHistoryAsync(
+        HttpContext context,
+        ImportService imports,
+        [FromQuery] int? limit,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        var effectiveLimit = Math.Clamp(limit ?? 10, 1, 50);
+        var batches = await imports.GetRecentBatchesAsync(userId, effectiveLimit, cancellationToken);
+        return TypedResults.Ok<IReadOnlyList<ImportBatchSummaryResponse>>(
+            batches.Select(b => new ImportBatchSummaryResponse(
+                b.BatchId,
+                b.CreatedAt,
+                b.TotalFiles,
+                b.TotalHands,
+                b.TotalTournaments,
+                b.Status switch
+                {
+                    ImportBatchStatus.InProgress => "inProgress",
+                    ImportBatchStatus.Failed => "failed",
+                    _ => "completed",
+                })).ToList());
     }
 
     private static async Task<Results<Ok<BatchResponse>, NotFound, UnauthorizedHttpResult>> GetBatchAsync(

@@ -7,6 +7,167 @@ h2 {
   font-weight: var(--font-weight-semibold);
 }
 
+// Stepper --------------------------------------------------------------------------------------------
+
+.import-stepper {
+  margin-bottom: var(--space-6);
+}
+
+// Two-column layout: import on the left, history on the right --------------------------------------
+
+.import-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+@media (min-width: 1024px) {
+  .import-layout {
+    grid-template-columns: 1fr 22rem;
+  }
+}
+
+// History panel ------------------------------------------------------------------------------------
+
+.import-layout__history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.history-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.history-empty {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+}
+
+.history-item__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.history-item__date {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.history-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+}
+
+.history-badge--completed {
+  background: color-mix(in srgb, var(--success) 15%, transparent);
+  color: var(--success);
+}
+
+.history-badge--in-progress {
+  background: color-mix(in srgb, var(--info) 15%, transparent);
+  color: var(--info);
+}
+
+.history-badge--failed {
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  color: var(--danger);
+}
+
+.history-item__details {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.history-item__separator {
+  color: var(--text-muted);
+}
+
+// Trust banner -------------------------------------------------------------------------------------
+
+.trust-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: border-color var(--motion-base) var(--easing-standard);
+}
+
+.trust-banner__icon {
+  --icon-size: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--success) 40%, transparent);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  color: var(--success);
+}
+
+.trust-banner__text {
+  flex: 1;
+  min-width: 0;
+
+  strong {
+    display: block;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  p {
+    margin: var(--space-1) 0 0;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-body);
+  }
+}
+
+.trust-banner__chevron {
+  --icon-size: 1.125rem;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color var(--motion-fast) var(--easing-standard);
+}
+
+.trust-banner:hover .trust-banner__chevron {
+  color: var(--text-primary);
+}
+
 // Drop zone -----------------------------------------------------------------------------------------
 
 .drop-zone {

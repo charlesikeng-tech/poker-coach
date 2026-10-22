@@ -741,7 +741,8 @@
         "tip": {
           "label": "Consejo",
           "winamax": "Torneos: necesitas el archivo de manos (HH) + el resumen (_summary.txt). Cash game: el archivo de manos es suficiente. Puedes soltar una carpeta entera — NutsIQ detecta y clasifica los archivos automáticamente.",
-          "betclic": "Betclic proporciona un archivo .txt por sesión de cash game. Suelta todos los archivos a la vez — NutsIQ detecta y clasifica automáticamente."
+          "betclic": "Betclic proporciona un archivo .txt por sesión de cash game. Suelta todos los archivos a la vez — NutsIQ detecta y clasifica automáticamente.",
+          "pmu": "PMU Poker proporciona un archivo .txt por sesión. Suelta todos los archivos a la vez — NutsIQ los detecta y ordena automáticamente."
         },
         "steps": {
           "winamax": {
@@ -774,6 +775,24 @@
             "3": {
               "title": "Suelta los archivos en NutsIQ",
               "text": "Suelta los archivos .txt descargados directamente en la zona de arriba."
+            }
+          },
+          "pmu": {
+            "1": {
+              "title": "Inicia sesión en PMU Poker",
+              "text": "Abre la aplicación PMU Poker en tu ordenador e inicia sesión en tu cuenta."
+            },
+            "2": {
+              "title": "Accede a los ajustes",
+              "text": "En el lobby, haz clic en el icono ⚙ (engranaje) para abrir los ajustes."
+            },
+            "3": {
+              "title": "Localiza la carpeta de historiales",
+              "text": "En las opciones, busca la sección \"Historial de manos\" y anota la ruta de la carpeta en tu disco."
+            },
+            "4": {
+              "title": "Suelta los archivos en NutsIQ",
+              "text": "Abre la carpeta de historiales y suelta los archivos .txt directamente en la zona de arriba."
             }
           }
         }
@@ -834,7 +853,23 @@
         "error": "No se pudieron cargar o modificar tus cuentas de póker. Inténtalo de nuevo.",
         "unlink": "Desvincular"
       },
-      "rooms": "Salas compatibles:"
+      "rooms": "Salas compatibles:",
+      "history": {
+        "title": "Últimas importaciones",
+        "empty": "Ninguna importación todavía.",
+        "hands": "manos",
+        "tournaments": "torneos",
+        "files": "archivos",
+        "status": {
+          "completed": "Completado",
+          "inProgress": "En curso",
+          "failed": "Error"
+        }
+      },
+      "trust": {
+        "title": "Seguridad y confidencialidad",
+        "description": "Tus archivos se analizan de forma segura y se eliminan después del tratamiento. Nunca compartimos tus datos."
+      }
     },
     "notFound": {
       "title": "Página no encontrada",

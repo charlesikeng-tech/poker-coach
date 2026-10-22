@@ -92,6 +92,38 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         throw new InvalidOperationException("The imported file disappeared while being queued twice in a row.");
     }
 
+    public async Task<IReadOnlyList<ImportBatchSummary>> GetRecentBatchesAsync(Guid userId, int limit, CancellationToken cancellationToken)
+    {
+        var batches = await (
+            from file in db.Set<ImportedFileRecord>().AsNoTracking()
+            where file.UserId == userId
+            group file by file.BatchId into g
+            orderby g.Max(f => f.CreatedAt) descending
+            select new
+            {
+                BatchId = g.Key,
+                CreatedAt = g.Max(f => f.CreatedAt),
+                TotalFiles = g.Count(),
+                TotalHands = g.Sum(f => (int?)f.HandsImported ?? 0),
+                TotalTournaments = g.Count(f => f.Kind == ImportStatusText.TournamentSummary && f.Status == ImportStatusText.Completed),
+                HasPending = g.Any(f => f.Status == ImportStatusText.Pending || f.Status == ImportStatusText.Processing),
+                HasFailed = g.Any(f => f.Status == ImportStatusText.Failed),
+            })
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+
+        return batches.Select(b => new ImportBatchSummary(
+            b.BatchId,
+            b.CreatedAt,
+            b.TotalFiles,
+            b.TotalHands,
+            b.TotalTournaments,
+            b.HasPending ? ImportBatchStatus.InProgress
+                : b.HasFailed ? ImportBatchStatus.Failed
+                : ImportBatchStatus.Completed))
+            .ToList();
+    }
+
     public async Task<IReadOnlyList<ImportedFileView>> GetBatchAsync(Guid userId, Guid batchId, CancellationToken cancellationToken)
     {
         var rows = await (

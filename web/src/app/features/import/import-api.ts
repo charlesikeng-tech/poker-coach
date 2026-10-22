@@ -51,6 +51,17 @@ export interface PokerAccount {
   readonly confirmedAt: string | null;
 }
 
+export type ImportBatchStatus = 'inProgress' | 'completed' | 'failed';
+
+export interface ImportBatchSummary {
+  readonly batchId: string;
+  readonly createdAt: string;
+  readonly totalFiles: number;
+  readonly totalHands: number;
+  readonly totalTournaments: number;
+  readonly status: ImportBatchStatus;
+}
+
 /** Thin HTTP client: no state, no retry policy (owned by ImportSession). */
 @Injectable({ providedIn: 'root' })
 export class ImportApi {
@@ -83,5 +94,11 @@ export class ImportApi {
 
   deleteAccount(accountId: string): Promise<unknown> {
     return firstValueFrom(this.http.delete(`/api/poker-accounts/${encodeURIComponent(accountId)}`));
+  }
+
+  getHistory(limit = 10): Promise<ImportBatchSummary[]> {
+    return firstValueFrom(
+      this.http.get<ImportBatchSummary[]>(`/api/import/history`, { params: { limit } }),
+    );
   }
 }

@@ -39,6 +39,9 @@ internal sealed class InMemoryImportStore : IImportStore
     public Task<IReadOnlyList<ImportedFileView>> GetBatchAsync(Guid userId, Guid batchId, CancellationToken cancellationToken) =>
         throw new NotSupportedException();
 
+    public Task<IReadOnlyList<ImportBatchSummary>> GetRecentBatchesAsync(Guid userId, int limit, CancellationToken cancellationToken) =>
+        Task.FromResult<IReadOnlyList<ImportBatchSummary>>([]);
+
     public Task<ClaimedFile?> ClaimNextAsync(int maxAttempts, CancellationToken cancellationToken) =>
         Task.FromResult(queue.TryDequeue(out var file) ? file : null);
 

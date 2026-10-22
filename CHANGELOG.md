@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.21-89591d7] — 2026-10-21
+
+### Correctifs
+
+- **legal**: Corriger les tarifs Pro dans les CGV (14,90€/mois, 149€/an)
+
 ## [2026.10.21-4d7ea67] — 2026-10-21
 
 ### Documentation

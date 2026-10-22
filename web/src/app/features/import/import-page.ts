@@ -1,13 +1,28 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { BookOpen, CircleAlert, CircleCheck, Clock, FolderOpen, Upload, X } from 'lucide';
+import {
+  BookOpen,
+  ChevronRight,
+  CircleAlert,
+  CircleCheck,
+  Clock,
+  FolderOpen,
+  ShieldCheck,
+  Upload,
+  X,
+} from 'lucide';
+
+import { RouterLink } from '@angular/router';
 
 import { SupportedRoom, SUPPORTED_ROOMS } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { RoomBadge } from '../../shared/ui/room-badge/room-badge';
+import { Stepper, StepDef } from '../../shared/ui/stepper/stepper';
 import { filesFromDrop, selectImportableFiles } from './file-selection';
+import { ImportApi, ImportBatchSummary } from './import-api';
 import { ImportRow, ImportSession } from './import-session';
 import { PokerAccounts } from './poker-accounts';
 
@@ -29,7 +44,17 @@ const KNOWN_ERRORS = new Set([
 
 @Component({
   selector: 'app-import-page',
-  imports: [TranslocoDirective, PageHeader, Button, Icon, PokerAccounts, RoomBadge],
+  imports: [
+    TranslocoDirective,
+    DatePipe,
+    RouterLink,
+    PageHeader,
+    Button,
+    Icon,
+    PokerAccounts,
+    RoomBadge,
+    Stepper,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'page-enter',
@@ -41,16 +66,69 @@ const KNOWN_ERRORS = new Set([
 export class ImportPage {
   protected readonly rooms = SUPPORTED_ROOMS;
   protected readonly session = inject(ImportSession);
+  private readonly importApi = inject(ImportApi);
   protected readonly dragging = signal(false);
   protected readonly nothingToImport = signal(false);
   protected readonly guideOpen = signal(false);
   protected readonly guideRoom = signal<SupportedRoom>('winamax');
-  protected readonly icons = { BookOpen, CircleAlert, CircleCheck, Clock, FolderOpen, Upload, X };
+  protected readonly icons = {
+    BookOpen,
+    ChevronRight,
+    CircleAlert,
+    CircleCheck,
+    Clock,
+    FolderOpen,
+    ShieldCheck,
+    Upload,
+    X,
+  };
+  protected readonly history = signal<readonly ImportBatchSummary[]>([]);
+  protected readonly historyLoading = signal(true);
+
+  protected readonly importSteps: readonly StepDef[] = [
+    { label: 'Fichier' },
+    { label: 'Analyse' },
+    { label: 'Résultats' },
+  ];
+
+  protected readonly currentStep = computed(() => {
+    switch (this.session.phase()) {
+      case 'idle':
+        return 0;
+      case 'uploading':
+        return 0;
+      case 'processing':
+        return 1;
+      case 'done':
+      case 'failed':
+        return 2;
+    }
+  });
 
   /** Problems first: they are what the user has to act on. */
   protected readonly sortedRows = computed(() =>
     [...this.session.rows()].sort((a, b) => severity(b) - severity(a)),
   );
+
+  constructor() {
+    this.loadHistory();
+  }
+
+  private async loadHistory(): Promise<void> {
+    try {
+      const batches = await this.importApi.getHistory(5);
+      this.history.set(batches);
+    } catch {
+      // Silent: the history panel is informational.
+    } finally {
+      this.historyLoading.set(false);
+    }
+  }
+
+  protected refreshHistory(): void {
+    this.historyLoading.set(true);
+    this.loadHistory();
+  }
 
   protected onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -95,7 +173,9 @@ export class ImportPage {
     this.nothingToImport.set(selection.accepted.length === 0);
     if (selection.accepted.length > 0) {
       this.guideOpen.set(false);
-      void this.session.start(selection.accepted, selection.ignored);
+      void this.session
+        .start(selection.accepted, selection.ignored)
+        .then(() => this.refreshHistory());
     }
   }
 }
