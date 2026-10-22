@@ -29,7 +29,8 @@
     "cashSessions": "Cash Sessions",
     "pushFold": "Push / Fold Nash",
     "bounty": "Bounty PKO",
-    "variance": "Variance"
+    "variance": "Variance",
+    "cashVariance": "Cash Variance"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -1815,6 +1816,17 @@
         "title": "Security",
         "connected": "Connected",
         "emailPassword": "Email / Password"
+      },
+      "reset": {
+        "title": "Reset my data",
+        "description": "All your poker data is deleted: hands, tournaments, imported files, coaching, training, bankroll, plans and custom ranges. Your account, subscription and linked poker accounts are kept.",
+        "advice": "You can re-import your files after the reset.",
+        "word": "RESET",
+        "type": "To confirm, type {{word}}",
+        "action": "Reset",
+        "resetting": "Resetting…",
+        "error": "The reset did not go through. Try again.",
+        "done": "Data reset. You can re-import your files."
       }
     },
     "privacy": {
@@ -2478,6 +2490,38 @@
       "insight1": "MTT variance is extreme: even a winning player can be losing over 500+ tournaments. Don't draw conclusions from small samples.",
       "insight2": "Larger fields mean higher variance. A 1,000-player field generates ~3× more variance than a 100-player field.",
       "insight3": "\"Tournaments for significance\" shows how many you need to play for your sample to rise above statistical noise with 95% confidence."
+    },
+    "cashVariance": {
+      "title": "Cash Game Variance",
+      "description": "Simulate the distribution of your results over a cash game sample. Answer \"is my downswing normal?\"",
+      "inputs": "Parameters",
+      "hands": "Number of hands",
+      "bb100": "Win rate",
+      "sd": "Standard deviation",
+      "bigBlind": "Big blind",
+      "results": "Projection",
+      "expectedProfit": "Expected profit",
+      "profitProb": "Probability of profit",
+      "ci95": "95% confidence interval",
+      "worstCase": "Worst case (1%)",
+      "breakeven": "Hands for significance",
+      "handsUnit": "hands",
+      "downswingTitle": "Downswing risk",
+      "downswingLabel": "Downswing tested",
+      "downswingDesc": "chance of experiencing this downswing over the period",
+      "insightHead": "In practice",
+      "insight1": "A standard deviation of 75 BB/100 is typical for NL 6-max. In full ring (9-max), it's around 60-65 BB/100.",
+      "insight2": "With a 2 BB/100 win rate, you need about 500,000 hands for results to be significant. Patience is key.",
+      "insight3": "A 20-30 buy-in downswing is normal, even for a consistent winning player. Don't change your strategy based on a single downswing.",
+      "chart": {
+        "title": "Simulation",
+        "ev": "Expected value",
+        "ci70": "70% confidence",
+        "ci95": "95% confidence",
+        "best": "Best run",
+        "worst": "Worst run",
+        "samples": "Sample runs"
+      }
     }
   },
   "rangeSelector": {

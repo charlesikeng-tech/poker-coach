@@ -220,6 +220,33 @@
     </section>
 
     <section class="card glass danger">
+      <h2><app-icon [icon]="icons.RotateCcw" />{{ t('reset.title') }}</h2>
+      <p>{{ t('reset.description') }}</p>
+      <p class="hint">{{ t('reset.advice') }}</p>
+      <label class="field">
+        <span>{{ t('reset.type', { word: resetWord() }) }}</span>
+        <input
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          [value]="resetConfirmation()"
+          (input)="resetConfirmation.set(value($event))"
+        />
+      </label>
+      @if (resetFailed()) {
+        <p class="error" role="alert">{{ t('reset.error') }}</p>
+      }
+      @if (resetDone()) {
+        <p class="success" role="status">{{ t('reset.done') }}</p>
+      }
+      <button type="button" class="delete-button" [disabled]="!canReset()" (click)="reset()">
+        <app-icon [icon]="icons.RotateCcw" />{{
+          t(resetting() ? 'reset.resetting' : 'reset.action')
+        }}
+      </button>
+    </section>
+
+    <section class="card glass danger">
       <h2><app-icon [icon]="icons.ShieldAlert" />{{ t('delete.title') }}</h2>
       <p>{{ t('delete.description') }}</p>
       <p class="hint">{{ t('delete.advice') }}</p>

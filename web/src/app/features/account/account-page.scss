@@ -277,6 +277,12 @@ input[type='password'] {
   font-size: var(--font-size-sm);
 }
 
+.success {
+  margin-bottom: var(--space-3);
+  color: var(--success) !important;
+  font-size: var(--font-size-sm);
+}
+
 .danger {
   border-color: color-mix(in srgb, var(--danger) 45%, transparent);
 

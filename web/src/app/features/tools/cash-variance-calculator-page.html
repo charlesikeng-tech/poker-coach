@@ -1,0 +1,174 @@
+<ng-container *transloco="let t; prefix: 'pages.cashVariance'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <section class="glass panel inputs">
+      <h2>{{ t('inputs') }}</h2>
+
+      <div class="fields">
+        <label class="field">
+          <span>{{ t('hands') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="10000"
+            [value]="hands()"
+            (change)="update('hands', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('bb100') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              step="0.5"
+              [value]="bb100()"
+              (change)="update('bb100', $any($event.target).value)"
+            />
+            <span class="unit">BB/100</span>
+          </div>
+        </label>
+        <label class="field">
+          <span>{{ t('sd') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="1"
+              step="5"
+              [value]="sdPer100()"
+              (change)="update('sdPer100', $any($event.target).value)"
+            />
+            <span class="unit">BB/100</span>
+          </div>
+        </label>
+        <label class="field">
+          <span>{{ t('bigBlind') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="0.25"
+              [value]="bigBlind()"
+              (change)="update('bigBlind', $any($event.target).value)"
+            />
+            <span class="unit">€</span>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <section class="glass panel results">
+      <h2>{{ t('results') }}</h2>
+
+      <dl class="metrics">
+        <div class="metric" [attr.data-positive]="expectedProfitBb() >= 0">
+          <dt>{{ t('expectedProfit') }}</dt>
+          <dd>
+            {{ fmtSigned(expectedProfitBb()) }} BB
+            <span class="money">({{ fmtMoney(expectedProfitMoney()) }})</span>
+          </dd>
+        </div>
+        <div class="metric metric--highlight">
+          <dt>{{ t('profitProb') }}</dt>
+          <dd>{{ fmt(profitProbability(), 1) }}%</dd>
+        </div>
+        <div class="metric">
+          <dt>{{ t('ci95') }}</dt>
+          <dd class="ci-range">
+            {{ fmtSigned(ci95Low()) }} → {{ fmtSigned(ci95High()) }} BB
+            <span class="money"
+              >({{ fmtMoney(ci95LowMoney()) }} → {{ fmtMoney(ci95HighMoney()) }})</span
+            >
+          </dd>
+        </div>
+        <div class="metric" [attr.data-positive]="false">
+          <dt>{{ t('worstCase') }}</dt>
+          <dd>
+            {{ fmtSigned(worstDownswing()) }} BB
+            <span class="money">({{ fmtMoney(worstDownswingMoney()) }})</span>
+          </dd>
+        </div>
+      </dl>
+
+      @if (breakeven() !== null) {
+        <div class="breakeven">
+          <span class="breakeven-label">{{ t('breakeven') }}</span>
+          <span class="breakeven-value">{{ fmt(breakeven()) }} {{ t('handsUnit') }}</span>
+        </div>
+      }
+    </section>
+  </div>
+
+  <section class="glass panel chart-section">
+    <h2>{{ t('chart.title') }}</h2>
+    <app-variance-simulation-chart
+      [hands]="hands()"
+      [evPerHand]="evPerHand()"
+      [sdPerHand]="sdPerHand()"
+      [ariaLabel]="t('chart.title')"
+    />
+    <div class="chart-legend">
+      <span class="legend-item">
+        <span class="legend-line legend-line--ev"></span>
+        {{ t('chart.ev') }}
+      </span>
+      <span class="legend-item">
+        <span class="legend-swatch legend-swatch--70"></span>
+        {{ t('chart.ci70') }}
+      </span>
+      <span class="legend-item">
+        <span class="legend-swatch legend-swatch--95"></span>
+        {{ t('chart.ci95') }}
+      </span>
+      <span class="legend-item">
+        <span class="legend-line legend-line--best"></span>
+        {{ t('chart.best') }}
+      </span>
+      <span class="legend-item">
+        <span class="legend-line legend-line--worst"></span>
+        {{ t('chart.worst') }}
+      </span>
+      <span class="legend-item">
+        <span class="legend-line legend-line--sample"></span>
+        {{ t('chart.samples') }}
+      </span>
+    </div>
+  </section>
+
+  <section class="glass panel downswing-section">
+    <h2>{{ t('downswingTitle') }}</h2>
+    <div class="downswing-row">
+      <label class="field">
+        <span>{{ t('downswingLabel') }}</span>
+        <div class="input-with-unit">
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="100"
+            [value]="downswingInput()"
+            (change)="update('downswingInput', $any($event.target).value)"
+          />
+          <span class="unit">BB</span>
+        </div>
+      </label>
+      <div class="downswing-result" [attr.data-high]="downswingProbability() > 50">
+        <span class="downswing-pct">{{ fmt(downswingProbability(), 1) }}%</span>
+        <span class="downswing-desc">{{ t('downswingDesc') }}</span>
+      </div>
+    </div>
+  </section>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>

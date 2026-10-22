@@ -202,6 +202,14 @@ export const routes: Routes = [
           import('./features/tools/variance-calculator-page').then((m) => m.VarianceCalculatorPage),
       },
       {
+        path: 'tools/cash-variance',
+        title: 'nav.cashVariance',
+        loadComponent: () =>
+          import('./features/tools/cash-variance-calculator-page').then(
+            (m) => m.CashVarianceCalculatorPage,
+          ),
+      },
+      {
         path: '**',
         title: 'pages.notFound.title',
         loadComponent: () =>

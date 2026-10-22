@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-076a231] — 2026-10-22
 
 ### Correctifs
 
@@ -10,6 +10,7 @@
 
 - **ranges**: Add custom user-defined ranges (backend + API + types)
 - **ranges,nav**: Add GameType to custom ranges and hide MTT-only tools in Cash Game
+- **hands**: Display cash game amounts in euros instead of raw cents
 
 ## [2026.10.22-131fa42] — 2026-10-22
 

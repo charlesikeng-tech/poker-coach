@@ -1,0 +1,40 @@
+@let s = scales();
+<svg [attr.width]="width()" [attr.height]="chartHeight" role="img" [attr.aria-label]="ariaLabel()">
+  @for (tick of s.yTicks; track tick) {
+    <line
+      class="grid"
+      [class.grid--zero]="tick === 0"
+      [attr.x1]="margin.left"
+      [attr.x2]="width() - margin.right"
+      [attr.y1]="s.y(tick)"
+      [attr.y2]="s.y(tick)"
+    />
+    <text
+      class="tick"
+      [attr.x]="margin.left - 8"
+      [attr.y]="s.y(tick)"
+      text-anchor="end"
+      dominant-baseline="middle"
+    >
+      {{ fmtAxis(tick) }}
+    </text>
+  }
+
+  @for (tick of s.xTicks; track tick) {
+    <text class="tick" [attr.x]="s.x(tick)" [attr.y]="chartHeight - 8" text-anchor="middle">
+      {{ fmtHands(tick) }}
+    </text>
+  }
+
+  <path class="band band--95" [attr.d]="bandPath95()" />
+  <path class="band band--70" [attr.d]="bandPath70()" />
+
+  @for (path of samplePaths(); track $index) {
+    <path class="sample" [attr.d]="path" [attr.stroke]="sampleColors[$index]" />
+  }
+
+  <path class="envelope envelope--best" [attr.d]="bestPath()" />
+  <path class="envelope envelope--worst" [attr.d]="worstPath()" />
+
+  <path class="ev-line" [attr.d]="evPath()" />
+</svg>

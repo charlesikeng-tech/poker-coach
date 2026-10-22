@@ -48,6 +48,12 @@ public interface IAccountDataStore
     /// <summary>Deletes the user; the database cascades to everything they own.</summary>
     /// <returns>False when the user did not exist.</returns>
     Task<bool> DeleteUserAsync(Guid userId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Deletes all poker data (hands, tournaments, imports, coaching, training, bankroll, ranges,
+    /// plans) but keeps the user, identities, subscription and poker accounts.
+    /// </summary>
+    Task ResetPokerDataAsync(Guid userId, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -124,6 +130,9 @@ public sealed class AccountDataService(
 
     public Task<bool> DeleteAsync(Guid userId, CancellationToken cancellationToken) =>
         store.DeleteUserAsync(userId, cancellationToken);
+
+    public Task ResetAsync(Guid userId, CancellationToken cancellationToken) =>
+        store.ResetPokerDataAsync(userId, cancellationToken);
 
     internal static string TournamentsCsv(IEnumerable<TournamentListItem> items)
     {

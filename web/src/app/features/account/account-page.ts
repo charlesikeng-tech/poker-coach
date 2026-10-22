@@ -3,7 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Copy, Download, KeyRound, Link2, Pencil, Plus, ShieldAlert, Trash2, User } from 'lucide';
+import {
+  Copy,
+  Download,
+  KeyRound,
+  Link2,
+  Pencil,
+  Plus,
+  RotateCcw,
+  ShieldAlert,
+  Trash2,
+  User,
+} from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -49,6 +60,7 @@ export class AccountPage {
     Link2,
     Pencil,
     Plus,
+    RotateCcw,
     ShieldAlert,
     Trash2,
     User,
@@ -97,6 +109,23 @@ export class AccountPage {
   protected readonly passwordError = signal<string | null>(null);
   protected readonly passwordMismatch = computed(
     () => this.repeatPassword() !== '' && this.repeatPassword() !== this.newPassword(),
+  );
+
+  // Reset data
+  protected readonly resetConfirmation = signal('');
+  protected readonly resetting = signal(false);
+  protected readonly resetFailed = signal(false);
+  protected readonly resetDone = signal(false);
+
+  protected readonly resetWord = computed(() => {
+    this.session.user();
+    return this.transloco.translate('pages.account.reset.word');
+  });
+
+  protected readonly canReset = computed(
+    () =>
+      this.resetConfirmation().trim().toUpperCase() === this.resetWord().toUpperCase() &&
+      !this.resetting(),
   );
 
   // Delete account
@@ -206,6 +235,24 @@ export class AccountPage {
     void this.document.defaultView?.navigator.clipboard.writeText(url);
     this.copiedId.set(invitation.id);
     setTimeout(() => this.copiedId.set(null), 2000);
+  }
+
+  protected async reset(): Promise<void> {
+    if (!this.canReset()) {
+      return;
+    }
+    this.resetting.set(true);
+    this.resetFailed.set(false);
+    this.resetDone.set(false);
+    try {
+      await firstValueFrom(this.http.post('/api/me/reset', { confirm: 'RESET' }));
+      this.resetDone.set(true);
+      this.resetConfirmation.set('');
+    } catch {
+      this.resetFailed.set(true);
+    } finally {
+      this.resetting.set(false);
+    }
   }
 
   protected async delete(): Promise<void> {

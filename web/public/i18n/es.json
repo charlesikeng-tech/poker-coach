@@ -29,7 +29,8 @@
     "cashSessions": "Sesiones Cash",
     "pushFold": "Push / Fold Nash",
     "bounty": "Bounty PKO",
-    "variance": "Varianza"
+    "variance": "Varianza",
+    "cashVariance": "Varianza Cash"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -1815,6 +1816,17 @@
         "title": "Seguridad",
         "connected": "Conectado",
         "emailPassword": "Email / Contraseña"
+      },
+      "reset": {
+        "title": "Reiniciar mis datos",
+        "description": "Todos tus datos de poker se eliminan: manos, torneos, archivos importados, coaching, entrenamiento, bankroll, planes y rangos personalizados. Tu cuenta, suscripción y cuentas de poker vinculadas se conservan.",
+        "advice": "Podrás reimportar tus archivos después del reinicio.",
+        "word": "REINICIAR",
+        "type": "Para confirmar, escribe {{word}}",
+        "action": "Reiniciar",
+        "resetting": "Reiniciando…",
+        "error": "No se pudo reiniciar. Inténtalo de nuevo.",
+        "done": "Datos reiniciados. Puedes reimportar tus archivos."
       }
     },
     "privacy": {
@@ -2478,6 +2490,38 @@
       "insight1": "La varianza en MTT es extrema: incluso un jugador ganador puede estar en pérdidas durante 500+ torneos. No saques conclusiones de muestras pequeñas.",
       "insight2": "Fields más grandes implican más varianza. Un field de 1.000 jugadores genera ~3× más varianza que uno de 100.",
       "insight3": "« Torneos para significancia » indica cuántos necesitas jugar para que tu muestra supere el ruido estadístico con 95% de confianza."
+    },
+    "cashVariance": {
+      "title": "Varianza Cash Game",
+      "description": "Simula la distribución de tus resultados en una muestra de manos cash. Responde a « ¿es normal mi mala racha? »",
+      "inputs": "Parámetros",
+      "hands": "Número de manos",
+      "bb100": "Win rate",
+      "sd": "Desviación estándar",
+      "bigBlind": "Big blind",
+      "results": "Proyección",
+      "expectedProfit": "Beneficio esperado",
+      "profitProb": "Probabilidad de beneficio",
+      "ci95": "Intervalo de confianza 95%",
+      "worstCase": "Peor escenario (1%)",
+      "breakeven": "Manos para significancia",
+      "handsUnit": "manos",
+      "downswingTitle": "Riesgo de downswing",
+      "downswingLabel": "Downswing testeado",
+      "downswingDesc": "de probabilidad de sufrir este downswing en el periodo",
+      "insightHead": "En la práctica",
+      "insight1": "Una desviación estándar de 75 BB/100 es típica en NL 6-max. En full ring (9-max), ronda los 60-65 BB/100.",
+      "insight2": "Con un win rate de 2 BB/100, necesitas unas 500.000 manos para que los resultados sean significativos. La paciencia es clave.",
+      "insight3": "Un downswing de 20-30 buy-ins es normal, incluso para un jugador ganador consistente. No cambies de estrategia por un solo downswing.",
+      "chart": {
+        "title": "Simulación",
+        "ev": "Valor esperado",
+        "ci70": "70 % de confianza",
+        "ci95": "95 % de confianza",
+        "best": "Mejor racha",
+        "worst": "Peor racha",
+        "samples": "Ejemplos de recorridos"
+      }
     }
   },
   "rangeSelector": {

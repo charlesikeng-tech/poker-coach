@@ -26,6 +26,9 @@ public sealed record ChangePasswordRequest(string? CurrentPassword, string? NewP
 /// <param name="Confirm">Must be exactly "DELETE": a deletion is never one stray request away.</param>
 public sealed record DeleteAccountRequest(string? Confirm);
 
+/// <param name="Confirm">Must be exactly "RESET": a reset is never one stray request away.</param>
+public sealed record ResetDataRequest(string? Confirm);
+
 public static class AccountEndpoints
 {
     public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder endpoints)
@@ -38,6 +41,7 @@ public static class AccountEndpoints
         group.MapPut("/display-name", ChangeDisplayNameAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapPost("/password", ChangePasswordAsync).AddEndpointFilter<AntiforgeryValidationFilter>().RequireRateLimiting(LocalAccountEndpoints.RateLimitPolicy);
         group.MapGet("/export", ExportAsync);
+        group.MapPost("/reset", ResetAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         group.MapDelete("/", DeleteAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
 
         return endpoints;
@@ -192,6 +196,27 @@ public static class AccountEndpoints
             await file.DisposeAsync();
             throw;
         }
+    }
+
+    /// <summary>Deletes all poker data but keeps the account, identities and subscription.</summary>
+    private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> ResetAsync(
+        [FromBody] ResetDataRequest request,
+        HttpContext context,
+        AccountDataService accountData,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!string.Equals(request.Confirm, "RESET", StringComparison.Ordinal))
+        {
+            return ApiProblems.Validation("confirm", "Must be \"RESET\".");
+        }
+
+        await accountData.ResetAsync(userId, cancellationToken);
+        return TypedResults.NoContent();
     }
 
     /// <summary>Deletes the account and everything it owns (GDPR erasure), then ends the session.</summary>

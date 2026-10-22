@@ -29,7 +29,8 @@
     "cashSessions": "Sessions Cash",
     "pushFold": "Push / Fold Nash",
     "bounty": "Bounty PKO",
-    "variance": "Variance"
+    "variance": "Variance",
+    "cashVariance": "Variance Cash"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -1815,6 +1816,17 @@
         "title": "Sécurité",
         "connected": "Connecté",
         "emailPassword": "E-mail / Mot de passe"
+      },
+      "reset": {
+        "title": "Réinitialiser mes données",
+        "description": "Toutes tes données poker sont supprimées : mains, tournois, fichiers importés, coaching, entraînement, bankroll, plans et ranges personnalisées. Ton compte, ton abonnement et tes comptes poker liés sont conservés.",
+        "advice": "Tu pourras ré-importer tes fichiers après la réinitialisation.",
+        "word": "REINITIALISER",
+        "type": "Pour confirmer, tape {{word}}",
+        "action": "Réinitialiser",
+        "resetting": "Réinitialisation…",
+        "error": "La réinitialisation n'a pas abouti. Réessaie.",
+        "done": "Données réinitialisées. Tu peux ré-importer tes fichiers."
       }
     },
     "privacy": {
@@ -2478,6 +2490,38 @@
       "insight1": "La variance en MTT est extrême : même un joueur gagnant peut être perdant sur 500+ tournois. Ne tirez pas de conclusions hâtives sur un petit échantillon.",
       "insight2": "Plus le field est grand, plus la variance est élevée. Un field de 1 000 joueurs génère ~3× plus de variance qu'un field de 100.",
       "insight3": "Le « nombre de tournois pour être significatif » indique combien il faut jouer pour que votre échantillon dépasse le bruit statistique avec 95 % de confiance."
+    },
+    "cashVariance": {
+      "title": "Variance Cash Game",
+      "description": "Simule la distribution de tes résultats sur un échantillon de mains cash. Réponds à « mon downswing est-il normal ? »",
+      "inputs": "Paramètres",
+      "hands": "Nombre de mains",
+      "bb100": "Win rate",
+      "sd": "Écart-type",
+      "bigBlind": "Big blind",
+      "results": "Projection",
+      "expectedProfit": "Profit espéré",
+      "profitProb": "Probabilité d'être en profit",
+      "ci95": "Intervalle de confiance 95 %",
+      "worstCase": "Pire scénario (1 %)",
+      "breakeven": "Mains pour être significatif",
+      "handsUnit": "mains",
+      "downswingTitle": "Risque de downswing",
+      "downswingLabel": "Downswing testé",
+      "downswingDesc": "de chance de subir ce downswing sur la période",
+      "insightHead": "En pratique",
+      "insight1": "Un écart-type de 75 BB/100 est typique en NL 6-max. En full ring (9-max), il est autour de 60-65 BB/100.",
+      "insight2": "Avec un win rate de 2 BB/100, il faut environ 500 000 mains pour que les résultats soient significatifs. La patience est la clé.",
+      "insight3": "Un downswing de 20-30 buy-ins est normal, même pour un joueur gagnant régulier. Ne change pas de stratégie sur un seul downswing.",
+      "chart": {
+        "title": "Simulation",
+        "ev": "Valeur attendue",
+        "ci70": "70 % de confiance",
+        "ci95": "95 % de confiance",
+        "best": "Meilleure course",
+        "worst": "Pire course",
+        "samples": "Exemples de parcours"
+      }
     }
   },
   "rangeSelector": {

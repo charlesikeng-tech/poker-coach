@@ -102,6 +102,12 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
             icon: Activity,
             visibleFor: 'tournament',
           },
+          {
+            path: '/tools/cash-variance',
+            labelKey: 'nav.cashVariance',
+            icon: Activity,
+            visibleFor: 'cashGame',
+          },
         ],
       },
     ],

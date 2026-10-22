@@ -102,6 +102,8 @@ public sealed class AccountDataServiceTests
         }
 
         public Task<bool> DeleteUserAsync(Guid userId, CancellationToken cancellationToken) => Task.FromResult(snapshot is not null);
+
+        public Task ResetPokerDataAsync(Guid userId, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 
     private sealed class StubTournaments(TournamentFacts[] facts) : ITournamentReadStore

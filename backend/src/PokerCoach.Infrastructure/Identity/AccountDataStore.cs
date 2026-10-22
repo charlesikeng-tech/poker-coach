@@ -2,10 +2,16 @@ using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Identity;
 using PokerCoach.Domain.Identity;
+using PokerCoach.Domain.Notifications;
+using PokerCoach.Domain.Poker.Ranges;
+using PokerCoach.Infrastructure.Bankroll;
 using PokerCoach.Infrastructure.Coaching;
 using PokerCoach.Infrastructure.Import;
 using PokerCoach.Infrastructure.Persistence;
+using PokerCoach.Infrastructure.Platform;
 using PokerCoach.Infrastructure.Poker;
+using PokerCoach.Infrastructure.Progress;
+using PokerCoach.Infrastructure.Statistics;
 using PokerCoach.Infrastructure.Training;
 
 namespace PokerCoach.Infrastructure.Identity;
@@ -86,4 +92,35 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
     /// </summary>
     public async Task<bool> DeleteUserAsync(Guid userId, CancellationToken cancellationToken) =>
         await db.Set<User>().Where(u => u.Id == userId).ExecuteDeleteAsync(cancellationToken) > 0;
+
+    /// <summary>
+    /// Deletes all poker data but keeps the user, identities, subscription and poker accounts.
+    /// Hands and tournaments cascade to facts, entries and coverage.
+    /// </summary>
+    public async Task ResetPokerDataAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var accountIds = await db.Set<PokerAccountRecord>()
+            .Where(a => a.UserId == userId)
+            .Select(a => a.Id)
+            .ToListAsync(cancellationToken);
+
+        if (accountIds.Count > 0)
+        {
+            await db.Set<HandRecord>().Where(h => accountIds.Contains(h.PokerAccountId)).ExecuteDeleteAsync(cancellationToken);
+            await db.Set<TournamentRecord>().Where(t => accountIds.Contains(t.PokerAccountId)).ExecuteDeleteAsync(cancellationToken);
+        }
+
+        await db.Set<ImportedFileRecord>().Where(f => f.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<LeakExplanationRecord>().Where(e => e.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<CoachingReportRecord>().Where(r => r.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<OpeningAttemptRecord>().Where(a => a.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<SizingAttemptRecord>().Where(a => a.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<BankrollSettingsRecord>().Where(s => s.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<BankrollMovementRecord>().Where(m => m.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<WeeklyPlanRecord>().Where(p => p.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<CustomOpeningRange>().Where(r => r.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<CustomDefenceRange>().Where(r => r.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<WeeklyNotification>().Where(n => n.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+        await db.Set<FeatureUsageRecord>().Where(u => u.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+    }
 }
