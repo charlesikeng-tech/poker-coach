@@ -28,7 +28,8 @@
     },
     "cashSessions": "Sessions Cash",
     "pushFold": "Push / Fold Nash",
-    "bounty": "Bounty PKO"
+    "bounty": "Bounty PKO",
+    "variance": "Variance"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -2418,6 +2419,26 @@
       "insight1": "En PKO, vous recevez la moitié du bounty adverse en cash immédiat. L'autre moitié s'ajoute à votre propre bounty (valeur indirecte estimée à ~50 % de sa face).",
       "insight2": "Plus le ratio bounty/buy-in est élevé, plus vous pouvez call large. Sur les tables finales PKO, les bounties gonflent et les calls deviennent très wide.",
       "insight3": "Ce calcul suppose que vous couvrez l'adversaire (vous l'éliminez si vous gagnez). Si c'est l'inverse, le bounty ne s'applique pas à ce spot."
+    },
+    "variance": {
+      "title": "Calculateur de Variance",
+      "description": "Simule la distribution de vos résultats sur un échantillon de tournois. Répondez à « mon downswing est-il normal ? »",
+      "inputs": "Paramètres",
+      "roi": "ROI estimé",
+      "buyIn": "Buy-in moyen",
+      "fieldSize": "Taille du field",
+      "numTournaments": "Nombre de tournois",
+      "results": "Projection",
+      "expectedProfit": "Profit espéré",
+      "profitProb": "Probabilité d'être en profit",
+      "ci95": "Intervalle de confiance 95 %",
+      "worstCase": "Pire scénario (1 %)",
+      "breakeven": "Tournois pour être significatif",
+      "tournaments": "tournois",
+      "insightHead": "En pratique",
+      "insight1": "La variance en MTT est extrême : même un joueur gagnant peut être perdant sur 500+ tournois. Ne tirez pas de conclusions hâtives sur un petit échantillon.",
+      "insight2": "Plus le field est grand, plus la variance est élevée. Un field de 1 000 joueurs génère ~3× plus de variance qu'un field de 100.",
+      "insight3": "Le « nombre de tournois pour être significatif » indique combien il faut jouer pour que votre échantillon dépasse le bruit statistique avec 95 % de confiance."
     }
   },
   "rangeSelector": {

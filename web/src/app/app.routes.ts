@@ -196,6 +196,12 @@ export const routes: Routes = [
           import('./features/tools/bounty-calculator-page').then((m) => m.BountyCalculatorPage),
       },
       {
+        path: 'tools/variance',
+        title: 'nav.variance',
+        loadComponent: () =>
+          import('./features/tools/variance-calculator-page').then((m) => m.VarianceCalculatorPage),
+      },
+      {
         path: '**',
         title: 'pages.notFound.title',
         loadComponent: () =>

@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - **tools**: Add Nash push/fold reference charts
+- **tools**: Add Bounty PKO calculator for progressive knockout decisions
 
 ## [2026.10.22-9db8085] — 2026-10-22
 

@@ -28,7 +28,8 @@
     },
     "cashSessions": "Sesiones Cash",
     "pushFold": "Push / Fold Nash",
-    "bounty": "Bounty PKO"
+    "bounty": "Bounty PKO",
+    "variance": "Varianza"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -2418,6 +2419,26 @@
       "insight1": "En PKO, recibes la mitad del bounty rival en efectivo inmediato. La otra mitad se suma a tu propio bounty (valor indirecto estimado en ~50% de su valor nominal).",
       "insight2": "Cuanto mayor sea la relación bounty/buy-in, más amplio puedes hacer call. En las mesas finales PKO, los bounties se inflan y los calls se vuelven muy amplios.",
       "insight3": "Este cálculo asume que cubres al rival (lo eliminas si ganas). Si él te cubre a ti, el bounty no aplica en este spot."
+    },
+    "variance": {
+      "title": "Calculadora de Varianza",
+      "description": "Simula la distribución de tus resultados en una muestra de torneos. Responde a « ¿es normal mi mala racha? »",
+      "inputs": "Parámetros",
+      "roi": "ROI estimado",
+      "buyIn": "Buy-in promedio",
+      "fieldSize": "Tamaño del field",
+      "numTournaments": "Número de torneos",
+      "results": "Proyección",
+      "expectedProfit": "Beneficio esperado",
+      "profitProb": "Probabilidad de beneficio",
+      "ci95": "Intervalo de confianza 95%",
+      "worstCase": "Peor escenario (1%)",
+      "breakeven": "Torneos para significancia",
+      "tournaments": "torneos",
+      "insightHead": "En la práctica",
+      "insight1": "La varianza en MTT es extrema: incluso un jugador ganador puede estar en pérdidas durante 500+ torneos. No saques conclusiones de muestras pequeñas.",
+      "insight2": "Fields más grandes implican más varianza. Un field de 1.000 jugadores genera ~3× más varianza que uno de 100.",
+      "insight3": "« Torneos para significancia » indica cuántos necesitas jugar para que tu muestra supere el ruido estadístico con 95% de confianza."
     }
   },
   "rangeSelector": {

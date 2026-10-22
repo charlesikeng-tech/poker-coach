@@ -1,0 +1,100 @@
+<ng-container *transloco="let t; prefix: 'pages.variance'">
+  <app-page-header [heading]="t('title')" [description]="t('description')" />
+
+  <div class="layout">
+    <section class="glass panel inputs">
+      <h2>{{ t('inputs') }}</h2>
+
+      <div class="fields">
+        <label class="field">
+          <span>{{ t('roi') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              step="1"
+              [value]="roi()"
+              (change)="update('roi', $any($event.target).value)"
+            />
+            <span class="unit">%</span>
+          </div>
+        </label>
+        <label class="field">
+          <span>{{ t('buyIn') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0.01"
+              step="1"
+              [value]="buyIn()"
+              (change)="update('buyIn', $any($event.target).value)"
+            />
+            <span class="unit">€</span>
+          </div>
+        </label>
+        <label class="field">
+          <span>{{ t('fieldSize') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="2"
+            step="10"
+            [value]="fieldSize()"
+            (change)="update('fieldSize', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('numTournaments') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="50"
+            [value]="numTournaments()"
+            (change)="update('numTournaments', $any($event.target).value)"
+          />
+        </label>
+      </div>
+    </section>
+
+    <section class="glass panel results">
+      <h2>{{ t('results') }}</h2>
+
+      <dl class="metrics">
+        <div class="metric" [attr.data-positive]="expectedProfit() >= 0">
+          <dt>{{ t('expectedProfit') }}</dt>
+          <dd>{{ fmtSigned(expectedProfit()) }} €</dd>
+        </div>
+        <div class="metric metric--highlight">
+          <dt>{{ t('profitProb') }}</dt>
+          <dd>{{ fmt(profitProbability(), 1) }}%</dd>
+        </div>
+        <div class="metric">
+          <dt>{{ t('ci95') }}</dt>
+          <dd class="ci-range">{{ fmtSigned(ci95Low()) }} € → {{ fmtSigned(ci95High()) }} €</dd>
+        </div>
+        <div class="metric" [attr.data-positive]="false">
+          <dt>{{ t('worstCase') }}</dt>
+          <dd>{{ fmtSigned(worstDownswing()) }} €</dd>
+        </div>
+      </dl>
+
+      @if (breakeven() !== null) {
+        <div class="breakeven">
+          <span class="breakeven-label">{{ t('breakeven') }}</span>
+          <span class="breakeven-value">{{ fmt(breakeven()) }} {{ t('tournaments') }}</span>
+        </div>
+      }
+    </section>
+  </div>
+
+  <aside class="insights glass">
+    <p class="insights-head">{{ t('insightHead') }}</p>
+    <ul class="insight-list">
+      <li>{{ t('insight1') }}</li>
+      <li>{{ t('insight2') }}</li>
+      <li>{{ t('insight3') }}</li>
+    </ul>
+  </aside>
+</ng-container>
