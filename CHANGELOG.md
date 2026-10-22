@@ -1,6 +1,12 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-9f7a919] — 2026-10-22
+
+### Fonctionnalités
+
+- **auth**: Validate Turnstile action and hostname in siteverify
+
+## [2026.10.22-d4db456] — 2026-10-22
 
 ### Correctifs
 

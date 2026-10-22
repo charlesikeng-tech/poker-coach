@@ -17,7 +17,7 @@ public static partial class WebHosting
     /// </summary>
     private const string ContentSecurityPolicy =
         "default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; "
-        + "font-src 'self'; connect-src 'self' https://*.ingest.de.sentry.io; frame-src https://challenges.cloudflare.com; "
+        + "font-src 'self'; connect-src 'self' https://*.ingest.de.sentry.io https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; "
         + "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
 
     private const string Immutable = "public, max-age=31536000, immutable";
