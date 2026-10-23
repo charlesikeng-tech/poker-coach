@@ -75,19 +75,30 @@
     <section class="glass panel results">
       <h2>{{ t('results') }}</h2>
 
-      @if (evResults().length > 0) {
-        <dl class="metrics">
-          @for (result of evResults(); track result.action) {
-            <div
-              class="metric"
-              [class.metric--best]="result.action === bestAction()"
-              [attr.data-positive]="result.ev >= 0"
-            >
-              <dt>{{ t('action.' + result.action) }}</dt>
-              <dd>{{ fmt(result.ev) }}</dd>
+      @if (evBars().length > 0) {
+        <div class="ev-bars">
+          @for (bar of evBars(); track bar.action) {
+            <div class="ev-bar-row" [class.ev-bar-row--best]="bar.isBest">
+              <span class="ev-bar-label">{{ t('action.' + bar.action) }}</span>
+              <div class="ev-bar-track">
+                <div class="ev-bar-zero"></div>
+                <div
+                  class="ev-bar-fill"
+                  [class.positive]="bar.isPositive"
+                  [class.negative]="!bar.isPositive"
+                  [style.width.%]="bar.pct"
+                ></div>
+              </div>
+              <span
+                class="ev-bar-value"
+                [class.positive]="bar.isPositive"
+                [class.negative]="!bar.isPositive"
+              >
+                {{ fmt(bar.ev) }}
+              </span>
             </div>
           }
-        </dl>
+        </div>
 
         <p class="verdict" [attr.data-action]="bestAction()">
           {{ t('verdict.' + bestAction()) }}

@@ -49,6 +49,23 @@ export class PotOddsPage {
     return ev !== null && ev >= 0;
   });
 
+  protected readonly gaugeArc = computed(() => {
+    const odds = this.potOdds();
+    const eq = this.equity() / 100;
+    if (odds === null) return null;
+    const r = 54;
+    const circ = 2 * Math.PI * r;
+    const half = circ / 2;
+    return {
+      r,
+      circ,
+      oddsOffset: circ - odds * half,
+      equityOffset: circ - Math.min(eq, 1) * half,
+      oddsPct: odds * 100,
+      equityPct: eq * 100,
+    };
+  });
+
   protected update(field: 'pot' | 'call' | 'equity', value: string): void {
     const n = parseFloat(value);
     if (!isNaN(n)) {

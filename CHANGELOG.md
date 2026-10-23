@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - **tools**: Add risk of ruin, Kelly criterion, observed winrate and bankroll recommendations to cash variance calculator
+- **site**: Add tools listing pages (FR/EN/ES) and navigation links
 
 ## [2026.10.23-85f1dfc] — 2026-10-23
 

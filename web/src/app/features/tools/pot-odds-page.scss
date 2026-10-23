@@ -119,6 +119,67 @@ input[type='number'] {
   }
 }
 
+// ── Gauge ───────────────────────────────────────────────────────────
+
+.gauge-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-4);
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 220px;
+  overflow: visible;
+}
+
+.gauge-equity {
+  transition: stroke-dashoffset var(--motion-base) var(--easing-emphasized);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--success) 40%, transparent));
+}
+
+.gauge-odds {
+  transition: stroke-dashoffset var(--motion-base) var(--easing-emphasized);
+  opacity: 0.5;
+}
+
+.gauge-labels {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0.25rem;
+  pointer-events: none;
+}
+
+.gauge-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gauge-main {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+
+  &.positive {
+    color: var(--success);
+  }
+
+  &.negative {
+    color: var(--danger);
+  }
+}
+
+.gauge-sub {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
 @media (max-width: 767px) {
   .layout {
     grid-template-columns: 1fr;

@@ -61,14 +61,40 @@
     <section class="glass panel results">
       <h2>{{ t('results') }}</h2>
 
+      <div class="prob-hero" [attr.data-positive]="profitProbability() >= 50">
+        <div class="prob-ring">
+          <svg viewBox="0 0 120 120" class="prob-svg" aria-hidden="true">
+            <circle
+              cx="60"
+              cy="60"
+              r="52"
+              fill="none"
+              stroke="var(--border-subtle)"
+              stroke-width="8"
+            />
+            <circle
+              cx="60"
+              cy="60"
+              r="52"
+              fill="none"
+              stroke-width="8"
+              stroke-linecap="round"
+              [attr.stroke]="profitProbability() >= 50 ? 'var(--success)' : 'var(--danger)'"
+              [attr.stroke-dasharray]="2 * 3.1416 * 52"
+              [attr.stroke-dashoffset]="2 * 3.1416 * 52 * (1 - profitProbability() / 100)"
+              transform="rotate(-90 60 60)"
+              class="prob-ring-fill"
+            />
+          </svg>
+          <span class="prob-ring-value">{{ fmt(profitProbability(), 1) }}%</span>
+        </div>
+        <span class="prob-ring-label">{{ t('profitProb') }}</span>
+      </div>
+
       <dl class="metrics">
         <div class="metric" [attr.data-positive]="expectedProfit() >= 0">
           <dt>{{ t('expectedProfit') }}</dt>
           <dd>{{ fmtSigned(expectedProfit()) }} €</dd>
-        </div>
-        <div class="metric metric--highlight">
-          <dt>{{ t('profitProb') }}</dt>
-          <dd>{{ fmt(profitProbability(), 1) }}%</dd>
         </div>
         <div class="metric">
           <dt>{{ t('ci95') }}</dt>

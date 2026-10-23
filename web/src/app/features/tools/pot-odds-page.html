@@ -49,11 +49,71 @@
     <section class="glass panel results">
       <h2>{{ t('results') }}</h2>
 
-      <dl class="metrics">
-        <div class="metric">
-          <dt>{{ t('potOdds') }}</dt>
-          <dd>{{ fmtPct(potOdds()) }}</dd>
+      @if (gaugeArc(); as g) {
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 120 70" class="gauge-svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="potOddsGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="var(--danger)" />
+                <stop offset="50%" stop-color="var(--warning)" />
+                <stop offset="100%" stop-color="var(--success)" />
+              </linearGradient>
+            </defs>
+            <circle
+              cx="60"
+              cy="60"
+              [attr.r]="g.r"
+              fill="none"
+              stroke="var(--border-subtle)"
+              stroke-width="8"
+              stroke-linecap="round"
+              [attr.stroke-dasharray]="g.circ"
+              [attr.stroke-dashoffset]="g.circ / 2"
+              transform="rotate(180 60 60)"
+            />
+            <circle
+              cx="60"
+              cy="60"
+              [attr.r]="g.r"
+              fill="none"
+              stroke="url(#potOddsGrad)"
+              stroke-width="8"
+              stroke-linecap="round"
+              class="gauge-equity"
+              [attr.stroke-dasharray]="g.circ"
+              [attr.stroke-dashoffset]="g.equityOffset"
+              transform="rotate(180 60 60)"
+            />
+            <circle
+              cx="60"
+              cy="60"
+              [attr.r]="g.r"
+              fill="none"
+              stroke="var(--text-primary)"
+              stroke-width="3"
+              stroke-linecap="round"
+              class="gauge-odds"
+              [attr.stroke-dasharray]="g.circ"
+              [attr.stroke-dashoffset]="g.oddsOffset"
+              transform="rotate(180 60 60)"
+            />
+          </svg>
+          <div class="gauge-labels">
+            <div class="gauge-center">
+              <span
+                class="gauge-main"
+                [class.positive]="isPositiveEv()"
+                [class.negative]="!isPositiveEv()"
+              >
+                {{ fmtPct(potOdds()) }}
+              </span>
+              <span class="gauge-sub">{{ t('potOdds') }}</span>
+            </div>
+          </div>
         </div>
+      }
+
+      <dl class="metrics">
         <div class="metric">
           <dt>{{ t('breakEven') }}</dt>
           <dd>{{ fmtPct(breakEven()) }}</dd>

@@ -132,24 +132,41 @@
     @if (results(); as players) {
       <section class="glass panel results-panel">
         <h2>{{ t('results') }}</h2>
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th>{{ t('player') }}</th>
-              <th class="num">{{ t('chipShare') }}</th>
-              <th class="num">{{ t('icmEquity') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (player of players; track $index) {
-              <tr>
-                <td>{{ t('playerN', { n: $index + 1 }) }}</td>
-                <td class="num">{{ formatChipShare(player.chipShare) }}</td>
-                <td class="num equity">{{ formatEquity(player.icmEquity) }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+        <div class="icm-bars">
+          @for (player of players; track $index) {
+            <div class="icm-bar-row">
+              <span class="icm-bar-label">{{ t('playerN', { n: $index + 1 }) }}</span>
+              <div class="icm-bar-tracks">
+                <div class="icm-bar-track">
+                  <div
+                    class="icm-bar-fill icm-bar-fill--chips"
+                    [style.width.%]="player.chipShare * 100"
+                  ></div>
+                </div>
+                <div class="icm-bar-track">
+                  <div
+                    class="icm-bar-fill icm-bar-fill--equity"
+                    [style.width.%]="(player.icmEquity / payouts()[0]) * 100"
+                  ></div>
+                </div>
+              </div>
+              <div class="icm-bar-values">
+                <span class="icm-chip-value">{{ formatChipShare(player.chipShare) }}</span>
+                <span class="icm-equity-value">{{ formatEquity(player.icmEquity) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="icm-legend">
+          <span class="icm-legend-item">
+            <span class="icm-legend-swatch icm-legend-swatch--chips"></span>
+            {{ t('chipShare') }}
+          </span>
+          <span class="icm-legend-item">
+            <span class="icm-legend-swatch icm-legend-swatch--equity"></span>
+            {{ t('icmEquity') }}
+          </span>
+        </div>
       </section>
     }
   </div>

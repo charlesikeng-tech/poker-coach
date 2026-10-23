@@ -157,10 +157,24 @@
   background: color-mix(in srgb, var(--success) 25%, var(--surface-secondary));
   border-color: color-mix(in srgb, var(--success) 45%, transparent);
   color: var(--text-primary);
+  box-shadow: inset 0 0 8px color-mix(in srgb, var(--success) 12%, transparent);
+  animation: push-glow 140ms var(--easing-standard);
 
   .cell__hand {
     color: var(--success);
     font-weight: var(--font-weight-semibold);
+  }
+
+  &:hover {
+    box-shadow:
+      inset 0 0 8px color-mix(in srgb, var(--success) 12%, transparent),
+      0 0 12px color-mix(in srgb, var(--success) 25%, transparent);
+  }
+}
+
+@keyframes push-glow {
+  from {
+    background: color-mix(in srgb, var(--success) 50%, var(--surface-secondary));
   }
 }
 

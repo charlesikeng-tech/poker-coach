@@ -91,20 +91,34 @@
     <section class="glass panel results">
       <h2>{{ t('results') }}</h2>
 
-      <dl class="metrics">
-        <div class="metric">
-          <dt>{{ t('standardEquity') }}</dt>
-          <dd>{{ fmt(standardRequired()) }}%</dd>
+      <div class="equity-compare">
+        <div class="equity-compare-row">
+          <span class="equity-compare-label">{{ t('standardEquity') }}</span>
+          <div class="equity-compare-track">
+            <div
+              class="equity-compare-fill equity-compare-fill--standard"
+              [style.width.%]="standardRequired()"
+            ></div>
+          </div>
+          <span class="equity-compare-value">{{ fmt(standardRequired()) }}%</span>
         </div>
-        <div class="metric metric--highlight">
-          <dt>{{ t('adjustedEquity') }}</dt>
-          <dd>{{ fmt(adjustedRequired()) }}%</dd>
+        <div class="equity-compare-row">
+          <span class="equity-compare-label">{{ t('adjustedEquity') }}</span>
+          <div class="equity-compare-track">
+            <div
+              class="equity-compare-fill equity-compare-fill--adjusted"
+              [style.width.%]="adjustedRequired()"
+            ></div>
+          </div>
+          <span class="equity-compare-value equity-compare-value--accent"
+            >{{ fmt(adjustedRequired()) }}%</span
+          >
         </div>
-        <div class="metric">
-          <dt>{{ t('discount') }}</dt>
-          <dd class="discount">−{{ fmt(equityDiscount()) }}%</dd>
+        <div class="equity-discount-badge">
+          <span class="discount-arrow">↓</span>
+          <span class="discount-value">−{{ fmt(equityDiscount()) }}%</span>
         </div>
-      </dl>
+      </div>
 
       <div class="ev-comparison">
         <div class="ev-row" [attr.data-positive]="evWithout() >= 0">

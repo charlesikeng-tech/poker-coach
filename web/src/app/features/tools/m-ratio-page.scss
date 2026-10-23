@@ -59,6 +59,150 @@ input[type='number'] {
   padding: 0;
 }
 
+// ── M Hero ──────────────────────────────────────────────────────────
+
+.m-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--space-5);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--surface-hover);
+  transition: box-shadow var(--motion-base) var(--easing-standard);
+
+  &[data-zone='green'] {
+    box-shadow: 0 0 24px color-mix(in srgb, var(--success) 15%, transparent);
+  }
+
+  &[data-zone='yellow'] {
+    box-shadow: 0 0 24px color-mix(in srgb, var(--warning) 15%, transparent);
+  }
+
+  &[data-zone='orange'] {
+    box-shadow: 0 0 24px color-mix(in srgb, var(--warning) 10%, transparent);
+  }
+
+  &[data-zone='red'] {
+    box-shadow: 0 0 24px color-mix(in srgb, var(--danger) 15%, transparent);
+  }
+
+  &[data-zone='dead'] {
+    box-shadow: 0 0 24px color-mix(in srgb, var(--text-muted) 10%, transparent);
+  }
+}
+
+.m-hero-value {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+
+  [data-zone='green'] & {
+    color: var(--success);
+  }
+
+  [data-zone='yellow'] & {
+    color: var(--warning);
+  }
+
+  [data-zone='orange'] & {
+    color: color-mix(in srgb, var(--warning) 50%, var(--danger));
+  }
+
+  [data-zone='red'] & {
+    color: var(--danger);
+  }
+
+  [data-zone='dead'] & {
+    color: var(--text-muted);
+  }
+}
+
+.m-hero-label {
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// ── Zone gauge ──────────────────────────────────────────────────────
+
+.zone-gauge {
+  position: relative;
+  margin-bottom: var(--space-5);
+}
+
+.zone-gauge-track {
+  display: flex;
+  height: 0.625rem;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.zone-segment {
+  &--dead {
+    flex: 1;
+    background: var(--text-muted);
+    opacity: 0.3;
+  }
+
+  &--red {
+    flex: 5;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--text-muted) 50%, var(--danger)),
+      var(--danger)
+    );
+  }
+
+  &--orange {
+    flex: 4;
+    background: linear-gradient(
+      90deg,
+      var(--danger),
+      color-mix(in srgb, var(--warning) 50%, var(--danger))
+    );
+  }
+
+  &--yellow {
+    flex: 10;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--warning) 50%, var(--danger)),
+      var(--warning)
+    );
+  }
+
+  &--green {
+    flex: 10;
+    background: linear-gradient(90deg, var(--warning), var(--success));
+  }
+}
+
+.zone-gauge-indicator {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 1rem;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--text-primary);
+  box-shadow: 0 0 6px rgb(0 0 0 / 0.5);
+  transition: left var(--motion-base) var(--easing-emphasized);
+}
+
+.zone-gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .metric {
   display: flex;
   justify-content: space-between;
@@ -78,11 +222,6 @@ input[type='number'] {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-semibold);
     font-variant-numeric: tabular-nums;
-  }
-
-  &--large dd {
-    font-size: var(--font-size-metric);
-    color: var(--accent-primary);
   }
 }
 

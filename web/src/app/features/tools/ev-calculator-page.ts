@@ -54,6 +54,18 @@ export class EvCalculatorPage {
     return results.reduce((best, curr) => (curr.ev > best.ev ? curr : best)).action;
   });
 
+  protected readonly evBars = computed(() => {
+    const results = this.evResults();
+    if (results.length === 0) return [];
+    const maxAbs = Math.max(...results.map((r) => Math.abs(r.ev)), 1);
+    return results.map((r) => ({
+      ...r,
+      pct: (r.ev / maxAbs) * 50 + 50,
+      isPositive: r.ev >= 0,
+      isBest: r.action === this.bestAction(),
+    }));
+  });
+
   protected update(
     field: 'pot' | 'callAmount' | 'winPct' | 'raiseAmount' | 'foldEquityPct',
     value: string,

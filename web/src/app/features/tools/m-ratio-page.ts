@@ -50,6 +50,12 @@ export class MRatioPage {
     return m !== null ? zone(m) : 'dead';
   });
 
+  protected readonly zonePct = computed(() => {
+    const m = this.mRatio();
+    if (m === null) return 0;
+    return Math.min(m / 30, 1) * 100;
+  });
+
   protected update(field: 'stack' | 'sb' | 'bb' | 'ante' | 'players', value: string): void {
     const n = parseFloat(value);
     if (!isNaN(n) && n >= 0) {

@@ -160,7 +160,7 @@ input[type='text'] {
 }
 
 .bar-track {
-  height: 0.5rem;
+  height: 0.625rem;
   overflow: hidden;
   border-radius: var(--radius-pill);
   background: var(--border-subtle);
@@ -169,10 +169,15 @@ input[type='text'] {
 .bar-fill {
   height: 100%;
   border-radius: inherit;
-  background: var(--player-color, var(--accent-primary));
-  box-shadow: 0 0 6px
-    color-mix(in srgb, var(--player-color, var(--accent-primary)) 60%, transparent);
-  transition: width 500ms var(--easing-emphasized, ease-out);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--player-color, var(--accent-primary)) 70%, transparent),
+    var(--player-color, var(--accent-primary))
+  );
+  box-shadow:
+    0 0 8px color-mix(in srgb, var(--player-color, var(--accent-primary)) 50%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 0.15);
+  transition: width 700ms var(--easing-emphasized, ease-out);
 }
 
 .equity-value {

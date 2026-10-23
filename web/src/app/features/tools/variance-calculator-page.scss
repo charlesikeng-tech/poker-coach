@@ -63,6 +63,66 @@ input[type='number'] {
   }
 }
 
+// ── Probability hero ────────────────────────────────────────────────
+
+.prob-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--space-5);
+}
+
+.prob-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.prob-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.prob-ring-fill {
+  transition: stroke-dashoffset var(--motion-slow) var(--easing-emphasized);
+
+  [data-positive='true'] & {
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--success) 40%, transparent));
+  }
+
+  [data-positive='false'] & {
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--danger) 40%, transparent));
+  }
+}
+
+.prob-ring-value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+
+  [data-positive='true'] & {
+    color: var(--success);
+  }
+
+  [data-positive='false'] & {
+    color: var(--danger);
+  }
+}
+
+.prob-ring-label {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 // ── Results ─────────────────────────────────────────────────────────
 
 .metrics {

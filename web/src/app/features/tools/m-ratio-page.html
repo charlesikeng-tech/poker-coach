@@ -68,14 +68,34 @@
     <section class="glass panel results">
       <h2>{{ t('results') }}</h2>
 
+      <div class="m-hero" [attr.data-zone]="zone()">
+        <span class="m-hero-value">{{ fmt(mRatio()) }}</span>
+        <span class="m-hero-label">M-Ratio</span>
+      </div>
+
+      <div class="zone-gauge">
+        <div class="zone-gauge-track">
+          <div class="zone-segment zone-segment--dead"></div>
+          <div class="zone-segment zone-segment--red"></div>
+          <div class="zone-segment zone-segment--orange"></div>
+          <div class="zone-segment zone-segment--yellow"></div>
+          <div class="zone-segment zone-segment--green"></div>
+        </div>
+        <div class="zone-gauge-indicator" [style.left.%]="zonePct()"></div>
+        <div class="zone-gauge-labels">
+          <span>0</span>
+          <span>1</span>
+          <span>6</span>
+          <span>10</span>
+          <span>20</span>
+          <span>30+</span>
+        </div>
+      </div>
+
       <dl class="metrics">
         <div class="metric">
           <dt>{{ t('orbitCost') }}</dt>
           <dd>{{ fmt(orbitCost()) }}</dd>
-        </div>
-        <div class="metric metric--large">
-          <dt>M</dt>
-          <dd>{{ fmt(mRatio()) }}</dd>
         </div>
         <div class="metric">
           <dt>{{ t('effectiveM') }}</dt>
