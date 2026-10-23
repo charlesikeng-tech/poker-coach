@@ -73,8 +73,19 @@
 }
 
 .group-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin-top: var(--space-6);
   font-size: var(--font-size-lg);
+
+  &::before {
+    content: '';
+    width: 3px;
+    height: 1em;
+    border-radius: 2px;
+    background: var(--accent-primary);
+  }
 }
 
 .group-hint {
@@ -83,12 +94,27 @@
   font-size: var(--font-size-sm);
 }
 
-// Flex, not a grid of fixed tracks: a card alone on its row (or the open one) takes the whole row
-// instead of a third of it.
 .leaks {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
+
+  > * {
+    animation: card-in var(--motion-base) var(--easing-emphasized) both;
+  }
+
+  @for $i from 1 through 8 {
+    > :nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 60}ms;
+    }
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 .leak {

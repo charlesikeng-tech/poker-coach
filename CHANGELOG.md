@@ -8,6 +8,7 @@
 - **site**: Add tools listing pages (FR/EN/ES) and navigation links
 - **tools**: Add visual gauges and enhanced rendering to all calculators
 - **ui**: Add visual polish to dashboard, performance and statistics pages
+- **ui**: Add visual polish to tournaments and cash sessions pages
 
 ## [2026.10.23-85f1dfc] — 2026-10-23
 
