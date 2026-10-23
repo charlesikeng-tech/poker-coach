@@ -23,5 +23,5 @@ Before going live:
 
 - [ ] Fill in `mentions-legales.html` (publisher, SIREN, host) — mandatory in France
 - [ ] Have `cgv.html` written or validated, then link it in Stripe Checkout (Settings → Public details)
-- [ ] Create the `partenaires@nutsiq.com` mailbox
+- [x] Create the `contact@nutsiq.com` mailbox
 - [ ] Prices here mirror Stripe's (9 €/month, 79 €/year): change both together

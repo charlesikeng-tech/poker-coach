@@ -9,7 +9,7 @@ import { BrandMark } from '../../shared/ui/brand-mark/brand-mark';
  * Address for privacy requests, shown on the page once set. Until then the page points to the account
  * page, where export and deletion are self-service. Set it before inviting players outside the team.
  */
-export const PRIVACY_CONTACT_EMAIL: string | null = null;
+export const PRIVACY_CONTACT_EMAIL: string | null = 'contact@nutsiq.com';
 
 /** Public: readable before signing in, linked from the sign-in page. */
 @Component({

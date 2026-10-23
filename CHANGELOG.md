@@ -1,6 +1,10 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.22-def44a2] — 2026-10-22
+
+### Correctifs
+
+- **nav**: Navigate to dashboard when switching game type
 
 ### Fonctionnalités
 
