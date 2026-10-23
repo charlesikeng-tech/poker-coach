@@ -37,10 +37,29 @@ h2 {
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: var(--space-3);
   margin: 0 0 var(--space-4);
+
+  > * {
+    animation: tile-in var(--motion-base) var(--easing-emphasized) both;
+  }
+
+  @for $i from 1 through 6 {
+    > :nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 60}ms;
+    }
+  }
+}
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 .stat-tile--hero {
   grid-column: span 2;
+  border-color: color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-primary) 8%, transparent);
 }
 
 .hint {
@@ -65,12 +84,36 @@ app-tournament-selection-panel {
   margin-top: var(--space-6);
 }
 
+h2 {
+  position: relative;
+  padding-left: var(--space-4);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    width: 3px;
+    height: 1em;
+    border-radius: 2px;
+    background: var(--accent-primary);
+  }
+}
+
 tbody tr {
   transition: background-color var(--motion-fast) var(--easing-standard);
 }
 
 tbody tr:hover {
   background: var(--surface-hover);
+}
+
+td[data-sign='positive'] {
+  background: color-mix(in srgb, var(--success) 8%, transparent);
+}
+
+td[data-sign='negative'] {
+  background: color-mix(in srgb, var(--danger) 6%, transparent);
 }
 
 .skeleton-tile {

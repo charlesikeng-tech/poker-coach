@@ -8,9 +8,22 @@
 }
 
 h2 {
+  position: relative;
   margin-bottom: var(--space-1);
+  padding-left: var(--space-4);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    width: 3px;
+    height: 1em;
+    border-radius: 2px;
+    background: var(--accent-primary);
+  }
 }
 
 .lead {
@@ -59,8 +72,24 @@ tbody th {
   }
 }
 
+tbody tr {
+  transition: background-color var(--motion-fast) var(--easing-standard);
+}
+
+tbody tr:hover {
+  background: var(--surface-hover);
+}
+
 tbody tr:last-child > * {
   border-bottom: 0;
+}
+
+td[data-sign='positive'] {
+  background: color-mix(in srgb, var(--success) 8%, transparent);
+}
+
+td[data-sign='negative'] {
+  background: color-mix(in srgb, var(--danger) 6%, transparent);
 }
 
 .num {

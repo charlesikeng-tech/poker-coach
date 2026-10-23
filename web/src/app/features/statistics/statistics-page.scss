@@ -68,12 +68,23 @@
 }
 
 .section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin: var(--space-6) 0 var(--space-3);
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+
+  &::before {
+    content: '';
+    width: 3px;
+    height: 1em;
+    border-radius: 2px;
+    background: var(--accent-primary);
+  }
 
   &:first-of-type {
     margin-top: 0;
@@ -84,6 +95,23 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   gap: var(--space-3);
+
+  > * {
+    animation: tile-in var(--motion-base) var(--easing-emphasized) both;
+  }
+
+  @for $i from 1 through 10 {
+    > :nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 50}ms;
+    }
+  }
+}
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 .sample {
@@ -145,6 +173,14 @@ tbody tr:hover {
 
 tbody tr:last-child > * {
   border-bottom: 0;
+}
+
+td[data-sign='positive'] {
+  background: color-mix(in srgb, var(--success) 8%, transparent);
+}
+
+td[data-sign='negative'] {
+  background: color-mix(in srgb, var(--danger) 6%, transparent);
 }
 
 .num {

@@ -56,6 +56,7 @@
           >
             @if (profitDelta(); as delta) {
               <small class="delta" [attr.data-sign]="sign(delta)">
+                {{ sign(delta) === 'positive' ? '↑' : '↓' }}
                 {{ t('totals.delta', { amount: formats().signedMoney(delta), days: windowDays }) }}
               </small>
             } @else {

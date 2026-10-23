@@ -30,12 +30,23 @@
 }
 
 .section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   margin-bottom: var(--space-3);
   color: var(--text-secondary);
   font-family: var(--font-sans);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
   letter-spacing: 0;
+
+  &::before {
+    content: '';
+    width: 3px;
+    height: 1em;
+    border-radius: 2px;
+    background: var(--accent-primary);
+  }
 }
 
 .totals {
@@ -43,15 +54,53 @@
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   gap: var(--space-3);
   margin-bottom: var(--space-4);
+
+  > * {
+    animation: tile-in var(--motion-base) var(--easing-emphasized) both;
+  }
+
+  @for $i from 1 through 6 {
+    > :nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 60}ms;
+    }
+  }
+}
+
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }
 
 .stat-tile--hero {
   grid-column: span 2;
+  border-color: color-mix(in srgb, var(--accent-primary) 25%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent-primary) 8%, transparent);
 }
 
 .delta {
-  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+
+  &[data-sign='positive'] {
+    background: color-mix(in srgb, var(--success) 10%, transparent);
+    color: var(--success);
+  }
+
+  &[data-sign='negative'] {
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+    color: var(--danger);
+  }
+
+  &:not([data-sign]) {
+    color: var(--text-muted);
+  }
 }
 
 .columns {
@@ -59,6 +108,18 @@
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: var(--space-4);
   margin-top: var(--space-4);
+
+  > * {
+    animation: tile-in var(--motion-base) var(--easing-emphasized) both;
+
+    &:nth-child(1) {
+      animation-delay: 200ms;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 280ms;
+    }
+  }
 }
 
 .panel {
@@ -102,8 +163,15 @@
       'date profit';
     align-items: center;
     column-gap: var(--space-3);
-    padding: var(--space-3) 0;
+    padding: var(--space-3) var(--space-3);
+    margin: 0 calc(-1 * var(--space-3));
     border-bottom: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--motion-fast) var(--easing-standard);
+
+    &:hover {
+      background: var(--surface-hover);
+    }
 
     &:last-child {
       border-bottom: 0;
@@ -131,8 +199,19 @@
 }
 
 .recent__profit {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
   font-family: var(--font-display);
   font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+
+  &[data-sign='positive'] {
+    background: color-mix(in srgb, var(--success) 10%, transparent);
+  }
+
+  &[data-sign='negative'] {
+    background: color-mix(in srgb, var(--danger) 8%, transparent);
+  }
 }
 
 .recent__chip {
