@@ -93,13 +93,18 @@
 }
 
 .item__profit {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
   font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 
   &[data-sign='positive'] {
+    background: color-mix(in srgb, var(--success) 10%, transparent);
     color: var(--success);
   }
   &[data-sign='negative'] {
+    background: color-mix(in srgb, var(--danger) 8%, transparent);
     color: var(--danger);
   }
 }
@@ -152,6 +157,10 @@
   padding: var(--space-5);
   --icon-size: 1.5rem;
   color: var(--text-muted);
+
+  app-icon {
+    color: var(--accent-primary);
+  }
 
   h2 {
     font-size: var(--font-size-md);
