@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.23-5b7c029] — 2026-10-23
+
+### Maintenance
+
+- **email**: Unify contact address to contact@nutsiq.com
+
 ## [2026.10.22-def44a2] — 2026-10-22
 
 ### Correctifs
