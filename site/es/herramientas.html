@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Herramientas de poker gratuitas — Calculadoras ICM, varianza, equity, pot odds | NutsIQ</title>
+    <meta
+      name="description"
+      content="10 calculadoras de poker gratuitas en NutsIQ: varianza cash game y MTT, ICM, pot odds, equity, push/fold, M-ratio, EV, bounty, risk of ruin y Kelly criterion. Herramientas pro, sin publicidad."
+    />
+    <meta name="theme-color" content="#0b1411" />
+    <link rel="canonical" href="https://nutsiq.com/es/herramientas.html" />
+    <link rel="alternate" hreflang="fr" href="https://nutsiq.com/outils.html" />
+    <link rel="alternate" hreflang="en" href="https://nutsiq.com/en/tools.html" />
+    <link rel="alternate" hreflang="es" href="https://nutsiq.com/es/herramientas.html" />
+    <link rel="alternate" hreflang="x-default" href="https://nutsiq.com/outils.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NutsIQ" />
+    <meta property="og:title" content="Herramientas de poker gratuitas — NutsIQ" />
+    <meta property="og:description" content="10 calculadoras de poker pro, gratuitas, sin publicidad. Varianza, ICM, equity, pot odds, push/fold, risk of ruin y más." />
+    <meta property="og:image" content="https://nutsiq.com/assets/og.png" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="/fonts/sora-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      @font-face { font-family: "Sora Variable"; src: url("/fonts/sora-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+      @font-face { font-family: "IBM Plex Sans Variable"; src: url("/fonts/ibm-plex-sans-latin-wght-normal.woff2") format("woff2"); font-weight: 100 700; font-display: swap; }
+
+      :root {
+        color-scheme: dark;
+        --felt: #0b1411; --felt-raised: #0f1a16; --felt-high: #1b2b24;
+        --ink: #ecf2ee; --ink-2: #a9b8b0; --ink-3: #87978e;
+        --gold: #e9b949; --gold-hi: #f3ca68; --on-gold: #1a1405;
+        --line: rgb(214 236 224 / 0.1); --line-strong: rgb(214 236 224 / 0.18);
+        --gold-wash: rgb(233 185 73 / 0.12); --gold-glow: rgb(233 185 73 / 0.35);
+        --good: #3ddc97; --bad: #ff6b6b;
+        --felt-light: rgb(31 77 56 / 0.55);
+        --display: "Sora Variable", "Sora", "IBM Plex Sans Variable", system-ui, sans-serif;
+        --body: "IBM Plex Sans Variable", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: radial-gradient(900px 520px at 70% -120px, var(--felt-light), transparent 70%), var(--felt);
+        color: var(--ink);
+        font: 400 1.0625rem/1.6 var(--body);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: clip;
+      }
+      a { color: inherit; }
+      :focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 3px; }
+      h1, h2, h3 { margin: 0; font-family: var(--display); line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; }
+      p { margin: 0; }
+      .wrap { width: 100%; max-width: 72rem; margin-inline: auto; padding-inline: max(16px, 4vw); }
+      .eyebrow { color: var(--gold); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+
+      /* Buttons */
+      .btn { display: inline-flex; gap: 0.5rem; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.25rem; border: 1px solid transparent; border-radius: var(--radius-md); font: 600 0.95rem/1 var(--body); text-decoration: none; white-space: nowrap; cursor: pointer; transition: box-shadow 240ms cubic-bezier(0.2,0,0,1), border-color 140ms, background-color 140ms; }
+      .btn--gold { background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: var(--on-gold); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 1px 2px rgb(0 0 0 / 0.3); }
+      .btn--gold:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 0 0 1px var(--gold-glow), 0 8px 28px var(--gold-glow); }
+      .btn--ghost { border-color: var(--line-strong); background: rgb(22 36 30 / 0.55); color: var(--ink); }
+      .btn--ghost:hover { border-color: var(--gold-glow); }
+
+      /* Header */
+      .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; border-bottom: 1px solid var(--line); background: rgb(11 20 17 / 0.78); backdrop-filter: blur(14px); }
+      .top .wrap { display: flex; gap: 1.5rem; align-items: center; min-height: 4rem; }
+      .top nav { display: flex; gap: 1.5rem; margin-left: auto; font-size: 0.95rem; }
+      .top nav a { color: var(--ink-2); text-decoration: none; }
+      .top nav a:hover { color: var(--ink); }
+      .brand { display: inline-flex; gap: 0.55rem; align-items: center; font: 700 1.35rem/1 var(--display); letter-spacing: -0.02em; text-decoration: none; }
+      .brand b { color: var(--gold); font-weight: inherit; }
+      .brand svg { width: 1.35rem; height: 1.35rem; }
+      .top .actions { display: flex; gap: 0.75rem; align-items: center; }
+      .signin { color: var(--ink-2); font-size: 0.95rem; text-decoration: none; }
+
+      /* Hero */
+      .hero { padding-block: clamp(3rem, 8vw, 5rem) clamp(2rem, 5vw, 3rem); }
+      .hero h1 { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.035em; }
+      .hero h1 em { color: var(--gold); font-style: normal; }
+      .hero .lede { max-width: 38rem; margin-top: 1.2rem; color: var(--ink-2); font-size: 1.1rem; }
+
+      /* Filter tabs */
+      .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+      .filter-btn { padding: 0.4rem 0.9rem; border: 1px solid var(--line-strong); border-radius: 999px; background: transparent; color: var(--ink-2); font: 500 0.88rem/1.4 var(--body); cursor: pointer; transition: all 140ms; }
+      .filter-btn:hover { border-color: var(--gold-glow); color: var(--ink); }
+      .filter-btn.active { border-color: var(--gold); background: var(--gold-wash); color: var(--gold); }
+
+      /* Tools grid */
+      .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 1.25rem; margin-top: 2rem; padding-bottom: 2rem; }
+
+      .tool-card {
+        position: relative;
+        display: flex; flex-direction: column; gap: 0.75rem;
+        padding: 1.5rem;
+        border: 1px solid var(--line-strong); border-radius: var(--radius-lg);
+        background: rgb(22 36 30 / 0.5);
+        text-decoration: none;
+        transition: border-color 240ms cubic-bezier(0.2,0,0,1), box-shadow 240ms cubic-bezier(0.2,0,0,1), transform 240ms cubic-bezier(0.2,0,0,1);
+      }
+      .tool-card:hover {
+        border-color: var(--gold-glow);
+        box-shadow: 0 0 0 1px var(--gold-glow), 0 16px 48px rgb(233 185 73 / 0.08);
+        transform: translateY(-2px);
+      }
+      .tool-card-head { display: flex; align-items: center; gap: 0.75rem; }
+      .tool-icon {
+        display: grid; place-items: center;
+        width: 2.5rem; height: 2.5rem; flex: none;
+        border-radius: var(--radius-md);
+        background: var(--gold-wash);
+        color: var(--gold);
+      }
+      .tool-icon svg { width: 1.25rem; height: 1.25rem; }
+      .tool-card h3 { font-size: 1.1rem; font-weight: 600; }
+      .tool-card p { color: var(--ink-2); font-size: 0.92rem; line-height: 1.55; }
+      .tool-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: auto; padding-top: 0.5rem; }
+      .tag { padding: 2px 0.5rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+      .tag--cash { background: rgb(61 220 151 / 0.12); color: var(--good); }
+      .tag--mtt { background: rgb(233 185 73 / 0.12); color: var(--gold); }
+      .tag--new { background: rgb(255 107 107 / 0.14); color: var(--bad); }
+
+      /* CTA */
+      .final { padding-block: clamp(3rem, 7vw, 5rem); text-align: left; }
+      .final .wrap { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; align-items: center; justify-content: space-between; }
+      .final h2 { font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 700; }
+      .final h2 em { color: var(--gold); font-style: normal; }
+
+      /* Footer */
+      footer { padding-block: 2.5rem 3rem; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 0.88rem; }
+      footer .wrap { display: grid; gap: 1.25rem; }
+      footer .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+      footer a { color: var(--ink-2); text-decoration: none; }
+      footer a:hover { color: var(--ink); }
+      .responsible { max-width: 60rem; padding: 0.8rem 1rem; border: 1px solid var(--line); border-radius: var(--radius-md); }
+
+      @media (max-width: 720px) {
+        .tools-grid { grid-template-columns: 1fr; }
+        .signin { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+    </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Herramientas de poker gratuitas — NutsIQ",
+      "description": "10 calculadoras de poker gratuitas: varianza, ICM, equity, pot odds, push/fold, risk of ruin, Kelly criterion y más.",
+      "url": "https://nutsiq.com/es/herramientas.html",
+      "publisher": {
+        "@type": "Organization",
+        "name": "NutsIQ",
+        "url": "https://nutsiq.com"
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": 10,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Calculadora de varianza Cash Game", "url": "https://app.nutsiq.com/tools/cash-variance" },
+          { "@type": "ListItem", "position": 2, "name": "Calculadora de varianza MTT", "url": "https://app.nutsiq.com/tools/variance" },
+          { "@type": "ListItem", "position": 3, "name": "Calculadora ICM", "url": "https://app.nutsiq.com/tools/icm" },
+          { "@type": "ListItem", "position": 4, "name": "Calculadora de pot odds", "url": "https://app.nutsiq.com/tools/pot-odds" },
+          { "@type": "ListItem", "position": 5, "name": "Calculadora de equity", "url": "https://app.nutsiq.com/tools/equity" },
+          { "@type": "ListItem", "position": 6, "name": "Calculadora de valor esperado (EV)", "url": "https://app.nutsiq.com/tools/ev" },
+          { "@type": "ListItem", "position": 7, "name": "Calculadora push/fold", "url": "https://app.nutsiq.com/tools/push-fold" },
+          { "@type": "ListItem", "position": 8, "name": "Calculadora M-Ratio", "url": "https://app.nutsiq.com/tools/m-ratio" },
+          { "@type": "ListItem", "position": 9, "name": "Calculadora de bounty", "url": "https://app.nutsiq.com/tools/bounty" },
+          { "@type": "ListItem", "position": 10, "name": "Risk of Ruin & Kelly Criterion", "url": "https://app.nutsiq.com/tools/cash-variance" }
+        ]
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <a class="brand" href="/es/" aria-label="NutsIQ, inicio">
+          <svg viewBox="0 0 22 22" aria-hidden="true">
+            <g fill="#e9b949">
+              <rect x="16" y="0" width="6" height="6" rx="1.25" />
+              <rect x="8" y="8" width="6" height="6" rx="1.25" />
+              <rect x="16" y="8" width="6" height="6" rx="1.25" />
+              <rect x="0" y="16" width="6" height="6" rx="1.25" />
+              <rect x="8" y="16" width="6" height="6" rx="1.25" />
+              <rect x="16" y="16" width="6" height="6" rx="1.25" />
+            </g>
+            <g fill="#ecf2ee" fill-opacity="0.14">
+              <rect x="0" y="0" width="6" height="6" rx="1.25" />
+              <rect x="8" y="0" width="6" height="6" rx="1.25" />
+              <rect x="0" y="8" width="6" height="6" rx="1.25" />
+            </g>
+          </svg>
+          <span>Nuts<b>IQ</b></span>
+        </a>
+        <nav>
+          <a href="/es/">Inicio</a>
+          <a href="/es/#tarifs">Precios</a>
+        </nav>
+        <div class="actions">
+          <a class="signin" href="https://app.nutsiq.com/sign-in">Iniciar sesión</a>
+          <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Probar gratis</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Herramientas gratuitas</p>
+          <h1>Todas las calculadoras de poker<br />que <em>realmente</em> necesitas</h1>
+          <p class="lede">
+            10 herramientas de cálculo integradas en NutsIQ. Varianza, ICM, equity, pot odds, push/fold, risk of ruin — sin publicidad, sin registro para probarlas.
+          </p>
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="cash">Cash Game</button>
+            <button class="filter-btn" data-filter="mtt">MTT</button>
+            <button class="filter-btn" data-filter="both">Universal</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="wrap">
+        <div class="tools-grid" id="tools-grid">
+
+          <!-- Varianza Cash Game -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/cash-variance" data-cat="cash">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 4 5-9"/></svg>
+              </div>
+              <h3>Varianza Cash Game</h3>
+            </div>
+            <p>Simula la distribución de tus resultados en N manos. Intervalos de confianza, 10 recorridos de ejemplo, probabilidad de downswing, <strong>risk of ruin</strong>, bankroll recomendado y <strong>Kelly criterion</strong>.</p>
+            <div class="tool-tags">
+              <span class="tag tag--cash">Cash Game</span>
+              <span class="tag tag--new">Mejorado</span>
+            </div>
+          </a>
+
+          <!-- Varianza MTT -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/variance" data-cat="mtt">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 12l4-3 4 6 5-8"/></svg>
+              </div>
+              <h3>Varianza MTT</h3>
+            </div>
+            <p>Calcula la varianza de tus resultados en torneos según tu ROI, field size y número de torneos. Visualiza el abanico de resultados posibles.</p>
+            <div class="tool-tags">
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- ICM -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/icm" data-cat="mtt">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              </div>
+              <h3>Calculadora ICM</h3>
+            </div>
+            <p>Calcula la equity ICM de cada jugador en la mesa final según los stacks y la estructura de premios. Imprescindible para decisiones de deal y spots en la burbuja.</p>
+            <div class="tool-tags">
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- Pot Odds -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/pot-odds" data-cat="both">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+              </div>
+              <h3>Pot Odds</h3>
+            </div>
+            <p>Calcula las pot odds y la equity necesaria para un call rentable. Introduce el tamaño del bote y la apuesta rival, obtén la respuesta al instante.</p>
+            <div class="tool-tags">
+              <span class="tag tag--cash">Cash Game</span>
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- Equity -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/equity" data-cat="both">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+              </div>
+              <h3>Equity Calculator</h3>
+            </div>
+            <p>Compara la equity de dos rangos o manos entre sí. Selección visual de rangos en la cuadrícula 13×13.</p>
+            <div class="tool-tags">
+              <span class="tag tag--cash">Cash Game</span>
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- EV -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/ev" data-cat="both">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+              </div>
+              <h3>Valor esperado (EV)</h3>
+            </div>
+            <p>Calcula el expected value de una decisión: fold, call o raise. Introduce las probabilidades y los montos, y descubre qué acción maximiza tu EV.</p>
+            <div class="tool-tags">
+              <span class="tag tag--cash">Cash Game</span>
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- Push/Fold -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/push-fold" data-cat="mtt">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+              <h3>Push/Fold</h3>
+            </div>
+            <p>Rangos óptimos de push y call según tu posición, tu stack en BB y el número de jugadores restantes. Basado en el modelo de equilibrio Nash.</p>
+            <div class="tool-tags">
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- M-Ratio -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/m-ratio" data-cat="mtt">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+              </div>
+              <h3>M-Ratio</h3>
+            </div>
+            <p>Calcula tu M-Ratio (Harrington) y la zona en la que te encuentras (verde, naranja, roja). Adapta tu estrategia según la urgencia de actuar.</p>
+            <div class="tool-tags">
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- Bounty -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/bounty" data-cat="mtt">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20v-2a7 7 0 0 1 14 0v2"/></svg>
+              </div>
+              <h3>Bounty Calculator</h3>
+            </div>
+            <p>Ajusta tus rangos de call según el valor del bounty en PKO (progressive knockout). Calcula el bonus de odds que aporta el bounty.</p>
+            <div class="tool-tags">
+              <span class="tag tag--mtt">MTT</span>
+            </div>
+          </a>
+
+          <!-- Risk of Ruin & Kelly -->
+          <a class="tool-card" href="https://app.nutsiq.com/tools/cash-variance" data-cat="cash">
+            <div class="tool-card-head">
+              <div class="tool-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <h3>Risk of Ruin & Kelly</h3>
+            </div>
+            <p>Calcula tu probabilidad de ruina según tu bankroll y tu winrate (fórmula de Malmuth). El criterio de Kelly te indica el buy-in óptimo para maximizar tu crecimiento.</p>
+            <div class="tool-tags">
+              <span class="tag tag--cash">Cash Game</span>
+              <span class="tag tag--new">Nuevo</span>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="final">
+        <div class="wrap">
+          <h2>Usa las herramientas.<br />Encuentra tus <em>leaks</em>.</h2>
+          <a class="btn btn--gold" href="https://app.nutsiq.com/sign-in">Probar gratis</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <div class="links">
+          <span>© 2026 NutsIQ</span>
+          <a href="/es/">Inicio</a>
+          <a href="/mentions-legales.html">Aviso legal</a>
+          <a href="/cgv.html">Condiciones de venta</a>
+          <a href="https://app.nutsiq.com/privacy">Privacidad</a>
+        </div>
+        <p class="responsible">
+          Solo para mayores de 18 años. Jugar conlleva riesgos: endeudamiento,
+          aislamiento, adicción. NutsIQ es una herramienta de análisis independiente,
+          sin relación con las salas de poker cuyos historiales analiza.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Filter tabs
+      (function () {
+        var btns = document.querySelectorAll('.filter-btn');
+        var cards = document.querySelectorAll('.tool-card');
+        btns.forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            btns.forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            var f = btn.getAttribute('data-filter');
+            cards.forEach(function (card) {
+              var cat = card.getAttribute('data-cat');
+              card.style.display = (f === 'all' || cat === f || cat === 'both') ? '' : 'none';
+            });
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
