@@ -2509,6 +2509,31 @@
       "downswingTitle": "Riesgo de downswing",
       "downswingLabel": "Downswing testeado",
       "downswingDesc": "de probabilidad de sufrir este downswing en el periodo",
+      "observed": {
+        "toggle": "Win rate observado",
+        "hands": "Manos jugadas",
+        "bbWon": "BB ganadas",
+        "winrate": "Win rate real"
+      },
+      "ror": {
+        "title": "Risk of Ruin",
+        "bankroll": "Bankroll actual",
+        "label": "Risk of ruin",
+        "na": "El risk of ruin requiere un win rate positivo."
+      },
+      "bankroll": {
+        "title": "Bankroll recomendado",
+        "desc": "Bankroll mínimo según tu nivel de riesgo aceptable.",
+        "recommended": "Recomendado"
+      },
+      "kelly": {
+        "title": "Criterio de Kelly",
+        "desc": "Calcula el tamaño óptimo de buy-in para maximizar el crecimiento de tu bankroll a largo plazo.",
+        "fraction": "Fracción de Kelly",
+        "fullKelly": "Full Kelly",
+        "halfKelly": "Half Kelly",
+        "na": "El criterio de Kelly requiere un win rate positivo."
+      },
       "insightHead": "En la práctica",
       "insight1": "Una desviación estándar de 75 BB/100 es típica en NL 6-max. En full ring (9-max), ronda los 60-65 BB/100.",
       "insight2": "Con un win rate de 2 BB/100, necesitas unas 500.000 manos para que los resultados sean significativos. La paciencia es clave.",
@@ -2516,6 +2541,7 @@
       "chart": {
         "title": "Simulación",
         "ev": "Valor esperado",
+        "observed": "Win rate observado",
         "ci70": "70 % de confianza",
         "ci95": "95 % de confianza",
         "best": "Mejor racha",

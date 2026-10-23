@@ -1,5 +1,16 @@
 @let s = scales();
 <svg [attr.width]="width()" [attr.height]="chartHeight" role="img" [attr.aria-label]="ariaLabel()">
+  <defs>
+    <linearGradient id="drawdown-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--danger)" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="var(--danger)" stop-opacity="0.25" />
+    </linearGradient>
+    <linearGradient id="observed-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="1" />
+    </linearGradient>
+  </defs>
+
   @for (tick of s.yTicks; track tick) {
     <line
       class="grid"
@@ -29,6 +40,10 @@
   <path class="band band--95" [attr.d]="bandPath95()" />
   <path class="band band--70" [attr.d]="bandPath70()" />
 
+  @if (drawdownPath()) {
+    <path class="drawdown-area" [attr.d]="drawdownPath()" />
+  }
+
   @for (path of samplePaths(); track $index) {
     <path class="sample" [attr.d]="path" [attr.stroke]="sampleColors[$index]" />
   }
@@ -37,4 +52,8 @@
   <path class="envelope envelope--worst" [attr.d]="worstPath()" />
 
   <path class="ev-line" [attr.d]="evPath()" />
+
+  @if (observedPath()) {
+    <path class="observed-line" [attr.d]="observedPath()!" />
+  }
 </svg>

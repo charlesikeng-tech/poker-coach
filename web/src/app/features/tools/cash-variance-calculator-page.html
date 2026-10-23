@@ -1,6 +1,7 @@
 <ng-container *transloco="let t; prefix: 'pages.cashVariance'">
   <app-page-header [heading]="t('title')" [description]="t('description')" />
 
+  <!-- ── Inputs + Results ─────────────────────────────────────────── -->
   <div class="layout">
     <section class="glass panel inputs">
       <h2>{{ t('inputs') }}</h2>
@@ -103,12 +104,65 @@
     </section>
   </div>
 
+  <!-- ── Chart ────────────────────────────────────────────────────── -->
   <section class="glass panel chart-section">
-    <h2>{{ t('chart.title') }}</h2>
+    <div class="chart-header">
+      <h2>{{ t('chart.title') }}</h2>
+      <button
+        class="observed-toggle"
+        [class.active]="observedEnabled()"
+        (click)="toggleObserved()"
+        type="button"
+      >
+        <span class="toggle-dot"></span>
+        {{ t('observed.toggle') }}
+      </button>
+    </div>
+
+    @if (observedEnabled()) {
+      <div class="observed-inputs">
+        <label class="field">
+          <span>{{ t('observed.hands') }}</span>
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="1000"
+            [value]="observedHands()"
+            (change)="update('observedHands', $any($event.target).value)"
+          />
+        </label>
+        <label class="field">
+          <span>{{ t('observed.bbWon') }}</span>
+          <div class="input-with-unit">
+            <input
+              type="number"
+              inputmode="decimal"
+              step="10"
+              [value]="observedBbWon()"
+              (change)="update('observedBbWon', $any($event.target).value)"
+            />
+            <span class="unit">BB</span>
+          </div>
+        </label>
+        <div class="observed-result">
+          <span class="observed-label">{{ t('observed.winrate') }}</span>
+          <span
+            class="observed-value"
+            [class.positive]="observedBb100() >= bb100()"
+            [class.negative]="observedBb100() < bb100()"
+          >
+            {{ fmt(observedBb100(), 1) }} BB/100
+          </span>
+        </div>
+      </div>
+    }
+
     <app-variance-simulation-chart
       [hands]="hands()"
       [evPerHand]="evPerHand()"
       [sdPerHand]="sdPerHand()"
+      [observedEvPerHand]="observedEvPerHand()"
       [ariaLabel]="t('chart.title')"
     />
     <div class="chart-legend">
@@ -116,6 +170,12 @@
         <span class="legend-line legend-line--ev"></span>
         {{ t('chart.ev') }}
       </span>
+      @if (observedEnabled()) {
+        <span class="legend-item">
+          <span class="legend-line legend-line--observed"></span>
+          {{ t('chart.observed') }}
+        </span>
+      }
       <span class="legend-item">
         <span class="legend-swatch legend-swatch--70"></span>
         {{ t('chart.ci70') }}
@@ -139,6 +199,62 @@
     </div>
   </section>
 
+  <!-- ── Risk of Ruin + Bankroll ──────────────────────────────────── -->
+  <div class="layout">
+    <section class="glass panel ror-section">
+      <h2>{{ t('ror.title') }}</h2>
+      <label class="field">
+        <span>{{ t('ror.bankroll') }}</span>
+        <div class="input-with-unit">
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            step="100"
+            [value]="bankroll()"
+            (change)="update('bankroll', $any($event.target).value)"
+          />
+          <span class="unit">BB</span>
+        </div>
+      </label>
+
+      @if (riskOfRuin() !== null) {
+        <div class="ror-gauge">
+          <div class="ror-gauge-track">
+            <div class="ror-gauge-fill" [style.width.%]="rorPct()" [class]="rorSeverity()"></div>
+          </div>
+          <div class="ror-value" [class]="rorSeverity()">
+            {{ fmtPct(riskOfRuin()!) }}
+          </div>
+          <span class="ror-label">{{ t('ror.label') }}</span>
+        </div>
+      } @else {
+        <p class="ror-na">{{ t('ror.na') }}</p>
+      }
+    </section>
+
+    <section class="glass panel bankroll-section">
+      <h2>{{ t('bankroll.title') }}</h2>
+      <p class="section-desc">{{ t('bankroll.desc') }}</p>
+
+      @if (riskLevels().length > 0) {
+        <div class="bankroll-grid">
+          @for (level of riskLevels(); track level.pct) {
+            <div class="bankroll-card" [class.recommended]="level.pct === 5">
+              @if (level.pct === 5) {
+                <span class="badge">{{ t('bankroll.recommended') }}</span>
+              }
+              <span class="bankroll-ror">{{ t('ror.label') }} &lt; {{ level.label }}</span>
+              <span class="bankroll-amount">{{ fmt(level.bankroll) }} BB</span>
+              <span class="bankroll-money">{{ fmtMoney(level.bankroll * bigBlind()) }}</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  </div>
+
+  <!-- ── Downswing ────────────────────────────────────────────────── -->
   <section class="glass panel downswing-section">
     <h2>{{ t('downswingTitle') }}</h2>
     <div class="downswing-row">
@@ -163,6 +279,35 @@
     </div>
   </section>
 
+  <!-- ── Kelly Criterion ──────────────────────────────────────────── -->
+  <section class="glass panel kelly-section">
+    <h2>{{ t('kelly.title') }}</h2>
+    <p class="section-desc">{{ t('kelly.desc') }}</p>
+
+    @if (kellyFraction() !== null && kellyFraction()! > 0) {
+      <div class="kelly-grid">
+        <div class="kelly-card">
+          <span class="kelly-label">{{ t('kelly.fraction') }}</span>
+          <span class="kelly-value">{{ fmt(kellyFraction()!, 2) }}%</span>
+        </div>
+        <div class="kelly-card">
+          <span class="kelly-label">{{ t('kelly.fullKelly') }}</span>
+          <span class="kelly-value">{{ fmt(kellyBuyIns()!, 0) }} BI</span>
+          <span class="kelly-sub">{{ fmtMoney(kellyBuyIns()! * 100 * bigBlind()) }}</span>
+        </div>
+        <div class="kelly-card kelly-card--highlight">
+          <span class="kelly-label">{{ t('kelly.halfKelly') }}</span>
+          <span class="kelly-value">{{ fmt(halfKellyBuyIns()!, 0) }} BI</span>
+          <span class="kelly-sub">{{ fmtMoney(halfKellyBuyIns()! * 100 * bigBlind()) }}</span>
+          <span class="badge">{{ t('bankroll.recommended') }}</span>
+        </div>
+      </div>
+    } @else {
+      <p class="ror-na">{{ t('kelly.na') }}</p>
+    }
+  </section>
+
+  <!-- ── Insights ─────────────────────────────────────────────────── -->
   <aside class="insights glass">
     <p class="insights-head">{{ t('insightHead') }}</p>
     <ul class="insight-list">

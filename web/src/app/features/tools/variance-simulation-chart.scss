@@ -62,3 +62,16 @@ svg {
   stroke-width: 2.5;
   stroke-linejoin: round;
 }
+
+.observed-line {
+  fill: none;
+  stroke: url(#observed-grad);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-dasharray: 8 4;
+}
+
+.drawdown-area {
+  fill: url(#drawdown-grad);
+  stroke: none;
+}

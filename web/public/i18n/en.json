@@ -2509,6 +2509,31 @@
       "downswingTitle": "Downswing risk",
       "downswingLabel": "Downswing tested",
       "downswingDesc": "chance of experiencing this downswing over the period",
+      "observed": {
+        "toggle": "Observed win rate",
+        "hands": "Hands played",
+        "bbWon": "BB won",
+        "winrate": "Actual win rate"
+      },
+      "ror": {
+        "title": "Risk of Ruin",
+        "bankroll": "Current bankroll",
+        "label": "Risk of ruin",
+        "na": "Risk of ruin requires a positive win rate."
+      },
+      "bankroll": {
+        "title": "Recommended bankroll",
+        "desc": "Minimum bankroll based on your acceptable risk level.",
+        "recommended": "Recommended"
+      },
+      "kelly": {
+        "title": "Kelly Criterion",
+        "desc": "Calculate the optimal buy-in size to maximize long-term bankroll growth.",
+        "fraction": "Kelly fraction",
+        "fullKelly": "Full Kelly",
+        "halfKelly": "Half Kelly",
+        "na": "Kelly criterion requires a positive win rate."
+      },
       "insightHead": "In practice",
       "insight1": "A standard deviation of 75 BB/100 is typical for NL 6-max. In full ring (9-max), it's around 60-65 BB/100.",
       "insight2": "With a 2 BB/100 win rate, you need about 500,000 hands for results to be significant. Patience is key.",
@@ -2516,6 +2541,7 @@
       "chart": {
         "title": "Simulation",
         "ev": "Expected value",
+        "observed": "Observed win rate",
         "ci70": "70% confidence",
         "ci95": "95% confidence",
         "best": "Best run",

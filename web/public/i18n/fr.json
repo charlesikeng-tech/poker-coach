@@ -2509,6 +2509,31 @@
       "downswingTitle": "Risque de downswing",
       "downswingLabel": "Downswing testé",
       "downswingDesc": "de chance de subir ce downswing sur la période",
+      "observed": {
+        "toggle": "Win rate observé",
+        "hands": "Mains jouées",
+        "bbWon": "BB gagnées",
+        "winrate": "Win rate réel"
+      },
+      "ror": {
+        "title": "Risk of Ruin",
+        "bankroll": "Bankroll actuelle",
+        "label": "Risk of ruin",
+        "na": "Le risk of ruin nécessite un win rate positif."
+      },
+      "bankroll": {
+        "title": "Bankroll recommandée",
+        "desc": "Bankroll minimum selon ton niveau de risque acceptable.",
+        "recommended": "Recommandé"
+      },
+      "kelly": {
+        "title": "Critère de Kelly",
+        "desc": "Calcule la taille de buy-in optimale pour maximiser la croissance de ta bankroll à long terme.",
+        "fraction": "Fraction de Kelly",
+        "fullKelly": "Full Kelly",
+        "halfKelly": "Half Kelly",
+        "na": "Le critère de Kelly nécessite un win rate positif."
+      },
       "insightHead": "En pratique",
       "insight1": "Un écart-type de 75 BB/100 est typique en NL 6-max. En full ring (9-max), il est autour de 60-65 BB/100.",
       "insight2": "Avec un win rate de 2 BB/100, il faut environ 500 000 mains pour que les résultats soient significatifs. La patience est la clé.",
@@ -2516,6 +2541,7 @@
       "chart": {
         "title": "Simulation",
         "ev": "Valeur attendue",
+        "observed": "Win rate observé",
         "ci70": "70 % de confiance",
         "ci95": "95 % de confiance",
         "best": "Meilleure course",

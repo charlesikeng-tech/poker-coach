@@ -54,10 +54,11 @@ export class VarianceSimulationChart {
   readonly hands = input.required<number>();
   readonly evPerHand = input.required<number>();
   readonly sdPerHand = input.required<number>();
+  readonly observedEvPerHand = input<number | null>(null);
   readonly ariaLabel = input('');
 
   protected readonly margin = MARGIN;
-  protected readonly chartHeight = 350;
+  protected readonly chartHeight = 380;
   protected readonly width = signal(600);
   protected readonly sampleColors = SAMPLE_COLORS;
 
@@ -65,12 +66,14 @@ export class VarianceSimulationChart {
     const n = this.hands();
     const mu = this.evPerHand();
     const sigma = this.sdPerHand();
+    const obsEv = this.observedEvPerHand();
 
     const numSteps = Math.min(MAX_STEPS, Math.max(n, 1));
     const stepSize = n / numSteps;
 
     const steps: number[] = [];
     const ev: number[] = [];
+    const observed: number[] = [];
     const ci95Upper: number[] = [];
     const ci95Lower: number[] = [];
     const ci70Upper: number[] = [];
@@ -95,8 +98,15 @@ export class VarianceSimulationChart {
       best.push(evN + 3 * sdN);
       worst.push(evN - 3 * sdN);
 
-      yMin = Math.min(yMin, evN - 3 * sdN);
-      yMax = Math.max(yMax, evN + 3 * sdN);
+      if (obsEv !== null) {
+        const obsN = obsEv * hand;
+        observed.push(obsN);
+        yMin = Math.min(yMin, obsN, evN - 3 * sdN);
+        yMax = Math.max(yMax, obsN, evN + 3 * sdN);
+      } else {
+        yMin = Math.min(yMin, evN - 3 * sdN);
+        yMax = Math.max(yMax, evN + 3 * sdN);
+      }
     }
 
     const rng = mulberry32(42);
@@ -118,6 +128,7 @@ export class VarianceSimulationChart {
     return {
       steps,
       ev,
+      observed,
       ci95Upper,
       ci95Lower,
       ci70Upper,
@@ -158,6 +169,11 @@ export class VarianceSimulationChart {
   protected readonly bestPath = computed(() => this.linePath('best'));
   protected readonly worstPath = computed(() => this.linePath('worst'));
 
+  protected readonly observedPath = computed(() => {
+    if (this.observedEvPerHand() === null) return null;
+    return this.linePath('observed');
+  });
+
   protected readonly samplePaths = computed(() => {
     const sim = this.simulation();
     const { x, y } = this.scales();
@@ -166,6 +182,51 @@ export class VarianceSimulationChart {
         .map((val, i) => `${i === 0 ? 'M' : 'L'}${x(sim.steps[i]).toFixed(1)},${y(val).toFixed(1)}`)
         .join(' '),
     );
+  });
+
+  // Drawdown area: fills red below the zero line for the worst sample path
+  protected readonly drawdownPath = computed(() => {
+    const sim = this.simulation();
+    const { x, y } = this.scales();
+
+    // Find the sample with the lowest minimum
+    let worstIdx = 0;
+    let worstMin = 0;
+    for (let s = 0; s < sim.samples.length; s++) {
+      const min = Math.min(...sim.samples[s]);
+      if (min < worstMin) {
+        worstMin = min;
+        worstIdx = s;
+      }
+    }
+
+    const path = sim.samples[worstIdx];
+    const zeroY = y(0);
+
+    // Collect segments that dip below zero
+    const segments: string[] = [];
+    let inDrawdown = false;
+    let segStart = 0;
+
+    for (let i = 0; i < path.length; i++) {
+      if (path[i] < 0 && !inDrawdown) {
+        inDrawdown = true;
+        segStart = i > 0 ? i - 1 : 0;
+      } else if ((path[i] >= 0 || i === path.length - 1) && inDrawdown) {
+        inDrawdown = false;
+        const segEnd = i;
+
+        let d = `M${x(sim.steps[segStart]).toFixed(1)},${zeroY.toFixed(1)}`;
+        for (let j = segStart; j <= segEnd; j++) {
+          const yVal = path[j] < 0 ? y(path[j]) : zeroY;
+          d += ` L${x(sim.steps[j]).toFixed(1)},${yVal.toFixed(1)}`;
+        }
+        d += ` L${x(sim.steps[segEnd]).toFixed(1)},${zeroY.toFixed(1)} Z`;
+        segments.push(d);
+      }
+    }
+
+    return segments.join(' ');
   });
 
   constructor() {
@@ -213,7 +274,7 @@ export class VarianceSimulationChart {
     return `${forward} ${backward} Z`;
   }
 
-  private linePath(key: 'ev' | 'best' | 'worst'): string {
+  private linePath(key: 'ev' | 'best' | 'worst' | 'observed'): string {
     const sim = this.simulation();
     const { x, y } = this.scales();
     const data = sim[key];

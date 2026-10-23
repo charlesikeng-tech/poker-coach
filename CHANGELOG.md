@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.23-85f1dfc] — 2026-10-23
+
+### Maintenance
+
+- **legal**: Add share capital (1000 €)
+
 ## [2026.10.23-90134d9] — 2026-10-23
 
 ### Maintenance
