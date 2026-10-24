@@ -236,6 +236,9 @@ public enum Feature
 
     /// <summary>Custom user-defined ranges for opening and defence, replacing or supplementing the reference.</summary>
     CustomRanges,
+
+    /// <summary>AI-generated strategic plan per buy-in band or stake level (GTO vs exploitative recommendations).</summary>
+    StrategyPlan,
 }
 
 /// <summary>The offer matrix (ADR-0016): the lowest plan that opens each feature.</summary>

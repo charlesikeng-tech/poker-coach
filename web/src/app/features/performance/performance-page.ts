@@ -30,6 +30,7 @@ import { GameType } from '../statistics/statistics-api';
 import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
+import { StrategyPlanPanel } from '../coaching/strategy-plan-panel';
 import { TournamentSelectionPanel } from '../coaching/tournament-selection-panel';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 import {
@@ -57,6 +58,7 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
     StatTile,
     CashDebriefPanel,
     TournamentSelectionPanel,
+    StrategyPlanPanel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },

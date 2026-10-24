@@ -2150,7 +2150,8 @@
           "cashDebrief": "Debrief de cash game",
           "bankrollCoach": "Consejo bankroll",
           "monthlyReport": "Informe mensual",
-          "tournamentSelection": "Selección de torneos"
+          "tournamentSelection": "Selección de torneos",
+          "strategyPlan": "Plan estratégico"
         }
       }
     },
@@ -2661,6 +2662,27 @@
       "strengths": "Tus puntos fuertes",
       "avoid": "Evitar",
       "recommendations": "Recomendaciones"
+    },
+    "strategyPlan": {
+      "title": "Plan estratégico",
+      "intro": "El coach construye un plan estratégico por franja de buy-in o nivel de stakes, recomendando un enfoque GTO o exploitativo según tu perfil.",
+      "action": "Generar mi plan",
+      "writing": "El coach construye tu plan…",
+      "stale": "Se han importado nuevos datos desde este plan.",
+      "progression": "Progresión",
+      "keyFocus": "Prioridades de trabajo",
+      "approach": {
+        "gto": "GTO",
+        "exploitative": "Exploitativo",
+        "mixed": "Mixto"
+      },
+      "band": {
+        "upTo5": "Hasta 5 €",
+        "from5To10": "5 a 10 €",
+        "from10To20": "10 a 20 €",
+        "from20To50": "20 a 50 €",
+        "over50": "Más de 50 €"
+      }
     }
   },
   "planLock": {
@@ -2701,6 +2723,10 @@
       "defenceRanges": {
         "title": "Defensa vs open",
         "description": "Lo que haces call y 3-bet ante un open, comparado con las referencias."
+      },
+      "strategyPlan": {
+        "title": "Plan estratégico",
+        "description": "Un plan GTO o exploitativo por franja de buy-in o nivel de stakes, adaptado a tus leaks."
       }
     }
   }

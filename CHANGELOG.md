@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.24-35d4fbb] — 2026-10-24
 
 ### Correctifs
 

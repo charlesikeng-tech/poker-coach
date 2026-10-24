@@ -121,6 +121,25 @@ export interface TournamentSelection {
   readonly createdAt: string;
 }
 
+export interface StrategyPlanBand {
+  readonly band: string;
+  readonly approach: 'gto' | 'exploitative' | 'mixed';
+  readonly rationale: string;
+  readonly adjustments: readonly string[];
+  readonly priorityLeak: string | null;
+}
+
+export interface StrategyPlan {
+  readonly headline: string;
+  readonly overview: string;
+  readonly bands: readonly StrategyPlanBand[];
+  readonly progression: string;
+  readonly keyFocus: readonly string[];
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 /** Error codes the coach panels explain; anything else is shown as a generic failure. */
 const COACH_ERRORS = new Set([
   'HANDS_PENDING',
@@ -161,7 +180,8 @@ export function notWrittenYet(error: unknown): boolean {
     code === 'REVIEW_NOT_FOUND' ||
     code === 'CASH_DEBRIEF_NOT_FOUND' ||
     code === 'MONTHLY_REPORT_NOT_FOUND' ||
-    code === 'TOURNAMENT_SELECTION_NOT_FOUND'
+    code === 'TOURNAMENT_SELECTION_NOT_FOUND' ||
+    code === 'STRATEGY_PLAN_NOT_FOUND'
   );
 }
 
@@ -244,6 +264,25 @@ export class CoachingApi {
   writeTournamentSelection(language: string): Promise<TournamentSelection> {
     return firstValueFrom(
       this.http.post<TournamentSelection>('/api/coaching/tournament-selection', { language }),
+    );
+  }
+
+  strategyPlan(language: string, gameType: GameType = 'tournament'): Promise<StrategyPlan> {
+    let params = new HttpParams().set('language', language);
+    if (gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
+    }
+    return firstValueFrom(
+      this.http.get<StrategyPlan>('/api/coaching/strategy-plan', { params }),
+    );
+  }
+
+  writeStrategyPlan(language: string, gameType: GameType = 'tournament'): Promise<StrategyPlan> {
+    return firstValueFrom(
+      this.http.post<StrategyPlan>('/api/coaching/strategy-plan', {
+        language,
+        ...(gameType !== 'tournament' ? { gameType } : {}),
+      }),
     );
   }
 }

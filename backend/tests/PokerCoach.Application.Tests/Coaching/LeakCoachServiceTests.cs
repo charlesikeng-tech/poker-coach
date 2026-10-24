@@ -205,6 +205,9 @@ public sealed class LeakCoachServiceTests
 
         public Task<ModelAnswer<TournamentSelectionAdvice>> AdviseTournamentSelectionAsync(TournamentSelectionPrompt prompt, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+
+        public Task<ModelAnswer<StrategyPlanAdvice>> AdviseStrategyPlanAsync(StrategyPlanPrompt prompt, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class FakeStore : ICoachingStore

@@ -13,6 +13,7 @@ public enum AiTask
     BankrollCoach,
     MonthlyReport,
     TournamentSelection,
+    StrategyPlan,
 }
 
 public static class AiTasks
@@ -26,6 +27,7 @@ public static class AiTasks
         AiTask.BankrollCoach => "bankroll-coach",
         AiTask.MonthlyReport => "monthly-report",
         AiTask.TournamentSelection => "tournament-selection",
+        AiTask.StrategyPlan => "strategy-plan",
         _ => "leak-explanation",
     };
 
@@ -38,6 +40,7 @@ public static class AiTasks
         AiTask.MonthlyReport => 3,
         AiTask.BankrollCoach => 1,
         AiTask.TournamentSelection => 2,
+        AiTask.StrategyPlan => 3,
         _ => 1,
     };
 
@@ -48,6 +51,7 @@ public static class AiTasks
         AiTask.CashDebrief => Domain.Subscriptions.Feature.TournamentDebrief,
         AiTask.WeekReview => Domain.Subscriptions.Feature.WeekReview,
         AiTask.MonthlyReport => Domain.Subscriptions.Feature.MonthlyReport,
+        AiTask.StrategyPlan => Domain.Subscriptions.Feature.StrategyPlan,
         _ => null,
     };
 }

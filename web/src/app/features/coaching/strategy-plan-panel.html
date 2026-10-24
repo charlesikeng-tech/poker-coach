@@ -1,0 +1,100 @@
+<ng-container *transloco="let t; prefix: 'coach'">
+  <section class="coach-panel glass" aria-live="polite" [attr.aria-busy]="writing()">
+    <header class="coach-head">
+      <h3><app-icon [icon]="icons.Sparkles" />{{ t('strategyPlan.title') }}</h3>
+      <span class="ai-tag">{{ t('aiTag') }}</span>
+    </header>
+
+    @switch (state().kind) {
+      @case ('loading') {
+        <span class="skeleton" role="status" [attr.aria-label]="t('loading')"></span>
+      }
+      @case ('ready') {
+        @let a = $any(state()).advice;
+        @if (a.stale) {
+          <p class="stale">
+            <span>{{ t('strategyPlan.stale') }}</span>
+            <button appButton variant="ghost" [disabled]="writing()" (click)="write()">
+              <app-icon [icon]="icons.RefreshCw" [class.spin]="writing()" />{{ t('update') }}
+            </button>
+          </p>
+        }
+        <p class="headline">{{ a.headline }}</p>
+        <p class="story">{{ a.overview }}</p>
+
+        @for (band of a.bands; track band.band) {
+          <div class="band-card">
+            <h4>
+              {{ t('strategyPlan.band.' + band.band) }}
+              <span class="approach-tag approach-{{ band.approach }}">{{
+                t('strategyPlan.approach.' + band.approach)
+              }}</span>
+            </h4>
+            <p>{{ band.rationale }}</p>
+            @if (band.adjustments.length > 0) {
+              <ul>
+                @for (adj of band.adjustments; track $index) {
+                  <li>{{ adj }}</li>
+                }
+              </ul>
+            }
+            @if (band.priorityLeak) {
+              <p class="priority-leak">{{ band.priorityLeak }}</p>
+            }
+          </div>
+        }
+
+        @if (a.progression) {
+          <div class="columns">
+            <div>
+              <h4>{{ t('strategyPlan.progression') }}</h4>
+              <p>{{ a.progression }}</p>
+            </div>
+          </div>
+        }
+
+        @if (a.keyFocus.length > 0) {
+          <div class="columns">
+            <div>
+              <h4>{{ t('strategyPlan.keyFocus') }}</h4>
+              <ul>
+                @for (item of a.keyFocus; track $index) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+
+        <p class="disclaimer">{{ t('disclaimer', { date: date(a.createdAt) }) }}</p>
+      }
+      @default {
+        <p class="intro">
+          {{ state().kind === 'failed' ? t('loadFailed') : t('strategyPlan.intro') }}
+        </p>
+        @if (!billing.allows('strategyPlan')) {
+          <app-plan-lock feature="strategyPlan" [compact]="true" />
+        } @else {
+          <div class="write">
+            <button appButton variant="secondary" [disabled]="writing()" (click)="write()">
+              <app-icon
+                [class.spin]="writing()"
+                [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+              />
+              {{ writing() ? t('strategyPlan.writing') : t('strategyPlan.action') }}
+            </button>
+          </div>
+        }
+      }
+    }
+
+    @if (writeError(); as code) {
+      <p class="coach-error" role="alert">
+        {{ t('errors.' + code) }}
+        @if (code === 'PLAN_REQUIRED') {
+          <a routerLink="/subscription">{{ t('upgrade') }}</a>
+        }
+      </p>
+    }
+  </section>
+</ng-container>

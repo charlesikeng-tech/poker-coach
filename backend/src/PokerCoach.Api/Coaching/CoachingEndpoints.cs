@@ -116,6 +116,28 @@ public sealed record TournamentSelectionResponse(
 
 public sealed record GenerateTournamentSelectionRequest(string? Language);
 
+/// <param name="GameType">tournament or cashGame; defaults to tournament.</param>
+public sealed record GenerateStrategyPlanRequest(string? Language, string? GameType);
+
+/// <summary>AI-written strategy plan band recommendation.</summary>
+public sealed record StrategyPlanBandResponse(
+    string Band,
+    string Approach,
+    string Rationale,
+    IReadOnlyList<string> Adjustments,
+    string? PriorityLeak);
+
+/// <summary>AI-written strategy plan (GTO vs exploitative per buy-in band or stake level).</summary>
+public sealed record StrategyPlanResponse(
+    string Headline,
+    string Overview,
+    IReadOnlyList<StrategyPlanBandResponse> Bands,
+    string Progression,
+    IReadOnlyList<string> KeyFocus,
+    bool Stale,
+    string Model,
+    DateTimeOffset CreatedAt);
+
 /// <summary>AI-written monthly report.</summary>
 public sealed record MonthlyReportResponse(
     DateOnly Month,
@@ -159,6 +181,9 @@ public static class CoachingEndpoints
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         endpoints.MapGet("/api/coaching/tournament-selection", GetTournamentSelectionAsync).WithTags("Coaching");
         endpoints.MapPost("/api/coaching/tournament-selection", GenerateTournamentSelectionAsync).WithTags("Coaching")
+            .AddEndpointFilter<AntiforgeryValidationFilter>();
+        endpoints.MapGet("/api/coaching/strategy-plan", GetStrategyPlanAsync).WithTags("Coaching");
+        endpoints.MapPost("/api/coaching/strategy-plan", GenerateStrategyPlanAsync).WithTags("Coaching")
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         return endpoints;
     }
@@ -448,6 +473,77 @@ public static class CoachingEndpoints
 
         var outcome = await selection.GenerateAsync(userId, answerLanguage!, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToSelectionResponse(view)) : Problem(outcome.Failure!.Value, "NO_TOURNAMENTS");
+    }
+
+    private static async Task<Results<Ok<StrategyPlanResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetStrategyPlanAsync(
+        string? language,
+        string? gameType,
+        HttpContext context,
+        StrategyPlanService strategy,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var view = await strategy.GetAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        return view is null
+            ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "STRATEGY_PLAN_NOT_FOUND", "No strategy plan written yet.")
+            : TypedResults.Ok(ToStrategyResponse(view));
+    }
+
+    private static async Task<Results<Ok<StrategyPlanResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GenerateStrategyPlanAsync(
+        GenerateStrategyPlanRequest? request,
+        HttpContext context,
+        StrategyPlanService strategy,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!GameTypeQuery.TryParse(request?.GameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var outcome = await strategy.GenerateAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        return outcome.View is { } view ? TypedResults.Ok(ToStrategyResponse(view)) : Problem(outcome.Failure!.Value, "NO_TOURNAMENTS");
+    }
+
+    private static StrategyPlanResponse ToStrategyResponse(ReportView<StrategyPlanAdvice> view)
+    {
+        var a = view.Report;
+        return new StrategyPlanResponse(
+            a.Headline,
+            a.Overview,
+            a.Bands.Select(b => new StrategyPlanBandResponse(b.Band, b.Approach, b.Rationale, b.Adjustments, b.PriorityLeak)).ToList(),
+            a.Progression,
+            a.KeyFocus,
+            view.Stale,
+            view.Model,
+            view.CreatedAt);
     }
 
     private static TournamentSelectionResponse ToSelectionResponse(ReportView<TournamentSelectionAdvice> view)

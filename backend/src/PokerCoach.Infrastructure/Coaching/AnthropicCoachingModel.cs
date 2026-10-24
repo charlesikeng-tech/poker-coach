@@ -547,6 +547,113 @@ internal sealed partial class AnthropicCoachingModel(
 
     private const int TournamentSelectionMaxOutputTokens = 1_500;
 
+    private const string StrategyPlanRules = """
+
+        Rules:
+        - Use only the figures given. Never compute, estimate or invent a statistic, a percentage or a range.
+        - Be concrete: name the bands or stakes, the leaks by their stat name, and the specific adjustments.
+        - The approach is "gto" (GTO-first: balanced ranges, standard sizings, minimal reads-based
+          adjustments), "exploitative" (reads-first: wide deviations from balance targeting field
+          tendencies), or "mixed" (GTO baseline with specific exploitative adjustments at identified spots).
+        - Do not suggest a specific stake amount, room, or solver.
+        - If the player has few entries in a band, say so and frame the recommendation as tentative.
+        - When a confirmed leak directly impacts a band's performance, connect them explicitly.
+
+        Fill the fields:
+        - headline: one sentence on the overall strategic recommendation.
+        - overview: three to five sentences on the player's strategic profile across levels,
+          linking performance and leaks.
+        - bands: one entry per band or stake level the player has played, each with:
+          - band: the band or stake key exactly as given in the facts.
+          - approach: "gto", "exploitative", or "mixed".
+          - rationale: two or three sentences on why this approach suits this band for this player.
+          - adjustments: two or three concrete preflop or postflop adjustments for this band,
+            tied to the player's leaks or the field's tendencies.
+          - priority_leak: the one confirmed or possible leak that costs the most at this stake,
+            with one sentence on why. Empty string if no leak is relevant or data is insufficient.
+        - progression: two or three sentences on the recommended path for moving between levels
+          (where to focus volume, when to consider moving up or down).
+        - key_focus: two or three things to work on across all levels, each one sentence.
+
+        """;
+
+    private const string TournamentStrategyPlanInstructions = MttContext + """
+        You receive the player's performance figures broken down by buy-in band, tournament type and
+        speed, and their confirmed and possible leaks, all computed by the software over the player's
+        entire history.
+
+        Your task is to build a strategic plan for each buy-in band the player has played, recommending
+        whether a GTO-based, exploitative, or mixed approach is most profitable at that stake level
+        given the player's profile.
+
+        Framework for the approach recommendation:
+        - At micro stakes (up to 5 €), fields are mostly recreational players. An exploitative approach
+          that targets common mistakes (overcalling, passive play, poor ICM awareness) is usually more
+          profitable than a balanced one.
+        - At low stakes (5 to 20 €), fields mix recreational and regular players. A solid default
+          strategy with targeted exploitative adjustments against weaker opponents is the sweet spot.
+        - At mid stakes (20 € and above), fields are mostly regulars. A GTO baseline becomes necessary
+          to avoid being exploited; deviations require solid reads.
+        - The approach must account for the player's own leaks: a player with confirmed leaks should
+          fix fundamentals before attempting advanced exploits.
+        - Groups with fewer than 20 tournaments are unreliable: mention the uncertainty explicitly.
+
+        """ + StrategyPlanRules + Voice;
+
+    private const string CashStrategyPlanInstructions = CashContext + """
+        You receive the player's performance figures broken down by stake level, and their confirmed
+        and possible leaks, all computed by the software over the player's entire history.
+
+        Your task is to build a strategic plan for each stake level the player has played, recommending
+        whether a GTO-based, exploitative, or mixed approach is most profitable at that level
+        given the player's profile.
+
+        Framework for the approach recommendation:
+        - At micro stakes (NL2 to NL5), fields are mostly recreational players. An exploitative approach
+          that targets common mistakes (overcalling, passive postflop play, poor positional awareness)
+          is usually more profitable than a balanced one. Rake is high relative to the pot.
+        - At low stakes (NL10 to NL25), fields mix recreational and regular players. A solid default
+          strategy with targeted exploitative adjustments against weaker opponents is the sweet spot.
+        - At mid stakes (NL50 and above), fields are mostly regulars. A GTO baseline becomes necessary
+          to avoid being exploited; deviations require solid reads. Rake impact decreases.
+        - The approach must account for the player's own leaks: a player with confirmed leaks should
+          fix fundamentals before attempting advanced exploits.
+        - Groups with fewer than 500 hands are unreliable: mention the uncertainty explicitly.
+
+        """ + StrategyPlanRules + Voice;
+
+    private static readonly JsonObject StrategyPlanBandSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("band", "approach", "rationale", "adjustments", "priority_leak"),
+        ["properties"] = new JsonObject
+        {
+            ["band"] = Text.DeepClone(),
+            ["approach"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("gto", "exploitative", "mixed") },
+            ["rationale"] = Text.DeepClone(),
+            ["adjustments"] = Texts.DeepClone(),
+            ["priority_leak"] = Text.DeepClone(),
+        },
+    };
+
+    private static readonly JsonObject StrategyPlanSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("headline", "overview", "bands", "progression", "key_focus"),
+        ["properties"] = new JsonObject
+        {
+            ["headline"] = Text.DeepClone(),
+            ["overview"] = Text.DeepClone(),
+            ["bands"] = new JsonObject { ["type"] = "array", ["items"] = StrategyPlanBandSchema.DeepClone() },
+            ["progression"] = Text.DeepClone(),
+            ["key_focus"] = Texts.DeepClone(),
+        },
+    };
+
+    private const int StrategyPlanMaxOutputTokens = 2_500;
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
@@ -591,6 +698,7 @@ internal sealed partial class AnthropicCoachingModel(
             AiTask.MonthlyReport => MonthlyReportMaxOutputTokens,
             AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
             AiTask.TournamentSelection => TournamentSelectionMaxOutputTokens,
+            AiTask.StrategyPlan => StrategyPlanMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
     }
@@ -634,6 +742,11 @@ internal sealed partial class AnthropicCoachingModel(
 
     public Task<ModelAnswer<TournamentSelectionAdvice>> AdviseTournamentSelectionAsync(TournamentSelectionPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("tournament-selection", () => TournamentSelectionCoreAsync(prompt, ModelFor(AiTask.TournamentSelection), cancellationToken));
+
+    public Task<ModelAnswer<StrategyPlanAdvice>> AdviseStrategyPlanAsync(StrategyPlanPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync(
+            prompt.GameType == GameType.CashGame ? "cash-strategy-plan" : "strategy-plan",
+            () => StrategyPlanCoreAsync(prompt, ModelFor(AiTask.StrategyPlan), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -1057,6 +1170,41 @@ internal sealed partial class AnthropicCoachingModel(
                 Clean(answer.Strengths, 3),
                 Clean(answer.Avoid, 2),
                 Clean(answer.Recommendations, 3)),
+            usage);
+    }
+
+    private sealed record StrategyPlanBandAnswer(string? Band, string? Approach, string? Rationale, IReadOnlyList<string>? Adjustments, string? PriorityLeak);
+
+    private sealed record StrategyPlanAnswer(string? Headline, string? Overview, IReadOnlyList<StrategyPlanBandAnswer>? Bands, string? Progression, IReadOnlyList<string>? KeyFocus);
+
+    private async Task<ModelAnswer<StrategyPlanAdvice>> StrategyPlanCoreAsync(StrategyPlanPrompt prompt, string model, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var instructions = prompt.GameType == GameType.CashGame ? CashStrategyPlanInstructions : TournamentStrategyPlanInstructions;
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
+        var (answer, usage) = await CallAsync<StrategyPlanAnswer>(instructions, StrategyPlanSchema, user, MaxOutputTokensFor(AiTask.StrategyPlan), Reasoning.Writing, cancellationToken, model: model);
+        if (string.IsNullOrWhiteSpace(answer.Headline) || string.IsNullOrWhiteSpace(answer.Overview))
+        {
+            throw new CoachingModelException("The model answer misses required fields.", usage);
+        }
+
+        var bands = (answer.Bands ?? [])
+            .Where(b => !string.IsNullOrWhiteSpace(b.Band) && !string.IsNullOrWhiteSpace(b.Approach) && !string.IsNullOrWhiteSpace(b.Rationale))
+            .Select(b => new StrategyPlanBand(
+                b.Band!.Trim(),
+                b.Approach!.Trim(),
+                b.Rationale!.Trim(),
+                Clean(b.Adjustments, 3),
+                string.IsNullOrWhiteSpace(b.PriorityLeak) ? null : b.PriorityLeak!.Trim()))
+            .ToList();
+
+        return new ModelAnswer<StrategyPlanAdvice>(
+            new StrategyPlanAdvice(
+                answer.Headline.Trim(),
+                answer.Overview.Trim(),
+                bands,
+                answer.Progression?.Trim() ?? string.Empty,
+                Clean(answer.KeyFocus, 3)),
             usage);
     }
 }

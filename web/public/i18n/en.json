@@ -2150,7 +2150,8 @@
           "cashDebrief": "Cash game debrief",
           "bankrollCoach": "Bankroll advice",
           "monthlyReport": "Monthly report",
-          "tournamentSelection": "Tournament selection"
+          "tournamentSelection": "Tournament selection",
+          "strategyPlan": "Strategy plan"
         }
       }
     },
@@ -2661,6 +2662,27 @@
       "strengths": "Your strengths",
       "avoid": "Avoid",
       "recommendations": "Recommendations"
+    },
+    "strategyPlan": {
+      "title": "Strategy plan",
+      "intro": "The coach builds a strategic plan per buy-in band or stake level, recommending a GTO or exploitative approach based on your profile.",
+      "action": "Generate my plan",
+      "writing": "The coach is building your plan…",
+      "stale": "New data has been imported since this plan.",
+      "progression": "Progression",
+      "keyFocus": "Key focus areas",
+      "approach": {
+        "gto": "GTO",
+        "exploitative": "Exploitative",
+        "mixed": "Mixed"
+      },
+      "band": {
+        "upTo5": "Up to €5",
+        "from5To10": "€5 to €10",
+        "from10To20": "€10 to €20",
+        "from20To50": "€20 to €50",
+        "over50": "Over €50"
+      }
     }
   },
   "planLock": {
@@ -2701,6 +2723,10 @@
       "defenceRanges": {
         "title": "Defence vs open",
         "description": "What you call and 3-bet facing an open, against the references."
+      },
+      "strategyPlan": {
+        "title": "Strategy plan",
+        "description": "A GTO or exploitative plan per buy-in band or stake level, adapted to your leaks."
       }
     }
   }
