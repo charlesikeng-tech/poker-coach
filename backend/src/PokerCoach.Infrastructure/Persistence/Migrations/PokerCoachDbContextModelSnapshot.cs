@@ -1324,6 +1324,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(14,2)")
                         .HasColumnName("all_in_expected_net_chips");
 
+                    b.Property<bool>("CallThreeBet")
+                        .HasColumnType("boolean")
+                        .HasColumnName("call_three_bet");
+
                     b.Property<bool>("CbetFlop")
                         .HasColumnType("boolean")
                         .HasColumnName("cbet_flop");
@@ -1378,6 +1382,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(10,2)")
                         .HasColumnName("facing_open_to_big_blinds");
 
+                    b.Property<int?>("FacingThreeBetFrom")
+                        .HasColumnType("integer")
+                        .HasColumnName("facing_three_bet_from");
+
                     b.Property<int>("FactsVersion")
                         .HasColumnType("integer")
                         .HasColumnName("facts_version");
@@ -1405,6 +1413,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<bool>("FoldToThreeBetOpportunity")
                         .HasColumnType("boolean")
                         .HasColumnName("fold_to_three_bet_opportunity");
+
+                    b.Property<bool>("FourBet")
+                        .HasColumnType("boolean")
+                        .HasColumnName("four_bet");
 
                     b.Property<bool>("HadPreflopDecision")
                         .HasColumnType("boolean")

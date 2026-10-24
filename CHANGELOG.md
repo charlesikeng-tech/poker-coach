@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **ranges**: Add vs 3-bet ranges (call/4-bet spot, Pro)
+
 ## [2026.10.24-bb5bea7] — 2026-10-24
 
 ### Fonctionnalités
