@@ -1,0 +1,345 @@
+<ng-container *transloco="let t; prefix: 'pages.ranges'">
+  @if (locked()) {
+    <app-plan-lock feature="vsThreeBetRanges" />
+  } @else if (state() === 'error') {
+    <app-empty-state
+      [icon]="icons.CircleAlert"
+      [heading]="t('error.title')"
+      [description]="t('error.description')"
+    >
+      <button appButton variant="secondary" (click)="retry()">{{ t('error.retry') }}</button>
+    </app-empty-state>
+  } @else if (data(); as data) {
+    @if (data.pendingHands > 0) {
+      <p class="pending glass" role="status">
+        <app-icon class="spin" [icon]="icons.LoaderCircle" />
+        {{ t('pending', { count: data.pendingHands }) }}
+      </p>
+    }
+
+    <div class="toolbar">
+      <app-format-toggle
+        class="format"
+        [value]="format()"
+        [counts]="data.spots"
+        (changed)="setFormat($event)"
+      />
+      <label>
+        <span>{{ t('band') }}</span>
+        <select [value]="band()" (change)="setBand($any($event.target).value)">
+          @for (option of bands; track option) {
+            <option [value]="option" [selected]="option === band()">
+              {{ t('bands.' + option) }}
+            </option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>{{ t('period') }}</span>
+        <select [value]="period()" (change)="setPeriod($any($event.target).value)">
+          @for (option of periods; track option) {
+            <option [value]="option" [selected]="option === period()">
+              {{ t('periods.' + option) }}
+            </option>
+          }
+        </select>
+      </label>
+      @if (hasReference()) {
+        <div class="views" role="group" [attr.aria-label]="t('view')">
+          @for (v of views; track v) {
+            <button
+              type="button"
+              [class.active]="view() === v"
+              [attr.aria-pressed]="view() === v"
+              (click)="view.set(v)"
+            >
+              {{ t('views.' + v) }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    @if (spot(); as s) {
+      <nav class="positions" [attr.aria-label]="t('vsThreeBet.openers')">
+        @for (o of openers(); track o.position) {
+          <button
+            type="button"
+            class="position"
+            [class.position--active]="s.pair.opener === o.position"
+            [attr.aria-pressed]="s.pair.opener === o.position"
+            (click)="chooseOpener(o.position)"
+          >
+            <strong>{{ short[o.position] }}</strong>
+            <span class="numeric">{{ percent(o.rate) }}</span>
+          </button>
+        }
+      </nav>
+      <nav class="positions openers" [attr.aria-label]="t('vsThreeBet.threeBettors')">
+        <span class="openers__label">{{ t('vsThreeBet.facing') }}</span>
+        @for (tb of threeBettors(); track tb.threeBettor) {
+          <button
+            type="button"
+            class="position"
+            [class.position--active]="s.pair.threeBettor === tb.threeBettor"
+            [attr.aria-pressed]="s.pair.threeBettor === tb.threeBettor"
+            (click)="chooseThreeBettor(tb.threeBettor)"
+          >
+            <strong>{{ short[tb.threeBettor] }}</strong>
+            <span class="numeric">{{ percent(tb.continueRate.rate) }}</span>
+          </button>
+        }
+      </nav>
+
+      <div class="layout">
+        @for (shown of [s.pair.opener + s.pair.threeBettor + shownView()]; track shown) {
+          <div
+            class="grid glass"
+            role="grid"
+            [attr.aria-label]="
+              t('vsThreeBet.gridLabel.' + shownView(), {
+                opener: short[s.pair.opener],
+                threeBettor: short[s.pair.threeBettor],
+              })
+            "
+          >
+            @for (cell of s.cells; track cell.hand; let i = $index) {
+              <button
+                type="button"
+                class="cell"
+                role="gridcell"
+                [attr.data-view]="shownView()"
+                [attr.data-ref]="shownView() === 'reference' ? cell.reference : null"
+                [attr.data-gap]="shownView() === 'gap' ? gap(cell) : null"
+                [class.cell--in]="cell.reference !== null && cell.reference !== 'fold'"
+                [class.cell--never]="shownView() !== 'reference' && cell.dealt === 0"
+                [class.cell--thin]="
+                  shownView() === 'mine' && cell.dealt > 0 && cell.dealt < thinSample
+                "
+                [style.--open]="shownView() === 'mine' ? fourBetShare(cell) : 0"
+                [style.--limp]="shownView() === 'mine' ? callShare(cell) : 0"
+                [style.animation-delay.ms]="delay(i)"
+                [attr.aria-label]="
+                  t('vsThreeBet.cellLabel', {
+                    hand: cell.hand,
+                    dealt: cell.dealt,
+                    calls: cell.calls,
+                    fourBets: cell.fourBets,
+                  })
+                "
+                (mouseenter)="hovered.set(cell)"
+                (focus)="hovered.set(cell)"
+                (mouseleave)="hovered.set(null)"
+                (blur)="hovered.set(null)"
+              >
+                <span class="cell__fill" aria-hidden="true"></span>
+                <span class="cell__hand">{{ cell.hand }}</span>
+                @if (cell.dealt > 0 && shownView() !== 'reference') {
+                  <span class="cell__count numeric">{{ cell.dealt }}</span>
+                }
+              </button>
+            }
+          </div>
+        }
+
+        <aside class="side">
+          @switch (shownView()) {
+            @case ('reference') {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('vsThreeBet.reference.title', {
+                      opener: short[s.pair.opener],
+                      threeBettor: short[s.pair.threeBettor],
+                      version: data.referenceVersion,
+                    })
+                  }}
+                </h2>
+                <p class="line">
+                  <span class="swatch swatch--open"></span>
+                  {{ t('vsThreeBet.reference.fourBet', { share: percent(s.fourBetShare) }) }}
+                </p>
+                @if (s.fourBetNotation) {
+                  <code class="notation">{{ s.fourBetNotation }}</code>
+                }
+                <p class="line">
+                  <span class="swatch swatch--limp"></span>
+                  {{ t('vsThreeBet.reference.call', { share: percent(s.callShare) }) }}
+                </p>
+                @if (s.callNotation) {
+                  <code class="notation">{{ s.callNotation }}</code>
+                }
+                <p class="muted">{{ t('vsThreeBet.reference.note') }}</p>
+              </section>
+            }
+            @case ('gap') {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('vsThreeBet.gap.title', {
+                      opener: short[s.pair.opener],
+                      threeBettor: short[s.pair.threeBettor],
+                    })
+                  }}
+                </h2>
+                @if (gapSummary().played === 0) {
+                  <p class="muted">{{ t('gap.none') }}</p>
+                } @else {
+                  <p class="line">
+                    <span class="swatch swatch--loose"></span>
+                    {{ t('vsThreeBet.gap.tooLoose', { count: gapSummary().tooLoose.length }) }}
+                  </p>
+                  @if (gapSummary().tooLoose.length > 0) {
+                    <p class="hands">{{ gapSummary().tooLoose.join(' · ') }}</p>
+                  }
+                  <p class="line">
+                    <span class="swatch swatch--tight"></span>
+                    {{ t('vsThreeBet.gap.tooTight', { count: gapSummary().tooTight.length }) }}
+                  </p>
+                  @if (gapSummary().tooTight.length > 0) {
+                    <p class="hands">{{ gapSummary().tooTight.join(' · ') }}</p>
+                  }
+                  <p class="line">
+                    <span class="swatch swatch--other"></span>
+                    {{
+                      t('vsThreeBet.gap.otherAction', {
+                        count: gapSummary().otherAction.length,
+                      })
+                    }}
+                  </p>
+                  @if (gapSummary().otherAction.length > 0) {
+                    <p class="hands">{{ gapSummary().otherAction.join(' · ') }}</p>
+                  }
+                  <p class="muted">{{ t('vsThreeBet.gap.rule') }}</p>
+                }
+              </section>
+            }
+            @default {
+              <section class="card glass">
+                <h2>
+                  {{
+                    t('vsThreeBet.summary.title', {
+                      opener: short[s.pair.opener],
+                      threeBettor: short[s.pair.threeBettor],
+                    })
+                  }}
+                </h2>
+                @if (s.pair.dealt === 0) {
+                  <p class="muted">{{ t('vsThreeBet.summary.none') }}</p>
+                } @else {
+                  <p class="big numeric">{{ percent(s.pair.continueRate.rate) }}</p>
+                  <p class="muted">
+                    {{
+                      t('vsThreeBet.summary.counts', {
+                        calls: s.pair.calls,
+                        fourBets: s.pair.fourBets,
+                        dealt: s.pair.dealt,
+                      })
+                    }}
+                  </p>
+                  @if (s.callShare !== null && s.fourBetShare !== null) {
+                    <p class="muted">
+                      {{
+                        t('vsThreeBet.summary.reference', {
+                          continue: percent(s.callShare + s.fourBetShare),
+                          fourBet: percent(s.fourBetShare),
+                          mine: percent(s.pair.fourBetRate.rate),
+                        })
+                      }}
+                    </p>
+                  }
+                }
+                @if (!s.pair.hasReference) {
+                  <p class="nash">
+                    {{
+                      band() === 'short'
+                        ? t('vsThreeBet.noReference.short')
+                        : t('vsThreeBet.noReference.spot')
+                    }}
+                  </p>
+                }
+              </section>
+            }
+          }
+
+          <section class="card glass detail" aria-live="polite">
+            @if (focus(); as c) {
+              <p class="detail__hand">
+                {{ c.hand }}
+                @if (c.reference) {
+                  <span class="tag" [class.tag--in]="c.reference !== 'fold'">{{
+                    t('vsThreeBet.detail.reference.' + c.reference)
+                  }}</span>
+                }
+              </p>
+              @if (c.dealt === 0) {
+                <p class="muted">{{ t('vsThreeBet.detail.never') }}</p>
+              } @else {
+                <dl>
+                  <div>
+                    <dt>{{ t('detail.dealt') }}</dt>
+                    <dd class="numeric">{{ c.dealt }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--open"></span>4-bet</dt>
+                    <dd class="numeric">{{ c.fourBets }} · {{ percent(fourBetShare(c)) }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--limp"></span>Call</dt>
+                    <dd class="numeric">{{ c.calls }} · {{ percent(callShare(c)) }}</dd>
+                  </div>
+                  <div>
+                    <dt><span class="swatch swatch--fold"></span>{{ t('detail.folds') }}</dt>
+                    <dd class="numeric">{{ c.dealt - c.calls - c.fourBets }}</dd>
+                  </div>
+                </dl>
+                @if (c.dealt < thinSample) {
+                  <p class="muted">{{ t('detail.thin') }}</p>
+                }
+              }
+            } @else {
+              <p class="muted">{{ t('vsThreeBet.detail.hint') }}</p>
+            }
+          </section>
+
+          <section class="card glass legend">
+            @switch (shownView()) {
+              @case ('mine') {
+                <p><span class="swatch swatch--open"></span>{{ t('vsThreeBet.legend.fourBet') }}</p>
+                <p><span class="swatch swatch--limp"></span>{{ t('vsThreeBet.legend.call') }}</p>
+                <p><span class="swatch swatch--fold"></span>{{ t('legend.fold') }}</p>
+                <p><span class="swatch swatch--never"></span>{{ t('legend.never') }}</p>
+                <p class="muted">{{ t('legend.sample') }}</p>
+              }
+              @case ('reference') {
+                <p>
+                  <span class="swatch swatch--open"></span>{{ t('vsThreeBet.legend.refFourBet') }}
+                </p>
+                <p><span class="swatch swatch--limp"></span>{{ t('vsThreeBet.legend.refCall') }}</p>
+                <p><span class="swatch swatch--fold"></span>{{ t('legend.refFold') }}</p>
+              }
+              @default {
+                <p><span class="swatch swatch--match"></span>{{ t('legend.match') }}</p>
+                <p>
+                  <span class="swatch swatch--loose"></span>{{ t('vsThreeBet.legend.tooLoose') }}
+                </p>
+                <p>
+                  <span class="swatch swatch--tight"></span>{{ t('vsThreeBet.legend.tooTight') }}
+                </p>
+                <p>
+                  <span class="swatch swatch--other"></span>{{ t('vsThreeBet.legend.otherAction') }}
+                </p>
+                <p><span class="swatch swatch--never"></span>{{ t('legend.neverGap') }}</p>
+              }
+            }
+          </section>
+        </aside>
+      </div>
+      <p class="method">{{ t('vsThreeBet.method', { version: data.referenceVersion }) }}</p>
+    }
+  } @else {
+    <div class="layout" role="status" [attr.aria-label]="t('loading')">
+      <div class="grid glass skeleton-grid"><span class="skeleton"></span></div>
+    </div>
+  }
+</ng-container>

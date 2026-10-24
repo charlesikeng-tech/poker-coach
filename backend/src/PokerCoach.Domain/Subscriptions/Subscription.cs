@@ -239,6 +239,9 @@ public enum Feature
 
     /// <summary>AI-generated strategic plan per buy-in band or stake level (GTO vs exploitative recommendations).</summary>
     StrategyPlan,
+
+    /// <summary>Reaction to a 3-bet after opening (call, 4-bet) against the references.</summary>
+    VsThreeBetRanges,
 }
 
 /// <summary>The offer matrix (ADR-0016): the lowest plan that opens each feature.</summary>
@@ -246,7 +249,7 @@ public static class PlanFeatures
 {
     public static Plan MinimumPlan(Feature feature) => feature switch
     {
-        Feature.OpeningRanges or Feature.DefenceRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport => Plan.Pro,
+        Feature.OpeningRanges or Feature.DefenceRanges or Feature.VsThreeBetRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport => Plan.Pro,
         _ => Plan.Elite,
     };
 

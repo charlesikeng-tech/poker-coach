@@ -115,6 +115,12 @@ internal sealed class HandHeroFactsRecord
 
     public bool ProbeBetTurn { get; set; }
 
+    public PokerPosition? FacingThreeBetFrom { get; set; }
+
+    public bool CallThreeBet { get; set; }
+
+    public bool FourBet { get; set; }
+
     public void Apply(HeroHandFacts facts, int version)
     {
         FactsVersion = version;
@@ -167,6 +173,9 @@ internal sealed class HandHeroFactsRecord
         DonkBetFlop = facts.DonkBetFlop;
         ProbeBetTurnOpportunity = facts.ProbeBetTurnOpportunity;
         ProbeBetTurn = facts.ProbeBetTurn;
+        FacingThreeBetFrom = facts.FacingThreeBetFrom;
+        CallThreeBet = facts.CallThreeBet;
+        FourBet = facts.FourBet;
     }
 
     public HeroHandFacts ToDomain() => new(
@@ -218,7 +227,10 @@ internal sealed class HandHeroFactsRecord
         DonkBetFlopOpportunity,
         DonkBetFlop,
         ProbeBetTurnOpportunity,
-        ProbeBetTurn);
+        ProbeBetTurn,
+        FacingThreeBetFrom,
+        CallThreeBet,
+        FourBet);
 }
 
 internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<HandHeroFactsRecord>
@@ -230,6 +242,7 @@ internal sealed class HandHeroFactsConfiguration : IEntityTypeConfiguration<Hand
         builder.Property(f => f.HandId).ValueGeneratedNever();
         builder.Property(f => f.Position).HasConversion<int?>();
         builder.Property(f => f.FacingOpenFrom).HasConversion<int?>();
+        builder.Property(f => f.FacingThreeBetFrom).HasConversion<int?>();
         builder.Property(f => f.StackInBigBlinds).HasPrecision(10, 2);
         builder.Property(f => f.NetBigBlinds).HasPrecision(12, 2);
         builder.Property(f => f.AllInEquity).HasPrecision(5, 4);

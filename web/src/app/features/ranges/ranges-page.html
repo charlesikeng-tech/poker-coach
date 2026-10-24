@@ -1,7 +1,13 @@
 <ng-container *transloco="let t; prefix: 'pages.ranges'">
   <app-page-header
     [heading]="t('title')"
-    [description]="spot() === 'defence' ? t('defence.description') : t('description')"
+    [description]="
+      spot() === 'defence'
+        ? t('defence.description')
+        : spot() === 'vsThreeBet'
+          ? t('vsThreeBet.description')
+          : t('description')
+    "
   />
 
   <div class="spots" role="group" [attr.aria-label]="t('spot')">
@@ -19,6 +25,8 @@
 
   @if (spot() === 'defence') {
     <app-defence-ranges />
+  } @else if (spot() === 'vsThreeBet') {
+    <app-vs-three-bet-ranges />
   } @else {
     @if (locked() === 'openingRanges') {
       <app-plan-lock feature="openingRanges" />

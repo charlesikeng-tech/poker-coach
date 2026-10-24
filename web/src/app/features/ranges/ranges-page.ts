@@ -23,6 +23,7 @@ import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { RangeGauge } from '../leaks/range-gauge';
 import { CustomRangeEditor } from './custom-range-editor';
 import { DefenceRanges } from './defence-ranges';
+import { VsThreeBetRanges } from './vs-three-bet-ranges';
 import { GameType, PokerPosition } from '../statistics/statistics-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import {
@@ -39,7 +40,7 @@ import { POSITION_SHORT, RangeView } from './ranges-shared';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 
 type LoadState = 'loading' | 'ready' | 'error';
-type RangeSpot = 'open' | 'defence';
+type RangeSpot = 'open' | 'defence' | 'vsThreeBet';
 type PushView = 'shove' | 'call';
 const VIEWS: readonly RangeView[] = ['mine', 'reference', 'gap'];
 
@@ -66,6 +67,7 @@ const RANKS = 'AKQJT98765432';
     Icon,
     RangeGauge,
     DefenceRanges,
+    VsThreeBetRanges,
     CustomRangeEditor,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,8 +80,7 @@ export class RangesPage {
   protected readonly billing = inject(BillingService);
   private readonly language = inject(LanguageService);
 
-  /** Opening ranges, or defence against an open (ADR-0018). */
-  protected readonly spots: readonly RangeSpot[] = ['open', 'defence'];
+  protected readonly spots: readonly RangeSpot[] = ['open', 'defence', 'vsThreeBet'];
   protected readonly spot = signal<RangeSpot>('open');
   protected readonly periods = PERIOD_FILTERS;
   protected readonly gameTypeService = inject(GameTypeService);
@@ -176,7 +177,6 @@ export class RangesPage {
         this.pushStack(),
         this.gameTypeService.current(),
       ] as const;
-      // The defence view loads its own data.
       if (this.spot() === 'open') {
         untracked(() => void this.load(...args));
       }

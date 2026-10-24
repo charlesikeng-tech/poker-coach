@@ -93,12 +93,48 @@ public sealed record DefenceRangesResponse(
     int PendingHands,
     int ReferenceVersion);
 
+/// <param name="Reference">What the reference does with it (fold, call, fourBet); null when no reference is written.</param>
+public sealed record VsThreeBetCellResponse(string Hand, int Dealt, int Calls, int FourBets, VsThreeBetAction? Reference);
+
+/// <param name="Opener">The opener's seat (the hero who opened).</param>
+/// <param name="ContinueRate">Calls and 4-bets over spots.</param>
+public sealed record VsThreeBetPairResponse(
+    PokerPosition Opener,
+    PokerPosition ThreeBettor,
+    int Dealt,
+    int Calls,
+    int FourBets,
+    StatRateResponse ContinueRate,
+    StatRateResponse FourBetRate,
+    bool HasReference);
+
+/// <param name="CallShare">Share of all two-card holdings the reference calls (ratio); null without a reference.</param>
+/// <param name="Cells">The 169 starting hands in grid order.</param>
+public sealed record VsThreeBetSpotResponse(
+    VsThreeBetPairResponse Pair,
+    string? CallNotation,
+    string? FourBetNotation,
+    decimal? CallShare,
+    decimal? FourBetShare,
+    IReadOnlyList<VsThreeBetCellResponse> Cells);
+
+/// <param name="Pairs">Every opener–3-bettor pair of the format with its counts, openers first to act first.</param>
+public sealed record VsThreeBetRangesResponse(
+    TableFormat Format,
+    StackBand Band,
+    FormatCountsResponse Spots,
+    IReadOnlyList<VsThreeBetPairResponse> Pairs,
+    VsThreeBetSpotResponse Selected,
+    int PendingHands,
+    int ReferenceVersion);
+
 public static class RangeEndpoints
 {
     public static IEndpointRouteBuilder MapRangeEndpoints(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/api/ranges/opening", GetOpeningAsync).WithTags("Ranges").RequiresFeature(Feature.OpeningRanges);
         endpoints.MapGet("/api/ranges/defence", GetDefenceAsync).WithTags("Ranges").RequiresFeature(Feature.DefenceRanges);
+        endpoints.MapGet("/api/ranges/vs-three-bet", GetVsThreeBetAsync).WithTags("Ranges").RequiresFeature(Feature.VsThreeBetRanges);
         endpoints.MapCustomRangeEndpoints();
         return endpoints;
     }
@@ -257,6 +293,79 @@ public static class RangeEndpoints
             result.ReferenceVersion));
     }
 
+    /// <summary>
+    /// The player's reaction to a 3-bet after opening: for one opener and one 3-bettor, what each starting
+    /// hand did (call, 4-bet, fold), with the list of every pair and its counts.
+    /// </summary>
+    /// <param name="band">short (15–25 BB, no reference written), mid (25–40 BB) or deep (40 BB and more).</param>
+    /// <param name="opener">The hero's seat (he opened); with <paramref name="threeBettor"/>, omitted or invalid: picks best default.</param>
+    private static async Task<Results<Ok<VsThreeBetRangesResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetVsThreeBetAsync(
+        HttpContext context,
+        PlanAccess plans,
+        VsThreeBetRangeService vsThreeBet,
+        CancellationToken cancellationToken,
+        string? format = null,
+        string band = "mid",
+        string? opener = null,
+        string? threeBettor = null,
+        DateTimeOffset? from = null,
+        DateTimeOffset? to = null,
+        string? gameType = null)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!Enum.TryParse<StackBand>(band, ignoreCase: true, out var stackBand) || !Enum.IsDefined(stackBand) || stackBand == StackBand.Push)
+        {
+            return ApiProblems.Validation("band", "Must be one of: short, mid, deep.");
+        }
+
+        if (!TableFormatQuery.TryParse(format, out var tableFormat))
+        {
+            return ApiProblems.Validation("format", "Must be sixMax or fullRing.");
+        }
+
+        if (from is not null && to is not null && from >= to)
+        {
+            return ApiProblems.Validation("to", "Must be after 'from'.");
+        }
+
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        if (!TryParseSeat(opener, out var openerSeat))
+        {
+            return ApiProblems.Validation("opener", "Must be a position (utg … smallBlind).");
+        }
+
+        if (!TryParseSeat(threeBettor, out var threeBettorSeat))
+        {
+            return ApiProblems.Validation("threeBettor", "Must be a position (utg … bigBlind).");
+        }
+
+        from = await plans.ClampFromAsync(userId, from, cancellationToken);
+        var result = await vsThreeBet.GetAsync(userId, tableFormat, stackBand, openerSeat, threeBettorSeat, from, to, cancellationToken, parsedGameType);
+        var selected = result.Selected;
+        return TypedResults.Ok(new VsThreeBetRangesResponse(
+            result.Format,
+            result.Band,
+            new FormatCountsResponse(result.SpotsByFormat[TableFormat.SixMax], result.SpotsByFormat[TableFormat.FullRing]),
+            result.Pairs.Select(VsThreeBetPairMap).ToList(),
+            new VsThreeBetSpotResponse(
+                VsThreeBetPairMap(selected.Pair),
+                selected.CallNotation,
+                selected.FourBetNotation,
+                selected.CallShare,
+                selected.FourBetShare,
+                selected.Cells.Select(c => new VsThreeBetCellResponse(c.Hand.ToString(), c.Dealt, c.Calls, c.FourBets, c.Reference)).ToList()),
+            result.PendingHands,
+            result.ReferenceVersion));
+    }
+
     /// <summary>Omitted is valid (null); a name in any case is; a number or an unknown name is not.</summary>
     private static bool TryParseSeat(string? value, out PokerPosition? seat)
     {
@@ -283,5 +392,15 @@ public static class RangeEndpoints
         p.ThreeBets,
         new StatRateResponse(p.DefenceRate.Made, p.DefenceRate.Opportunities, p.DefenceRate.Rate),
         new StatRateResponse(p.ThreeBetRate.Made, p.ThreeBetRate.Opportunities, p.ThreeBetRate.Rate),
+        p.HasReference);
+
+    private static VsThreeBetPairResponse VsThreeBetPairMap(VsThreeBetPair p) => new(
+        p.Opener,
+        p.ThreeBettor,
+        p.Dealt,
+        p.Calls,
+        p.FourBets,
+        new StatRateResponse(p.ContinueRate.Made, p.ContinueRate.Opportunities, p.ContinueRate.Rate),
+        new StatRateResponse(p.FourBetRate.Made, p.FourBetRate.Opportunities, p.FourBetRate.Rate),
         p.HasReference);
 }

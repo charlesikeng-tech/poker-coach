@@ -135,6 +135,58 @@ export interface DefenceQuery {
   readonly gameType?: GameType;
 }
 
+// Vs 3-bet ranges: the opener's reaction to a 3-bet (call, 4-bet, fold).
+
+/** What a reference does facing a 3-bet after opening. */
+export type VsThreeBetAction = 'fold' | 'call' | 'fourBet';
+
+export interface VsThreeBetCell {
+  readonly hand: string;
+  readonly dealt: number;
+  readonly calls: number;
+  readonly fourBets: number;
+  readonly reference: VsThreeBetAction | null;
+}
+
+export interface VsThreeBetPair {
+  readonly opener: PokerPosition;
+  readonly threeBettor: PokerPosition;
+  readonly dealt: number;
+  readonly calls: number;
+  readonly fourBets: number;
+  readonly continueRate: StatRate;
+  readonly fourBetRate: StatRate;
+  readonly hasReference: boolean;
+}
+
+export interface VsThreeBetSpot {
+  readonly pair: VsThreeBetPair;
+  readonly callNotation: string | null;
+  readonly fourBetNotation: string | null;
+  readonly callShare: number | null;
+  readonly fourBetShare: number | null;
+  readonly cells: readonly VsThreeBetCell[];
+}
+
+export interface VsThreeBetRanges {
+  readonly format: TableFormat;
+  readonly band: DefenceBand;
+  readonly spots: { readonly sixMax: number; readonly fullRing: number };
+  readonly pairs: readonly VsThreeBetPair[];
+  readonly selected: VsThreeBetSpot;
+  readonly pendingHands: number;
+  readonly referenceVersion: number;
+}
+
+export interface VsThreeBetQuery {
+  readonly format?: TableFormat;
+  readonly band: DefenceBand;
+  readonly opener?: PokerPosition;
+  readonly threeBettor?: PokerPosition;
+  readonly from?: string;
+  readonly gameType?: GameType;
+}
+
 // Custom user-defined ranges (Elite feature).
 
 export interface CustomOpeningRange {
@@ -183,6 +235,12 @@ export class RangesApi {
   defence(query: DefenceQuery): Promise<DefenceRanges> {
     return firstValueFrom(
       this.http.get<DefenceRanges>('/api/ranges/defence', { params: toParams(query) }),
+    );
+  }
+
+  vsThreeBet(query: VsThreeBetQuery): Promise<VsThreeBetRanges> {
+    return firstValueFrom(
+      this.http.get<VsThreeBetRanges>('/api/ranges/vs-three-bet', { params: toParams(query) }),
     );
   }
 

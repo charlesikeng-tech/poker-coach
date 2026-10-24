@@ -20,6 +20,11 @@ public sealed record OpeningHoldingCount(PokerPosition Position, int MaxSeats, i
 /// <param name="Dealt">Times the hero faced that open with this holding.</param>
 public sealed record DefenceHoldingCount(PokerPosition Position, PokerPosition Opener, int MaxSeats, int PlayersDealt, string HeroCards, int Dealt, int Calls, int ThreeBets);
 
+/// <summary>Spots where the hero opened and faced a single 3-bet (see <see cref="HeroHandFacts.FacingThreeBetFrom"/>), grouped by opener, 3-bettor, table and holding.</summary>
+/// <param name="Opener">The hero's position (he opened).</param>
+/// <param name="ThreeBettor">The 3-bettor's position.</param>
+public sealed record VsThreeBetHoldingCount(PokerPosition Opener, PokerPosition ThreeBettor, int MaxSeats, int PlayersDealt, string HeroCards, int Dealt, int Calls, int FourBets);
+
 public interface IRangeReadStore
 {
     /// <summary>Spots facing a single open within the filter, grouped by seat, opener, table size and holding.</summary>
@@ -31,6 +36,13 @@ public interface IRangeReadStore
 
     /// <summary>RFI spots of the user's analysed hands within the filter, grouped by position, table size and holding.</summary>
     Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken);
+
+    /// <summary>Spots where the hero opened and faced a 3-bet within the filter, grouped by opener, 3-bettor, table size and holding.</summary>
+    Task<IReadOnlyList<VsThreeBetHoldingCount>> CountVsThreeBetsAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,

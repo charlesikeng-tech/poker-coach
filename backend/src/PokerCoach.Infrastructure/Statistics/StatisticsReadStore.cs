@@ -255,6 +255,33 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToList();
     }
 
+    public async Task<IReadOnlyList<VsThreeBetHoldingCount>> CountVsThreeBetsAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+    {
+        var rows = await Filtered(userId, filter, factsVersion)
+            .Where(x => x.F.FacingThreeBetFrom != null && x.F.Position != null && x.HeroCards != null)
+            .GroupBy(x => new { x.F.Position, x.F.FacingThreeBetFrom, x.MaxSeats, x.F.PlayersDealt, x.HeroCards })
+            .Select(g => new
+            {
+                g.Key.Position,
+                g.Key.FacingThreeBetFrom,
+                g.Key.MaxSeats,
+                g.Key.PlayersDealt,
+                g.Key.HeroCards,
+                Dealt = g.Count(),
+                Calls = g.Count(x => x.F.CallThreeBet),
+                FourBets = g.Count(x => x.F.FourBet),
+            })
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(r => new VsThreeBetHoldingCount(r.Position!.Value, r.FacingThreeBetFrom!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Calls, r.FourBets))
+            .ToList();
+    }
+
     /// <summary>The hero's opens and 3-bets against a single open: a few columns per raise, a sixth of the hands at most.</summary>
     public async Task<IReadOnlyList<PlayedRaiseRow>> ListRaisesAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
         await Filtered(userId, filter, factsVersion)

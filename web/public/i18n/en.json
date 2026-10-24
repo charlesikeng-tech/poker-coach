@@ -1451,7 +1451,8 @@
       "spot": "Spot",
       "spots": {
         "open": "Open",
-        "defence": "Defence vs open"
+        "defence": "Defence vs open",
+        "vsThreeBet": "Vs 3-bet"
       },
       "defence": {
         "description": "What you call, 3-bet or fold facing a single raise, hand by hand, by your position and the opener's.",
@@ -1522,6 +1523,60 @@
         "callTab": "Call",
         "threeBetTab": "3-bet",
         "indicator": "Custom target"
+      },
+      "vsThreeBet": {
+        "description": "What you call, 4-bet or fold when you open and face a 3-bet, hand by hand.",
+        "openers": "Your position (opener)",
+        "threeBettors": "3-bettor's position",
+        "facing": "3-bet from:",
+        "cellLabel": "{{hand}}: dealt {{dealt}} times facing this 3-bet, call {{calls}}, 4-bet {{fourBets}}",
+        "gridLabel": {
+          "mine": "Your reaction in the {{opener}} facing a {{threeBettor}} 3-bet",
+          "reference": "Reference vs 3-bet in the {{opener}} facing {{threeBettor}}",
+          "gap": "Gap with the reference in the {{opener}} facing {{threeBettor}} 3-bet"
+        },
+        "summary": {
+          "title": "{{opener}} facing a {{threeBettor}} 3-bet",
+          "none": "No spot of this kind for these filters.",
+          "counts": "{{calls}} call · {{fourBets}} 4-bet over {{dealt}} spots",
+          "reference": "Reference: continue {{continue}}, including 4-bet {{fourBet}} (yours: {{mine}})."
+        },
+        "noReference": {
+          "short": "No reference yet between 15 and 25 BB: 3-bets become shoves at these depths, a different strategy.",
+          "spot": "No reference written for this spot."
+        },
+        "reference": {
+          "title": "Reference v{{version}} · {{opener}} vs {{threeBettor}} 3-bet",
+          "fourBet": "4-bet: {{share}} of hands",
+          "call": "Call: {{share}} of hands",
+          "note": "Our conventions for €5–20 online MTTs with antes, facing a 3-bet after opening. References, not GTO."
+        },
+        "gap": {
+          "title": "Gap · {{opener}} vs {{threeBettor}} 3-bet",
+          "tooLoose": "{{count}} hand(s) played where the reference folds",
+          "tooTight": "{{count}} reference hand(s) you fold",
+          "otherAction": "{{count}} hand(s) played the other way (call instead of 4-bet or vice versa)",
+          "rule": "A hand counts as played if you call or 4-bet it at least half the time; between the two, the more frequent one wins."
+        },
+        "detail": {
+          "hint": "Hover a cell to see how often you were dealt this hand facing a 3-bet.",
+          "never": "Never dealt facing this 3-bet for these filters.",
+          "reference": {
+            "fold": "Ref: fold",
+            "call": "Ref: call",
+            "fourBet": "Ref: 4-bet"
+          }
+        },
+        "legend": {
+          "fourBet": "Share played as a 4-bet",
+          "call": "Share played as a call",
+          "refFourBet": "Reference 4-bet",
+          "refCall": "Reference call",
+          "tooLoose": "Played, where the reference folds",
+          "tooTight": "Folded, where the reference plays",
+          "otherAction": "Played differently from the reference"
+        },
+        "method": "Spot counted: after opening (raise first in), your decision facing a single 3-bet (not all-in); the 3-bettor's position is known. Reference v{{version}} for 25 BB and more."
       }
     },
     "training": {

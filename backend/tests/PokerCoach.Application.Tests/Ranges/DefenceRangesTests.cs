@@ -105,6 +105,9 @@ public sealed class DefenceRangeServiceTests
 
         public Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+
+        public Task<IReadOnlyList<VsThreeBetHoldingCount>> CountVsThreeBetsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class NoCustomRanges : ICustomRangeStore

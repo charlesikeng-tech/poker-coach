@@ -89,7 +89,10 @@ public static class HandAnalyzer
             play.DonkBetFlopOpportunity,
             play.DonkBetFlop,
             play.ProbeBetTurnOpportunity,
-            play.ProbeBetTurn);
+            play.ProbeBetTurn,
+            preflop.FacingThreeBetFrom,
+            preflop.CallThreeBet,
+            preflop.FourBet);
     }
 
     private static PreflopFacts Preflop(HandForAnalysis hand, string hero, PokerPosition? position, IReadOnlyDictionary<string, PokerPosition> positions)
@@ -151,6 +154,14 @@ public static class HandAnalyzer
                 {
                     facts.FoldToThreeBetOpportunity = true;
                     facts.FoldToThreeBet = action.Kind == ActionKind.Fold;
+
+                    if (!lastRaiseAllIn && facts.LastRaiser is { } threeBettor
+                        && positions.TryGetValue(threeBettor, out var threeBettorPosition))
+                    {
+                        facts.FacingThreeBetFrom = threeBettorPosition;
+                        facts.CallThreeBet = action.Kind == ActionKind.Call;
+                        facts.FourBet = action.Kind == ActionKind.Raise;
+                    }
                 }
 
                 facts.Vpip |= action.Kind is ActionKind.Call or ActionKind.Bet or ActionKind.Raise;
@@ -270,6 +281,12 @@ public static class HandAnalyzer
         public long? ThreeBetTo { get; set; }
 
         public bool ThreeBetAllIn { get; set; }
+
+        public PokerPosition? FacingThreeBetFrom { get; set; }
+
+        public bool CallThreeBet { get; set; }
+
+        public bool FourBet { get; set; }
     }
 
     private sealed record PostflopFacts(bool SawFlop, bool CbetOpportunity, bool Cbet, bool WentToShowdown);

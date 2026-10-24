@@ -109,6 +109,7 @@ builder.Services.AddScoped<TournamentDetailService>();
 builder.Services.AddScoped<HandReplayService>();
 builder.Services.AddScoped<RangeService>();
 builder.Services.AddScoped<DefenceRangeService>();
+builder.Services.AddScoped<VsThreeBetRangeService>();
 builder.Services.AddScoped<CustomRangeService>();
 builder.Services.AddScoped<OpeningTrainingService>();
 builder.Services.AddScoped<SizingTrainingService>();

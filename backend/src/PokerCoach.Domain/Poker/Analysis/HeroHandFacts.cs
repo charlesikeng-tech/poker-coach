@@ -21,6 +21,12 @@ namespace PokerCoach.Domain.Poker.Analysis;
 /// blinds; <paramref name="FacingOpenEffectiveStack"/>: the smaller of the two starting stacks, in big blinds.</param>
 /// <param name="ThreeBetToBigBlinds">In that spot, he 3-bet: his raise-to in big blinds; <paramref name="ThreeBetAllIn"/>
 /// when all-in.</param>
+/// <param name="FacingThreeBetFrom">
+/// The hero opened and his second preflop decision faced exactly one 3-bet, not all-in: the 3-bettor's position.
+/// Null for any other spot (or a 3-bettor that cannot be named).
+/// </param>
+/// <param name="CallThreeBet">In that spot, he called the 3-bet.</param>
+/// <param name="FourBet">In that spot, he re-raised (4-bet).</param>
 /// <param name="AllInExpectedNetChips">Same hands: what the hero should have won given the cards (see <see cref="AllInExpectation"/>).</param>
 public sealed record HeroHandFacts(
     PokerPosition? Position,
@@ -71,11 +77,14 @@ public sealed record HeroHandFacts(
     bool DonkBetFlopOpportunity = false,
     bool DonkBetFlop = false,
     bool ProbeBetTurnOpportunity = false,
-    bool ProbeBetTurn = false)
+    bool ProbeBetTurn = false,
+    PokerPosition? FacingThreeBetFrom = null,
+    bool CallThreeBet = false,
+    bool FourBet = false)
 {
     /// <summary>Bump on any change of a definition below or in <see cref="HandAnalyzer"/>.</summary>
-    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018). 5: open and 3-bet sizes (ADR-0020). 6: fold to turn c-bet, donk bet, probe bet.</remarks>
-    public const int Version = 6;
+    /// <remarks>2: all-in EV. 3: postflop play (see PostflopPlay). 4: defence against an open (ADR-0018). 5: open and 3-bet sizes (ADR-0020). 6: fold to turn c-bet, donk bet, probe bet. 7: vs 3-bet ranges (opener facing a 3-bet: call, 4-bet, fold).</remarks>
+    public const int Version = 7;
 
     /// <summary>Expected result of an all-in in big blinds, comparable across levels and tournaments.</summary>
     public decimal? AllInExpectedNetBigBlinds(long bigBlind) =>
