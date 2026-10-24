@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **shell**: Sync game type toggle with route on navigation
+
 ## [2026.10.23-d4cf2b1] — 2026-10-23
 
 ### Fonctionnalités
