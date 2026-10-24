@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
@@ -123,6 +123,13 @@ export class Shell {
 
   constructor() {
     void this.billing.load();
+
+    effect(() => {
+      const requiredType = resolveRequiredGameType(this.url());
+      if (requiredType && requiredType !== this.gameTypeService.current()) {
+        this.gameTypeService.set(requiredType);
+      }
+    });
   }
 
   protected isGroupExpanded(item: NavigationItem): boolean {
@@ -178,6 +185,21 @@ export class Shell {
   protected skipToContent(): void {
     this.document.getElementById('main-content')?.focus();
   }
+}
+
+function resolveRequiredGameType(url: string): GameType | undefined {
+  const path = url.split('?')[0];
+  for (const section of PRIMARY_NAVIGATION) {
+    for (const item of section.items) {
+      if (item.visibleFor && path.startsWith(item.path)) return item.visibleFor;
+      if (item.children) {
+        for (const child of item.children) {
+          if (child.visibleFor && path.startsWith(child.path)) return child.visibleFor;
+        }
+      }
+    }
+  }
+  return undefined;
 }
 
 function filterNavigation(

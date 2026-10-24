@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.23-d4cf2b1] — 2026-10-23
 
 ### Fonctionnalités
 
@@ -9,6 +9,7 @@
 - **tools**: Add visual gauges and enhanced rendering to all calculators
 - **ui**: Add visual polish to dashboard, performance and statistics pages
 - **ui**: Add visual polish to tournaments and cash sessions pages
+- **ui**: Add visual polish to coach and leaks pages
 
 ## [2026.10.23-85f1dfc] — 2026-10-23
 
