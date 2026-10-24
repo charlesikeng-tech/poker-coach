@@ -272,9 +272,7 @@ export class CoachingApi {
     if (gameType !== 'tournament') {
       params = params.set('gameType', gameType);
     }
-    return firstValueFrom(
-      this.http.get<StrategyPlan>('/api/coaching/strategy-plan', { params }),
-    );
+    return firstValueFrom(this.http.get<StrategyPlan>('/api/coaching/strategy-plan', { params }));
   }
 
   writeStrategyPlan(language: string, gameType: GameType = 'tournament'): Promise<StrategyPlan> {

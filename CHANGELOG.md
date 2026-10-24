@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **coaching**: Add strategy plan with gameType support (Elite)
+
 ## [2026.10.24-35d4fbb] — 2026-10-24
 
 ### Correctifs
