@@ -1,10 +1,14 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.24-3453bbb] — 2026-10-24
 
 ### Fonctionnalités
 
 - **ranges**: Add vs 3-bet ranges (call/4-bet spot, Pro)
+
+### Maintenance
+
+- **db**: Add migration for vs 3-bet facts columns
 
 ## [2026.10.24-bb5bea7] — 2026-10-24
 
