@@ -30,7 +30,8 @@
     "pushFold": "Push / Fold Nash",
     "bounty": "Bounty PKO",
     "variance": "Variance",
-    "cashVariance": "Cash Variance"
+    "cashVariance": "Cash Variance",
+    "coach": "My students"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -2604,6 +2605,29 @@
         "worst": "Worst run",
         "samples": "Sample runs"
       }
+    },
+    "coachDashboard": {
+      "title": "My students",
+      "heading": "My students",
+      "empty": "No students yet. Enter an invitation token to get started.",
+      "addStudent": "Add a student",
+      "tokenPlaceholder": "Invitation token",
+      "add": "Add",
+      "remove": "Remove",
+      "confirmRemove": "Remove this student from the dashboard?",
+      "leaks": "leak | leaks",
+      "hands": "hands",
+      "noData": "—",
+      "loading": "Loading…",
+      "loadError": "Could not load data.",
+      "addError": "Invalid, expired, or revoked token.",
+      "viewDetail": "View detail",
+      "plan": "Plan: {{plan}}",
+      "subtitle": "Track your students’ progress in real time",
+      "notesPlaceholder": "Add a note…",
+      "notesSave": "Save",
+      "notesCancel": "Cancel",
+      "notesEdit": "Edit note"
     }
   },
   "rangeSelector": {
@@ -2782,6 +2806,14 @@
       "strategyPlan": {
         "title": "Strategy plan",
         "description": "A GTO or exploitative plan per buy-in band or stake level, adapted to your leaks."
+      },
+      "vsThreeBetRanges": {
+        "title": "Vs 3-bet ranges",
+        "description": "What you call, 4-bet, or fold facing a 3-bet, position by position."
+      },
+      "monthlyReport": {
+        "title": "Monthly report",
+        "description": "Results, leaks, training, and recommendations for the next month."
       }
     }
   }

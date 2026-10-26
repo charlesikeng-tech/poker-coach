@@ -55,6 +55,24 @@ internal sealed class CoachInvitationConfiguration : IEntityTypeConfiguration<Co
     }
 }
 
+internal sealed class CoachBookmarkConfiguration : IEntityTypeConfiguration<CoachBookmark>
+{
+    public void Configure(EntityTypeBuilder<CoachBookmark> builder)
+    {
+        builder.ToTable("coach_bookmarks", IdentitySchema.Name);
+        builder.HasKey(b => b.Id);
+        builder.Property(b => b.Id).ValueGeneratedNever();
+        builder.Property(b => b.CreatedAt).IsRequired();
+
+        builder.Property(b => b.Notes).HasMaxLength(CoachBookmark.MaxNotesLength);
+
+        builder.HasIndex(b => b.CoachUserId);
+        builder.HasIndex(b => new { b.CoachUserId, b.InvitationId }).IsUnique();
+        builder.HasOne<User>().WithMany().HasForeignKey(b => b.CoachUserId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne<CoachInvitation>().WithMany().HasForeignKey(b => b.InvitationId).OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
 internal static class IdentitySchema
 {
     public const string Name = "identity";

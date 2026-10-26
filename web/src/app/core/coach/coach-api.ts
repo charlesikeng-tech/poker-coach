@@ -19,6 +19,27 @@ export interface CoachStudent {
   plan: string;
 }
 
+export interface TrendPoint {
+  month: string;
+  vpip: number | null;
+  pfr: number | null;
+  threeBet: number | null;
+}
+
+export interface StudentSummary {
+  bookmarkId: string;
+  invitationId: string;
+  studentName: string;
+  plan: string;
+  leakCount: number;
+  hands: number;
+  vpip: number | null;
+  pfr: number | null;
+  threeBet: number | null;
+  notes: string | null;
+  trend: TrendPoint[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class CoachApi {
   private readonly http = inject(HttpClient);
@@ -35,6 +56,22 @@ export class CoachApi {
 
   revokeInvitation(id: string): Promise<void> {
     return firstValueFrom(this.http.delete<void>(`/api/me/coach-invitations/${id}`));
+  }
+
+  listStudents(): Promise<StudentSummary[]> {
+    return firstValueFrom(this.http.get<StudentSummary[]>('/api/me/coach-students'));
+  }
+
+  addStudent(token: string): Promise<StudentSummary> {
+    return firstValueFrom(this.http.post<StudentSummary>('/api/me/coach-students', { token }));
+  }
+
+  removeStudent(bookmarkId: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`/api/me/coach-students/${bookmarkId}`));
+  }
+
+  updateStudentNotes(bookmarkId: string, notes: string | null): Promise<void> {
+    return firstValueFrom(this.http.patch<void>(`/api/me/coach-students/${bookmarkId}`, { notes }));
   }
 
   getStudent(token: string): Promise<CoachStudent> {

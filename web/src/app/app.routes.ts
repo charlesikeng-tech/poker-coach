@@ -136,6 +136,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/account/account-page').then((m) => m.AccountPage),
       },
       {
+        path: 'coach',
+        title: 'pages.coachDashboard.title',
+        loadComponent: () =>
+          import('./features/coach/coach-dashboard-page').then((m) => m.CoachDashboardPage),
+      },
+      {
         path: 'coach/:token',
         title: 'pages.coach.title',
         loadComponent: () => import('./features/coach/coach-page').then((m) => m.CoachPage),

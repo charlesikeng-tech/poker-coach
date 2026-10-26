@@ -1,0 +1,217 @@
+<ng-container *transloco="let t; prefix: 'pages.coachDashboard'">
+  <div class="hero">
+    <div class="hero__chips" aria-hidden="true">
+      <app-poker-chip class="hero-chip hero-chip--1" motion="float" />
+      <app-poker-chip class="hero-chip hero-chip--2" motion="float" [delay]="-3000" />
+    </div>
+    <h1 class="hero__title">{{ t('heading') }}</h1>
+    <p class="hero__subtitle">{{ t('subtitle') }}</p>
+  </div>
+
+  <form class="add-form glass" (submit)="addStudent($event)">
+    <div class="add-form__inner">
+      <div class="add-form__field">
+        <label class="add-form__label" for="token-input">{{ t('addStudent') }}</label>
+        <input
+          id="token-input"
+          type="text"
+          class="add-form__input"
+          [placeholder]="t('tokenPlaceholder')"
+          [value]="tokenInput()"
+          (input)="tokenInput.set($any($event.target).value)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <button
+        appButton
+        variant="primary"
+        type="submit"
+        [disabled]="adding() || !tokenInput().trim()"
+      >
+        @if (adding()) {
+          <app-poker-chip class="btn-chip" motion="spin" />
+        }
+        {{ t('add') }}
+      </button>
+    </div>
+    @if (addError()) {
+      <p class="add-form__error" role="alert">{{ t('addError') }}</p>
+    }
+  </form>
+
+  @if (loading()) {
+    <div class="skeleton-grid">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton-card">
+          <div class="skeleton skeleton--name"></div>
+          <div class="skeleton skeleton--stats"></div>
+          <div class="skeleton skeleton--bar"></div>
+        </div>
+      }
+    </div>
+  } @else if (error()) {
+    <div class="empty-state glass">
+      <span class="empty-state__icon" aria-hidden="true">⚠</span>
+      <p>{{ t('loadError') }}</p>
+    </div>
+  } @else if (students().length === 0) {
+    <div class="empty-state glass">
+      <span class="empty-state__icon" aria-hidden="true">♠</span>
+      <p>{{ t('empty') }}</p>
+    </div>
+  } @else {
+    <div class="student-grid">
+      @for (student of students(); track student.bookmarkId; let i = $index) {
+        <article class="student-card glass" appSpotlight [style.animation-delay.ms]="i * 80">
+          <div class="student-card__header">
+            <div class="student-card__identity">
+              <div class="student-card__avatar">
+                {{ student.studentName.charAt(0).toUpperCase() }}
+              </div>
+              <div>
+                <h2 class="student-card__name">{{ student.studentName }}</h2>
+                <span class="student-card__plan">{{ student.plan }}</span>
+              </div>
+            </div>
+            <div
+              class="student-card__leak-badge"
+              [attr.data-severity]="leakSeverity(student.leakCount)"
+            >
+              <span class="leak-badge__count">{{ student.leakCount }}</span>
+              <span class="leak-badge__label">{{ t('leaks') }}</span>
+            </div>
+          </div>
+
+          <div class="student-card__stats">
+            <div class="stat-gauge">
+              <div class="stat-gauge__header">
+                <span class="stat-gauge__label">VPIP</span>
+                <div class="stat-gauge__right">
+                  <app-sparkline
+                    [points]="trendValues(student, 'vpip')"
+                    color="var(--accent-primary)"
+                    [ariaLabel]="'VPIP trend'"
+                  />
+                  <span class="stat-gauge__value">{{ formatPercent(student.vpip) }}</span>
+                </div>
+              </div>
+              <div class="stat-gauge__track">
+                <div class="stat-gauge__fill" [style.width]="gaugeWidth(student.vpip)"></div>
+              </div>
+            </div>
+            <div class="stat-gauge">
+              <div class="stat-gauge__header">
+                <span class="stat-gauge__label">PFR</span>
+                <div class="stat-gauge__right">
+                  <app-sparkline
+                    [points]="trendValues(student, 'pfr')"
+                    color="var(--info)"
+                    [ariaLabel]="'PFR trend'"
+                  />
+                  <span class="stat-gauge__value">{{ formatPercent(student.pfr) }}</span>
+                </div>
+              </div>
+              <div class="stat-gauge__track">
+                <div
+                  class="stat-gauge__fill stat-gauge__fill--pfr"
+                  [style.width]="gaugeWidth(student.pfr)"
+                ></div>
+              </div>
+            </div>
+            <div class="stat-gauge">
+              <div class="stat-gauge__header">
+                <span class="stat-gauge__label">3-bet</span>
+                <div class="stat-gauge__right">
+                  <app-sparkline
+                    [points]="trendValues(student, 'threeBet')"
+                    color="var(--success)"
+                    [ariaLabel]="'3-bet trend'"
+                  />
+                  <span class="stat-gauge__value">{{ formatPercent(student.threeBet) }}</span>
+                </div>
+              </div>
+              <div class="stat-gauge__track">
+                <div
+                  class="stat-gauge__fill stat-gauge__fill--3bet"
+                  [style.width]="gaugeWidth(student.threeBet)"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="student-card__notes">
+            @if (editingNotes() === student.bookmarkId) {
+              <textarea
+                class="notes__input"
+                #notesInput
+                [value]="student.notes ?? ''"
+                (keydown.escape)="cancelEditNotes()"
+                (keydown.meta.enter)="saveNotes(student.bookmarkId, notesInput.value)"
+                (keydown.control.enter)="saveNotes(student.bookmarkId, notesInput.value)"
+                [placeholder]="t('notesPlaceholder')"
+                maxlength="500"
+                rows="2"
+              ></textarea>
+              <div class="notes__actions">
+                <button
+                  appButton
+                  variant="primary"
+                  size="sm"
+                  type="button"
+                  (click)="saveNotes(student.bookmarkId, notesInput.value)"
+                >
+                  {{ t('notesSave') }}
+                </button>
+                <button
+                  appButton
+                  variant="ghost"
+                  size="sm"
+                  type="button"
+                  (click)="cancelEditNotes()"
+                >
+                  {{ t('notesCancel') }}
+                </button>
+              </div>
+            } @else {
+              <button
+                class="notes__display"
+                type="button"
+                (click)="startEditNotes(student.bookmarkId)"
+                [attr.aria-label]="t('notesEdit')"
+              >
+                @if (student.notes) {
+                  <span class="notes__text">{{ student.notes }}</span>
+                } @else {
+                  <span class="notes__placeholder">{{ t('notesPlaceholder') }}</span>
+                }
+                <span class="notes__pencil" aria-hidden="true">✎</span>
+              </button>
+            }
+          </div>
+
+          <div class="student-card__footer">
+            <span class="student-card__hands">
+              {{ student.hands.toLocaleString() }} {{ t('hands') }}
+            </span>
+            <div class="student-card__actions">
+              <a class="action-link" [routerLink]="['/coach', student.invitationId]">
+                {{ t('viewDetail') }}
+                <span class="action-link__arrow" aria-hidden="true">→</span>
+              </a>
+              <button
+                class="action-remove"
+                type="button"
+                [attr.aria-label]="t('remove')"
+                (click)="removeStudent(student.bookmarkId)"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</ng-container>

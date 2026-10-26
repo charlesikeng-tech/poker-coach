@@ -87,6 +87,7 @@ builder.Services.AddRateLimiter(options =>
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1), QueueLimit = 0 }));
 });
 builder.Services.AddScoped<CoachInvitationService>();
+builder.Services.AddScoped<CoachDashboardService>();
 builder.Services.AddScoped<UserProfileService>();
 builder.Services.AddScoped<AccountDataService>();
 
@@ -223,6 +224,7 @@ app.MapBankrollEndpoints();
 app.MapProgressEndpoints();
 app.MapLeakEndpoints();
 app.MapCoachAccessEndpoints();
+app.MapCoachDashboardEndpoints();
 app.MapCoachingEndpoints();
 app.MapBillingEndpoints();
 app.MapAdminEndpoints();

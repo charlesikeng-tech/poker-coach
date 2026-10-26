@@ -30,7 +30,8 @@
     "pushFold": "Push / Fold Nash",
     "bounty": "Bounty PKO",
     "variance": "Varianza",
-    "cashVariance": "Varianza Cash"
+    "cashVariance": "Varianza Cash",
+    "coach": "Mis alumnos"
   },
   "shell": {
     "skipToContent": "Ir al contenido",
@@ -2604,6 +2605,29 @@
         "worst": "Peor racha",
         "samples": "Ejemplos de recorridos"
       }
+    },
+    "coachDashboard": {
+      "title": "Mis alumnos",
+      "heading": "Mis alumnos",
+      "empty": "Ningún alumno añadido. Introduce un token de invitación para empezar.",
+      "addStudent": "Añadir un alumno",
+      "tokenPlaceholder": "Token de invitación",
+      "add": "Añadir",
+      "remove": "Eliminar",
+      "confirmRemove": "¿Eliminar este alumno del dashboard?",
+      "leaks": "leak | leaks",
+      "hands": "manos",
+      "noData": "—",
+      "loading": "Cargando…",
+      "loadError": "No se pudieron cargar los datos.",
+      "addError": "Token inválido, expirado o revocado.",
+      "viewDetail": "Ver detalle",
+      "plan": "Plan: {{plan}}",
+      "subtitle": "Sigue el progreso de tus alumnos en tiempo real",
+      "notesPlaceholder": "Añadir una nota…",
+      "notesSave": "Guardar",
+      "notesCancel": "Cancelar",
+      "notesEdit": "Editar nota"
     }
   },
   "rangeSelector": {
@@ -2782,6 +2806,14 @@
       "strategyPlan": {
         "title": "Plan estratégico",
         "description": "Un plan GTO o exploitativo por franja de buy-in o nivel de stakes, adaptado a tus leaks."
+      },
+      "vsThreeBetRanges": {
+        "title": "Ranges vs 3-bet",
+        "description": "Lo que haces call, 4-bet o fold frente a un 3-bet, posición por posición."
+      },
+      "monthlyReport": {
+        "title": "Informe mensual",
+        "description": "Resultados, leaks, entrenamiento y recomendaciones para el mes siguiente."
       }
     }
   }

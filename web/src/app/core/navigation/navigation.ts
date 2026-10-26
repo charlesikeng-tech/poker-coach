@@ -4,6 +4,7 @@ import {
   ChevronDown,
   Crown,
   Dumbbell,
+  GraduationCap,
   Grid3x3,
   LayoutDashboard,
   Layers,
@@ -123,6 +124,7 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
 
 export const SECONDARY_NAVIGATION: readonly NavigationItem[] = [
   { path: '/import', labelKey: 'nav.import', icon: Upload },
+  { path: '/coach', labelKey: 'nav.coach', icon: GraduationCap },
   { path: '/subscription', labelKey: 'nav.subscription', icon: Crown },
 ];
 

@@ -61,6 +61,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ILocalAccountStore, LocalAccountStore>();
         services.AddScoped<IAccountCleanupStore, AccountCleanupStore>();
         services.AddScoped<ICoachInvitationStore, CoachInvitationStore>();
+        services.AddScoped<ICoachBookmarkStore, CoachBookmarkStore>();
         services.AddSingleton<IPasswordHasher, AspNetPasswordHasher>();
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();

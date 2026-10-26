@@ -22,6 +22,45 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PokerCoach.Domain.Identity.CoachBookmark", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CoachUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("coach_user_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("InvitationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("invitation_id");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("notes");
+
+                    b.HasKey("Id")
+                        .HasName("pk_coach_bookmarks");
+
+                    b.HasIndex("CoachUserId")
+                        .HasDatabaseName("ix_coach_bookmarks_coach_user_id");
+
+                    b.HasIndex("InvitationId")
+                        .HasDatabaseName("ix_coach_bookmarks_invitation_id");
+
+                    b.HasIndex("CoachUserId", "InvitationId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_coach_bookmarks_coach_user_id_invitation_id");
+
+                    b.ToTable("coach_bookmarks", "identity");
+                });
+
             modelBuilder.Entity("PokerCoach.Domain.Identity.CoachInvitation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1743,6 +1782,23 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasFilter("source_hand_id IS NOT NULL");
 
                     b.ToTable("sizing_attempts", "training");
+                });
+
+            modelBuilder.Entity("PokerCoach.Domain.Identity.CoachBookmark", b =>
+                {
+                    b.HasOne("PokerCoach.Domain.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("CoachUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_coach_bookmarks_users_coach_user_id");
+
+                    b.HasOne("PokerCoach.Domain.Identity.CoachInvitation", null)
+                        .WithMany()
+                        .HasForeignKey("InvitationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_coach_bookmarks_coach_invitations_invitation_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Domain.Identity.CoachInvitation", b =>
