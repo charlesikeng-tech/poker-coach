@@ -49,15 +49,68 @@ public static class AccountEmails
         var text = $"{t.Intro}\n\n{t.Action}: {link}\n"
             + (secondary is { } s ? $"{s.Label}: {s.Link}\n" : string.Empty)
             + $"\n{t.Outro}\n\nNutsIQ";
+
+        var e = (Func<string, string>)WebUtility.HtmlEncode;
+
         string Button(string label, string href, bool primary) =>
-            $"<a href=\"{WebUtility.HtmlEncode(href)}\" style=\"display:inline-block;margin:8px 8px 8px 0;padding:12px 20px;border-radius:10px;"
-            + (primary ? "background:#e9b949;color:#1a1405;" : "background:#eef3ef;color:#10201a;")
-            + $"font-weight:600;text-decoration:none\">{WebUtility.HtmlEncode(label)}</a>";
-        var html = "<div style=\"font-family:system-ui,-apple-system,'Segoe UI',sans-serif;max-width:520px;color:#10201a;line-height:1.5\">"
-            + $"<p style=\"font-size:18px;font-weight:600\">NutsIQ</p><p>{WebUtility.HtmlEncode(t.Intro)}</p><p>"
+            "<td style=\"padding:4px 8px 4px 0\">"
+            + $"<a href=\"{e(href)}\" style=\"display:inline-block;padding:14px 28px;"
+            + "border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;"
+            + (primary
+                ? "background:#e9b949;color:#1a1405;"
+                : "background:transparent;color:#e9b949;border:1.5px solid #e9b949;")
+            + $"\">{e(label)}</a></td>";
+
+        var buttons = "<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>"
             + Button(t.Action, link, primary: true)
             + (secondary is { } b ? Button(b.Label, b.Link, primary: false) : string.Empty)
-            + $"</p><p style=\"color:#5b6b63;font-size:13px\">{WebUtility.HtmlEncode(t.Outro)}</p></div>";
+            + "</tr></table>";
+
+        var html = "<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
+            + "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
+            + "<meta name=\"color-scheme\" content=\"light dark\">"
+            + "<meta name=\"supported-color-schemes\" content=\"light dark\">"
+            + "<title>" + e(t.Subject) + "</title></head>"
+            + "<body style=\"margin:0;padding:0;background:#f4f4f0;-webkit-text-size-adjust:100%\">"
+            + "<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" "
+            + "style=\"background:#f4f4f0\">"
+            + "<tr><td align=\"center\" style=\"padding:32px 16px\">"
+
+            // Container
+            + "<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+            + "style=\"max-width:560px;width:100%\">"
+
+            // Header
+            + "<tr><td style=\"background:#1a1f1a;border-radius:12px 12px 0 0;padding:28px 32px;text-align:center\">"
+            + "<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">"
+            + "<tr>"
+            + "<td style=\"color:#e9b949;font-family:Georgia,serif;font-size:13px;vertical-align:middle;padding-right:8px\">&#9824;</td>"
+            + "<td style=\"font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:22px;font-weight:700;"
+            + "color:#ffffff;letter-spacing:0.5px;vertical-align:middle\">NutsIQ</td>"
+            + "<td style=\"color:#e9b949;font-family:Georgia,serif;font-size:13px;vertical-align:middle;padding-left:8px\">&#9830;</td>"
+            + "</tr></table>"
+            + "</td></tr>"
+
+            // Body
+            + "<tr><td style=\"background:#ffffff;padding:32px 32px 24px\">"
+            + "<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">"
+            + "<tr><td style=\"font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;"
+            + "color:#2a2a2a;line-height:1.6;padding-bottom:24px\">"
+            + e(t.Intro) + "</td></tr>"
+            + "<tr><td style=\"padding-bottom:24px\">" + buttons + "</td></tr>"
+            + "<tr><td style=\"border-top:1px solid #e8e8e4;padding-top:20px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;"
+            + "font-size:13px;color:#8a8a82;line-height:1.5\">"
+            + e(t.Outro) + "</td></tr>"
+            + "</table></td></tr>"
+
+            // Footer
+            + "<tr><td style=\"background:#1a1f1a;border-radius:0 0 12px 12px;padding:20px 32px;text-align:center;"
+            + "font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:12px;color:#6b7b6e\">"
+            + "NutsIQ &mdash; Analyse tes mains. Corrige tes leaks."
+            + "</td></tr>"
+
+            + "</table></td></tr></table></body></html>";
+
         return new EmailMessage(to, t.Subject, text, html);
     }
 }

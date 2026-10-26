@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.26-35652ee] — 2026-10-26
+
+### Correctifs
+
+- **sign-in**: Fix Turnstile re-render and honeypot autofill on mode switch
+
 ## [2026.10.26-b9286fc] — 2026-10-26
 
 ### Correctifs
