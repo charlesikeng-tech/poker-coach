@@ -124,6 +124,7 @@ public sealed record StatLine(
 /// <param name="Format">The table format the figures are for.</param>
 /// <param name="HandsByFormat">Hands per format with the other filters: lets the page offer both.</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: figures are partial until 0.</param>
+/// <param name="References">Reference ranges (overall + per position) for the current game type.</param>
 public sealed record StatisticsReport(
     StatLine Overall,
     IReadOnlyList<PositionStatLine> ByPosition,
@@ -131,7 +132,8 @@ public sealed record StatisticsReport(
     StatisticsSample Sample,
     TableFormat Format,
     FormatCounts HandsByFormat,
-    IReadOnlyList<PokerRoom> Rooms);
+    IReadOnlyList<PokerRoom> Rooms,
+    IReadOnlyList<ReferenceRange> References);
 
 /// <param name="Position">Null when the position could not be named.</param>
 public sealed record PositionStatLine(PokerPosition? Position, StatLine Line);
@@ -174,7 +176,9 @@ public sealed class StatisticsService(IStatisticsReadStore store)
             .Select(g => new PositionStatLine(g.Position, StatLine.From(g.Counts)))
             .ToList();
         var rooms = await store.ListRoomsAsync(userId, filter with { Room = null }, HeroHandFacts.Version, cancellationToken);
-        return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample, format, formats, rooms);
+        var isCash = (filter.GameType ?? GameType.Tournament) == GameType.CashGame;
+        var references = isCash ? ReferenceRanges.LowStakesCash : ReferenceRanges.LowStakesMtt;
+        return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample, format, formats, rooms, references);
     }
 
     /// <summary>Months shown when the filter has no start: a year is enough to see a trend.</summary>

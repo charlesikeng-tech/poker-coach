@@ -41,6 +41,13 @@ export interface StatLine {
 export type PokerPosition =
   'utg' | 'utg1' | 'utg2' | 'lojack' | 'hijack' | 'cutoff' | 'button' | 'smallBlind' | 'bigBlind';
 
+export interface StatReference {
+  readonly stat: string;
+  readonly position: PokerPosition | null;
+  readonly min: number;
+  readonly max: number;
+}
+
 export interface StatisticsReport {
   readonly overall: StatLine;
   readonly byPosition: readonly {
@@ -55,6 +62,8 @@ export interface StatisticsReport {
   readonly handsByFormat: Readonly<Record<TableFormat, number>>;
   /** Rooms with hands matching the current filter (game type and period), as camelCase strings. */
   readonly rooms: readonly string[];
+  /** Reference ranges (overall + per position) for the current game type. */
+  readonly references: readonly StatReference[];
 }
 
 export type GameType = 'tournament' | 'cashGame';

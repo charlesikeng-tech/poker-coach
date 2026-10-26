@@ -187,6 +187,18 @@ td[data-sign='negative'] {
   text-align: right;
 }
 
+.tile-wrap {
+  cursor: pointer;
+}
+
+.cell-stat {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
 .skeleton-tile {
   display: flex;
   flex-direction: column;

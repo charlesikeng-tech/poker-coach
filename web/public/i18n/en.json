@@ -729,6 +729,14 @@
         "band": "Reference range: {{min}} % to {{max}} %.",
         "thin": "Few spots that month: read with care.",
         "error": "The breakdowns cannot be loaded right now."
+      },
+      "popover": {
+        "inRange": "In range",
+        "tooHigh": "Too high",
+        "tooLow": "Too low",
+        "range": "Reference {{min}}–{{max}}",
+        "leaksLink": "See full analysis →",
+        "noRef": "No reference for this statistic."
       }
     },
     "import": {

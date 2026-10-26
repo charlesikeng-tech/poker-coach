@@ -80,6 +80,7 @@ public sealed record StatisticsSampleResponse(int Tournaments, int CompleteTourn
 /// <param name="PendingHands">Hands still being analyzed: figures are partial while above zero.</param>
 /// <param name="Format">Table format of the figures; positions are named within it.</param>
 /// <param name="HandsByFormat">Hands per format with the other filters.</param>
+/// <param name="References">Reference ranges (overall + per position) for the current game type.</param>
 public sealed record StatisticsResponse(
     StatLineResponse Overall,
     IReadOnlyList<PositionStatLineResponse> ByPosition,
@@ -87,14 +88,15 @@ public sealed record StatisticsResponse(
     StatisticsSampleResponse Sample,
     TableFormat Format,
     FormatCountsResponse HandsByFormat,
-    IReadOnlyList<PokerRoom> Rooms);
+    IReadOnlyList<PokerRoom> Rooms,
+    IReadOnlyList<StatisticReferenceResponse> References);
 
 public sealed record PhaseStatLineResponse(TournamentPhase Phase, StatLineResponse Line);
 
 /// <param name="Month">First day of the month (UTC), "2026-10-01".</param>
 public sealed record MonthStatLineResponse(DateOnly Month, StatLineResponse Line);
 
-public sealed record StatisticReferenceResponse(LeakStat Stat, decimal Min, decimal Max);
+public sealed record StatisticReferenceResponse(LeakStat Stat, PokerPosition? Position, decimal Min, decimal Max);
 
 /// <param name="ByPhase">Early (levels 1–6), middle (7–12), late (13+).</param>
 /// <param name="ByMonth">Months with hands, oldest first.</param>
@@ -249,7 +251,8 @@ public static class StatisticsEndpoints
         new StatisticsSampleResponse(report.Sample.Tournaments, report.Sample.CompleteTournaments),
         report.Format,
         new FormatCountsResponse(report.HandsByFormat.SixMax, report.HandsByFormat.FullRing),
-        report.Rooms);
+        report.Rooms,
+        report.References.Select(r => new StatisticReferenceResponse(r.Stat, r.Position, r.Min, r.Max)).ToList());
 
     /// <summary>The statistics by tournament phase and by month, with the same filters as the main view.</summary>
     /// <param name="to">Exclusive upper bound on the hand start time.</param>
@@ -306,7 +309,7 @@ public static class StatisticsEndpoints
             b.Format,
             b.ByPhase.Select(p => new PhaseStatLineResponse(p.Phase, StatLineResponse.From(p.Line))).ToList(),
             b.ByMonth.Select(m => new MonthStatLineResponse(m.Month, StatLineResponse.From(m.Line))).ToList(),
-            b.References.Select(r => new StatisticReferenceResponse(r.Stat, r.Min, r.Max)).ToList()));
+            b.References.Select(r => new StatisticReferenceResponse(r.Stat, r.Position, r.Min, r.Max)).ToList()));
     }
 
     private static bool TryParsePhase(string? value, out TournamentPhase? phase)

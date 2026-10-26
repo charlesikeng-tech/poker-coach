@@ -729,6 +729,14 @@
         "band": "Zone de référence : {{min}} % à {{max}} %.",
         "thin": "Peu de spots ce mois-là : à prendre avec prudence.",
         "error": "Impossible de charger les répartitions pour le moment."
+      },
+      "popover": {
+        "inRange": "Dans la norme",
+        "tooHigh": "Trop haut",
+        "tooLow": "Trop bas",
+        "range": "Repère {{min}}–{{max}}",
+        "leaksLink": "Voir l'analyse complète →",
+        "noRef": "Pas de repère pour cette statistique."
       }
     },
     "import": {

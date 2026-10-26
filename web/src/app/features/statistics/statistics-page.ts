@@ -23,6 +23,7 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { StatPopover } from '../../shared/ui/stat-popover/stat-popover';
 import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
@@ -30,10 +31,12 @@ import { BreakdownsPanel } from './breakdowns-panel';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 import {
   GameType,
+  PokerPosition,
   STACK_FILTERS,
   StackFilter,
   StatLine,
   StatRate,
+  StatReference,
   StatisticsApi,
   StatisticsQuery,
   StatisticsReport,
@@ -89,6 +92,7 @@ const PENDING_REFRESH_MS = 3000;
     Button,
     Icon,
     StatTile,
+    StatPopover,
     AllInLuckPanel,
     BreakdownsPanel,
   ],
@@ -127,6 +131,14 @@ export class StatisticsPage {
   protected readonly room = signal<string | null>(null);
   protected readonly rooms = computed(() => [...(this.report()?.rooms ?? [])].sort());
   protected readonly roomName = roomName;
+
+  protected readonly activePopover = signal<{
+    stat: string;
+    rate: StatRate;
+    ref: StatReference | null;
+    position: PokerPosition | null;
+    anchor: HTMLElement;
+  } | null>(null);
 
   /**
    * The breakdown panel's query: the page's filters in the format shown, without the phase. A computed
@@ -235,6 +247,37 @@ export class StatisticsPage {
 
   protected sign(value: number | null): 'positive' | 'negative' | null {
     return value === null || value === 0 ? null : value > 0 ? 'positive' : 'negative';
+  }
+
+  protected openPopover(
+    stat: string,
+    rate: StatRate,
+    ref: StatReference | null,
+    position: PokerPosition | null,
+    event: MouseEvent,
+  ): void {
+    event.stopPropagation();
+    const anchor = event.currentTarget as HTMLElement;
+    if (this.activePopover()?.anchor === anchor) {
+      this.activePopover.set(null);
+      return;
+    }
+    this.activePopover.set({ stat, rate, ref, position, anchor });
+  }
+
+  protected closePopover(): void {
+    this.activePopover.set(null);
+  }
+
+  protected findRef(stat: string, position: PokerPosition | null = null): StatReference | null {
+    const refs = this.report()?.references;
+    if (!refs) return null;
+    return (
+      refs.find((r) => r.stat === stat && r.position === position) ??
+      (position !== null
+        ? (refs.find((r) => r.stat === stat && r.position === null) ?? null)
+        : null)
+    );
   }
 
   private async load(

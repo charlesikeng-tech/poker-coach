@@ -115,16 +115,22 @@
         />
         @for (key of tileRates; track key) {
           @let r = rate(report.overall, key);
-          <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
-            <small class="sample numeric" [attr.title]="t('stats.' + key + 'Hint')">
-              {{
-                t('sample', {
-                  made: formats().integer(r.made),
-                  opportunities: formats().integer(r.opportunities),
-                })
-              }}
-            </small>
-          </app-stat-tile>
+          <div
+            class="tile-wrap"
+            (click)="openPopover(key, r, findRef(key), null, $event)"
+            data-stat-trigger
+          >
+            <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
+              <small class="sample numeric" [attr.title]="t('stats.' + key + 'Hint')">
+                {{
+                  t('sample', {
+                    made: formats().integer(r.made),
+                    opportunities: formats().integer(r.opportunities),
+                  })
+                }}
+              </small>
+            </app-stat-tile>
+          </div>
         }
       </div>
 
@@ -132,16 +138,22 @@
       <div class="tiles tiles--postflop">
         @for (key of postflopRates; track key) {
           @let r = rate(report.overall, key);
-          <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
-            <small class="sample numeric" [attr.title]="t('stats.' + key + 'Hint')">
-              {{
-                t('sample', {
-                  made: formats().integer(r.made),
-                  opportunities: formats().integer(r.opportunities),
-                })
-              }}
-            </small>
-          </app-stat-tile>
+          <div
+            class="tile-wrap"
+            (click)="openPopover(key, r, findRef(key), null, $event)"
+            data-stat-trigger
+          >
+            <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
+              <small class="sample numeric" [attr.title]="t('stats.' + key + 'Hint')">
+                {{
+                  t('sample', {
+                    made: formats().integer(r.made),
+                    opportunities: formats().integer(r.opportunities),
+                  })
+                }}
+              </small>
+            </app-stat-tile>
+          </div>
         }
       </div>
       <p class="hint">{{ t('sections.postflopHint') }}</p>
@@ -173,7 +185,14 @@
                   <td class="num numeric">{{ formats().integer(row.line.hands) }}</td>
                   @for (key of rates; track key) {
                     @let r = rate(row.line, key);
-                    <td class="num numeric" [attr.title]="r.made + ' / ' + r.opportunities">
+                    <td
+                      class="num numeric cell-stat"
+                      [attr.title]="r.made + ' / ' + r.opportunities"
+                      (click)="
+                        openPopover(key, r, findRef(key, row.position), row.position, $event)
+                      "
+                      data-stat-trigger
+                    >
                       {{ formats().share(r.rate) }}
                     </td>
                   }
@@ -199,6 +218,18 @@
         />
       } @else {
         <app-plan-lock feature="advancedLeaks" />
+      }
+
+      @if (activePopover(); as pop) {
+        <app-stat-popover
+          [stat]="pop.stat"
+          [rate]="pop.rate"
+          [ref]="pop.ref"
+          [position]="pop.position"
+          [format]="formats().share"
+          [anchor]="pop.anchor"
+          (closed)="closePopover()"
+        />
       }
     }
   } @else {

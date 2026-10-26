@@ -729,6 +729,14 @@
         "band": "Zona de referencia: {{min}} % a {{max}} %.",
         "thin": "Pocos spots ese mes: tómalo con cautela.",
         "error": "No se pueden cargar los desgloses por ahora."
+      },
+      "popover": {
+        "inRange": "En rango",
+        "tooHigh": "Demasiado alto",
+        "tooLow": "Demasiado bajo",
+        "range": "Referencia {{min}}–{{max}}",
+        "leaksLink": "Ver análisis completo →",
+        "noRef": "Sin referencia para esta estadística."
       }
     },
     "import": {
