@@ -165,6 +165,9 @@ export class SignInPage implements AfterViewInit {
     this.mode.set(mode);
     this.formError.set(null);
     this.sentTo.set(null);
+    if (this.turnstileWidgetId !== null && this.window?.turnstile) {
+      this.window.turnstile.remove(this.turnstileWidgetId);
+    }
     this.turnstileWidgetId = null;
     this.turnstileToken.set(null);
     setTimeout(() => this.renderTurnstile());

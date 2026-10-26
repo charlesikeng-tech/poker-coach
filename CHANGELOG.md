@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.26-b9286fc] — 2026-10-26
+
+### Correctifs
+
+- **coaching**: Handle v3 leak stats in CoachingStore.Spot()
+
 ## [2026.10.24-3453bbb] — 2026-10-24
 
 ### Fonctionnalités
