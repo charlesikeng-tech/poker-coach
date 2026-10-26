@@ -2362,7 +2362,10 @@
         "improving": "↗ Improving",
         "offTrack": "↘ Off track",
         "notEnoughSpots": "Not enough spots"
-      }
+      },
+      "target": "Target",
+      "preflop": "Preflop",
+      "spots": "{{made}} of {{count}} spots"
     },
     "icm": {
       "title": "ICM Calculator",

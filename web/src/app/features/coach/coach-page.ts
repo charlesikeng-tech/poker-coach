@@ -7,10 +7,12 @@ import { Leak, LeakAnalysis } from '../leaks/leaks-api';
 import { Priority, PriorityStatus, ProgressReport } from '../progress/progress-api';
 import { StatLine, StatRate, StatisticsReport } from '../statistics/statistics-api';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
+import { StatTile } from '../../shared/ui/effects/stat-tile';
+import { Spotlight } from '../../shared/ui/effects/spotlight.directive';
+import { RangeGauge } from '../leaks/range-gauge';
 
 export type CoachTab = 'leaks' | 'statistics' | 'progress';
 
-/** Key preflop stats displayed on the statistics tab, in order. */
 const STAT_KEYS = [
   'vpip',
   'pfr',
@@ -27,7 +29,7 @@ type StatKey = (typeof STAT_KEYS)[number];
 
 @Component({
   selector: 'app-coach-page',
-  imports: [TranslocoDirective, PageHeader],
+  imports: [TranslocoDirective, PageHeader, StatTile, Spotlight, RangeGauge],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
   templateUrl: './coach-page.html',
@@ -63,6 +65,14 @@ export class CoachPage {
   });
 
   protected readonly currentWeek = computed(() => this.progressReport()?.current ?? null);
+
+  protected readonly formats = computed(() => ({
+    share: (value: number | null) => (value === null ? '—' : `${(value * 100).toFixed(1)} %`),
+    bb100: (value: number | null) =>
+      value === null ? '—' : `${value > 0 ? '+' : ''}${value.toFixed(1)}`,
+    integer: (value: number | null) => (value === null ? '—' : Math.round(value).toLocaleString()),
+    shareGauge: (value: number) => `${(value * 100).toFixed(1)} %`,
+  }));
 
   constructor() {
     void this.load();
@@ -104,6 +114,23 @@ export class CoachPage {
       default:
         return 'status-muted';
     }
+  }
+
+  protected gauge(p: Priority): {
+    min: number;
+    max: number;
+    baseline: number;
+    week: number | null;
+  } {
+    const ceil = Math.max(p.max, p.baselineRate, p.weekRate ?? 0) * 1.3;
+    const scale = Math.min(1, Math.ceil(ceil * 10) / 10) || 0.1;
+    const pos = (v: number) => Math.min(Math.max((v / scale) * 100, 0), 100);
+    return {
+      min: pos(p.min),
+      max: pos(p.max),
+      baseline: pos(p.baselineRate),
+      week: p.weekRate !== null ? pos(p.weekRate) : null,
+    };
   }
 
   private async load(): Promise<void> {

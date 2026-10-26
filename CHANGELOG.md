@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.26-986cacc] — 2026-10-26
+
+### Fonctionnalités
+
+- **coach**: Add multi-student dashboard with sparklines and notes
+
 ## [2026.10.26-35652ee] — 2026-10-26
 
 ### Correctifs

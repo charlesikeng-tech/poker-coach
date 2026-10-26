@@ -53,55 +53,82 @@
         } @else {
           @if (confirmedLeaks().length > 0) {
             <section class="leak-group">
-              <h2>
+              <h2 class="group-title">
                 {{ t('confirmed') }}
-                <span class="leak-count">{{ confirmedLeaks().length }}</span>
+                <span class="count-badge">{{ confirmedLeaks().length }}</span>
               </h2>
-              <ul class="leak-list">
+              <div class="leak-grid">
                 @for (leak of confirmedLeaks(); track leak.stat + (leak.position ?? '')) {
-                  <li class="leak-card" [class.too-high]="leak.direction === 'tooHigh'">
-                    <div class="leak-header">
+                  <article
+                    class="leak-card glass"
+                    appSpotlight
+                    [class.leak-card--too-high]="leak.direction === 'tooHigh'"
+                    [class.leak-card--confirmed]="true"
+                  >
+                    <header>
                       <span class="leak-stat">{{ statName(leak) }}</span>
                       <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
-                    </div>
-                    <div class="leak-figures">
-                      <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
-                      <span class="leak-range"
+                    </header>
+                    <span class="leak-rate numeric">{{ formatRate(leak.rate) }}</span>
+                    <app-range-gauge
+                      [rate]="leak.rate"
+                      [low]="leak.intervalLow"
+                      [high]="leak.intervalHigh"
+                      [min]="leak.range.min"
+                      [max]="leak.range.max"
+                      [format]="formats().shareGauge"
+                      [label]="statName(leak) + ' ' + formatRate(leak.rate)"
+                    />
+                    <div class="leak-meta">
+                      <span
                         >{{ t('reference') }}
                         {{ formatRange(leak.range.min, leak.range.max) }}</span
                       >
+                      <span class="numeric">{{ leak.made }} / {{ leak.opportunities }}</span>
                     </div>
-                    <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
-                  </li>
+                  </article>
                 }
-              </ul>
+              </div>
             </section>
           }
 
           @if (possibleLeaks().length > 0) {
             <section class="leak-group">
-              <h2>
+              <h2 class="group-title">
                 {{ t('possible') }}
-                <span class="leak-count">{{ possibleLeaks().length }}</span>
+                <span class="count-badge">{{ possibleLeaks().length }}</span>
               </h2>
-              <ul class="leak-list">
+              <div class="leak-grid">
                 @for (leak of possibleLeaks(); track leak.stat + (leak.position ?? '')) {
-                  <li class="leak-card possible" [class.too-high]="leak.direction === 'tooHigh'">
-                    <div class="leak-header">
+                  <article
+                    class="leak-card glass"
+                    appSpotlight
+                    [class.leak-card--too-high]="leak.direction === 'tooHigh'"
+                  >
+                    <header>
                       <span class="leak-stat">{{ statName(leak) }}</span>
                       <span class="leak-arrow">{{ leak.direction === 'tooHigh' ? '↑' : '↓' }}</span>
-                    </div>
-                    <div class="leak-figures">
-                      <span class="leak-rate">{{ formatRate(leak.rate) }}</span>
-                      <span class="leak-range"
+                    </header>
+                    <span class="leak-rate numeric">{{ formatRate(leak.rate) }}</span>
+                    <app-range-gauge
+                      [rate]="leak.rate"
+                      [low]="leak.intervalLow"
+                      [high]="leak.intervalHigh"
+                      [min]="leak.range.min"
+                      [max]="leak.range.max"
+                      [format]="formats().shareGauge"
+                      [label]="statName(leak) + ' ' + formatRate(leak.rate)"
+                    />
+                    <div class="leak-meta">
+                      <span
                         >{{ t('reference') }}
                         {{ formatRange(leak.range.min, leak.range.max) }}</span
                       >
+                      <span class="numeric">{{ leak.made }} / {{ leak.opportunities }}</span>
                     </div>
-                    <div class="leak-sample">{{ leak.made }} / {{ leak.opportunities }}</div>
-                  </li>
+                  </article>
                 }
-              </ul>
+              </div>
             </section>
           }
         }
@@ -111,51 +138,68 @@
     <!-- Statistics tab -->
     @if (activeTab() === 'statistics') {
       @if (statsReport(); as r) {
-        @if (r.overall.bigBlindsPer100 !== null) {
-          <div class="bb100-banner" [class.positive]="r.overall.bigBlindsPer100 > 0">
-            <span class="bb100-value">{{ formatBb100(r.overall.bigBlindsPer100) }}</span>
-            <span class="bb100-label">{{ t('bb100') }}</span>
-          </div>
-        }
+        <div class="stats-hero">
+          @if (r.overall.bigBlindsPer100 !== null) {
+            <app-stat-tile
+              class="stat-tile--hero"
+              [label]="t('bb100')"
+              [value]="r.overall.bigBlindsPer100"
+              [format]="formats().bb100"
+              [signed]="true"
+            />
+          }
+          <app-stat-tile
+            [label]="t('hands', { count: '' })"
+            [value]="r.overall.hands"
+            [format]="formats().integer"
+          />
+        </div>
 
-        <div class="stats-grid">
+        <h2 class="section-title">{{ t('preflop') }}</h2>
+        <div class="stats-tiles">
           @for (key of statKeys; track key) {
-            <div class="stat-cell">
-              <span class="stat-label">{{ t('stats.' + key) }}</span>
-              <span class="stat-value">{{ formatPercent(statRate(r.overall, key).rate) }}</span>
-              <span class="stat-sample">{{ statRate(r.overall, key).opportunities }}</span>
-            </div>
+            <app-stat-tile
+              [label]="t('stats.' + key)"
+              [value]="statRate(r.overall, key).rate"
+              [format]="formats().share"
+            >
+              <small class="stat-sample numeric">{{
+                statRate(r.overall, key).opportunities
+              }}</small>
+            </app-stat-tile>
           }
         </div>
 
         @if (positionRows().length > 0) {
-          <h2 class="section-title">{{ t('byPosition') }}</h2>
-          <div class="position-table-wrap">
-            <table class="position-table">
-              <thead>
-                <tr>
-                  <th>{{ t('position') }}</th>
-                  <th>VPIP</th>
-                  <th>PFR</th>
-                  <th>3-bet</th>
-                  <th>{{ t('hands') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of positionRows(); track row.position) {
+          <section class="position-panel glass">
+            <h2 class="panel-title">{{ t('byPosition') }}</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
                   <tr>
-                    <td>
-                      {{ row.position ? t('positions.' + row.position) : '—' }}
-                    </td>
-                    <td>{{ formatPercent(row.line.vpip.rate) }}</td>
-                    <td>{{ formatPercent(row.line.pfr.rate) }}</td>
-                    <td>{{ formatPercent(row.line.threeBet.rate) }}</td>
-                    <td>{{ row.line.hands }}</td>
+                    <th>{{ t('position') }}</th>
+                    <th class="num">VPIP</th>
+                    <th class="num">PFR</th>
+                    <th class="num">3-bet</th>
+                    <th class="num">{{ t('hands', { count: '' }) }}</th>
                   </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  @for (row of positionRows(); track row.position) {
+                    <tr>
+                      <td>
+                        {{ row.position ? t('positions.' + row.position) : '—' }}
+                      </td>
+                      <td class="num numeric">{{ formatPercent(row.line.vpip.rate) }}</td>
+                      <td class="num numeric">{{ formatPercent(row.line.pfr.rate) }}</td>
+                      <td class="num numeric">{{ formatPercent(row.line.threeBet.rate) }}</td>
+                      <td class="num numeric">{{ row.line.hands }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
         }
       }
     }
@@ -169,34 +213,57 @@
         @if (week.priorities.length === 0) {
           <p class="state-message">{{ t('noPriorities') }}</p>
         } @else {
-          <ul class="priority-list">
+          <div class="priority-list">
             @for (p of week.priorities; track p.stat + (p.position ?? '')) {
-              <li class="priority-item">
-                <div class="priority-header">
+              <article class="priority glass" [attr.data-status]="p.status" appSpotlight>
+                <header class="priority-header">
                   <span class="priority-stat">{{ priorityStatName(p) }}</span>
-                  <span class="priority-arrow" [class.too-high]="p.direction === 'tooHigh'">
+                  <span class="priority-direction" [class.too-high]="p.direction === 'tooHigh'">
                     {{ p.direction === 'tooHigh' ? '↑' : '↓' }}
                   </span>
-                </div>
-                <div class="priority-rates">
-                  <span class="priority-baseline">
-                    {{ t('baseline') }} {{ formatPercent(p.baselineRate) }}
-                    <span class="priority-range">({{ formatRange(p.min, p.max) }})</span>
-                  </span>
-                  @if (p.weekRate !== null) {
-                    <span class="priority-week">
-                      {{ t('thisWeek') }} {{ formatPercent(p.weekRate) }} · {{ p.weekMade }}/{{
-                        p.weekOpportunities
-                      }}
-                    </span>
+                </header>
+
+                @let g = gauge(p);
+                <div class="gauge" role="img">
+                  <span
+                    class="gauge-range"
+                    [style.left.%]="g.min"
+                    [style.width.%]="g.max - g.min"
+                  ></span>
+                  <span class="gauge-mark gauge-mark--baseline" [style.left.%]="g.baseline"></span>
+                  @if (g.week !== null) {
+                    <span class="gauge-mark gauge-mark--week" [style.left.%]="g.week"></span>
                   }
                 </div>
+
+                <dl class="priority-figures">
+                  <div>
+                    <dt>{{ t('baseline') }}</dt>
+                    <dd class="numeric">{{ formatPercent(p.baselineRate) }}</dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('thisWeek') }}</dt>
+                    <dd class="numeric week-value">
+                      {{ formatPercent(p.weekRate) }}
+                      @if (p.weekRate !== null) {
+                        <small>{{
+                          t('spots', { made: p.weekMade, count: p.weekOpportunities })
+                        }}</small>
+                      }
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{{ t('target') }}</dt>
+                    <dd class="numeric">{{ formatRange(p.min, p.max) }}</dd>
+                  </div>
+                </dl>
+
                 <span class="priority-status" [class]="statusClass(p.status)">
                   {{ t('status.' + p.status) }}
                 </span>
-              </li>
+              </article>
             }
-          </ul>
+          </div>
         }
       } @else {
         <p class="state-message">{{ t('noProgress') }}</p>
