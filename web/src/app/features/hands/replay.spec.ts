@@ -22,6 +22,9 @@ const hand: HandReplay = {
       stack: 5000,
       cards: ['Ah', 'Kd'],
       collected: 0,
+      opponentName: null,
+      opponentType: null,
+      opponentHands: null,
     },
     {
       seatNumber: 2,
@@ -31,6 +34,9 @@ const hand: HandReplay = {
       stack: 6000,
       cards: null,
       collected: 0,
+      opponentName: 'Player2',
+      opponentType: null,
+      opponentHands: null,
     },
     {
       seatNumber: 3,
@@ -40,6 +46,9 @@ const hand: HandReplay = {
       stack: 4000,
       cards: ['Qs', 'Qc'],
       collected: 8125,
+      opponentName: 'Player3',
+      opponentType: 'lag',
+      opponentHands: 45,
     },
   ],
   actions: [

@@ -2,6 +2,10 @@
 
 ## [Non publié]
 
+### Correctifs
+
+- **import**: Only aggregate opponent stats for newly inserted hands
+
 ### Fonctionnalités
 
 - **opponents**: Extract and store opponent stats at import with deterministic player type classification
