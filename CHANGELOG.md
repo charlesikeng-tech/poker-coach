@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.27-9cdd728] — 2026-10-27
+
+### Correctifs
+
+- **admin**: Add missing Ultimate option to grant access dropdown
+
 ## [2026.10.27-0956cc0] — 2026-10-27
 
 ### Correctifs

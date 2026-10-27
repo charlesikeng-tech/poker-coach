@@ -2216,7 +2216,8 @@
       },
       "plans": {
         "pro": "Pro",
-        "elite": "Elite"
+        "elite": "Elite",
+        "ultimate": "Ultimate"
       },
       "ai": {
         "title": "AI usage — {{month}}",
