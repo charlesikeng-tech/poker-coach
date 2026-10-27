@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.27-18353dd] — 2026-10-27
 
 ### Correctifs
 
 - **infra**: Align StakesLevel EF config with migration default value
+- **billing**: Align subscription tests with Ultimate plan for admins and billing-off
 
 ### Fonctionnalités
 

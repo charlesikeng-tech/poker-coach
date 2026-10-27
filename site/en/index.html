@@ -685,7 +685,6 @@
         margin-inline: auto;
       }
       .plan .tag {
-        margin-top: -0.5rem;
         color: var(--ink-3);
         font-size: 0.92rem;
       }
@@ -711,8 +710,9 @@
         color: var(--ink-3);
       }
       .plan {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-row: span 6;
+        grid-template-rows: subgrid;
         gap: 1rem;
         padding: 1.5rem;
         border: 1px solid var(--line-strong);
@@ -767,7 +767,7 @@
         color: var(--gold);
       }
       .plan .btn {
-        margin-top: auto;
+        align-self: end;
       }
       .fineprint {
         max-width: 60rem;
