@@ -48,7 +48,7 @@ export class SubscriptionPage implements OnDestroy {
   private pollTimer: ReturnType<typeof setTimeout> | undefined;
 
   protected readonly icons = { Check, CreditCard, LoaderCircle, Minus, Sparkles };
-  protected readonly plans: readonly Plan[] = ['starter', 'pro', 'elite'];
+  protected readonly plans: readonly Plan[] = ['starter', 'pro', 'elite', 'ultimate'];
   protected readonly rows = ROWS;
   protected readonly prices = PRICES;
   protected readonly interval = signal<BillingInterval>('year');

@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **statistics**: Auto-regenerate stale player profile on load
+
 ## [2026.10.27-a811981] — 2026-10-27
 
 ### Fonctionnalités

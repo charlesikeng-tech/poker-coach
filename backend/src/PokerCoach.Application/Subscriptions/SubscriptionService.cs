@@ -186,7 +186,7 @@ public sealed class SubscriptionService(
     public async Task<BillingRedirect> ChangePlanAsync(Guid userId, Plan plan, BillingInterval interval, Uri appUrl, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(appUrl);
-        if (plan is not (Plan.Pro or Plan.Elite))
+        if (plan is not (Plan.Pro or Plan.Elite or Plan.Ultimate))
         {
             throw new ArgumentOutOfRangeException(nameof(plan), plan, "Only a paid offer can be chosen.");
         }

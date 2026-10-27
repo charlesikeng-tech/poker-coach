@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 // Mirrors backend/src/PokerCoach.Api/Billing (ADR-0014, ADR-0016).
 
-export type Plan = 'starter' | 'pro' | 'elite';
+export type Plan = 'starter' | 'pro' | 'elite' | 'ultimate';
 export type PaidPlan = Exclude<Plan, 'starter'>;
 
 /** What the offers open besides history and AI credits; mirrors PokerCoach.Domain.Subscriptions.Feature. */
@@ -23,7 +23,7 @@ export type Feature =
   | 'customRanges'
   | 'strategyPlan';
 
-const PLAN_ORDER: readonly Plan[] = ['starter', 'pro', 'elite'];
+const PLAN_ORDER: readonly Plan[] = ['starter', 'pro', 'elite', 'ultimate'];
 
 /** The lowest offer that opens each feature (the server checks it again). */
 export const MINIMUM_PLAN: Readonly<Record<Feature, PaidPlan>> = {
@@ -87,6 +87,7 @@ export interface BillingSummary {
 export const PRICES: Readonly<Record<PaidPlan, Record<BillingInterval, number>>> = {
   pro: { month: 14.9, year: 149 },
   elite: { month: 29.9, year: 299 },
+  ultimate: { month: 49.9, year: 499 },
 };
 
 /**

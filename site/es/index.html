@@ -678,9 +678,11 @@
       }
       .plans {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1.25rem;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.75rem;
         margin-top: 2rem;
+        max-width: 82rem;
+        margin-inline: auto;
       }
       .plan .tag {
         margin-top: -0.5rem;
@@ -712,7 +714,7 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        padding: 1.75rem;
+        padding: 1.5rem;
         border: 1px solid var(--line-strong);
         border-radius: var(--radius-lg);
         background: rgb(22 36 30 / 0.5);
@@ -937,6 +939,11 @@
         }
       }
 
+      @media (max-width: 1100px) {
+        .plans {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
       @media (max-width: 900px) {
         .hero .wrap,
         .truth .wrap,
@@ -1130,7 +1137,7 @@
             "name": "¿Cómo funcionan los créditos IA?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Cada texto del coach tiene un coste real, por eso cada plan tiene créditos mensuales: una explicación de fuga cuesta 1 crédito, un informe 2, un debrief de torneo 5. Con Elite, 400 créditos equivalen por ejemplo a un debrief después de cada uno de tus torneos y decenas de explicaciones. Los créditos se reinician el 1 de cada mes."
+              "text": "Cada texto del coach tiene un coste real, por eso cada plan tiene créditos mensuales: una explicación de fuga cuesta 1 crédito, un informe 2, un debrief de torneo 5. Con Ultimate, 1 000 créditos y balances ilimitados para los grinders más activos. Los créditos se reinician el 1 de cada mes."
             }
           }
         ]
@@ -1176,6 +1183,19 @@
             "priceSpecification": {
               "@type": "UnitPriceSpecification",
               "price": "299",
+              "priceCurrency": "EUR",
+              "billingDuration": "P1Y"
+            }
+          },
+          {
+            "@type": "Offer",
+            "name": "Ultimate",
+            "price": "499",
+            "priceCurrency": "EUR",
+            "description": "1 000 créditos IA y balances ilimitados, 499 € al año.",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": "499",
               "priceCurrency": "EUR",
               "billingDuration": "P1Y"
             }
@@ -1648,7 +1668,8 @@
             <h2>Un plan para cada volumen de juego.</h2>
             <p>
               Empieza con Starter. Pasa a Pro para todo tu historial y un
-              informe mensual, Elite para el coach después de cada torneo.
+              informe mensual, Elite para el coach después de cada torneo,
+              Ultimate para grinders sin límites.
             </p>
           </div>
 
@@ -1935,6 +1956,103 @@
                 >Pasarse a Elite</a
               >
             </article>
+            <article class="plan">
+              <h3>Ultimate</h3>
+              <p class="tag">Para grinders sin límites.</p>
+              <p class="price">
+                <strong class="numeric" data-month="49,90 €" data-year="499 €"
+                  >499 €</strong
+                ><span class="per">/ año</span>
+              </p>
+              <p
+                class="note numeric"
+                data-month="Sin compromiso."
+                data-year="Es decir, 41,58 € al mes."
+              >
+                Es decir, 41,58 € al mes.
+              </p>
+              <ul>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Historial</b>: completo</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span><b>Coaching IA</b>: 1 000 créditos / mes</span>
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Leak Finder</b>: todo Elite + balances ilimitados</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Rangos &amp; push/fold</b>: rangos de apertura y
+                    equilibrio push/fold</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Ejercicios</b>: todo, más un quiz sobre tus propias
+                    manos</span
+                  >
+                </li>
+                <li>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    aria-hidden="true"
+                  >
+                    <path d="m5 12 5 5L20 7" /></svg
+                  ><span
+                    ><b>Informes</b>: balances y análisis ilimitados</span
+                  >
+                </li>
+              </ul>
+              <a class="btn btn--ghost" href="https://app.nutsiq.com/sign-in"
+                >Pasarse a Ultimate</a
+              >
+            </article>
           </div>
           <p class="fineprint">
             Precios con IVA incluido. Una explicación de fuga cuesta 1 crédito,
@@ -2043,10 +2161,9 @@
               <p>
                 Cada texto del coach tiene un coste real, por eso cada plan
                 tiene créditos mensuales: una explicación de fuga cuesta 1
-                crédito, un informe 2, un debrief de torneo 5. Con Elite, 400
-                créditos equivalen por ejemplo a un debrief después de cada uno
-                de tus torneos y decenas de explicaciones. Los créditos se
-                reinician el 1 de cada mes.
+                crédito, un informe 2, un debrief de torneo 5. Con Ultimate,
+                1 000 créditos y balances ilimitados para los grinders más
+                activos. Los créditos se reinician el 1 de cada mes.
               </p>
             </details>
           </div>

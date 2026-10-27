@@ -28,8 +28,11 @@ public sealed class PlanOptions
 
     public PlanLimits Elite { get; set; } = new() { MonthlyCredits = 400 };
 
+    public PlanLimits Ultimate { get; set; } = new() { MonthlyCredits = 1000 };
+
     public PlanLimits For(Plan plan) => plan switch
     {
+        Plan.Ultimate => Ultimate,
         Plan.Elite => Elite,
         Plan.Pro => Pro,
         _ => Starter,

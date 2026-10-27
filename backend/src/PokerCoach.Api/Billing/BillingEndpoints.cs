@@ -111,9 +111,9 @@ public static partial class BillingEndpoints
 
         // Pro when omitted: clients written before ADR-0016 only offered Pro.
         var plan = request.Plan ?? Plan.Pro;
-        if (plan is not (Plan.Pro or Plan.Elite))
+        if (plan is not (Plan.Pro or Plan.Elite or Plan.Ultimate))
         {
-            return ApiProblems.Validation("plan", "Must be pro or elite.");
+            return ApiProblems.Validation("plan", "Must be pro, elite or ultimate.");
         }
 
         var language = (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage ?? UserLanguages.Default;
@@ -168,9 +168,9 @@ public static partial class BillingEndpoints
             return ApiProblems.Validation("interval", "Must be month or year.");
         }
 
-        if (request.Plan is not { } plan || plan is not (Plan.Pro or Plan.Elite))
+        if (request.Plan is not { } plan || plan is not (Plan.Pro or Plan.Elite or Plan.Ultimate))
         {
-            return ApiProblems.Validation("plan", "Must be pro or elite.");
+            return ApiProblems.Validation("plan", "Must be pro, elite or ultimate.");
         }
 
         return Respond(await subscriptions.ChangePlanAsync(userId, plan, interval, app.Value.BaseUrl(context, environment), cancellationToken));

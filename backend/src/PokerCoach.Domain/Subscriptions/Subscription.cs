@@ -7,6 +7,7 @@ public enum Plan
     Starter = 0,
     Pro = 1,
     Elite = 2,
+    Ultimate = 3,
 }
 
 public enum BillingInterval

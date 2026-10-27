@@ -73,10 +73,13 @@ public sealed class StripePlanPrices
 
     public StripePrices Elite { get; set; } = new();
 
+    public StripePrices Ultimate { get; set; } = new();
+
     public string? For(Plan plan, BillingInterval interval)
     {
         var prices = plan switch
         {
+            Plan.Ultimate => Ultimate,
             Plan.Elite => Elite,
             Plan.Pro => Pro,
             _ => null,
@@ -87,6 +90,7 @@ public sealed class StripePlanPrices
     /// <summary>The offer a price belongs to; null for a price not configured here.</summary>
     public Plan? TierOf(string? priceId) =>
         string.IsNullOrEmpty(priceId) ? null
+        : priceId == Ultimate.Monthly || priceId == Ultimate.Yearly ? Plan.Ultimate
         : priceId == Elite.Monthly || priceId == Elite.Yearly ? Plan.Elite
         : priceId == Pro.Monthly || priceId == Pro.Yearly ? Plan.Pro
         : null;

@@ -2032,7 +2032,8 @@
         "tagline": {
           "starter": "Para descubrir tus leaks.",
           "pro": "Para trabajar tu juego cada semana.",
-          "elite": "Para analizarlo todo, después de cada torneo."
+          "elite": "Para analizarlo todo, después de cada torneo.",
+          "ultimate": "Para grinders sin límites."
         },
         "per": {
           "month": "/ mes",
@@ -2053,7 +2054,8 @@
           "label": "Historial",
           "starter": "últimos 30 días",
           "pro": "completo",
-          "elite": "completo"
+          "elite": "completo",
+          "ultimate": "completo"
         },
         "credits": {
           "label": "Coaching IA",
@@ -2063,25 +2065,29 @@
           "label": "Leak Finder",
           "starter": "leaks preflop",
           "pro": "preflop, con explicaciones",
-          "elite": "preflop y postflop, por fase y por stack, suerte en los all-in"
+          "elite": "preflop y postflop, por fase y por stack, suerte en los all-in",
+          "ultimate": "todo Elite + balances ilimitados"
         },
         "ranges": {
           "label": "Rangos y push/fold",
           "starter": "—",
           "pro": "rangos de apertura",
-          "elite": "rangos de apertura y equilibrio push/fold"
+          "elite": "rangos de apertura y equilibrio push/fold",
+          "ultimate": "rangos de apertura y equilibrio push/fold"
         },
         "training": {
           "label": "Ejercicios",
           "starter": "—",
           "pro": "ejercicios genéricos",
-          "elite": "ejercicios y quiz con tus propias manos"
+          "elite": "ejercicios y quiz con tus propias manos",
+          "ultimate": "ejercicios y quiz con tus propias manos"
         },
         "reports": {
           "label": "Informes",
           "starter": "—",
           "pro": "balance del coach una vez al mes",
-          "elite": "balance cada semana y análisis de cada torneo"
+          "elite": "balance cada semana y análisis de cada torneo",
+          "ultimate": "balances y análisis ilimitados"
         },
         "separator": ":"
       },
@@ -2096,7 +2102,8 @@
       "plans": {
         "starter": "Starter",
         "pro": "Pro",
-        "elite": "Elite"
+        "elite": "Elite",
+        "ultimate": "Ultimate"
       },
       "topup": {
         "sectionTitle": "Nuestros Packs",
@@ -2812,7 +2819,8 @@
     "cta": "Pasar a {{plan}}",
     "plans": {
       "pro": "Pro",
-      "elite": "Elite"
+      "elite": "Elite",
+      "ultimate": "Ultimate"
     },
     "features": {
       "openingRanges": {

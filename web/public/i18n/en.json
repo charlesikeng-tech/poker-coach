@@ -2032,7 +2032,8 @@
         "tagline": {
           "starter": "To discover your leaks.",
           "pro": "To work on your game every week.",
-          "elite": "To analyse everything, after every tournament."
+          "elite": "To analyse everything, after every tournament.",
+          "ultimate": "For grinders with no limits."
         },
         "per": {
           "month": "/ month",
@@ -2053,7 +2054,8 @@
           "label": "History",
           "starter": "last 30 days",
           "pro": "full",
-          "elite": "full"
+          "elite": "full",
+          "ultimate": "full"
         },
         "credits": {
           "label": "AI coaching",
@@ -2063,25 +2065,29 @@
           "label": "Leak Finder",
           "starter": "preflop leaks",
           "pro": "preflop, with explanations",
-          "elite": "preflop and postflop, by phase and stack, all-in luck"
+          "elite": "preflop and postflop, by phase and stack, all-in luck",
+          "ultimate": "everything in Elite + unlimited reviews"
         },
         "ranges": {
           "label": "Ranges & push/fold",
           "starter": "—",
           "pro": "opening ranges",
-          "elite": "opening ranges and push/fold equilibrium"
+          "elite": "opening ranges and push/fold equilibrium",
+          "ultimate": "opening ranges and push/fold equilibrium"
         },
         "training": {
           "label": "Drills",
           "starter": "—",
           "pro": "generic drills",
-          "elite": "drills and quiz on your own hands"
+          "elite": "drills and quiz on your own hands",
+          "ultimate": "drills and quiz on your own hands"
         },
         "reports": {
           "label": "Reports",
           "starter": "—",
           "pro": "coach review once a month",
-          "elite": "review every week and debrief of every tournament"
+          "elite": "review every week and debrief of every tournament",
+          "ultimate": "unlimited reviews and debriefs"
         },
         "separator": ":"
       },
@@ -2096,7 +2102,8 @@
       "plans": {
         "starter": "Starter",
         "pro": "Pro",
-        "elite": "Elite"
+        "elite": "Elite",
+        "ultimate": "Ultimate"
       },
       "topup": {
         "sectionTitle": "Our Packs",
@@ -2812,7 +2819,8 @@
     "cta": "Go {{plan}}",
     "plans": {
       "pro": "Pro",
-      "elite": "Elite"
+      "elite": "Elite",
+      "ultimate": "Ultimate"
     },
     "features": {
       "openingRanges": {

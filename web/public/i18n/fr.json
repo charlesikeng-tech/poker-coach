@@ -2032,7 +2032,8 @@
         "tagline": {
           "starter": "Pour découvrir tes leaks.",
           "pro": "Pour travailler ton jeu chaque semaine.",
-          "elite": "Pour tout analyser, après chaque tournoi."
+          "elite": "Pour tout analyser, après chaque tournoi.",
+          "ultimate": "Pour les grinders sans limites."
         },
         "per": {
           "month": "/ mois",
@@ -2053,7 +2054,8 @@
           "label": "Historique",
           "starter": "30 derniers jours",
           "pro": "complet",
-          "elite": "complet"
+          "elite": "complet",
+          "ultimate": "complet"
         },
         "credits": {
           "label": "Coaching IA",
@@ -2063,25 +2065,29 @@
           "label": "Leak Finder",
           "starter": "vue des leaks préflop",
           "pro": "préflop, avec explications",
-          "elite": "préflop et postflop, par phase et par stack, chance à l’all-in"
+          "elite": "préflop et postflop, par phase et par stack, chance à l’all-in",
+          "ultimate": "tout Elite + bilans illimités"
         },
         "ranges": {
           "label": "Ranges & push/fold",
           "starter": "—",
           "pro": "ranges d’ouverture",
-          "elite": "ranges d’ouverture et équilibre push/fold"
+          "elite": "ranges d’ouverture et équilibre push/fold",
+          "ultimate": "ranges d’ouverture et équilibre push/fold"
         },
         "training": {
           "label": "Exercices",
           "starter": "—",
           "pro": "exercices génériques",
-          "elite": "exercices et quiz sur tes propres mains"
+          "elite": "exercices et quiz sur tes propres mains",
+          "ultimate": "exercices et quiz sur tes propres mains"
         },
         "reports": {
           "label": "Rapports",
           "starter": "—",
           "pro": "bilan du coach une fois par mois",
-          "elite": "bilan chaque semaine et débrief de chaque tournoi"
+          "elite": "bilan chaque semaine et débrief de chaque tournoi",
+          "ultimate": "bilans et débriefs illimités"
         },
         "separator": " :"
       },
@@ -2096,7 +2102,8 @@
       "plans": {
         "starter": "Starter",
         "pro": "Pro",
-        "elite": "Elite"
+        "elite": "Elite",
+        "ultimate": "Ultimate"
       },
       "topup": {
         "sectionTitle": "Nos Packs",
@@ -2812,7 +2819,8 @@
     "cta": "Passer {{plan}}",
     "plans": {
       "pro": "Pro",
-      "elite": "Elite"
+      "elite": "Elite",
+      "ultimate": "Ultimate"
     },
     "features": {
       "openingRanges": {
