@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.27-a811981] — 2026-10-27
+
+### Fonctionnalités
+
+- **statistics**: Add AI player profile detection with archetype classification
+
 ## [2026.10.26-9ebfd5f] — 2026-10-26
 
 ### Fonctionnalités

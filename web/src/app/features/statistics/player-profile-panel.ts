@@ -73,7 +73,11 @@ export class PlayerProfilePanel {
         this.language.current(),
         this.gameTypeService.current(),
       );
-      this.state.set({ kind: 'ready', profile });
+      if (profile.stale) {
+        void this.analyze();
+      } else {
+        this.state.set({ kind: 'ready', profile });
+      }
     } catch (error) {
       this.state.set({ kind: notWrittenYet(error) ? 'idle' : 'failed' });
     }
