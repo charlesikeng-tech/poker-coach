@@ -189,7 +189,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         var statistics = scope.ServiceProvider.GetRequiredService<StatisticsService>();
         var noFilter = new StatisticsFilter(null, null, null, null);
 
-        var before = await statistics.GetAsync(userId, noFilter, Ct);
+        var before = await statistics.GetAsync(userId, noFilter, StakesLevel.Low, Ct);
         Assert.Equal(72, before.PendingHands);
         Assert.Equal(0, before.Overall.Hands);
 
@@ -199,7 +199,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         {
         }
 
-        var after = await statistics.GetAsync(userId, noFilter, Ct);
+        var after = await statistics.GetAsync(userId, noFilter, StakesLevel.Low, Ct);
         Assert.Equal(0, after.PendingHands);
         Assert.Equal(72, after.Overall.Hands);
         Assert.Equal(72, after.ByPosition.Sum(p => p.Line.Hands));
@@ -211,7 +211,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         Assert.InRange(defences.Sum(d => d.Dealt), 1, after.Overall.ThreeBet.Opportunities);
         Assert.All(defences, d => Assert.InRange(d.Calls + d.ThreeBets, 0, d.Dealt));
 
-        var deep = await statistics.GetAsync(userId, noFilter with { MinStackBigBlinds = 1_000m }, Ct);
+        var deep = await statistics.GetAsync(userId, noFilter with { MinStackBigBlinds = 1_000m }, StakesLevel.Low, Ct);
         Assert.Equal(0, deep.Overall.Hands);
         Assert.Equal(0, await backfill.ProcessBatchAsync(Ct));
     }
@@ -246,9 +246,9 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
         Assert.Equal(7, accelerator.MissingHands);
 
         var statistics = scope.ServiceProvider.GetRequiredService<StatisticsService>();
-        var all = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null), Ct);
+        var all = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null), StakesLevel.Low, Ct);
         Assert.Equal(new StatisticsSample(1, 0), all.Sample);
-        var completeOnly = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null, CompleteHistoryOnly: true), Ct);
+        var completeOnly = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null, CompleteHistoryOnly: true), StakesLevel.Low, Ct);
         Assert.Equal(0, completeOnly.Overall.Hands);
         Assert.Equal(0, await coverage.ProcessBatchAsync(PokerCoach.Domain.Poker.Analysis.HeroHandFacts.Version, Ct));
     }

@@ -214,7 +214,7 @@ public static class BankrollEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, _) = await CoachingEndpoints.LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, _, _) = await CoachingEndpoints.LanguageAsync(language, userId, profiles, cancellationToken);
         var view = await coaching.GetAsync(userId, answerLanguage!, cancellationToken);
         return view is not null
             ? TypedResults.Ok(ToCoachingResponse(view))
@@ -233,7 +233,7 @@ public static class BankrollEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await CoachingEndpoints.LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, _, problem) = await CoachingEndpoints.LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;

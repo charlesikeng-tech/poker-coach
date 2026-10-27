@@ -3,6 +3,7 @@ using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -52,7 +53,7 @@ public sealed class LeakCoachServiceTests
     [Fact]
     public async Task A_statistic_that_is_not_a_leak_is_refused()
     {
-        var outcome = await Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Utg, LeakDirection.TooHigh, null, null, "fr", Ct);
+        var outcome = await Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Utg, LeakDirection.TooHigh, null, null, "fr", StakesLevel.Low, Ct);
 
         Assert.Equal(CoachingFailure.NotALeak, outcome.Failure);
         Assert.Equal(0, model.Calls);
@@ -114,7 +115,7 @@ public sealed class LeakCoachServiceTests
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
 
     private Task<CoachingOutcome> ExplainButtonAsync() =>
-        Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, null, "fr", Ct);
+        Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, null, "fr", StakesLevel.Low, Ct);
 
     private LeakCoachService Service() =>
         new(new LeakService(new StatsStub()), store, new AiUsageGuard(ledger, model, options, BillingFakes.Unbilled(time), time), options, time);

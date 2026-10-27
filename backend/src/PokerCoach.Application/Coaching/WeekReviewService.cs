@@ -5,6 +5,7 @@ using PokerCoach.Application.Progress;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -62,12 +63,12 @@ public sealed class WeekReviewService(
     internal const int Version = 1;
 
     /// <summary>The stored review of the week (this week when null), and whether the week moved since. Free.</summary>
-    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
-        => await GetAsync(userId, week, GameType.Tournament, language, cancellationToken);
+    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
+        => await GetAsync(userId, week, GameType.Tournament, language, stakesLevel, cancellationToken);
 
-    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken, TournamentSubFormat? subFormat = null)
+    public async Task<ReportView<WeekReviewReport>?> GetAsync(Guid userId, DateOnly? week, GameType gameType, string language, StakesLevel stakesLevel, CancellationToken cancellationToken, TournamentSubFormat? subFormat = null)
     {
-        var facts = await MeasureAsync(userId, week, gameType, subFormat, cancellationToken);
+        var facts = await MeasureAsync(userId, week, gameType, subFormat, stakesLevel, cancellationToken);
         if (facts is null)
         {
             return null;
@@ -77,12 +78,12 @@ public sealed class WeekReviewService(
         return stored is null ? null : View(stored, Fingerprint(facts, language));
     }
 
-    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, string language, CancellationToken cancellationToken)
-        => await GenerateAsync(userId, week, GameType.Tournament, language, cancellationToken);
+    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
+        => await GenerateAsync(userId, week, GameType.Tournament, language, stakesLevel, cancellationToken);
 
-    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, GameType gameType, string language, CancellationToken cancellationToken, TournamentSubFormat? subFormat = null)
+    public async Task<ReportOutcome<WeekReviewReport>> GenerateAsync(Guid userId, DateOnly? week, GameType gameType, string language, StakesLevel stakesLevel, CancellationToken cancellationToken, TournamentSubFormat? subFormat = null)
     {
-        var facts = await MeasureAsync(userId, week, gameType, subFormat, cancellationToken);
+        var facts = await MeasureAsync(userId, week, gameType, subFormat, stakesLevel, cancellationToken);
         if (facts is null)
         {
             return ReportOutcome<WeekReviewReport>.Fail(CoachingFailure.NotFound);
@@ -142,9 +143,9 @@ public sealed class WeekReviewService(
     /// <summary>Everything the review is written from, for this week or one of the history's weeks.</summary>
     internal sealed record WeekFacts(WeekReport Week, GameType GameType, bool WeekOver, int DayOfWeek, int DrillAttempts, int DrillCorrect, int DrillGoal, PerformanceFigures Results, CashPerformanceFigures? CashResults);
 
-    private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken)
+    private async Task<WeekFacts?> MeasureAsync(Guid userId, DateOnly? week, GameType gameType, TournamentSubFormat? subFormat, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
-        var report = await progress.GetAsync(userId, gameType, subFormat, cancellationToken);
+        var report = await progress.GetAsync(userId, gameType, subFormat, stakesLevel, cancellationToken);
         var current = week is null || week == report.WeekStart;
         var measured = current ? report.Current : report.History.FirstOrDefault(h => h.Plan.WeekStart == week);
         if (measured is null)

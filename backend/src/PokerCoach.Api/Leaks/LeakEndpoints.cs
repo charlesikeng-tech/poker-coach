@@ -93,6 +93,7 @@ public static class LeakEndpoints
         HttpContext context,
         PlanAccess plans,
         ILeakService leaks,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
@@ -121,7 +122,8 @@ public static class LeakEndpoints
 
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var analysis = await leaks.GetAsync(userId, tableFormat, from, to, cancellationToken, parsedGameType);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var analysis = await leaks.GetAsync(userId, tableFormat, from, to, stakesLevel, cancellationToken, parsedGameType);
 
         // Postflop leaks are Elite (ADR-0016): counted, not shown, so the page can say what Elite would add.
         var advanced = (await plans.GetPlanAsync(userId, cancellationToken)).Allows(Feature.AdvancedLeaks);
@@ -159,6 +161,7 @@ public static class LeakEndpoints
         LeakCoachService coach,
         UserProfileService profiles,
         PlanAccess plans,
+        IUserAccountStore users,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -191,7 +194,8 @@ public static class LeakEndpoints
             ?? UserLanguages.Default;
         // The leak is the one the page shows: same history window (ADR-0014).
         var from = await plans.ClampFromAsync(userId, request.From, cancellationToken);
-        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, from, answerLanguage, cancellationToken, request.GameType);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var outcome = await coach.ExplainAsync(userId, stat, request.Position, direction, request.Format, from, answerLanguage, stakesLevel, cancellationToken, request.GameType);
         if (outcome.Explanation is { } explanation)
         {
             var notes = explanation.Explanation.Hands.ToDictionary(h => h.Ref, h => h.Note, StringComparer.Ordinal);

@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Statistics;
+using PokerCoach.Application.Identity;
 using PokerCoach.Application.Progress;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -67,6 +69,7 @@ public static class ProgressEndpoints
     private static async Task<Results<Ok<ProgressResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         HttpContext context,
         ProgressService progress,
+        IUserAccountStore users,
         string? gameType,
         string? subFormat,
         CancellationToken cancellationToken)
@@ -86,12 +89,14 @@ public static class ProgressEndpoints
             return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
         }
 
-        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, cancellationToken)));
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        return TypedResults.Ok(ToResponse(await progress.GetAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, stakesLevel, cancellationToken)));
     }
 
     private static async Task<Results<Ok<ProgressResponse>, ProblemHttpResult, UnauthorizedHttpResult>> RebuildAsync(
         HttpContext context,
         ProgressService progress,
+        IUserAccountStore users,
         string? gameType,
         string? subFormat,
         CancellationToken cancellationToken)
@@ -111,7 +116,8 @@ public static class ProgressEndpoints
             return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
         }
 
-        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, cancellationToken)));
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        return TypedResults.Ok(ToResponse(await progress.RebuildAsync(userId, parsedGameType ?? GameType.Tournament, parsedSubFormat, stakesLevel, cancellationToken)));
     }
 
     internal static ProgressResponse ToResponse(ProgressReport r) => new(

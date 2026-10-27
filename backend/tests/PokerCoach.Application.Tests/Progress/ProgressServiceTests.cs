@@ -3,6 +3,7 @@ using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Progress;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -22,7 +23,7 @@ public sealed class ProgressServiceTests
         var stats = new StubStats(baseline: Counts(hands: 100, vpip: 50, decisions: 100), week: HeroStatCounts.Zero);
         var service = Service(stats, new MemoryPlans());
 
-        var report = await service.GetAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
+        var report = await service.GetAsync(Guid.NewGuid(), GameType.Tournament, null, StakesLevel.Low, TestContext.Current.CancellationToken);
 
         Assert.Null(report.Current);
         Assert.Equal(100, report.BaselineHands);
@@ -38,9 +39,9 @@ public sealed class ProgressServiceTests
         var stats = new StubStats(baseline: Counts(hands: 1000, vpip: 500, decisions: 1000), week: Counts(hands: 40, vpip: 8, decisions: 40));
         var service = Service(stats, plans);
 
-        var first = await service.GetAsync(userId, TestContext.Current.CancellationToken);
+        var first = await service.GetAsync(userId, GameType.Tournament, null, StakesLevel.Low, TestContext.Current.CancellationToken);
         stats.Baseline = Counts(hands: 1000, vpip: 230, decisions: 1000); // fixed meanwhile: the plan does not move
-        var second = await service.GetAsync(userId, TestContext.Current.CancellationToken);
+        var second = await service.GetAsync(userId, GameType.Tournament, null, StakesLevel.Low, TestContext.Current.CancellationToken);
 
         var vpip = Assert.Single(first.Current!.Priorities, p => p.Priority.Stat == LeakStat.Vpip);
         Assert.Equal(0.5m, vpip.Priority.BaselineRate);
@@ -60,9 +61,9 @@ public sealed class ProgressServiceTests
         var stats = new StubStats(baseline: Counts(hands: 1000, vpip: 500, decisions: 1000), week: HeroStatCounts.Zero);
         var service = Service(stats, plans);
 
-        await service.GetAsync(userId, TestContext.Current.CancellationToken);
+        await service.GetAsync(userId, GameType.Tournament, null, StakesLevel.Low, TestContext.Current.CancellationToken);
         stats.Baseline = Counts(hands: 1000, vpip: 230, decisions: 1000);
-        var rebuilt = await service.RebuildAsync(userId, TestContext.Current.CancellationToken);
+        var rebuilt = await service.RebuildAsync(userId, GameType.Tournament, null, StakesLevel.Low, TestContext.Current.CancellationToken);
 
         Assert.DoesNotContain(rebuilt.Current!.Plan.Priorities, p => p.Stat == LeakStat.Vpip);
         Assert.Equal(new DateOnly(2026, 9, 28), Assert.Single(rebuilt.History).Plan.WeekStart);

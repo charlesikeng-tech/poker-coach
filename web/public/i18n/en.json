@@ -1891,6 +1891,14 @@
         "resetting": "Resetting…",
         "error": "The reset did not go through. Try again.",
         "done": "Data reset. You can re-import your files."
+      },
+      "stakesLevel": {
+        "title": "Stakes level",
+        "description": "Reference ranges, leak diagnostics and AI coaching adapt to your level.",
+        "low": "Low stakes",
+        "mid": "Mid stakes",
+        "high": "High stakes",
+        "saved": "Level saved"
       }
     },
     "privacy": {

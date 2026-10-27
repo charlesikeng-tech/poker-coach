@@ -4,6 +4,7 @@ using System.Text;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Tournaments;
@@ -97,7 +98,7 @@ public sealed class TournamentDebriefService(
     }
 
     /// <summary>Writes the debrief, unless the stored one is still up to date (then it is returned, unpaid).</summary>
-    public async Task<ReportOutcome<DebriefReport>> GenerateAsync(Guid userId, Guid tournamentId, string language, CancellationToken cancellationToken)
+    public async Task<ReportOutcome<DebriefReport>> GenerateAsync(Guid userId, Guid tournamentId, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var detail = await tournaments.GetAsync(userId, tournamentId, cancellationToken);
         if (detail is null)
@@ -140,7 +141,7 @@ public sealed class TournamentDebriefService(
             AiTask.TournamentDebrief,
             async (model, ct) =>
             {
-                var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, ct);
+                var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, stakesLevel, ct);
                 var hands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct))
                     .ToDictionary(h => h.HandId);
                 var subFormat = detail.SubFormat ?? TournamentSubFormat.Mtt;

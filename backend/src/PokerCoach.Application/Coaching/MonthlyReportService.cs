@@ -5,6 +5,7 @@ using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Tournaments;
@@ -41,20 +42,20 @@ public sealed class MonthlyReportService(
     public const int MinHands = 50;
     internal const int Version = 1;
 
-    public async Task<ReportView<MonthlyReportData>?> GetAsync(Guid userId, DateOnly? month, string language, CancellationToken cancellationToken)
+    public async Task<ReportView<MonthlyReportData>?> GetAsync(Guid userId, DateOnly? month, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var target = month ?? PreviousMonth(time.GetUtcNow());
-        var facts = await MeasureAsync(userId, target, cancellationToken);
+        var facts = await MeasureAsync(userId, target, stakesLevel, cancellationToken);
         if (facts is null) return null;
 
         var stored = await reports.FindAsync<MonthlyReportData>(userId, Kind, Subject(target), language, cancellationToken);
         return stored is null ? null : View(stored, Fingerprint(facts, language));
     }
 
-    public async Task<ReportOutcome<MonthlyReportData>> GenerateAsync(Guid userId, DateOnly? month, string language, CancellationToken cancellationToken)
+    public async Task<ReportOutcome<MonthlyReportData>> GenerateAsync(Guid userId, DateOnly? month, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var target = month ?? PreviousMonth(time.GetUtcNow());
-        var facts = await MeasureAsync(userId, target, cancellationToken);
+        var facts = await MeasureAsync(userId, target, stakesLevel, cancellationToken);
         if (facts is null)
             return ReportOutcome<MonthlyReportData>.Fail(CoachingFailure.NotFound);
 
@@ -102,7 +103,7 @@ public sealed class MonthlyReportService(
         int DrillAttempts,
         int DrillCorrect);
 
-    private async Task<MonthFacts?> MeasureAsync(Guid userId, DateOnly month, CancellationToken cancellationToken)
+    private async Task<MonthFacts?> MeasureAsync(Guid userId, DateOnly month, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var start = new DateTimeOffset(month.Year, month.Month, 1, 0, 0, 0, TimeSpan.Zero);
         var end = start.AddMonths(1);
@@ -117,8 +118,8 @@ public sealed class MonthlyReportService(
             : 0;
         if (totalHands == 0) return null;
 
-        var leakAnalysis = await leaks.GetAsync(userId, null, start, end, cancellationToken);
-        var previousLeaks = await leaks.GetAsync(userId, null, previousStart, start, cancellationToken);
+        var leakAnalysis = await leaks.GetAsync(userId, null, start, end, stakesLevel, cancellationToken);
+        var previousLeaks = await leaks.GetAsync(userId, null, previousStart, start, stakesLevel, cancellationToken);
 
         var (drillAttempts, drillCorrect) = await training.CountSinceAsync(userId, start, end, cancellationToken);
 

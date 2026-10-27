@@ -4,7 +4,9 @@ using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
+using PokerCoach.Application.Identity;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
@@ -81,6 +83,7 @@ public static class TrainingEndpoints
         HttpContext context,
         OpeningTrainingService training,
         PlanAccess plans,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         string format = "sixMax",
         string band = "mid",
@@ -148,7 +151,7 @@ public static class TrainingEndpoints
 
         var drill = drillMode == DrillMode.Defence
             ? await training.NextDefenceAsync(userId, parsedFormat, seats, cancellationToken)
-            : await training.NextAsync(userId, parsedFormat, stackBand, seats, cancellationToken);
+            : await training.NextAsync(userId, parsedFormat, stackBand, seats, (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low, cancellationToken);
         var spot = drill.Spot;
         return TypedResults.Ok(new DrillSpotResponse(
             spot.Item.Format,

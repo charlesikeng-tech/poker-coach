@@ -15,9 +15,11 @@ namespace PokerCoach.Api.Account;
 /// <param name="IsAdmin">Shows the administration page; every admin route checks it again.</param>
 /// <param name="HasPassword">Whether the account has an email and password credential.</param>
 /// <param name="HasGoogle">Whether the account has a Google identity linked.</param>
-public sealed record MeResponse(Guid Id, string DisplayName, string? Email, string PreferredLanguage, bool IsAdmin, bool HasPassword, bool HasGoogle);
+/// <param name="StakesLevel">low, mid or high.</param>
+public sealed record MeResponse(Guid Id, string DisplayName, string? Email, string PreferredLanguage, string StakesLevel, bool IsAdmin, bool HasPassword, bool HasGoogle);
 
-public sealed record UpdatePreferencesRequest(string? Language);
+/// <param name="StakesLevel">low, mid or high; null leaves it unchanged.</param>
+public sealed record UpdatePreferencesRequest(string? Language, string? StakesLevel);
 
 public sealed record ChangeDisplayNameRequest(string? DisplayName);
 
@@ -75,6 +77,7 @@ public static class AccountEndpoints
         AntiforgeryTokens.IssueRequestToken(context, antiforgery);
         return TypedResults.Ok(new MeResponse(
             profile.Id, profile.DisplayName, profile.Email, profile.PreferredLanguage,
+            profile.StakesLevel.ToString().ToLowerInvariant(),
             admins.IsAdminEmail(profile.Email),
             profile.HasPassword,
             profile.LinkedProviders.Contains(IdentityProviders.Google)));
@@ -139,9 +142,14 @@ public static class AccountEndpoints
         UserProfileService profiles,
         CancellationToken cancellationToken)
     {
-        if (!UserLanguages.IsSupported(request.Language))
+        if (request.Language is not null && !UserLanguages.IsSupported(request.Language))
         {
             return ApiProblems.Validation("language", $"Must be one of: {string.Join(", ", UserLanguages.All)}.");
+        }
+
+        if (!TryParseStakesLevel(request.StakesLevel, out var stakesLevel))
+        {
+            return ApiProblems.Validation("stakesLevel", "Must be low, mid or high.");
         }
 
         if (!context.User.TryGetUserId(out var userId))
@@ -149,7 +157,12 @@ public static class AccountEndpoints
             return TypedResults.Unauthorized();
         }
 
-        if (!await profiles.ChangePreferredLanguageAsync(userId, request.Language!, cancellationToken))
+        if (request.Language is not null && !await profiles.ChangePreferredLanguageAsync(userId, request.Language, cancellationToken))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (stakesLevel is not null && !await profiles.ChangeStakesLevelAsync(userId, stakesLevel.Value, cancellationToken))
         {
             return TypedResults.Unauthorized();
         }
@@ -247,5 +260,22 @@ public static class AccountEndpoints
         await accountData.DeleteAsync(userId, cancellationToken);
         await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return TypedResults.NoContent();
+    }
+
+    private static bool TryParseStakesLevel(string? value, out StakesLevel? level)
+    {
+        level = null;
+        if (string.IsNullOrEmpty(value))
+        {
+            return true;
+        }
+
+        if (Enum.TryParse<StakesLevel>(value, ignoreCase: true, out var parsed) && Enum.IsDefined(parsed) && !int.TryParse(value, out _))
+        {
+            level = parsed;
+            return true;
+        }
+
+        return false;
     }
 }

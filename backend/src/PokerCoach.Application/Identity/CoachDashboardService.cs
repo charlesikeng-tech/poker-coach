@@ -110,7 +110,7 @@ public sealed class CoachDashboardService(
             var overall = groups.Aggregate(HeroStatCounts.Zero, (acc, g) => acc.Add(g.Counts));
             var line = StatLine.From(overall);
 
-            var leakAnalysis = await leaks.GetAsync(studentId, null, null, null, cancellationToken);
+            var leakAnalysis = await leaks.GetAsync(studentId, null, null, null, user.StakesLevel, cancellationToken);
 
             var now = time.GetUtcNow();
             var firstMonth = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero).AddMonths(-(TrendMonths - 1));

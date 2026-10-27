@@ -1,4 +1,5 @@
 using PokerCoach.Application.Ranges;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 
@@ -22,7 +23,8 @@ public sealed class RangeServiceTests
                 new OpeningHoldingCount(PokerPosition.Button, 9, 6, "??", 5, 5, 0),
                 // Another format: not in this view.
                 new OpeningHoldingCount(PokerPosition.Button, 6, 6, "AhKd", 7, 7, 0),
-            ]);
+            ],
+            StakesLevel.Low);
 
         Assert.Equal(ReferenceOpeningRanges.Positions(TableFormat.FullRing), positions.Select(p => p.Position));
 
@@ -49,7 +51,8 @@ public sealed class SixMaxRangeTests
         var positions = RangeService.Build(
             TableFormat.SixMax,
             StackBand.Mid,
-            [new OpeningHoldingCount(PokerPosition.Utg, 6, 6, "AsAd", 2, 2, 0)]);
+            [new OpeningHoldingCount(PokerPosition.Utg, 6, 6, "AsAd", 2, 2, 0)],
+            StakesLevel.Low);
 
         Assert.Equal(
             new[] { PokerPosition.Utg, PokerPosition.Hijack, PokerPosition.Cutoff, PokerPosition.Button, PokerPosition.SmallBlind },

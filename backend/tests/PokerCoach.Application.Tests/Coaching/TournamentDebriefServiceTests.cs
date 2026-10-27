@@ -3,6 +3,7 @@ using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 
@@ -28,8 +29,8 @@ public sealed class TournamentDebriefServiceTests
     {
         PlayHands(30, doubleUpAt: 10, bustAt: 30);
 
-        var first = await Service().GenerateAsync(UserId, TournamentId, "fr", Ct);
-        var second = await Service().GenerateAsync(UserId, TournamentId, "fr", Ct);
+        var first = await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct);
+        var second = await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct);
 
         Assert.NotNull(first.View);
         Assert.False(second.View!.Stale);
@@ -46,7 +47,7 @@ public sealed class TournamentDebriefServiceTests
     public async Task New_hands_make_the_stored_debrief_stale_until_written_again()
     {
         PlayHands(30, doubleUpAt: 10, bustAt: null);
-        await Service().GenerateAsync(UserId, TournamentId, "fr", Ct);
+        await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct);
 
         PlayHands(5, doubleUpAt: null, bustAt: null);
         var view = await Service().GetAsync(UserId, TournamentId, "fr", Ct);
@@ -59,14 +60,14 @@ public sealed class TournamentDebriefServiceTests
     public async Task Refuses_unknown_tournaments_pending_facts_and_short_runs_without_paying()
     {
         PlayHands(10, doubleUpAt: null, bustAt: null);
-        Assert.Equal(CoachingFailure.NotEnoughData, (await Service().GenerateAsync(UserId, TournamentId, "fr", Ct)).Failure);
+        Assert.Equal(CoachingFailure.NotEnoughData, (await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct)).Failure);
 
         PlayHands(20, doubleUpAt: null, bustAt: null);
         hands.Add(hands[^1] with { HandId = Guid.NewGuid(), Facts = null });
-        Assert.Equal(CoachingFailure.HandsPending, (await Service().GenerateAsync(UserId, TournamentId, "fr", Ct)).Failure);
+        Assert.Equal(CoachingFailure.HandsPending, (await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct)).Failure);
 
         tournament = null;
-        Assert.Equal(CoachingFailure.NotFound, (await Service().GenerateAsync(UserId, TournamentId, "fr", Ct)).Failure);
+        Assert.Equal(CoachingFailure.NotFound, (await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct)).Failure);
         Assert.Equal(0, model.Calls);
     }
 
@@ -76,7 +77,7 @@ public sealed class TournamentDebriefServiceTests
         PlayHands(30, doubleUpAt: 10, bustAt: null);
         ledger.Seed(UserId, AiTask.TournamentDebrief, new CoachingOptions().DailyDebriefsPerUser, time.GetUtcNow());
 
-        Assert.Equal(CoachingFailure.DailyLimitReached, (await Service().GenerateAsync(UserId, TournamentId, "fr", Ct)).Failure);
+        Assert.Equal(CoachingFailure.DailyLimitReached, (await Service().GenerateAsync(UserId, TournamentId, "fr", StakesLevel.Low, Ct)).Failure);
     }
 
     [Fact]

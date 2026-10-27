@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -26,6 +27,7 @@ public sealed class StatisticsBreakdownsTests
         var breakdowns = await service.GetBreakdownsAsync(
             Guid.NewGuid(),
             new StatisticsFilter(null, null, 15m, null),
+            StakesLevel.Low,
             new DateTimeOffset(2026, 10, 9, 20, 0, 0, TimeSpan.Zero),
             TestContext.Current.CancellationToken);
 

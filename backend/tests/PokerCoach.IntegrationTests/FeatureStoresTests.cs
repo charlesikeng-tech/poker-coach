@@ -81,11 +81,11 @@ public sealed class FeatureStoresTests(PostgresFixture fixture)
         await using var scope = fixture.Services.CreateAsyncScope();
         var statistics = scope.ServiceProvider.GetRequiredService<StatisticsService>();
 
-        var breakdowns = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(null, null, null, null), DateTimeOffset.UtcNow, Ct);
+        var breakdowns = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(null, null, null, null), StakesLevel.Low, DateTimeOffset.UtcNow, Ct);
 
         Assert.Equal(222, breakdowns.ByPhase.Sum(p => p.Line.Hands));
         Assert.Contains(breakdowns.ByMonth, m => m.Month == new DateOnly(2026, 9, 1) && m.Line.Hands == 222);
-        var early = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null, Phase: TournamentPhase.Early), Ct);
+        var early = await statistics.GetAsync(userId, new StatisticsFilter(null, null, null, null, Phase: TournamentPhase.Early), StakesLevel.Low, Ct);
         Assert.Equal(breakdowns.ByPhase.Single(p => p.Phase == TournamentPhase.Early).Line.Hands, early.Overall.Hands);
     }
 

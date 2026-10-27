@@ -3,7 +3,9 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
+using PokerCoach.Application.Identity;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -192,6 +194,7 @@ public static class StatisticsEndpoints
         HttpContext context,
         PlanAccess plans,
         StatisticsService statistics,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
@@ -240,7 +243,8 @@ public static class StatisticsEndpoints
 
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase, parsedGameType, parsedRoom), cancellationToken);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var report = await statistics.GetAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, tournamentPhase, parsedGameType, parsedRoom), stakesLevel, cancellationToken);
         return TypedResults.Ok(ToResponse(report));
     }
 
@@ -262,6 +266,7 @@ public static class StatisticsEndpoints
         PlanAccess plans,
         StatisticsService statistics,
         TimeProvider time,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
@@ -304,7 +309,8 @@ public static class StatisticsEndpoints
 
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, GameType: parsedGameType, Room: parsedRoom), time.GetUtcNow(), cancellationToken);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var b = await statistics.GetBreakdownsAsync(userId, new StatisticsFilter(from, to, minStackBb, maxStackBb, completeOnly, tableFormat, GameType: parsedGameType, Room: parsedRoom), stakesLevel, time.GetUtcNow(), cancellationToken);
         return TypedResults.Ok(new StatisticsBreakdownsResponse(
             b.Format,
             b.ByPhase.Select(p => new PhaseStatLineResponse(p.Phase, StatLineResponse.From(p.Line))).ToList(),

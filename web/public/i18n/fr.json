@@ -1891,6 +1891,14 @@
         "resetting": "Réinitialisation…",
         "error": "La réinitialisation n'a pas abouti. Réessaie.",
         "done": "Données réinitialisées. Tu peux ré-importer tes fichiers."
+      },
+      "stakesLevel": {
+        "title": "Niveau de stakes",
+        "description": "Les plages de référence, diagnostics de leaks et conseils IA s’adaptent à votre niveau.",
+        "low": "Low stakes",
+        "mid": "Mid stakes",
+        "high": "High stakes",
+        "saved": "Niveau enregistré"
       }
     },
     "privacy": {

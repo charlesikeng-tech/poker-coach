@@ -90,6 +90,27 @@
       </section>
 
       <section class="card glass">
+        <h2>{{ t('stakesLevel.title') }}</h2>
+        <p class="hint">{{ t('stakesLevel.description') }}</p>
+        <div class="stakes-selector">
+          @for (level of stakesLevels; track level) {
+            <button
+              type="button"
+              class="stakes-option"
+              [class.stakes-option--active]="user.stakesLevel === level"
+              [disabled]="savingStakes()"
+              (click)="changeStakesLevel(level)"
+            >
+              {{ t('stakesLevel.' + level) }}
+            </button>
+          }
+          @if (stakesSaved()) {
+            <span class="stakes-saved" role="status">{{ t('stakesLevel.saved') }}</span>
+          }
+        </div>
+      </section>
+
+      <section class="card glass">
         <h2>{{ t('security.title') }}</h2>
         <div class="auth-methods">
           @if (user.hasGoogle) {

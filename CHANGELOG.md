@@ -6,6 +6,7 @@
 
 - **statistics**: Auto-regenerate stale player profile on load
 - **billing**: Add Ultimate plan with 1000 AI credits and unlimited reviews
+- **stakes**: Add StakesLevel to User model and propagate to services
 
 ## [2026.10.27-a811981] — 2026-10-27
 

@@ -3,12 +3,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+export type StakesLevel = 'low' | 'mid' | 'high';
+
 /** Mirrors the API's MeResponse. */
 export interface CurrentUser {
   readonly id: string;
   readonly displayName: string;
   readonly email: string | null;
   readonly preferredLanguage: string;
+  readonly stakesLevel: StakesLevel;
   /** Shows the administration page (ADR-0015); the API checks it again on every admin call. */
   readonly isAdmin?: boolean;
   readonly hasPassword?: boolean;

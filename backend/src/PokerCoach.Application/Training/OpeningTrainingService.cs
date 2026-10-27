@@ -1,4 +1,5 @@
 using PokerCoach.Application.Leaks;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -82,6 +83,7 @@ public sealed class OpeningTrainingService(ITrainingStore store, ILeakService le
         TableFormat format,
         StackBand band,
         IReadOnlyCollection<PokerPosition> positions,
+        StakesLevel stakesLevel,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(positions);
@@ -100,7 +102,7 @@ public sealed class OpeningTrainingService(ITrainingStore store, ILeakService le
             return new DrillSpot(OpeningDrill.Deal(random, format, band, allowed, due[random.Next(due.Count)]), Review: true, Focus: false);
         }
 
-        var analysis = await leaks.GetAsync(userId, format, null, null, cancellationToken);
+        var analysis = await leaks.GetAsync(userId, format, null, null, stakesLevel, cancellationToken);
         var leaking = analysis.Report.Leaks
             .Where(l => l.Stat == LeakStat.Rfi && l.Position is { } p && allowed.Contains(p))
             .Select(l => l.Position!.Value)

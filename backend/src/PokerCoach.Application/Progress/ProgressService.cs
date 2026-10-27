@@ -1,5 +1,6 @@
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Progress;
@@ -54,13 +55,13 @@ public sealed class ProgressService(IWeeklyPlanStore plans, ILeakService leaks, 
 
     public const int HistoryWeeks = 6;
 
-    public Task<ProgressReport> GetAsync(Guid userId, CancellationToken cancellationToken) =>
-        GetAsync(userId, GameType.Tournament, null, cancellationToken);
+    public Task<ProgressReport> GetAsync(Guid userId, StakesLevel stakesLevel, CancellationToken cancellationToken) =>
+        GetAsync(userId, GameType.Tournament, null, stakesLevel, cancellationToken);
 
-    public Task<ProgressReport> GetAsync(Guid userId, GameType gameType, CancellationToken cancellationToken) =>
-        GetAsync(userId, gameType, null, cancellationToken);
+    public Task<ProgressReport> GetAsync(Guid userId, GameType gameType, StakesLevel stakesLevel, CancellationToken cancellationToken) =>
+        GetAsync(userId, gameType, null, stakesLevel, cancellationToken);
 
-    public async Task<ProgressReport> GetAsync(Guid userId, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken)
+    public async Task<ProgressReport> GetAsync(Guid userId, GameType gameType, TournamentSubFormat? subFormat, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var now = time.GetUtcNow();
         var week = WeeklyPlanner.WeekStart(now);
@@ -69,7 +70,7 @@ public sealed class ProgressService(IWeeklyPlanStore plans, ILeakService leaks, 
         var baselineHands = 0;
         if (plan is null)
         {
-            var analysis = await leaks.GetAsync(userId, null, now.AddDays(-WeeklyPlanner.BaselineDays), null, cancellationToken, gameType, subFormat);
+            var analysis = await leaks.GetAsync(userId, null, now.AddDays(-WeeklyPlanner.BaselineDays), null, stakesLevel, cancellationToken, gameType, subFormat);
             baselineHands = analysis.Hands;
             if (analysis.Hands >= MinBaselineHands && analysis.PendingHands == 0)
             {
@@ -94,16 +95,16 @@ public sealed class ProgressService(IWeeklyPlanStore plans, ILeakService leaks, 
     }
 
     /// <summary>Drops this week's plan and builds it again (after a big import, for instance).</summary>
-    public Task<ProgressReport> RebuildAsync(Guid userId, CancellationToken cancellationToken) =>
-        RebuildAsync(userId, GameType.Tournament, null, cancellationToken);
+    public Task<ProgressReport> RebuildAsync(Guid userId, StakesLevel stakesLevel, CancellationToken cancellationToken) =>
+        RebuildAsync(userId, GameType.Tournament, null, stakesLevel, cancellationToken);
 
-    public Task<ProgressReport> RebuildAsync(Guid userId, GameType gameType, CancellationToken cancellationToken) =>
-        RebuildAsync(userId, gameType, null, cancellationToken);
+    public Task<ProgressReport> RebuildAsync(Guid userId, GameType gameType, StakesLevel stakesLevel, CancellationToken cancellationToken) =>
+        RebuildAsync(userId, gameType, null, stakesLevel, cancellationToken);
 
-    public async Task<ProgressReport> RebuildAsync(Guid userId, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken)
+    public async Task<ProgressReport> RebuildAsync(Guid userId, GameType gameType, TournamentSubFormat? subFormat, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         await plans.DeleteAsync(userId, WeeklyPlanner.WeekStart(time.GetUtcNow()), gameType, subFormat, cancellationToken);
-        return await GetAsync(userId, gameType, subFormat, cancellationToken);
+        return await GetAsync(userId, gameType, subFormat, stakesLevel, cancellationToken);
     }
 
     private async Task<WeekReport> MeasureAsync(Guid userId, WeeklyPlan plan, CancellationToken cancellationToken)

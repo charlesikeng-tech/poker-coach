@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using PokerCoach.Application.Leaks;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -69,10 +70,11 @@ public sealed class LeakCoachService(
         TableFormat? format,
         DateTimeOffset? from,
         string language,
+        StakesLevel stakesLevel,
         CancellationToken cancellationToken,
         GameType? gameType = null)
     {
-        var analysis = await leaks.GetAsync(userId, format, from, null, cancellationToken, gameType);
+        var analysis = await leaks.GetAsync(userId, format, from, null, stakesLevel, cancellationToken, gameType);
         var leak = analysis.Report.Leaks.FirstOrDefault(l => l.Stat == stat && l.Position == position && l.Direction == direction);
         if (leak is null)
         {

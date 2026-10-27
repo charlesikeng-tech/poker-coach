@@ -1891,6 +1891,14 @@
         "resetting": "Reiniciando…",
         "error": "No se pudo reiniciar. Inténtalo de nuevo.",
         "done": "Datos reiniciados. Puedes reimportar tus archivos."
+      },
+      "stakesLevel": {
+        "title": "Nivel de stakes",
+        "description": "Los rangos de referencia, diagnósticos de leaks y consejos de IA se adaptan a tu nivel.",
+        "low": "Low stakes",
+        "mid": "Mid stakes",
+        "high": "High stakes",
+        "saved": "Nivel guardado"
       }
     },
     "privacy": {

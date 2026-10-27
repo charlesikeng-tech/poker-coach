@@ -4,6 +4,7 @@ using System.Text;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Leaks;
 
@@ -22,38 +23,38 @@ public sealed class StrategyPlanService(
     public const int MinCashHands = 1000;
     internal const int Version = 1;
 
-    public async Task<ReportView<StrategyPlanAdvice>?> GetAsync(Guid userId, GameType gameType, string language, CancellationToken cancellationToken)
+    public async Task<ReportView<StrategyPlanAdvice>?> GetAsync(Guid userId, GameType gameType, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var subject = Subject(gameType);
         if (gameType == GameType.CashGame)
         {
-            var cashFacts = await MeasureCashAsync(userId, cancellationToken);
+            var cashFacts = await MeasureCashAsync(userId, stakesLevel, cancellationToken);
             if (cashFacts is null) return null;
             var stored = await reports.FindAsync<StrategyPlanAdvice>(userId, Kind, subject, language, cancellationToken);
             return stored is null ? null : View(stored, CashFingerprint(cashFacts, language));
         }
         else
         {
-            var facts = await MeasureAsync(userId, cancellationToken);
+            var facts = await MeasureAsync(userId, stakesLevel, cancellationToken);
             if (facts is null) return null;
             var stored = await reports.FindAsync<StrategyPlanAdvice>(userId, Kind, subject, language, cancellationToken);
             return stored is null ? null : View(stored, Fingerprint(facts, language));
         }
     }
 
-    public async Task<ReportOutcome<StrategyPlanAdvice>> GenerateAsync(Guid userId, GameType gameType, string language, CancellationToken cancellationToken)
+    public async Task<ReportOutcome<StrategyPlanAdvice>> GenerateAsync(Guid userId, GameType gameType, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var subject = Subject(gameType);
 
         if (gameType == GameType.CashGame)
-            return await GenerateCashAsync(userId, subject, language, cancellationToken);
+            return await GenerateCashAsync(userId, subject, language, stakesLevel, cancellationToken);
 
-        return await GenerateTournamentAsync(userId, subject, language, cancellationToken);
+        return await GenerateTournamentAsync(userId, subject, language, stakesLevel, cancellationToken);
     }
 
-    private async Task<ReportOutcome<StrategyPlanAdvice>> GenerateTournamentAsync(Guid userId, string subject, string language, CancellationToken cancellationToken)
+    private async Task<ReportOutcome<StrategyPlanAdvice>> GenerateTournamentAsync(Guid userId, string subject, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
-        var facts = await MeasureAsync(userId, cancellationToken);
+        var facts = await MeasureAsync(userId, stakesLevel, cancellationToken);
         if (facts is null)
             return ReportOutcome<StrategyPlanAdvice>.Fail(CoachingFailure.NotFound);
 
@@ -78,9 +79,9 @@ public sealed class StrategyPlanService(
         return ReportOutcome<StrategyPlanAdvice>.Of(View(report, fingerprint));
     }
 
-    private async Task<ReportOutcome<StrategyPlanAdvice>> GenerateCashAsync(Guid userId, string subject, string language, CancellationToken cancellationToken)
+    private async Task<ReportOutcome<StrategyPlanAdvice>> GenerateCashAsync(Guid userId, string subject, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
-        var facts = await MeasureCashAsync(userId, cancellationToken);
+        var facts = await MeasureCashAsync(userId, stakesLevel, cancellationToken);
         if (facts is null)
             return ReportOutcome<StrategyPlanAdvice>.Fail(CoachingFailure.NotFound);
 
@@ -119,12 +120,12 @@ public sealed class StrategyPlanService(
         IReadOnlyList<Leak> ConfirmedLeaks,
         IReadOnlyList<Leak> PossibleLeaks);
 
-    private async Task<StrategyFacts?> MeasureAsync(Guid userId, CancellationToken cancellationToken)
+    private async Task<StrategyFacts?> MeasureAsync(Guid userId, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var report = await performance.GetAsync(userId, from: null, to: null, cancellationToken);
         if (report.Totals.Tournaments == 0) return null;
 
-        var leakAnalysis = await leaks.GetAsync(userId, format: null, from: null, to: null, cancellationToken);
+        var leakAnalysis = await leaks.GetAsync(userId, format: null, from: null, to: null, stakesLevel, cancellationToken);
         var confirmed = leakAnalysis.Report.Leaks.Where(l => l.Confidence == LeakConfidence.Confirmed).ToList();
         var possible = leakAnalysis.Report.Leaks.Where(l => l.Confidence == LeakConfidence.Possible).ToList();
 
@@ -137,12 +138,12 @@ public sealed class StrategyPlanService(
             possible);
     }
 
-    private async Task<CashStrategyFacts?> MeasureCashAsync(Guid userId, CancellationToken cancellationToken)
+    private async Task<CashStrategyFacts?> MeasureCashAsync(Guid userId, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var report = await cashPerformance.GetAsync(userId, from: null, to: null, cancellationToken);
         if (report.Totals.Hands == 0) return null;
 
-        var leakAnalysis = await leaks.GetAsync(userId, format: null, from: null, to: null, cancellationToken, gameType: GameType.CashGame);
+        var leakAnalysis = await leaks.GetAsync(userId, format: null, from: null, to: null, stakesLevel, cancellationToken, gameType: GameType.CashGame);
         var confirmed = leakAnalysis.Report.Leaks.Where(l => l.Confidence == LeakConfidence.Confirmed).ToList();
         var possible = leakAnalysis.Report.Leaks.Where(l => l.Confidence == LeakConfidence.Possible).ToList();
 

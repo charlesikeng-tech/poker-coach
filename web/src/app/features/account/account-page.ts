@@ -25,7 +25,7 @@ import {
 } from '../../core/auth/accounts-api';
 import { BillingService } from '../../core/billing/billing.service';
 import { CoachApi, CoachInvitation } from '../../core/coach/coach-api';
-import { SessionService } from '../../core/auth/session.service';
+import { SessionService, type StakesLevel } from '../../core/auth/session.service';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
@@ -90,6 +90,11 @@ export class AccountPage {
   protected readonly newLabel = signal('');
   protected readonly copiedId = signal<string | null>(null);
   protected readonly revokingId = signal<string | null>(null);
+
+  // Stakes level
+  protected readonly stakesLevels: StakesLevel[] = ['low', 'mid', 'high'];
+  protected readonly savingStakes = signal(false);
+  protected readonly stakesSaved = signal(false);
 
   constructor() {
     void this.loadInvitations();
@@ -173,6 +178,22 @@ export class AccountPage {
       this.nameError.set('unknown');
     } finally {
       this.savingName.set(false);
+    }
+  }
+
+  protected async changeStakesLevel(level: StakesLevel): Promise<void> {
+    if (this.savingStakes() || level === this.session.user()?.stakesLevel) {
+      return;
+    }
+    this.savingStakes.set(true);
+    this.stakesSaved.set(false);
+    try {
+      await firstValueFrom(this.http.put('/api/me/preferences', { stakesLevel: level }));
+      await this.session.load();
+      this.stakesSaved.set(true);
+      setTimeout(() => this.stakesSaved.set(false), 2000);
+    } finally {
+      this.savingStakes.set(false);
     }
   }
 

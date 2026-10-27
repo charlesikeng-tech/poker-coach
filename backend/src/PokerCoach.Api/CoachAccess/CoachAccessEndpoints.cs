@@ -139,6 +139,7 @@ public static class CoachAccessEndpoints
         CoachInvitationService invitationService,
         PlanAccess plans,
         ILeakService leaks,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
@@ -172,7 +173,8 @@ public static class CoachAccessEndpoints
         }
 
         from = await plans.ClampFromAsync(studentId.Value, from, cancellationToken);
-        var analysis = await leaks.GetAsync(studentId.Value, tableFormat, from, to, cancellationToken, parsedGameType);
+        var studentStakesLevel = (await users.FindByIdAsync(studentId.Value, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var analysis = await leaks.GetAsync(studentId.Value, tableFormat, from, to, studentStakesLevel, cancellationToken, parsedGameType);
 
         var advanced = (await plans.GetPlanAsync(studentId.Value, cancellationToken)).Allows(Feature.AdvancedLeaks);
         var shown = analysis.Report.Leaks.Where(l => advanced || !l.Stat.IsPostflop()).ToList();
@@ -199,6 +201,7 @@ public static class CoachAccessEndpoints
         CoachInvitationService invitationService,
         PlanAccess plans,
         StatisticsService statistics,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
@@ -227,8 +230,9 @@ public static class CoachAccessEndpoints
         }
 
         from = await plans.ClampFromAsync(studentId.Value, from, cancellationToken);
+        var studentStakesLevel = (await users.FindByIdAsync(studentId.Value, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
         return TypedResults.Ok(StatisticsEndpoints.ToResponse(
-            await statistics.GetAsync(studentId.Value, new Application.Statistics.StatisticsFilter(from, to, null, null, false, tableFormat, null, parsedGameType, null), cancellationToken)));
+            await statistics.GetAsync(studentId.Value, new Application.Statistics.StatisticsFilter(from, to, null, null, false, tableFormat, null, parsedGameType, null), studentStakesLevel, cancellationToken)));
     }
 
     private static async Task<Results<Ok<ProgressResponse>, ProblemHttpResult, ForbidHttpResult, UnauthorizedHttpResult>> GetProgressAsync(
@@ -236,6 +240,7 @@ public static class CoachAccessEndpoints
         HttpContext context,
         CoachInvitationService invitationService,
         ProgressService progress,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         string? gameType = null,
         string? subFormat = null)
@@ -261,8 +266,9 @@ public static class CoachAccessEndpoints
             return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
         }
 
+        var studentStakesLevel = (await users.FindByIdAsync(studentId.Value, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
         return TypedResults.Ok(ProgressEndpoints.ToResponse(
-            await progress.GetAsync(studentId.Value, parsedGameType ?? GameType.Tournament, parsedSubFormat, cancellationToken)));
+            await progress.GetAsync(studentId.Value, parsedGameType ?? GameType.Tournament, parsedSubFormat, studentStakesLevel, cancellationToken)));
     }
 
     private static CoachInvitationResponse ToResponse(Domain.Identity.CoachInvitation i) =>

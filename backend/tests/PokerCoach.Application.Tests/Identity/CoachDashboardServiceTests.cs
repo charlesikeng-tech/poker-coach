@@ -271,7 +271,7 @@ public sealed class CoachDashboardServiceTests
 
     private sealed class StubLeakService : ILeakService
     {
-        public Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null) =>
+        public Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, StakesLevel stakesLevel, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null) =>
             Task.FromResult(new LeakAnalysis(new LeakReport([], []), 0, new StatisticsSample(0, 0), 0, 1, TableFormat.SixMax, new FormatCounts(0, 0)));
 
         public Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null) =>

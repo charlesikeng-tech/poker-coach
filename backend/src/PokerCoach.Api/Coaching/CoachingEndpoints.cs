@@ -220,7 +220,7 @@ public static class CoachingEndpoints
     };
 
     /// <summary>The requested language if supported, else the account's; a validation problem for an unknown one.</summary>
-    internal static async Task<(string? Language, ProblemHttpResult? Problem)> LanguageAsync(
+    internal static async Task<(string? Language, StakesLevel StakesLevel, ProblemHttpResult? Problem)> LanguageAsync(
         string? requested,
         Guid userId,
         UserProfileService profiles,
@@ -228,10 +228,11 @@ public static class CoachingEndpoints
     {
         if (requested is not null && !UserLanguages.IsSupported(requested))
         {
-            return (null, ApiProblems.Validation("language", $"Must be one of: {string.Join(", ", UserLanguages.All)}."));
+            return (null, StakesLevel.Low, ApiProblems.Validation("language", $"Must be one of: {string.Join(", ", UserLanguages.All)}."));
         }
 
-        return (requested ?? (await profiles.GetAsync(userId, cancellationToken))?.PreferredLanguage ?? UserLanguages.Default, null);
+        var profile = await profiles.GetAsync(userId, cancellationToken);
+        return (requested ?? profile?.PreferredLanguage ?? UserLanguages.Default, profile?.StakesLevel ?? StakesLevel.Low, null);
     }
 
     private static async Task<Results<Ok<DebriefResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetDebriefAsync(
@@ -247,7 +248,7 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
@@ -272,13 +273,13 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var outcome = await debriefs.GenerateAsync(userId, id, answerLanguage!, cancellationToken);
+        var outcome = await debriefs.GenerateAsync(userId, id, answerLanguage!, stakesLevel, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToResponse(view)) : Problem(outcome.Failure!.Value, "TOURNAMENT_NOT_FOUND");
     }
 
@@ -307,13 +308,13 @@ public static class CoachingEndpoints
             return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var view = await reviews.GetAsync(userId, week, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken, parsedSubFormat);
+        var view = await reviews.GetAsync(userId, week, parsedGameType ?? GameType.Tournament, answerLanguage!, stakesLevel, cancellationToken, parsedSubFormat);
         return view is null
             ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "REVIEW_NOT_FOUND", "No review written for this week yet.")
             : TypedResults.Ok(ToResponse(view));
@@ -341,13 +342,13 @@ public static class CoachingEndpoints
             return ApiProblems.Validation("subFormat", "Must be mtt, rebuyMtt or sng.");
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var outcome = await reviews.GenerateAsync(userId, request?.Week, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken, parsedSubFormat);
+        var outcome = await reviews.GenerateAsync(userId, request?.Week, parsedGameType ?? GameType.Tournament, answerLanguage!, stakesLevel, cancellationToken, parsedSubFormat);
         return outcome.View is { } view ? TypedResults.Ok(ToResponse(view)) : Problem(outcome.Failure!.Value, "WEEK_NOT_FOUND");
     }
 
@@ -364,7 +365,7 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
@@ -388,7 +389,7 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
@@ -411,13 +412,13 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var view = await monthly.GetAsync(userId, month, answerLanguage!, cancellationToken);
+        var view = await monthly.GetAsync(userId, month, answerLanguage!, stakesLevel, cancellationToken);
         return view is null
             ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "MONTHLY_REPORT_NOT_FOUND", "No monthly report written for this month yet.")
             : TypedResults.Ok(ToMonthlyResponse(view));
@@ -435,13 +436,13 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var outcome = await monthly.GenerateAsync(userId, request?.Month, answerLanguage!, cancellationToken);
+        var outcome = await monthly.GenerateAsync(userId, request?.Month, answerLanguage!, stakesLevel, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToMonthlyResponse(view)) : Problem(outcome.Failure!.Value, "MONTH_NOT_FOUND");
     }
 
@@ -457,7 +458,7 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
@@ -481,7 +482,7 @@ public static class CoachingEndpoints
             return TypedResults.Unauthorized();
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
@@ -509,13 +510,13 @@ public static class CoachingEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var view = await strategy.GetAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        var view = await strategy.GetAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, stakesLevel, cancellationToken);
         return view is null
             ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "STRATEGY_PLAN_NOT_FOUND", "No strategy plan written yet.")
             : TypedResults.Ok(ToStrategyResponse(view));
@@ -538,13 +539,13 @@ public static class CoachingEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var outcome = await strategy.GenerateAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        var outcome = await strategy.GenerateAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, stakesLevel, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToStrategyResponse(view)) : Problem(outcome.Failure!.Value, "NO_TOURNAMENTS");
     }
 
@@ -580,13 +581,13 @@ public static class CoachingEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var view = await profileService.GetAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        var view = await profileService.GetAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, stakesLevel, cancellationToken);
         return view is null
             ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "PLAYER_PROFILE_NOT_FOUND", "No player profile written yet.")
             : TypedResults.Ok(ToProfileResponse(view));
@@ -609,13 +610,13 @@ public static class CoachingEndpoints
             return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
         }
 
-        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        var (answerLanguage, stakesLevel, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
         if (problem is not null)
         {
             return problem;
         }
 
-        var outcome = await profileService.GenerateAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        var outcome = await profileService.GenerateAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, stakesLevel, cancellationToken);
         return outcome.View is { } view ? TypedResults.Ok(ToProfileResponse(view)) : Problem(outcome.Failure!.Value, "NO_STATISTICS");
     }
 

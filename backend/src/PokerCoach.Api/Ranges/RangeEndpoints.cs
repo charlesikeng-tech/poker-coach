@@ -5,7 +5,9 @@ using PokerCoach.Api.Errors;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Leaks;
 using PokerCoach.Api.Statistics;
+using PokerCoach.Application.Identity;
 using PokerCoach.Application.Ranges;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
@@ -151,6 +153,7 @@ public static class RangeEndpoints
         HttpContext context,
         PlanAccess plans,
         RangeService ranges,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         string? format = null,
         string band = "mid",
@@ -197,7 +200,8 @@ public static class RangeEndpoints
 
         // Free plan: history window (ADR-0014). Data is kept, only not shown.
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
-        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, stack, from, to, cancellationToken, parsedGameType);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var result = await ranges.GetOpeningAsync(userId, tableFormat, stackBand, stack, from, to, stakesLevel, cancellationToken, parsedGameType);
         return TypedResults.Ok(new OpeningRangesResponse(
             result.Format,
             result.Band,

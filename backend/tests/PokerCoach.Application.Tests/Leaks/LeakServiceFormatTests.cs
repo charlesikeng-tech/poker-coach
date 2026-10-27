@@ -1,5 +1,6 @@
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Poker.Ranges;
@@ -15,8 +16,8 @@ public sealed class LeakServiceFormatTests
     [Fact]
     public async Task A_six_max_utg_is_judged_like_a_full_ring_lojack_and_keeps_its_name()
     {
-        var sixMax = await new LeakService(new Stub()).GetAsync(Guid.NewGuid(), TableFormat.SixMax, null, null, TestContext.Current.CancellationToken);
-        var fullRing = await new LeakService(new Stub()).GetAsync(Guid.NewGuid(), TableFormat.FullRing, null, null, TestContext.Current.CancellationToken);
+        var sixMax = await new LeakService(new Stub()).GetAsync(Guid.NewGuid(), TableFormat.SixMax, null, null, StakesLevel.Low, TestContext.Current.CancellationToken);
+        var fullRing = await new LeakService(new Stub()).GetAsync(Guid.NewGuid(), TableFormat.FullRing, null, null, StakesLevel.Low, TestContext.Current.CancellationToken);
 
         Assert.DoesNotContain(sixMax.Report.Leaks, l => l.Stat == LeakStat.Rfi);
         Assert.Contains(fullRing.Report.Leaks, l => l.Stat == LeakStat.Rfi && l.Position == PokerPosition.Utg && l.Direction == LeakDirection.TooHigh);
@@ -26,7 +27,7 @@ public sealed class LeakServiceFormatTests
     [Fact]
     public async Task Without_a_format_the_busiest_one_is_analysed()
     {
-        var analysis = await new LeakService(new Stub(new FormatCounts(100, 900))).GetAsync(Guid.NewGuid(), null, null, null, TestContext.Current.CancellationToken);
+        var analysis = await new LeakService(new Stub(new FormatCounts(100, 900))).GetAsync(Guid.NewGuid(), null, null, null, StakesLevel.Low, TestContext.Current.CancellationToken);
 
         Assert.Equal(TableFormat.FullRing, analysis.Format);
     }
