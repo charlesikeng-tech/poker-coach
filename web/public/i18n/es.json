@@ -2245,7 +2245,8 @@
           "bankrollCoach": "Consejo bankroll",
           "monthlyReport": "Informe mensual",
           "tournamentSelection": "Selección de torneos",
-          "strategyPlan": "Plan estratégico"
+          "strategyPlan": "Plan estratégico",
+          "playerProfile": "Perfil de jugador"
         }
       }
     },

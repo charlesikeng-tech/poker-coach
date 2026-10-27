@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.27-6443b9d] — 2026-10-27
+
+### Correctifs
+
+- **i18n**: Add missing Ultimate plan label in admin translations
+
 ## [2026.10.27-9cdd728] — 2026-10-27
 
 ### Correctifs
