@@ -21,6 +21,7 @@ import {
   TrendingUp,
   Trophy,
   Upload,
+  Users,
   Wallet,
   Wrench,
 } from 'lucide';
@@ -75,6 +76,7 @@ export const PRIMARY_NAVIGATION: readonly NavigationSection[] = [
       { path: '/statistics', labelKey: 'nav.statistics', icon: ChartColumn },
       { path: '/leaks', labelKey: 'nav.leaks', icon: Radar },
       { path: '/ranges', labelKey: 'nav.ranges', icon: Grid3x3 },
+      { path: '/opponents', labelKey: 'nav.opponents', icon: Users },
       {
         path: '/tools',
         labelKey: 'nav.tools',

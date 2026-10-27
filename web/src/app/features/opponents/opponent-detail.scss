@@ -1,0 +1,233 @@
+:host {
+  display: block;
+}
+
+.back {
+  --icon-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  // Desktop hides the back link (list is always visible).
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.header__name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.meta {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.dates {
+  margin-bottom: var(--space-5);
+}
+
+// Stat grid
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+
+  > * {
+    animation: stat-in var(--motion-base) var(--easing-emphasized) both;
+  }
+
+  @for $i from 1 through 12 {
+    > :nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 40}ms;
+    }
+  }
+}
+
+@keyframes stat-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+}
+
+.stat__label {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat__value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+// Type badges (same as list)
+.type-badge {
+  flex: none;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.type--nit {
+  background: color-mix(in srgb, #6b8aff 15%, transparent);
+  color: #6b8aff;
+}
+
+.type--tag {
+  background: color-mix(in srgb, #4ade80 15%, transparent);
+  color: #4ade80;
+}
+
+.type--lag {
+  background: color-mix(in srgb, #f59e0b 15%, transparent);
+  color: #f59e0b;
+}
+
+.type--callingStation {
+  background: color-mix(in srgb, #a78bfa 15%, transparent);
+  color: #a78bfa;
+}
+
+.type--maniac {
+  background: color-mix(in srgb, #ef4444 15%, transparent);
+  color: #ef4444;
+}
+
+.type--shark {
+  background: color-mix(in srgb, #06b6d4 15%, transparent);
+  color: #06b6d4;
+}
+
+.type--unknown {
+  background: color-mix(in srgb, var(--text-muted) 10%, transparent);
+  color: var(--text-muted);
+}
+
+// Sections (tags, note)
+.section {
+  margin-bottom: var(--space-5);
+}
+
+.section__header {
+  --icon-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tag {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent-primary) 12%, transparent);
+  color: var(--accent-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.note-text {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.empty-hint {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+.edit-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  textarea,
+  input {
+    width: 100%;
+  }
+}
+
+.edit-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  color: var(--text-secondary);
+}
+
+// Skeletons
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeleton-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+
+  .skeleton:first-child {
+    width: 50%;
+    height: 0.6rem;
+  }
+
+  .skeleton:last-child {
+    width: 70%;
+    height: 1.2rem;
+  }
+}

@@ -1,0 +1,147 @@
+<ng-container *transloco="let t; prefix: 'pages.opponents.detail'">
+  @if (state() === 'loading') {
+    <div class="loading">
+      <div class="skeleton" style="width: 60%; height: 1.5rem"></div>
+      <div class="skeleton" style="width: 40%; height: 1rem"></div>
+      <div class="stat-grid">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+          <div class="glass skeleton-stat">
+            <span class="skeleton"></span><span class="skeleton"></span>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (state() === 'error') {
+    <p class="error">
+      {{ t('error') }}
+      <button appButton variant="secondary" (click)="retry()">{{ t('retry') }}</button>
+    </p>
+  } @else if (data(); as d) {
+    <a class="back" routerLink="/opponents" [attr.aria-label]="t('back')">
+      <app-icon [icon]="icons.ArrowLeft" /> {{ t('back') }}
+    </a>
+
+    <header class="header">
+      <h2 class="header__name">{{ d.opponentName }}</h2>
+      <span [class]="'type-badge ' + typeClass(d.type)">{{ t('types.' + d.type) }}</span>
+    </header>
+
+    <p class="meta">
+      {{ d.room }} · {{ d.screenName }} · {{ t('hands', { count: d.stats.hands }) }}
+      @if (d.distinctTournaments > 0) {
+        · {{ t('tournaments', { count: d.distinctTournaments }) }}
+      }
+    </p>
+    <p class="meta dates">
+      {{ t('firstSeen') }} {{ date(d.firstSeenAt) }} — {{ t('lastSeen') }} {{ date(d.lastSeenAt) }}
+    </p>
+
+    <!-- Stats grid -->
+    <div class="stat-grid">
+      <div class="stat glass">
+        <span class="stat__label">VPIP</span>
+        <span class="stat__value numeric">{{ percent(d.stats.vpipRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">PFR</span>
+        <span class="stat__value numeric">{{ percent(d.stats.pfrRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">RFI</span>
+        <span class="stat__value numeric">{{ percent(d.stats.rfiRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">Steal</span>
+        <span class="stat__value numeric">{{ percent(d.stats.stealRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">3-Bet</span>
+        <span class="stat__value numeric">{{ percent(d.stats.threeBetRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">{{ t('stats.foldTo3bet') }}</span>
+        <span class="stat__value numeric">{{ percent(d.stats.foldToThreeBetRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">C-Bet Flop</span>
+        <span class="stat__value numeric">{{ percent(d.stats.cbetFlopRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">{{ t('stats.foldToCbet') }}</span>
+        <span class="stat__value numeric">{{ percent(d.stats.foldToCbetFlopRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">{{ t('stats.aggression') }}</span>
+        <span class="stat__value numeric">{{ percent(d.stats.aggressionFrequency) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">WTSD</span>
+        <span class="stat__value numeric">{{ percent(d.stats.wtsdRate) }}</span>
+      </div>
+      <div class="stat glass">
+        <span class="stat__label">W$SD</span>
+        <span class="stat__value numeric">{{ percent(d.stats.wsdRate) }}</span>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <section class="section">
+      <div class="section__header">
+        <h3><app-icon [icon]="icons.Tag" /> {{ t('tagsTitle') }}</h3>
+        <button appButton variant="ghost" (click)="startEditTags()">{{ t('edit') }}</button>
+      </div>
+      @if (editingTags()) {
+        <div class="edit-area">
+          <input
+            type="text"
+            [value]="tagsText()"
+            (input)="tagsText.set($any($event.target).value)"
+            [placeholder]="t('tagsPlaceholder')"
+          />
+          <div class="edit-actions">
+            <button appButton variant="primary" [disabled]="saving()" (click)="saveTags()">
+              <app-icon [icon]="icons.Save" /> {{ t('save') }}
+            </button>
+            <button appButton variant="ghost" (click)="cancelEditTags()">{{ t('cancel') }}</button>
+          </div>
+        </div>
+      } @else if (d.tags.length > 0) {
+        <div class="tags">
+          @for (tag of d.tags; track tag) {
+            <span class="tag">{{ tag }}</span>
+          }
+        </div>
+      } @else {
+        <p class="empty-hint">{{ t('noTags') }}</p>
+      }
+    </section>
+
+    <!-- Note -->
+    <section class="section">
+      <div class="section__header">
+        <h3><app-icon [icon]="icons.NotebookPen" /> {{ t('noteTitle') }}</h3>
+        <button appButton variant="ghost" (click)="startEditNote()">{{ t('edit') }}</button>
+      </div>
+      @if (editingNote()) {
+        <div class="edit-area">
+          <textarea
+            rows="4"
+            [value]="noteText()"
+            (input)="noteText.set($any($event.target).value)"
+            [placeholder]="t('notePlaceholder')"
+          ></textarea>
+          <div class="edit-actions">
+            <button appButton variant="primary" [disabled]="saving()" (click)="saveNote()">
+              <app-icon [icon]="icons.Save" /> {{ t('save') }}
+            </button>
+            <button appButton variant="ghost" (click)="cancelEditNote()">{{ t('cancel') }}</button>
+          </div>
+        </div>
+      } @else if (d.note) {
+        <p class="note-text">{{ d.note }}</p>
+      } @else {
+        <p class="empty-hint">{{ t('noNote') }}</p>
+      }
+    </section>
+  }
+</ng-container>

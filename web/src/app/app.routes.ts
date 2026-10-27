@@ -109,6 +109,20 @@ export const routes: Routes = [
       // The Sessions placeholder became the bankroll (roadmap step 1): keep old links working.
       { path: 'sessions', redirectTo: 'bankroll' },
       {
+        path: 'opponents',
+        title: 'nav.opponents',
+        loadComponent: () =>
+          import('./features/opponents/opponents-page').then((m) => m.OpponentsPage),
+        children: [
+          { path: '', children: [] },
+          {
+            path: ':id',
+            loadComponent: () =>
+              import('./features/opponents/opponent-detail').then((m) => m.OpponentDetailPage),
+          },
+        ],
+      },
+      {
         path: 'statistics',
         title: 'nav.statistics',
         loadComponent: () =>

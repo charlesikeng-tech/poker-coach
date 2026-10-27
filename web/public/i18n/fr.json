@@ -31,7 +31,8 @@
     "bounty": "Bounty PKO",
     "variance": "Variance",
     "cashVariance": "Variance Cash",
-    "coach": "Mes élèves"
+    "coach": "Mes élèves",
+    "opponents": "Adversaires"
   },
   "shell": {
     "skipToContent": "Aller au contenu",
@@ -548,6 +549,88 @@
           "planLimit": "Tu as atteint la limite mensuelle du plan gratuit. Reviens le mois prochain.",
           "unknown": "Le coach n'a pas pu répondre. Réessaie dans un moment."
         }
+      }
+    },
+    "opponents": {
+      "title": "Adversaires",
+      "description": "Profils, statistiques et notes sur les joueurs que tu as croisés.",
+      "empty": {
+        "title": "Aucun adversaire",
+        "description": "Importe des mains pour commencer à suivre tes adversaires.",
+        "action": "Importer des fichiers"
+      },
+      "loading": "Chargement…",
+      "error": {
+        "title": "Impossible de charger les adversaires",
+        "description": "NutsIQ n'a pas pu répondre. Réessaie.",
+        "retry": "Réessayer"
+      },
+      "noMatch": "Aucun adversaire ne correspond à cette recherche.",
+      "list": {
+        "label": "Liste des adversaires",
+        "search": "Rechercher un adversaire…",
+        "sort": "Trier par",
+        "sortDir": "Ordre de tri",
+        "count": "{{count}} adversaire(s)",
+        "hands": "{{count}} mains"
+      },
+      "sort": {
+        "hands": "Mains",
+        "name": "Nom",
+        "lastSeen": "Dernière rencontre",
+        "vpip": "VPIP"
+      },
+      "types": {
+        "unknown": "Inconnu",
+        "nit": "Nit",
+        "tag": "TAG",
+        "lag": "LAG",
+        "callingStation": "Calling Station",
+        "maniac": "Maniac",
+        "shark": "Shark"
+      },
+      "pager": {
+        "label": "Pages",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "position": "Page {{page}} sur {{count}}"
+      },
+      "overview": {
+        "label": "Sélection",
+        "pickTitle": "Choisis un adversaire",
+        "pickDescription": "Sélectionne un joueur dans la liste pour voir son profil complet."
+      },
+      "detail": {
+        "back": "Retour à la liste",
+        "error": "Impossible de charger le profil.",
+        "retry": "Réessayer",
+        "hands": "{{count}} mains",
+        "tournaments": "{{count}} tournoi(s)",
+        "firstSeen": "Première rencontre",
+        "lastSeen": "Dernière rencontre",
+        "types": {
+          "unknown": "Inconnu",
+          "nit": "Nit",
+          "tag": "TAG",
+          "lag": "LAG",
+          "callingStation": "Calling Station",
+          "maniac": "Maniac",
+          "shark": "Shark"
+        },
+        "stats": {
+          "foldTo3bet": "Fold to 3-Bet",
+          "foldToCbet": "Fold to C-Bet",
+          "aggression": "Agression"
+        },
+        "tagsTitle": "Tags",
+        "tagsPlaceholder": "tag1, tag2, tag3",
+        "noTags": "Aucun tag.",
+        "noteTitle": "Note",
+        "notePlaceholder": "Ajoute une note sur cet adversaire…",
+        "noNote": "Aucune note.",
+        "edit": "Modifier",
+        "save": "Enregistrer",
+        "cancel": "Annuler"
       }
     },
     "statistics": {

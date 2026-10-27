@@ -7,6 +7,7 @@
 - **opponents**: Add RFI, steal, fold-to-3bet, c-bet, fold-to-cbet, W$SD stats
 - **opponents**: Add opponent stats backfill for pre-migration accounts
 - **opponents**: Add notes, tags columns and fix GDPR reset/export
+- **opponents**: Add REST API for opponent list, detail, notes and tags
 
 ## [2026.10.27-39a76c9] — 2026-10-27
 
