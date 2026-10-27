@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - **opponents**: Add RFI, steal, fold-to-3bet, c-bet, fold-to-cbet, W$SD stats
+- **opponents**: Add opponent stats backfill for pre-migration accounts
 
 ## [2026.10.27-39a76c9] — 2026-10-27
 

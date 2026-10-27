@@ -63,6 +63,10 @@ internal sealed class OpponentStatsRecord
 
     public int DistinctTournaments { get; set; }
 
+    public string? Note { get; set; }
+
+    public string? Tags { get; set; }
+
     public DateTimeOffset UpdatedAt { get; set; }
 }
 
@@ -77,6 +81,8 @@ internal sealed class OpponentStatsConfiguration : IEntityTypeConfiguration<Oppo
         builder.HasIndex(o => new { o.PokerAccountId, o.OpponentName })
             .IsUnique()
             .HasDatabaseName("ix_opponent_stats_account_opponent");
+        builder.Property(o => o.Note).HasMaxLength(4000);
+        builder.Property(o => o.Tags).HasMaxLength(1000);
         builder.HasOne<PokerAccountRecord>().WithMany().HasForeignKey(o => o.PokerAccountId).OnDelete(DeleteBehavior.Cascade);
     }
 }

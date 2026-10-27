@@ -1641,6 +1641,11 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_seen_at");
 
+                    b.Property<string>("Note")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("note");
+
                     b.Property<string>("OpponentName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1682,6 +1687,11 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<int>("StealOpportunity")
                         .HasColumnType("integer")
                         .HasColumnName("steal_opportunity");
+
+                    b.Property<string>("Tags")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("tags");
 
                     b.Property<int>("ThreeBet")
                         .HasColumnType("integer")

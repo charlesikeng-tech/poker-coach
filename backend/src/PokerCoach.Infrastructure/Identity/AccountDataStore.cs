@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using PokerCoach.Application.Identity;
 using PokerCoach.Domain.Identity;
@@ -49,6 +50,21 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
             .OrderBy(r => r.CreatedAt)
             .Select(r => new ExportedReport(r.Kind, r.Subject, r.CreatedAt, r.Language, r.Model, r.Payload))
             .ToListAsync(cancellationToken);
+        var accountMap = await db.Set<PokerAccountRecord>().AsNoTracking()
+            .Where(a => a.UserId == userId)
+            .ToDictionaryAsync(a => a.Id, a => $"{a.Room}/{a.ScreenName}", cancellationToken);
+        var opponents = accountMap.Count > 0
+            ? await db.Set<OpponentStatsRecord>().AsNoTracking()
+                .Where(o => accountMap.Keys.Contains(o.PokerAccountId) && (o.Note != null || o.Tags != null))
+                .OrderBy(o => o.OpponentName)
+                .Select(o => new { o.PokerAccountId, o.OpponentName, o.Note, o.Tags })
+                .ToListAsync(cancellationToken)
+            : [];
+        var exportedOpponents = opponents.Select(o => new ExportedOpponent(
+            accountMap[o.PokerAccountId],
+            o.OpponentName,
+            o.Note,
+            ParseTags(o.Tags))).ToList();
 
         return new AccountSnapshot(
             user.DisplayName,
@@ -68,7 +84,8 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
                 a.Answer.ToString(),
                 a.Correct)).ToList(),
             explanations,
-            reports);
+            reports,
+            exportedOpponents);
     }
 
     public async IAsyncEnumerable<ExportedUpload> StreamUploadsAsync(Guid userId, [EnumeratorCancellation] CancellationToken cancellationToken)
@@ -106,6 +123,7 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
 
         if (accountIds.Count > 0)
         {
+            await db.Set<OpponentStatsRecord>().Where(o => accountIds.Contains(o.PokerAccountId)).ExecuteDeleteAsync(cancellationToken);
             await db.Set<HandRecord>().Where(h => accountIds.Contains(h.PokerAccountId)).ExecuteDeleteAsync(cancellationToken);
             await db.Set<TournamentRecord>().Where(t => accountIds.Contains(t.PokerAccountId)).ExecuteDeleteAsync(cancellationToken);
         }
@@ -122,5 +140,12 @@ internal sealed class AccountDataStore(PokerCoachDbContext db) : IAccountDataSto
         await db.Set<CustomDefenceRange>().Where(r => r.UserId == userId).ExecuteDeleteAsync(cancellationToken);
         await db.Set<WeeklyNotification>().Where(n => n.UserId == userId).ExecuteDeleteAsync(cancellationToken);
         await db.Set<FeatureUsageRecord>().Where(u => u.UserId == userId).ExecuteDeleteAsync(cancellationToken);
+    }
+
+    private static IReadOnlyList<string> ParseTags(string? json)
+    {
+        if (string.IsNullOrEmpty(json)) return [];
+        try { return JsonSerializer.Deserialize<List<string>>(json) ?? []; }
+        catch (JsonException) { return []; }
     }
 }
