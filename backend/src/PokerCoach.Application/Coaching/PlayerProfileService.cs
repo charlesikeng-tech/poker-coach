@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -20,35 +21,35 @@ public sealed class PlayerProfileService(
     public const int MinHands = 200;
     internal const int Version = 1;
 
-    public async Task<ReportView<PlayerProfile>?> GetAsync(Guid userId, GameType gameType, string language, CancellationToken cancellationToken)
+    public async Task<ReportView<PlayerProfile>?> GetAsync(Guid userId, GameType gameType, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var subject = Subject(gameType);
         var stored = await reports.FindAsync<PlayerProfile>(userId, Kind, subject, language, cancellationToken);
         if (stored is null) return null;
 
-        var stats = await GetStatsAsync(userId, gameType, cancellationToken);
+        var stats = await GetStatsAsync(userId, gameType, stakesLevel, cancellationToken);
         if (stats is null) return null;
-        var leakData = await GetLeaksAsync(userId, gameType, cancellationToken);
+        var leakData = await GetLeaksAsync(userId, gameType, stakesLevel, cancellationToken);
         return View(stored, Fingerprint(stats, leakData, language));
     }
 
-    public async Task<ReportOutcome<PlayerProfile>> GenerateAsync(Guid userId, GameType gameType, string language, CancellationToken cancellationToken)
+    public async Task<ReportOutcome<PlayerProfile>> GenerateAsync(Guid userId, GameType gameType, string language, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var subject = Subject(gameType);
-        var stats = await GetStatsAsync(userId, gameType, cancellationToken);
+        var stats = await GetStatsAsync(userId, gameType, stakesLevel, cancellationToken);
         if (stats is null)
             return ReportOutcome<PlayerProfile>.Fail(CoachingFailure.NotFound);
 
         if (stats.Overall.Hands < MinHands)
             return ReportOutcome<PlayerProfile>.Fail(CoachingFailure.NotEnoughData);
 
-        var leakData = await GetLeaksAsync(userId, gameType, cancellationToken);
+        var leakData = await GetLeaksAsync(userId, gameType, stakesLevel, cancellationToken);
         var fingerprint = Fingerprint(stats, leakData, language);
         var stored = await reports.FindAsync<PlayerProfile>(userId, Kind, subject, language, cancellationToken);
         if (stored is not null && stored.Fingerprint == fingerprint)
             return ReportOutcome<PlayerProfile>.Of(View(stored, fingerprint));
 
-        var facts = BuildFacts(stats, leakData, gameType);
+        var facts = BuildFacts(stats, leakData, gameType, stakesLevel);
         var outcome = await guard.RunAsync(
             userId,
             AiTask.PlayerProfile,
@@ -62,16 +63,16 @@ public sealed class PlayerProfileService(
         return ReportOutcome<PlayerProfile>.Of(View(report, fingerprint));
     }
 
-    private async Task<StatisticsReport?> GetStatsAsync(Guid userId, GameType gameType, CancellationToken cancellationToken)
+    private async Task<StatisticsReport?> GetStatsAsync(Guid userId, GameType gameType, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var filter = new StatisticsFilter(From: null, To: null, MinStackBigBlinds: null, MaxStackBigBlinds: null, GameType: gameType);
-        var report = await statistics.GetAsync(userId, filter, cancellationToken);
+        var report = await statistics.GetAsync(userId, filter, stakesLevel, cancellationToken);
         return report.Overall.Hands == 0 ? null : report;
     }
 
-    private async Task<LeakData> GetLeaksAsync(Guid userId, GameType gameType, CancellationToken cancellationToken)
+    private async Task<LeakData> GetLeaksAsync(Guid userId, GameType gameType, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
-        var analysis = await leaks.GetAsync(userId, format: null, from: null, to: null, cancellationToken, gameType: gameType);
+        var analysis = await leaks.GetAsync(userId, format: null, from: null, to: null, stakesLevel, cancellationToken, gameType: gameType);
         return new LeakData(
             analysis.Report.Leaks.Where(l => l.Confidence == LeakConfidence.Confirmed).ToList(),
             analysis.Report.Leaks.Where(l => l.Confidence == LeakConfidence.Possible).ToList());
@@ -79,12 +80,12 @@ public sealed class PlayerProfileService(
 
     internal sealed record LeakData(IReadOnlyList<Leak> Confirmed, IReadOnlyList<Leak> Possible);
 
-    internal static string BuildFacts(StatisticsReport stats, LeakData leakData, GameType gameType)
+    internal static string BuildFacts(StatisticsReport stats, LeakData leakData, GameType gameType, StakesLevel stakesLevel)
     {
         string Pct(decimal? ratio) => ratio is { } r ? (r * 100m).ToString("0.#", CultureInfo.InvariantCulture) + " %" : "N/A";
         string Range(decimal min, decimal max) => $"{Pct(min)}–{Pct(max)}";
         var o = stats.Overall;
-        var refs = gameType == GameType.CashGame ? ReferenceRanges.LowStakesCash : ReferenceRanges.LowStakesMtt;
+        var refs = ReferenceRanges.For(stakesLevel, gameType);
         ReferenceRange? Ref(LeakStat stat) => refs.FirstOrDefault(r => r.Stat == stat && r.Position is null);
 
         var text = new StringBuilder();

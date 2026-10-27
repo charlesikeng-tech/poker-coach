@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -41,7 +42,7 @@ public sealed record LeakCounts(TableFormat Format, HeroStatCounts Overall, IRea
 
 public interface ILeakService
 {
-    Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
+    Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, StakesLevel stakesLevel, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
     Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
 }
 
@@ -64,6 +65,7 @@ public sealed class LeakService(IStatisticsReadStore store) : ILeakService
         TableFormat? format,
         DateTimeOffset? from,
         DateTimeOffset? to,
+        StakesLevel stakesLevel,
         CancellationToken cancellationToken,
         GameType? gameType = null,
         TournamentSubFormat? subFormat = null)
@@ -80,7 +82,7 @@ public sealed class LeakService(IStatisticsReadStore store) : ILeakService
         var (overall, byPosition) = Aggregate(groups, shown);
 
         var isCash = (gameType ?? GameType.Tournament) == GameType.CashGame;
-        var baseRanges = isCash ? ReferenceRanges.LowStakesCash : ReferenceRanges.LowStakesMtt;
+        var baseRanges = ReferenceRanges.For(stakesLevel, isCash ? GameType.CashGame : GameType.Tournament);
         var relevantRanges = baseRanges
             .Where(r => r.Position is null || byPosition.ContainsKey(r.Position.Value))
             .ToList();

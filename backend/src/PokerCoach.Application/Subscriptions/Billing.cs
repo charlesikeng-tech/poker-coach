@@ -159,7 +159,7 @@ public sealed record PlanGrant(Plan Plan, PlanSource Source, DateTimeOffset? Gra
 
 /// <summary>
 /// Which plan a user has and what it opens (ADR-0014 to 0016). Administrators and billing off (development,
-/// tests, self-hosting) have Elite; otherwise the higher of a live Stripe subscription and an active grant.
+/// tests, self-hosting) have Ultimate; otherwise the higher of a live Stripe subscription and an active grant.
 /// </summary>
 public sealed class PlanAccess(
     ISubscriptionStore store,
@@ -180,12 +180,12 @@ public sealed class PlanAccess(
     {
         if (await IsAdminAsync(userId, cancellationToken))
         {
-            return new PlanGrant(Plan.Elite, PlanSource.Admin);
+            return new PlanGrant(Plan.Ultimate, PlanSource.Admin);
         }
 
         if (!gateway.IsConfigured)
         {
-            return new PlanGrant(Plan.Elite, PlanSource.BillingOff);
+            return new PlanGrant(Plan.Ultimate, PlanSource.BillingOff);
         }
 
         // The higher of what is paid and what is given (a Pro subscriber given Elite has Elite).

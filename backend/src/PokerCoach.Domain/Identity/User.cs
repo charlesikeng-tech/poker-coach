@@ -36,6 +36,8 @@ public sealed class User
 
     public UserStatus Status { get; private set; }
 
+    public StakesLevel StakesLevel { get; private set; }
+
     /// <summary>
     /// Rotated on every sign-in. The cookie carries this value; a mismatch means someone else has
     /// signed in since — the session is rejected, which prevents account sharing.
@@ -79,6 +81,16 @@ public sealed class User
     {
         EnsureSupported(language);
         PreferredLanguage = language;
+    }
+
+    public void ChangeStakesLevel(StakesLevel level)
+    {
+        if (!Enum.IsDefined(level))
+        {
+            throw new ArgumentOutOfRangeException(nameof(level), level, "Unknown stakes level.");
+        }
+
+        StakesLevel = level;
     }
 
     private static void EnsureSupported(string language)

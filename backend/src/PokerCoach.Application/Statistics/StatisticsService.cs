@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -160,7 +161,7 @@ public sealed class StatisticsService(IStatisticsReadStore store)
     ];
 
     /// <param name="filter">Without a format, the one the player plays most is used.</param>
-    public async Task<StatisticsReport> GetAsync(Guid userId, StatisticsFilter filter, CancellationToken cancellationToken)
+    public async Task<StatisticsReport> GetAsync(Guid userId, StatisticsFilter filter, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(filter);
         var formats = await store.CountByFormatAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
@@ -177,7 +178,7 @@ public sealed class StatisticsService(IStatisticsReadStore store)
             .ToList();
         var rooms = await store.ListRoomsAsync(userId, filter with { Room = null }, HeroHandFacts.Version, cancellationToken);
         var isCash = (filter.GameType ?? GameType.Tournament) == GameType.CashGame;
-        var references = isCash ? ReferenceRanges.LowStakesCash : ReferenceRanges.LowStakesMtt;
+        var references = ReferenceRanges.For(stakesLevel, isCash ? GameType.CashGame : GameType.Tournament);
         return new StatisticsReport(StatLine.From(overall), byPosition, pending, sample, format, formats, rooms, references);
     }
 
@@ -186,7 +187,7 @@ public sealed class StatisticsService(IStatisticsReadStore store)
 
     /// <param name="filter">Its phase is ignored for the phases (all three are given); without a start, the
     /// trend covers the last <see cref="TrendMonths"/> months.</param>
-    public async Task<StatisticsBreakdowns> GetBreakdownsAsync(Guid userId, StatisticsFilter filter, DateTimeOffset now, CancellationToken cancellationToken)
+    public async Task<StatisticsBreakdowns> GetBreakdownsAsync(Guid userId, StatisticsFilter filter, StakesLevel stakesLevel, DateTimeOffset now, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(filter);
         var format = filter.Format ?? (await store.CountByFormatAsync(userId, filter, HeroHandFacts.Version, cancellationToken)).Busiest;
@@ -211,6 +212,6 @@ public sealed class StatisticsService(IStatisticsReadStore store)
             format,
             phases,
             months.Select(m => new MonthStatLine(m.Month, StatLine.From(m.Counts))).ToList(),
-            isCash ? [] : ReferenceRanges.LowStakesMtt.Where(r => r.Position is null).ToList());
+            isCash ? [] : ReferenceRanges.For(stakesLevel, GameType.Tournament).Where(r => r.Position is null).ToList());
     }
 }

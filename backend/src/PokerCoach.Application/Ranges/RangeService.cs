@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
@@ -110,6 +111,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
         int? pushStack,
         DateTimeOffset? from,
         DateTimeOffset? to,
+        StakesLevel stakesLevel,
         CancellationToken cancellationToken,
         GameType? gameType = null)
     {
@@ -131,7 +133,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
             ? customs.ToDictionary(r => r.Position, r => r.ToHandClassSet())
             : null;
 
-        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stack, customByPosition), callRanges, pending, ReferenceOpeningRanges.Version);
+        return new OpeningRanges(shown, band, stack, spots, Build(shown, band, counts, stakesLevel, stack, customByPosition), callRanges, pending, ReferenceOpeningRanges.Version);
     }
 
     internal static List<PushCallRange> BuildCallRanges(TableFormat format, int stackBb)
@@ -155,7 +157,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
     }
 
     internal static List<PositionRange> Build(
-        TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts, int? pushStack = null,
+        TableFormat format, StackBand band, IEnumerable<OpeningHoldingCount> counts, StakesLevel stakesLevel, int? pushStack = null,
         IReadOnlyDictionary<PokerPosition, IReadOnlySet<HandClass>>? customRanges = null)
     {
         var byPosition = counts
@@ -190,7 +192,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     opens,
                     cells.Sum(c => c.Limps),
                     StatRate.Of(opens, dealt),
-                    ReferenceRanges.LowStakesMtt.FirstOrDefault(
+                    ReferenceRanges.For(stakesLevel, GameType.Tournament).FirstOrDefault(
                         r => r.Stat == LeakStat.Rfi && r.Position == OpeningSeat.FullRingEquivalent(position, format)),
                     isCustom ? null : ReferenceOpeningRanges.NotationFor(band, format, position),
                     reference is null ? null : ReferenceOpeningRanges.ComboShare(reference),
