@@ -17,10 +17,21 @@ public sealed record OpponentStats(
     int Hands,
     int Vpip,
     int Pfr,
+    int RfiOpportunity,
+    int Rfi,
+    int StealOpportunity,
+    int Steal,
     int ThreeBetOpportunity,
     int ThreeBet,
+    int FoldToThreeBetOpportunity,
+    int FoldToThreeBet,
     int SawFlop,
+    int CbetFlopOpportunity,
+    int CbetFlop,
+    int FoldToCbetFlopOpportunity,
+    int FoldToCbetFlop,
     int WentToShowdown,
+    int WonAtShowdown,
     int PostflopAggressive,
     int PostflopDecisions)
 {
@@ -29,9 +40,15 @@ public sealed record OpponentStats(
     public decimal VpipRate => Hands > 0 ? (decimal)Vpip / Hands : 0;
     public decimal PfrRate => Hands > 0 ? (decimal)Pfr / Hands : 0;
     public decimal VpipPfrGap => VpipRate - PfrRate;
+    public decimal? RfiRate => RfiOpportunity > 0 ? (decimal)Rfi / RfiOpportunity : null;
+    public decimal? StealRate => StealOpportunity > 0 ? (decimal)Steal / StealOpportunity : null;
     public decimal ThreeBetRate => ThreeBetOpportunity > 0 ? (decimal)ThreeBet / ThreeBetOpportunity : 0;
+    public decimal? FoldToThreeBetRate => FoldToThreeBetOpportunity > 0 ? (decimal)FoldToThreeBet / FoldToThreeBetOpportunity : null;
+    public decimal? CbetFlopRate => CbetFlopOpportunity > 0 ? (decimal)CbetFlop / CbetFlopOpportunity : null;
+    public decimal? FoldToCbetFlopRate => FoldToCbetFlopOpportunity > 0 ? (decimal)FoldToCbetFlop / FoldToCbetFlopOpportunity : null;
     public decimal AggressionFrequency => PostflopDecisions > 0 ? (decimal)PostflopAggressive / PostflopDecisions : 0;
     public decimal WtsdRate => SawFlop > 0 ? (decimal)WentToShowdown / SawFlop : 0;
+    public decimal? WsdRate => WentToShowdown > 0 ? (decimal)WonAtShowdown / WentToShowdown : null;
 
     /// <summary>
     /// Deterministic classification by thresholds. Order matters: maniac before LAG (superset),

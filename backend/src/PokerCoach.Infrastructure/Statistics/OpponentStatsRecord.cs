@@ -23,17 +23,45 @@ internal sealed class OpponentStatsRecord
 
     public int Pfr { get; set; }
 
+    public int RfiOpportunity { get; set; }
+
+    public int Rfi { get; set; }
+
+    public int StealOpportunity { get; set; }
+
+    public int Steal { get; set; }
+
     public int ThreeBetOpportunity { get; set; }
 
     public int ThreeBet { get; set; }
 
+    public int FoldToThreeBetOpportunity { get; set; }
+
+    public int FoldToThreeBet { get; set; }
+
     public int SawFlop { get; set; }
 
+    public int CbetFlopOpportunity { get; set; }
+
+    public int CbetFlop { get; set; }
+
+    public int FoldToCbetFlopOpportunity { get; set; }
+
+    public int FoldToCbetFlop { get; set; }
+
     public int WentToShowdown { get; set; }
+
+    public int WonAtShowdown { get; set; }
 
     public int PostflopAggressive { get; set; }
 
     public int PostflopDecisions { get; set; }
+
+    public DateTimeOffset FirstSeenAt { get; set; }
+
+    public DateTimeOffset LastSeenAt { get; set; }
+
+    public int DistinctTournaments { get; set; }
 
     public DateTimeOffset UpdatedAt { get; set; }
 }

@@ -502,19 +502,38 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
 
     private const string UpsertOpponentStatsSql = """
         INSERT INTO poker.opponent_stats
-            (id, poker_account_id, opponent_name, hands, vpip, pfr, three_bet_opportunity, three_bet,
-             saw_flop, went_to_showdown, postflop_aggressive, postflop_decisions, updated_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            (id, poker_account_id, opponent_name, hands, vpip, pfr,
+             rfi_opportunity, rfi, steal_opportunity, steal,
+             three_bet_opportunity, three_bet, fold_to_three_bet_opportunity, fold_to_three_bet,
+             saw_flop, cbet_flop_opportunity, cbet_flop, fold_to_cbet_flop_opportunity, fold_to_cbet_flop,
+             went_to_showdown, won_at_showdown, postflop_aggressive, postflop_decisions,
+             first_seen_at, last_seen_at, distinct_tournaments, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
+                $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
         ON CONFLICT (poker_account_id, opponent_name) DO UPDATE SET
             hands = poker.opponent_stats.hands + excluded.hands,
             vpip = poker.opponent_stats.vpip + excluded.vpip,
             pfr = poker.opponent_stats.pfr + excluded.pfr,
+            rfi_opportunity = poker.opponent_stats.rfi_opportunity + excluded.rfi_opportunity,
+            rfi = poker.opponent_stats.rfi + excluded.rfi,
+            steal_opportunity = poker.opponent_stats.steal_opportunity + excluded.steal_opportunity,
+            steal = poker.opponent_stats.steal + excluded.steal,
             three_bet_opportunity = poker.opponent_stats.three_bet_opportunity + excluded.three_bet_opportunity,
             three_bet = poker.opponent_stats.three_bet + excluded.three_bet,
+            fold_to_three_bet_opportunity = poker.opponent_stats.fold_to_three_bet_opportunity + excluded.fold_to_three_bet_opportunity,
+            fold_to_three_bet = poker.opponent_stats.fold_to_three_bet + excluded.fold_to_three_bet,
             saw_flop = poker.opponent_stats.saw_flop + excluded.saw_flop,
+            cbet_flop_opportunity = poker.opponent_stats.cbet_flop_opportunity + excluded.cbet_flop_opportunity,
+            cbet_flop = poker.opponent_stats.cbet_flop + excluded.cbet_flop,
+            fold_to_cbet_flop_opportunity = poker.opponent_stats.fold_to_cbet_flop_opportunity + excluded.fold_to_cbet_flop_opportunity,
+            fold_to_cbet_flop = poker.opponent_stats.fold_to_cbet_flop + excluded.fold_to_cbet_flop,
             went_to_showdown = poker.opponent_stats.went_to_showdown + excluded.went_to_showdown,
+            won_at_showdown = poker.opponent_stats.won_at_showdown + excluded.won_at_showdown,
             postflop_aggressive = poker.opponent_stats.postflop_aggressive + excluded.postflop_aggressive,
             postflop_decisions = poker.opponent_stats.postflop_decisions + excluded.postflop_decisions,
+            first_seen_at = LEAST(poker.opponent_stats.first_seen_at, excluded.first_seen_at),
+            last_seen_at = GREATEST(poker.opponent_stats.last_seen_at, excluded.last_seen_at),
+            distinct_tournaments = poker.opponent_stats.distinct_tournaments + excluded.distinct_tournaments,
             updated_at = excluded.updated_at
         """;
 
@@ -547,12 +566,26 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Hands });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Vpip });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Pfr });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.RfiOpportunity });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Rfi });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.StealOpportunity });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Steal });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.ThreeBetOpportunity });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.ThreeBet });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.FoldToThreeBetOpportunity });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.FoldToThreeBet });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.SawFlop });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.CbetFlopOpportunity });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.CbetFlop });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.FoldToCbetFlopOpportunity });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.FoldToCbetFlop });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.WentToShowdown });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.WonAtShowdown });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.PostflopAggressive });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.PostflopDecisions });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = s.HandStartedAt });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = s.HandStartedAt });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.TournamentExternalId is not null ? 1 : 0 });
                 cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = now });
                 batch.BatchCommands.Add(cmd);
             }

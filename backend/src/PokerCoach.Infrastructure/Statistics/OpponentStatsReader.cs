@@ -47,8 +47,14 @@ internal sealed class OpponentStatsReader(PokerCoachDbContext db) : IOpponentSta
             r => r.OpponentName,
             r => new OpponentStats(
                 r.Hands, r.Vpip, r.Pfr,
+                r.RfiOpportunity, r.Rfi,
+                r.StealOpportunity, r.Steal,
                 r.ThreeBetOpportunity, r.ThreeBet,
-                r.SawFlop, r.WentToShowdown,
+                r.FoldToThreeBetOpportunity, r.FoldToThreeBet,
+                r.SawFlop,
+                r.CbetFlopOpportunity, r.CbetFlop,
+                r.FoldToCbetFlopOpportunity, r.FoldToCbetFlop,
+                r.WentToShowdown, r.WonAtShowdown,
                 r.PostflopAggressive, r.PostflopDecisions),
             StringComparer.Ordinal);
 }

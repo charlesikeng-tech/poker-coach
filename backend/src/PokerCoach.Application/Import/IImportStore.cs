@@ -57,12 +57,25 @@ public sealed record OpponentStatsToUpsert(
     int Hands,
     int Vpip,
     int Pfr,
+    int RfiOpportunity,
+    int Rfi,
+    int StealOpportunity,
+    int Steal,
     int ThreeBetOpportunity,
     int ThreeBet,
+    int FoldToThreeBetOpportunity,
+    int FoldToThreeBet,
     int SawFlop,
+    int CbetFlopOpportunity,
+    int CbetFlop,
+    int FoldToCbetFlopOpportunity,
+    int FoldToCbetFlop,
     int WentToShowdown,
+    int WonAtShowdown,
     int PostflopAggressive,
-    int PostflopDecisions);
+    int PostflopDecisions,
+    DateTimeOffset HandStartedAt,
+    string? TournamentExternalId);
 
 /// <param name="ContentSha256">Lowercase hex SHA-256 of <paramref name="Content"/>: the file deduplication key.</param>
 public sealed record FileToImport(string FileName, byte[] Content, string ContentSha256);

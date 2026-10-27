@@ -162,7 +162,7 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
 
     private static List<OpponentStatsToUpsert> AggregateOpponentFacts(IReadOnlyList<HandToInsert> hands)
     {
-        var agg = new Dictionary<(Guid, string), (int Hands, int Vpip, int Pfr, int ThreeBetOpp, int ThreeBet, int SawFlop, int Wtsd, int Aggressive, int Decisions)>();
+        var agg = new Dictionary<(Guid, string), OpponentAgg>();
 
         foreach (var item in hands)
         {
@@ -173,32 +173,67 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             foreach (var (opponent, f) in facts)
             {
                 var key = (item.PokerAccountId, opponent);
-                var prev = agg.GetValueOrDefault(key);
-                agg[key] = (
-                    prev.Hands + 1,
-                    prev.Vpip + (f.Vpip ? 1 : 0),
-                    prev.Pfr + (f.Pfr ? 1 : 0),
-                    prev.ThreeBetOpp + (f.ThreeBetOpportunity ? 1 : 0),
-                    prev.ThreeBet + (f.ThreeBet ? 1 : 0),
-                    prev.SawFlop + (f.SawFlop ? 1 : 0),
-                    prev.Wtsd + (f.WentToShowdown ? 1 : 0),
-                    prev.Aggressive + f.PostflopAggressive,
-                    prev.Decisions + f.PostflopDecisions);
+                if (!agg.TryGetValue(key, out var a))
+                {
+                    a = new OpponentAgg();
+                    agg[key] = a;
+                }
+
+                a.Hands++;
+                a.Vpip += f.Vpip ? 1 : 0;
+                a.Pfr += f.Pfr ? 1 : 0;
+                a.RfiOpp += f.RfiOpportunity ? 1 : 0;
+                a.Rfi += f.Rfi ? 1 : 0;
+                a.StealOpp += f.StealOpportunity ? 1 : 0;
+                a.Steal += f.Steal ? 1 : 0;
+                a.ThreeBetOpp += f.ThreeBetOpportunity ? 1 : 0;
+                a.ThreeBet += f.ThreeBet ? 1 : 0;
+                a.FoldToThreeBetOpp += f.FoldToThreeBetOpportunity ? 1 : 0;
+                a.FoldToThreeBet += f.FoldToThreeBet ? 1 : 0;
+                a.SawFlop += f.SawFlop ? 1 : 0;
+                a.CbetFlopOpp += f.CbetFlopOpportunity ? 1 : 0;
+                a.CbetFlop += f.CbetFlop ? 1 : 0;
+                a.FoldToCbetOpp += f.FoldToCbetFlopOpportunity ? 1 : 0;
+                a.FoldToCbet += f.FoldToCbetFlop ? 1 : 0;
+                a.Wtsd += f.WentToShowdown ? 1 : 0;
+                a.Wsd += f.WonAtShowdown ? 1 : 0;
+                a.Aggressive += f.PostflopAggressive;
+                a.Decisions += f.PostflopDecisions;
+
+                var startedAt = item.Hand.StartedAt;
+                if (a.FirstSeen == DateTimeOffset.MinValue || startedAt < a.FirstSeen)
+                    a.FirstSeen = startedAt;
+                if (startedAt > a.LastSeen)
+                    a.LastSeen = startedAt;
+                if (item.Hand.ExternalTournamentId is not null)
+                    a.Tournaments.Add(item.Hand.ExternalTournamentId);
             }
         }
 
         return agg.Select(kv => new OpponentStatsToUpsert(
-            kv.Key.Item1,
-            kv.Key.Item2,
-            kv.Value.Hands,
-            kv.Value.Vpip,
-            kv.Value.Pfr,
-            kv.Value.ThreeBetOpp,
-            kv.Value.ThreeBet,
+            kv.Key.Item1, kv.Key.Item2,
+            kv.Value.Hands, kv.Value.Vpip, kv.Value.Pfr,
+            kv.Value.RfiOpp, kv.Value.Rfi,
+            kv.Value.StealOpp, kv.Value.Steal,
+            kv.Value.ThreeBetOpp, kv.Value.ThreeBet,
+            kv.Value.FoldToThreeBetOpp, kv.Value.FoldToThreeBet,
             kv.Value.SawFlop,
-            kv.Value.Wtsd,
-            kv.Value.Aggressive,
-            kv.Value.Decisions)).ToList();
+            kv.Value.CbetFlopOpp, kv.Value.CbetFlop,
+            kv.Value.FoldToCbetOpp, kv.Value.FoldToCbet,
+            kv.Value.Wtsd, kv.Value.Wsd,
+            kv.Value.Aggressive, kv.Value.Decisions,
+            kv.Value.FirstSeen, null)).ToList();
+    }
+
+    private sealed class OpponentAgg
+    {
+        public int Hands, Vpip, Pfr;
+        public int RfiOpp, Rfi, StealOpp, Steal;
+        public int ThreeBetOpp, ThreeBet, FoldToThreeBetOpp, FoldToThreeBet;
+        public int SawFlop, CbetFlopOpp, CbetFlop, FoldToCbetOpp, FoldToCbet;
+        public int Wtsd, Wsd, Aggressive, Decisions;
+        public DateTimeOffset FirstSeen, LastSeen;
+        public HashSet<string> Tournaments = new(StringComparer.Ordinal);
     }
 
     private static FileOutcome Failed(string code, ImportFileKind? kind = null, IReadOnlyList<ParseError>? rejections = null) =>

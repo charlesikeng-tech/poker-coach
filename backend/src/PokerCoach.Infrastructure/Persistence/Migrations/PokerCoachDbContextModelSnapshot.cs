@@ -1601,9 +1601,45 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<int>("CbetFlop")
+                        .HasColumnType("integer")
+                        .HasColumnName("cbet_flop");
+
+                    b.Property<int>("CbetFlopOpportunity")
+                        .HasColumnType("integer")
+                        .HasColumnName("cbet_flop_opportunity");
+
+                    b.Property<int>("DistinctTournaments")
+                        .HasColumnType("integer")
+                        .HasColumnName("distinct_tournaments");
+
+                    b.Property<DateTimeOffset>("FirstSeenAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("first_seen_at");
+
+                    b.Property<int>("FoldToCbetFlop")
+                        .HasColumnType("integer")
+                        .HasColumnName("fold_to_cbet_flop");
+
+                    b.Property<int>("FoldToCbetFlopOpportunity")
+                        .HasColumnType("integer")
+                        .HasColumnName("fold_to_cbet_flop_opportunity");
+
+                    b.Property<int>("FoldToThreeBet")
+                        .HasColumnType("integer")
+                        .HasColumnName("fold_to_three_bet");
+
+                    b.Property<int>("FoldToThreeBetOpportunity")
+                        .HasColumnType("integer")
+                        .HasColumnName("fold_to_three_bet_opportunity");
+
                     b.Property<int>("Hands")
                         .HasColumnType("integer")
                         .HasColumnName("hands");
+
+                    b.Property<DateTimeOffset>("LastSeenAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_seen_at");
 
                     b.Property<string>("OpponentName")
                         .IsRequired()
@@ -1627,9 +1663,25 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("postflop_decisions");
 
+                    b.Property<int>("Rfi")
+                        .HasColumnType("integer")
+                        .HasColumnName("rfi");
+
+                    b.Property<int>("RfiOpportunity")
+                        .HasColumnType("integer")
+                        .HasColumnName("rfi_opportunity");
+
                     b.Property<int>("SawFlop")
                         .HasColumnType("integer")
                         .HasColumnName("saw_flop");
+
+                    b.Property<int>("Steal")
+                        .HasColumnType("integer")
+                        .HasColumnName("steal");
+
+                    b.Property<int>("StealOpportunity")
+                        .HasColumnType("integer")
+                        .HasColumnName("steal_opportunity");
 
                     b.Property<int>("ThreeBet")
                         .HasColumnType("integer")
@@ -1650,6 +1702,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.Property<int>("WentToShowdown")
                         .HasColumnType("integer")
                         .HasColumnName("went_to_showdown");
+
+                    b.Property<int>("WonAtShowdown")
+                        .HasColumnType("integer")
+                        .HasColumnName("won_at_showdown");
 
                     b.HasKey("Id")
                         .HasName("pk_opponent_stats");
