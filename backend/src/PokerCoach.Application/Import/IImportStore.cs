@@ -42,8 +42,8 @@ public interface IImportStore
 
     Task UpsertTournamentSummaryAsync(Guid pokerAccountId, ParsedTournamentSummary summary, CancellationToken cancellationToken);
 
-    /// <returns>Number of hands newly inserted; duplicates are silently skipped.</returns>
-    Task<int> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken);
+    /// <returns>The set of <see cref="ParsedHand.ExternalHandId"/> values actually inserted; duplicates are silently skipped.</returns>
+    Task<IReadOnlySet<string>> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken);
 
     /// <summary>Upserts opponent stats: additive counters merged with <c>ON CONFLICT DO UPDATE</c>.</summary>
     Task UpsertOpponentStatsAsync(IReadOnlyList<OpponentStatsToUpsert> stats, CancellationToken cancellationToken);

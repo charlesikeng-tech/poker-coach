@@ -436,11 +436,12 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
              big_blind, ante, table_name, max_seats, button_seat, hero_seat, hero_stack, hero_cards, total_pot, rake, stakes, details, created_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
         ON CONFLICT (poker_account_id, external_hand_id) DO NOTHING
+        RETURNING external_hand_id
         """;
 
-    public async Task<int> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken)
+    public async Task<IReadOnlySet<string>> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken)
     {
-        if (hands.Count == 0) return 0;
+        if (hands.Count == 0) return new HashSet<string>();
 
         var connection = (NpgsqlConnection)db.Database.GetDbConnection();
         if (connection.State != System.Data.ConnectionState.Open)
@@ -449,9 +450,8 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         }
 
         var now = time.GetUtcNow();
-        var totalInserted = 0;
+        var inserted = new HashSet<string>(StringComparer.Ordinal);
 
-        // Process in chunks to keep batch message size bounded (~500 hands each).
         const int ChunkSize = 500;
         for (var offset = 0; offset < hands.Count; offset += ChunkSize)
         {
@@ -489,10 +489,15 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
                 batch.BatchCommands.Add(cmd);
             }
 
-            totalInserted += await batch.ExecuteNonQueryAsync(cancellationToken);
+            await using var reader = await batch.ExecuteReaderAsync(cancellationToken);
+            do
+            {
+                while (await reader.ReadAsync(cancellationToken))
+                    inserted.Add(reader.GetString(0));
+            } while (await reader.NextResultAsync(cancellationToken));
         }
 
-        return totalInserted;
+        return inserted;
     }
 
     private const string UpsertOpponentStatsSql = """

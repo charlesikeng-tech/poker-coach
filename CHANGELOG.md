@@ -8,6 +8,7 @@
 - **opponents**: Display opponent profiles in the hand replayer
 - **opponents**: Add ExploitAdjustment domain rules per player type
 - **opponents**: Add ExploitDrill quiz for opponent type recognition and adjustments
+- **opponents**: Enrich AI coaching prompts with opponent type labels
 
 ## [2026.10.27-46565b2] — 2026-10-27
 

@@ -138,12 +138,13 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             return Failed(ImportErrorCodes.NoValidHand, ImportFileKind.HandHistory, rejections);
         }
 
-        var imported = await store.BulkInsertHandsAsync(handsToInsert, cancellationToken);
-        var alreadyPresent = handsToInsert.Count - imported;
+        var insertedIds = await store.BulkInsertHandsAsync(handsToInsert, cancellationToken);
+        var alreadyPresent = handsToInsert.Count - insertedIds.Count;
 
-        if (imported > 0)
+        if (insertedIds.Count > 0)
         {
-            var opponentStats = AggregateOpponentFacts(handsToInsert);
+            var newHands = handsToInsert.Where(h => insertedIds.Contains(h.Hand.ExternalHandId)).ToList();
+            var opponentStats = AggregateOpponentFacts(newHands);
             if (opponentStats.Count > 0)
                 await store.UpsertOpponentStatsAsync(opponentStats, cancellationToken);
         }
@@ -153,7 +154,7 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             ImportFileKind.HandHistory,
             null,
             firstAccountId,
-            imported,
+            insertedIds.Count,
             alreadyPresent,
             rejections.Count,
             Cap(rejections));
