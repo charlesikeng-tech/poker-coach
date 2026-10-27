@@ -120,6 +120,7 @@ builder.Services.AddScoped<BankrollService>();
 builder.Services.AddScoped<ProgressService>();
 builder.Services.AddScoped<PerformanceService>();
 builder.Services.AddScoped<HandFactsBackfill>();
+builder.Services.AddScoped<OpponentStatsBackfill>();
 builder.Services.AddScoped<CoverageBackfill>();
 builder.Services.AddScoped<StatisticsService>();
 builder.Services.AddScoped<AllInLuckService>();

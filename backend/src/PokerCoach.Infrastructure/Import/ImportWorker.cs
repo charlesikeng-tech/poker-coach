@@ -52,7 +52,11 @@ internal sealed partial class ImportWorker(
                     factsComputed = await scope.ServiceProvider.GetRequiredService<HandFactsBackfill>().ProcessBatchAsync(stoppingToken);
                     if (factsComputed == 0)
                     {
-                        // Coverage needs every hand's facts: it runs once facts are up to date.
+                        factsComputed = await scope.ServiceProvider.GetRequiredService<OpponentStatsBackfill>().ProcessBatchAsync(stoppingToken);
+                    }
+
+                    if (factsComputed == 0)
+                    {
                         factsComputed = await scope.ServiceProvider.GetRequiredService<CoverageBackfill>()
                             .ProcessBatchAsync(HeroHandFacts.Version, stoppingToken);
                     }

@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **opponents**: Add RFI, steal, fold-to-3bet, c-bet, fold-to-cbet, W$SD stats
+
 ## [2026.10.27-39a76c9] — 2026-10-27
 
 ### Correctifs
