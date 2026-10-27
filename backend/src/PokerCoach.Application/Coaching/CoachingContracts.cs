@@ -92,6 +92,13 @@ public sealed record StrategyPlanBand(string Band, string Approach, string Ratio
 /// <summary>The model's strategy plan, after schema validation.</summary>
 public sealed record StrategyPlanAdvice(string Headline, string Overview, IReadOnlyList<StrategyPlanBand> Bands, string Progression, IReadOnlyList<string> KeyFocus);
 
+/// <summary>What the model is asked for the player profile. No player name or id.</summary>
+public sealed record PlayerProfilePrompt(string Language, string Facts, GameType GameType = GameType.Tournament);
+
+/// <summary>The model's player profile classification, after schema validation.</summary>
+/// <param name="Archetype">One of: nit, tag, lag, calling_station, maniac, shark.</param>
+public sealed record PlayerProfile(string Archetype, string Title, string Description, IReadOnlyList<string> Strengths, IReadOnlyList<string> Weaknesses, string Advice);
+
 /// <summary>Port to the language model (Infrastructure adapter per provider).</summary>
 public interface ICoachingModel
 {
@@ -127,6 +134,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<StrategyPlanAdvice>> AdviseStrategyPlanAsync(StrategyPlanPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<PlayerProfile>> ProfilePlayerAsync(PlayerProfilePrompt prompt, CancellationToken cancellationToken);
 }
 
 /// <summary>The provider failed or answered outside the schema.</summary>

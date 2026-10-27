@@ -14,6 +14,7 @@ public enum AiTask
     MonthlyReport,
     TournamentSelection,
     StrategyPlan,
+    PlayerProfile,
 }
 
 public static class AiTasks
@@ -28,6 +29,7 @@ public static class AiTasks
         AiTask.MonthlyReport => "monthly-report",
         AiTask.TournamentSelection => "tournament-selection",
         AiTask.StrategyPlan => "strategy-plan",
+        AiTask.PlayerProfile => "player-profile",
         _ => "leak-explanation",
     };
 
@@ -41,6 +43,7 @@ public static class AiTasks
         AiTask.BankrollCoach => 1,
         AiTask.TournamentSelection => 2,
         AiTask.StrategyPlan => 3,
+        AiTask.PlayerProfile => 1,
         _ => 1,
     };
 

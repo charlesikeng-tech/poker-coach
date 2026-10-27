@@ -1,0 +1,95 @@
+<ng-container *transloco="let t; prefix: 'coach.playerProfile'">
+  <section class="profile-panel glass" aria-live="polite" [attr.aria-busy]="writing()">
+    @switch (state().kind) {
+      @case ('loading') {
+        <div class="profile-skeleton">
+          <span class="skeleton"></span>
+        </div>
+      }
+      @case ('analyzing') {
+        <div class="analyzing">
+          <div class="scan-ring">
+            <span class="scan-icon">🔍</span>
+          </div>
+          <p class="analyzing-text">{{ t('analyzing') }}</p>
+          <div class="scan-bars">
+            @for (i of [1, 2, 3, 4, 5]; track i) {
+              <span class="bar" [style.animation-delay]="i * 120 + 'ms'"></span>
+            }
+          </div>
+        </div>
+      }
+      @case ('ready') {
+        @let p = $any(state()).profile;
+        <div class="reveal">
+          <div class="avatar-wrap">
+            <span class="avatar">{{ avatar(p.archetype) }}</span>
+          </div>
+          <h3 class="archetype-title">{{ p.title }}</h3>
+          <span class="archetype-badge">{{ t('archetypes.' + p.archetype) }}</span>
+          <p class="description">{{ p.description }}</p>
+
+          <div class="columns">
+            <div>
+              <h4>{{ t('strengths') }}</h4>
+              <ul class="list strengths">
+                @for (s of p.strengths; track $index) {
+                  <li>{{ s }}</li>
+                }
+              </ul>
+            </div>
+            <div>
+              <h4>{{ t('weaknesses') }}</h4>
+              <ul class="list weaknesses">
+                @for (w of p.weaknesses; track $index) {
+                  <li>{{ w }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+
+          <div class="advice-card glass">
+            <h4>{{ t('adviceTitle') }}</h4>
+            <p>{{ p.advice }}</p>
+          </div>
+
+          @if (p.stale) {
+            <p class="stale">
+              <span>{{ t('stale') }}</span>
+              <button appButton variant="ghost" [disabled]="writing()" (click)="analyze()">
+                <app-icon [icon]="icons.RefreshCw" [class.spin]="writing()" />{{ t('update') }}
+              </button>
+            </p>
+          }
+
+          <p class="disclaimer">{{ t('disclaimer', { date: date(p.createdAt) }) }}</p>
+        </div>
+      }
+      @default {
+        <div class="idle">
+          <span class="idle-icon">🎭</span>
+          <h3>{{ t('title') }}</h3>
+          <p class="intro">
+            {{ state().kind === 'failed' ? t('loadFailed') : t('intro') }}
+          </p>
+          <button appButton variant="secondary" [disabled]="writing()" (click)="analyze()">
+            <app-icon
+              [class.spin]="writing()"
+              [icon]="writing() ? icons.LoaderCircle : icons.Sparkles"
+            />
+            {{ t('action') }}
+          </button>
+        </div>
+      }
+    }
+
+    @if (writeError(); as code) {
+      <p class="coach-error" role="alert">
+        {{ t('errors.' + code) }}
+        @if (code === 'PLAN_REQUIRED') {
+          <a routerLink="/subscription">{{ t('upgrade') }}</a>
+        }
+      </p>
+    }
+  </section>
+</ng-container>

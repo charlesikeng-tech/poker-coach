@@ -159,6 +159,19 @@ public sealed record MonthlyReportResponse(
     string Model,
     DateTimeOffset CreatedAt);
 
+public sealed record GeneratePlayerProfileRequest(string? Language, string? GameType);
+
+public sealed record PlayerProfileResponse(
+    string Archetype,
+    string Title,
+    string Description,
+    IReadOnlyList<string> Strengths,
+    IReadOnlyList<string> Weaknesses,
+    string Advice,
+    bool Stale,
+    string Model,
+    DateTimeOffset CreatedAt);
+
 /// <summary>
 /// The coach's reports (ADR-0012): tournament debrief and weekly review. GET reads the stored report for
 /// free; POST writes it (a paid model call) unless the stored one is still up to date.
@@ -184,6 +197,9 @@ public static class CoachingEndpoints
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         endpoints.MapGet("/api/coaching/strategy-plan", GetStrategyPlanAsync).WithTags("Coaching");
         endpoints.MapPost("/api/coaching/strategy-plan", GenerateStrategyPlanAsync).WithTags("Coaching")
+            .AddEndpointFilter<AntiforgeryValidationFilter>();
+        endpoints.MapGet("/api/statistics/profile", GetPlayerProfileAsync).WithTags("Coaching");
+        endpoints.MapPost("/api/statistics/profile", GeneratePlayerProfileAsync).WithTags("Coaching")
             .AddEndpointFilter<AntiforgeryValidationFilter>();
         return endpoints;
     }
@@ -544,6 +560,69 @@ public static class CoachingEndpoints
             view.Stale,
             view.Model,
             view.CreatedAt);
+    }
+
+    private static async Task<Results<Ok<PlayerProfileResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetPlayerProfileAsync(
+        string? language,
+        string? gameType,
+        HttpContext context,
+        PlayerProfileService profileService,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!GameTypeQuery.TryParse(gameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var view = await profileService.GetAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        return view is null
+            ? ApiProblems.WithCode(StatusCodes.Status404NotFound, "PLAYER_PROFILE_NOT_FOUND", "No player profile written yet.")
+            : TypedResults.Ok(ToProfileResponse(view));
+    }
+
+    private static async Task<Results<Ok<PlayerProfileResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GeneratePlayerProfileAsync(
+        GeneratePlayerProfileRequest? request,
+        HttpContext context,
+        PlayerProfileService profileService,
+        UserProfileService profiles,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        if (!GameTypeQuery.TryParse(request?.GameType, out var parsedGameType))
+        {
+            return ApiProblems.Validation("gameType", "Must be tournament or cashGame.");
+        }
+
+        var (answerLanguage, problem) = await LanguageAsync(request?.Language, userId, profiles, cancellationToken);
+        if (problem is not null)
+        {
+            return problem;
+        }
+
+        var outcome = await profileService.GenerateAsync(userId, parsedGameType ?? GameType.Tournament, answerLanguage!, cancellationToken);
+        return outcome.View is { } view ? TypedResults.Ok(ToProfileResponse(view)) : Problem(outcome.Failure!.Value, "NO_STATISTICS");
+    }
+
+    private static PlayerProfileResponse ToProfileResponse(ReportView<PlayerProfile> view)
+    {
+        var p = view.Report;
+        return new PlayerProfileResponse(p.Archetype, p.Title, p.Description, p.Strengths, p.Weaknesses, p.Advice, view.Stale, view.Model, view.CreatedAt);
     }
 
     private static TournamentSelectionResponse ToSelectionResponse(ReportView<TournamentSelectionAdvice> view)

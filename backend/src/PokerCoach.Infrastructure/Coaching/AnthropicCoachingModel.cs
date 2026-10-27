@@ -654,6 +654,61 @@ internal sealed partial class AnthropicCoachingModel(
 
     private const int StrategyPlanMaxOutputTokens = 2_500;
 
+    private const string PlayerProfileBody = """
+        You receive a player's overall statistics and the reference ranges used by the software for
+        a solid regular at these stakes. The reference ranges are the source of truth for what
+        "balanced" or "in range" means — use them, not your own thresholds.
+
+        Your task is to classify the player into exactly one archetype among: nit, tag, lag,
+        calling_station, maniac, shark. Choose the closest match.
+
+        Archetype definitions (compare the player's stats to the reference ranges given):
+        - nit: VPIP well below the reference range low end, very few hands played, ultra-tight.
+        - tag (tight-aggressive): VPIP in or slightly below the reference range, PFR close to VPIP
+          (gap within the VPIP-PFR gap range), 3-bet within range. Selective but aggressive.
+        - lag (loose-aggressive): VPIP above the reference range high end, PFR still close to VPIP,
+          3-bet above range, high postflop aggression above range.
+        - calling_station: VPIP above the reference range, large VPIP–PFR gap (well above the gap
+          range), postflop aggression below range, limp rate above range.
+        - maniac: VPIP far above the reference range, very high PFR, aggression far above range.
+        - shark: most statistics within the reference ranges, solid postflop play, limp within range.
+
+        Rules:
+        - Use only the figures given. Never compute, estimate or invent a statistic or a percentage.
+        - Compare the player's stats to the reference ranges provided in the data. Cite the
+          reference range when explaining why a stat is too high, too low, or balanced.
+        - title: a fun, memorable title for the archetype (2–5 words), in the requested language.
+        - description: two or three sentences describing what this profile means for the player, with the
+          key stats that drove the classification and how they compare to the reference ranges.
+        - strengths: two or three things the player does well, tied to their stats.
+        - weaknesses: two or three things the player should improve, tied to their stats.
+        - advice: two or three sentences of concrete, actionable advice for this archetype to move toward
+          a more balanced, winning style.
+
+        """;
+
+    private const string PlayerProfileInstructions = MttContext + PlayerProfileBody + Voice;
+
+    private const string CashPlayerProfileInstructions = CashContext + PlayerProfileBody + Voice;
+
+    private static readonly JsonObject PlayerProfileSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("archetype", "title", "description", "strengths", "weaknesses", "advice"),
+        ["properties"] = new JsonObject
+        {
+            ["archetype"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("nit", "tag", "lag", "calling_station", "maniac", "shark") },
+            ["title"] = Text.DeepClone(),
+            ["description"] = Text.DeepClone(),
+            ["strengths"] = Texts.DeepClone(),
+            ["weaknesses"] = Texts.DeepClone(),
+            ["advice"] = Text.DeepClone(),
+        },
+    };
+
+    private const int PlayerProfileMaxOutputTokens = 1_000;
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
@@ -699,6 +754,7 @@ internal sealed partial class AnthropicCoachingModel(
             AiTask.BankrollCoach => BankrollCoachMaxOutputTokens,
             AiTask.TournamentSelection => TournamentSelectionMaxOutputTokens,
             AiTask.StrategyPlan => StrategyPlanMaxOutputTokens,
+            AiTask.PlayerProfile => PlayerProfileMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
     }
@@ -747,6 +803,11 @@ internal sealed partial class AnthropicCoachingModel(
         LoggedAsync(
             prompt.GameType == GameType.CashGame ? "cash-strategy-plan" : "strategy-plan",
             () => StrategyPlanCoreAsync(prompt, ModelFor(AiTask.StrategyPlan), cancellationToken));
+
+    public Task<ModelAnswer<PlayerProfile>> ProfilePlayerAsync(PlayerProfilePrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync(
+            prompt.GameType == GameType.CashGame ? "cash-player-profile" : "player-profile",
+            () => PlayerProfileCoreAsync(prompt, ModelFor(AiTask.PlayerProfile), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -1205,6 +1266,30 @@ internal sealed partial class AnthropicCoachingModel(
                 bands,
                 answer.Progression?.Trim() ?? string.Empty,
                 Clean(answer.KeyFocus, 3)),
+            usage);
+    }
+
+    private sealed record PlayerProfileAnswer(string? Archetype, string? Title, string? Description, IReadOnlyList<string>? Strengths, IReadOnlyList<string>? Weaknesses, string? Advice);
+
+    private async Task<ModelAnswer<PlayerProfile>> PlayerProfileCoreAsync(PlayerProfilePrompt prompt, string model, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var instructions = prompt.GameType == GameType.CashGame ? CashPlayerProfileInstructions : PlayerProfileInstructions;
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
+        var (answer, usage) = await CallAsync<PlayerProfileAnswer>(instructions, PlayerProfileSchema, user, MaxOutputTokensFor(AiTask.PlayerProfile), Reasoning.Writing, cancellationToken, model: model);
+        if (string.IsNullOrWhiteSpace(answer.Archetype) || string.IsNullOrWhiteSpace(answer.Title) || string.IsNullOrWhiteSpace(answer.Description))
+        {
+            throw new CoachingModelException("The model answer misses required fields.", usage);
+        }
+
+        return new ModelAnswer<PlayerProfile>(
+            new PlayerProfile(
+                answer.Archetype.Trim(),
+                answer.Title.Trim(),
+                answer.Description.Trim(),
+                Clean(answer.Strengths, 3),
+                Clean(answer.Weaknesses, 3),
+                answer.Advice?.Trim() ?? string.Empty),
             usage);
     }
 }

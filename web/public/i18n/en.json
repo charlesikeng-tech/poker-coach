@@ -2773,6 +2773,39 @@
         "from20To50": "€20 to €50",
         "over50": "Over €50"
       }
+    },
+    "playerProfile": {
+      "title": "What player am I?",
+      "intro": "AI analyzes your stats and leaks to determine your player archetype: NIT, TAG, LAG, Calling Station, Maniac or Shark.",
+      "action": "Detect my profile",
+      "analyzing": "Analyzing your profile…",
+      "stale": "Your stats have changed since this analysis.",
+      "update": "Update",
+      "loadFailed": "Could not load your profile.",
+      "strengths": "Strengths",
+      "weaknesses": "Weaknesses",
+      "adviceTitle": "Coach's advice",
+      "disclaimer": "AI analysis from {{date}} based on your statistics and leaks.",
+      "archetypes": {
+        "nit": "NIT",
+        "tag": "TAG",
+        "lag": "LAG",
+        "calling_station": "Calling Station",
+        "maniac": "Maniac",
+        "shark": "Shark"
+      },
+      "errors": {
+        "NOT_ENOUGH_HANDS": "At least 200 hands are needed to detect your profile.",
+        "COACHING_DAILY_LIMIT": "Daily limit reached. Try again tomorrow.",
+        "COACHING_BUDGET_EXHAUSTED": "The coach is paused until next month.",
+        "COACHING_UNAVAILABLE": "The AI coach is not configured.",
+        "COACHING_FAILED": "Analysis could not complete. Try again.",
+        "PLAN_REQUIRED": "This feature is included in Pro.",
+        "PLAN_LIMIT_REACHED": "Your monthly AI credits are used up.",
+        "network": "Connection failed. Check your network.",
+        "unknown": "An unexpected error occurred."
+      },
+      "upgrade": "Go Pro"
     }
   },
   "planLock": {

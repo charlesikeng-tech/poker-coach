@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.26-9ebfd5f] — 2026-10-26
+
+### Fonctionnalités
+
+- **statistics**: Add stat popover with reference ranges and leak diagnosis
+
 ## [2026.10.26-986cacc] — 2026-10-26
 
 ### Fonctionnalités

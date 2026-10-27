@@ -140,6 +140,20 @@ export interface StrategyPlan {
   readonly createdAt: string;
 }
 
+export type PlayerArchetype = 'nit' | 'tag' | 'lag' | 'calling_station' | 'maniac' | 'shark';
+
+export interface PlayerProfile {
+  readonly archetype: PlayerArchetype;
+  readonly title: string;
+  readonly description: string;
+  readonly strengths: readonly string[];
+  readonly weaknesses: readonly string[];
+  readonly advice: string;
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 /** Error codes the coach panels explain; anything else is shown as a generic failure. */
 const COACH_ERRORS = new Set([
   'HANDS_PENDING',
@@ -181,7 +195,8 @@ export function notWrittenYet(error: unknown): boolean {
     code === 'CASH_DEBRIEF_NOT_FOUND' ||
     code === 'MONTHLY_REPORT_NOT_FOUND' ||
     code === 'TOURNAMENT_SELECTION_NOT_FOUND' ||
-    code === 'STRATEGY_PLAN_NOT_FOUND'
+    code === 'STRATEGY_PLAN_NOT_FOUND' ||
+    code === 'PLAYER_PROFILE_NOT_FOUND'
   );
 }
 
@@ -278,6 +293,23 @@ export class CoachingApi {
   writeStrategyPlan(language: string, gameType: GameType = 'tournament'): Promise<StrategyPlan> {
     return firstValueFrom(
       this.http.post<StrategyPlan>('/api/coaching/strategy-plan', {
+        language,
+        ...(gameType !== 'tournament' ? { gameType } : {}),
+      }),
+    );
+  }
+
+  playerProfile(language: string, gameType: GameType = 'tournament'): Promise<PlayerProfile> {
+    let params = new HttpParams().set('language', language);
+    if (gameType !== 'tournament') {
+      params = params.set('gameType', gameType);
+    }
+    return firstValueFrom(this.http.get<PlayerProfile>('/api/statistics/profile', { params }));
+  }
+
+  writePlayerProfile(language: string, gameType: GameType = 'tournament'): Promise<PlayerProfile> {
+    return firstValueFrom(
+      this.http.post<PlayerProfile>('/api/statistics/profile', {
         language,
         ...(gameType !== 'tournament' ? { gameType } : {}),
       }),

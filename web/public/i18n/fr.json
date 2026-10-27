@@ -2773,6 +2773,39 @@
         "from20To50": "20 à 50 €",
         "over50": "Plus de 50 €"
       }
+    },
+    "playerProfile": {
+      "title": "Quel joueur suis-je ?",
+      "intro": "L'IA analyse tes statistiques et tes leaks pour déterminer ton archétype de joueur : NIT, TAG, LAG, Calling Station, Maniac ou Shark.",
+      "action": "Détecter mon profil",
+      "analyzing": "Analyse de ton profil en cours…",
+      "stale": "Tes stats ont changé depuis cette analyse.",
+      "update": "Mettre à jour",
+      "loadFailed": "Impossible de charger ton profil.",
+      "strengths": "Points forts",
+      "weaknesses": "Points faibles",
+      "adviceTitle": "Conseil du coach",
+      "disclaimer": "Analyse IA réalisée le {{date}} à partir de tes statistiques et de tes leaks.",
+      "archetypes": {
+        "nit": "NIT",
+        "tag": "TAG",
+        "lag": "LAG",
+        "calling_station": "Calling Station",
+        "maniac": "Maniac",
+        "shark": "Shark"
+      },
+      "errors": {
+        "NOT_ENOUGH_HANDS": "Il faut au moins 200 mains pour détecter ton profil.",
+        "COACHING_DAILY_LIMIT": "Limite quotidienne atteinte. Réessaie demain.",
+        "COACHING_BUDGET_EXHAUSTED": "Le coach est en pause jusqu'au mois prochain.",
+        "COACHING_UNAVAILABLE": "Le coach IA n'est pas configuré.",
+        "COACHING_FAILED": "L'analyse n'a pas pu aboutir. Réessaie.",
+        "PLAN_REQUIRED": "Cette fonction est incluse dans Pro.",
+        "PLAN_LIMIT_REACHED": "Tes crédits IA du mois sont épuisés.",
+        "network": "Connexion impossible. Vérifie ton réseau.",
+        "unknown": "Une erreur inattendue est survenue."
+      },
+      "upgrade": "Passer Pro"
     }
   },
   "planLock": {

@@ -28,6 +28,7 @@ import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { AllInLuckPanel } from './all-in-luck';
 import { BreakdownsPanel } from './breakdowns-panel';
+import { PlayerProfilePanel } from './player-profile-panel';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 import {
   GameType,
@@ -95,6 +96,7 @@ const PENDING_REFRESH_MS = 3000;
     StatPopover,
     AllInLuckPanel,
     BreakdownsPanel,
+    PlayerProfilePanel,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter' },
