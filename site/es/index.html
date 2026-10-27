@@ -738,6 +738,9 @@
         font: 700 2.6rem/1 var(--display);
         letter-spacing: -0.03em;
       }
+      [data-billing="month"] .price strong {
+        font-size: 2rem;
+      }
       .price span {
         color: var(--ink-3);
       }
@@ -1661,7 +1664,7 @@
         </div>
       </section>
 
-      <section id="tarifs">
+      <section id="tarifs" data-billing="year">
         <div class="wrap">
           <div class="section-head">
             <p class="eyebrow">Precios</p>
@@ -2229,6 +2232,7 @@
         function show(yearly) {
           month.setAttribute("aria-pressed", String(!yearly));
           year.setAttribute("aria-pressed", String(yearly));
+          document.getElementById("tarifs").setAttribute("data-billing", yearly ? "year" : "month");
           document.querySelectorAll("[data-month]").forEach(function (el) {
             el.textContent = yearly
               ? el.getAttribute("data-year")

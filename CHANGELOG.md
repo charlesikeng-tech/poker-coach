@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.27-68287bd] — 2026-10-27
+
+### Correctifs
+
+- **site**: Align pricing cards with CSS subgrid
+
 ## [2026.10.27-18353dd] — 2026-10-27
 
 ### Correctifs
