@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
@@ -56,8 +57,8 @@ public sealed class DefenceDrillTests
         var userId = Guid.NewGuid();
 
         var spot = await service.NextDefenceAsync(userId, TableFormat.SixMax, [PokerPosition.Button], TestContext.Current.CancellationToken);
-        var result = await service.AnswerAsync(userId, Item("72o", PokerPosition.Button, 8), DrillAnswer.Call, TestContext.Current.CancellationToken);
-        await service.AnswerAsync(userId, new DrillItem(TableFormat.SixMax, StackBand.Mid, PokerPosition.Utg, RangeNotation.Parse("AA").Single()), DrillAnswer.Raise, TestContext.Current.CancellationToken);
+        var result = await service.AnswerAsync(userId, Item("72o", PokerPosition.Button, 8), DrillAnswer.Call, StakesLevel.Low, TestContext.Current.CancellationToken);
+        await service.AnswerAsync(userId, new DrillItem(TableFormat.SixMax, StackBand.Mid, PokerPosition.Utg, RangeNotation.Parse("AA").Single()), DrillAnswer.Raise, StakesLevel.Low, TestContext.Current.CancellationToken);
         var defence = await service.ProgressAsync(userId, TableFormat.SixMax, DrillMode.Defence, TestContext.Current.CancellationToken);
         var opening = await service.ProgressAsync(userId, TableFormat.SixMax, DrillMode.Open, TestContext.Current.CancellationToken);
 

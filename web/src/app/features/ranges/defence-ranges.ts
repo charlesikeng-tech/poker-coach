@@ -9,10 +9,11 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { TranslocoDirective } from '@jsverse/transloco';
+import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { CircleAlert, LoaderCircle } from 'lucide';
 
 import { BillingService } from '../../core/billing/billing.service';
+import { SessionService } from '../../core/auth/session.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
@@ -69,6 +70,13 @@ export class DefenceRanges {
   private readonly api = inject(RangesApi);
   protected readonly billing = inject(BillingService);
   private readonly language = inject(LanguageService);
+  private readonly sessionService = inject(SessionService);
+  private readonly transloco = inject(TranslocoService);
+
+  protected readonly stakesLabel = computed(() => {
+    const level = this.sessionService.user()?.stakesLevel ?? 'low';
+    return this.transloco.translate(`pages.account.stakesLevel.buyinMtt.${level}`);
+  });
 
   protected readonly periods = PERIOD_FILTERS;
   protected readonly bands = DEFENCE_BANDS;

@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
@@ -49,7 +50,7 @@ public static class OpeningDrill
 
     public const int PushStackMax = 14;
 
-    public static DrillAnswer Expected(DrillItem item)
+    public static DrillAnswer Expected(DrillItem item, StakesLevel stakesLevel = default)
     {
         ArgumentNullException.ThrowIfNull(item);
         if (item.IsDefence)
@@ -57,7 +58,7 @@ public static class OpeningDrill
             return DefenceDrill.Range(item).Contains(item.Hand) ? DrillAnswer.Call : DrillAnswer.Fold;
         }
 
-        var range = ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)
+        var range = ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack, stakesLevel)
             ?? throw new ArgumentException("This seat has no opening range.", nameof(item));
         return range.Contains(item.Hand) ? DrillAnswer.Raise : DrillAnswer.Fold;
     }
@@ -66,7 +67,7 @@ public static class OpeningDrill
     /// A new spot. <paramref name="review"/> (a hand missed before) is asked again as is; otherwise the seat
     /// is drawn from <paramref name="seats"/> (repeat a seat to weight it) and the hand as described above.
     /// </summary>
-    public static OpeningSpot Deal(Random random, TableFormat format, StackBand band, IReadOnlyList<PokerPosition> seats, DrillItem? review = null)
+    public static OpeningSpot Deal(Random random, TableFormat format, StackBand band, IReadOnlyList<PokerPosition> seats, DrillItem? review = null, StakesLevel stakesLevel = default)
     {
         ArgumentNullException.ThrowIfNull(random);
         ArgumentNullException.ThrowIfNull(seats);
@@ -81,7 +82,7 @@ public static class OpeningDrill
 
             var position = seats[random.Next(seats.Count)];
             int? pushStack = band == StackBand.Push ? random.Next(PushStackMin, PushStackMax + 1) : null;
-            var range = ReferenceOpeningRanges.For(band, format, position, pushStack)
+            var range = ReferenceOpeningRanges.For(band, format, position, pushStack, stakesLevel)
                 ?? throw new ArgumentException($"{position} has no opening range.", nameof(seats));
             var boundary = Boundary(range);
             var hand = random.NextDouble() < BoundaryShare && boundary.Count > 0

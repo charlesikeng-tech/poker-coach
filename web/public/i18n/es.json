@@ -1434,7 +1434,7 @@
       "reference": {
         "title": "Referencia v{{version}} · {{position}}",
         "share": "de las manos iniciales (en combinaciones)",
-        "note": "Nuestras convenciones para MTT online de 5–20 € con antes, escritas mano por mano (abrir o no). No es un cálculo GTO.",
+        "note": "Nuestras convenciones para MTT online de {{stakes}} con antes, escritas mano por mano (abrir o no). No es un cálculo GTO.",
         "nash": "Equilibrio push/fold calculado a {{stack}} BB",
         "nashNote": "Calculado por NutsIQ: all-in o tirar, EV en fichas, antes de 0,125 BB, stacks iguales, un solo pagador a la vez (como las tablas push/fold habituales). En SB contra BB es el equilibrio exacto. Ver ADR-0009."
       },
@@ -1488,7 +1488,7 @@
           "title": "Referencia v{{version}} · {{defender}} vs {{opener}}",
           "threeBet": "3-bet: {{share}} de las manos",
           "call": "Call: {{share}} de las manos",
-          "note": "Nuestras convenciones para MTT online de 5–20 € con antes, ante un open de 2 a 2,3 BB (3 BB desde la SB), en fichas, sin ICM. Escritas mano por mano (call, 3-bet o fold): no es un cálculo GTO."
+          "note": "Nuestras convenciones para MTT online de {{stakes}} con antes, ante un open de 2 a 2,3 BB (3 BB desde la SB), en fichas, sin ICM. Escritas mano por mano (call, 3-bet o fold): no es un cálculo GTO."
         },
         "gap": {
           "title": "Diferencia · {{defender}} vs {{opener}}",
@@ -1558,7 +1558,7 @@
           "title": "Referencia v{{version}} · {{opener}} vs 3-bet de {{threeBettor}}",
           "fourBet": "4-bet: {{share}} de manos",
           "call": "Call: {{share}} de manos",
-          "note": "Nuestras convenciones para MTTs online €5–20 con antes, frente a un 3-bet tras abrir. Referencias, no GTO."
+          "note": "Nuestras convenciones para MTTs online de {{stakes}} con antes, frente a un 3-bet tras abrir. Referencias, no GTO."
         },
         "gap": {
           "title": "Diferencia · {{opener}} vs 3-bet de {{threeBettor}}",
@@ -1640,7 +1640,7 @@
         }
       },
       "gridLabel": "Rango de referencia de la posición",
-      "reference": "Referencia v{{version}} (MTT 5–20 €). No es GTO: nuestras convenciones, para revisar en Rangos.",
+      "reference": "Referencia v{{version}} (MTT {{stakes}}). No es GTO: nuestras convenciones, para revisar en Rangos.",
       "next": "Mano siguiente",
       "space": "Espacio",
       "hint": "Responde con los botones o el teclado (F para tirar, R para subir). Después verás el rango de referencia de la posición con tu mano marcada.",
@@ -1898,7 +1898,12 @@
         "low": "Low stakes",
         "mid": "Mid stakes",
         "high": "High stakes",
-        "saved": "Nivel guardado"
+        "saved": "Nivel guardado",
+        "buyinMtt": {
+          "low": "5–20 €",
+          "mid": "50–100 €",
+          "high": "200 €+"
+        }
       }
     },
     "privacy": {

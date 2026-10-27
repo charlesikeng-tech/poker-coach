@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
@@ -59,9 +60,9 @@ public sealed class RealSpotsTests
         var userId = Guid.NewGuid();
 
         var first = (await service.NextRealAsync(userId, TableFormat.SixMax, TestContext.Current.CancellationToken))!;
-        await service.AnswerAsync(userId, first.Drill.Spot.Item, DrillAnswer.Fold, TestContext.Current.CancellationToken, first.HandId);
+        await service.AnswerAsync(userId, first.Drill.Spot.Item, DrillAnswer.Fold, StakesLevel.Low, TestContext.Current.CancellationToken, first.HandId);
         var again = (await service.NextRealAsync(userId, TableFormat.SixMax, TestContext.Current.CancellationToken))!;
-        await service.AnswerAsync(userId, again.Drill.Spot.Item, DrillAnswer.Raise, TestContext.Current.CancellationToken, again.HandId);
+        await service.AnswerAsync(userId, again.Drill.Spot.Item, DrillAnswer.Raise, StakesLevel.Low, TestContext.Current.CancellationToken, again.HandId);
         var done = await service.NextRealAsync(userId, TableFormat.SixMax, TestContext.Current.CancellationToken);
 
         Assert.Equal(missed.HandId, first.HandId);

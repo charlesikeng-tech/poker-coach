@@ -99,7 +99,7 @@ public sealed class OpeningTrainingService(ITrainingStore store, ILeakService le
         var due = Due(recent).Where(i => i.Band == band && allowed.Contains(i.Position)).ToList();
         if (due.Count > 0 && random.NextDouble() < ReviewShare)
         {
-            return new DrillSpot(OpeningDrill.Deal(random, format, band, allowed, due[random.Next(due.Count)]), Review: true, Focus: false);
+            return new DrillSpot(OpeningDrill.Deal(random, format, band, allowed, due[random.Next(due.Count)], stakesLevel), Review: true, Focus: false);
         }
 
         var analysis = await leaks.GetAsync(userId, format, null, null, stakesLevel, cancellationToken);
@@ -108,7 +108,7 @@ public sealed class OpeningTrainingService(ITrainingStore store, ILeakService le
             .Select(l => l.Position!.Value)
             .ToHashSet();
         var weighted = allowed.SelectMany(p => Enumerable.Repeat(p, leaking.Contains(p) ? FocusWeight : 1)).ToList();
-        var spot = OpeningDrill.Deal(random, format, band, weighted);
+        var spot = OpeningDrill.Deal(random, format, band, weighted, stakesLevel: stakesLevel);
         return new DrillSpot(spot, Review: false, Focus: leaking.Contains(spot.Item.Position));
     }
 
@@ -171,10 +171,10 @@ public sealed class OpeningTrainingService(ITrainingStore store, ILeakService le
     }
 
     /// <param name="sourceHandId">Set when the spot comes from the quiz on real hands.</param>
-    public async Task<DrillResult> AnswerAsync(Guid userId, DrillItem item, DrillAnswer answer, CancellationToken cancellationToken, Guid? sourceHandId = null)
+    public async Task<DrillResult> AnswerAsync(Guid userId, DrillItem item, DrillAnswer answer, StakesLevel stakesLevel, CancellationToken cancellationToken, Guid? sourceHandId = null)
     {
         ArgumentNullException.ThrowIfNull(item);
-        var expected = OpeningDrill.Expected(item);
+        var expected = OpeningDrill.Expected(item, stakesLevel);
         var correct = expected == answer;
         await store.RecordAsync(userId, new DrillAttempt(item, answer, correct, time.GetUtcNow(), sourceHandId), ReferenceOpeningRanges.Version, cancellationToken);
         return item.IsDefence
@@ -182,8 +182,8 @@ public sealed class OpeningTrainingService(ITrainingStore store, ILeakService le
             : new DrillResult(
                 expected,
                 correct,
-                ReferenceOpeningRanges.NotationFor(item.Band, item.Format, item.Position),
-                ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack)!,
+                ReferenceOpeningRanges.NotationFor(item.Band, item.Format, item.Position, stakesLevel),
+                ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, item.PushStack, stakesLevel)!,
                 ReferenceOpeningRanges.Version);
     }
 

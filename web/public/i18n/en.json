@@ -1434,7 +1434,7 @@
       "reference": {
         "title": "Reference v{{version}} · {{position}}",
         "share": "of starting hands (in combinations)",
-        "note": "Our conventions for €5–20 online MTTs with antes, written hand by hand (open or not). This is not a GTO computation.",
+        "note": "Our conventions for {{stakes}} online MTTs with antes, written hand by hand (open or not). This is not a GTO computation.",
         "nash": "Push/fold equilibrium computed at {{stack}} BB",
         "nashNote": "Computed by NutsIQ: shove or fold, chip EV, 0.125 BB antes, equal stacks, one caller at a time (as usual push/fold charts). Heads-up SB vs BB it is the exact equilibrium. See ADR-0009."
       },
@@ -1488,7 +1488,7 @@
           "title": "Reference v{{version}} · {{defender}} vs {{opener}}",
           "threeBet": "3-bet: {{share}} of hands",
           "call": "Call: {{share}} of hands",
-          "note": "Our conventions for €5–20 online MTTs with antes, facing a 2–2.3 BB open (3 BB from the SB), chip EV, no ICM. Written hand by hand (call, 3-bet or fold): not a GTO computation."
+          "note": "Our conventions for {{stakes}} online MTTs with antes, facing a 2–2.3 BB open (3 BB from the SB), chip EV, no ICM. Written hand by hand (call, 3-bet or fold): not a GTO computation."
         },
         "gap": {
           "title": "Gap · {{defender}} vs {{opener}}",
@@ -1558,7 +1558,7 @@
           "title": "Reference v{{version}} · {{opener}} vs {{threeBettor}} 3-bet",
           "fourBet": "4-bet: {{share}} of hands",
           "call": "Call: {{share}} of hands",
-          "note": "Our conventions for €5–20 online MTTs with antes, facing a 3-bet after opening. References, not GTO."
+          "note": "Our conventions for {{stakes}} online MTTs with antes, facing a 3-bet after opening. References, not GTO."
         },
         "gap": {
           "title": "Gap · {{opener}} vs {{threeBettor}} 3-bet",
@@ -1640,7 +1640,7 @@
         }
       },
       "gridLabel": "The position's reference range",
-      "reference": "Reference v{{version}} (€5–20 MTT). Not GTO: our conventions, to review in Ranges.",
+      "reference": "Reference v{{version}} ({{stakes}} MTT). Not GTO: our conventions, to review in Ranges.",
       "next": "Next hand",
       "space": "Space",
       "hint": "Answer with the buttons or the keyboard (F to fold, R to raise). After answering you will see the position's reference range with your hand outlined.",
@@ -1898,7 +1898,12 @@
         "low": "Low stakes",
         "mid": "Mid stakes",
         "high": "High stakes",
-        "saved": "Level saved"
+        "saved": "Level saved",
+        "buyinMtt": {
+          "low": "€5–20",
+          "mid": "€50–100",
+          "high": "€200+"
+        }
       }
     },
     "privacy": {

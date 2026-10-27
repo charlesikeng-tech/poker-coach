@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
@@ -78,7 +79,7 @@ public static class SizingDrill
     /// A new spot: <paramref name="review"/> as is (with a new hand), or an open or a 3-bet (<paramref name="kind"/>,
     /// or either when null) drawn at <paramref name="band"/>.
     /// </summary>
-    public static SizingSpot Deal(Random random, TableFormat format, StackBand band, SizingKind? kind, SizingItem? review = null)
+    public static SizingSpot Deal(Random random, TableFormat format, StackBand band, SizingKind? kind, SizingItem? review = null, StakesLevel stakesLevel = default)
     {
         ArgumentNullException.ThrowIfNull(random);
         if (band == StackBand.Push)
@@ -88,7 +89,7 @@ public static class SizingDrill
 
         var item = review ?? NewItem(random, format, band, kind ?? (random.Next(2) == 0 ? SizingKind.Open : SizingKind.ThreeBet));
         var range = item.Kind == SizingKind.Open
-            ? ReferenceOpeningRanges.For(item.Band, item.Format, item.Position)
+            ? ReferenceOpeningRanges.For(item.Band, item.Format, item.Position, stakesLevel: stakesLevel)
             : ThreeBetRange(item.Format, item.Position, item.Opener!.Value);
         var hands = range is { Count: > 0 } ? range.ToList() : [.. HandClass.All];
         var hand = hands[random.Next(hands.Count)];

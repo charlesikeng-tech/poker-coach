@@ -13,6 +13,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { Check, CircleAlert, Flame, History, RotateCcw, Sparkles, Target, X } from 'lucide';
 
 import { BillingService, Feature } from '../../core/billing/billing.service';
+import { SessionService } from '../../core/auth/session.service';
 import { LanguageService } from '../../core/i18n/language.service';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
@@ -77,6 +78,12 @@ export class TrainingPage {
   protected readonly billing = inject(BillingService);
   private readonly transloco = inject(TranslocoService);
   private readonly language = inject(LanguageService);
+  private readonly sessionService = inject(SessionService);
+
+  protected readonly stakesLabel = computed(() => {
+    const level = this.sessionService.user()?.stakesLevel ?? 'low';
+    return this.transloco.translate(`pages.account.stakesLevel.buyinMtt.${level}`);
+  });
 
   protected readonly bands = STACK_BANDS;
   protected readonly modes: readonly RoomMode[] = ['open', 'defence', 'sizing', 'real'];

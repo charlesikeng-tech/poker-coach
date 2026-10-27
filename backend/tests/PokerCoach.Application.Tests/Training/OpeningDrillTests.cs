@@ -2,6 +2,7 @@ using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
@@ -75,7 +76,7 @@ public sealed class OpeningDrillTests
         var service = new OpeningTrainingService(store, new LeakService(new NoStats()), new FakeTimeProvider(), new Random(1));
         var item = new DrillItem(TableFormat.SixMax, StackBand.Mid, PokerPosition.Utg, RangeNotation.Parse("72o").Single());
 
-        var result = await service.AnswerAsync(Guid.NewGuid(), item, DrillAnswer.Raise, TestContext.Current.CancellationToken);
+        var result = await service.AnswerAsync(Guid.NewGuid(), item, DrillAnswer.Raise, StakesLevel.Low, TestContext.Current.CancellationToken);
 
         Assert.False(result.Correct);
         Assert.Equal(DrillAnswer.Fold, result.Expected);

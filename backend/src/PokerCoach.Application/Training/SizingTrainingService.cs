@@ -1,4 +1,5 @@
 using PokerCoach.Application.Statistics;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
@@ -101,12 +102,12 @@ public sealed class SizingTrainingService(
     internal const int OffHandsShown = 3;
 
     /// <param name="kind">Open or 3-bet; null for both.</param>
-    public async Task<SizingDrillSpot> NextAsync(Guid userId, TableFormat format, StackBand band, SizingKind? kind, CancellationToken cancellationToken)
+    public async Task<SizingDrillSpot> NextAsync(Guid userId, TableFormat format, StackBand band, SizingKind? kind, StakesLevel stakesLevel, CancellationToken cancellationToken)
     {
         var recent = await store.RecentAsync(userId, format, History, cancellationToken);
         var due = Due(recent).Where(i => i.Band == band && (kind is null || i.Kind == kind)).ToList();
         var review = due.Count > 0 && random.NextDouble() < ReviewShare ? due[random.Next(due.Count)] : null;
-        var spot = SizingDrill.Deal(random, format, band, kind, review);
+        var spot = SizingDrill.Deal(random, format, band, kind, review, stakesLevel);
         return new SizingDrillSpot(spot, SizingDrill.Choices(spot.Item), review is not null);
     }
 

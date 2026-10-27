@@ -2,6 +2,10 @@
 
 ## [Non publié]
 
+### Correctifs
+
+- **infra**: Align StakesLevel EF config with migration default value
+
 ### Fonctionnalités
 
 - **statistics**: Auto-regenerate stale player profile on load

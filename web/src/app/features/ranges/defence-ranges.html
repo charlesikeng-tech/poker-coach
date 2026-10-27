@@ -189,7 +189,7 @@
                   <code class="notation">{{ s.callNotation }}</code>
                 }
                 @if (!s.isCustomRange) {
-                  <p class="muted">{{ t('defence.reference.note') }}</p>
+                  <p class="muted">{{ t('defence.reference.note', { stakes: stakesLabel() }) }}</p>
                 }
               </section>
             }

@@ -169,7 +169,7 @@
                 @if (s.callNotation) {
                   <code class="notation">{{ s.callNotation }}</code>
                 }
-                <p class="muted">{{ t('vsThreeBet.reference.note') }}</p>
+                <p class="muted">{{ t('vsThreeBet.reference.note', { stakes: stakesLabel() }) }}</p>
               </section>
             }
             @case ('gap') {

@@ -1434,7 +1434,7 @@
       "reference": {
         "title": "Repère v{{version}} · {{position}}",
         "share": "des mains de départ (en combinaisons)",
-        "note": "Nos conventions pour des MTT en ligne à 5–20 € avec antes, écrites main par main (open ou non). Ce n'est pas un calcul GTO.",
+        "note": "Nos conventions pour des MTT en ligne à {{stakes}} avec antes, écrites main par main (open ou non). Ce n'est pas un calcul GTO.",
         "nash": "Équilibre push/fold calculé à {{stack}} BB",
         "nashNote": "Calculé par NutsIQ : shove ou fold, gains en chips, antes de 0,125 BB, stacks égaux, un seul caller à la fois (comme les tableaux push/fold usuels). En heads-up SB contre BB, c'est l'équilibre exact. Voir ADR-0009."
       },
@@ -1488,7 +1488,7 @@
           "title": "Repère v{{version}} · {{defender}} vs {{opener}}",
           "threeBet": "3-bet : {{share}} des mains",
           "call": "Call : {{share}} des mains",
-          "note": "Nos conventions pour des MTT en ligne à 5–20 € avec antes, face à un open de 2 à 2,3 BB (3 BB depuis la SB), en chips, sans ICM. Écrites main par main (call, 3-bet ou fold) : ce n'est pas un calcul GTO."
+          "note": "Nos conventions pour des MTT en ligne à {{stakes}} avec antes, face à un open de 2 à 2,3 BB (3 BB depuis la SB), en chips, sans ICM. Écrites main par main (call, 3-bet ou fold) : ce n'est pas un calcul GTO."
         },
         "gap": {
           "title": "Écart · {{defender}} vs {{opener}}",
@@ -1558,7 +1558,7 @@
           "title": "Référence v{{version}} · {{opener}} vs 3-bet du {{threeBettor}}",
           "fourBet": "4-bet : {{share}} des mains",
           "call": "Call : {{share}} des mains",
-          "note": "Nos conventions pour les MTT online €5–20 avec antes, face à un 3-bet après ouverture. Références, pas GTO."
+          "note": "Nos conventions pour les MTT online à {{stakes}} avec antes, face à un 3-bet après ouverture. Références, pas GTO."
         },
         "gap": {
           "title": "Écart · {{opener}} vs 3-bet du {{threeBettor}}",
@@ -1640,7 +1640,7 @@
         }
       },
       "gridLabel": "Range de référence de la position",
-      "reference": "Repère v{{version}} (MTT 5–20 €). Ce n'est pas du GTO : nos conventions, à relire dans Ranges.",
+      "reference": "Repère v{{version}} (MTT {{stakes}}). Ce n'est pas du GTO : nos conventions, à relire dans Ranges.",
       "next": "Main suivante",
       "space": "Espace",
       "hint": "Réponds avec les boutons ou au clavier (F pour fold, R pour raise). Après ta réponse, tu verras la range de référence de la position avec ta main entourée.",
@@ -1898,7 +1898,12 @@
         "low": "Low stakes",
         "mid": "Mid stakes",
         "high": "High stakes",
-        "saved": "Niveau enregistré"
+        "saved": "Niveau enregistré",
+        "buyinMtt": {
+          "low": "5–20 €",
+          "mid": "50–100 €",
+          "high": "200 €+"
+        }
       }
     },
     "privacy": {

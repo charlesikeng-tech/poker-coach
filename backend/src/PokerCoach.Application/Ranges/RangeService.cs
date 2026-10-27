@@ -176,7 +176,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                         h => (Dealt: h.Sum(x => x.Count.Dealt), Opens: h.Sum(x => x.Count.Opens), Limps: h.Sum(x => x.Count.Limps)));
                 IReadOnlySet<HandClass>? custom = null;
                 var isCustom = customRanges is not null && customRanges.TryGetValue(position, out custom);
-                var reference = isCustom ? custom : ReferenceOpeningRanges.For(band, format, position, pushStack);
+                var reference = isCustom ? custom : ReferenceOpeningRanges.For(band, format, position, pushStack, stakesLevel);
                 var cells = HandClass.All
                     .Select(hand =>
                     {
@@ -194,7 +194,7 @@ public sealed class RangeService(IRangeReadStore ranges, IStatisticsReadStore st
                     StatRate.Of(opens, dealt),
                     ReferenceRanges.For(stakesLevel, GameType.Tournament).FirstOrDefault(
                         r => r.Stat == LeakStat.Rfi && r.Position == OpeningSeat.FullRingEquivalent(position, format)),
-                    isCustom ? null : ReferenceOpeningRanges.NotationFor(band, format, position),
+                    isCustom ? null : ReferenceOpeningRanges.NotationFor(band, format, position, stakesLevel),
                     reference is null ? null : ReferenceOpeningRanges.ComboShare(reference),
                     cells,
                     isCustom);

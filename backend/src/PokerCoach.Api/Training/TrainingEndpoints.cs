@@ -171,6 +171,7 @@ public static class TrainingEndpoints
         HttpContext context,
         OpeningTrainingService training,
         PlanAccess plans,
+        IUserAccountStore users,
         CancellationToken cancellationToken)
     {
         if (!context.User.TryGetUserId(out var userId))
@@ -239,7 +240,8 @@ public static class TrainingEndpoints
             return ApiProblems.Validation("hand", "Must be one starting hand, like AKs.");
         }
 
-        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack, request.Shover), answer, cancellationToken, request.SourceHandId);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var result = await training.AnswerAsync(userId, new DrillItem(format, band, position, hands.Single(), pushStack, request.Shover), answer, stakesLevel, cancellationToken, request.SourceHandId);
         return TypedResults.Ok(new DrillResultResponse(
             result.Expected,
             result.Correct,

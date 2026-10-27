@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Training;
@@ -74,7 +75,7 @@ public sealed class SizingTrainingServiceTests
         var reviews = 0;
         for (var i = 0; i < 40; i++)
         {
-            var next = await service.NextAsync(Guid.NewGuid(), TableFormat.SixMax, StackBand.Mid, null, Ct);
+            var next = await service.NextAsync(Guid.NewGuid(), TableFormat.SixMax, StackBand.Mid, null, StakesLevel.Low, Ct);
             reviews += next.Review ? 1 : 0;
             Assert.True(!next.Review || next.Spot.Item == missed);
         }

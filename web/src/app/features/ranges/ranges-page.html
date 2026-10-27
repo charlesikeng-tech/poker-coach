@@ -298,7 +298,7 @@
                   <p class="muted">{{ t('reference.share') }}</p>
                   @if (r.referenceNotation) {
                     <code class="notation">{{ r.referenceNotation }}</code>
-                    <p class="muted">{{ t('reference.note') }}</p>
+                    <p class="muted">{{ t('reference.note', { stakes: stakesLabel() }) }}</p>
                   } @else if (!r.isCustomRange) {
                     <p class="nash">{{ t('reference.nash', { stack: data.pushStack }) }}</p>
                     <p class="muted">{{ t('reference.nashNote') }}</p>

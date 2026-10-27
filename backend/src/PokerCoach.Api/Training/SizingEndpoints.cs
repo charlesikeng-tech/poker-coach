@@ -3,8 +3,10 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Billing;
 using PokerCoach.Api.Errors;
 using PokerCoach.Api.Statistics;
+using PokerCoach.Application.Identity;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Training;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Ranges;
 using PokerCoach.Domain.Subscriptions;
@@ -134,6 +136,7 @@ public static class SizingEndpoints
     private static async Task<Results<Ok<SizingSpotResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetSpotAsync(
         HttpContext context,
         SizingTrainingService sizing,
+        IUserAccountStore users,
         CancellationToken cancellationToken,
         string format = "sixMax",
         string band = "mid",
@@ -165,7 +168,8 @@ public static class SizingEndpoints
             sizingKind = parsedKind;
         }
 
-        var drill = await sizing.NextAsync(userId, parsedFormat, stackBand, sizingKind, cancellationToken);
+        var stakesLevel = (await users.FindByIdAsync(userId, cancellationToken))?.StakesLevel ?? StakesLevel.Low;
+        var drill = await sizing.NextAsync(userId, parsedFormat, stackBand, sizingKind, stakesLevel, cancellationToken);
         var item = drill.Spot.Item;
         return TypedResults.Ok(new SizingSpotResponse(
             item.Format,

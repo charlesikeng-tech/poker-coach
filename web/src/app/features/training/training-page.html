@@ -307,7 +307,7 @@
                     ? t('referenceDefence', { stack: s.pushStack })
                     : s.band === 'push'
                       ? t('referencePush', { stack: s.pushStack })
-                      : t('reference', { version: r.referenceVersion })
+                      : t('reference', { version: r.referenceVersion, stakes: stakesLabel() })
                 }}
               </p>
               <button appButton variant="primary" class="next" (click)="nextHand()">
