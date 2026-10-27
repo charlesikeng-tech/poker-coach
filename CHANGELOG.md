@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.27-0956cc0] — 2026-10-27
 
 ### Correctifs
 
 - **import**: Only aggregate opponent stats for newly inserted hands
+- **tests**: Add missing opponent fields to replay test fixture
 
 ### Fonctionnalités
 
