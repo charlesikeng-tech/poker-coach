@@ -12,6 +12,7 @@
 - **billing**: Add Ultimate plan with 1000 AI credits and unlimited reviews
 - **stakes**: Add StakesLevel to User model and propagate to services
 - **stakes**: Propagate StakesLevel to all endpoints, services and frontend
+- **stakes**: Replace opening ranges with GTO solver data and wire stakes to all training paths
 
 ## [2026.10.27-a811981] — 2026-10-27
 

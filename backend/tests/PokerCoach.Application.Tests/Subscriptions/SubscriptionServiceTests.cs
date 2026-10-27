@@ -114,7 +114,7 @@ public sealed class SubscriptionServiceTests
         var off = new FakeBillingGateway(configured: false);
         var service = Service(off);
 
-        Assert.Equal(Plan.Elite, (await service.GetAsync(jo.Id, Ct)).Plan);
+        Assert.Equal(Plan.Ultimate, (await service.GetAsync(jo.Id, Ct)).Plan);
         Assert.False((await service.GetAsync(jo.Id, Ct)).BillingEnabled);
         Assert.Equal(BillingFailure.Unavailable, (await service.StartCheckoutAsync(jo.Id, Plan.Pro, BillingInterval.Month, "fr", AppUrl, Ct)).Failure);
         Assert.Null(await Plans(off).HistoryStartAsync(jo.Id, Ct));
@@ -314,7 +314,7 @@ public sealed class SubscriptionServiceTests
         var other = User.Register("Max", "max@example.com", "fr", time.GetUtcNow());
         users.AddUser(other);
 
-        Assert.Equal(new PlanGrant(Plan.Elite, PlanSource.Admin), await Plans().GetAccessAsync(jo.Id, Ct));
+        Assert.Equal(new PlanGrant(Plan.Ultimate, PlanSource.Admin), await Plans().GetAccessAsync(jo.Id, Ct));
         Assert.True(await Plans().IsAdminAsync(jo.Id, Ct));
         Assert.Equal(new PlanGrant(Plan.Starter, PlanSource.Starter), await Plans().GetAccessAsync(other.Id, Ct));
         Assert.False(await Plans().IsAdminAsync(other.Id, Ct));
