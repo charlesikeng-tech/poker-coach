@@ -7,9 +7,12 @@ using PokerCoach.Domain.Poker.Analysis;
 
 namespace PokerCoach.Api.Hands;
 
-/// <summary>A seat. No player name: others are known by position only.</summary>
+/// <summary>A seat. Opponents include their screen name and archetype when enough data exists.</summary>
 /// <param name="Cards">Text form ("Ah", "Tc"); null when unknown (not the hero, not shown).</param>
 /// <param name="Collected">Chips collected from the pot(s), uncalled bets included.</param>
+/// <param name="OpponentName">The opponent's screen name; null for the hero.</param>
+/// <param name="OpponentType">Archetype classification (nit, tag, lag…); null when fewer than 20 hands or for the hero.</param>
+/// <param name="OpponentHands">Number of hands observed; null for the hero.</param>
 public sealed record ReplaySeatResponse(
     int SeatNumber,
     PokerPosition? Position,
@@ -17,7 +20,10 @@ public sealed record ReplaySeatResponse(
     bool IsDealt,
     long Stack,
     IReadOnlyList<string>? Cards,
-    long Collected);
+    long Collected,
+    string? OpponentName,
+    string? OpponentType,
+    int? OpponentHands);
 
 /// <param name="Amount">Chips this action adds to the pot (a raise's increment, not its total).</param>
 public sealed record ReplayActionResponse(Street Street, int SeatNumber, ActionKind Kind, long Amount, bool IsAllIn);
@@ -50,6 +56,9 @@ public static class HandEndpoints
         return endpoints;
     }
 
+    private static string? ToCamelCase(string? value) =>
+        value is { Length: > 0 } ? char.ToLowerInvariant(value[0]) + value[1..] : null;
+
     /// <summary>One hand for the replayer. Someone else's hand answers like a missing one.</summary>
     private static async Task<Results<Ok<HandReplayResponse>, ProblemHttpResult, UnauthorizedHttpResult>> GetAsync(
         Guid id,
@@ -80,7 +89,10 @@ public static class HandEndpoints
             replay.MaxSeats,
             replay.ButtonSeat,
             replay.Seats
-                .Select(s => new ReplaySeatResponse(s.SeatNumber, s.Position, s.IsHero, s.IsDealt, s.Stack, s.Cards?.Select(c => c.ToString()).ToList(), s.Collected))
+                .Select(s => new ReplaySeatResponse(
+                    s.SeatNumber, s.Position, s.IsHero, s.IsDealt, s.Stack,
+                    s.Cards?.Select(c => c.ToString()).ToList(), s.Collected,
+                    s.OpponentName, ToCamelCase(s.OpponentType?.ToString()), s.OpponentHands))
                 .ToList(),
             replay.Actions.Select(a => new ReplayActionResponse(a.Street, a.SeatNumber, a.Kind, a.Amount, a.IsAllIn)).ToList(),
             replay.Board.Select(c => c.ToString()).ToList(),

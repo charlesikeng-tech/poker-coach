@@ -1353,7 +1353,16 @@
       },
       "potLabel": "Pot",
       "timeline": "Avancement dans la main",
-      "speed": "Vitesse de lecture"
+      "speed": "Vitesse de lecture",
+      "playerTypes": {
+        "nit": "Nit",
+        "tag": "TAG",
+        "lag": "LAG",
+        "callingStation": "Calling Station",
+        "maniac": "Maniac",
+        "shark": "Shark",
+        "hands": "{{count}} mains"
+      }
     },
     "ranges": {
       "title": "Ranges",

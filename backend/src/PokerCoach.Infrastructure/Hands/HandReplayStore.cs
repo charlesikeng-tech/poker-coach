@@ -24,6 +24,7 @@ internal sealed class HandReplayStore(PokerCoachDbContext db) : IHandReplayStore
                 select new
                 {
                     h.Id,
+                    h.PokerAccountId,
                     h.TournamentId,
                     TournamentName = t != null ? t.Name : null,
                     h.StartedAt,
@@ -74,6 +75,7 @@ internal sealed class HandReplayStore(PokerCoachDbContext db) : IHandReplayStore
 
         return new HandReplaySource(
             row.Id,
+            row.PokerAccountId,
             row.TournamentId,
             row.TournamentName,
             row.StartedAt,

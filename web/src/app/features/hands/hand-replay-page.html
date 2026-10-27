@@ -255,6 +255,20 @@
                       <span class="log__who">{{
                         who?.isHero ? t('you') : who ? positionLabel(who) : '?'
                       }}</span>
+                      @if (who && who.opponentType; as opType) {
+                        @if (opType !== 'unknown') {
+                          <span
+                            class="log__type"
+                            [attr.data-type]="opType"
+                            [attr.title]="
+                              t('playerTypes.' + opType) +
+                              ' · ' +
+                              t('playerTypes.hands', { count: who.opponentHands })
+                            "
+                            >{{ t('playerTypes.' + opType) }}</span
+                          >
+                        }
+                      }
                       <span>
                         {{ t('actions.' + item.action.kind, { amount: actionAmount(item.index) }) }}
                         @if (item.action.isAllIn) {

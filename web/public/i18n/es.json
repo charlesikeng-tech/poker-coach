@@ -1353,7 +1353,16 @@
       },
       "potLabel": "Bote",
       "timeline": "Posición en la mano",
-      "speed": "Velocidad de reproducción"
+      "speed": "Velocidad de reproducción",
+      "playerTypes": {
+        "nit": "Nit",
+        "tag": "TAG",
+        "lag": "LAG",
+        "callingStation": "Calling Station",
+        "maniac": "Maniac",
+        "shark": "Shark",
+        "hands": "{{count}} manos"
+      }
     },
     "ranges": {
       "title": "Rangos",

@@ -11,6 +11,8 @@ export type Street = 'preflop' | 'flop' | 'turn' | 'river';
 export type ActionKind =
   'postAnte' | 'postSmallBlind' | 'postBigBlind' | 'fold' | 'check' | 'call' | 'bet' | 'raise';
 
+export type PlayerType = 'nit' | 'tag' | 'lag' | 'callingStation' | 'maniac' | 'shark' | 'unknown';
+
 export interface ReplaySeat {
   readonly seatNumber: number;
   /** Null for a seated player who was not dealt in. */
@@ -22,6 +24,12 @@ export interface ReplaySeat {
   readonly cards: readonly string[] | null;
   /** Chips collected from the pot(s), uncalled bets included. */
   readonly collected: number;
+  /** The opponent's screen name; null for the hero. */
+  readonly opponentName: string | null;
+  /** Archetype classification; null when fewer than 20 hands or for the hero. */
+  readonly opponentType: PlayerType | null;
+  /** Number of hands observed; null for the hero. */
+  readonly opponentHands: number | null;
 }
 
 export interface ReplayAction {

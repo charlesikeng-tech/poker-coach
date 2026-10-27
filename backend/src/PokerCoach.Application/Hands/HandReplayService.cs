@@ -8,6 +8,7 @@ namespace PokerCoach.Application.Hands;
 /// <param name="Shown">Cards shown at showdown, by player.</param>
 public sealed record HandReplaySource(
     Guid HandId,
+    Guid PokerAccountId,
     Guid? TournamentId,
     string? TournamentName,
     DateTimeOffset StartedAt,
@@ -35,6 +36,9 @@ public interface IHandReplayStore
 /// <param name="Position">Null for a seated player who was not dealt in, or beyond 9 players.</param>
 /// <param name="Cards">The hero's cards, or a player's cards shown at showdown; null when unknown.</param>
 /// <param name="Collected">Chips collected from the pot(s), uncalled bets included.</param>
+/// <param name="OpponentName">The opponent's screen name on the room; null for the hero.</param>
+/// <param name="OpponentType">Deterministic archetype classification; null when too few hands or for the hero.</param>
+/// <param name="OpponentHands">Number of hands observed for this opponent; null for the hero.</param>
 public sealed record ReplaySeat(
     int SeatNumber,
     PokerPosition? Position,
@@ -42,7 +46,10 @@ public sealed record ReplaySeat(
     bool IsDealt,
     long Stack,
     IReadOnlyList<Card>? Cards,
-    long Collected);
+    long Collected,
+    string? OpponentName = null,
+    PlayerType? OpponentType = null,
+    int? OpponentHands = null);
 
 /// <param name="Amount">Chips this action adds to the pot (a raise's increment, not its total).</param>
 public sealed record ReplayAction(Street Street, int SeatNumber, ActionKind Kind, long Amount, bool IsAllIn);
@@ -68,17 +75,28 @@ public sealed record HandReplay(
 
 /// <summary>
 /// Turns a stored hand into the replayer's view: seats by number and position, actions by seat. Names are
-/// dropped here, so no other player's pseudonym reaches the browser.
+/// dropped here, so no other player's pseudonym reaches the browser — but the opponent type and stats do.
 /// </summary>
-public sealed class HandReplayService(IHandReplayStore store)
+public sealed class HandReplayService(IHandReplayStore store, IOpponentStatsReader opponentStats)
 {
     public async Task<HandReplay?> GetAsync(Guid userId, Guid handId, CancellationToken cancellationToken)
     {
         var source = await store.FindAsync(userId, handId, cancellationToken);
-        return source is null ? null : Build(source);
+        if (source is null) return null;
+
+        var opponentNames = source.Hand.Seats
+            .Where(s => s.Player != source.Hand.Hero)
+            .Select(s => s.Player)
+            .ToList();
+
+        var stats = opponentNames.Count > 0
+            ? await opponentStats.GetAsync(source.PokerAccountId, opponentNames, cancellationToken)
+            : new Dictionary<string, OpponentStats>();
+
+        return Build(source, stats);
     }
 
-    internal static HandReplay Build(HandReplaySource source)
+    internal static HandReplay Build(HandReplaySource source, IReadOnlyDictionary<string, OpponentStats>? opponentProfiles = null)
     {
         ArgumentNullException.ThrowIfNull(source);
 
@@ -98,6 +116,16 @@ public sealed class HandReplayService(IHandReplayStore store)
                     cards = shown;
                 }
 
+                string? opponentName = null;
+                PlayerType? opponentType = null;
+                int? opponentHands = null;
+                if (!isHero && opponentProfiles is not null && opponentProfiles.TryGetValue(s.Player, out var profile))
+                {
+                    opponentName = s.Player;
+                    opponentType = profile.Classify();
+                    opponentHands = profile.Hands;
+                }
+
                 return new ReplaySeat(
                     s.SeatNumber,
                     positions.TryGetValue(s.Player, out var position) ? position : null,
@@ -105,7 +133,10 @@ public sealed class HandReplayService(IHandReplayStore store)
                     dealt.Contains(s.Player),
                     s.Stack,
                     cards,
-                    hand.Collected.GetValueOrDefault(s.Player));
+                    hand.Collected.GetValueOrDefault(s.Player),
+                    opponentName,
+                    opponentType,
+                    opponentHands);
             })
             .ToList();
 

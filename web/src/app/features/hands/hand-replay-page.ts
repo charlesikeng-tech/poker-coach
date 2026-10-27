@@ -163,7 +163,11 @@ export class HandReplayPage {
           : seat.isDealt
             ? this.positionLabel(seat) || t('player')
             : t('sittingOut'),
-        sublabel: seat.isHero ? this.positionLabel(seat) : '',
+        sublabel: seat.isHero
+          ? this.positionLabel(seat)
+          : seat.opponentType && seat.opponentType !== 'unknown'
+            ? t('playerTypes.' + seat.opponentType)
+            : '',
         isHero: seat.isHero,
         out: !seat.isDealt,
         stack: state?.stack ?? seat.stack,

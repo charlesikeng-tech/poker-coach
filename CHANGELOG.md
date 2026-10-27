@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- **opponents**: Extract and store opponent stats at import with deterministic player type classification
+
 ## [2026.10.27-46565b2] — 2026-10-27
 
 ### Correctifs

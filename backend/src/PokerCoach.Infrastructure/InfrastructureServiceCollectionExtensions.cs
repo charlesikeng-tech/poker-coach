@@ -66,6 +66,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IImportStore, ImportStore>();
         services.AddScoped<IPokerAccountStore, PokerAccountStore>();
         services.AddScoped<IHandReplayStore, HandReplayStore>();
+        services.AddScoped<IOpponentStatsReader, OpponentStatsReader>();
         services.AddScoped<ITrainingStore, TrainingStore>();
         services.AddScoped<ISizingTrainingStore, SizingTrainingStore>();
         services.AddScoped<IBankrollStore, BankrollStore>();

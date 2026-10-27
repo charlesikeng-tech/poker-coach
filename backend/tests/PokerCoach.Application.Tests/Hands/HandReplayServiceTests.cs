@@ -2,6 +2,8 @@ using PokerCoach.Application.Hands;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 
+#pragma warning disable CA1859
+
 namespace PokerCoach.Application.Tests.Hands;
 
 public sealed class HandReplayServiceTests
@@ -9,7 +11,7 @@ public sealed class HandReplayServiceTests
     [Fact]
     public async Task Unknown_or_foreign_hand_is_null()
     {
-        var service = new HandReplayService(new StubStore(null));
+        var service = new HandReplayService(new StubStore(null), new StubOpponentStats());
 
         Assert.Null(await service.GetAsync(Guid.NewGuid(), Guid.NewGuid(), TestContext.Current.CancellationToken));
     }
@@ -71,6 +73,7 @@ public sealed class HandReplayServiceTests
         return new HandReplaySource(
             Guid.NewGuid(),
             Guid.NewGuid(),
+            Guid.NewGuid(),
             "CASSIOPEIA",
             DateTimeOffset.UnixEpoch,
             3,
@@ -92,5 +95,11 @@ public sealed class HandReplayServiceTests
     {
         public Task<HandReplaySource?> FindAsync(Guid userId, Guid handId, CancellationToken cancellationToken) =>
             Task.FromResult(source);
+    }
+
+    private sealed class StubOpponentStats : IOpponentStatsReader
+    {
+        public Task<IReadOnlyDictionary<string, OpponentStats>> GetAsync(Guid pokerAccountId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<string, OpponentStats>>(new Dictionary<string, OpponentStats>());
     }
 }
