@@ -1595,6 +1595,72 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.ToTable("hand_hero_facts", "poker");
                 });
 
+            modelBuilder.Entity("PokerCoach.Infrastructure.Statistics.OpponentStatsRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Hands")
+                        .HasColumnType("integer")
+                        .HasColumnName("hands");
+
+                    b.Property<string>("OpponentName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("opponent_name");
+
+                    b.Property<int>("Pfr")
+                        .HasColumnType("integer")
+                        .HasColumnName("pfr");
+
+                    b.Property<Guid>("PokerAccountId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("poker_account_id");
+
+                    b.Property<int>("PostflopAggressive")
+                        .HasColumnType("integer")
+                        .HasColumnName("postflop_aggressive");
+
+                    b.Property<int>("PostflopDecisions")
+                        .HasColumnType("integer")
+                        .HasColumnName("postflop_decisions");
+
+                    b.Property<int>("SawFlop")
+                        .HasColumnType("integer")
+                        .HasColumnName("saw_flop");
+
+                    b.Property<int>("ThreeBet")
+                        .HasColumnType("integer")
+                        .HasColumnName("three_bet");
+
+                    b.Property<int>("ThreeBetOpportunity")
+                        .HasColumnType("integer")
+                        .HasColumnName("three_bet_opportunity");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<int>("Vpip")
+                        .HasColumnType("integer")
+                        .HasColumnName("vpip");
+
+                    b.Property<int>("WentToShowdown")
+                        .HasColumnType("integer")
+                        .HasColumnName("went_to_showdown");
+
+                    b.HasKey("Id")
+                        .HasName("pk_opponent_stats");
+
+                    b.HasIndex("PokerAccountId", "OpponentName")
+                        .IsUnique()
+                        .HasDatabaseName("ux_opponent_stats_poker_account_id_opponent_name");
+
+                    b.ToTable("opponent_stats", "poker");
+                });
+
             modelBuilder.Entity("PokerCoach.Infrastructure.Tournaments.TournamentCoverageRecord", b =>
                 {
                     b.Property<Guid>("TournamentId")
@@ -2069,6 +2135,16 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_hand_hero_facts_poker_accounts_poker_account_id");
+                });
+
+            modelBuilder.Entity("PokerCoach.Infrastructure.Statistics.OpponentStatsRecord", b =>
+                {
+                    b.HasOne("PokerCoach.Infrastructure.Poker.PokerAccountRecord", null)
+                        .WithMany()
+                        .HasForeignKey("PokerAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_opponent_stats_poker_accounts_poker_account_id");
                 });
 
             modelBuilder.Entity("PokerCoach.Infrastructure.Tournaments.TournamentCoverageRecord", b =>

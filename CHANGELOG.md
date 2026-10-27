@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.27-46565b2] — 2026-10-27
+
+### Correctifs
+
+- **site**: Shrink monthly price font so amounts fit on one line
+
 ## [2026.10.27-68287bd] — 2026-10-27
 
 ### Correctifs

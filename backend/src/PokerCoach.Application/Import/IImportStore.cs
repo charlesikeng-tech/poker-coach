@@ -44,9 +44,25 @@ public interface IImportStore
 
     /// <returns>Number of hands newly inserted; duplicates are silently skipped.</returns>
     Task<int> BulkInsertHandsAsync(IReadOnlyList<HandToInsert> hands, CancellationToken cancellationToken);
+
+    /// <summary>Upserts opponent stats: additive counters merged with <c>ON CONFLICT DO UPDATE</c>.</summary>
+    Task UpsertOpponentStatsAsync(IReadOnlyList<OpponentStatsToUpsert> stats, CancellationToken cancellationToken);
 }
 
 public sealed record HandToInsert(Guid PokerAccountId, Guid? TournamentId, Guid ImportedFileId, ParsedHand Hand);
+
+public sealed record OpponentStatsToUpsert(
+    Guid PokerAccountId,
+    string OpponentName,
+    int Hands,
+    int Vpip,
+    int Pfr,
+    int ThreeBetOpportunity,
+    int ThreeBet,
+    int SawFlop,
+    int WentToShowdown,
+    int PostflopAggressive,
+    int PostflopDecisions);
 
 /// <param name="ContentSha256">Lowercase hex SHA-256 of <paramref name="Content"/>: the file deduplication key.</param>
 public sealed record FileToImport(string FileName, byte[] Content, string ContentSha256);

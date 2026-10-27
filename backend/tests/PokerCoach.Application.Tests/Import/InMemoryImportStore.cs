@@ -24,6 +24,8 @@ internal sealed class InMemoryImportStore : IImportStore
 
     public HashSet<(Guid AccountId, string ExternalHandId)> Hands { get; } = [];
 
+    public List<OpponentStatsToUpsert> OpponentStats { get; } = [];
+
     public Exception? FailOnHandInsert { get; set; }
 
     public Guid Enqueue(Guid userId, byte[] content)
@@ -93,6 +95,12 @@ internal sealed class InMemoryImportStore : IImportStore
         }
 
         return Task.FromResult(inserted);
+    }
+
+    public Task UpsertOpponentStatsAsync(IReadOnlyList<OpponentStatsToUpsert> stats, CancellationToken cancellationToken)
+    {
+        OpponentStats.AddRange(stats);
+        return Task.CompletedTask;
     }
 
     private Guid TournamentId(Guid accountId, string externalId)

@@ -495,6 +495,67 @@ internal sealed class ImportStore(PokerCoachDbContext db, TimeProvider time) : I
         return totalInserted;
     }
 
+    private const string UpsertOpponentStatsSql = """
+        INSERT INTO poker.opponent_stats
+            (id, poker_account_id, opponent_name, hands, vpip, pfr, three_bet_opportunity, three_bet,
+             saw_flop, went_to_showdown, postflop_aggressive, postflop_decisions, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        ON CONFLICT (poker_account_id, opponent_name) DO UPDATE SET
+            hands = poker.opponent_stats.hands + excluded.hands,
+            vpip = poker.opponent_stats.vpip + excluded.vpip,
+            pfr = poker.opponent_stats.pfr + excluded.pfr,
+            three_bet_opportunity = poker.opponent_stats.three_bet_opportunity + excluded.three_bet_opportunity,
+            three_bet = poker.opponent_stats.three_bet + excluded.three_bet,
+            saw_flop = poker.opponent_stats.saw_flop + excluded.saw_flop,
+            went_to_showdown = poker.opponent_stats.went_to_showdown + excluded.went_to_showdown,
+            postflop_aggressive = poker.opponent_stats.postflop_aggressive + excluded.postflop_aggressive,
+            postflop_decisions = poker.opponent_stats.postflop_decisions + excluded.postflop_decisions,
+            updated_at = excluded.updated_at
+        """;
+
+    public async Task UpsertOpponentStatsAsync(IReadOnlyList<OpponentStatsToUpsert> stats, CancellationToken cancellationToken)
+    {
+        if (stats.Count == 0) return;
+
+        var connection = (NpgsqlConnection)db.Database.GetDbConnection();
+        if (connection.State != System.Data.ConnectionState.Open)
+        {
+            await db.Database.OpenConnectionAsync(cancellationToken);
+        }
+
+        var now = time.GetUtcNow();
+
+        const int ChunkSize = 500;
+        for (var offset = 0; offset < stats.Count; offset += ChunkSize)
+        {
+            var chunk = stats.Count - offset >= ChunkSize
+                ? stats.Skip(offset).Take(ChunkSize).ToList()
+                : stats.Skip(offset).ToList();
+
+            using var batch = new NpgsqlBatch(connection, transaction);
+            foreach (var s in chunk)
+            {
+                var cmd = new NpgsqlBatchCommand(UpsertOpponentStatsSql);
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Uuid, Value = Guid.CreateVersion7(now) });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Uuid, Value = s.PokerAccountId });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Text, Value = s.OpponentName });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Hands });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Vpip });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.Pfr });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.ThreeBetOpportunity });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.ThreeBet });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.SawFlop });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.WentToShowdown });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.PostflopAggressive });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.Integer, Value = s.PostflopDecisions });
+                cmd.Parameters.Add(new NpgsqlParameter { NpgsqlDbType = NpgsqlDbType.TimestampTz, Value = now });
+                batch.BatchCommands.Add(cmd);
+            }
+
+            await batch.ExecuteNonQueryAsync(cancellationToken);
+        }
+    }
+
     private async Task<NpgsqlCommand> CommandAsync(string sql, CancellationToken cancellationToken)
     {
         var connection = (NpgsqlConnection)db.Database.GetDbConnection();

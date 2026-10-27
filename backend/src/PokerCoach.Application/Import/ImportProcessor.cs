@@ -1,5 +1,7 @@
 using System.Text;
+using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker;
+using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.HandHistories;
 
 namespace PokerCoach.Application.Import;
@@ -139,6 +141,13 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
         var imported = await store.BulkInsertHandsAsync(handsToInsert, cancellationToken);
         var alreadyPresent = handsToInsert.Count - imported;
 
+        if (imported > 0)
+        {
+            var opponentStats = AggregateOpponentFacts(handsToInsert);
+            if (opponentStats.Count > 0)
+                await store.UpsertOpponentStatsAsync(opponentStats, cancellationToken);
+        }
+
         return new FileOutcome(
             ImportFileStatus.Completed,
             ImportFileKind.HandHistory,
@@ -148,6 +157,47 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             alreadyPresent,
             rejections.Count,
             Cap(rejections));
+    }
+
+    private static List<OpponentStatsToUpsert> AggregateOpponentFacts(IReadOnlyList<HandToInsert> hands)
+    {
+        var agg = new Dictionary<(Guid, string), (int Hands, int Vpip, int Pfr, int ThreeBetOpp, int ThreeBet, int SawFlop, int Wtsd, int Aggressive, int Decisions)>();
+
+        foreach (var item in hands)
+        {
+            var analysis = HandForAnalysisMapper.From(item.Hand);
+            if (analysis is null) continue;
+
+            var facts = OpponentFactsExtractor.Extract(analysis);
+            foreach (var (opponent, f) in facts)
+            {
+                var key = (item.PokerAccountId, opponent);
+                var prev = agg.GetValueOrDefault(key);
+                agg[key] = (
+                    prev.Hands + 1,
+                    prev.Vpip + (f.Vpip ? 1 : 0),
+                    prev.Pfr + (f.Pfr ? 1 : 0),
+                    prev.ThreeBetOpp + (f.ThreeBetOpportunity ? 1 : 0),
+                    prev.ThreeBet + (f.ThreeBet ? 1 : 0),
+                    prev.SawFlop + (f.SawFlop ? 1 : 0),
+                    prev.Wtsd + (f.WentToShowdown ? 1 : 0),
+                    prev.Aggressive + f.PostflopAggressive,
+                    prev.Decisions + f.PostflopDecisions);
+            }
+        }
+
+        return agg.Select(kv => new OpponentStatsToUpsert(
+            kv.Key.Item1,
+            kv.Key.Item2,
+            kv.Value.Hands,
+            kv.Value.Vpip,
+            kv.Value.Pfr,
+            kv.Value.ThreeBetOpp,
+            kv.Value.ThreeBet,
+            kv.Value.SawFlop,
+            kv.Value.Wtsd,
+            kv.Value.Aggressive,
+            kv.Value.Decisions)).ToList();
     }
 
     private static FileOutcome Failed(string code, ImportFileKind? kind = null, IReadOnlyList<ParseError>? rejections = null) =>
