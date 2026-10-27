@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using PokerCoach.Application.Hands;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Poker.Analysis;
 
@@ -27,6 +28,7 @@ public sealed class CashSessionDebriefService(
     ICashPerformanceReadStore cashStore,
     ICoachingReportStore reports,
     AiUsageGuard guard,
+    IOpponentStatsReader opponentStatsReader,
     TimeProvider time)
 {
     internal const string Kind = "cash-debrief";
@@ -89,12 +91,16 @@ public sealed class CashSessionDebriefService(
             AiTask.CashDebrief,
             async (model, ct) =>
             {
-                var narratedHands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct))
-                    .ToDictionary(h => h.HandId);
+                var narratedHandsList = await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct);
+                var narratedHands = narratedHandsList.ToDictionary(h => h.HandId);
+                var opponentNames = HandNarrator.OpponentNames(narratedHandsList);
+                var opponentTypes = opponentNames.Count > 0
+                    ? HandNarrator.ClassifyOpponents(await opponentStatsReader.GetByUserAsync(userId, opponentNames, ct))
+                    : new Dictionary<string, PlayerType>();
                 var prompt = new DebriefPrompt(
                     language,
                     Facts(day, hands, moments),
-                    moments.Where(m => narratedHands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(narratedHands[m.HandId]))).ToList());
+                    moments.Where(m => narratedHands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(narratedHands[m.HandId], opponentTypes))).ToList());
                 return await model.DebriefCashSessionAsync(prompt, ct);
             },
             cancellationToken);

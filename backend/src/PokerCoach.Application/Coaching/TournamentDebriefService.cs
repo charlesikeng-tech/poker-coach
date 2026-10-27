@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using PokerCoach.Application.Hands;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
@@ -69,6 +70,7 @@ public sealed class TournamentDebriefService(
     ILeakService leaks,
     ICoachingReportStore reports,
     AiUsageGuard guard,
+    IOpponentStatsReader opponentStatsReader,
     TimeProvider time)
 {
     internal const string Kind = "tournament-debrief";
@@ -144,12 +146,17 @@ public sealed class TournamentDebriefService(
                 var analysis = await leaks.GetAsync(userId, null, time.GetUtcNow().AddDays(-LeakDays), null, stakesLevel, ct);
                 var hands = (await reports.LoadHandsAsync(userId, moments.Select(m => m.HandId).ToList(), ct))
                     .ToDictionary(h => h.HandId);
+                var narratedHands = moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => hands[m.HandId]).ToList();
+                var opponentNames = HandNarrator.OpponentNames(narratedHands);
+                var opponentTypes = opponentNames.Count > 0
+                    ? HandNarrator.ClassifyOpponents(await opponentStatsReader.GetByUserAsync(userId, opponentNames, ct))
+                    : new Dictionary<string, PlayerType>();
                 var subFormat = detail.SubFormat ?? TournamentSubFormat.Mtt;
                 var isBounty = detail.IsBounty;
                 var prompt = new DebriefPrompt(
                     language,
                     Facts(detail, moments, analysis.Report.Leaks),
-                    moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(hands[m.HandId]))).ToList(),
+                    moments.Where(m => hands.ContainsKey(m.HandId)).Select(m => (m.Ref, HandNarrator.Tell(hands[m.HandId], opponentTypes))).ToList(),
                     subFormat,
                     isBounty);
                 return await model.DebriefTournamentAsync(prompt, ct);

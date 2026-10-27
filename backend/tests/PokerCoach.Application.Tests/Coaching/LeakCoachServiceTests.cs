@@ -1,6 +1,7 @@
 using PokerCoach.Application.Tests.Subscriptions;
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
+using PokerCoach.Application.Hands;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Domain.Identity;
@@ -112,13 +113,39 @@ public sealed class LeakCoachServiceTests
         Assert.Contains("BTN raises", story, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void The_hand_story_includes_opponent_types_when_provided()
+    {
+        var hand = new WinamaxHandHistoryParser().Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "GoldenFiles", "Winamax", "20260905_CASSIOPEIA_1161415333__real_holdem_no-limit.txt"))).Hands[1];
+        var input = HandForAnalysisMapper.From(hand)!;
+        var btnPlayer = input.Seats.First(s => PositionResolver.Resolve(input).TryGetValue(s.Player, out var p) && p == PokerPosition.Button).Player;
+        var opponentTypes = new Dictionary<string, PlayerType>(StringComparer.Ordinal) { [btnPlayer] = PlayerType.Lag };
+
+        var story = HandNarrator.Tell(new ExampleHand(Guid.NewGuid(), hand.StartedAt, hand.Level, hand.Ante, input, hand.Board, "4cKs"), opponentTypes);
+
+        Assert.Contains("BTN [Lag] raises", story, StringComparison.Ordinal);
+        Assert.Contains("Hero (HJ)", story, StringComparison.Ordinal);
+        Assert.DoesNotContain("Villain0", story, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void The_hand_story_omits_unknown_opponent_types()
+    {
+        var example = Example();
+        var opponentTypes = new Dictionary<string, PlayerType>(StringComparer.Ordinal) { ["P3"] = PlayerType.Unknown };
+
+        var story = HandNarrator.Tell(example, opponentTypes);
+
+        Assert.DoesNotContain("[Unknown]", story, StringComparison.Ordinal);
+    }
+
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
 
     private Task<CoachingOutcome> ExplainButtonAsync() =>
         Service().ExplainAsync(UserId, LeakStat.Rfi, PokerPosition.Button, LeakDirection.TooLow, null, null, "fr", StakesLevel.Low, Ct);
 
     private LeakCoachService Service() =>
-        new(new LeakService(new StatsStub()), store, new AiUsageGuard(ledger, model, options, BillingFakes.Unbilled(time), time), options, time);
+        new(new LeakService(new StatsStub()), store, new AiUsageGuard(ledger, model, options, BillingFakes.Unbilled(time), time), options, new NullOpponentStatsReader(), time);
 
     private static ExampleHand Example()
     {
@@ -212,6 +239,15 @@ public sealed class LeakCoachServiceTests
 
         public Task<ModelAnswer<PlayerProfile>> ProfilePlayerAsync(PlayerProfilePrompt prompt, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+    }
+
+    private sealed class NullOpponentStatsReader : IOpponentStatsReader
+    {
+        public Task<IReadOnlyDictionary<string, OpponentStats>> GetAsync(Guid pokerAccountId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<string, OpponentStats>>(new Dictionary<string, OpponentStats>());
+
+        public Task<IReadOnlyDictionary<string, OpponentStats>> GetByUserAsync(Guid userId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<string, OpponentStats>>(new Dictionary<string, OpponentStats>());
     }
 
     private sealed class FakeStore : ICoachingStore

@@ -206,7 +206,7 @@ public sealed class FeatureStoresTests(PostgresFixture fixture)
 
         var hands = await scope.ServiceProvider.GetRequiredService<ICoachingReportStore>()
             .LoadHandsAsync(userId, detail.KeyMoments.Select(m => m.HandId).ToList(), Ct);
-        var stories = hands.Select(HandNarrator.Tell).ToList();
+        var stories = hands.Select(h => HandNarrator.Tell(h)).ToList();
 
         Assert.Equal(detail.KeyMoments.Count, hands.Count);
         Assert.Contains(stories, s => s.Contains("Shown: ", StringComparison.Ordinal));

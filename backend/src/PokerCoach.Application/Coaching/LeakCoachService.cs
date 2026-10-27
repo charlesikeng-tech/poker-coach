@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using PokerCoach.Application.Hands;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
@@ -59,6 +60,7 @@ public sealed class LeakCoachService(
     ICoachingStore store,
     AiUsageGuard guard,
     CoachingOptions options,
+    IOpponentStatsReader opponentStatsReader,
     TimeProvider time)
 {
 
@@ -106,6 +108,10 @@ public sealed class LeakCoachService(
             async (model, ct) =>
             {
                 var examples = await store.FindExampleHandsAsync(userId, situation, options.ExampleHands, HeroHandFacts.Version, ct);
+                var opponentNames = HandNarrator.OpponentNames(examples);
+                var opponentTypes = opponentNames.Count > 0
+                    ? HandNarrator.ClassifyOpponents(await opponentStatsReader.GetByUserAsync(userId, opponentNames, ct))
+                    : new Dictionary<string, PlayerType>();
                 labels = examples
                     .Select((e, i) =>
                     {
@@ -116,7 +122,7 @@ public sealed class LeakCoachService(
                 var prompt = new ExplanationPrompt(
                     language,
                     Facts(leak, analysis.Format, positionRates),
-                    examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e))).ToList(),
+                    examples.Select((e, i) => (labels[i].Ref, HandNarrator.Tell(e, opponentTypes))).ToList(),
                     gameType ?? GameType.Tournament);
                 return await model.ExplainAsync(prompt, ct);
             },

@@ -26,17 +26,35 @@ public static class HandNarrator
 
     public static string Label(PokerPosition position) => Labels[position];
 
-    public static string Tell(ExampleHand example)
+    /// <summary>Collects the distinct opponent names from a set of hands.</summary>
+    public static HashSet<string> OpponentNames(IEnumerable<ExampleHand> hands) =>
+        hands
+            .SelectMany(h => h.Hand.Seats.Where(s => s.Player != h.Hand.Hero).Select(s => s.Player))
+            .ToHashSet(StringComparer.Ordinal);
+
+    /// <summary>Builds the opponent-name → PlayerType map from stats, for use with <see cref="Tell"/>.</summary>
+    public static Dictionary<string, PlayerType> ClassifyOpponents(IReadOnlyDictionary<string, OpponentStats> stats) =>
+        stats
+            .Select(kvp => (kvp.Key, Type: kvp.Value.Classify()))
+            .Where(x => x.Type != PlayerType.Unknown)
+            .ToDictionary(x => x.Key, x => x.Type, StringComparer.Ordinal);
+
+    public static string Tell(ExampleHand example, IReadOnlyDictionary<string, PlayerType>? opponentTypes = null)
     {
         ArgumentNullException.ThrowIfNull(example);
 
         var hand = example.Hand;
         var positions = PositionResolver.Resolve(hand);
         var dealt = hand.Actions.Select(a => a.Player).ToHashSet(StringComparer.Ordinal);
-        string Name(string player) =>
-            player == hand.Hero
-                ? $"Hero ({(positions.TryGetValue(player, out var hp) ? Labels[hp] : "?")})"
-                : positions.TryGetValue(player, out var p) ? Labels[p] : "Villain";
+        string Name(string player)
+        {
+            if (player == hand.Hero)
+                return $"Hero ({(positions.TryGetValue(player, out var hp) ? Labels[hp] : "?")})";
+            var label = positions.TryGetValue(player, out var p) ? Labels[p] : "Villain";
+            if (opponentTypes is not null && opponentTypes.TryGetValue(player, out var type) && type != PlayerType.Unknown)
+                return $"{label} [{type}]";
+            return label;
+        }
         string Bb(long chips) => Math.Round((decimal)chips / hand.BigBlind, 1).ToString(CultureInfo.InvariantCulture) + " BB";
 
         var text = new StringBuilder();

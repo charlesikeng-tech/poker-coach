@@ -1,6 +1,7 @@
 using PokerCoach.Application.Tests.Subscriptions;
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
+using PokerCoach.Application.Hands;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Identity;
@@ -107,7 +108,16 @@ public sealed class TournamentDebriefServiceTests
     }
 
     private TournamentDebriefService Service() =>
-        new(new TournamentDetailService(new Store(this)), new LeakService(new NoLeakStats()), reports, new AiUsageGuard(ledger, model, new CoachingOptions(), BillingFakes.Unbilled(time), time), time);
+        new(new TournamentDetailService(new Store(this)), new LeakService(new NoLeakStats()), reports, new AiUsageGuard(ledger, model, new CoachingOptions(), BillingFakes.Unbilled(time), time), new NullOpponentStatsReader(), time);
+
+    private sealed class NullOpponentStatsReader : IOpponentStatsReader
+    {
+        public Task<IReadOnlyDictionary<string, OpponentStats>> GetAsync(Guid pokerAccountId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<string, OpponentStats>>(new Dictionary<string, OpponentStats>());
+
+        public Task<IReadOnlyDictionary<string, OpponentStats>> GetByUserAsync(Guid userId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<string, OpponentStats>>(new Dictionary<string, OpponentStats>());
+    }
 
     /// <summary>Hands at 100 BB; a double-up and a bust where asked (1-based indexes among the new hands).</summary>
     private void PlayHands(int count, int? doubleUpAt, int? bustAt)

@@ -7,4 +7,7 @@ public interface IOpponentStatsReader
 {
     /// <summary>Stats for the given opponents, keyed by opponent name. Missing opponents are absent from the result.</summary>
     Task<IReadOnlyDictionary<string, OpponentStats>> GetAsync(Guid pokerAccountId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken);
+
+    /// <summary>Stats across all poker accounts of the user. Used by coaching services that work at user level.</summary>
+    Task<IReadOnlyDictionary<string, OpponentStats>> GetByUserAsync(Guid userId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken);
 }
