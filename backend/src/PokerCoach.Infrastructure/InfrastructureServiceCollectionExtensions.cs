@@ -31,6 +31,8 @@ using PokerCoach.Infrastructure.Platform;
 using PokerCoach.Infrastructure.Poker;
 using PokerCoach.Infrastructure.Progress;
 using PokerCoach.Infrastructure.Ranges;
+using PokerCoach.Application.Opponents;
+using PokerCoach.Infrastructure.Opponents;
 using PokerCoach.Infrastructure.Statistics;
 using PokerCoach.Infrastructure.Tournaments;
 using PokerCoach.Infrastructure.Training;
@@ -78,6 +80,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ICoverageStore, CoverageStore>();
         services.AddScoped<IHandFactsStore, HandFactsStore>();
         services.AddScoped<IOpponentStatsBackfillStore, OpponentStatsBackfillStore>();
+        services.AddScoped<IOpponentStore, OpponentStore>();
         services.AddScoped<StatisticsReadStore>();
         services.AddScoped<IStatisticsReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
         services.AddScoped<IRangeReadStore>(sp => sp.GetRequiredService<StatisticsReadStore>());
