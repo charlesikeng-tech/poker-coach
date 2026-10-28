@@ -8,7 +8,11 @@
 # sets. No body-size limit here: the app enforces its own (100 MB per upload).
 {$APP_DOMAIN} {
 	encode zstd gzip
-	reverse_proxy app:8080
+	reverse_proxy app:8080 {
+		transport http {
+			read_timeout 120s
+		}
+	}
 }
 
 # The landing page (site/): plain files, baked into this image.

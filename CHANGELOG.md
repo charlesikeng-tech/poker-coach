@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-b299309] — 2026-10-28
+
+### Correctifs
+
+- **ci**: Remove apostrophe in jq single-quoted filter that broke shell parsing
+
 ## [2026.10.28-5d4ffdd] — 2026-10-28
 
 ### CI/CD

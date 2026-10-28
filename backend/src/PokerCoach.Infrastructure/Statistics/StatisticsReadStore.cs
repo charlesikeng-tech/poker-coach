@@ -476,16 +476,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         bool needsCoverage = includeCoverage || filter.CompleteHistoryOnly;
 
         IQueryable<FilteredHand> query;
+        var accountIds = db.Set<PokerAccountRecord>()
+            .Where(a => a.UserId == userId && a.ConfirmedAt != null)
+            .Where(a => filter.Room == null || a.Room == filter.Room)
+            .Select(a => a.Id);
+
         if (needsCoverage)
         {
             query =
                 from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
                 join h in db.Set<HandRecord>() on f.HandId equals h.Id
-                join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
+                join a in db.Set<PokerAccountRecord>() on f.PokerAccountId equals a.Id
                 join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
                 from c in coverage.DefaultIfEmpty()
-                where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
-                      && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
+                where accountIds.Contains(f.PokerAccountId) && f.FactsVersion == factsVersion
+                      && h.GameType == gameType
                 select new FilteredHand
                 {
                     F = f,
@@ -504,9 +509,9 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             query =
                 from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
                 join h in db.Set<HandRecord>() on f.HandId equals h.Id
-                join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
-                where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
-                      && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
+                join a in db.Set<PokerAccountRecord>() on f.PokerAccountId equals a.Id
+                where accountIds.Contains(f.PokerAccountId) && f.FactsVersion == factsVersion
+                      && h.GameType == gameType
                 select new FilteredHand
                 {
                     F = f,
