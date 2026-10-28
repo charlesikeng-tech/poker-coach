@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-c0b7013] — 2026-10-28
 
 ### Performance
 

@@ -150,7 +150,8 @@ public sealed record CheckoutRequest(
     BillingInterval Interval,
     string Language,
     Uri SuccessUrl,
-    Uri CancelUrl);
+    Uri CancelUrl,
+    int? TrialDays = null);
 
 public sealed record TopUpRequest(Guid UserId, int Credits, string Language, Uri SuccessUrl, Uri CancelUrl);
 

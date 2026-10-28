@@ -132,21 +132,28 @@ internal sealed partial class StripeBillingGateway(
             throw new BillingGatewayException($"No Stripe price configured for {request.Plan} billed {request.Interval}.");
         }
 
+        var form = new List<KeyValuePair<string, string>>
+        {
+            new("mode", "subscription"),
+            new("customer", request.CustomerId),
+            new("client_reference_id", request.UserId.ToString()),
+            new("line_items[0][price]", price),
+            new("line_items[0][quantity]", "1"),
+            new("allow_promotion_codes", "true"),
+            new("locale", request.Language),
+            new("subscription_data[metadata][user_id]", request.UserId.ToString()),
+            new("success_url", request.SuccessUrl.ToString()),
+            new("cancel_url", request.CancelUrl.ToString()),
+        };
+        if (request.TrialDays is { } trialDays)
+        {
+            form.Add(new("subscription_data[trial_period_days]", trialDays.ToString(CultureInfo.InvariantCulture)));
+        }
+
         using var json = await SendAsync(
             HttpMethod.Post,
             "v1/checkout/sessions",
-            [
-                new("mode", "subscription"),
-                new("customer", request.CustomerId),
-                new("client_reference_id", request.UserId.ToString()),
-                new("line_items[0][price]", price),
-                new("line_items[0][quantity]", "1"),
-                new("allow_promotion_codes", "true"),
-                new("locale", request.Language),
-                new("subscription_data[metadata][user_id]", request.UserId.ToString()),
-                new("success_url", request.SuccessUrl.ToString()),
-                new("cancel_url", request.CancelUrl.ToString()),
-            ],
+            form,
             idempotencyKey: null,
             cancellationToken);
         return new Uri(json.RootElement.GetProperty("url").GetString()!);

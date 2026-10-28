@@ -70,6 +70,8 @@ public sealed class SubscriptionService(
     /// <summary>A record older than this is re-read from Stripe when shown: repairs a missed webhook.</summary>
     public static readonly TimeSpan MaxSyncAge = TimeSpan.FromDays(1);
 
+    public const int TrialDays = 14;
+
     public async Task<BillingSummary> GetAsync(Guid userId, CancellationToken cancellationToken)
     {
         var subscription = gateway.IsConfigured ? await store.FindByUserAsync(userId, cancellationToken) : null;
@@ -130,6 +132,7 @@ public sealed class SubscriptionService(
                 return BillingRedirect.Fail(BillingFailure.AlreadySubscribed);
             }
 
+            var eligibleForTrial = subscription is null || subscription.Status is null;
             subscription ??= await OpenCustomerAsync(userId, cancellationToken);
             if (subscription is null)
             {
@@ -144,7 +147,8 @@ public sealed class SubscriptionService(
                     interval,
                     language,
                     new Uri(appUrl, "subscription?checkout=success"),
-                    new Uri(appUrl, "subscription?checkout=cancel")),
+                    new Uri(appUrl, "subscription?checkout=cancel"),
+                    TrialDays: eligibleForTrial ? TrialDays : null),
                 cancellationToken));
         }
         catch (BillingGatewayException)
