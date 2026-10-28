@@ -23,6 +23,7 @@ import {
   Play,
   StepBack,
   StepForward,
+  UserRound,
 } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
@@ -105,6 +106,7 @@ export class HandReplayPage {
     Play,
     StepBack,
     StepForward,
+    UserRound,
   };
 
   private readonly locale = computed(() => this.language.current());

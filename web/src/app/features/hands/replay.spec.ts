@@ -25,6 +25,7 @@ const hand: HandReplay = {
       opponentName: null,
       opponentType: null,
       opponentHands: null,
+      opponentId: null,
     },
     {
       seatNumber: 2,
@@ -37,6 +38,7 @@ const hand: HandReplay = {
       opponentName: 'Player2',
       opponentType: null,
       opponentHands: null,
+      opponentId: null,
     },
     {
       seatNumber: 3,
@@ -49,6 +51,7 @@ const hand: HandReplay = {
       opponentName: 'Player3',
       opponentType: 'lag',
       opponentHands: 45,
+      opponentId: null,
     },
   ],
   actions: [

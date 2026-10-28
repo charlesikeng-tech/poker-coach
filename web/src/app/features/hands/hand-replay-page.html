@@ -244,7 +244,7 @@
               <ol>
                 @for (item of group.actions; track item.index) {
                   @let who = seatOf(item.action.seatNumber);
-                  <li>
+                  <li class="log__entry">
                     <button
                       type="button"
                       class="log__action"
@@ -276,6 +276,15 @@
                         }
                       </span>
                     </button>
+                    @if (who?.opponentId) {
+                      <a
+                        class="log__profile"
+                        [routerLink]="['/opponents', who!.opponentId!]"
+                        [title]="t('viewProfile')"
+                      >
+                        <app-icon [icon]="icons.UserRound" />
+                      </a>
+                    }
                   </li>
                 }
               </ol>

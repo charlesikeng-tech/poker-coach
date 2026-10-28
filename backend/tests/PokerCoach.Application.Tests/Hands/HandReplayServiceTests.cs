@@ -104,5 +104,8 @@ public sealed class HandReplayServiceTests
 
         public Task<IReadOnlyDictionary<string, OpponentStats>> GetByUserAsync(Guid userId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyDictionary<string, OpponentStats>>(new Dictionary<string, OpponentStats>());
+
+        public Task<IReadOnlyDictionary<string, Guid>> GetIdsAsync(Guid pokerAccountId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyDictionary<string, Guid>>(new Dictionary<string, Guid>());
     }
 }

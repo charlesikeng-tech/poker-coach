@@ -42,6 +42,20 @@ internal sealed class OpponentStatsReader(PokerCoachDbContext db) : IOpponentSta
         return ToStats(rows);
     }
 
+    public async Task<IReadOnlyDictionary<string, Guid>> GetIdsAsync(
+        Guid pokerAccountId,
+        IReadOnlyCollection<string> opponentNames,
+        CancellationToken cancellationToken)
+    {
+        if (opponentNames.Count == 0)
+            return new Dictionary<string, Guid>();
+
+        return await db.Set<OpponentStatsRecord>()
+            .AsNoTracking()
+            .Where(o => o.PokerAccountId == pokerAccountId && opponentNames.Contains(o.OpponentName))
+            .ToDictionaryAsync(o => o.OpponentName, o => o.Id, cancellationToken);
+    }
+
     private static Dictionary<string, OpponentStats> ToStats(List<OpponentStatsRecord> rows) =>
         rows.ToDictionary(
             r => r.OpponentName,

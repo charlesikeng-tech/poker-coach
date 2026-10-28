@@ -30,6 +30,8 @@ export interface ReplaySeat {
   readonly opponentType: PlayerType | null;
   /** Number of hands observed; null for the hero. */
   readonly opponentHands: number | null;
+  /** Opponent profile ID for linking to the detail page; null for the hero. */
+  readonly opponentId: string | null;
 }
 
 export interface ReplayAction {

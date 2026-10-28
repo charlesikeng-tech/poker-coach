@@ -10,4 +10,7 @@ public interface IOpponentStatsReader
 
     /// <summary>Stats across all poker accounts of the user. Used by coaching services that work at user level.</summary>
     Task<IReadOnlyDictionary<string, OpponentStats>> GetByUserAsync(Guid userId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken);
+
+    /// <summary>Record IDs of opponents for one poker account, keyed by name. Used by the replayer to build profile links.</summary>
+    Task<IReadOnlyDictionary<string, Guid>> GetIdsAsync(Guid pokerAccountId, IReadOnlyCollection<string> opponentNames, CancellationToken cancellationToken);
 }

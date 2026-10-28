@@ -224,10 +224,16 @@
   font-weight: var(--font-weight-semibold);
 }
 
+.log__entry {
+  display: flex;
+  align-items: center;
+}
+
 .log__action {
   display: flex;
+  flex: 1;
+  min-width: 0;
   gap: var(--space-2);
-  width: 100%;
   padding: var(--space-1) var(--space-2);
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
@@ -302,6 +308,30 @@
   &[data-type='shark'] {
     background: color-mix(in srgb, #10b981 18%, transparent);
     color: #34d399;
+  }
+}
+
+.log__profile {
+  --icon-size: 0.75rem;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition:
+    color var(--motion-fast),
+    background var(--motion-fast);
+
+  &:hover {
+    background: var(--surface-hover);
+    color: var(--accent-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
   }
 }
 

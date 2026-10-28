@@ -23,7 +23,8 @@ public sealed record ReplaySeatResponse(
     long Collected,
     string? OpponentName,
     string? OpponentType,
-    int? OpponentHands);
+    int? OpponentHands,
+    Guid? OpponentId);
 
 /// <param name="Amount">Chips this action adds to the pot (a raise's increment, not its total).</param>
 public sealed record ReplayActionResponse(Street Street, int SeatNumber, ActionKind Kind, long Amount, bool IsAllIn);
@@ -92,7 +93,7 @@ public static class HandEndpoints
                 .Select(s => new ReplaySeatResponse(
                     s.SeatNumber, s.Position, s.IsHero, s.IsDealt, s.Stack,
                     s.Cards?.Select(c => c.ToString()).ToList(), s.Collected,
-                    s.OpponentName, ToCamelCase(s.OpponentType?.ToString()), s.OpponentHands))
+                    s.OpponentName, ToCamelCase(s.OpponentType?.ToString()), s.OpponentHands, s.OpponentId))
                 .ToList(),
             replay.Actions.Select(a => new ReplayActionResponse(a.Street, a.SeatNumber, a.Kind, a.Amount, a.IsAllIn)).ToList(),
             replay.Board.Select(c => c.ToString()).ToList(),

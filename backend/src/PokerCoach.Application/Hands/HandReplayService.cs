@@ -49,7 +49,8 @@ public sealed record ReplaySeat(
     long Collected,
     string? OpponentName = null,
     PlayerType? OpponentType = null,
-    int? OpponentHands = null);
+    int? OpponentHands = null,
+    Guid? OpponentId = null);
 
 /// <param name="Amount">Chips this action adds to the pot (a raise's increment, not its total).</param>
 public sealed record ReplayAction(Street Street, int SeatNumber, ActionKind Kind, long Amount, bool IsAllIn);
@@ -92,11 +93,14 @@ public sealed class HandReplayService(IHandReplayStore store, IOpponentStatsRead
         var stats = opponentNames.Count > 0
             ? await opponentStats.GetAsync(source.PokerAccountId, opponentNames, cancellationToken)
             : new Dictionary<string, OpponentStats>();
+        var ids = opponentNames.Count > 0
+            ? await opponentStats.GetIdsAsync(source.PokerAccountId, opponentNames, cancellationToken)
+            : new Dictionary<string, Guid>();
 
-        return Build(source, stats);
+        return Build(source, stats, ids);
     }
 
-    internal static HandReplay Build(HandReplaySource source, IReadOnlyDictionary<string, OpponentStats>? opponentProfiles = null)
+    internal static HandReplay Build(HandReplaySource source, IReadOnlyDictionary<string, OpponentStats>? opponentProfiles = null, IReadOnlyDictionary<string, Guid>? opponentIds = null)
     {
         ArgumentNullException.ThrowIfNull(source);
 
@@ -119,12 +123,15 @@ public sealed class HandReplayService(IHandReplayStore store, IOpponentStatsRead
                 string? opponentName = null;
                 PlayerType? opponentType = null;
                 int? opponentHands = null;
+                Guid? opponentId = null;
                 if (!isHero && opponentProfiles is not null && opponentProfiles.TryGetValue(s.Player, out var profile))
                 {
                     opponentName = s.Player;
                     opponentType = profile.Classify();
                     opponentHands = profile.Hands;
                 }
+                if (!isHero && opponentIds is not null && opponentIds.TryGetValue(s.Player, out var resolvedId))
+                    opponentId = resolvedId;
 
                 return new ReplaySeat(
                     s.SeatNumber,
@@ -136,7 +143,8 @@ public sealed class HandReplayService(IHandReplayStore store, IOpponentStatsRead
                     hand.Collected.GetValueOrDefault(s.Player),
                     opponentName,
                     opponentType,
-                    opponentHands);
+                    opponentHands,
+                    opponentId);
             })
             .ToList();
 

@@ -1445,7 +1445,8 @@
         "maniac": "Maniac",
         "shark": "Shark",
         "hands": "{{count}} mains"
-      }
+      },
+      "viewProfile": "Voir le profil"
     },
     "ranges": {
       "title": "Ranges",
