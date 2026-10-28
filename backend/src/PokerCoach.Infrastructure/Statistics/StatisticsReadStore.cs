@@ -277,7 +277,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         int factsVersion,
         CancellationToken cancellationToken)
     {
-        var tournaments = await Filtered(userId, filter, factsVersion)
+        var tournaments = await Filtered(userId, filter, factsVersion, includeCoverage: true)
             .Where(x => x.TournamentId != null)
             .Select(x => new { TournamentId = x.TournamentId!.Value, x.Complete })
             .Distinct()
@@ -470,29 +470,56 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToListAsync(cancellationToken);
 
     /// <summary>The user's analyzed hands within the filter, with whether their tournament's history is complete.</summary>
-    private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion)
+    private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion, bool includeCoverage = false)
     {
         var gameType = filter.GameType ?? GameType.Tournament;
-        var query =
-            from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
-            join h in db.Set<HandRecord>() on f.HandId equals h.Id
-            join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
-            join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
-            from c in coverage.DefaultIfEmpty()
-            where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
-                  && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
-            select new FilteredHand
-            {
-                F = f,
-                StartedAt = h.StartedAt,
-                TournamentId = h.TournamentId,
-                HeroCards = h.HeroCards,
-                MaxSeats = h.MaxSeats,
-                BigBlind = h.BigBlind,
-                Level = h.Level,
-                Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
-                Room = a.Room,
-            };
+        bool needsCoverage = includeCoverage || filter.CompleteHistoryOnly;
+
+        IQueryable<FilteredHand> query;
+        if (needsCoverage)
+        {
+            query =
+                from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
+                join h in db.Set<HandRecord>() on f.HandId equals h.Id
+                join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
+                join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
+                from c in coverage.DefaultIfEmpty()
+                where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
+                      && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
+                select new FilteredHand
+                {
+                    F = f,
+                    StartedAt = h.StartedAt,
+                    TournamentId = h.TournamentId,
+                    HeroCards = h.HeroCards,
+                    MaxSeats = h.MaxSeats,
+                    BigBlind = h.BigBlind,
+                    Level = h.Level,
+                    Complete = c != null && c.CoverageVersion == TournamentCoverage.Version && c.Status == CoverageStatus.Complete,
+                    Room = a.Room,
+                };
+        }
+        else
+        {
+            query =
+                from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
+                join h in db.Set<HandRecord>() on f.HandId equals h.Id
+                join a in db.Set<PokerAccountRecord>() on h.PokerAccountId equals a.Id
+                where a.UserId == userId && a.ConfirmedAt != null && f.FactsVersion == factsVersion
+                      && h.GameType == gameType && (filter.Room == null || a.Room == filter.Room)
+                select new FilteredHand
+                {
+                    F = f,
+                    StartedAt = h.StartedAt,
+                    TournamentId = h.TournamentId,
+                    HeroCards = h.HeroCards,
+                    MaxSeats = h.MaxSeats,
+                    BigBlind = h.BigBlind,
+                    Level = h.Level,
+                    Complete = false,
+                    Room = a.Room,
+                };
+        }
 
         if (filter.From is { } from)
         {

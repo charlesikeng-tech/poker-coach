@@ -1,10 +1,14 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-75fde55] — 2026-10-28
 
 ### CI/CD
 
 - Add Discord webhook for release announcements
+
+### Fonctionnalités
+
+- **site**: Activate Discord invite link on landing pages (FR/EN/ES)
 
 ## [2026.10.28-0ec74c8] — 2026-10-28
 
