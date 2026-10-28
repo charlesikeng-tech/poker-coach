@@ -58,6 +58,8 @@ public static class InfrastructureServiceCollectionExtensions
                 npgsql.MigrationsHistoryTable(DatabaseOptions.MigrationsHistoryTable, "public"));
         });
 
+        services.AddMemoryCache();
+
         services.AddScoped<IUserAccountStore, UserAccountStore>();
         services.AddScoped<IAccountDataStore, AccountDataStore>();
         services.AddScoped<ILocalAccountStore, LocalAccountStore>();

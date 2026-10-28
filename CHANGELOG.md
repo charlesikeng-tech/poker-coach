@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-dad9acc] — 2026-10-28
+
+### Performance
+
+- Denormalize remaining hand columns to eliminate hands JOIN
+
 ## [2026.10.28-51d975c] — 2026-10-28
 
 ### Performance

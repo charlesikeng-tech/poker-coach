@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using PokerCoach.Application.Ranges;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Training;
@@ -14,16 +16,32 @@ using PokerCoach.Infrastructure.Tournaments;
 namespace PokerCoach.Infrastructure.Statistics;
 
 /// <summary>One aggregate query (COUNT ... FILTER per flag, grouped by position): no hand leaves the database.</summary>
-internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsReadStore, ICashPerformanceReadStore, ICashSessionReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
+internal sealed class StatisticsReadStore(PokerCoachDbContext db, IMemoryCache cache) : IStatisticsReadStore, ICashPerformanceReadStore, ICashSessionReadStore, IRangeReadStore, IAllInReadStore, IRealSpotStore, IPlayedSizingStore
 {
-    public async Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
+    private static readonly ConcurrentDictionary<Guid, long> Generations = new();
+
+    internal static void InvalidateUser(Guid userId) =>
+        Generations.AddOrUpdate(userId, 1, (_, g) => g + 1);
+
+    private async Task<T> Cached<T>(string method, Guid userId, int factsVersion, StatisticsFilter filter, Func<Task<T>> factory)
+    {
+        var gen = Generations.GetValueOrDefault(userId);
+        var key = $"stats:{userId}:{factsVersion}:{gen}:{method}:{filter.GetHashCode()}";
+        if (cache.TryGetValue(key, out object? cached))
+            return (T)cached!;
+        var result = await factory();
+        cache.Set(key, (object)result!, CacheDuration);
+        return result;
+    }
+    public Task<IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)>> CountByPositionAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
-        // Within a format, positions are named by distance to the button (OpeningSeat): grouped with the
-        // number of players dealt, then renamed and summed.
+        return Cached(nameof(CountByPositionAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .GroupBy(x => new { x.F.Position, x.F.PlayersDealt })
             .Select(g => new
@@ -68,7 +86,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<(PokerPosition? Position, HeroStatCounts Counts)> result = rows
             .Select(r => (
                 Position: r.Position is { } p && filter.Format is { } format ? OpeningSeat.Canonical(p, r.PlayersDealt, format) : r.Position,
                 Counts: new HeroStatCounts(
@@ -110,15 +128,19 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .GroupBy(r => r.Position)
             .Select(g => (g.Key, g.Aggregate(HeroStatCounts.Zero, (total, r) => total.Add(r.Counts))))
             .ToList();
+        return result;
+        });
     }
 
     /// <summary>One aggregate query grouped by year and month (timestamps are UTC: Npgsql reads them AT TIME ZONE UTC).</summary>
-    public async Task<IReadOnlyList<(DateOnly Month, HeroStatCounts Counts)>> CountByMonthAsync(
+    public Task<IReadOnlyList<(DateOnly Month, HeroStatCounts Counts)>> CountByMonthAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountByMonthAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .GroupBy(x => new { x.StartedAt.Year, x.StartedAt.Month })
             .Select(g => new
@@ -163,7 +185,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<(DateOnly Month, HeroStatCounts Counts)> result = rows
             .OrderBy(r => r.Year).ThenBy(r => r.Month)
             .Select(r => (new DateOnly(r.Year, r.Month, 1), new HeroStatCounts(
                 r.Hands, r.PreflopDecisions, r.Vpip, r.Pfr, r.RfiOpportunities, r.Rfi, r.Limp, r.StealOpportunities, r.Steal,
@@ -174,6 +196,8 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 r.FoldToCbetTurnOpportunities, r.FoldToCbetTurn, r.DonkBetFlopOpportunities, r.DonkBetFlop,
                 r.ProbeBetTurnOpportunities, r.ProbeBetTurn)))
             .ToList();
+        return result;
+        });
     }
 
     public async Task<IReadOnlyList<(DateOnly WeekStart, PokerPosition? Position, HeroStatCounts Counts)>> CountByWeekAndPositionAsync(
@@ -260,38 +284,46 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToList();
     }
 
-    public async Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
+    public Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
     {
-        var counts = await Filtered(userId, filter with { Format = null }, factsVersion)
-            .GroupBy(x => x.MaxSeats <= 6)
-            .Select(g => new { SixMax = g.Key, Hands = g.Count() })
-            .ToListAsync(cancellationToken);
-        return new FormatCounts(
-            counts.Where(c => c.SixMax).Sum(c => c.Hands),
-            counts.Where(c => !c.SixMax).Sum(c => c.Hands));
+        return Cached(nameof(CountByFormatAsync), userId, factsVersion, filter, async () =>
+        {
+            var counts = await Filtered(userId, filter with { Format = null }, factsVersion)
+                .GroupBy(x => x.MaxSeats <= 6)
+                .Select(g => new { SixMax = g.Key, Hands = g.Count() })
+                .ToListAsync(cancellationToken);
+            return new FormatCounts(
+                counts.Where(c => c.SixMax).Sum(c => c.Hands),
+                counts.Where(c => !c.SixMax).Sum(c => c.Hands));
+        });
     }
 
-    public async Task<StatisticsSample> CountTournamentsAsync(
+    public Task<StatisticsSample> CountTournamentsAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountTournamentsAsync), userId, factsVersion, filter, async () =>
+        {
         var tournaments = await Filtered(userId, filter, factsVersion, includeCoverage: true)
             .Where(x => x.TournamentId != null)
             .Select(x => new { TournamentId = x.TournamentId!.Value, x.Complete })
             .Distinct()
             .ToListAsync(cancellationToken);
         return new StatisticsSample(tournaments.Count, tournaments.Count(t => t.Complete));
+        });
     }
 
     /// <summary>One query grouped by position, table size and exact holding: a few thousand rows at most.</summary>
-    public async Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
+    public Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountOpeningsAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.RfiOpportunity && x.F.Position != null && x.HeroCards != null)
             .GroupBy(x => new { x.F.Position, x.MaxSeats, x.F.PlayersDealt, x.HeroCards })
@@ -307,17 +339,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<OpeningHoldingCount> result = rows
             .Select(r => new OpeningHoldingCount(r.Position!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Opens, r.Limps))
             .ToList();
+        return result;
+        });
     }
 
-    public async Task<IReadOnlyList<DefenceHoldingCount>> CountDefencesAsync(
+    public Task<IReadOnlyList<DefenceHoldingCount>> CountDefencesAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountDefencesAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.FacingOpenFrom != null && x.F.Position != null && x.HeroCards != null)
             .GroupBy(x => new { x.F.Position, x.F.FacingOpenFrom, x.MaxSeats, x.F.PlayersDealt, x.HeroCards })
@@ -334,17 +370,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<DefenceHoldingCount> result = rows
             .Select(r => new DefenceHoldingCount(r.Position!.Value, r.FacingOpenFrom!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Calls, r.ThreeBets))
             .ToList();
+        return result;
+        });
     }
 
-    public async Task<IReadOnlyList<DefencePairCount>> CountDefencePairsAsync(
+    public Task<IReadOnlyList<DefencePairCount>> CountDefencePairsAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountDefencePairsAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.FacingOpenFrom != null && x.F.Position != null)
             .GroupBy(x => new { x.F.Position, x.F.FacingOpenFrom, x.MaxSeats, x.F.PlayersDealt })
@@ -360,17 +400,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<DefencePairCount> result = rows
             .Select(r => new DefencePairCount(r.Position!.Value, r.FacingOpenFrom!.Value, r.MaxSeats, r.PlayersDealt, r.Dealt, r.Calls, r.ThreeBets))
             .ToList();
+        return result;
+        });
     }
 
-    public async Task<IReadOnlyList<VsThreeBetHoldingCount>> CountVsThreeBetsAsync(
+    public Task<IReadOnlyList<VsThreeBetHoldingCount>> CountVsThreeBetsAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountVsThreeBetsAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.FacingThreeBetFrom != null && x.F.Position != null && x.HeroCards != null)
             .GroupBy(x => new { x.F.Position, x.F.FacingThreeBetFrom, x.MaxSeats, x.F.PlayersDealt, x.HeroCards })
@@ -387,17 +431,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<VsThreeBetHoldingCount> result = rows
             .Select(r => new VsThreeBetHoldingCount(r.Position!.Value, r.FacingThreeBetFrom!.Value, r.MaxSeats, r.PlayersDealt, r.HeroCards!, r.Dealt, r.Calls, r.FourBets))
             .ToList();
+        return result;
+        });
     }
 
-    public async Task<IReadOnlyList<VsThreeBetPairCount>> CountVsThreeBetPairsAsync(
+    public Task<IReadOnlyList<VsThreeBetPairCount>> CountVsThreeBetPairsAsync(
         Guid userId,
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken)
     {
+        return Cached(nameof(CountVsThreeBetPairsAsync), userId, factsVersion, filter, async () =>
+        {
         var rows = await Filtered(userId, filter, factsVersion)
             .Where(x => x.F.FacingThreeBetFrom != null && x.F.Position != null)
             .GroupBy(x => new { x.F.Position, x.F.FacingThreeBetFrom, x.MaxSeats, x.F.PlayersDealt })
@@ -413,9 +461,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             })
             .ToListAsync(cancellationToken);
 
-        return rows
+        IReadOnlyList<VsThreeBetPairCount> result = rows
             .Select(r => new VsThreeBetPairCount(r.Position!.Value, r.FacingThreeBetFrom!.Value, r.MaxSeats, r.PlayersDealt, r.Dealt, r.Calls, r.FourBets))
             .ToList();
+        return result;
+        });
     }
 
     /// <summary>The hero's opens and 3-bets against a single open: a few columns per raise, a sixth of the hands at most.</summary>
@@ -689,12 +739,16 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
          where a.UserId == userId && a.ConfirmedAt != null && (f == null || f.FactsVersion != factsVersion)
          select h.Id).CountAsync(cancellationToken);
 
-    public async Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
-        await Filtered(userId, filter with { Room = null }, factsVersion)
-            .Select(x => x.Room)
-            .Distinct()
-            .OrderBy(r => r)
-            .ToListAsync(cancellationToken);
+    public Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+        Cached(nameof(ListRoomsAsync), userId, factsVersion, filter, async () =>
+        {
+            IReadOnlyList<PokerRoom> result = await Filtered(userId, filter with { Room = null }, factsVersion)
+                .Select(x => x.Room)
+                .Distinct()
+                .OrderBy(r => r)
+                .ToListAsync(cancellationToken);
+            return result;
+        });
 
     private sealed class FilteredHand
     {

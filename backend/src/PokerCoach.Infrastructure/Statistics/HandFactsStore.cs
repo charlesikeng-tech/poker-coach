@@ -67,6 +67,18 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
         // key and its batch is simply picked up again.
         await db.SaveChangesAsync(cancellationToken);
         db.ChangeTracker.Clear();
+
+        var accountIds = existing.Values.Select(r => r.PokerAccountId)
+            .Concat(handMeta.Values.Select(m => m.PokerAccountId))
+            .Distinct()
+            .ToList();
+        var userIds = await db.Set<PokerAccountRecord>().AsNoTracking()
+            .Where(a => accountIds.Contains(a.Id))
+            .Select(a => a.UserId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        foreach (var userId in userIds)
+            StatisticsReadStore.InvalidateUser(userId);
     }
 
     /// <summary>Stored hand document to the analysis input. Imported hands always have a hero.</summary>
