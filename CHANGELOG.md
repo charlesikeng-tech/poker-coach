@@ -10,6 +10,10 @@
 
 - **web**: Add angular-eslint and fix all 15 violations
 
+### Tests
+
+- **web**: Add specs for wilson, push-fold ranges and room names
+
 ## [2026.10.28-f106a01] — 2026-10-28
 
 ### Correctifs
