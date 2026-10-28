@@ -1,8 +1,6 @@
-name: Discord – annonce de release
+name: Discord – test webhook
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       test_message:
@@ -13,54 +11,30 @@ permissions:
   contents: read
 
 jobs:
-  announce:
+  test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event.release.prerelease == false
     steps:
-      - name: Send Discord announcement
+      - name: Send test message
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_ANNOUNCES_WEBHOOK }}
-          EVENT_NAME: ${{ github.event_name }}
-          TAG: ${{ github.event.release.tag_name }}
-          NAME: ${{ github.event.release.name }}
-          BODY: ${{ github.event.release.body }}
-          URL: ${{ github.event.release.html_url }}
           TEST_MESSAGE: ${{ inputs.test_message }}
         run: |
           set -euo pipefail
-
           [ -n "${WEBHOOK_URL}" ] || { echo "::error::Secret DISCORD_ANNOUNCES_WEBHOOK manquant"; exit 1; }
 
-          if [ "${EVENT_NAME}" = "workflow_dispatch" ]; then
-            TITLE="🧪 Test d'annonce"
-            DESCRIPTION="${TEST_MESSAGE}"
-            LINK=""
-          else
-            TITLE="🚀 NutsIQ ${NAME:-$TAG}"
-            DESCRIPTION="${BODY:-Nouvelle version disponible.}"
-            LINK="${URL}"
-          fi
-
-          if [ "${#DESCRIPTION}" -gt 3900 ]; then
-            DESCRIPTION="${DESCRIPTION:0:3900}…"$'\n\n'"[Notes complètes sur GitHub](${LINK})"
-          fi
-
           PAYLOAD=$(jq -n \
-            --arg title "$TITLE" \
-            --arg desc "$DESCRIPTION" \
-            --arg url "$LINK" \
+            --arg desc "$TEST_MESSAGE" \
             '{
               username: "NutsIQ",
               allowed_mentions: { parse: [] },
               embeds: [{
-                title: $title,
+                title: "🧪 Test d'annonce",
                 description: $desc,
                 color: 13938487,
-                url: $url,
                 footer: { text: "Changelog NutsIQ" },
                 timestamp: (now | todate)
               }]
-            } | if $url == "" then del(.embeds[0].url) else . end')
+            }')
 
           curl --fail-with-body --silent --show-error \
             -H "Content-Type: application/json" \

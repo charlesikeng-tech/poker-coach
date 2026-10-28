@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-ab5003d] — 2026-10-28
+
+### Performance
+
+- Skip LEFT JOIN on tournament_coverage for queries that don't need it
+
 ## [2026.10.28-75fde55] — 2026-10-28
 
 ### CI/CD

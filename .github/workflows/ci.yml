@@ -192,3 +192,36 @@ jobs:
             --title "$TAG" \
             --notes-file release-notes.md \
             --target "${{ github.sha }}"
+      - name: Announce on Discord
+        if: secrets.DISCORD_ANNOUNCES_WEBHOOK != ''
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_ANNOUNCES_WEBHOOK }}
+        run: |
+          set -euo pipefail
+          TITLE="🚀 NutsIQ ${TAG}"
+          BODY=$(cat release-notes.md)
+          DESCRIPTION="${BODY:-Nouvelle version disponible.}"
+          URL="https://github.com/${{ github.repository }}/releases/tag/${TAG}"
+          if [ "${#DESCRIPTION}" -gt 3900 ]; then
+            DESCRIPTION="${DESCRIPTION:0:3900}…"$'\n\n'"[Notes complètes sur GitHub](${URL})"
+          fi
+          PAYLOAD=$(jq -n \
+            --arg title "$TITLE" \
+            --arg desc "$DESCRIPTION" \
+            --arg url "$URL" \
+            '{
+              username: "NutsIQ",
+              allowed_mentions: { parse: [] },
+              embeds: [{
+                title: $title,
+                description: $desc,
+                color: 13938487,
+                url: $url,
+                footer: { text: "Changelog NutsIQ" },
+                timestamp: (now | todate)
+              }]
+            }')
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$WEBHOOK_URL"
