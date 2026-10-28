@@ -63,31 +63,45 @@ public sealed class VsThreeBetRangeService(IRangeReadStore ranges, IStatisticsRe
         }
 
         var (min, max) = ReferenceOpeningRanges.Bounds(band);
-        var counts = await ranges.CountVsThreeBetsAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max, GameType: gameType), HeroHandFacts.Version, cancellationToken);
+        var baseFilter = new StatisticsFilter(from, to, min > 0 ? min : null, max, GameType: gameType);
+
+        var pairCounts = await ranges.CountVsThreeBetPairsAsync(userId, baseFilter, HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
 
         var spots = Enum.GetValues<TableFormat>().ToDictionary(
             f => f,
-            f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
+            f => pairCounts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
 
-        var cellsByPair = Cells(shown, counts);
+        var pairTotals = pairCounts
+            .Where(c => TableFormats.Of(c.MaxSeats) == shown)
+            .GroupBy(c => (
+                OpeningSeat.Canonical(c.Opener, c.PlayersDealt, shown),
+                OpeningSeat.Canonical(c.ThreeBettor, c.PlayersDealt, shown)))
+            .ToDictionary(
+                g => g.Key,
+                g => (Dealt: g.Sum(x => x.Dealt), Calls: g.Sum(x => x.Calls), FourBets: g.Sum(x => x.FourBets)));
+
         var pairs = Pairs(shown)
             .Select(p =>
             {
-                var cells = cellsByPair.GetValueOrDefault(p) ?? [];
+                var (dealt, calls, fourBets) = pairTotals.GetValueOrDefault(p);
                 return new VsThreeBetPair(
                     p.Opener,
                     p.ThreeBettor,
-                    cells.Sum(c => c.Value.Dealt),
-                    cells.Sum(c => c.Value.Calls),
-                    cells.Sum(c => c.Value.FourBets),
+                    dealt,
+                    calls,
+                    fourBets,
                     ReferenceVsThreeBetRanges.For(band, shown, p.Opener, p.ThreeBettor) is not null);
             })
             .ToList();
 
         var selected = pairs.FirstOrDefault(p => p.Opener == opener && p.ThreeBettor == threeBettor)
+            ?? (opener is not null ? pairs.Where(p => p.Opener == opener).MaxBy(p => p.Dealt) : null)
             ?? pairs.MaxBy(p => p.Dealt) ?? pairs.First();
+
+        var holdingCounts = await ranges.CountVsThreeBetsAsync(userId, baseFilter with { Format = shown }, HeroHandFacts.Version, cancellationToken);
+        var cellsByPair = Cells(shown, holdingCounts);
 
         return new VsThreeBetRanges(
             shown,

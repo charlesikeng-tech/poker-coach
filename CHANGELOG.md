@@ -1,5 +1,17 @@
 # Changelog
 
+## [2026.10.28-6c24999] — 2026-10-28
+
+### Performance
+
+- Batch history week queries in progress page (6 → 1 SQL round-trip)
+
+## [2026.10.28-78ccf31] — 2026-10-28
+
+### Maintenance
+
+- **deps**: Bump the npm_and_yarn group across 1 directory with 4 updates
+
 ## [2026.10.28-1f55e5a] — 2026-10-28
 
 ### Correctifs

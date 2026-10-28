@@ -66,12 +66,15 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
         }
 
         var (min, max) = ReferenceOpeningRanges.Bounds(band);
-        var counts = await ranges.CountDefencesAsync(userId, new StatisticsFilter(from, to, min > 0 ? min : null, max, GameType: gameType), HeroHandFacts.Version, cancellationToken);
+        var baseFilter = new StatisticsFilter(from, to, min > 0 ? min : null, max, GameType: gameType);
+
+        // Lightweight pair summary (no HeroCards grouping) — determines format, pairs and selected pair.
+        var pairCounts = await ranges.CountDefencePairsAsync(userId, baseFilter, HeroHandFacts.Version, cancellationToken);
         var pending = await statistics.CountPendingAsync(userId, HeroHandFacts.Version, cancellationToken);
 
         var spots = Enum.GetValues<TableFormat>().ToDictionary(
             f => f,
-            f => counts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
+            f => pairCounts.Where(c => TableFormats.Of(c.MaxSeats) == f).Sum(c => c.Dealt));
         var shown = format ?? (spots[TableFormat.FullRing] > spots[TableFormat.SixMax] ? TableFormat.FullRing : TableFormat.SixMax);
 
         var customs = gameType is { } gt
@@ -81,25 +84,39 @@ public sealed class DefenceRangeService(IRangeReadStore ranges, IStatisticsReadS
             ? customs.ToDictionary(r => (r.Defender, r.Opener))
             : null;
 
-        var cellsByPair = Cells(shown, counts);
+        // Build pair totals from the lightweight query.
+        var pairTotals = pairCounts
+            .Where(c => TableFormats.Of(c.MaxSeats) == shown)
+            .GroupBy(c => (
+                OpeningSeat.Canonical(c.Position, c.PlayersDealt, shown),
+                OpeningSeat.Canonical(c.Opener, c.PlayersDealt, shown)))
+            .ToDictionary(
+                g => g.Key,
+                g => (Dealt: g.Sum(x => x.Dealt), Calls: g.Sum(x => x.Calls), ThreeBets: g.Sum(x => x.ThreeBets)));
+
         var pairs = Pairs(shown)
             .Select(p =>
             {
-                var cells = cellsByPair.GetValueOrDefault(p) ?? [];
+                var (dealt, calls, threeBets) = pairTotals.GetValueOrDefault(p);
                 var hasCustom = customByPair is not null && customByPair.ContainsKey(p);
                 return new DefencePair(
                     p.Defender,
                     p.Opener,
-                    cells.Sum(c => c.Value.Dealt),
-                    cells.Sum(c => c.Value.Calls),
-                    cells.Sum(c => c.Value.ThreeBets),
+                    dealt,
+                    calls,
+                    threeBets,
                     hasCustom || ReferenceDefenceRanges.For(band, shown, p.Defender, p.Opener) is not null);
             })
             .ToList();
 
         var bigBlind = pairs.Where(p => p.Defender == PokerPosition.BigBlind).ToList();
         var selected = pairs.FirstOrDefault(p => p.Defender == defender && p.Opener == opener)
+            ?? (defender is not null ? pairs.Where(p => p.Defender == defender).MaxBy(p => p.Dealt) : null)
             ?? (bigBlind.MaxBy(p => p.Dealt) is { Dealt: > 0 } busiest ? busiest : bigBlind.First(p => p.Opener == PokerPosition.Button));
+
+        // Detail query with format filter — only the selected format's holdings for the 169-cell grid.
+        var holdingCounts = await ranges.CountDefencesAsync(userId, baseFilter with { Format = shown }, HeroHandFacts.Version, cancellationToken);
+        var cellsByPair = Cells(shown, holdingCounts);
 
         var selectedCustom = customByPair?.GetValueOrDefault((selected.Defender, selected.Opener));
         return new DefenceRanges(

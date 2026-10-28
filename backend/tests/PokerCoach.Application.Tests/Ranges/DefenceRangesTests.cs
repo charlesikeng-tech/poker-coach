@@ -74,8 +74,9 @@ public sealed class DefenceRangeServiceTests
         Assert.Equal(15, result.Pairs.Count);
         var selected = result.Selected;
         Assert.Equal((PokerPosition.BigBlind, PokerPosition.Button), (selected.Pair.Defender, selected.Pair.Opener));
-        Assert.Equal((8, 1, 3), (selected.Pair.Dealt, selected.Pair.Calls, selected.Pair.ThreeBets));
-        Assert.Equal(0.5m, selected.Pair.DefenceRate.Rate);
+        // Pair counts include all spots (even unreadable hero cards): 3+1+4+5=13 dealt, 0+1+0+5=6 calls, 3 three-bets.
+        Assert.Equal((13, 6, 3), (selected.Pair.Dealt, selected.Pair.Calls, selected.Pair.ThreeBets));
+        Assert.Equal(0.6923m, selected.Pair.DefenceRate.Rate);
 
         var ako = selected.Cells.Single(c => c.Hand.ToString() == "AKo");
         Assert.Equal((4, 1, 3, DefenceAction.ThreeBet), (ako.Dealt, ako.Calls, ako.ThreeBets, ako.Reference));
@@ -103,8 +104,15 @@ public sealed class DefenceRangeServiceTests
         public Task<IReadOnlyList<DefenceHoldingCount>> CountDefencesAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<DefenceHoldingCount>>(counts);
 
+        public Task<IReadOnlyList<DefencePairCount>> CountDefencePairsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<DefencePairCount>>(
+                counts.Select(c => new DefencePairCount(c.Position, c.Opener, c.MaxSeats, c.PlayersDealt, c.Dealt, c.Calls, c.ThreeBets)).ToList());
+
         public Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+
+        public Task<IReadOnlyList<VsThreeBetPairCount>> CountVsThreeBetPairsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<VsThreeBetPairCount>>([]);
 
         public Task<IReadOnlyList<VsThreeBetHoldingCount>> CountVsThreeBetsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
             throw new NotSupportedException();

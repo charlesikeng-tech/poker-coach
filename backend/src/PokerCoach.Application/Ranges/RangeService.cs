@@ -26,6 +26,12 @@ public sealed record DefenceHoldingCount(PokerPosition Position, PokerPosition O
 /// <param name="ThreeBettor">The 3-bettor's position.</param>
 public sealed record VsThreeBetHoldingCount(PokerPosition Opener, PokerPosition ThreeBettor, int MaxSeats, int PlayersDealt, string HeroCards, int Dealt, int Calls, int FourBets);
 
+/// <summary>Defence spots per seat pair, table size and players dealt — no holding detail.</summary>
+public sealed record DefencePairCount(PokerPosition Position, PokerPosition Opener, int MaxSeats, int PlayersDealt, int Dealt, int Calls, int ThreeBets);
+
+/// <summary>Vs-3-bet spots per opener–3-bettor pair, table size and players dealt — no holding detail.</summary>
+public sealed record VsThreeBetPairCount(PokerPosition Opener, PokerPosition ThreeBettor, int MaxSeats, int PlayersDealt, int Dealt, int Calls, int FourBets);
+
 public interface IRangeReadStore
 {
     /// <summary>Spots facing a single open within the filter, grouped by seat, opener, table size and holding.</summary>
@@ -34,6 +40,14 @@ public interface IRangeReadStore
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken);
+
+    /// <summary>Defence spots summarised by seat pair and table size (no holding grouping): for pair counts and format toggle.</summary>
+    Task<IReadOnlyList<DefencePairCount>> CountDefencePairsAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+        => Task.FromResult<IReadOnlyList<DefencePairCount>>([]);
 
     /// <summary>RFI spots of the user's analysed hands within the filter, grouped by position, table size and holding.</summary>
     Task<IReadOnlyList<OpeningHoldingCount>> CountOpeningsAsync(
@@ -48,6 +62,14 @@ public interface IRangeReadStore
         StatisticsFilter filter,
         int factsVersion,
         CancellationToken cancellationToken);
+
+    /// <summary>Vs-3-bet spots summarised by opener–3-bettor pair and table size (no holding grouping): for pair counts and format toggle.</summary>
+    Task<IReadOnlyList<VsThreeBetPairCount>> CountVsThreeBetPairsAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+        => Task.FromResult<IReadOnlyList<VsThreeBetPairCount>>([]);
 }
 
 /// <summary>One starting hand: what the player did with it, and whether the reference opens it.</summary>
