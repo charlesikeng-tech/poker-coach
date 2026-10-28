@@ -135,6 +135,8 @@ export class PokerTable {
     return bubble && seat ? [{ ...bubble, x: seat.x, y: seat.y }] : [];
   });
 
+  protected readonly dealKeys = computed(() => [this.view().dealKey]);
+
   protected readonly payouts = computed(() =>
     this.placed().filter((p) => this.view().payouts.includes(p.seat.seatNumber)),
   );

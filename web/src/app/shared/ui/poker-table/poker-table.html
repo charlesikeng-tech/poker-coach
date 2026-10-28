@@ -5,7 +5,7 @@
   <div class="felt__glow" aria-hidden="true"></div>
 
   <!-- Keyed on the hand: a new hand is dealt again from the middle. -->
-  @for (dealt of [v.dealKey]; track dealt) {
+  @for (dealt of dealKeys(); track dealt) {
     <div class="middle">
       <div class="board">
         @for (card of v.board; track $index) {

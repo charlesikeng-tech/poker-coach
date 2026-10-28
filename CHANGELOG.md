@@ -1,6 +1,10 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-f106a01] — 2026-10-28
+
+### Correctifs
+
+- **opponents**: React to route param changes in detail page
 
 ### Fonctionnalités
 
