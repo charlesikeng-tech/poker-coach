@@ -1,4 +1,4 @@
-name: Discord – test webhook
+name: Discord release
 
 on:
   workflow_dispatch:

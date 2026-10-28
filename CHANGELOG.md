@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **ci**: Simplify Discord announcement script to avoid shell quoting issues
+
 ## [2026.10.28-6a289a4] — 2026-10-28
 
 ### CI/CD
