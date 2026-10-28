@@ -6,6 +6,10 @@
 
 - **web**: Stabilize @for array reference in poker-table (NG0956)
 
+### Fonctionnalités
+
+- **web**: Add angular-eslint and fix all 15 violations
+
 ## [2026.10.28-f106a01] — 2026-10-28
 
 ### Correctifs
