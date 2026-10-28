@@ -179,7 +179,7 @@ jobs:
       - name: Generate release notes
         uses: orhun/git-cliff-action@v4
         with:
-          args: --unreleased --tag ${{ env.TAG }} --strip header
+          args: --current --tag ${{ env.TAG }} --strip header
           output: release-notes.md
         continue-on-error: true
       - name: Ensure release notes exist

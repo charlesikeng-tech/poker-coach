@@ -1,6 +1,10 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-7a0e143] — 2026-10-28
+
+### Documentation
+
+- Add Brevo conversion campaign runbook and email templates
 
 ### Fonctionnalités
 
