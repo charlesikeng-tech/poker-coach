@@ -276,6 +276,9 @@ public sealed class CoachDashboardServiceTests
 
         public Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null) =>
             Task.FromResult(new LeakCounts(format, HeroStatCounts.Zero, new Dictionary<PokerPosition, HeroStatCounts>()));
+
+        public Task<IReadOnlyDictionary<DateOnly, LeakCounts>> CountByWeekAsync(Guid userId, TableFormat format, DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null) =>
+            Task.FromResult<IReadOnlyDictionary<DateOnly, LeakCounts>>(new Dictionary<DateOnly, LeakCounts>());
     }
 
     internal sealed class StubStatisticsReadStore : IStatisticsReadStore

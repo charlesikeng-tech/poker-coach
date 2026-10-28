@@ -59,6 +59,11 @@ public interface IStatisticsReadStore
     /// <summary>Hands of the user's confirmed accounts whose facts are missing or outdated (still being computed).</summary>
     Task<int> CountPendingAsync(Guid userId, int factsVersion, CancellationToken cancellationToken);
 
+    /// <summary>Counts per ISO week (Monday) and position within the filter, for batch progress measurement.</summary>
+    Task<IReadOnlyList<(DateOnly WeekStart, PokerPosition? Position, HeroStatCounts Counts)>> CountByWeekAndPositionAsync(
+        Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
+        => Task.FromResult<IReadOnlyList<(DateOnly, PokerPosition?, HeroStatCounts)>>([]);
+
     /// <summary>Distinct rooms that have hands matching the filter (Room field ignored).</summary>
     Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
         => Task.FromResult<IReadOnlyList<PokerRoom>>([]);

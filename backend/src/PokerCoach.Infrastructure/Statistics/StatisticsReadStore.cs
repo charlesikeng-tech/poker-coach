@@ -176,6 +176,90 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToList();
     }
 
+    public async Task<IReadOnlyList<(DateOnly WeekStart, PokerPosition? Position, HeroStatCounts Counts)>> CountByWeekAndPositionAsync(
+        Guid userId,
+        StatisticsFilter filter,
+        int factsVersion,
+        CancellationToken cancellationToken)
+    {
+        var rows = await Filtered(userId, filter, factsVersion)
+            .GroupBy(x => new { x.StartedAt.Year, x.StartedAt.Month, x.StartedAt.Day, x.F.Position, x.F.PlayersDealt })
+            .Select(g => new
+            {
+                g.Key.Year,
+                g.Key.Month,
+                g.Key.Day,
+                g.Key.Position,
+                g.Key.PlayersDealt,
+                Hands = g.Count(),
+                PreflopDecisions = g.Count(x => x.F.HadPreflopDecision),
+                Vpip = g.Count(x => x.F.Vpip),
+                Pfr = g.Count(x => x.F.Pfr),
+                RfiOpportunities = g.Count(x => x.F.RfiOpportunity),
+                Rfi = g.Count(x => x.F.Rfi),
+                Limp = g.Count(x => x.F.Limp),
+                StealOpportunities = g.Count(x => x.F.StealOpportunity),
+                Steal = g.Count(x => x.F.Steal),
+                ThreeBetOpportunities = g.Count(x => x.F.ThreeBetOpportunity),
+                ThreeBet = g.Count(x => x.F.ThreeBet),
+                FoldToThreeBetOpportunities = g.Count(x => x.F.FoldToThreeBetOpportunity),
+                FoldToThreeBet = g.Count(x => x.F.FoldToThreeBet),
+                SawFlop = g.Count(x => x.F.SawFlop),
+                CbetFlopOpportunities = g.Count(x => x.F.CbetFlopOpportunity),
+                CbetFlop = g.Count(x => x.F.CbetFlop),
+                WentToShowdown = g.Count(x => x.F.WentToShowdown),
+                WonAtShowdown = g.Count(x => x.F.WonAtShowdown),
+                NetBigBlinds = g.Sum(x => x.F.NetBigBlinds),
+                FoldToCbetFlopOpportunities = g.Count(x => x.F.FoldToCbetFlopOpportunity),
+                FoldToCbetFlop = g.Count(x => x.F.FoldToCbetFlop),
+                RaiseCbetFlop = g.Count(x => x.F.RaiseCbetFlop),
+                CbetTurnOpportunities = g.Count(x => x.F.CbetTurnOpportunity),
+                CbetTurn = g.Count(x => x.F.CbetTurn),
+                CheckRaiseFlopOpportunities = g.Count(x => x.F.CheckRaiseFlopOpportunity),
+                CheckRaiseFlop = g.Count(x => x.F.CheckRaiseFlop),
+                WonWhenSawFlop = g.Count(x => x.F.WonWhenSawFlop),
+                PostflopAggressive = g.Sum(x => x.F.PostflopAggressive),
+                PostflopDecisions = g.Sum(x => x.F.PostflopDecisions),
+                FoldToCbetTurnOpportunities = g.Count(x => x.F.FoldToCbetTurnOpportunity),
+                FoldToCbetTurn = g.Count(x => x.F.FoldToCbetTurn),
+                DonkBetFlopOpportunities = g.Count(x => x.F.DonkBetFlopOpportunity),
+                DonkBetFlop = g.Count(x => x.F.DonkBetFlop),
+                ProbeBetTurnOpportunities = g.Count(x => x.F.ProbeBetTurnOpportunity),
+                ProbeBetTurn = g.Count(x => x.F.ProbeBetTurn),
+            })
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(r =>
+            {
+                var day = new DateOnly(r.Year, r.Month, r.Day);
+                var sinceMonday = ((int)day.DayOfWeek + 6) % 7;
+                return (
+                    WeekStart: day.AddDays(-sinceMonday),
+                    Position: r.Position is { } p && filter.Format is { } format
+                        ? OpeningSeat.Canonical(p, r.PlayersDealt, format)
+                        : r.Position,
+                    Counts: new HeroStatCounts(
+                        r.Hands, r.PreflopDecisions, r.Vpip, r.Pfr,
+                        r.RfiOpportunities, r.Rfi, r.Limp,
+                        r.StealOpportunities, r.Steal,
+                        r.ThreeBetOpportunities, r.ThreeBet,
+                        r.FoldToThreeBetOpportunities, r.FoldToThreeBet,
+                        r.SawFlop, r.CbetFlopOpportunities, r.CbetFlop,
+                        r.WentToShowdown, r.WonAtShowdown, r.NetBigBlinds,
+                        r.FoldToCbetFlopOpportunities, r.FoldToCbetFlop, r.RaiseCbetFlop,
+                        r.CbetTurnOpportunities, r.CbetTurn,
+                        r.CheckRaiseFlopOpportunities, r.CheckRaiseFlop,
+                        r.WonWhenSawFlop, r.PostflopAggressive, r.PostflopDecisions,
+                        r.FoldToCbetTurnOpportunities, r.FoldToCbetTurn,
+                        r.DonkBetFlopOpportunities, r.DonkBetFlop,
+                        r.ProbeBetTurnOpportunities, r.ProbeBetTurn));
+            })
+            .GroupBy(r => (r.WeekStart, r.Position))
+            .Select(g => (g.Key.WeekStart, g.Key.Position, g.Aggregate(HeroStatCounts.Zero, (total, r) => total.Add(r.Counts))))
+            .ToList();
+    }
+
     public async Task<FormatCounts> CountByFormatAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken)
     {
         var counts = await Filtered(userId, filter with { Format = null }, factsVersion)

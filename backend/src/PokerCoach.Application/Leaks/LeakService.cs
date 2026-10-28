@@ -44,6 +44,9 @@ public interface ILeakService
 {
     Task<LeakAnalysis> GetAsync(Guid userId, TableFormat? format, DateTimeOffset? from, DateTimeOffset? to, StakesLevel stakesLevel, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
     Task<LeakCounts> CountAsync(Guid userId, TableFormat format, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
+
+    /// <summary>Counts grouped by ISO week (Monday), for batch progress measurement over several weeks.</summary>
+    Task<IReadOnlyDictionary<DateOnly, LeakCounts>> CountByWeekAsync(Guid userId, TableFormat format, DateTimeOffset from, DateTimeOffset to, CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null);
 }
 
 public sealed class LeakService(IStatisticsReadStore store) : ILeakService
@@ -97,6 +100,25 @@ public sealed class LeakService(IStatisticsReadStore store) : ILeakService
             ReferenceRanges.Version,
             shown,
             formats);
+    }
+
+    public async Task<IReadOnlyDictionary<DateOnly, LeakCounts>> CountByWeekAsync(
+        Guid userId, TableFormat format, DateTimeOffset from, DateTimeOffset to,
+        CancellationToken cancellationToken, GameType? gameType = null, TournamentSubFormat? subFormat = null)
+    {
+        var filter = new StatisticsFilter(from, to, ReferenceRanges.MinStackBigBlinds, null, Format: format, GameType: gameType, SubFormat: subFormat);
+        var rows = await store.CountByWeekAndPositionAsync(userId, filter, HeroHandFacts.Version, cancellationToken);
+
+        return rows
+            .GroupBy(r => r.WeekStart)
+            .ToDictionary(
+                g => g.Key,
+                g =>
+                {
+                    var weekRows = g.Select(r => (r.Position, r.Counts)).ToList();
+                    var (overall, byPosition) = Aggregate(weekRows, format);
+                    return new LeakCounts(format, overall, byPosition);
+                });
     }
 
     private static (HeroStatCounts Overall, Dictionary<PokerPosition, HeroStatCounts> ByPosition) Aggregate(

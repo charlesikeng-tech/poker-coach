@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-1f55e5a] — 2026-10-28
 
 ### Correctifs
 
@@ -9,6 +9,7 @@
 ### Fonctionnalités
 
 - **web**: Add angular-eslint and fix all 15 violations
+- Add tournament review with AI hand-by-hand commentary
 
 ### Refactoring
 

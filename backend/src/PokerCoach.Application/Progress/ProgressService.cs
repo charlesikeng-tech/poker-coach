@@ -2,6 +2,7 @@ using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Training;
 using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker;
+using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Poker.Leaks;
 using PokerCoach.Domain.Progress;
 using PokerCoach.Domain.Tournaments;
@@ -85,10 +86,13 @@ public sealed class ProgressService(IWeeklyPlanStore plans, ILeakService leaks, 
         var current = plan is null ? null : await MeasureAsync(userId, plan, cancellationToken);
         var (attempts, correct) = await training.CountSinceAsync(userId, WeeklyPlanner.Start(week), null, cancellationToken);
 
-        var history = new List<WeekReport>();
-        foreach (var past in await plans.ListBeforeAsync(userId, week, gameType, subFormat, HistoryWeeks, cancellationToken))
+        var pastPlans = await plans.ListBeforeAsync(userId, week, gameType, subFormat, HistoryWeeks, cancellationToken);
+        var history = new List<WeekReport>(pastPlans.Count);
+        if (pastPlans.Count > 0)
         {
-            history.Add(await MeasureAsync(userId, past, cancellationToken));
+            var weekCounts = await BatchCountAsync(userId, pastPlans, gameType, subFormat, cancellationToken);
+            foreach (var past in pastPlans)
+                history.Add(BuildWeekReport(past, weekCounts.GetValueOrDefault(past.WeekStart)));
         }
 
         return new ProgressReport(week, current, baselineHands, attempts, correct, WeeklyPlanner.DrillGoal, history);
@@ -111,6 +115,29 @@ public sealed class ProgressService(IWeeklyPlanStore plans, ILeakService leaks, 
     {
         var start = WeeklyPlanner.Start(plan.WeekStart);
         var counts = await leaks.CountAsync(userId, plan.Format, start, start.AddDays(7), cancellationToken, plan.GameType, plan.SubFormat);
+        return BuildWeekReport(plan, counts);
+    }
+
+    /// <summary>One batch query per distinct format (usually one) instead of one query per history week.</summary>
+    private async Task<Dictionary<DateOnly, LeakCounts>> BatchCountAsync(
+        Guid userId, IReadOnlyList<WeeklyPlan> pastPlans, GameType gameType, TournamentSubFormat? subFormat, CancellationToken cancellationToken)
+    {
+        var result = new Dictionary<DateOnly, LeakCounts>();
+        foreach (var group in pastPlans.GroupBy(p => p.Format))
+        {
+            var earliest = group.Min(p => WeeklyPlanner.Start(p.WeekStart));
+            var latest = group.Max(p => WeeklyPlanner.Start(p.WeekStart).AddDays(7));
+            var batch = await leaks.CountByWeekAsync(userId, group.Key, earliest, latest, cancellationToken, gameType, subFormat);
+            foreach (var (w, c) in batch)
+                result[w] = c;
+        }
+
+        return result;
+    }
+
+    private static WeekReport BuildWeekReport(WeeklyPlan plan, LeakCounts? counts)
+    {
+        counts ??= new LeakCounts(plan.Format, HeroStatCounts.Zero, new Dictionary<PokerPosition, HeroStatCounts>());
         var priorities = plan.Priorities
             .Select(p =>
             {
