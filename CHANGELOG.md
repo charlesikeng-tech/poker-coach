@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-0ec74c8] — 2026-10-28
+
+### Performance
+
+- Split defence and vs-3-bet range queries (pair summary + format filter)
+
 ## [2026.10.28-6c24999] — 2026-10-28
 
 ### Performance
