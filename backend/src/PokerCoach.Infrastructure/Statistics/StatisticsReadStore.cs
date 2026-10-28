@@ -24,7 +24,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
     {
         // Within a format, positions are named by distance to the button (OpeningSeat): grouped with the
         // number of players dealt, then renamed and summed.
-        var rows = await Filtered(userId, filter, factsVersion)
+        var rows = await Filtered(userId, filter, factsVersion, needsHandColumns: false)
             .GroupBy(x => new { x.F.Position, x.F.PlayersDealt })
             .Select(g => new
             {
@@ -119,7 +119,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         int factsVersion,
         CancellationToken cancellationToken)
     {
-        var rows = await Filtered(userId, filter, factsVersion)
+        var rows = await Filtered(userId, filter, factsVersion, needsHandColumns: false)
             .GroupBy(x => new { x.StartedAt.Year, x.StartedAt.Month })
             .Select(g => new
             {
@@ -182,7 +182,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         int factsVersion,
         CancellationToken cancellationToken)
     {
-        var rows = await Filtered(userId, filter, factsVersion)
+        var rows = await Filtered(userId, filter, factsVersion, needsHandColumns: false)
             .GroupBy(x => new { x.StartedAt.Year, x.StartedAt.Month, x.StartedAt.Day, x.F.Position, x.F.PlayersDealt })
             .Select(g => new
             {
@@ -470,10 +470,16 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .ToListAsync(cancellationToken);
 
     /// <summary>The user's analyzed hands within the filter, with whether their tournament's history is complete.</summary>
-    private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion, bool includeCoverage = false)
+    private IQueryable<FilteredHand> Filtered(Guid userId, StatisticsFilter filter, int factsVersion,
+        bool includeCoverage = false, bool needsHandColumns = true)
     {
         var gameType = filter.GameType ?? GameType.Tournament;
         bool needsCoverage = includeCoverage || filter.CompleteHistoryOnly;
+        bool needsHandJoin = needsHandColumns
+            || filter.Phase != null
+            || filter.Format != null
+            || filter.SubFormat != null
+            || needsCoverage;
 
         IQueryable<FilteredHand> query;
         var accountIds = db.Set<PokerAccountRecord>()
@@ -481,7 +487,21 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
             .Where(a => filter.Room == null || a.Room == filter.Room)
             .Select(a => a.Id);
 
-        if (needsCoverage)
+        if (!needsHandJoin)
+        {
+            query =
+                from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
+                join a in db.Set<PokerAccountRecord>() on f.PokerAccountId equals a.Id
+                where accountIds.Contains(f.PokerAccountId) && f.FactsVersion == factsVersion
+                      && f.GameType == gameType
+                select new FilteredHand
+                {
+                    F = f,
+                    StartedAt = f.StartedAt,
+                    Room = a.Room,
+                };
+        }
+        else if (needsCoverage)
         {
             query =
                 from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
@@ -490,11 +510,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 join c in db.Set<TournamentCoverageRecord>() on h.TournamentId equals c.TournamentId into coverage
                 from c in coverage.DefaultIfEmpty()
                 where accountIds.Contains(f.PokerAccountId) && f.FactsVersion == factsVersion
-                      && h.GameType == gameType
+                      && f.GameType == gameType
                 select new FilteredHand
                 {
                     F = f,
-                    StartedAt = h.StartedAt,
+                    StartedAt = f.StartedAt,
                     TournamentId = h.TournamentId,
                     HeroCards = h.HeroCards,
                     MaxSeats = h.MaxSeats,
@@ -511,11 +531,11 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
                 join h in db.Set<HandRecord>() on f.HandId equals h.Id
                 join a in db.Set<PokerAccountRecord>() on f.PokerAccountId equals a.Id
                 where accountIds.Contains(f.PokerAccountId) && f.FactsVersion == factsVersion
-                      && h.GameType == gameType
+                      && f.GameType == gameType
                 select new FilteredHand
                 {
                     F = f,
-                    StartedAt = h.StartedAt,
+                    StartedAt = f.StartedAt,
                     TournamentId = h.TournamentId,
                     HeroCards = h.HeroCards,
                     MaxSeats = h.MaxSeats,
@@ -613,7 +633,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
         Guid userId, DateTimeOffset from, DateTimeOffset to, int factsVersion, CancellationToken cancellationToken)
     {
         var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
-        var row = await Filtered(userId, filter, factsVersion)
+        var row = await Filtered(userId, filter, factsVersion, needsHandColumns: false)
             .GroupBy(_ => 1)
             .Select(g => new
             {
@@ -691,7 +711,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db) : IStatisticsR
          select h.Id).CountAsync(cancellationToken);
 
     public async Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, StatisticsFilter filter, int factsVersion, CancellationToken cancellationToken) =>
-        await Filtered(userId, filter with { Room = null }, factsVersion)
+        await Filtered(userId, filter with { Room = null }, factsVersion, needsHandColumns: false)
             .Select(x => x.Room)
             .Distinct()
             .OrderBy(r => r)

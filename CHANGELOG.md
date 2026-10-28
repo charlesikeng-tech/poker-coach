@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-8bc9052] — 2026-10-28
+
+### Correctifs
+
+- Resolve 504 timeout and make release step idempotent
+
 ## [2026.10.28-b299309] — 2026-10-28
 
 ### Correctifs

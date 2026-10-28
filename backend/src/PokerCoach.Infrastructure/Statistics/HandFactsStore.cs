@@ -33,18 +33,25 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
             .ToDictionaryAsync(f => f.HandId, cancellationToken);
 
         var newIds = ids.Where(id => !existing.ContainsKey(id)).ToList();
-        var accountIds = newIds.Count > 0
+        var handMeta = newIds.Count > 0
             ? await db.Set<HandRecord>().AsNoTracking()
                 .Where(h => newIds.Contains(h.Id))
-                .Select(h => new { h.Id, h.PokerAccountId })
-                .ToDictionaryAsync(h => h.Id, h => h.PokerAccountId, cancellationToken)
+                .Select(h => new { h.Id, h.PokerAccountId, h.GameType, h.StartedAt })
+                .ToDictionaryAsync(h => h.Id, cancellationToken)
             : [];
 
         foreach (var (handId, handFacts) in facts)
         {
             if (!existing.TryGetValue(handId, out var record))
             {
-                record = new HandHeroFactsRecord { HandId = handId, PokerAccountId = accountIds[handId] };
+                var meta = handMeta[handId];
+                record = new HandHeroFactsRecord
+                {
+                    HandId = handId,
+                    PokerAccountId = meta.PokerAccountId,
+                    GameType = meta.GameType,
+                    StartedAt = meta.StartedAt,
+                };
                 db.Add(record);
             }
 

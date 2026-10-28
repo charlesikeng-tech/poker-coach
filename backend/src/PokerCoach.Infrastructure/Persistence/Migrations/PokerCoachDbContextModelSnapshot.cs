@@ -1463,6 +1463,12 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("four_bet");
 
+                    b.Property<short>("GameType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)1)
+                        .HasColumnName("game_type");
+
                     b.Property<bool>("HadPreflopDecision")
                         .HasColumnType("boolean")
                         .HasColumnName("had_preflop_decision");
@@ -1542,6 +1548,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(10,2)")
                         .HasColumnName("stack_in_big_blinds");
 
+                    b.Property<DateTimeOffset>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
                     b.Property<bool>("Steal")
                         .HasColumnType("boolean")
                         .HasColumnName("steal");
@@ -1591,6 +1601,9 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PokerAccountId", "FactsVersion")
                         .HasDatabaseName("ix_hand_hero_facts_poker_account_id_facts_version");
+
+                    b.HasIndex("PokerAccountId", "FactsVersion", "GameType")
+                        .HasDatabaseName("ix_hand_hero_facts_poker_account_id_facts_version_game_type");
 
                     b.ToTable("hand_hero_facts", "poker");
                 });
