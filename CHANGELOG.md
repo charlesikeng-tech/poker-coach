@@ -9,6 +9,7 @@
 - **opponents**: Add notes, tags columns and fix GDPR reset/export
 - **opponents**: Add REST API for opponent list, detail, notes and tags
 - **opponents**: Add Angular page with list, detail, notes and tags
+- **opponents**: Add opponent profile link in hand replayer
 
 ## [2026.10.27-39a76c9] — 2026-10-27
 

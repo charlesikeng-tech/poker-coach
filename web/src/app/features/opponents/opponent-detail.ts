@@ -4,9 +4,11 @@ import {
   computed,
   effect,
   inject,
+  input,
   signal,
+  untracked,
 } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { ArrowLeft, NotebookPen, Save, Tag, X } from 'lucide';
 
@@ -27,8 +29,9 @@ type LoadState = 'loading' | 'ready' | 'error';
 })
 export class OpponentDetailPage {
   private readonly api = inject(OpponentsApi);
-  private readonly route = inject(ActivatedRoute);
   private readonly language = inject(LanguageService);
+
+  readonly id = input.required<string>();
 
   protected readonly state = signal<LoadState>('loading');
   protected readonly data = signal<OpponentDetail | null>(null);
@@ -43,8 +46,8 @@ export class OpponentDetailPage {
 
   constructor() {
     effect(() => {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) void this.load(id);
+      const id = this.id();
+      untracked(() => void this.load(id));
     });
   }
 
@@ -115,8 +118,7 @@ export class OpponentDetailPage {
   }
 
   protected retry(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) void this.load(id);
+    void this.load(this.id());
   }
 
   private async load(id: string): Promise<void> {
