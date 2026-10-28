@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### CI/CD
+
+- Move Discord announcement into the release job
+
 ## [2026.10.28-ab5003d] — 2026-10-28
 
 ### Performance

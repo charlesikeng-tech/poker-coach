@@ -193,11 +193,11 @@ jobs:
             --notes-file release-notes.md \
             --target "${{ github.sha }}"
       - name: Announce on Discord
-        if: secrets.DISCORD_ANNOUNCES_WEBHOOK != ''
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_ANNOUNCES_WEBHOOK }}
         run: |
           set -euo pipefail
+          [ -n "${WEBHOOK_URL}" ] || { echo "No webhook configured, skipping."; exit 0; }
           TITLE="🚀 NutsIQ ${TAG}"
           BODY=$(cat release-notes.md)
           DESCRIPTION="${BODY:-Nouvelle version disponible.}"
