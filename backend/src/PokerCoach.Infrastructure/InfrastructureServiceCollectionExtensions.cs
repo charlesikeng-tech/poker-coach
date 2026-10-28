@@ -111,10 +111,12 @@ public static class InfrastructureServiceCollectionExtensions
         if (!string.IsNullOrWhiteSpace(configuration[$"{EmailOptions.SectionName}:{nameof(EmailOptions.BrevoApiKey)}"]))
         {
             services.AddHttpClient<IEmailSender, BrevoEmailSender>(client => client.Timeout = TimeSpan.FromSeconds(15));
+            services.AddHttpClient<IContactSync, BrevoContactSync>(client => client.Timeout = TimeSpan.FromSeconds(15));
         }
         else
         {
             services.AddSingleton<IEmailSender, LogEmailSender>();
+            services.AddSingleton<IContactSync, LogContactSync>();
         }
 
         // Starts only when Import:WorkerEnabled is true (default); needs ImportProcessor and ImportOptions

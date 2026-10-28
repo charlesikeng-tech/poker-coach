@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.DependencyInjection;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.IntegrationTests;
@@ -86,7 +87,13 @@ public sealed partial class LocalAccountsTests(PostgresFixture fixture)
             scope.ServiceProvider.GetRequiredService<ILocalAccountStore>(),
             scope.ServiceProvider.GetRequiredService<IPasswordHasher>(),
             new CapturingSender(sent),
+            new NullContactSync(),
             TimeProvider.System);
+
+    private sealed class NullContactSync : IContactSync
+    {
+        public Task SyncAsync(ContactAttributes contact, CancellationToken cancellationToken) => Task.CompletedTask;
+    }
 
     private static string TokenIn(EmailMessage message) => Uri.UnescapeDataString(TokenPattern().Match(message.Text).Groups[1].Value);
 

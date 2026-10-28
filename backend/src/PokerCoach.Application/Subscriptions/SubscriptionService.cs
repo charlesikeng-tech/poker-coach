@@ -1,5 +1,6 @@
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Domain.Subscriptions;
 
 namespace PokerCoach.Application.Subscriptions;
@@ -65,6 +66,7 @@ public sealed class SubscriptionService(
     PlanAccess plans,
     UserProfileService profiles,
     AiUsageGuard aiUsage,
+    IContactSync contactSync,
     TimeProvider time)
 {
     /// <summary>A record older than this is re-read from Stripe when shown: repairs a missed webhook.</summary>
@@ -246,6 +248,7 @@ public sealed class SubscriptionService(
         }
 
         await SyncAsync(subscription, cancellationToken);
+        _ = SyncContactPlanAsync(subscription);
         return WebhookOutcome.Synced;
     }
 
@@ -330,6 +333,28 @@ public sealed class SubscriptionService(
         catch (BillingGatewayException)
         {
             // Showing the last known state beats failing the page.
+        }
+    }
+
+    private async Task SyncContactPlanAsync(Subscription subscription)
+    {
+        try
+        {
+            var profile = await profiles.GetAsync(subscription.UserId, CancellationToken.None);
+            if (profile?.Email is null)
+                return;
+
+            var plan = subscription.IsAlive == true
+                ? subscription.Status == SubscriptionStatus.Trialing
+                    ? $"{subscription.Plan.ToString().ToLowerInvariant()}_trial"
+                    : subscription.Plan.ToString().ToLowerInvariant()
+                : "starter";
+
+            await contactSync.SyncAsync(new ContactAttributes(profile.Email, Plan: plan), CancellationToken.None);
+        }
+        catch (Exception)
+        {
+            // Fire-and-forget: never fail the webhook because of Brevo.
         }
     }
 }

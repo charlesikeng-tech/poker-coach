@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.Application.Tests.Identity;
@@ -200,7 +201,12 @@ public sealed partial class LocalAccountServiceTests
         return (await Service().ConfirmEmailAsync(TokenIn(emails.Sent[^1]), Password, Ct)).User!;
     }
 
-    private LocalAccountService Service() => new(accounts, hasher, emails, time);
+    private LocalAccountService Service() => new(accounts, hasher, emails, new NullContactSync(), time);
+
+    private sealed class NullContactSync : IContactSync
+    {
+        public Task SyncAsync(ContactAttributes contact, CancellationToken cancellationToken) => Task.CompletedTask;
+    }
 
     private static string TokenIn(EmailMessage message) => Uri.UnescapeDataString(TokenPattern().Match(message.Text).Groups[1].Value);
 

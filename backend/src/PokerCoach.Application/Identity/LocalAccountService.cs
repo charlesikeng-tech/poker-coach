@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.Application.Identity;
@@ -123,6 +124,7 @@ public sealed class LocalAccountService(
     ILocalAccountStore store,
     IPasswordHasher hasher,
     IEmailSender email,
+    IContactSync contactSync,
     TimeProvider time)
 {
     public const int MinPasswordLength = 10;
@@ -264,7 +266,19 @@ public sealed class LocalAccountService(
         }
 
         credential.ConfirmEmail(now);
-        return await CompleteSignInAsync(credential, check, password!, now, cancellationToken);
+        var outcome = await CompleteSignInAsync(credential, check, password!, now, cancellationToken);
+        if (outcome.User is { } confirmedUser)
+        {
+            _ = contactSync.SyncAsync(
+                new ContactAttributes(
+                    credential.Email,
+                    Plan: "starter",
+                    SignupDate: confirmedUser.CreatedAt,
+                    Language: confirmedUser.PreferredLanguage),
+                CancellationToken.None);
+        }
+
+        return outcome;
     }
 
     /// <summary>Sends a new confirmation link to an unconfirmed address; silent otherwise.</summary>

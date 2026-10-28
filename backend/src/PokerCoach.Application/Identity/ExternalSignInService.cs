@@ -1,3 +1,4 @@
+using PokerCoach.Application.Notifications;
 using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.Application.Identity;
@@ -18,7 +19,7 @@ public sealed record ExternalSignIn(
 /// joins that account (ADR-0013): both prove the same mailbox. An unconfirmed one proves nothing and is
 /// not joined.
 /// </summary>
-public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider timeProvider, ILocalAccountStore? localAccounts = null)
+public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider timeProvider, ILocalAccountStore? localAccounts = null, IContactSync? contactSync = null)
 {
     public async Task<User> SignInAsync(ExternalSignIn signIn, CancellationToken cancellationToken)
     {
@@ -38,6 +39,17 @@ public sealed class ExternalSignInService(IUserAccountStore store, TimeProvider 
 
             if (await store.TryAddAsync(newUser, identity, cancellationToken))
             {
+                if (contactSync is not null)
+                {
+                    _ = contactSync.SyncAsync(
+                        new ContactAttributes(
+                            newUser.Email!,
+                            Plan: "starter",
+                            SignupDate: newUser.CreatedAt,
+                            Language: newUser.PreferredLanguage),
+                        CancellationToken.None);
+                }
+
                 return newUser;
             }
 

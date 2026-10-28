@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using PokerCoach.Application.Coaching;
 using PokerCoach.Application.Identity;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Tests.Coaching;
 using PokerCoach.Application.Tests.Identity;
@@ -386,7 +387,12 @@ public sealed class SubscriptionServiceTests
     private PlanAccess Plans(FakeBillingGateway? gateway = null) => new(store, gateway ?? stripe, users, admins, new PlanOptions(), time);
 
     private SubscriptionService Service(FakeBillingGateway? gateway = null, AiUsageGuard? guard = null) =>
-        new(store, gateway ?? stripe, Plans(gateway), new UserProfileService(users), guard ?? Guard(new InMemoryAiUsageLedger()), time);
+        new(store, gateway ?? stripe, Plans(gateway), new UserProfileService(users), guard ?? Guard(new InMemoryAiUsageLedger()), new NullContactSync(), time);
+
+    private sealed class NullContactSync : IContactSync
+    {
+        public Task SyncAsync(ContactAttributes contact, CancellationToken cancellationToken) => Task.CompletedTask;
+    }
 
     private AiUsageGuard Guard(IAiUsageLedger ledger) =>
         new(ledger, new ScriptedModel(), new CoachingOptions { DailyExplanationsPerUser = 1000, DailyDebriefsPerUser = 1000, DailyWeekReviewsPerUser = 1000 }, Plans(), time);
