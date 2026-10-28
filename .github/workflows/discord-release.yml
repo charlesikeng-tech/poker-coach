@@ -21,22 +21,11 @@ jobs:
         run: |
           set -euo pipefail
           [ -n "${WEBHOOK_URL}" ] || { echo "::error::Secret DISCORD_ANNOUNCES_WEBHOOK manquant"; exit 1; }
-
-          PAYLOAD=$(jq -n \
+          jq -n \
+            --arg title "Test webhook" \
             --arg desc "$TEST_MESSAGE" \
-            '{
-              username: "NutsIQ",
-              allowed_mentions: { parse: [] },
-              embeds: [{
-                title: "🧪 Test d'annonce",
-                description: $desc,
-                color: 13938487,
-                footer: { text: "Changelog NutsIQ" },
-                timestamp: (now | todate)
-              }]
-            }')
-
-          curl --fail-with-body --silent --show-error \
+            '{username:"NutsIQ",allowed_mentions:{parse:[]},embeds:[{title:$title,description:$desc,color:13938487,footer:{text:"Changelog NutsIQ"},timestamp:(now|todate)}]}' \
+          | curl --fail-with-body --silent --show-error \
             -H "Content-Type: application/json" \
-            -d "$PAYLOAD" \
+            -d @- \
             "$WEBHOOK_URL"

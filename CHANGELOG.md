@@ -1,6 +1,10 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-5d4ffdd] — 2026-10-28
+
+### CI/CD
+
+- Rename Discord test workflow to "Discord release"
 
 ### Correctifs
 
