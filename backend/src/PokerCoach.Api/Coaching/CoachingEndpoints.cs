@@ -235,9 +235,9 @@ public static class CoachingEndpoints
         return (requested ?? profile?.PreferredLanguage ?? UserLanguages.Default, profile?.StakesLevel ?? StakesLevel.Low, null);
     }
 
-    private readonly record struct ResolvedUser(Guid UserId, string Language, StakesLevel StakesLevel);
+    internal readonly record struct ResolvedUser(Guid UserId, string Language, StakesLevel StakesLevel);
 
-    private static async Task<(ResolvedUser? User, ProblemHttpResult? ValidationError)> ResolveUserAsync(
+    internal static async Task<(ResolvedUser? User, ProblemHttpResult? ValidationError)> ResolveUserAsync(
         string? language,
         HttpContext context,
         UserProfileService profiles,

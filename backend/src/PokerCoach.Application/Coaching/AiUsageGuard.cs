@@ -15,6 +15,7 @@ public enum AiTask
     TournamentSelection,
     StrategyPlan,
     PlayerProfile,
+    HandCommentary,
 }
 
 public static class AiTasks
@@ -30,6 +31,7 @@ public static class AiTasks
         AiTask.TournamentSelection => "tournament-selection",
         AiTask.StrategyPlan => "strategy-plan",
         AiTask.PlayerProfile => "player-profile",
+        AiTask.HandCommentary => "hand-commentary",
         _ => "leak-explanation",
     };
 
@@ -44,6 +46,7 @@ public static class AiTasks
         AiTask.TournamentSelection => 2,
         AiTask.StrategyPlan => 3,
         AiTask.PlayerProfile => 1,
+        AiTask.HandCommentary => 3,
         _ => 1,
     };
 
@@ -256,7 +259,7 @@ public sealed class AiUsageGuard(IAiUsageLedger ledger, ICoachingModel model, Co
 
     private int DailyLimit(AiTask task) => task switch
     {
-        AiTask.TournamentDebrief or AiTask.CashDebrief => options.DailyDebriefsPerUser,
+        AiTask.HandCommentary or AiTask.TournamentDebrief or AiTask.CashDebrief => options.DailyDebriefsPerUser,
         AiTask.WeekReview or AiTask.MonthlyReport => options.DailyWeekReviewsPerUser,
         _ => options.DailyExplanationsPerUser,
     };

@@ -10,6 +10,10 @@
 
 - **web**: Add angular-eslint and fix all 15 violations
 
+### Refactoring
+
+- Extract shared logic from Winamax readers, coaching panels and endpoints
+
 ### Tests
 
 - **web**: Add specs for wilson, push-fold ranges and room names

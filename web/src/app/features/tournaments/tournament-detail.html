@@ -208,6 +208,11 @@
           }
         </section>
 
+        <a class="review-link" [routerLink]="['/tournaments', d.tournament.id, 'review']">
+          <app-icon [icon]="icons.Radar" />
+          {{ t('detail.reviewLink') }}
+        </a>
+
         <app-debrief-panel
           [tournamentId]="d.tournament.id"
           [handsDealt]="d.stack.length"

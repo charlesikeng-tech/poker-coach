@@ -79,6 +79,14 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'tournaments/:id/review',
+        title: 'pages.tournaments.review.pageTitle',
+        loadComponent: () =>
+          import('./features/tournaments/tournament-review-page').then(
+            (m) => m.TournamentReviewPage,
+          ),
+      },
+      {
         path: 'hands/:id',
         title: 'pages.hand.pageTitle',
         loadComponent: () =>

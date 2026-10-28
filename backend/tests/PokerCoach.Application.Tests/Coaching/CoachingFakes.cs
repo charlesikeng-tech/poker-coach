@@ -62,6 +62,9 @@ internal sealed class ScriptedModel : ICoachingModel
 
     public Task<ModelAnswer<PlayerProfile>> ProfilePlayerAsync(PlayerProfilePrompt prompt, CancellationToken cancellationToken) =>
         throw new NotSupportedException();
+
+    public Task<ModelAnswer<HandCommentaryBatch>> CommentHandsAsync(HandCommentaryPrompt prompt, CancellationToken cancellationToken) =>
+        throw new NotSupportedException();
 }
 
 /// <summary>The AI usage ledger in memory, with the same counting rules as the PostgreSQL one (ADR-0017).</summary>

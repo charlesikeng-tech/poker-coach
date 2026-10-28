@@ -161,6 +161,7 @@ builder.Services.AddScoped<MonthlyReportService>();
 builder.Services.AddScoped<TournamentSelectionService>();
 builder.Services.AddScoped<StrategyPlanService>();
 builder.Services.AddScoped<PlayerProfileService>();
+builder.Services.AddScoped<TournamentReviewService>();
 builder.Services.AddSingleton<FeatureUsageTracker>();
 
 // Behind the platform's TLS-terminating proxy, ASPNETCORE_FORWARDEDHEADERS_ENABLED=true makes the app see
@@ -218,6 +219,7 @@ app.MapAccountEndpoints();
 app.MapImportEndpoints();
 app.MapPokerAccountEndpoints();
 app.MapTournamentEndpoints();
+app.MapTournamentReviewEndpoints();
 app.MapHandEndpoints();
 app.MapStatisticsEndpoints();
 app.MapCashPerformanceEndpoints();

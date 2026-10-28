@@ -421,6 +421,59 @@
           "smallBlind": "Ciega pequeña",
           "bigBlind": "Ciega grande",
           "unknown": "Desconocida"
+        },
+        "reviewLink": "Revisar todas las manos con IA"
+      },
+      "review": {
+        "pageTitle": "Revisión del torneo",
+        "subtitle": "Revisión IA de manos",
+        "hands": "Manos",
+        "commented": "Analizadas",
+        "coachSummary": "Resumen del coach",
+        "strengths": "Fortalezas",
+        "workOn": "A mejorar",
+        "generateTitle": "Comentario IA",
+        "generateHint": "Generar comentarios sobre los momentos clave de este torneo.",
+        "generateAction": "Analizar momentos clave",
+        "generating": "Analizando…",
+        "handsTitle": "Manos",
+        "filterLabel": "Filtrar manos",
+        "filters": {
+          "all": "Todas",
+          "keyMoments": "Momentos clave",
+          "commented": "Analizadas",
+          "mistakes": "Errores"
+        },
+        "noHands": "Ninguna mano coincide con este filtro.",
+        "level": "Niv. {{level}}",
+        "keyMoment": "Clave",
+        "analyze": "Analizar",
+        "analyzing": "Analizando…",
+        "replay": "Replay ›",
+        "verdicts": {
+          "wellPlayed": "Bien jugado",
+          "mistake": "A revisar",
+          "variance": "Varianza",
+          "standard": "Estándar",
+          "routine": "Rutina"
+        },
+        "error": {
+          "title": "No se pudo cargar esta revisión",
+          "description": "NutsIQ no pudo responder. Tus datos están seguros: inténtalo de nuevo.",
+          "retry": "Reintentar"
+        },
+        "errors": {
+          "COACHING_DAILY_LIMIT": "Límite diario del coach alcanzado. Inténtalo mañana.",
+          "COACHING_BUDGET_EXHAUSTED": "El coach está en pausa hasta el próximo mes.",
+          "COACHING_UNAVAILABLE": "El coach IA no está configurado en este servidor.",
+          "COACHING_FAILED": "El coach no pudo responder. Inténtalo de nuevo.",
+          "PLAN_REQUIRED": "Esta función es parte de Pro.",
+          "PLAN_LIMIT_REACHED": "Tus créditos IA del mes se agotaron.",
+          "TOURNAMENT_NOT_FOUND": "Este torneo no se encuentra.",
+          "HANDS_PENDING": "Tus manos aún se están analizando.",
+          "NOT_ENOUGH_HANDS": "No hay suficientes manos para que el coach comente.",
+          "network": "No se puede conectar. Comprueba tu red.",
+          "unknown": "Se produjo un error inesperado."
         }
       }
     },
@@ -2191,9 +2244,9 @@
         "reports": {
           "label": "Informes",
           "starter": "—",
-          "pro": "balance del coach una vez al mes",
-          "elite": "balance cada semana y análisis de cada torneo",
-          "ultimate": "balances y análisis ilimitados"
+          "pro": "balance del coach una vez al mes y revisión IA mano a mano",
+          "elite": "balance cada semana, análisis y revisión IA mano a mano de cada torneo",
+          "ultimate": "balances, análisis y revisiones IA mano a mano ilimitados"
         },
         "separator": ":"
       },
@@ -2974,6 +3027,10 @@
       "monthlyReport": {
         "title": "Informe mensual",
         "description": "Resultados, leaks, entrenamiento y recomendaciones para el mes siguiente."
+      },
+      "handCommentary": {
+        "title": "Comentario IA de manos",
+        "description": "El coach analiza cada mano y te dice qué mejorar."
       }
     }
   }

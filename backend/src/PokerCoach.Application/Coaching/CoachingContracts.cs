@@ -99,6 +99,20 @@ public sealed record PlayerProfilePrompt(string Language, string Facts, GameType
 /// <param name="Archetype">One of: nit, tag, lag, calling_station, maniac, shark.</param>
 public sealed record PlayerProfile(string Archetype, string Title, string Description, IReadOnlyList<string> Strengths, IReadOnlyList<string> Weaknesses, string Advice);
 
+/// <summary>What the model is asked for hand commentary. No player name or id.</summary>
+/// <param name="TournamentFacts">One-line tournament context (buy-in, field, stack, level).</param>
+/// <param name="Hands">Numbered hand stories (H1, H2…) with their context.</param>
+public sealed record HandCommentaryPrompt(string Language, string TournamentFacts, IReadOnlyList<(string Ref, string Story)> Hands);
+
+/// <summary>The model's commentary on one hand.</summary>
+/// <param name="Verdict">"well_played", "mistake", "variance", "standard", or "routine".</param>
+/// <param name="Analysis">2–4 sentences: what happened and what to notice.</param>
+/// <param name="Suggestion">1 sentence on what to do differently; null when well played or routine.</param>
+public sealed record HandCommentaryNote(string Ref, string Verdict, string Analysis, string? Suggestion);
+
+/// <summary>The model's batch answer: one note per hand asked.</summary>
+public sealed record HandCommentaryBatch(IReadOnlyList<HandCommentaryNote> Hands);
+
 /// <summary>Port to the language model (Infrastructure adapter per provider).</summary>
 public interface ICoachingModel
 {
@@ -137,6 +151,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<PlayerProfile>> ProfilePlayerAsync(PlayerProfilePrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<HandCommentaryBatch>> CommentHandsAsync(HandCommentaryPrompt prompt, CancellationToken cancellationToken);
 }
 
 /// <summary>The provider failed or answered outside the schema.</summary>

@@ -709,6 +709,52 @@ internal sealed partial class AnthropicCoachingModel(
 
     private const int PlayerProfileMaxOutputTokens = 1_000;
 
+    private const string HandCommentaryInstructions = MttContext + """
+        You receive one or more hands from a tournament the player played, told as short anonymous stories
+        by the software. Your task is to comment each hand: what happened, whether the hero played well,
+        and what to do differently if applicable.
+
+        Rules:
+        - Use only the facts given. Never compute, estimate or invent a statistic, a percentage or a card.
+        - Opponents are known only by position. Do not guess cards that were not shown.
+        - Judge decisions, not results: a lost all-in can be well played, a won pot can be a mistake.
+        - verdict "well_played": the hero made the right decision given the information available.
+        - verdict "mistake": a clear error that costs chips in the long run.
+        - verdict "variance": a preflop all-in whose equity is given and whose result went against it.
+        - verdict "standard": a normal play either way, or not enough information to judge.
+        - verdict "routine": the hand has no notable decision (e.g. fold preflop, walk in the big blind).
+        - analysis: two to four sentences describing the key decision(s) street by street.
+        - suggestion: one sentence on what to do differently; null when well played, routine or variance.
+        - Be concrete and practical, for a recreational player who wants to improve.
+        """ + Voice;
+
+    private static readonly JsonObject HandCommentaryNoteSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("ref", "verdict", "analysis"),
+        ["properties"] = new JsonObject
+        {
+            ["ref"] = Text.DeepClone(),
+            ["verdict"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("well_played", "mistake", "variance", "standard", "routine") },
+            ["analysis"] = Text.DeepClone(),
+            ["suggestion"] = new JsonObject { ["type"] = "string" },
+        },
+    };
+
+    private static readonly JsonObject HandCommentarySchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("hands"),
+        ["properties"] = new JsonObject
+        {
+            ["hands"] = new JsonObject { ["type"] = "array", ["items"] = HandCommentaryNoteSchema.DeepClone() },
+        },
+    };
+
+    private const int HandCommentaryMaxOutputTokens = 4_000;
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
@@ -755,6 +801,7 @@ internal sealed partial class AnthropicCoachingModel(
             AiTask.TournamentSelection => TournamentSelectionMaxOutputTokens,
             AiTask.StrategyPlan => StrategyPlanMaxOutputTokens,
             AiTask.PlayerProfile => PlayerProfileMaxOutputTokens,
+            AiTask.HandCommentary => HandCommentaryMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
     }
@@ -808,6 +855,9 @@ internal sealed partial class AnthropicCoachingModel(
         LoggedAsync(
             prompt.GameType == GameType.CashGame ? "cash-player-profile" : "player-profile",
             () => PlayerProfileCoreAsync(prompt, ModelFor(AiTask.PlayerProfile), cancellationToken));
+
+    public Task<ModelAnswer<HandCommentaryBatch>> CommentHandsAsync(HandCommentaryPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("hand-commentary", () => HandCommentaryCoreAsync(prompt, ModelFor(AiTask.HandCommentary), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -1271,6 +1321,10 @@ internal sealed partial class AnthropicCoachingModel(
 
     private sealed record PlayerProfileAnswer(string? Archetype, string? Title, string? Description, IReadOnlyList<string>? Strengths, IReadOnlyList<string>? Weaknesses, string? Advice);
 
+    private sealed record HandCommentaryAnswer(IReadOnlyList<HandCommentaryNoteAnswer>? Hands);
+
+    private sealed record HandCommentaryNoteAnswer(string? Ref, string? Verdict, string? Analysis, string? Suggestion);
+
     private async Task<ModelAnswer<PlayerProfile>> PlayerProfileCoreAsync(PlayerProfilePrompt prompt, string model, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(prompt);
@@ -1291,5 +1345,29 @@ internal sealed partial class AnthropicCoachingModel(
                 Clean(answer.Weaknesses, 3),
                 answer.Advice?.Trim() ?? string.Empty),
             usage);
+    }
+
+    private static readonly HashSet<string> ValidCommentaryVerdicts = new(StringComparer.Ordinal)
+        { "well_played", "mistake", "variance", "standard", "routine" };
+
+    private async Task<ModelAnswer<HandCommentaryBatch>> HandCommentaryCoreAsync(HandCommentaryPrompt prompt, string model, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.TournamentFacts}\n\n"
+            + string.Join("\n\n", prompt.Hands.Select(h => $"Hand {h.Ref}:\n{h.Story}"));
+        var (answer, usage) = await CallAsync<HandCommentaryAnswer>(
+            HandCommentaryInstructions, HandCommentarySchema, user,
+            MaxOutputTokensFor(AiTask.HandCommentary), Reasoning.Judging, cancellationToken, model: model);
+
+        var notes = (answer.Hands ?? [])
+            .Where(h => h.Ref is not null && !string.IsNullOrWhiteSpace(h.Analysis) && ValidCommentaryVerdicts.Contains(h.Verdict ?? string.Empty))
+            .Select(h => new HandCommentaryNote(
+                h.Ref!,
+                h.Verdict!,
+                h.Analysis!.Trim(),
+                string.IsNullOrWhiteSpace(h.Suggestion) ? null : h.Suggestion!.Trim()))
+            .ToList();
+
+        return new ModelAnswer<HandCommentaryBatch>(new HandCommentaryBatch(notes), usage);
     }
 }

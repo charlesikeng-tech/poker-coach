@@ -243,6 +243,9 @@ public enum Feature
 
     /// <summary>Reaction to a 3-bet after opening (call, 4-bet) against the references.</summary>
     VsThreeBetRanges,
+
+    /// <summary>AI commentary on individual hands in the tournament review.</summary>
+    HandCommentary,
 }
 
 /// <summary>The offer matrix (ADR-0016): the lowest plan that opens each feature.</summary>
@@ -250,7 +253,7 @@ public static class PlanFeatures
 {
     public static Plan MinimumPlan(Feature feature) => feature switch
     {
-        Feature.OpeningRanges or Feature.DefenceRanges or Feature.VsThreeBetRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport => Plan.Pro,
+        Feature.OpeningRanges or Feature.DefenceRanges or Feature.VsThreeBetRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport or Feature.HandCommentary => Plan.Pro,
         _ => Plan.Elite,
     };
 

@@ -1,0 +1,265 @@
+<ng-container *transloco="let t; prefix: 'pages.tournaments'">
+  <a class="back" routerLink="/tournaments">
+    <app-icon [icon]="icons.ArrowLeft" />
+    {{ t('detail.back') }}
+  </a>
+
+  @switch (state()) {
+    @case ('notFound') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('detail.notFound.title')"
+        [description]="t('detail.notFound.description')"
+      />
+    }
+    @case ('error') {
+      <app-empty-state
+        [icon]="icons.CircleAlert"
+        [heading]="t('review.error.title')"
+        [description]="t('review.error.description')"
+      >
+        <button appButton variant="secondary" (click)="retry()">
+          {{ t('review.error.retry') }}
+        </button>
+      </app-empty-state>
+    }
+    @default {
+      @if (review(); as r) {
+        <header class="review-head" appSpotlight>
+          <div class="review-head__info">
+            <h2>{{ r.tournamentName }}</h2>
+            <p class="review-head__sub">{{ t('review.subtitle') }}</p>
+          </div>
+          <div class="review-head__stats">
+            <div class="stat-pill">
+              <span class="stat-pill__value numeric">{{ r.totalHands }}</span>
+              <span class="stat-pill__label">{{ t('review.hands') }}</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-pill__value numeric">{{ r.commentedCount }}</span>
+              <span class="stat-pill__label">{{ t('review.commented') }}</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Debrief summary -->
+        @if (r.hasDebrief && r.debriefHeadline) {
+          <section class="card glass debrief-summary" appSpotlight>
+            <div class="coach-badge">
+              <app-icon [icon]="icons.Sparkles" />
+              <span>{{ t('review.coachSummary') }}</span>
+            </div>
+            <p class="debrief-summary__headline">{{ r.debriefHeadline }}</p>
+            @if (r.debriefStory) {
+              <p class="debrief-summary__story">{{ r.debriefStory }}</p>
+            }
+            <div class="debrief-summary__columns">
+              @if (r.strengths && r.strengths.length > 0) {
+                <div>
+                  <h4 class="debrief-summary__heading debrief-summary__heading--good">
+                    {{ t('review.strengths') }}
+                  </h4>
+                  <ul>
+                    @for (item of r.strengths; track $index) {
+                      <li>{{ item }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+              @if (r.workOn && r.workOn.length > 0) {
+                <div>
+                  <h4 class="debrief-summary__heading debrief-summary__heading--work">
+                    {{ t('review.workOn') }}
+                  </h4>
+                  <ul>
+                    @for (item of r.workOn; track $index) {
+                      <li>{{ item }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+        <!-- Generate review action -->
+        <section class="card glass generate-section" appSpotlight>
+          <div class="generate-section__head">
+            <div>
+              <h3 class="generate-section__title">
+                <app-icon [icon]="icons.Zap" />
+                {{ t('review.generateTitle') }}
+              </h3>
+              <p class="generate-section__hint">{{ t('review.generateHint') }}</p>
+            </div>
+            @if (!billing.allows('handCommentary')) {
+              <app-plan-lock feature="handCommentary" [compact]="true" />
+            } @else {
+              <button
+                appButton
+                variant="primary"
+                [disabled]="generating()"
+                (click)="generateReview()"
+              >
+                <app-icon
+                  [class.spin]="generating()"
+                  [icon]="generating() ? icons.LoaderCircle : icons.Sparkles"
+                />
+                {{ generating() ? t('review.generating') : t('review.generateAction') }}
+              </button>
+            }
+          </div>
+          @if (genError(); as code) {
+            <p class="gen-error" role="alert">{{ t('review.errors.' + code) }}</p>
+          }
+        </section>
+
+        <!-- Hand list -->
+        <section class="card glass hands-section" [attr.aria-label]="t('review.handsTitle')">
+          <div class="hands-section__head">
+            <h3 class="hands-section__title">
+              <app-icon [icon]="icons.MessageSquareText" />
+              {{ t('review.handsTitle') }}
+            </h3>
+            <div class="filter-bar" role="group" [attr.aria-label]="t('review.filterLabel')">
+              <button type="button" [class.active]="filter() === 'all'" (click)="filter.set('all')">
+                {{ t('review.filters.all') }}
+              </button>
+              @if (hasKeyMoments()) {
+                <button
+                  type="button"
+                  [class.active]="filter() === 'keyMoments'"
+                  (click)="filter.set('keyMoments')"
+                >
+                  {{ t('review.filters.keyMoments') }}
+                </button>
+              }
+              @if (hasComments()) {
+                <button
+                  type="button"
+                  [class.active]="filter() === 'commented'"
+                  (click)="filter.set('commented')"
+                >
+                  {{ t('review.filters.commented') }}
+                </button>
+              }
+              @if (hasMistakes()) {
+                <button
+                  type="button"
+                  [class.active]="filter() === 'mistakes'"
+                  (click)="filter.set('mistakes')"
+                >
+                  {{ t('review.filters.mistakes') }}
+                </button>
+              }
+            </div>
+          </div>
+
+          @if (filteredHands().length === 0) {
+            <p class="empty">{{ t('review.noHands') }}</p>
+          } @else {
+            <ol class="hand-list">
+              @for (hand of pagedHands(); track hand.handId) {
+                <li class="hand-card" [class.hand-card--key]="hand.isKeyMoment">
+                  <div class="hand-card__head">
+                    <span class="hand-card__index numeric">#{{ hand.index }}</span>
+                    <span class="hand-card__meta">
+                      {{ t('review.level', { level: hand.level }) }}
+                      @if (hand.position) {
+                        · {{ t('detail.positions.' + hand.position) }}
+                      }
+                    </span>
+                    @if (hand.heroCards) {
+                      <span class="hand-card__cards">
+                        @for (card of parseCards(hand.heroCards); track card) {
+                          <app-playing-card [card]="card" size="small" />
+                        }
+                      </span>
+                    }
+                    <span class="hand-card__stack numeric">{{ bb(hand.stackInBigBlinds) }}</span>
+                    <span
+                      class="hand-card__net numeric"
+                      [attr.data-sign]="sign(hand.netBigBlinds)"
+                      >{{ signedBb(hand.netBigBlinds) }}</span
+                    >
+                    @if (hand.isKeyMoment) {
+                      <span class="key-badge">{{ t('review.keyMoment') }}</span>
+                    }
+                  </div>
+
+                  @if (hand.commentary; as c) {
+                    <div class="commentary" [class]="verdictClass(c.verdict)">
+                      <span class="commentary__verdict">{{
+                        t('review.verdicts.' + verdictLabel(c.verdict))
+                      }}</span>
+                      <p class="commentary__analysis">{{ c.analysis }}</p>
+                      @if (c.suggestion) {
+                        <p class="commentary__suggestion">{{ c.suggestion }}</p>
+                      }
+                    </div>
+                  } @else if (billing.allows('handCommentary')) {
+                    <button
+                      class="analyze-btn"
+                      [disabled]="commentingHand() !== null"
+                      (click)="commentSingle(hand)"
+                    >
+                      <app-icon
+                        [class.spin]="commentingHand() === hand.handId"
+                        [icon]="
+                          commentingHand() === hand.handId ? icons.LoaderCircle : icons.Sparkles
+                        "
+                      />
+                      {{
+                        commentingHand() === hand.handId
+                          ? t('review.analyzing')
+                          : t('review.analyze')
+                      }}
+                    </button>
+                  }
+
+                  <a class="hand-card__replay" [routerLink]="['/hands', hand.handId]">
+                    {{ t('review.replay') }}
+                  </a>
+                </li>
+              }
+            </ol>
+
+            @if (pageCount() > 1) {
+              <nav class="pager" [attr.aria-label]="t('pager.label')">
+                <button
+                  appButton
+                  variant="ghost"
+                  [disabled]="page() === 1"
+                  [attr.aria-label]="t('pager.previous')"
+                  (click)="page.set(page() - 1)"
+                >
+                  <app-icon [icon]="icons.ChevronLeft" />
+                </button>
+                <span class="numeric">{{
+                  t('pager.position', { page: page(), count: pageCount() })
+                }}</span>
+                <button
+                  appButton
+                  variant="ghost"
+                  [disabled]="page() >= pageCount()"
+                  [attr.aria-label]="t('pager.next')"
+                  (click)="page.set(page() + 1)"
+                >
+                  <app-icon [icon]="icons.ChevronRight" />
+                </button>
+              </nav>
+            }
+          }
+        </section>
+      } @else {
+        <div role="status" [attr.aria-label]="t('loading')" class="skeletons">
+          <div class="glass skeleton-block"><span class="skeleton"></span></div>
+          <div class="glass skeleton-block skeleton-block--tall">
+            <span class="skeleton"></span>
+          </div>
+          <div class="glass skeleton-block"><span class="skeleton"></span></div>
+        </div>
+      }
+    }
+  }
+</ng-container>

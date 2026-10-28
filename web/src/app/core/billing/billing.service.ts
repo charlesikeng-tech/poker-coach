@@ -21,7 +21,8 @@ export type Feature =
   | 'vsThreeBetRanges'
   | 'monthlyReport'
   | 'customRanges'
-  | 'strategyPlan';
+  | 'strategyPlan'
+  | 'handCommentary';
 
 const PLAN_ORDER: readonly Plan[] = ['starter', 'pro', 'elite', 'ultimate'];
 
@@ -39,6 +40,7 @@ export const MINIMUM_PLAN: Readonly<Record<Feature, PaidPlan>> = {
   tournamentDebrief: 'elite',
   customRanges: 'elite',
   strategyPlan: 'elite',
+  handCommentary: 'pro',
 };
 
 export interface PlanOffer {
