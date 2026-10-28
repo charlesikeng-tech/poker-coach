@@ -195,7 +195,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
 
         // What the background worker does when the import queue is empty.
         var backfill = scope.ServiceProvider.GetRequiredService<HandFactsBackfill>();
-        while (await backfill.ProcessBatchAsync(Ct) > 0)
+        while ((await backfill.ProcessBatchAsync(Ct)).HandsProcessed > 0)
         {
         }
 
@@ -213,7 +213,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
 
         var deep = await statistics.GetAsync(userId, noFilter with { MinStackBigBlinds = 1_000m }, StakesLevel.Low, Ct);
         Assert.Equal(0, deep.Overall.Hands);
-        Assert.Equal(0, await backfill.ProcessBatchAsync(Ct));
+        Assert.Equal(0, (await backfill.ProcessBatchAsync(Ct)).HandsProcessed);
     }
 
     [Fact]
@@ -228,7 +228,7 @@ public sealed class ImportPipelineTests(PostgresFixture fixture)
 
         // What the worker does when idle: facts first, then coverage.
         var facts = scope.ServiceProvider.GetRequiredService<HandFactsBackfill>();
-        while (await facts.ProcessBatchAsync(Ct) > 0)
+        while ((await facts.ProcessBatchAsync(Ct)).HandsProcessed > 0)
         {
         }
 

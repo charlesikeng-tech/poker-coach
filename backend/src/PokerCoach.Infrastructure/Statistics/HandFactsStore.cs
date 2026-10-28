@@ -25,7 +25,7 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
         return rows.Select(r => new PendingHand(r.Id, ToAnalysis(r.ButtonSeat, r.BigBlind, r.Details, r.HeroCards))).ToList();
     }
 
-    public async Task SaveAsync(IReadOnlyList<(Guid HandId, HeroHandFacts Facts)> facts, int version, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Guid>> SaveAsync(IReadOnlyList<(Guid HandId, HeroHandFacts Facts)> facts, int version, CancellationToken cancellationToken)
     {
         var ids = facts.Select(f => f.HandId).ToList();
         var existing = await db.Set<HandHeroFactsRecord>()
@@ -79,6 +79,8 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
             .ToListAsync(cancellationToken);
         foreach (var userId in userIds)
             StatisticsReadStore.InvalidateUser(userId);
+
+        return userIds;
     }
 
     /// <summary>Stored hand document to the analysis input. Imported hands always have a hero.</summary>

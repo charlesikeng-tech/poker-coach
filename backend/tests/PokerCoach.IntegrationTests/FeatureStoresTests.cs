@@ -244,7 +244,7 @@ public sealed class FeatureStoresTests(PostgresFixture fixture)
         var accounts = scope.ServiceProvider.GetRequiredService<PokerAccountService>();
         await accounts.ConfirmAsync(userId, Assert.Single(await accounts.ListAsync(userId, Ct)).Id, Ct);
         var facts = scope.ServiceProvider.GetRequiredService<HandFactsBackfill>();
-        while (await facts.ProcessBatchAsync(Ct) > 0)
+        while ((await facts.ProcessBatchAsync(Ct)).HandsProcessed > 0)
         {
         }
 

@@ -1,10 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PokerCoach.Application.Import;
+using PokerCoach.Application.Notifications;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Identity;
 using PokerCoach.Domain.Poker.Analysis;
+using PokerCoach.Infrastructure.Persistence;
+using PokerCoach.Infrastructure.Poker;
+using PokerCoach.Infrastructure.Statistics;
 
 namespace PokerCoach.Infrastructure.Import;
 
@@ -35,6 +41,7 @@ internal sealed partial class ImportWorker(
 
         var factsDue = true;
         var factsCheckedAt = DateTimeOffset.MinValue;
+        var affectedUserIds = new HashSet<Guid>();
         while (!stoppingToken.IsCancellationRequested)
         {
             TimeSpan? delay;
@@ -49,7 +56,11 @@ internal sealed partial class ImportWorker(
                 }
                 else if (factsDue || time.GetUtcNow() - factsCheckedAt > FactsRecheckInterval)
                 {
-                    factsComputed = await scope.ServiceProvider.GetRequiredService<HandFactsBackfill>().ProcessBatchAsync(stoppingToken);
+                    var (hands, userIds) = await scope.ServiceProvider.GetRequiredService<HandFactsBackfill>().ProcessBatchAsync(stoppingToken);
+                    factsComputed = hands;
+                    foreach (var uid in userIds)
+                        affectedUserIds.Add(uid);
+
                     if (factsComputed == 0)
                     {
                         factsComputed = await scope.ServiceProvider.GetRequiredService<OpponentStatsBackfill>().ProcessBatchAsync(stoppingToken);
@@ -63,6 +74,12 @@ internal sealed partial class ImportWorker(
 
                     factsCheckedAt = time.GetUtcNow();
                     factsDue = factsComputed > 0;
+
+                    if (!factsDue && affectedUserIds.Count > 0)
+                    {
+                        _ = SyncContactsAsync(scope.ServiceProvider, affectedUserIds);
+                        affectedUserIds = [];
+                    }
                 }
 
                 delay = imported || factsComputed > 0 ? null : IdleDelay;
@@ -89,6 +106,51 @@ internal sealed partial class ImportWorker(
                     return;
                 }
             }
+        }
+    }
+
+    private static async Task SyncContactsAsync(IServiceProvider services, IReadOnlyCollection<Guid> userIds)
+    {
+        try
+        {
+            var contactSync = services.GetRequiredService<IContactSync>();
+            var db = services.GetRequiredService<PokerCoachDbContext>();
+
+            foreach (var userId in userIds)
+            {
+                var user = await db.Set<User>().AsNoTracking()
+                    .Where(u => u.Id == userId)
+                    .Select(u => new { u.Email })
+                    .FirstOrDefaultAsync(CancellationToken.None);
+                if (user?.Email is null)
+                    continue;
+
+                var stats = await (
+                        from f in db.Set<HandHeroFactsRecord>().AsNoTracking()
+                        join a in db.Set<PokerAccountRecord>().AsNoTracking() on f.PokerAccountId equals a.Id
+                        where a.UserId == userId && f.FactsVersion == HeroHandFacts.Version
+                        group f by 1 into g
+                        select new { Total = g.Count(), MainGameType = g.GroupBy(x => x.GameType).OrderByDescending(x => x.Count()).Select(x => x.Key).FirstOrDefault() })
+                    .FirstOrDefaultAsync(CancellationToken.None);
+
+                var rooms = await db.Set<PokerAccountRecord>().AsNoTracking()
+                    .Where(a => a.UserId == userId && a.ConfirmedAt != null)
+                    .Select(a => a.Room)
+                    .Distinct()
+                    .ToListAsync(CancellationToken.None);
+
+                await contactSync.SyncAsync(
+                    new ContactAttributes(
+                        user.Email,
+                        TotalHands: stats?.Total ?? 0,
+                        Rooms: rooms.Count > 0 ? string.Join(", ", rooms) : null,
+                        MainGameType: stats?.MainGameType.ToString()),
+                    CancellationToken.None);
+            }
+        }
+        catch (Exception)
+        {
+            // Fire-and-forget: import processing must never fail because of Brevo.
         }
     }
 

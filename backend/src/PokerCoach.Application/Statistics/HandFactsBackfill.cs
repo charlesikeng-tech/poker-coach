@@ -10,7 +10,8 @@ public interface IHandFactsStore
     Task<IReadOnlyList<PendingHand>> GetPendingAsync(int version, int batchSize, CancellationToken cancellationToken);
 
     /// <summary>Insert or replace, in one transaction.</summary>
-    Task SaveAsync(IReadOnlyList<(Guid HandId, HeroHandFacts Facts)> facts, int version, CancellationToken cancellationToken);
+    /// <returns>Distinct user IDs whose statistics were affected.</returns>
+    Task<IReadOnlyList<Guid>> SaveAsync(IReadOnlyList<(Guid HandId, HeroHandFacts Facts)> facts, int version, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -21,17 +22,17 @@ public sealed class HandFactsBackfill(IHandFactsStore store)
 {
     public const int BatchSize = 500;
 
-    /// <returns>Number of hands processed; 0 when everything is up to date.</returns>
-    public async Task<int> ProcessBatchAsync(CancellationToken cancellationToken)
+    /// <returns>Number of hands processed and distinct user IDs affected; 0 hands when everything is up to date.</returns>
+    public async Task<(int HandsProcessed, IReadOnlyList<Guid> AffectedUserIds)> ProcessBatchAsync(CancellationToken cancellationToken)
     {
         var pending = await store.GetPendingAsync(HeroHandFacts.Version, BatchSize, cancellationToken);
         if (pending.Count == 0)
         {
-            return 0;
+            return (0, []);
         }
 
         var facts = pending.Select(p => (p.HandId, HandAnalyzer.Analyze(p.Hand))).ToList();
-        await store.SaveAsync(facts, HeroHandFacts.Version, cancellationToken);
-        return facts.Count;
+        var userIds = await store.SaveAsync(facts, HeroHandFacts.Version, cancellationToken);
+        return (facts.Count, userIds);
     }
 }

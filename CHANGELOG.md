@@ -5,6 +5,7 @@
 ### Fonctionnalités
 
 - Offer 14-day Stripe trial on first checkout
+- Sync user contacts to Brevo on signup and plan change
 
 ## [2026.10.28-c0b7013] — 2026-10-28
 
