@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Performance
+
+- Cache statistics aggregate queries with IMemoryCache (30 min TTL)
+
 ## [2026.10.28-dad9acc] — 2026-10-28
 
 ### Performance
