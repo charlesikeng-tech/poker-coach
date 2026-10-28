@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### CI/CD
+
+- Add Discord webhook for release announcements
+
 ## [2026.10.28-0ec74c8] — 2026-10-28
 
 ### Performance
