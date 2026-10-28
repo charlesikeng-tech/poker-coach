@@ -10,16 +10,15 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { LoaderCircle, RefreshCw, Sparkles } from 'lucide';
 
 import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
-import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
-import { CoachingApi, Debrief, DebriefMoment, coachErrorCode, notWrittenYet } from './coaching-api';
+import { coachDate, coachPanelIcons, coachWrite } from './coach-panel-utils';
+import { CoachingApi, Debrief, DebriefMoment, notWrittenYet } from './coaching-api';
 
 /** Mirrors TournamentDebriefService.MinHands: below it the button explains instead of calling. */
 export const MIN_DEBRIEF_HANDS = 20;
@@ -54,7 +53,7 @@ export class DebriefPanel {
   protected readonly state = signal<PanelState>({ kind: 'loading' });
   protected readonly writing = signal(false);
   protected readonly writeError = signal<string | null>(null);
-  protected readonly icons = { LoaderCircle, RefreshCw, Sparkles };
+  protected readonly icons = coachPanelIcons;
   protected readonly minHands = MIN_DEBRIEF_HANDS;
 
   /** Why the button is disabled, as a translation key; null when the debrief can be written. */
@@ -79,19 +78,11 @@ export class DebriefPanel {
   }
 
   protected async write(): Promise<void> {
-    if (this.writing() || this.blocked()) {
-      return;
-    }
-    this.writing.set(true);
-    this.writeError.set(null);
-    try {
+    if (this.blocked()) return;
+    await coachWrite(this.writing, this.writeError, async () => {
       const debrief = await this.api.writeDebrief(this.tournamentId(), this.language.current());
       this.state.set({ kind: 'ready', debrief });
-    } catch (error) {
-      this.writeError.set(coachErrorCode(error));
-    } finally {
-      this.writing.set(false);
-    }
+    });
   }
 
   /** "M3" → 3: the same number as on the stack chart and in the key-moment list. */
@@ -117,9 +108,7 @@ export class DebriefPanel {
     }).format(value);
   }
 
-  protected date(value: string): string {
-    return formatDateTime(value, this.language.current());
-  }
+  protected readonly date = coachDate(this.language);
 
   private async load(id: string, language: string): Promise<void> {
     const request = ++this.request;

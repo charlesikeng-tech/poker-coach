@@ -10,15 +10,14 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { LoaderCircle, RefreshCw, Sparkles } from 'lucide';
 
 import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
-import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
-import { CoachingApi, MonthlyReport, coachErrorCode, notWrittenYet } from './coaching-api';
+import { coachDate, coachPanelIcons, coachWrite } from './coach-panel-utils';
+import { CoachingApi, MonthlyReport, notWrittenYet } from './coaching-api';
 
 export const MIN_MONTHLY_HANDS = 50;
 
@@ -51,7 +50,7 @@ export class MonthlyReportPanel {
   protected readonly state = signal<PanelState>({ kind: 'loading' });
   protected readonly writing = signal(false);
   protected readonly writeError = signal<string | null>(null);
-  protected readonly icons = { LoaderCircle, RefreshCw, Sparkles };
+  protected readonly icons = coachPanelIcons;
   protected readonly minHands = MIN_MONTHLY_HANDS;
 
   protected readonly month = computed(
@@ -76,17 +75,11 @@ export class MonthlyReportPanel {
 
   protected async write(): Promise<void> {
     const month = this.month();
-    if (!month || this.writing()) return;
-    this.writing.set(true);
-    this.writeError.set(null);
-    try {
+    if (!month) return;
+    await coachWrite(this.writing, this.writeError, async () => {
       const report = await this.api.writeMonthlyReport(month.month, this.language.current());
       this.state.set({ kind: 'ready', report });
-    } catch (error) {
-      this.writeError.set(coachErrorCode(error));
-    } finally {
-      this.writing.set(false);
-    }
+    });
   }
 
   protected pct(value: number | null): string {
@@ -106,9 +99,7 @@ export class MonthlyReportPanel {
     }).format(value);
   }
 
-  protected date(value: string): string {
-    return formatDateTime(value, this.language.current());
-  }
+  protected readonly date = coachDate(this.language);
 
   private async load(month: string, language: string): Promise<void> {
     const request = ++this.request;

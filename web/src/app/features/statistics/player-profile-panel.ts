@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { LoaderCircle, RefreshCw, Sparkles, User } from 'lucide';
+import { User } from 'lucide';
 
 import { BillingService } from '../../core/billing/billing.service';
 import { GameTypeService } from '../../core/game-type/game-type.service';
 import { LanguageService } from '../../core/i18n/language.service';
-import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
+import { coachDate, coachPanelIcons } from '../coaching/coach-panel-utils';
 import {
   CoachingApi,
   PlayerArchetype,
@@ -56,7 +56,7 @@ export class PlayerProfilePanel {
   protected readonly state = signal<PanelState>({ kind: 'idle' });
   protected readonly writing = signal(false);
   protected readonly writeError = signal<string | null>(null);
-  protected readonly icons = { LoaderCircle, RefreshCw, Sparkles, User };
+  protected readonly icons = { ...coachPanelIcons, User };
 
   constructor() {
     effect(() => {
@@ -106,7 +106,5 @@ export class PlayerProfilePanel {
     return ARCHETYPE_AVATARS[archetype] ?? '🃏';
   }
 
-  protected date(value: string): string {
-    return formatDateTime(value, this.language.current());
-  }
+  protected readonly date = coachDate(this.language);
 }

@@ -1,22 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { LoaderCircle, RefreshCw, Sparkles } from 'lucide';
 
 import { BillingService } from '../../core/billing/billing.service';
 import { LanguageService } from '../../core/i18n/language.service';
-import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlanLock } from '../../shared/ui/plan-lock/plan-lock';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
-import {
-  CashDebrief,
-  CashDebriefMoment,
-  CoachingApi,
-  coachErrorCode,
-  notWrittenYet,
-} from './coaching-api';
+import { coachDate, coachPanelIcons, coachWrite } from './coach-panel-utils';
+import { CashDebrief, CashDebriefMoment, CoachingApi, notWrittenYet } from './coaching-api';
 
 export const MIN_CASH_DEBRIEF_HANDS = 20;
 
@@ -44,7 +37,7 @@ export class CashDebriefPanel {
   protected readonly state = signal<PanelState>({ kind: 'empty' });
   protected readonly writing = signal(false);
   protected readonly writeError = signal<string | null>(null);
-  protected readonly icons = { LoaderCircle, RefreshCw, Sparkles };
+  protected readonly icons = coachPanelIcons;
   protected readonly minHands = MIN_CASH_DEBRIEF_HANDS;
 
   protected readonly blocked = computed(() =>
@@ -68,19 +61,11 @@ export class CashDebriefPanel {
   }
 
   protected async write(): Promise<void> {
-    if (this.writing() || this.blocked()) {
-      return;
-    }
-    this.writing.set(true);
-    this.writeError.set(null);
-    try {
+    if (this.blocked()) return;
+    await coachWrite(this.writing, this.writeError, async () => {
       const debrief = await this.api.writeCashDebrief(this.day(), this.language.current());
       this.state.set({ kind: 'ready', debrief });
-    } catch (error) {
-      this.writeError.set(coachErrorCode(error));
-    } finally {
-      this.writing.set(false);
-    }
+    });
   }
 
   protected number(moment: CashDebriefMoment): string {
@@ -98,7 +83,5 @@ export class CashDebriefPanel {
     }).format(moment.netBigBlinds)} BB`;
   }
 
-  protected date(value: string): string {
-    return formatDateTime(value, this.language.current());
-  }
+  protected readonly date = coachDate(this.language);
 }

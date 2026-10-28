@@ -13,6 +13,7 @@
 ### Tests
 
 - **web**: Add specs for wilson, push-fold ranges and room names
+- **web**: Add specs for coaching errors, stack bounds, range grid and game type
 
 ## [2026.10.28-f106a01] — 2026-10-28
 

@@ -256,7 +256,7 @@ export class StatisticsPage {
     rate: StatRate,
     ref: StatReference | null,
     position: PokerPosition | null,
-    event: MouseEvent,
+    event: Event,
   ): void {
     event.stopPropagation();
     const anchor = event.currentTarget as HTMLElement;
