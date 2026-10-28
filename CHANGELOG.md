@@ -1,10 +1,14 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.28-6a289a4] — 2026-10-28
 
 ### CI/CD
 
 - Move Discord announcement into the release job
+
+### Correctifs
+
+- **ci**: Replace invalid secrets context in step `if` with shell guard
 
 ## [2026.10.28-ab5003d] — 2026-10-28
 

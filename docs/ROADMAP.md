@@ -1,0 +1,286 @@
+# NutsIQ — Roadmap
+
+Detailed status of every development phase. Each item links to the ADR that governs it when one exists (`docs/adr/`).
+
+## Phase 0 — Foundation
+
+Done:
+
+- [x] ADR-0001 modular monolith, ADR-0002 MVP import by upload, ADR-0003 frontend foundations
+- [x] Backend skeleton: layers, problem-details error contract, health checks, OpenAPI,
+      JSON structured logs, fail-fast configuration, architecture and HTTP tests
+- [x] Web skeleton: dark/light tokens, FR/EN/ES with runtime switching, responsive shell
+      (sidebar / rail / mobile drawer), MVP-1 routes with empty states
+- [x] Local PostgreSQL, CI workflow
+- [x] First `dotnet build` of the skeleton.
+- [x] `dotnet test` green, parser included.
+- [x] Packages aligned on the latest 10.0.x patches.
+- [x] Winamax format spike on two real tournaments (`docs/research/winamax-format-notes.md`)
+- [x] Winamax hand-history and summary parsers with golden tests (ADR-0001 amendment 1);
+      more samples still needed for re-entry, non-KO, Mystery KO, 9-max
+- [x] Database naming: snake_case, applied by an in-house convention (`SnakeCaseNaming`), one
+      schema per module.
+
+Open:
+
+- [ ] Upgrade web to Angular 22 (`ng update @angular/core@22 @angular/cli@22`): the scaffold was
+      generated with Angular 21 because the authoring environment's Node version was too old for CLI 22.
+- [ ] OpenTelemetry exporters and API Dockerfile once the hosting target is chosen
+      (includes persisted data-protection keys, ADR-0004).
+- [ ] ADR on opponent data (pseudonyms in hand histories): minimization and retention.
+
+## Phase 1 — Identity
+
+- [x] Google sign-in handled by the API, HttpOnly cookie session, CSRF token (ADR-0004)
+- [x] Accounts with internal id + external identity, idempotent first sign-in
+- [x] `GET /api/me`, `PUT /api/me/preferences` (language), sign-in page, sign-out, route guard
+- [x] End-to-end Google sign-in verified locally (Google Cloud project `poker-coach-511022`, test mode)
+- [x] First migration `InitialIdentity`
+- [x] PostgreSQL integration tests (Testcontainers) for constraints and the sign-in race
+
+## Phase 2 — Import (MVP-1, ADR-0005)
+
+- [x] Upload `.txt`/`.zip` (`POST /api/import/files`), batch status (`GET /api/import/batches/{id}`)
+- [x] Background processing queue in PostgreSQL; idempotent files, accounts, tournaments and hands
+- [x] Poker accounts detected from files: list, confirm, "not me" (`/api/poker-accounts`)
+- [x] Migration `Import`
+- [x] Web: import page (drag & drop of files, folders or zip; progress; account confirmation)
+- [x] Re-entries (one tournament entry per summary block), late registration, bounty-only winnings
+
+## Phase 3 — Tournaments (MVP-1)
+
+- [x] `GET /api/tournaments`: confirmed accounts only, period and buy-in filters, paging, totals
+- [x] Result rule (domain `TournamentResult`): profit = prize + bounties − buy-in × entries; a summary
+      without a "You won" line but with a finish position means zero; no summary means unknown, excluded
+      from totals
+- [x] Web: tournaments page (totals, filters, table, missing-summary marker)
+- [x] Tournament detail (`GET /api/tournaments/{id}`): stack curve, key moments ranked by share of
+      stack (domain `KeyMoments`), session stats labelled as descriptive; master-detail page with
+      name search
+- [x] Hand replayer (`GET /api/hands/{id}`): table with seats by position (other players' pseudonyms
+      never leave the server), street-by-street frames incl. all-in run-outs, previous/next hand and
+      key moment; key moments and coach-cited hands link to it
+
+## Phase 4 — Performance (MVP-1)
+
+- [x] `GET /api/performance`: totals, cumulative profit curve, breakdown by buy-in band, type, speed
+- [x] ITM = share of entries that won a prize (bounties alone do not count: the files do not give the
+      paid places)
+- [x] Web: performance page (KPIs, accessible line chart with crosshair, breakdown tables)
+- [x] Web: dashboard (last 30 days vs the 30 before, mini curve, latest tournaments, alerts for
+      unconfirmed accounts and missing summaries)
+- [x] Visual identity "Tapis de nuit" (felt, chip gold, glass panels, Sora + Plex, motion that
+      respects reduced-motion)
+
+## MVP-2 — Game analysis (ADR-0006)
+
+- [x] Domain `HandAnalyzer`: positions, VPIP, PFR, open, limp, steal, 3-bet, fold to 3-bet, flop
+      c-bet, WTSD, W$SD, net chips / big blinds per hand
+- [x] Versioned per-hand facts (`poker.hand_hero_facts`), computed in the background, SQL aggregates
+- [x] `GET /api/statistics` (period, stack depth) and the statistics page (tiles, by position)
+- [x] Migration `HandHeroFacts`
+- [x] Hand coverage per tournament (levels, hand-number gaps, stack breaks, entries seen, start/end
+      seen), computed in the background after facts, shown in the tournaments list
+- [x] Migration `TournamentCoverage`
+- [x] Rebuy/add-on tournaments (second Winamax summary layout), counted in money paid
+- [x] Migration `Rebuys`
+- [x] Statistics say what they rest on (hands, tournaments, complete histories) and can be
+      restricted to complete histories
+- [ ] Per-entry attribution of hands, postflop statistics
+
+## Ranges (ADR-0009)
+
+- [x] Domain `HandClass` (169 starting hands, 13×13 grid)
+- [x] `GET /api/ranges/opening`: actual opening range per position from the player's hands (RFI
+      spots, per-hand counts, never extrapolated), against the position's reference rate
+- [x] Web: Ranges page (position tabs, animated 13×13 grid with raise/limp shares and counts)
+- [x] Reference opening ranges v1 per position and stack band (`ReferenceOpeningRanges`, range
+      notation parser, seats named by distance to the button), compared hand by hand (gap view)
+- [x] Table formats: statistics, leaks and ranges per format (6-max / full ring), positions named
+      within the format, references by distance to the button
+- [x] Training room (open or fold): spots dealt from the reference ranges (half near the range edge),
+      missed hands come back, seats with an opening leak weighted up, answers stored
+      (`training.opening_attempts`), progress per seat; shared `PokerTable` with the replayer
+- [x] Migration `Training`
+- [x] Defence against an open (ADR-0018): hand facts v4 (single open, not all-in, nobody in between:
+      opener, call, 3-bet; migration `DefenceFacts`), `GET /api/ranges/defence`, reference v1 for 25 BB and
+      more (`ReferenceDefenceRanges`), "Open / Défense vs open" switch on the Ranges page
+- [x] Push/fold equilibrium below 15 BB (`PushFoldNash`, preflop equity table from
+      `backend/tools/preflop-equity`): push band in Ranges (stack 3–15 BB) and in the trainer
+- [x] Migration `TrainingPushStack`
+
+## Bankroll (roadmap step 1)
+
+- [x] Domain `BankrollLedger` (balance since a start date: known results + deposits, withdrawals,
+      adjustments) and `RiskSimulation` (ROI with its 95 % interval, risk of ruin by bootstrap of the
+      player's own results, 2,000 paths, seeded so figures do not move between refreshes)
+- [x] `GET /api/bankroll`, `PUT /api/bankroll/settings`, `POST|DELETE /api/bankroll/movements`
+      (schema `bankroll`)
+- [x] Web: Bankroll page (onboarding, balance curve with movements, buy-in limit of the rule,
+      true-ROI interval, risk of ruin, movements); replaces the empty Sessions page (`/sessions`
+      redirects)
+- [x] Migration `Bankroll`
+
+## All-in EV (roadmap step 2)
+
+- [x] Domain `HandEvaluator` (7 cards, bit arithmetic) and `ShowdownEquity` (exact: every board,
+      side pots, splits)
+- [x] `AllInExpectation`: preflop all-ins with every hand shown, unmatched shove given back,
+      side pots; stored in the hero's facts (facts version 2: everything is recomputed once)
+- [x] `GET /api/statistics/all-in` and the "All-in luck" panel in Statistics (actual vs expected
+      in BB, verdict, curve with the expected line, biggest swings linking to the replayer)
+- [x] Migration `AllInEv`
+- [x] Big blind defence in the trainer: a seat shoves (below 15 BB), call or fold from the big blind,
+      checked against the push/fold equilibrium's call ranges; attempts stored with the shover,
+      progress per shover
+- [x] Migration `TrainingDefence`
+
+## Postflop (roadmap step 3)
+
+- [x] Facts version 3: fold to / raise the flop c-bet, turn c-bet, flop check-raise, won when saw flop,
+      postflop aggression frequency (`PostflopPlay`)
+- [x] Statistics: preflop and postflop sections; leaks: references version 2 with five postflop
+      statistics (ADR-0007 amendment), example hands for the coach
+- [x] Migration `PostflopStats`
+
+## Weekly plan (roadmap step 4, ADR-0010)
+
+- [x] Domain `WeeklyPlanner` (priorities from the leaks of the last 90 days, week assessment, drills)
+- [x] `GET /api/progress` (builds the week's plan on first read), `POST /api/progress/plan/rebuild`;
+      schema `progress`
+- [x] Web: Plan page (priorities with baseline / week / target, drill and coach links, drill goal,
+      previous weeks); training room deep links (`?mode=&seats=&format=`)
+- [x] Migration `WeeklyPlan`
+
+## Data rights
+
+- [x] `GET /api/me/export`: zip with the uploads as sent, tournaments.csv, account.json
+- [x] `DELETE /api/me` (confirmation word, anti-forgery): cascade delete of everything the user owns,
+      AI usage rows kept without the user for the spending cap
+- [x] Web: My account page (link on the name in the top bar)
+
+## Tournament phases and trends
+
+- [x] `TournamentPhase` by blind level (early 1–6, middle 7–12, late 13+: hand histories do not give
+      the players left, so no guessed bubble / money / final table); `phase` filter on statistics
+- [x] `GET /api/statistics/breakdowns`: statistics by phase and by month, with the overall reference
+      ranges; web: phase table and month-by-month chart with the reference band
+
+## Quiz on real hands
+
+- [x] `RealSpots`: the hero's real raise-first-in spots (last 90 days), judged by the drills' answer key
+      (references above 15 BB, push/fold equilibrium below); missed ones are asked again until answered
+      right (`training.opening_attempts.source_hand_id`)
+- [x] `GET /api/training/opening/spot?mode=real` (404 `NO_REAL_SPOT_LEFT`), answers with `sourceHandId`;
+      web: "My hands" mode with the date, what the hero did that day and a link to the replay
+- [x] Migration `TrainingRealHands`
+
+## Preflop sizing (ADR-0020)
+
+- [x] `ReferenceSizings` v1: opens (2 BB short, 2.2 BB above, small blind 2.5–3 BB, all-in below 15 BB) and
+      3-bets against a single open (×3 in position, ×4 out of position, all-in below 25 BB or past a third of
+      the effective stack), each with an interval still in line
+- [x] Sizing drill (`/api/training/sizing/{spot,answers,progress}`, `training.sizing_attempts`): raising is
+      given, the size is asked; reviews and the weekly goal like the other drills; web: "Sizing" mode
+- [x] Hand facts v5: open and 3-bet raise-to, open faced, effective stack, poker account id
+      (migrations `SizingFacts`, `HandHeroFactsPokerAccountId`); `GET /api/training/sizing/played`
+      judges the player's own raises hand by hand, grouped by seat or side and band, with hands to replay
+- [x] Real sizing drill (`GET /api/training/sizing/real`): poorly-sized hands from the player's own
+      history, same flow as the reference drill; migration `SizingRealSpots`
+- [ ] Squeeze and postflop (c-bet by texture) sizing; opponent-aware sizing with the HUD
+
+## Email and password accounts (ADR-0013)
+
+- [x] Sign-up with confirmation link (password required to confirm), sign-in with lockout, forgotten
+      password (also adds a password to a Google account), resend; no account enumeration
+- [x] `identity.password_credentials`, `identity.email_tokens` (hashed, single use); PBKDF2 hashing
+- [x] Brevo sender (`Email:BrevoApiKey`, `Email:FromAddress`); without a key, emails go to the log in
+      Development; `App:PublicUrl` required outside Development; rate limit 10/min per address on `/api/auth`
+- [x] Web: sign-in / sign-up on the sign-in page, `/forgot-password`, `/reset-password`, `/confirm-email`
+- [ ] Brevo account and authenticated sending domain; cleanup of never-confirmed accounts
+
+## Session serial (ADR-0021)
+
+- [x] `session_serial UUID` on `identity.users`, rotated on every sign-in and password change;
+      `pc_ser` claim in the session cookie, validated every 30 minutes — prevents account sharing
+      and revokes sessions on password change
+- [x] `POST /api/me/password` (change password, rotates the serial)
+- [x] Migration `SessionSerial`
+
+## Subscriptions (ADR-0014)
+
+- [x] Free (30 days of history in statistics, leaks, ranges and tournament lists; 3 leak explanations a
+      month; no debrief or weekly review) and Pro (9 €/month, 79 €/year); plan derived from Stripe's status
+- [x] Stripe over plain HTTP: Checkout, customer portal, webhooks re-reading the customer's subscriptions
+      (`POST /api/billing/webhook`, signature checked); `GET /api/billing`, `POST /api/billing/checkout|portal`
+- [x] `subscriptions.subscriptions` (migration `Subscriptions`); the Stripe customer is deleted before the
+      account; without `Billing:Stripe:SecretKey` billing is off and every account has Pro
+- [x] Web: `/subscription` page, history-window notice on analysis pages, Pro prompts in the coach panels
+- [x] Administrators from `Admin:Emails` (always Pro) and offered Pro access with an optional end
+      (`subscriptions.pro_grants`, migration `ProGrants`, ADR-0015); `/admin` page with grants and
+      subscribers linked to Stripe; Google emails trusted only when verified
+- [x] Landing page `site/` for nutsiq.com (static, self-hosted fonts); legal pages as templates
+- [x] Three offers (ADR-0016): Starter 0 €, Pro 14,90 €/149 €, Elite 29,90 €/299 €; monthly AI credits
+      from the usage ledger (explanation 1, weekly review 2, debrief 5); feature matrix in the domain,
+      `403 PLAN_REQUIRED` gates, locks in the web app; tier read from the Stripe price (migration `PlanTiers`)
+- [x] Stripe in test mode: Pro and Elite products with two prices each, customer portal with plan switches
+      and proration, webhook via the Stripe CLI; checkout, Pro → Elite, cancellation verified end to end
+      (`docs/runbooks/stripe-setup.md`)
+- [ ] Stripe in live mode at launch (same runbook); raise `Coaching:MonthlyBudgetUsd` with subscribers; VAT
+      check with an accountant; CGV and legal notice (lawyer)
+
+## AI usage guard (ADR-0017)
+
+- [x] `AiUsageGuard`, the only way to the AI provider: atomic reservation (PostgreSQL advisory lock) of credits
+      and worst-case cost, then settlement at the real cost, failed calls included (credits given back);
+      unknown billing counted at the ceiling; abandoned reservations expire after 10 minutes
+- [x] Ledger `coaching.model_usage` with status and credits (migration `AiUsageGuard`); warning at 80 % of the
+      monthly budget; `GET /api/admin/ai-usage` and the admin page (spend vs budget, cost per credit, top users)
+
+## Coach reports (ADR-0012)
+
+- [x] Tournament debrief: story, verdict per key moment (variance checked against computed equity),
+      strengths, things to work on — `GET|POST /api/tournaments/{id}/debrief`, panel on the tournament page
+- [x] Weekly review: plan priorities against the week's measured progress, drills, next steps —
+      `GET|POST /api/progress/review`, panel on the Progress page (this week / last week)
+- [x] Stored per subject and language (`coaching.reports`), `stale` when the facts moved, regenerated on
+      demand only; shared gate (daily limits per feature, monthly budget); exported and deleted with the account
+
+## Deployment readiness (roadmap step 5, ADR-0011)
+
+- [x] Data-protection keys in PostgreSQL (`platform.data_protection_keys`): sessions survive redeploys
+- [x] API serves the web app (SPA fallback, cache policy), security headers (CSP, HSTS…), forwarded headers
+- [x] `migrate` command (release step), chiseled non-root Dockerfile, compose `app` profile
+- [x] First-party feature usage (`platform.feature_usage`, 13 months, deleted with the account)
+- [x] Privacy page `/privacy` (FR/EN/ES), linked from sign-in and account
+- [x] CI: image built, smoke-tested on PostgreSQL, pushed to GHCR from `main`
+- [x] Hosting decision (ADR-0019): Scaleway fr-par, one instance with Docker Compose (Caddy for TLS and the
+      landing page, app container), Managed PostgreSQL on a private network, backups 7 days; edge image built
+      and pushed by CI with the app; `deploy/scaleway/deploy.sh <sha>` (pull, migrate, up, readiness)
+- [x] Ghost mode: masking numeric values for demos (`web/src/app/core/ghost-mode/`)
+- [x] Sentry integration: frontend error monitoring (`@sentry/angular`, browser tracing),
+      separate DSN for dev and prod environments
+- [ ] Production provisioned (`docs/runbooks/scaleway-deploy.md`): DNS, env files, first deploy, restore tested,
+      uptime check; Google production redirect URI, Stripe live, Brevo domain; privacy contact, legal notice
+- [ ] Telemetry exporter (Azure Monitor or OTLP) with the hosting decision
+
+## MVP-3 — Leaks (ADR-0007)
+
+- [x] Domain `LeakDetector`: reference ranges v1 (low-stakes MTT, 15+ BB), Wilson 95 % guard,
+      confirmed / to watch / not judgeable yet
+- [x] `GET /api/leaks` and the leaks page (range gauge, why it costs, what to work on)
+- [x] AI explanations with example hands (ADR-0008): `POST /api/leaks/explanations`, Anthropic
+      adapter with structured output, anonymised hand stories, stored by fingerprint, per-user daily
+      limit and global monthly budget, usage ledger
+- [x] Migration `Coaching`
+- [ ] Adjustable references; evaluation set for explanations
+
+## Betclic cash game (ADR-0022)
+
+- [x] `GameType` enum (`Tournament`, `CashGame`), `Rake`, `Stakes` on `ParsedHand`
+- [x] Betclic NL Hold'em cash game parser (`BetclicHandHistoryParser`, `BetclicHandReader`,
+      `BetclicPatterns`, `BetclicValues`), detection, rake balance check, noise line skipping
+- [x] Migration `CashGame`: `game_type`, `rake`, `stakes` columns on `poker.hands`,
+      `tournament_id` nullable, index `(poker_account_id, game_type)`
+- [x] Import pipeline: cash game hands stored without tournament FK, `HandDetailsDocument` v2
+- [ ] Cash-specific statistics (BB/100, session tracking), performance page, game type filter

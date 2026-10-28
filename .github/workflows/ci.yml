@@ -195,33 +195,22 @@ jobs:
       - name: Announce on Discord
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_ANNOUNCES_WEBHOOK }}
+          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           [ -n "${WEBHOOK_URL}" ] || { echo "No webhook configured, skipping."; exit 0; }
-          TITLE="🚀 NutsIQ ${TAG}"
-          BODY=$(cat release-notes.md)
-          DESCRIPTION="${BODY:-Nouvelle version disponible.}"
-          URL="https://github.com/${{ github.repository }}/releases/tag/${TAG}"
+          URL="https://github.com/${REPO}/releases/tag/${TAG}"
+          DESCRIPTION=$(cat release-notes.md)
+          DESCRIPTION="${DESCRIPTION:-Nouvelle version disponible.}"
           if [ "${#DESCRIPTION}" -gt 3900 ]; then
-            DESCRIPTION="${DESCRIPTION:0:3900}…"$'\n\n'"[Notes complètes sur GitHub](${URL})"
+            DESCRIPTION="${DESCRIPTION:0:3900}"
           fi
-          PAYLOAD=$(jq -n \
-            --arg title "$TITLE" \
+          jq -n \
+            --arg title "NutsIQ ${TAG}" \
             --arg desc "$DESCRIPTION" \
             --arg url "$URL" \
-            '{
-              username: "NutsIQ",
-              allowed_mentions: { parse: [] },
-              embeds: [{
-                title: $title,
-                description: $desc,
-                color: 13938487,
-                url: $url,
-                footer: { text: "Changelog NutsIQ" },
-                timestamp: (now | todate)
-              }]
-            }')
-          curl --fail-with-body --silent --show-error \
+            '{username:"NutsIQ",allowed_mentions:{parse:[]},embeds:[{title:$title,description:$desc,color:13938487,url:$url,footer:{text:"Changelog NutsIQ"},timestamp:(now|todate)}]}' \
+          | curl --fail-with-body --silent --show-error \
             -H "Content-Type: application/json" \
-            -d "$PAYLOAD" \
+            -d @- \
             "$WEBHOOK_URL"
