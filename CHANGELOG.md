@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-51d975c] — 2026-10-28
+
+### Performance
+
+- Denormalize game_type and started_at into hand_hero_facts
+
 ## [2026.10.28-8bc9052] — 2026-10-28
 
 ### Correctifs

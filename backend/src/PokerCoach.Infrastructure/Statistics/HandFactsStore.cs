@@ -36,7 +36,7 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
         var handMeta = newIds.Count > 0
             ? await db.Set<HandRecord>().AsNoTracking()
                 .Where(h => newIds.Contains(h.Id))
-                .Select(h => new { h.Id, h.PokerAccountId, h.GameType, h.StartedAt })
+                .Select(h => new { h.Id, h.PokerAccountId, h.GameType, h.StartedAt, h.MaxSeats, h.HeroCards, h.TournamentId, h.BigBlind, h.Level })
                 .ToDictionaryAsync(h => h.Id, cancellationToken)
             : [];
 
@@ -51,6 +51,11 @@ internal sealed class HandFactsStore(PokerCoachDbContext db) : IHandFactsStore
                     PokerAccountId = meta.PokerAccountId,
                     GameType = meta.GameType,
                     StartedAt = meta.StartedAt,
+                    MaxSeats = meta.MaxSeats,
+                    HeroCards = meta.HeroCards,
+                    TournamentId = meta.TournamentId,
+                    BigBlind = meta.BigBlind,
+                    Level = meta.Level,
                 };
                 db.Add(record);
             }

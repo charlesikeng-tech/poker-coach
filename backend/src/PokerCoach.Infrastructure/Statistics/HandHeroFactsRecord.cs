@@ -22,6 +22,16 @@ internal sealed class HandHeroFactsRecord
 
     public DateTimeOffset StartedAt { get; set; }
 
+    public int MaxSeats { get; set; }
+
+    public string? HeroCards { get; set; }
+
+    public Guid? TournamentId { get; set; }
+
+    public long BigBlind { get; set; }
+
+    public int Level { get; set; }
+
     public PokerPosition? Position { get; set; }
 
     public int PlayersDealt { get; set; }

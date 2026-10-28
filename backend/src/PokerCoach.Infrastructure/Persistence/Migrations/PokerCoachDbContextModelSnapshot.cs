@@ -1369,6 +1369,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("numeric(14,2)")
                         .HasColumnName("all_in_expected_net_chips");
 
+                    b.Property<long>("BigBlind")
+                        .HasColumnType("bigint")
+                        .HasColumnName("big_blind");
+
                     b.Property<bool>("CallThreeBet")
                         .HasColumnType("boolean")
                         .HasColumnName("call_three_bet");
@@ -1473,9 +1477,21 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("had_preflop_decision");
 
+                    b.Property<string>("HeroCards")
+                        .HasColumnType("text")
+                        .HasColumnName("hero_cards");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer")
+                        .HasColumnName("level");
+
                     b.Property<bool>("Limp")
                         .HasColumnType("boolean")
                         .HasColumnName("limp");
+
+                    b.Property<int>("MaxSeats")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_seats");
 
                     b.Property<decimal>("NetBigBlinds")
                         .HasPrecision(12, 2)
@@ -1576,6 +1592,10 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("numeric(10,2)")
                         .HasColumnName("three_bet_to_big_blinds");
+
+                    b.Property<Guid?>("TournamentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tournament_id");
 
                     b.Property<bool>("Vpip")
                         .HasColumnType("boolean")
