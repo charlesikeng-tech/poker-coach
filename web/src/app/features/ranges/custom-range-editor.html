@@ -1,3 +1,4 @@
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
 <dialog #dialog (click)="onBackdropClick($event)">
   @if (openingSlot() || defenceSlot()) {
     <div class="editor" *transloco="let t; prefix: 'pages.ranges.custom'">

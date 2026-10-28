@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Correctifs
+
+- **web**: Stabilize @for array reference in poker-table (NG0956)
+
 ## [2026.10.28-f106a01] — 2026-10-28
 
 ### Correctifs

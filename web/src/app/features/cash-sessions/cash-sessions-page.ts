@@ -85,7 +85,7 @@ export class CashSessionsPage {
       const args = [this.period(), this.page()] as const;
       untracked(() => void this.load(...args));
     });
-    inject(DestroyRef).onDestroy(() => {});
+    inject(DestroyRef).onDestroy(() => undefined);
   }
 
   protected setPeriod(value: string): void {

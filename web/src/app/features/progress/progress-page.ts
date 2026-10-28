@@ -19,7 +19,6 @@ import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { MonthlyReportPanel, ReportableMonth } from '../coaching/monthly-report-panel';
 import { ReviewableWeek, WeekReviewPanel } from '../coaching/week-review-panel';
-import { GameType } from '../statistics/statistics-api';
 import { positionShort } from '../training/spot-table';
 import { Priority, ProgressApi, ProgressReport, TournamentSubFormat } from './progress-api';
 import { GameTypeService } from '../../core/game-type/game-type.service';

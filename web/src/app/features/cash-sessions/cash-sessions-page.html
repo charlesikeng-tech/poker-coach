@@ -67,7 +67,7 @@
                         }}</span>
                       }
                       @if (
-                        session.allInAdjBigBlindsPer100 != null &&
+                        session.allInAdjBigBlindsPer100 !== null &&
                         session.allInAdjBigBlindsPer100 !== session.bigBlindsPer100
                       ) {
                         <span [attr.data-sign]="sign(session.allInAdjBigBlindsPer100)"

@@ -26,6 +26,7 @@
           <div class="profile-info">
             @if (editingName()) {
               <form class="inline-form" (submit)="saveName($event)" novalidate>
+                <!-- eslint-disable @angular-eslint/template/no-autofocus -->
                 <input
                   type="text"
                   [value]="newName()"
@@ -34,6 +35,7 @@
                   autofocus
                   (input)="newName.set(value($event))"
                 />
+                <!-- eslint-enable @angular-eslint/template/no-autofocus -->
                 <button
                   appButton
                   variant="primary"

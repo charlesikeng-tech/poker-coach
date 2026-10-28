@@ -7,6 +7,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
  * `<a appButton routerLink>` for navigation.
  */
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'button[appButton], a[appButton]',
   template: '<ng-content />',
   changeDetection: ChangeDetectionStrategy.OnPush,

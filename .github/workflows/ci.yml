@@ -54,6 +54,8 @@ jobs:
         run: npx -y npm@11 ci
       - name: Format check
         run: npx prettier --check "src/**/*.{ts,html,scss}" "public/i18n/*.json"
+      - name: Lint
+        run: npm run lint
       - name: Build
         run: npm run build
       - name: Test

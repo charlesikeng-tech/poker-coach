@@ -117,7 +117,10 @@
           @let r = rate(report.overall, key);
           <div
             class="tile-wrap"
+            role="button"
+            tabindex="0"
             (click)="openPopover(key, r, findRef(key), null, $event)"
+            (keydown.enter)="openPopover(key, r, findRef(key), null, $event)"
             data-stat-trigger
           >
             <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">
@@ -140,7 +143,10 @@
           @let r = rate(report.overall, key);
           <div
             class="tile-wrap"
+            role="button"
+            tabindex="0"
             (click)="openPopover(key, r, findRef(key), null, $event)"
+            (keydown.enter)="openPopover(key, r, findRef(key), null, $event)"
             data-stat-trigger
           >
             <app-stat-tile [label]="t('stats.' + key)" [value]="r.rate" [format]="formats().share">

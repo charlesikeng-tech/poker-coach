@@ -26,7 +26,6 @@ import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
-import { GameType } from '../statistics/statistics-api';
 import { ImportApi, PokerAccount } from '../import/import-api';
 import { PERIOD_FILTERS, PeriodFilter, toQuery } from '../tournaments/filters';
 import { CashDebriefPanel } from '../coaching/cash-debrief-panel';
