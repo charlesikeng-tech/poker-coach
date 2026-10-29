@@ -16,11 +16,18 @@ internal sealed partial class WeeklyNotificationBackgroundService(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
-        do
+        try
         {
-            await TryRunAsync(stoppingToken);
+            do
+            {
+                await TryRunAsync(stoppingToken);
+            }
+            while (await timer.WaitForNextTickAsync(stoppingToken));
         }
-        while (await timer.WaitForNextTickAsync(stoppingToken));
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            // Host is shutting down: expected, not an error.
+        }
     }
 
     private async Task TryRunAsync(CancellationToken cancellationToken)

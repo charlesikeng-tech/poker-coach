@@ -26,11 +26,18 @@ internal sealed class UnconfirmedAccountCleanupService(
     {
         // Run once immediately on startup, then every 24 hours.
         using var timer = new PeriodicTimer(TimeSpan.FromHours(24));
-        do
+        try
         {
-            await RunOnceAsync(stoppingToken);
+            do
+            {
+                await RunOnceAsync(stoppingToken);
+            }
+            while (await timer.WaitForNextTickAsync(stoppingToken));
         }
-        while (await timer.WaitForNextTickAsync(stoppingToken));
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            // Host is shutting down: expected, not an error.
+        }
     }
 
     private async Task RunOnceAsync(CancellationToken cancellationToken)

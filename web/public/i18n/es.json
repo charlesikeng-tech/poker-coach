@@ -730,7 +730,58 @@
         "noNote": "Sin nota.",
         "edit": "Editar",
         "save": "Guardar",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "exploit": {
+          "title": "Cómo explotar",
+          "valueBetSizing": "Sizing de value bet",
+          "bluffFrequency": "Frecuencia de bluff",
+          "sizing": {
+            "Standard": "Estándar",
+            "Bigger": "Más grande",
+            "Smaller": "Más pequeño"
+          },
+          "bluff": {
+            "Standard": "Estándar",
+            "More": "Más",
+            "Less": "Menos"
+          },
+          "tips": {
+            "stealBlindsMore": "Roba sus blinds más a menudo — foldean demasiado",
+            "valueBetBigger": "Haz value bets más grandes — pagan cuando hacen call",
+            "dontBluffRiver": "No hagas bluff en el river — rara vez foldean",
+            "foldToThreeBetLess": "No sobre-foldees a sus 3-bets — rara vez bluffean",
+            "valueBetRelentlessly": "Value bet sin parar — no van a foldear",
+            "dontBluff": "No bluffees — hacen call demasiado wide",
+            "sizeUpValue": "Aumenta el tamaño de tus value bets — van a seguir pagando",
+            "avoidThinBluffs": "Evita los thin bluffs — elige spots claros",
+            "threeBetLighter": "Haz 3-bet más light — abren demasiado wide",
+            "trapWithMonsters": "Trapea con tus monstruos — déjalos bet",
+            "callDownWider": "Haz call down más wide — su agresión incluye muchos bluffs",
+            "avoidFancyPlays": "Evita fancy plays — las líneas directas funcionan mejor",
+            "callDownWide": "Haz call down wide — bluffean demasiado",
+            "letThemBluff": "Déjalos bluffear — check tus manos fuertes para inducir",
+            "potControlMediumHands": "Pot-control tus manos medias — van a escalar",
+            "raisePremiumsForValue": "Raise tus premiums para value — van a pagar",
+            "respectThreeBets": "Respeta sus 3-bets — van en serio",
+            "avoidMarginalSpots": "Evita spots marginales — busca oponentes más fáciles",
+            "bluffScareBoardsMore": "Bluffea los scare boards — pueden foldear",
+            "playGto": "Juega tu juego GTO — no intentes explotar",
+            "dontDeviate": "No desvíes — se van a ajustar y castigar",
+            "mixFrequencies": "Mezcla tus frecuencias — mantente impredecible"
+          }
+        },
+        "coaching": {
+          "title": "Coaching IA",
+          "empty": "No hay informe de coaching. Genera uno para obtener consejos precisos contra este oponente.",
+          "generate": "Analizar este oponente (2 créditos)",
+          "generating": "Analizando…",
+          "refresh": "Actualizar análisis",
+          "error": "El coach no pudo responder. Inténtalo de nuevo.",
+          "stale": "Este informe se basa en datos antiguos. Actualiza para renovar.",
+          "adjustments": "Ajustes",
+          "keyTips": "Recordatorios clave",
+          "notEnoughHands": "Se necesitan al menos 20 manos para el coaching IA."
+        }
       }
     },
     "statistics": {

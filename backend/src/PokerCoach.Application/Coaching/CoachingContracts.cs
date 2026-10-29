@@ -113,6 +113,21 @@ public sealed record HandCommentaryNote(string Ref, string Verdict, string Analy
 /// <summary>The model's batch answer: one note per hand asked.</summary>
 public sealed record HandCommentaryBatch(IReadOnlyList<HandCommentaryNote> Hands);
 
+/// <summary>What the model is asked for opponent coaching. No player name or id — opponent is anonymized.</summary>
+public sealed record OpponentCoachingPrompt(string Language, string Facts);
+
+/// <summary>One concrete adjustment when facing this opponent.</summary>
+/// <param name="Spot">The game situation where the adjustment applies.</param>
+/// <param name="Action">What to do differently.</param>
+/// <param name="Why">Why it exploits this opponent's tendency.</param>
+public sealed record OpponentAdjustment(string Spot, string Action, string Why);
+
+/// <summary>The model's opponent coaching report, after schema validation.</summary>
+/// <param name="Summary">2–3 sentence scouting report.</param>
+/// <param name="Adjustments">3–5 concrete adjustments.</param>
+/// <param name="KeyTips">2–3 one-line reminders for the HUD or notes.</param>
+public sealed record OpponentCoachingAdvice(string Summary, IReadOnlyList<OpponentAdjustment> Adjustments, IReadOnlyList<string> KeyTips);
+
 /// <summary>Port to the language model (Infrastructure adapter per provider).</summary>
 public interface ICoachingModel
 {
@@ -154,6 +169,9 @@ public interface ICoachingModel
 
     /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
     Task<ModelAnswer<HandCommentaryBatch>> CommentHandsAsync(HandCommentaryPrompt prompt, CancellationToken cancellationToken);
+
+    /// <exception cref="CoachingModelException">The provider failed or answered outside the schema.</exception>
+    Task<ModelAnswer<OpponentCoachingAdvice>> CoachAgainstOpponentAsync(OpponentCoachingPrompt prompt, CancellationToken cancellationToken);
 }
 
 /// <summary>The provider failed or answered outside the schema.</summary>

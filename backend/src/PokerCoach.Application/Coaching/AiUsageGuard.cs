@@ -16,6 +16,7 @@ public enum AiTask
     StrategyPlan,
     PlayerProfile,
     HandCommentary,
+    OpponentCoaching,
 }
 
 public static class AiTasks
@@ -32,6 +33,7 @@ public static class AiTasks
         AiTask.StrategyPlan => "strategy-plan",
         AiTask.PlayerProfile => "player-profile",
         AiTask.HandCommentary => "hand-commentary",
+        AiTask.OpponentCoaching => "opponent-coaching",
         _ => "leak-explanation",
     };
 
@@ -47,6 +49,7 @@ public static class AiTasks
         AiTask.StrategyPlan => 3,
         AiTask.PlayerProfile => 1,
         AiTask.HandCommentary => 3,
+        AiTask.OpponentCoaching => 2,
         _ => 1,
     };
 

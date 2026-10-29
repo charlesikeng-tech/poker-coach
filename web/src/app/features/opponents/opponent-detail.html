@@ -84,6 +84,93 @@
       </div>
     </div>
 
+    <!-- Exploit tips -->
+    @if (exploit(); as ex) {
+      @if (ex.tips.length > 0) {
+        <section class="section exploit-section">
+          <div class="section__header">
+            <h3><app-icon [icon]="icons.Swords" /> {{ t('exploit.title') }}</h3>
+          </div>
+          <div class="exploit-tendencies">
+            <span class="exploit-tendency">
+              <strong>{{ t('exploit.valueBetSizing') }}:</strong>
+              {{ t('exploit.sizing.' + ex.valueBetSizing) }}
+            </span>
+            <span class="exploit-tendency">
+              <strong>{{ t('exploit.bluffFrequency') }}:</strong>
+              {{ t('exploit.bluff.' + ex.bluffFrequency) }}
+            </span>
+          </div>
+          <ul class="exploit-tips">
+            @for (tip of ex.tips; track tip.key) {
+              <li>{{ t('exploit.tips.' + tip.key) }}</li>
+            }
+          </ul>
+        </section>
+      }
+    }
+
+    <!-- AI Coaching -->
+    <section class="section coaching-section">
+      <div class="section__header">
+        <h3><app-icon [icon]="icons.BrainCircuit" /> {{ t('coaching.title') }}</h3>
+      </div>
+      @if (coaching(); as c) {
+        <div class="coaching-report" [class.coaching-report--stale]="c.stale">
+          @if (c.stale) {
+            <p class="coaching-stale-hint">{{ t('coaching.stale') }}</p>
+          }
+          <p class="coaching-summary">{{ c.summary }}</p>
+          <h4>{{ t('coaching.adjustments') }}</h4>
+          <ul class="coaching-adjustments">
+            @for (adj of c.adjustments; track adj.spot) {
+              <li>
+                <strong>{{ adj.spot }}</strong>
+                <span>{{ adj.action }}</span>
+                <small>{{ adj.why }}</small>
+              </li>
+            }
+          </ul>
+          @if (c.keyTips.length > 0) {
+            <h4>{{ t('coaching.keyTips') }}</h4>
+            <ul class="coaching-key-tips">
+              @for (tip of c.keyTips; track tip) {
+                <li>{{ tip }}</li>
+              }
+            </ul>
+          }
+          <button
+            appButton
+            variant="ghost"
+            [disabled]="coachingState() === 'loading'"
+            (click)="requestCoaching()"
+          >
+            {{ t('coaching.refresh') }}
+          </button>
+        </div>
+      } @else {
+        <p class="empty-hint">{{ t('coaching.empty') }}</p>
+        <button
+          appButton
+          variant="primary"
+          [disabled]="coachingState() === 'loading' || (data()?.stats?.hands ?? 0) < 20"
+          (click)="requestCoaching()"
+        >
+          @if (coachingState() === 'loading') {
+            {{ t('coaching.generating') }}
+          } @else {
+            {{ t('coaching.generate') }}
+          }
+        </button>
+        @if (coachingState() === 'error') {
+          <p class="coaching-error">{{ t('coaching.error') }}</p>
+        }
+        @if ((data()?.stats?.hands ?? 0) < 20) {
+          <p class="empty-hint">{{ t('coaching.notEnoughHands') }}</p>
+        }
+      }
+    </section>
+
     <!-- Tags -->
     <section class="section">
       <div class="section__header">

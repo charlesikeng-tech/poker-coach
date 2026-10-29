@@ -1,6 +1,6 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.29-5275977] — 2026-10-29
 
 ### Fonctionnalités
 

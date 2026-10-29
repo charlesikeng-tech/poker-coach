@@ -161,6 +161,7 @@ builder.Services.AddScoped<MonthlyReportService>();
 builder.Services.AddScoped<TournamentSelectionService>();
 builder.Services.AddScoped<StrategyPlanService>();
 builder.Services.AddScoped<PlayerProfileService>();
+builder.Services.AddScoped<OpponentCoachService>();
 builder.Services.AddScoped<TournamentReviewService>();
 builder.Services.AddSingleton<FeatureUsageTracker>();
 

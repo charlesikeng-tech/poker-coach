@@ -10,13 +10,19 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { ArrowLeft, NotebookPen, Save, Tag, X } from 'lucide';
+import { ArrowLeft, BrainCircuit, NotebookPen, Save, Swords, Tag, X } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { Icon } from '../../shared/ui/icon/icon';
-import { OpponentDetail, OpponentsApi, PlayerType } from './opponents-api';
+import {
+  ExploitResponse,
+  OpponentCoachingResponse,
+  OpponentDetail,
+  OpponentsApi,
+  PlayerType,
+} from './opponents-api';
 
 type LoadState = 'loading' | 'ready' | 'error';
 
@@ -40,7 +46,10 @@ export class OpponentDetailPage {
   protected readonly editingTags = signal(false);
   protected readonly tagsText = signal('');
   protected readonly saving = signal(false);
-  protected readonly icons = { ArrowLeft, NotebookPen, Save, Tag, X };
+  protected readonly exploit = signal<ExploitResponse | null>(null);
+  protected readonly coaching = signal<OpponentCoachingResponse | null>(null);
+  protected readonly coachingState = signal<'idle' | 'loading' | 'error'>('idle');
+  protected readonly icons = { ArrowLeft, BrainCircuit, NotebookPen, Save, Swords, Tag, X };
 
   private readonly locale = computed(() => this.language.current());
 
@@ -117,18 +126,53 @@ export class OpponentDetailPage {
     }
   }
 
+  protected async requestCoaching(): Promise<void> {
+    const d = this.data();
+    if (!d) return;
+    this.coachingState.set('loading');
+    try {
+      const result = await this.api.generateCoaching(d.id);
+      this.coaching.set(result);
+      this.coachingState.set('idle');
+    } catch {
+      this.coachingState.set('error');
+    }
+  }
+
   protected retry(): void {
     void this.load(this.id());
   }
 
   private async load(id: string): Promise<void> {
     this.state.set('loading');
+    this.exploit.set(null);
+    this.coaching.set(null);
+    this.coachingState.set('idle');
     try {
       const data = await this.api.get(id);
       this.data.set(data);
       this.state.set('ready');
+      // Load exploit tips and cached coaching in parallel.
+      void this.loadExploit(id);
+      void this.loadCoaching(id);
     } catch {
       this.state.set('error');
+    }
+  }
+
+  private async loadExploit(id: string): Promise<void> {
+    try {
+      this.exploit.set(await this.api.getExploit(id));
+    } catch {
+      // Exploit tips are optional: no error state needed.
+    }
+  }
+
+  private async loadCoaching(id: string): Promise<void> {
+    try {
+      this.coaching.set(await this.api.getCoaching(id));
+    } catch {
+      // 404 = no cached coaching: expected, the user must generate it.
     }
   }
 }

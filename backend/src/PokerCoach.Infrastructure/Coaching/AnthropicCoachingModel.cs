@@ -755,6 +755,56 @@ internal sealed partial class AnthropicCoachingModel(
 
     private const int HandCommentaryMaxOutputTokens = 4_000;
 
+    private const string OpponentCoachingInstructions = MttContext + """
+        You receive an opponent's aggregate statistics over multiple hands, their deterministic archetype
+        classification, and the generic exploit tips the software already provides for that archetype.
+
+        Your task is to write a precise, personalised scouting report that goes beyond the generic tips:
+        reference the opponent's actual numbers (e.g. "Fold to 3-bet is 72 %, well above average") and
+        give concrete lines and ranges, not just general directions. If the sample is small (under 50
+        hands), say so and frame the advice as tendencies to watch.
+
+        Rules:
+        - Use only the figures given. Never compute, estimate or invent a statistic or a percentage.
+        - The opponent is anonymous: refer to them as "this opponent" or "they".
+        - Be concrete and practical, for a recreational player who wants to improve. Give the advice as
+          if briefing the hero before a session where they will face this opponent again.
+        - summary: two or three sentences describing who this opponent is and their key tendencies.
+        - adjustments: three to five concrete adjustments, each with:
+          - spot: one sentence describing the specific game situation.
+          - action: one sentence on the concrete action to take against this opponent.
+          - why: one sentence explaining why it exploits their tendency, citing their specific stat.
+        - key_tips: two or three one-line reminders the hero can paste into their HUD note or keep in mind.
+        """ + Voice;
+
+    private static readonly JsonObject OpponentAdjustmentSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("spot", "action", "why"),
+        ["properties"] = new JsonObject
+        {
+            ["spot"] = new JsonObject { ["type"] = "string" },
+            ["action"] = new JsonObject { ["type"] = "string" },
+            ["why"] = new JsonObject { ["type"] = "string" },
+        },
+    };
+
+    private static readonly JsonObject OpponentCoachingSchema = new()
+    {
+        ["type"] = "object",
+        ["additionalProperties"] = false,
+        ["required"] = new JsonArray("summary", "adjustments", "key_tips"),
+        ["properties"] = new JsonObject
+        {
+            ["summary"] = Text.DeepClone(),
+            ["adjustments"] = new JsonObject { ["type"] = "array", ["items"] = OpponentAdjustmentSchema.DeepClone() },
+            ["key_tips"] = Texts.DeepClone(),
+        },
+    };
+
+    private const int OpponentCoachingMaxOutputTokens = 1_500;
+
     private const int MaxCorrectionAttempts = 1;
 
     /// <summary>Thinking and answer share this cap: room for the reasoning on eight hands plus the text.</summary>
@@ -802,6 +852,7 @@ internal sealed partial class AnthropicCoachingModel(
             AiTask.StrategyPlan => StrategyPlanMaxOutputTokens,
             AiTask.PlayerProfile => PlayerProfileMaxOutputTokens,
             AiTask.HandCommentary => HandCommentaryMaxOutputTokens,
+            AiTask.OpponentCoaching => OpponentCoachingMaxOutputTokens,
             _ => settings.MaxOutputTokens,
         };
     }
@@ -858,6 +909,9 @@ internal sealed partial class AnthropicCoachingModel(
 
     public Task<ModelAnswer<HandCommentaryBatch>> CommentHandsAsync(HandCommentaryPrompt prompt, CancellationToken cancellationToken) =>
         LoggedAsync("hand-commentary", () => HandCommentaryCoreAsync(prompt, ModelFor(AiTask.HandCommentary), cancellationToken));
+
+    public Task<ModelAnswer<OpponentCoachingAdvice>> CoachAgainstOpponentAsync(OpponentCoachingPrompt prompt, CancellationToken cancellationToken) =>
+        LoggedAsync("opponent-coaching", () => OpponentCoachingCoreAsync(prompt, ModelFor(AiTask.OpponentCoaching), cancellationToken));
 
     /// <summary>Every rejected answer is logged with its reason: otherwise the player sees "try again" and nobody knows why.</summary>
     private async Task<T> LoggedAsync<T>(string task, Func<Task<T>> call)
@@ -1369,5 +1423,32 @@ internal sealed partial class AnthropicCoachingModel(
             .ToList();
 
         return new ModelAnswer<HandCommentaryBatch>(new HandCommentaryBatch(notes), usage);
+    }
+
+    private sealed record OpponentAdjustmentAnswer(string? Spot, string? Action, string? Why);
+
+    private sealed record OpponentCoachingAnswer(string? Summary, IReadOnlyList<OpponentAdjustmentAnswer>? Adjustments, IReadOnlyList<string>? KeyTips);
+
+    private async Task<ModelAnswer<OpponentCoachingAdvice>> OpponentCoachingCoreAsync(OpponentCoachingPrompt prompt, string model, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(prompt);
+        var user = $"Answer language: {prompt.Language}.\n\n{prompt.Facts}";
+        var (answer, usage) = await CallAsync<OpponentCoachingAnswer>(
+            OpponentCoachingInstructions, OpponentCoachingSchema, user,
+            MaxOutputTokensFor(AiTask.OpponentCoaching), Reasoning.Writing, cancellationToken, model: model);
+        if (string.IsNullOrWhiteSpace(answer.Summary))
+        {
+            throw new CoachingModelException("The model answer misses required fields.", usage);
+        }
+
+        var adjustments = (answer.Adjustments ?? [])
+            .Where(a => !string.IsNullOrWhiteSpace(a.Spot) && !string.IsNullOrWhiteSpace(a.Action) && !string.IsNullOrWhiteSpace(a.Why))
+            .Select(a => new OpponentAdjustment(a.Spot!.Trim(), a.Action!.Trim(), a.Why!.Trim()))
+            .Take(5)
+            .ToList();
+
+        return new ModelAnswer<OpponentCoachingAdvice>(
+            new OpponentCoachingAdvice(answer.Summary.Trim(), adjustments, Clean(answer.KeyTips, 3)),
+            usage);
     }
 }

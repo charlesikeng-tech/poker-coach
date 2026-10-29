@@ -730,7 +730,58 @@
         "noNote": "No note.",
         "edit": "Edit",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "exploit": {
+          "title": "How to exploit",
+          "valueBetSizing": "Value bet sizing",
+          "bluffFrequency": "Bluff frequency",
+          "sizing": {
+            "Standard": "Standard",
+            "Bigger": "Bigger",
+            "Smaller": "Smaller"
+          },
+          "bluff": {
+            "Standard": "Standard",
+            "More": "More",
+            "Less": "Less"
+          },
+          "tips": {
+            "stealBlindsMore": "Steal their blinds more often — they fold too much",
+            "valueBetBigger": "Size your value bets bigger — they pay off when they call",
+            "dontBluffRiver": "Don't bluff the river — they rarely fold at that point",
+            "foldToThreeBetLess": "Don't over-fold to their 3-bets — they rarely bluff",
+            "valueBetRelentlessly": "Value bet relentlessly — they won't fold",
+            "dontBluff": "Don't bluff — they call too wide",
+            "sizeUpValue": "Size up your value bets — they'll still call",
+            "avoidThinBluffs": "Avoid thin bluffs — pick clear spots only",
+            "threeBetLighter": "3-bet them lighter — they open wide",
+            "trapWithMonsters": "Trap with monsters — let them bet into you",
+            "callDownWider": "Call down wider — their aggression includes many bluffs",
+            "avoidFancyPlays": "Avoid fancy plays — straightforward lines work best",
+            "callDownWide": "Call down wide — they bluff far too much",
+            "letThemBluff": "Let them bluff — check strong hands to induce",
+            "potControlMediumHands": "Pot-control medium hands — they'll escalate",
+            "raisePremiumsForValue": "Raise premiums for value — they'll pay you off",
+            "respectThreeBets": "Respect their 3-bets — they mean it",
+            "avoidMarginalSpots": "Avoid marginal spots — find easier opponents",
+            "bluffScareBoardsMore": "Bluff scare boards more — they can find folds",
+            "playGto": "Play your GTO game — don't try to exploit",
+            "dontDeviate": "Don't deviate — they'll adjust and punish you",
+            "mixFrequencies": "Mix your frequencies — stay unpredictable"
+          }
+        },
+        "coaching": {
+          "title": "AI Coaching",
+          "empty": "No coaching report yet. Generate one to get precise advice on how to play against this opponent.",
+          "generate": "Analyse this opponent (2 credits)",
+          "generating": "Analysing…",
+          "refresh": "Refresh analysis",
+          "error": "The coach could not answer. Try again.",
+          "stale": "This report is based on older data. Refresh to update.",
+          "adjustments": "Adjustments",
+          "keyTips": "Key reminders",
+          "notEnoughHands": "At least 20 hands are needed for AI coaching."
+        }
       }
     },
     "statistics": {

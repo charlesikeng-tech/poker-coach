@@ -54,6 +54,33 @@ export interface OpponentDetail {
   readonly distinctTournaments: number;
 }
 
+export interface ExploitTip {
+  readonly key: string;
+  readonly category: string;
+}
+
+export interface ExploitResponse {
+  readonly playerType: PlayerType;
+  readonly valueBetSizing: string;
+  readonly bluffFrequency: string;
+  readonly tips: readonly ExploitTip[];
+}
+
+export interface OpponentAdjustment {
+  readonly spot: string;
+  readonly action: string;
+  readonly why: string;
+}
+
+export interface OpponentCoachingResponse {
+  readonly summary: string;
+  readonly adjustments: readonly OpponentAdjustment[];
+  readonly keyTips: readonly string[];
+  readonly stale: boolean;
+  readonly model: string;
+  readonly createdAt: string;
+}
+
 export type OpponentSort = 'hands' | 'name' | 'lastSeen' | 'vpip';
 
 export interface OpponentQuery {
@@ -101,6 +128,27 @@ export class OpponentsApi {
   setTags(id: string, tags: readonly string[]): Promise<void> {
     return firstValueFrom(
       this.http.put<void>(`/api/opponents/${encodeURIComponent(id)}/tags`, { tags }),
+    );
+  }
+
+  getExploit(id: string): Promise<ExploitResponse> {
+    return firstValueFrom(
+      this.http.get<ExploitResponse>(`/api/opponents/${encodeURIComponent(id)}/exploit`),
+    );
+  }
+
+  getCoaching(id: string): Promise<OpponentCoachingResponse> {
+    return firstValueFrom(
+      this.http.get<OpponentCoachingResponse>(`/api/opponents/${encodeURIComponent(id)}/coaching`),
+    );
+  }
+
+  generateCoaching(id: string): Promise<OpponentCoachingResponse> {
+    return firstValueFrom(
+      this.http.post<OpponentCoachingResponse>(
+        `/api/opponents/${encodeURIComponent(id)}/coaching`,
+        {},
+      ),
     );
   }
 }
