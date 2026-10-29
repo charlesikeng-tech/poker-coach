@@ -224,6 +224,71 @@
   border-left: 3px solid var(--warning);
 }
 
+// Delete button: appears on hover of the list item, positioned top-right.
+.list__item {
+  position: relative;
+}
+
+.item__delete {
+  --icon-size: 0.875rem;
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--motion-fast) var(--easing-standard),
+    color var(--motion-fast) var(--easing-standard),
+    background-color var(--motion-fast) var(--easing-standard);
+
+  .list__item:hover &,
+  .list__item:focus-within &,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  &:hover {
+    color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 10%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+// Inline confirmation state when deleting a tournament.
+.item--confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px dashed var(--danger);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger) 5%, transparent);
+}
+
+.item__confirm-text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.item__confirm-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
 .pager {
   --icon-size: 1rem;
   display: flex;

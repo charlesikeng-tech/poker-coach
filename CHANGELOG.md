@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.29-2743d36] — 2026-10-29
+
+### Fonctionnalités
+
+- AI opponent coaching and exploit tips on detail page
+
 ## [2026.10.29-5275977] — 2026-10-29
 
 ### Fonctionnalités

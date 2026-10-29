@@ -39,6 +39,29 @@ public interface ITournamentReadStore
     Task<IReadOnlyList<PokerRoom>> ListRoomsAsync(Guid userId, DateTimeOffset? from, DateTimeOffset? to, CancellationToken cancellationToken);
 }
 
+/// <summary>Result of a tournament deletion attempt.</summary>
+public enum TournamentDeleteResult
+{
+    /// <summary>Tournament deleted.</summary>
+    Deleted,
+
+    /// <summary>Tournament not found or does not belong to the user.</summary>
+    NotFound,
+
+    /// <summary>Tournament has a summary or entries: it cannot be deleted.</summary>
+    HasSummary,
+}
+
+public interface ITournamentDeleteStore
+{
+    /// <summary>
+    /// Deletes a tournament that has no summary (no entries), along with its hands, hand facts and coaching reports.
+    /// Returns <see cref="TournamentDeleteResult.NotFound"/> when the tournament does not exist or belongs to another user,
+    /// <see cref="TournamentDeleteResult.HasSummary"/> when entries exist, or <see cref="TournamentDeleteResult.Deleted"/> on success.
+    /// </summary>
+    Task<TournamentDeleteResult> DeleteAsync(Guid userId, Guid tournamentId, CancellationToken cancellationToken);
+}
+
 /// <param name="To">Exclusive upper bound.</param>
 /// <param name="Search">Part of the tournament name, case-insensitive; totals follow the search.</param>
 /// <param name="Mode">"sng" or "mtt" to restrict to one format family; null means all.</param>

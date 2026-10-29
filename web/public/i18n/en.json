@@ -375,6 +375,12 @@
         "place": "#{{place}}",
         "hands": "{{count}} hands"
       },
+      "delete": {
+        "label": "Delete this tournament",
+        "confirm": "Delete this tournament and its hands?",
+        "yes": "Delete",
+        "cancel": "Cancel"
+      },
       "overview": {
         "label": "Period totals",
         "pickTitle": "Pick a tournament",

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
-using PokerCoach.Application.Subscriptions;
 using PokerCoach.Api.Statistics;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
@@ -155,11 +155,15 @@ public static class TournamentEndpoints
     private const int MaxPageSize = 100;
     private const int MaxSearchLength = 100;
 
+    private const string TournamentNotFound = "TOURNAMENT_NOT_FOUND";
+    private const string TournamentHasSummary = "TOURNAMENT_HAS_SUMMARY";
+
     public static IEndpointRouteBuilder MapTournamentEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var tournaments = endpoints.MapGroup("/api/tournaments").WithTags("Tournaments");
         tournaments.MapGet("/", ListAsync);
         tournaments.MapGet("/{id:guid}", GetAsync);
+        tournaments.MapDelete("/{id:guid}", DeleteAsync).AddEndpointFilter<AntiforgeryValidationFilter>();
         endpoints.MapGet("/api/performance", GetPerformanceAsync).WithTags("Performance");
         return endpoints;
     }
@@ -266,6 +270,27 @@ public static class TournamentEndpoints
                 k.Moment.Stage)).ToList(),
             StatLineResponse.From(detail.Stats),
             detail.PendingHands));
+    }
+
+    /// <summary>Deletes a tournament that has no summary or entries. Hands and coaching reports are removed with it.</summary>
+    private static async Task<Results<NoContent, ProblemHttpResult, UnauthorizedHttpResult>> DeleteAsync(
+        Guid id,
+        HttpContext context,
+        ITournamentDeleteStore store,
+        CancellationToken cancellationToken)
+    {
+        if (!context.User.TryGetUserId(out var userId))
+        {
+            return TypedResults.Unauthorized();
+        }
+
+        return await store.DeleteAsync(userId, id, cancellationToken) switch
+        {
+            TournamentDeleteResult.Deleted => TypedResults.NoContent(),
+            TournamentDeleteResult.HasSummary => ApiProblems.WithCode(StatusCodes.Status409Conflict, TournamentHasSummary,
+                "This tournament has a summary and cannot be deleted."),
+            _ => ApiProblems.WithCode(StatusCodes.Status404NotFound, TournamentNotFound, "No such tournament."),
+        };
     }
 
     /// <param name="to">Exclusive upper bound on the start time.</param>

@@ -92,55 +92,92 @@
           } @else {
             <ul class="list__items" [class.stale]="state() === 'loading'">
               @for (tournament of data.items; track track(tournament)) {
-                <li>
-                  <a
-                    class="item"
-                    [class.item--missing]="tournament.result.status !== 'known'"
-                    [routerLink]="[tournament.id]"
-                    routerLinkActive="item--active"
-                    ariaCurrentWhenActive="page"
-                  >
-                    <span class="item__top">
-                      <span class="item__name">{{ tournament.name }}</span>
-                      @if (tournament.result.status === 'known') {
-                        <span
-                          class="item__profit numeric"
-                          [attr.data-sign]="sign(tournament.result.profit)"
+                <li class="list__item">
+                  @if (pendingDeletion() === tournament.id) {
+                    <div class="item item--confirm">
+                      <span class="item__confirm-text">{{ t('delete.confirm') }}</span>
+                      <div class="item__confirm-actions">
+                        <button
+                          appButton
+                          variant="primary"
+                          class="danger"
+                          [disabled]="deleting()"
+                          (click)="deleteTournament(tournament.id)"
                         >
-                          {{ signedMoney(tournament.result.profit) }}
-                        </span>
-                      } @else {
-                        <span
-                          class="chip chip--warning"
-                          [attr.title]="t('status.' + tournament.result.status + 'Hint')"
+                          {{ t('delete.yes') }}
+                        </button>
+                        <button
+                          appButton
+                          variant="ghost"
+                          [disabled]="deleting()"
+                          (click)="pendingDeletion.set(null)"
                         >
-                          <app-icon [icon]="icons.CircleAlert" />
-                          {{ t('status.' + tournament.result.status) }}
-                        </span>
-                      }
-                    </span>
-                    <span class="item__date">{{ date(tournament.startedAt) }}</span>
-                    <span class="item__meta numeric">
-                      <span>{{ money(tournament.buyIn) }}</span>
-                      @if (tournament.finishPosition !== null) {
-                        <span
-                          >{{ t('list.place', { place: integer(tournament.finishPosition) }) }}
-                          <span class="of"
-                            >/ {{ integer(tournament.registeredPlayers) }}</span
-                          ></span
-                        >
-                      }
-                      <span>{{ t('list.hands', { count: tournament.handCount }) }}</span>
-                      @if (tournament.coverage?.status === 'complete') {
-                        <span
-                          class="dot dot--complete"
-                          [attr.title]="t('coverage.completeHint')"
-                        ></span>
-                      } @else if (tournament.coverage?.status === 'partial') {
-                        <span class="dot dot--partial" [attr.title]="t('coverage.partial')"></span>
-                      }
-                    </span>
-                  </a>
+                          {{ t('delete.cancel') }}
+                        </button>
+                      </div>
+                    </div>
+                  } @else {
+                    <a
+                      class="item"
+                      [class.item--missing]="tournament.result.status !== 'known'"
+                      [routerLink]="[tournament.id]"
+                      routerLinkActive="item--active"
+                      ariaCurrentWhenActive="page"
+                    >
+                      <span class="item__top">
+                        <span class="item__name">{{ tournament.name }}</span>
+                        @if (tournament.result.status === 'known') {
+                          <span
+                            class="item__profit numeric"
+                            [attr.data-sign]="sign(tournament.result.profit)"
+                          >
+                            {{ signedMoney(tournament.result.profit) }}
+                          </span>
+                        } @else {
+                          <span
+                            class="chip chip--warning"
+                            [attr.title]="t('status.' + tournament.result.status + 'Hint')"
+                          >
+                            <app-icon [icon]="icons.CircleAlert" />
+                            {{ t('status.' + tournament.result.status) }}
+                          </span>
+                        }
+                      </span>
+                      <span class="item__date">{{ date(tournament.startedAt) }}</span>
+                      <span class="item__meta numeric">
+                        <span>{{ money(tournament.buyIn) }}</span>
+                        @if (tournament.finishPosition !== null) {
+                          <span
+                            >{{ t('list.place', { place: integer(tournament.finishPosition) }) }}
+                            <span class="of"
+                              >/ {{ integer(tournament.registeredPlayers) }}</span
+                            ></span
+                          >
+                        }
+                        <span>{{ t('list.hands', { count: tournament.handCount }) }}</span>
+                        @if (tournament.coverage?.status === 'complete') {
+                          <span
+                            class="dot dot--complete"
+                            [attr.title]="t('coverage.completeHint')"
+                          ></span>
+                        } @else if (tournament.coverage?.status === 'partial') {
+                          <span
+                            class="dot dot--partial"
+                            [attr.title]="t('coverage.partial')"
+                          ></span>
+                        }
+                      </span>
+                    </a>
+                    @if (tournament.result.status === 'missingSummary') {
+                      <button
+                        class="item__delete"
+                        [attr.aria-label]="t('delete.label')"
+                        (click)="pendingDeletion.set(tournament.id)"
+                      >
+                        <app-icon [icon]="icons.Trash2" />
+                      </button>
+                    }
+                  }
                 </li>
               }
             </ul>

@@ -167,4 +167,8 @@ export class TournamentsApi {
       this.http.get<TournamentDetail>(`/api/tournaments/${encodeURIComponent(id)}`),
     );
   }
+
+  delete(id: string): Promise<void> {
+    return firstValueFrom(this.http.delete<void>(`/api/tournaments/${encodeURIComponent(id)}`));
+  }
 }

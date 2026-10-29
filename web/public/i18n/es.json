@@ -375,6 +375,12 @@
         "place": "{{place}}.º",
         "hands": "{{count}} manos"
       },
+      "delete": {
+        "label": "Eliminar este torneo",
+        "confirm": "¿Eliminar este torneo y sus manos?",
+        "yes": "Eliminar",
+        "cancel": "Cancelar"
+      },
       "overview": {
         "label": "Totales del periodo",
         "pickTitle": "Elige un torneo",

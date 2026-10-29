@@ -25,6 +25,7 @@ import {
   Info,
   MousePointerClick,
   Search,
+  Trash2,
   Upload,
 } from 'lucide';
 import { filter, map } from 'rxjs';
@@ -113,10 +114,14 @@ export class TournamentsPage {
     Info,
     MousePointerClick,
     Search,
+    Trash2,
     Upload,
   };
   protected readonly showBreakdown = signal(false);
   protected readonly breakdownAnchor = signal<HTMLElement | null>(null);
+  /** Tournament whose deletion awaits a second confirmation. */
+  protected readonly pendingDeletion = signal<string | null>(null);
+  protected readonly deleting = signal(false);
 
   /** The tournament open in the detail pane, from the child route. */
   protected readonly selectedId = toSignal(
@@ -224,6 +229,31 @@ export class TournamentsPage {
     this.breakdownAnchor.set(
       (event.target as HTMLElement).closest('[data-breakdown-trigger]') as HTMLElement,
     );
+  }
+
+  protected async deleteTournament(id: string): Promise<void> {
+    this.deleting.set(true);
+    try {
+      await this.api.delete(id);
+      this.pendingDeletion.set(null);
+      // If the deleted tournament was selected, navigate back to the list.
+      if (this.selectedId() === id) {
+        void this.router.navigate(['/tournaments']);
+      }
+      // Reload to reflect the deletion.
+      void this.load(
+        this.period(),
+        this.buyIn(),
+        this.format(),
+        this.status(),
+        this.search(),
+        this.page(),
+      );
+    } catch {
+      // The list stays as-is; the confirmation state lets the user retry or cancel.
+    } finally {
+      this.deleting.set(false);
+    }
   }
 
   protected retry(): void {

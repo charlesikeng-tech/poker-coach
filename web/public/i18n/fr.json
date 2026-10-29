@@ -375,6 +375,12 @@
         "place": "{{place}}e",
         "hands": "{{count}} mains"
       },
+      "delete": {
+        "label": "Supprimer ce tournoi",
+        "confirm": "Supprimer ce tournoi et ses mains ?",
+        "yes": "Supprimer",
+        "cancel": "Annuler"
+      },
       "overview": {
         "label": "Totaux de la période",
         "pickTitle": "Choisis un tournoi",

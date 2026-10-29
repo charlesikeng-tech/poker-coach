@@ -79,6 +79,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<TournamentReadStore>();
         services.AddScoped<ITournamentReadStore>(sp => sp.GetRequiredService<TournamentReadStore>());
         services.AddScoped<ITournamentDetailStore>(sp => sp.GetRequiredService<TournamentReadStore>());
+        services.AddScoped<ITournamentDeleteStore, TournamentDeleteStore>();
         services.AddScoped<ICoverageStore, CoverageStore>();
         services.AddScoped<IHandFactsStore, HandFactsStore>();
         services.AddScoped<IOpponentStatsBackfillStore, OpponentStatsBackfillStore>();
