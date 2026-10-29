@@ -59,6 +59,18 @@ export interface PerformanceFigures {
   readonly roiLow: number | null;
   readonly roiHigh: number | null;
   readonly itmRate: number | null;
+  /** Sum of prize winnings across known results. */
+  readonly prizeWinnings: number;
+  /** Sum of bounty winnings across known results. */
+  readonly bountyWinnings: number;
+  /** Sum of fees; null when the breakdown is unavailable for some results. */
+  readonly fees: number | null;
+  /** Sum of bounty buy-ins (0 when the player only plays non-KO). */
+  readonly bountyBuyIns: number;
+  /** Sum of prize-pool buy-ins; null when the breakdown is unavailable for some results. */
+  readonly prizePoolBuyIns: number | null;
+  /** Sum of rebuy and add-on costs. */
+  readonly rebuysCost: number;
 }
 
 export interface TournamentPage {
@@ -79,6 +91,8 @@ export interface TournamentQuery {
   readonly search?: string;
   /** "sng" or "mtt" to restrict to one format family. */
   readonly mode?: string;
+  /** "known" for results only, "missing" for tournaments without a result. */
+  readonly status?: string;
 }
 
 /** Hero's chips at the start of a hand. */
@@ -141,6 +155,9 @@ export class TournamentsApi {
     }
     if (query.mode) {
       params = params.set('mode', query.mode);
+    }
+    if (query.status) {
+      params = params.set('status', query.status);
     }
     return firstValueFrom(this.http.get<TournamentPage>('/api/tournaments', { params }));
   }

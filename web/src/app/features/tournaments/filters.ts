@@ -3,6 +3,7 @@ import { TournamentQuery } from './tournaments-api';
 export type PeriodFilter = 'all' | '7d' | '30d' | '90d' | 'year';
 export type BuyInFilter = 'all' | 'upTo5' | 'upTo10' | 'upTo20' | 'upTo50' | 'over50';
 export type FormatFilter = 'all' | 'sng' | 'mtt';
+export type StatusFilter = 'all' | 'known' | 'missing';
 
 export const PERIOD_FILTERS: readonly PeriodFilter[] = ['all', '7d', '30d', '90d', 'year'];
 export const BUY_IN_FILTERS: readonly BuyInFilter[] = [
@@ -14,6 +15,7 @@ export const BUY_IN_FILTERS: readonly BuyInFilter[] = [
   'over50',
 ];
 export const FORMAT_FILTERS: readonly FormatFilter[] = ['all', 'sng', 'mtt'];
+export const STATUS_FILTERS: readonly StatusFilter[] = ['all', 'known', 'missing'];
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -25,11 +27,13 @@ export function toQuery(
   page: number,
   pageSize: number,
   now: Date,
+  status: StatusFilter = 'all',
 ): TournamentQuery {
   return {
     ...periodBounds(period, now),
     ...buyInBounds(buyIn),
     mode: format !== 'all' ? format : undefined,
+    status: status !== 'all' ? status : undefined,
     page,
     pageSize,
   };

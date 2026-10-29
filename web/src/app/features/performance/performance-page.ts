@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { CircleAlert, Upload } from 'lucide';
+import { CircleAlert, Info, Upload } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import {
@@ -24,6 +24,8 @@ import { roomName } from '../../core/poker/rooms';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
+import { ProfitBreakdownPopover } from '../../shared/ui/profit-breakdown/profit-breakdown-popover';
+import { Icon } from '../../shared/ui/icon/icon';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi, PokerAccount } from '../import/import-api';
@@ -55,6 +57,8 @@ const KNOWN_SPEEDS = new Set(['normal', 'semiturbo', 'turbo', 'hyperturbo']);
     Button,
     LineChart,
     StatTile,
+    ProfitBreakdownPopover,
+    Icon,
     CashDebriefPanel,
     TournamentSelectionPanel,
     StrategyPlanPanel,
@@ -77,8 +81,10 @@ export class PerformancePage {
   protected readonly report = signal<PerformanceReport | null>(null);
   protected readonly cashReport = signal<CashPerformanceReport | null>(null);
   protected readonly selectedDay = signal<string | null>(null);
-  protected readonly icons = { CircleAlert, Upload };
+  protected readonly icons = { CircleAlert, Info, Upload };
   protected readonly accounts = signal<readonly PokerAccount[]>([]);
+  protected readonly showBreakdown = signal(false);
+  protected readonly breakdownAnchor = signal<HTMLElement | null>(null);
   protected readonly room = signal<string | null>(null);
   /** Full list of cash rooms, updated only from unfiltered loads so it stays stable when a room is selected. */
   private readonly cashRoomsAll = signal<readonly string[]>([]);
@@ -105,6 +111,17 @@ export class PerformancePage {
     const report = this.cashReport();
     if (!day || !report) return 0;
     return report.curve.find((p) => p.date === day)?.hands ?? 0;
+  });
+
+  protected readonly showBountyCard = computed(() => {
+    const t = this.report()?.totals;
+    return !!t && ((t.bountyWinnings ?? 0) > 0 || (t.bountyBuyIns ?? 0) > 0);
+  });
+
+  protected readonly bountyProfit = computed(() => {
+    const t = this.report()?.totals;
+    if (!t || t.bountyWinnings === null || t.bountyBuyIns === null) return null;
+    return t.bountyWinnings - t.bountyBuyIns;
   });
 
   private readonly locale = computed(() => this.language.current());
@@ -227,6 +244,13 @@ export class PerformancePage {
         void panel.load();
       }
     }
+  }
+
+  protected toggleBreakdown(event: MouseEvent): void {
+    this.showBreakdown.update((v) => !v);
+    this.breakdownAnchor.set(
+      (event.target as HTMLElement).closest('[data-breakdown-trigger]') as HTMLElement,
+    );
   }
 
   protected retry(): void {

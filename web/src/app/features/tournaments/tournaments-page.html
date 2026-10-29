@@ -69,6 +69,15 @@
                   <option [value]="option">{{ t('filters.formats.' + option) }}</option>
                 }
               </select>
+              <select
+                [value]="status()"
+                [attr.aria-label]="t('filters.status')"
+                (change)="setStatus($any($event.target).value)"
+              >
+                @for (option of statusOptions; track option) {
+                  <option [value]="option">{{ t('filters.statuses.' + option) }}</option>
+                }
+              </select>
             </div>
             <p class="list__summary numeric">
               <span>{{ t('list.count', { count: data.totalCount }) }}</span>
@@ -86,6 +95,7 @@
                 <li>
                   <a
                     class="item"
+                    [class.item--missing]="tournament.result.status !== 'known'"
                     [routerLink]="[tournament.id]"
                     routerLinkActive="item--active"
                     ariaCurrentWhenActive="page"
@@ -101,9 +111,10 @@
                         </span>
                       } @else {
                         <span
-                          class="chip"
+                          class="chip chip--warning"
                           [attr.title]="t('status.' + tournament.result.status + 'Hint')"
                         >
+                          <app-icon [icon]="icons.CircleAlert" />
                           {{ t('status.' + tournament.result.status) }}
                         </span>
                       }
@@ -174,7 +185,23 @@
                   [value]="data.totals.profit"
                   [format]="formats().signedMoney"
                   [signed]="true"
-                />
+                >
+                  <button
+                    class="info-trigger"
+                    data-breakdown-trigger
+                    [attr.aria-label]="t('profitBreakdown.title')"
+                    (click)="toggleBreakdown($event)"
+                  >
+                    <app-icon [icon]="icons.Info" />
+                  </button>
+                </app-stat-tile>
+                @if (showBreakdown() && breakdownAnchor()) {
+                  <app-profit-breakdown-popover
+                    [figures]="data.totals"
+                    [anchor]="breakdownAnchor()!"
+                    (closed)="showBreakdown.set(false)"
+                  />
+                }
                 <app-stat-tile
                   [label]="t('totals.roi')"
                   [value]="data.totals.roi"
@@ -196,11 +223,9 @@
                   [value]="data.totals.tournaments"
                   [format]="formats().integer"
                 >
-                  @if (data.totals.entries > data.totals.tournamentsWithResult) {
-                    <small class="tile-note">{{
-                      t('totals.entries', { count: data.totals.entries })
-                    }}</small>
-                  }
+                  <small class="tile-note">{{
+                    t('totals.entries', { count: data.totals.entries })
+                  }}</small>
                 </app-stat-tile>
               </div>
               @if (data.totals.tournamentsWithResult < data.totals.tournaments) {
@@ -211,6 +236,30 @@
                     })
                   }}
                 </p>
+              }
+              @if (showBountyCard()) {
+                <section class="panel glass bounty-card">
+                  <h2>{{ t('bounty.title') }}</h2>
+                  <div class="totals">
+                    <app-stat-tile
+                      [label]="t('bounty.won')"
+                      [value]="data.totals.bountyWinnings"
+                      [format]="formats().money"
+                    />
+                    <app-stat-tile
+                      [label]="t('bounty.paid')"
+                      [value]="data.totals.bountyBuyIns"
+                      [format]="formats().money"
+                    />
+                    <app-stat-tile
+                      class="stat-tile--hero"
+                      [label]="t('bounty.profit')"
+                      [value]="bountyProfit()"
+                      [format]="formats().signedMoney"
+                      [signed]="true"
+                    />
+                  </div>
+                </section>
               }
               <div class="pick glass">
                 <app-icon [icon]="icons.MousePointerClick" />

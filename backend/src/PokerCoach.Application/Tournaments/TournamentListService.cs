@@ -42,7 +42,8 @@ public interface ITournamentReadStore
 /// <param name="To">Exclusive upper bound.</param>
 /// <param name="Search">Part of the tournament name, case-insensitive; totals follow the search.</param>
 /// <param name="Mode">"sng" or "mtt" to restrict to one format family; null means all.</param>
-public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinBuyIn, decimal? MaxBuyIn, int Page, int PageSize, string? Search = null, string? Mode = null);
+/// <param name="Status">"known" for results only, "missing" for tournaments without a result; null means all.</param>
+public sealed record TournamentFilter(DateTimeOffset? From, DateTimeOffset? To, decimal? MinBuyIn, decimal? MaxBuyIn, int Page, int PageSize, string? Search = null, string? Mode = null, string? Status = null);
 
 /// <param name="BuyIn">Price of one entry, fee included; null when unknown.</param>
 /// <param name="FinishPosition">Position of the last entry.</param>
@@ -73,18 +74,23 @@ public sealed class TournamentListService(ITournamentReadStore store)
         ArgumentNullException.ThrowIfNull(filter);
 
         var facts = await store.ListAsync(userId, filter.From, filter.To, cancellationToken);
-        var items = facts
+        var rows = facts
             .Where(f => filter.Mode is null
                 || (filter.Mode == "sng" && f.Mode == "sng")
                 || (filter.Mode == "mtt" && (f.Mode == "tt" || f.Mode == "mtt")))
-            .Select(ToItem)
-            .Where(i => filter.MinBuyIn is null || (i.BuyIn is { } b && b >= filter.MinBuyIn))
-            .Where(i => filter.MaxBuyIn is null || (i.BuyIn is { } b && b <= filter.MaxBuyIn))
-            .Where(i => string.IsNullOrWhiteSpace(filter.Search) || i.Name.Contains(filter.Search.Trim(), StringComparison.OrdinalIgnoreCase))
+            .Select(f => (Facts: f, Item: ToItem(f)))
+            .Where(r => filter.MinBuyIn is null || (r.Item.BuyIn is { } b && b >= filter.MinBuyIn))
+            .Where(r => filter.MaxBuyIn is null || (r.Item.BuyIn is { } b && b <= filter.MaxBuyIn))
+            .Where(r => string.IsNullOrWhiteSpace(filter.Search) || r.Item.Name.Contains(filter.Search.Trim(), StringComparison.OrdinalIgnoreCase))
+            .Where(r => filter.Status is null
+                || (filter.Status == "known" && r.Item.Result.Status == TournamentResultStatus.Known)
+                || (filter.Status == "missing" && r.Item.Result.Status != TournamentResultStatus.Known))
             .ToList();
 
+        var items = rows.Select(r => r.Item).ToList();
         var page = items.Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).ToList();
-        return new TournamentPage(page, filter.Page, filter.PageSize, items.Count, PerformanceFigures.Of(items.Select(i => i.Result).ToList()));
+        return new TournamentPage(page, filter.Page, filter.PageSize, items.Count,
+            PerformanceFigures.Of(rows.Select(r => ToBreakdown(r.Facts, r.Item.Result)).ToList()));
     }
 
     internal static TournamentListItem ToItem(TournamentFacts facts)
@@ -110,4 +116,22 @@ public sealed class TournamentListService(ITournamentReadStore store)
             : facts.BuyInExcludingFee is { } excludingFee && facts.Fee is { } handFee
                 ? excludingFee + handFee
                 : null;
+
+    /// <summary>Pairs a tournament result with its buy-in component breakdown for aggregation.</summary>
+    internal static TournamentResultWithBreakdown ToBreakdown(TournamentFacts facts, TournamentResult result)
+    {
+        if (result.Status != TournamentResultStatus.Known)
+            return new TournamentResultWithBreakdown(result, null, 0m, null, 0m);
+
+        var entries = facts.Entries.Count;
+        var totalFees = facts.Fee is { } fee ? fee * entries : (decimal?)null;
+        var totalBountyBuyIns = (facts.BountyBuyIn ?? 0m) * entries;
+        var totalPrizePoolBuyIns = facts.PrizePoolBuyIn is { } pp ? pp * entries : (decimal?)null;
+
+        var rebuys = facts.Entries.Sum(e => e.Rebuys);
+        var addons = facts.Entries.Sum(e => e.Addons);
+        var totalRebuysCost = (rebuys * (facts.RebuyCost ?? 0m)) + (addons * (facts.AddonCost ?? 0m));
+
+        return new TournamentResultWithBreakdown(result, totalFees, totalBountyBuyIns, totalPrizePoolBuyIns, totalRebuysCost);
+    }
 }

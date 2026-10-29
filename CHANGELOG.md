@@ -1,5 +1,17 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- Transparent profit breakdown, bounty P&L, status filter
+
+## [2026.10.29-225f7ba] — 2026-10-29
+
+### Performance
+
+- Parallelize import workers and facts backfill for large uploads
+
 ## [2026.10.29-2997404] — 2026-10-29
 
 ### Correctifs

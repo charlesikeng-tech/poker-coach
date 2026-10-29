@@ -46,7 +46,7 @@ public sealed class PerformanceService(ITournamentReadStore store)
         var rooms = await store.ListRoomsAsync(userId, from, to, cancellationToken);
 
         return new PerformanceReport(
-            PerformanceFigures.Of(rows.Select(r => r.Item.Result).ToList()),
+            Aggregate(rows),
             Curve(rows.Select(r => r.Item)),
             Group(rows, r => BuyInBand(r.Item.BuyIn), BuyInBands.Select(b => b.Key).Append(null)),
             Group(rows, r => r.Facts.Type, null),
@@ -74,7 +74,7 @@ public sealed class PerformanceService(ITournamentReadStore store)
             .ToDictionary(g => g.Key, g => g);
         return DayOrder
             .Where(day => grouped.ContainsKey(day))
-            .Select(day => new PerformanceGroup(day, PerformanceFigures.Of(grouped[day].Select(r => r.Item.Result).ToList())))
+            .Select(day => new PerformanceGroup(day, Aggregate(grouped[day])))
             .ToList();
     }
 
@@ -86,7 +86,7 @@ public sealed class PerformanceService(ITournamentReadStore store)
             .ToDictionary(g => g.Key, g => g);
         return TimeSlotOrder
             .Where(slot => grouped.ContainsKey(slot))
-            .Select(slot => new PerformanceGroup(slot, PerformanceFigures.Of(grouped[slot].Select(r => r.Item.Result).ToList())))
+            .Select(slot => new PerformanceGroup(slot, Aggregate(grouped[slot])))
             .ToList();
     }
 
@@ -103,7 +103,7 @@ public sealed class PerformanceService(ITournamentReadStore store)
             .Where(r => r.Facts.StartedAt is not null)
             .GroupBy(r => MonthOf(Local(r.Facts.StartedAt!.Value, zone)))
             .OrderByDescending(g => g.Key)
-            .Select(g => new PerformanceGroup(g.Key.ToString("yyyy-MM-dd"), PerformanceFigures.Of(g.Select(r => r.Item.Result).ToList())))
+            .Select(g => new PerformanceGroup(g.Key.ToString("yyyy-MM-dd"), Aggregate(g)))
             .ToList();
 
     internal static string? BuyInBand(decimal? buyIn) =>
@@ -126,6 +126,9 @@ public sealed class PerformanceService(ITournamentReadStore store)
         return points;
     }
 
+    private static PerformanceFigures Aggregate(IEnumerable<(TournamentFacts Facts, TournamentListItem Item)> rows) =>
+        PerformanceFigures.Of(rows.Select(r => TournamentListService.ToBreakdown(r.Facts, r.Item.Result)).ToList());
+
     /// <param name="order">Fixed group order (bands); null orders by number of tournaments, unknown last.</param>
     private static List<PerformanceGroup> Group(
         List<(TournamentFacts Facts, TournamentListItem Item)> rows,
@@ -134,7 +137,7 @@ public sealed class PerformanceService(ITournamentReadStore store)
     {
         var groups = rows
             .GroupBy(key)
-            .Select(g => new PerformanceGroup(g.Key, PerformanceFigures.Of(g.Select(r => r.Item.Result).ToList())))
+            .Select(g => new PerformanceGroup(g.Key, Aggregate(g)))
             .ToList();
 
         if (order is not null)

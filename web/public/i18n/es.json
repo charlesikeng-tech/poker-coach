@@ -155,7 +155,8 @@
         "roi": "ROI",
         "itm": "En premios",
         "entries": "Entradas",
-        "buyIns": "Buy-ins"
+        "buyIns": "Buy-ins",
+        "tournamentCount": "{{count}} torneos"
       },
       "excluded": "{{count}} torneo(s) sin archivo de resumen no se cuentan: importa su resumen para incluirlos.",
       "chart": {
@@ -252,6 +253,26 @@
           "selectDay": "Día",
           "placeholder": "Elige un día…"
         }
+      },
+      "profitBreakdown": {
+        "title": "¿Cómo se calcula?",
+        "formula": "Profit = Premios + Bounties − Buy-ins − Comisiones",
+        "prizes": "Premios",
+        "bountiesWon": "Bounties ganados",
+        "totalWinnings": "Ganancias totales",
+        "prizePoolBuyIns": "Buy-ins prize pool",
+        "bountyBuyIns": "Buy-ins bounty",
+        "fees": "Comisiones",
+        "rebuysCost": "Rebuys y add-ons",
+        "totalBuyIns": "Buy-ins totales",
+        "profit": "Profit",
+        "partialNote": "Algunos torneos no tienen el desglose de comisiones: solo se muestran los totales."
+      },
+      "bounty": {
+        "title": "P&L Bounty",
+        "won": "Bounties ganados",
+        "paid": "Buy-ins bounty",
+        "profit": "Profit bounty"
       }
     },
     "tournaments": {
@@ -293,6 +314,12 @@
           "all": "Todos los formatos",
           "sng": "SNG",
           "mtt": "MTT"
+        },
+        "status": "Resultado",
+        "statuses": {
+          "all": "Todos los resultados",
+          "known": "Con resultado",
+          "missing": "Sin resumen"
         }
       },
       "totals": {
@@ -475,6 +502,26 @@
           "network": "No se puede conectar. Comprueba tu red.",
           "unknown": "Se produjo un error inesperado."
         }
+      },
+      "profitBreakdown": {
+        "title": "¿Cómo se calcula?",
+        "formula": "Profit = Premios + Bounties − Buy-ins − Comisiones",
+        "prizes": "Premios",
+        "bountiesWon": "Bounties ganados",
+        "totalWinnings": "Ganancias totales",
+        "prizePoolBuyIns": "Buy-ins prize pool",
+        "bountyBuyIns": "Buy-ins bounty",
+        "fees": "Comisiones",
+        "rebuysCost": "Rebuys y add-ons",
+        "totalBuyIns": "Buy-ins totales",
+        "profit": "Profit",
+        "partialNote": "Algunos torneos no tienen el desglose de comisiones: solo se muestran los totales."
+      },
+      "bounty": {
+        "title": "P&L Bounty",
+        "won": "Bounties ganados",
+        "paid": "Buy-ins bounty",
+        "profit": "Profit bounty"
       }
     },
     "bankroll": {

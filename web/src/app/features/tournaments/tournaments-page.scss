@@ -209,6 +209,21 @@
   font-size: var(--font-size-xs);
 }
 
+.chip--warning {
+  --icon-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border-color: var(--warning);
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 10%, transparent);
+}
+
+.item--missing {
+  background: color-mix(in srgb, var(--warning) 5%, transparent);
+  border-left: 3px solid var(--warning);
+}
+
 .pager {
   --icon-size: 1rem;
   display: flex;
@@ -260,6 +275,30 @@
 .tile-note {
   color: var(--text-muted);
   font-size: var(--font-size-xs);
+}
+
+.info-trigger {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  transition: color var(--motion-fast) var(--easing-standard);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent-primary);
+  }
+}
+
+.bounty-card {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+
+  .totals {
+    margin-bottom: 0;
+  }
 }
 
 .hint {

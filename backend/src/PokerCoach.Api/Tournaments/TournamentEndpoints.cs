@@ -97,6 +97,12 @@ public sealed record TournamentDetailResponse(
 /// <summary>Money and rates cover tournaments with a known result only.</summary>
 /// <param name="Roi">Ratio: 0.12 means +12 %.</param>
 /// <param name="ItmRate">Share of entries that won a prize (bounties excluded), as a ratio.</param>
+/// <param name="PrizeWinnings">Sum of prize winnings across known results.</param>
+/// <param name="BountyWinnings">Sum of bounty winnings across known results.</param>
+/// <param name="Fees">Sum of fees; null when the breakdown is unavailable for some results.</param>
+/// <param name="BountyBuyIns">Sum of bounty buy-ins (0 when the player only plays non-KO).</param>
+/// <param name="PrizePoolBuyIns">Sum of prize-pool buy-ins; null when the breakdown is unavailable for some results.</param>
+/// <param name="RebuysCost">Sum of rebuy and add-on costs.</param>
 public sealed record PerformanceFiguresResponse(
     int Tournaments,
     int TournamentsWithResult,
@@ -108,10 +114,17 @@ public sealed record PerformanceFiguresResponse(
     decimal? Roi,
     decimal? RoiLow,
     decimal? RoiHigh,
-    decimal? ItmRate)
+    decimal? ItmRate,
+    decimal PrizeWinnings,
+    decimal BountyWinnings,
+    decimal? Fees,
+    decimal BountyBuyIns,
+    decimal? PrizePoolBuyIns,
+    decimal RebuysCost)
 {
     public static PerformanceFiguresResponse From(PerformanceFigures f) =>
-        new(f.Tournaments, f.TournamentsWithResult, f.Entries, f.PaidEntries, f.BuyIns, f.Winnings, f.Profit, f.Roi, f.RoiLow, f.RoiHigh, f.ItmRate);
+        new(f.Tournaments, f.TournamentsWithResult, f.Entries, f.PaidEntries, f.BuyIns, f.Winnings, f.Profit, f.Roi, f.RoiLow, f.RoiHigh, f.ItmRate,
+            f.PrizeWinnings, f.BountyWinnings, f.Fees, f.BountyBuyIns, f.PrizePoolBuyIns, f.RebuysCost);
 }
 
 public sealed record TournamentPageResponse(
@@ -165,7 +178,8 @@ public static class TournamentEndpoints
         int page = 1,
         int pageSize = 50,
         string? search = null,
-        string? mode = null)
+        string? mode = null,
+        string? status = null)
     {
         if (!context.User.TryGetUserId(out var userId))
         {
@@ -201,7 +215,7 @@ public static class TournamentEndpoints
         from = await plans.ClampFromAsync(userId, from, cancellationToken);
         var result = await tournaments.ListAsync(
             userId,
-            new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize, search, mode),
+            new TournamentFilter(from, to, minBuyIn, maxBuyIn, page, pageSize, search, mode, status),
             cancellationToken);
 
         return TypedResults.Ok(new TournamentPageResponse(

@@ -285,7 +285,23 @@
             [value]="report.totals.profit"
             [format]="formats().signedMoney"
             [signed]="true"
-          />
+          >
+            <button
+              class="info-trigger"
+              data-breakdown-trigger
+              [attr.aria-label]="t('profitBreakdown.title')"
+              (click)="toggleBreakdown($event)"
+            >
+              <app-icon [icon]="icons.Info" />
+            </button>
+          </app-stat-tile>
+          @if (showBreakdown() && breakdownAnchor()) {
+            <app-profit-breakdown-popover
+              [figures]="report.totals"
+              [anchor]="breakdownAnchor()!"
+              (closed)="showBreakdown.set(false)"
+            />
+          }
           <app-stat-tile
             [label]="t('totals.roi')"
             [value]="report.totals.roi"
@@ -307,7 +323,11 @@
             [label]="t('totals.entries')"
             [value]="report.totals.entries"
             [format]="formats().integer"
-          />
+          >
+            <small class="tile-note">{{
+              t('totals.tournamentCount', { count: report.totals.tournamentsWithResult })
+            }}</small>
+          </app-stat-tile>
           <app-stat-tile
             [label]="t('totals.buyIns')"
             [value]="report.totals.buyIns"
@@ -322,6 +342,31 @@
               })
             }}
           </p>
+        }
+
+        @if (showBountyCard()) {
+          <section class="panel glass bounty-card">
+            <h2>{{ t('bounty.title') }}</h2>
+            <div class="totals">
+              <app-stat-tile
+                [label]="t('bounty.won')"
+                [value]="report.totals.bountyWinnings"
+                [format]="formats().money"
+              />
+              <app-stat-tile
+                [label]="t('bounty.paid')"
+                [value]="report.totals.bountyBuyIns"
+                [format]="formats().money"
+              />
+              <app-stat-tile
+                class="stat-tile--hero"
+                [label]="t('bounty.profit')"
+                [value]="bountyProfit()"
+                [format]="formats().signedMoney"
+                [signed]="true"
+              />
+            </div>
+          </section>
         }
 
         <section class="panel glass">

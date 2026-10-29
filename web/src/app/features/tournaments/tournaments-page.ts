@@ -18,7 +18,15 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { ChevronLeft, ChevronRight, CircleAlert, MousePointerClick, Search, Upload } from 'lucide';
+import {
+  ChevronLeft,
+  ChevronRight,
+  CircleAlert,
+  Info,
+  MousePointerClick,
+  Search,
+  Upload,
+} from 'lucide';
 import { filter, map } from 'rxjs';
 
 import { LanguageService } from '../../core/i18n/language.service';
@@ -32,6 +40,7 @@ import {
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
+import { ProfitBreakdownPopover } from '../../shared/ui/profit-breakdown/profit-breakdown-popover';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PageHeader } from '../../shared/ui/page-header/page-header';
 import { ImportApi } from '../import/import-api';
@@ -42,6 +51,8 @@ import {
   FormatFilter,
   PERIOD_FILTERS,
   PeriodFilter,
+  STATUS_FILTERS,
+  StatusFilter,
   toQuery,
 } from './filters';
 import { Tournament, TournamentPage, TournamentsApi } from './tournaments-api';
@@ -67,6 +78,7 @@ type LoadState = 'loading' | 'ready' | 'error';
     Button,
     Icon,
     StatTile,
+    ProfitBreakdownPopover,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page-enter', '[class.has-selection]': 'selectedId() !== null' },
@@ -83,9 +95,11 @@ export class TournamentsPage {
   protected readonly periods = PERIOD_FILTERS;
   protected readonly buyIns = BUY_IN_FILTERS;
   protected readonly formatOptions = FORMAT_FILTERS;
+  protected readonly statusOptions = STATUS_FILTERS;
   protected readonly period = signal<PeriodFilter>('all');
   protected readonly buyIn = signal<BuyInFilter>('all');
   protected readonly format = signal<FormatFilter>('all');
+  protected readonly status = signal<StatusFilter>('all');
   protected readonly search = signal('');
   protected readonly page = signal(1);
 
@@ -96,10 +110,13 @@ export class TournamentsPage {
     ChevronLeft,
     ChevronRight,
     CircleAlert,
+    Info,
     MousePointerClick,
     Search,
     Upload,
   };
+  protected readonly showBreakdown = signal(false);
+  protected readonly breakdownAnchor = signal<HTMLElement | null>(null);
 
   /** The tournament open in the detail pane, from the child route. */
   protected readonly selectedId = toSignal(
@@ -115,12 +132,24 @@ export class TournamentsPage {
       this.period() !== 'all' ||
       this.buyIn() !== 'all' ||
       this.format() !== 'all' ||
+      this.status() !== 'all' ||
       this.search().trim() !== '',
   );
   protected readonly pageCount = computed(() => {
     const data = this.data();
     return data ? Math.max(1, Math.ceil(data.totalCount / data.pageSize)) : 1;
   });
+  protected readonly showBountyCard = computed(() => {
+    const t = this.data()?.totals;
+    return !!t && ((t.bountyWinnings ?? 0) > 0 || (t.bountyBuyIns ?? 0) > 0);
+  });
+
+  protected readonly bountyProfit = computed(() => {
+    const t = this.data()?.totals;
+    if (!t || t.bountyWinnings === null || t.bountyBuyIns === null) return null;
+    return t.bountyWinnings - t.bountyBuyIns;
+  });
+
   private readonly locale = computed(() => this.language.current());
   /** Every amount of one user is in one currency today (EUR on Winamax). */
   private readonly currency = computed(
@@ -151,6 +180,7 @@ export class TournamentsPage {
         this.period(),
         this.buyIn(),
         this.format(),
+        this.status(),
         this.search(),
         this.page(),
       ] as const;
@@ -175,6 +205,11 @@ export class TournamentsPage {
     this.page.set(1);
   }
 
+  protected setStatus(value: string): void {
+    this.status.set(value as StatusFilter);
+    this.page.set(1);
+  }
+
   /** Debounced: one request once the player stops typing. */
   protected setSearch(value: string): void {
     clearTimeout(this.searchTimer);
@@ -184,8 +219,22 @@ export class TournamentsPage {
     }, SEARCH_DELAY_MS);
   }
 
+  protected toggleBreakdown(event: MouseEvent): void {
+    this.showBreakdown.update((v) => !v);
+    this.breakdownAnchor.set(
+      (event.target as HTMLElement).closest('[data-breakdown-trigger]') as HTMLElement,
+    );
+  }
+
   protected retry(): void {
-    void this.load(this.period(), this.buyIn(), this.format(), this.search(), this.page());
+    void this.load(
+      this.period(),
+      this.buyIn(),
+      this.format(),
+      this.status(),
+      this.search(),
+      this.page(),
+    );
   }
 
   protected money(value: number | null): string {
@@ -220,13 +269,14 @@ export class TournamentsPage {
     period: PeriodFilter,
     buyIn: BuyInFilter,
     format: FormatFilter,
+    status: StatusFilter,
     search: string,
     page: number,
   ): Promise<void> {
     const request = ++this.request;
     this.state.set('loading');
     try {
-      const query = toQuery(period, buyIn, format, page, PAGE_SIZE, new Date());
+      const query = toQuery(period, buyIn, format, page, PAGE_SIZE, new Date(), status);
       const data = await this.api.list({ ...query, search: search.trim() || undefined });
       if (request === this.request) {
         this.data.set(data);
