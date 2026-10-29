@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.29-2997404] — 2026-10-29
+
+### Correctifs
+
+- **ci**: Pass output as CLI arg for git-cliff-action v4
+
 ## [2026.10.28-a794516] — 2026-10-28
 
 ### Correctifs

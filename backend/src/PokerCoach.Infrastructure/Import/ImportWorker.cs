@@ -15,9 +15,9 @@ using PokerCoach.Infrastructure.Statistics;
 namespace PokerCoach.Infrastructure.Import;
 
 /// <summary>
-/// Drains the import queue: one file at a time per instance, several instances share the queue safely
-/// (claims use SKIP LOCKED). When the queue is empty, brings per-hand statistics facts up to date
-/// (ADR-0006), then each tournament's hand coverage. Polling keeps it simple; LISTEN/NOTIFY can cut the latency later if it ever matters.
+/// Drains the import queue with configurable concurrency (each file claimed via SKIP LOCKED),
+/// then brings per-hand statistics facts up to date (ADR-0006) and each tournament's hand coverage.
+/// Polling keeps it simple; LISTEN/NOTIFY can cut the latency later if it ever matters.
 /// </summary>
 internal sealed partial class ImportWorker(
     IServiceScopeFactory scopes,
@@ -39,6 +39,7 @@ internal sealed partial class ImportWorker(
             return;
         }
 
+        var concurrency = Math.Clamp(options.WorkerConcurrency, 1, 32);
         var factsDue = true;
         var factsCheckedAt = DateTimeOffset.MinValue;
         var affectedUserIds = new HashSet<Guid>();
@@ -47,8 +48,7 @@ internal sealed partial class ImportWorker(
             TimeSpan? delay;
             try
             {
-                await using var scope = scopes.CreateAsyncScope();
-                var imported = await scope.ServiceProvider.GetRequiredService<ImportProcessor>().ProcessNextAsync(stoppingToken);
+                var imported = await ProcessFilesAsync(concurrency, stoppingToken);
                 var factsComputed = 0;
                 if (imported)
                 {
@@ -56,6 +56,7 @@ internal sealed partial class ImportWorker(
                 }
                 else if (factsDue || time.GetUtcNow() - factsCheckedAt > FactsRecheckInterval)
                 {
+                    await using var scope = scopes.CreateAsyncScope();
                     var (hands, userIds) = await scope.ServiceProvider.GetRequiredService<HandFactsBackfill>().ProcessBatchAsync(stoppingToken);
                     factsComputed = hands;
                     foreach (var uid in userIds)
@@ -106,6 +107,47 @@ internal sealed partial class ImportWorker(
                     return;
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Processes up to <paramref name="concurrency"/> queued files in parallel (each in its own DI scope).
+    /// Returns true when at least one file was processed.
+    /// </summary>
+    private async Task<bool> ProcessFilesAsync(int concurrency, CancellationToken stoppingToken)
+    {
+        if (concurrency == 1)
+        {
+            return await ProcessOneFileAsync(stoppingToken);
+        }
+
+        var tasks = new Task<bool>[concurrency];
+        for (var i = 0; i < concurrency; i++)
+        {
+            tasks[i] = ProcessOneFileAsync(stoppingToken);
+        }
+
+        var results = await Task.WhenAll(tasks);
+        return results.Any(static r => r);
+    }
+
+    private async Task<bool> ProcessOneFileAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            await using var scope = scopes.CreateAsyncScope();
+            return await scope.ServiceProvider.GetRequiredService<ImportProcessor>().ProcessNextAsync(stoppingToken);
+        }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            return false;
+        }
+        catch (Exception exception)
+        {
+            // Per-file errors are logged and swallowed: the file was already released by ImportProcessor
+            // and the queue should be rechecked rather than jumping straight to the facts pipeline.
+            LogProcessingFailed(logger, exception);
+            return true;
         }
     }
 

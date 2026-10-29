@@ -20,7 +20,7 @@ public interface IHandFactsStore
 /// </summary>
 public sealed class HandFactsBackfill(IHandFactsStore store)
 {
-    public const int BatchSize = 500;
+    public const int BatchSize = 2_000;
 
     /// <returns>Number of hands processed and distinct user IDs affected; 0 hands when everything is up to date.</returns>
     public async Task<(int HandsProcessed, IReadOnlyList<Guid> AffectedUserIds)> ProcessBatchAsync(CancellationToken cancellationToken)
@@ -31,8 +31,14 @@ public sealed class HandFactsBackfill(IHandFactsStore store)
             return (0, []);
         }
 
-        var facts = pending.Select(p => (p.HandId, HandAnalyzer.Analyze(p.Hand))).ToList();
+        // HandAnalyzer.Analyze is a pure function with no shared state; parallelise across cores.
+        var facts = new (Guid HandId, HeroHandFacts Facts)[pending.Count];
+        Parallel.For(0, pending.Count, i =>
+        {
+            facts[i] = (pending[i].HandId, HandAnalyzer.Analyze(pending[i].Hand));
+        });
+
         var userIds = await store.SaveAsync(facts, HeroHandFacts.Version, cancellationToken);
-        return (facts.Count, userIds);
+        return (facts.Length, userIds);
     }
 }

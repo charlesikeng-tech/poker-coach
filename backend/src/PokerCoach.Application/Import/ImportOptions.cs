@@ -22,4 +22,10 @@ public sealed class ImportOptions
 
     /// <summary>Background processing of queued files. Disabled in tests that do not need it.</summary>
     public bool WorkerEnabled { get; set; } = true;
+
+    /// <summary>
+    /// Number of files processed concurrently by the background worker. The queue uses
+    /// <c>FOR UPDATE SKIP LOCKED</c> for safe sharing; higher values drain large uploads faster.
+    /// </summary>
+    public int WorkerConcurrency { get; set; } = 3;
 }

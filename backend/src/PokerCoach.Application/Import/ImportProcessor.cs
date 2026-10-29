@@ -29,13 +29,15 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             return false;
         }
 
+        List<OpponentStatsToUpsert>? pendingStats = null;
         try
         {
             await store.InTransactionAsync(
                 async ct =>
                 {
-                    var outcome = await ImportAsync(file, ct);
+                    var (outcome, stats) = await ImportAsync(file, ct);
                     await store.CompleteAsync(file.Id, outcome, ct);
+                    pendingStats = stats;
                     return outcome;
                 },
                 cancellationToken);
@@ -47,14 +49,21 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             throw;
         }
 
+        // Opponent stats are additive; upserting them outside the import transaction shortens the
+        // critical section and reduces lock contention between concurrent workers.
+        if (pendingStats is { Count: > 0 })
+        {
+            await store.UpsertOpponentStatsAsync(pendingStats, cancellationToken);
+        }
+
         return true;
     }
 
-    private async Task<FileOutcome> ImportAsync(ClaimedFile file, CancellationToken cancellationToken)
+    private async Task<(FileOutcome Outcome, List<OpponentStatsToUpsert>? PendingStats)> ImportAsync(ClaimedFile file, CancellationToken cancellationToken)
     {
         if (!TryDecode(file.Content, out var text))
         {
-            return Failed(ImportErrorCodes.InvalidEncoding);
+            return (Failed(ImportErrorCodes.InvalidEncoding), null);
         }
 
         foreach (var provider in providers)
@@ -64,14 +73,14 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
                 case HandHistoryFileKind.HandHistory:
                     return await ImportHandsAsync(file, provider, text, cancellationToken);
                 case HandHistoryFileKind.TournamentSummary:
-                    return await ImportSummaryAsync(file, provider, text, cancellationToken);
+                    return (await ImportSummaryAsync(file, provider, text, cancellationToken), null);
                 case HandHistoryFileKind.Unknown:
                 default:
                     continue;
             }
         }
 
-        return Failed(ImportErrorCodes.UnrecognizedFormat);
+        return (Failed(ImportErrorCodes.UnrecognizedFormat), null);
     }
 
     private async Task<FileOutcome> ImportSummaryAsync(ClaimedFile file, IHandHistoryProvider provider, string text, CancellationToken cancellationToken)
@@ -87,7 +96,7 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
         return new FileOutcome(ImportFileStatus.Completed, ImportFileKind.TournamentSummary, null, accountId, 0, 0, 0, []);
     }
 
-    private async Task<FileOutcome> ImportHandsAsync(ClaimedFile file, IHandHistoryProvider provider, string text, CancellationToken cancellationToken)
+    private async Task<(FileOutcome Outcome, List<OpponentStatsToUpsert>? PendingStats)> ImportHandsAsync(ClaimedFile file, IHandHistoryProvider provider, string text, CancellationToken cancellationToken)
     {
         var result = provider.HandHistories.Parse(text);
         var rejections = new List<ParseError>(result.Errors);
@@ -135,21 +144,23 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
 
         if (handsToInsert.Count == 0)
         {
-            return Failed(ImportErrorCodes.NoValidHand, ImportFileKind.HandHistory, rejections);
+            return (Failed(ImportErrorCodes.NoValidHand, ImportFileKind.HandHistory, rejections), null);
         }
 
         var insertedIds = await store.BulkInsertHandsAsync(handsToInsert, cancellationToken);
         var alreadyPresent = handsToInsert.Count - insertedIds.Count;
 
+        // Aggregate stats in-memory (CPU-only); the actual DB upsert is deferred to after the transaction.
+        List<OpponentStatsToUpsert>? pendingStats = null;
         if (insertedIds.Count > 0)
         {
             var newHands = handsToInsert.Where(h => insertedIds.Contains(h.Hand.ExternalHandId)).ToList();
-            var opponentStats = AggregateOpponentFacts(newHands);
-            if (opponentStats.Count > 0)
-                await store.UpsertOpponentStatsAsync(opponentStats, cancellationToken);
+            var stats = AggregateOpponentFacts(newHands);
+            if (stats.Count > 0)
+                pendingStats = stats;
         }
 
-        return new FileOutcome(
+        return (new FileOutcome(
             ImportFileStatus.Completed,
             ImportFileKind.HandHistory,
             null,
@@ -157,7 +168,7 @@ public sealed class ImportProcessor(IImportStore store, IEnumerable<IHandHistory
             insertedIds.Count,
             alreadyPresent,
             rejections.Count,
-            Cap(rejections));
+            Cap(rejections)), pendingStats);
     }
 
     private static List<OpponentStatsToUpsert> AggregateOpponentFacts(IReadOnlyList<HandToInsert> hands)
