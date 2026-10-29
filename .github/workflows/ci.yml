@@ -179,8 +179,7 @@ jobs:
       - name: Generate release notes
         uses: orhun/git-cliff-action@v4
         with:
-          args: --current --tag ${{ env.TAG }} --strip header
-          output: release-notes.md
+          args: --unreleased --tag ${{ env.TAG }} --strip header --output release-notes.md
         continue-on-error: true
       - name: Ensure release notes exist
         run: test -s release-notes.md || echo "Première release NutsIQ." > release-notes.md

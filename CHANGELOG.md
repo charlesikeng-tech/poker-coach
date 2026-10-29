@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.28-a794516] — 2026-10-28
+
+### Correctifs
+
+- Use --current instead of --unreleased for git-cliff release notes
+
 ## [2026.10.28-7a0e143] — 2026-10-28
 
 ### Documentation
