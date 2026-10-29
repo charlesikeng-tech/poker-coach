@@ -246,6 +246,9 @@ public enum Feature
 
     /// <summary>AI commentary on individual hands in the tournament review.</summary>
     HandCommentary,
+
+    /// <summary>AI-generated coaching advice against a specific opponent.</summary>
+    OpponentCoaching,
 }
 
 /// <summary>The offer matrix (ADR-0016): the lowest plan that opens each feature.</summary>
@@ -253,7 +256,7 @@ public static class PlanFeatures
 {
     public static Plan MinimumPlan(Feature feature) => feature switch
     {
-        Feature.OpeningRanges or Feature.DefenceRanges or Feature.VsThreeBetRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport or Feature.HandCommentary => Plan.Pro,
+        Feature.OpeningRanges or Feature.DefenceRanges or Feature.VsThreeBetRanges or Feature.TrainingDrills or Feature.WeekReview or Feature.MonthlyReport or Feature.HandCommentary or Feature.OpponentCoaching => Plan.Pro,
         _ => Plan.Elite,
     };
 

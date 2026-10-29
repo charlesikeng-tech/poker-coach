@@ -61,6 +61,7 @@ public static class AiTasks
         AiTask.WeekReview => Domain.Subscriptions.Feature.WeekReview,
         AiTask.MonthlyReport => Domain.Subscriptions.Feature.MonthlyReport,
         AiTask.StrategyPlan => Domain.Subscriptions.Feature.StrategyPlan,
+        AiTask.OpponentCoaching => Domain.Subscriptions.Feature.OpponentCoaching,
         _ => null,
     };
 }

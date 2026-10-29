@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- Allow deleting tournaments without summary or result
+
 ## [2026.10.29-2743d36] — 2026-10-29
 
 ### Fonctionnalités
