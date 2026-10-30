@@ -61,7 +61,7 @@ public sealed record CashPerformanceReport(
     IReadOnlyList<PokerRoom> Rooms);
 
 /// <summary>A cash hand with its id and net result, for selecting key moments.</summary>
-public sealed record CashHandSummary(Guid HandId, DateTimeOffset StartedAt, long BigBlind, int MaxSeats, decimal NetBigBlinds, decimal StackInBigBlinds, PokerPosition? Position, string? HeroCards, decimal? AllInExpectedNetChips)
+public sealed record CashHandSummary(Guid HandId, DateTimeOffset StartedAt, long BigBlind, int MaxSeats, decimal NetBigBlinds, decimal StackInBigBlinds, PokerPosition? Position, string? HeroCards, decimal? AllInExpectedNetChips, PokerRoom Room)
 {
     public decimal AllInAdjNetBigBlinds =>
         AllInExpectedNetChips.HasValue && BigBlind > 0 ? AllInExpectedNetChips.Value / BigBlind : NetBigBlinds;

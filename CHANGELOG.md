@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- Add Replay button on tournament detail opening the poker table directly
+
 ## [2026.10.30-acaf1b9] — 2026-10-30
 
 ### Fonctionnalités

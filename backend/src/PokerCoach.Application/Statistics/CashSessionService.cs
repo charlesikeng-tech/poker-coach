@@ -1,3 +1,4 @@
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 
 namespace PokerCoach.Application.Statistics;
@@ -19,7 +20,8 @@ public sealed record CashSessionSummary(
     decimal NetBigBlinds,
     decimal? BigBlindsPer100,
     decimal NetMoney,
-    decimal? AllInAdjBigBlindsPer100);
+    decimal? AllInAdjBigBlindsPer100,
+    PokerRoom Room);
 
 public sealed record CashSessionStackPoint(int Index, DateTimeOffset StartedAt, decimal StackInBigBlinds);
 
@@ -148,7 +150,8 @@ public sealed class CashSessionService(ICashSessionReadStore store)
             Math.Round(netBb, 2),
             hands.Count == 0 ? null : Math.Round(netBb / hands.Count * 100m, 2),
             netMoney,
-            hands.Count == 0 ? null : Math.Round(adjNetBb / hands.Count * 100m, 2));
+            hands.Count == 0 ? null : Math.Round(adjNetBb / hands.Count * 100m, 2),
+            first.Room);
     }
 
     private static List<CashSessionKeyMoment> SelectKeyMoments(List<CashHandSummary> hands) =>

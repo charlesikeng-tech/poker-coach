@@ -63,7 +63,7 @@ public sealed class PerformanceServiceTests
         Assert.Equal(band, PerformanceService.BuyInBand((decimal)buyIn));
 
     private static TournamentFacts Facts(string name, DateTimeOffset? startedAt, decimal buyInExcludingFee, IReadOnlyList<EntryOutcome> entries) =>
-        new(Guid.NewGuid(), name, startedAt, "EUR", null, null, buyInExcludingFee, 0m, 100, 0, entries, "knockout", "normal");
+        new(Guid.NewGuid(), name, startedAt, "EUR", null, null, buyInExcludingFee, 0m, 100, 0, entries, PokerRoom.Winamax, "knockout", "normal");
 
     private sealed class StubStore(params TournamentFacts[] facts) : ITournamentReadStore
     {

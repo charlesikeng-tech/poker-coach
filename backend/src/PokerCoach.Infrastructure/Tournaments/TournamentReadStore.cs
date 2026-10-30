@@ -81,6 +81,7 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.Speed,
                 t.Mode,
                 t.SubFormat,
+                a.Room,
                 HasSummary = t.SummaryImportedAt != null,
             };
 
@@ -134,6 +135,7 @@ internal sealed class TournamentReadStore(PokerCoachDbContext db) : ITournamentR
                 t.RegisteredPlayers,
                 handCounts.GetValueOrDefault(t.Id),
                 t.HasSummary ? entries[t.Id].ToList() : [],
+                t.Room,
                 t.TournamentType,
                 t.Speed,
                 // Outdated coverage is not shown: it is being recomputed.

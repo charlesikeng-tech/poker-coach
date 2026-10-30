@@ -69,7 +69,7 @@ public sealed class AccountDataServiceTests
         new("Charles", "c@example.com", "fr", Now.AddMonths(-1), [new ExportedIdentity("google", "123", Now.AddMonths(-1))], [new ExportedPokerAccount("Winamax", "Hero", Now, Now)], [], [new ExportedExplanation(Now, "fr", "sonnet", "{\"summary\":\"ok\"}")]);
 
     private static TournamentFacts Facts(string name, decimal buyIn, IReadOnlyList<EntryOutcome> entries) =>
-        new(Guid.NewGuid(), name, Now.AddDays(-3), "EUR", null, null, buyIn, 0m, 100, 10, entries);
+        new(Guid.NewGuid(), name, Now.AddDays(-3), "EUR", null, null, buyIn, 0m, 100, 10, entries, PokerRoom.Winamax);
 
     private static byte[] Gzip(string text)
     {

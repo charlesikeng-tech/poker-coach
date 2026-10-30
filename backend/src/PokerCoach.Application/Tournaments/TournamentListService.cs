@@ -17,6 +17,7 @@ public sealed record TournamentFacts(
     int? RegisteredPlayers,
     int HandCount,
     IReadOnlyList<EntryOutcome> Entries,
+    PokerRoom Room,
     string? Type = null,
     string? Speed = null,
     TournamentCoverage? Coverage = null,
@@ -81,6 +82,7 @@ public sealed record TournamentListItem(
     int? FinishPosition,
     int HandCount,
     TournamentResult Result,
+    PokerRoom Room,
     TournamentCoverage? Coverage = null);
 
 public sealed record TournamentPage(IReadOnlyList<TournamentListItem> Items, int Page, int PageSize, int TotalCount, PerformanceFigures Totals);
@@ -129,6 +131,7 @@ public sealed class TournamentListService(ITournamentReadStore store)
             facts.Entries.Count == 0 ? null : facts.Entries[^1].FinishPosition,
             facts.HandCount,
             TournamentResult.Compute(buyIn, facts.Entries, facts.RebuyCost, facts.AddonCost),
+            facts.Room,
             facts.Coverage);
     }
 

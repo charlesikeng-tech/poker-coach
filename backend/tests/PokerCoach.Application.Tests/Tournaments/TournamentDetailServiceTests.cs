@@ -1,4 +1,5 @@
 using PokerCoach.Application.Tournaments;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 
@@ -56,7 +57,7 @@ public sealed class TournamentDetailServiceTests
             showdown, false, false, showdown, showdown, net, net / 100m);
 
     private static TournamentFacts Facts() =>
-        new(TournamentId, "CASSIOPEIA", Start, "EUR", 4m, null, null, 1m, 120, 4, [new EntryOutcome(3, 50m, null)]);
+        new(TournamentId, "CASSIOPEIA", Start, "EUR", 4m, null, null, 1m, 120, 4, [new EntryOutcome(3, 50m, null)], PokerRoom.Winamax);
 
     private sealed class StubStore(TournamentFacts? facts, IReadOnlyList<TournamentHandRow> hands) : ITournamentDetailStore
     {

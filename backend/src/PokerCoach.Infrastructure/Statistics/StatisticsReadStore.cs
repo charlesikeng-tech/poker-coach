@@ -644,7 +644,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db, IMemoryCache c
     {
         var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
         return await Filtered(userId, filter, factsVersion)
-            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards, x.F.AllInExpectedNetChips))
+            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards, x.F.AllInExpectedNetChips, x.Room))
             .ToListAsync(cancellationToken);
     }
 
@@ -654,7 +654,7 @@ internal sealed class StatisticsReadStore(PokerCoachDbContext db, IMemoryCache c
         var filter = new StatisticsFilter(from, to, null, null, GameType: GameType.CashGame);
         return await Filtered(userId, filter, factsVersion)
             .OrderBy(x => x.StartedAt)
-            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards, x.F.AllInExpectedNetChips))
+            .Select(x => new CashHandSummary(x.F.HandId, x.StartedAt, x.BigBlind, x.MaxSeats, x.F.NetBigBlinds, x.F.StackInBigBlinds, x.F.Position, x.HeroCards, x.F.AllInExpectedNetChips, x.Room))
             .ToListAsync(cancellationToken);
     }
 

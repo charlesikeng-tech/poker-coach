@@ -107,7 +107,7 @@ public sealed class BankrollServiceTests
 
     /// <summary>Fee-free buy-in: the buy-in is the amount given.</summary>
     private static TournamentFacts Facts(string name, DateTimeOffset startedAt, decimal buyIn, IReadOnlyList<EntryOutcome> entries) =>
-        new(Guid.NewGuid(), name, startedAt, "EUR", null, null, buyIn, 0m, 100, 0, entries);
+        new(Guid.NewGuid(), name, startedAt, "EUR", null, null, buyIn, 0m, 100, 0, entries, PokerRoom.Winamax);
 
     private sealed class StubTournaments(TournamentFacts[] facts) : ITournamentReadStore
     {

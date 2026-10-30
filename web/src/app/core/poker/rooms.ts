@@ -19,3 +19,14 @@ const ROOM_NAMES: Readonly<Record<string, string>> = {
 export function roomName(room: string): string {
   return ROOM_NAMES[room] ?? room;
 }
+
+/** Maps rooms to their logo file extension in /rooms/. */
+const ROOM_LOGO_EXT: Readonly<Record<string, string>> = {
+  pmu: 'png',
+};
+
+/** Path to the room's logo in /rooms/, or null if unknown. */
+export function roomLogo(room: string): string {
+  const ext = ROOM_LOGO_EXT[room] ?? 'svg';
+  return `/rooms/${room}.${ext}`;
+}

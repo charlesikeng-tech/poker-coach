@@ -70,7 +70,7 @@ public sealed class TournamentListServiceTests
         decimal? fee,
         IReadOnlyList<EntryOutcome> entries,
         decimal? buyInExcludingFee = null) =>
-        new(Guid.NewGuid(), name, DateTimeOffset.UnixEpoch, "EUR", prizePool, bounty, buyInExcludingFee, fee, 100, 10, entries);
+        new(Guid.NewGuid(), name, DateTimeOffset.UnixEpoch, "EUR", prizePool, bounty, buyInExcludingFee, fee, 100, 10, entries, PokerRoom.Winamax);
 
     private sealed class StubStore(params TournamentFacts[] facts) : ITournamentReadStore
     {

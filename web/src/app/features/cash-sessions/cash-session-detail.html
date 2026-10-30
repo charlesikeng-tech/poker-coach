@@ -26,7 +26,18 @@
         @let s = d.summary;
         <header class="head">
           <div>
-            <h2>{{ s.stakes }}</h2>
+            <h2>
+              @if (s.room) {
+                <img
+                  class="room-logo"
+                  [src]="roomLogo(s.room)"
+                  [alt]="roomName(s.room)"
+                  width="24"
+                  height="24"
+                />
+              }
+              {{ s.stakes }}
+            </h2>
             <p class="head__meta">
               <span>{{ date(s.startedAt) }}</span>
               <span class="tag">{{ duration(s.durationMinutes) }}</span>

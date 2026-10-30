@@ -3,6 +3,7 @@ using PokerCoach.Api.Authentication;
 using PokerCoach.Api.Errors;
 using PokerCoach.Application.Statistics;
 using PokerCoach.Application.Subscriptions;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 
 namespace PokerCoach.Api.Statistics;
@@ -18,7 +19,8 @@ public sealed record CashSessionSummaryResponse(
     decimal NetBigBlinds,
     decimal? BigBlindsPer100,
     decimal NetMoney,
-    decimal? AllInAdjBigBlindsPer100);
+    decimal? AllInAdjBigBlindsPer100,
+    PokerRoom Room);
 
 public sealed record CashSessionStackPointResponse(int Index, DateTimeOffset StartedAt, decimal StackInBigBlinds);
 
@@ -117,5 +119,5 @@ public static class CashSessionEndpoints
     }
 
     private static CashSessionSummaryResponse ToResponse(CashSessionSummary s) =>
-        new(s.Id, s.StartedAt, s.EndedAt, s.DurationMinutes, s.Hands, s.Stakes, s.BigBlind, s.NetBigBlinds, s.BigBlindsPer100, s.NetMoney, s.AllInAdjBigBlindsPer100);
+        new(s.Id, s.StartedAt, s.EndedAt, s.DurationMinutes, s.Hands, s.Stakes, s.BigBlind, s.NetBigBlinds, s.BigBlindsPer100, s.NetMoney, s.AllInAdjBigBlindsPer100, s.Room);
 }

@@ -5,6 +5,7 @@ using PokerCoach.Application.Hands;
 using PokerCoach.Application.Leaks;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Identity;
+using PokerCoach.Domain.Poker;
 using PokerCoach.Domain.Poker.Analysis;
 using PokerCoach.Domain.Tournaments;
 
@@ -136,7 +137,7 @@ public sealed class TournamentDebriefServiceTests
     }
 
     private static TournamentFacts Tournament() =>
-        new(TournamentId, "CASSIOPEIA", Start, "EUR", 4m, null, null, 1m, 120, 30, [new EntryOutcome(108, null, null)]);
+        new(TournamentId, "CASSIOPEIA", Start, "EUR", 4m, null, null, 1m, 120, 30, [new EntryOutcome(108, null, null)], PokerRoom.Winamax);
 
     private sealed class Store(TournamentDebriefServiceTests test) : ITournamentDetailStore
     {

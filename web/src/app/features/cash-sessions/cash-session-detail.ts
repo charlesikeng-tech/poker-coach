@@ -15,6 +15,7 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { ArrowLeft, CircleAlert, LoaderCircle, Radar } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
+import { roomLogo, roomName } from '../../core/poker/rooms';
 import { formatDateTime, formatInteger, formatSignedMoney } from '../../shared/format/format';
 import { Button } from '../../shared/ui/button/button';
 import { EmptyState } from '../../shared/ui/empty-state/empty-state';
@@ -148,6 +149,9 @@ export class CashSessionDetailPage {
   protected swingKind(moment: CashSessionKeyMoment): 'gain' | 'loss' {
     return moment.netBigBlinds >= 0 ? 'gain' : 'loss';
   }
+
+  protected readonly roomLogo = roomLogo;
+  protected readonly roomName = roomName;
 
   protected sign(value: number | null): 'positive' | 'negative' | 'neutral' {
     return value === null || value === 0 ? 'neutral' : value > 0 ? 'positive' : 'negative';
