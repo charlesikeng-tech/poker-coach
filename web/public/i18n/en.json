@@ -942,7 +942,34 @@
         "definition": "In big blinds, so levels compare. Counts preflop all-ins with no action after the flop and every hand still in shown; exact equity over every possible board, side pots included.",
         "none": "No preflop all-in with the cards shown in this period.",
         "pending": "Hands are still being analysed: figures will move.",
-        "error": "All-in luck cannot be loaded right now."
+        "error": "All-in luck cannot be loaded right now.",
+        "explain": {
+          "show": "Understand the chart",
+          "hide": "Hide explanation",
+          "title": "How to read this chart",
+          "curves": {
+            "title": "The two lines",
+            "actual": "Actual — your real winnings, hand by hand. This is what happened.",
+            "expected": "Expected — what you would have won on average given your equities. This is your theoretical performance."
+          },
+          "gap": {
+            "title": "The gap between them",
+            "positive": "You won {{actual}} versus {{expected}} expected: {{luck}} more than predicted. The board favored you — a run-good. This does not reflect better play.",
+            "negative": "You won {{actual}} versus {{expected}} expected: {{luck}} less than predicted. The board worked against you — a run-bad. This does not reflect worse play.",
+            "neutral": "You won {{actual}} versus {{expected}} expected: the gap is negligible. You are receiving your fair share of luck."
+          },
+          "sample": {
+            "title": "Significance",
+            "low": "With only {{count}} all-ins, the gap is still statistical noise. More hands are needed to draw a conclusion.",
+            "ok": "With {{count}} all-ins, the sample is starting to be meaningful. The gap reflects a trend, even though it can still shift."
+          },
+          "takeaway": {
+            "title": "Key takeaway",
+            "positive": "The expected line is the only one you control: it represents your decision-making. The current run-good will fade with volume. Focus on the slope of the expected line.",
+            "negative": "The expected line is the only one you control: it represents your decision-making. The current run-bad will correct with volume. If the expected line goes up, your play is solid — variance does the rest.",
+            "neutral": "The expected line is the only one you control: it represents your decision-making. The negligible gap confirms that variance is not costing you anything. Keep watching the slope of the expected line."
+          }
+        }
       },
       "sections": {
         "preflop": "Before the flop",

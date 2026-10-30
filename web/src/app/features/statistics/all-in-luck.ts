@@ -10,10 +10,13 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
+import { HelpCircle } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
+import { Button } from '../../shared/ui/button/button';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
+import { Icon } from '../../shared/ui/icon/icon';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
 import { LineChart, LinePoint } from '../../shared/ui/line-chart/line-chart';
 import { AllInLuck, GameType, StatisticsApi } from './statistics-api';
@@ -27,7 +30,7 @@ const FEW_ALL_INS = 30;
  */
 @Component({
   selector: 'app-all-in-luck',
-  imports: [TranslocoDirective, RouterLink, StatTile, LineChart, PlayingCard],
+  imports: [TranslocoDirective, RouterLink, Button, Icon, StatTile, LineChart, PlayingCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './all-in-luck.html',
   styleUrl: './all-in-luck.scss',
@@ -43,8 +46,11 @@ export class AllInLuckPanel {
   /** Changes while facts are being computed: the panel reloads with the page. */
   readonly refreshKey = input(0);
 
+  protected readonly icons = { HelpCircle };
+  protected readonly Math = Math;
   protected readonly luck = signal<AllInLuck | null>(null);
   protected readonly failed = signal(false);
+  protected readonly showExplain = signal(false);
   protected readonly fewAllIns = FEW_ALL_INS;
 
   private readonly locale = computed(() => this.language.current());

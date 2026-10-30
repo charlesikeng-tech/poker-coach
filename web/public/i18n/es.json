@@ -942,7 +942,34 @@
         "definition": "En ciegas grandes, para comparar niveles. Cuenta los all-in preflop sin acción tras el flop y con todas las manos en juego mostradas; equity exacta sobre todos los boards posibles, side pots incluidos.",
         "none": "Ningún all-in preflop con las cartas mostradas en este periodo.",
         "pending": "Las manos aún se están analizando: las cifras van a cambiar.",
-        "error": "No se puede cargar la suerte en los all-in por ahora."
+        "error": "No se puede cargar la suerte en los all-in por ahora.",
+        "explain": {
+          "show": "Entender la curva",
+          "hide": "Ocultar explicación",
+          "title": "Cómo leer este gráfico",
+          "curves": {
+            "title": "Las dos líneas",
+            "actual": "Real — tus ganancias efectivas, mano a mano. Es lo que ocurrió.",
+            "expected": "Esperado — lo que habrías ganado en promedio con tus equities. Es tu rendimiento teórico."
+          },
+          "gap": {
+            "title": "La diferencia entre ambas",
+            "positive": "Ganaste {{actual}} frente a {{expected}} esperados: {{luck}} más de lo previsto. El board te favoreció — un run-good. Esto no refleja un mejor juego.",
+            "negative": "Ganaste {{actual}} frente a {{expected}} esperados: {{luck}} menos de lo previsto. El board te perjudicó — un run-bad. Esto no refleja un peor juego.",
+            "neutral": "Ganaste {{actual}} frente a {{expected}} esperados: la diferencia es despreciable. Estás recibiendo tu parte justa de suerte."
+          },
+          "sample": {
+            "title": "Significancia",
+            "low": "Con solo {{count}} all-in, la diferencia es todavía ruido estadístico. Se necesitan más manos para sacar una conclusión.",
+            "ok": "Con {{count}} all-in, la muestra empieza a ser significativa. La diferencia refleja una tendencia, aunque aún puede cambiar."
+          },
+          "takeaway": {
+            "title": "Lo que debes recordar",
+            "positive": "La curva esperada es la única que controlas: representa tu toma de decisiones. El run-good actual se diluirá con el volumen. Concéntrate en la pendiente de la curva esperada.",
+            "negative": "La curva esperada es la única que controlas: representa tu toma de decisiones. El run-bad actual se corregirá con el volumen. Si la curva esperada sube, tu juego es sólido — la varianza hace el resto.",
+            "neutral": "La curva esperada es la única que controlas: representa tu toma de decisiones. La diferencia nula confirma que la varianza no te está costando nada. Sigue vigilando la pendiente de la curva esperada."
+          }
+        }
       },
       "sections": {
         "preflop": "Antes del flop",

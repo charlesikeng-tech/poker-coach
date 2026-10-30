@@ -942,7 +942,34 @@
         "definition": "En big blinds, pour comparer les niveaux. Compte les all-in preflop sans action postflop, toutes les mains encore en jeu montrées ; equity exacte sur tous les boards possibles, side pots compris.",
         "none": "Aucun all-in preflop avec les cartes montrées sur cette période.",
         "pending": "Analyse des mains en cours : les chiffres vont encore bouger.",
-        "error": "Impossible de charger la chance aux all-in pour le moment."
+        "error": "Impossible de charger la chance aux all-in pour le moment.",
+        "explain": {
+          "show": "Comprendre la courbe",
+          "hide": "Masquer l'explication",
+          "title": "Comment lire ce graphique",
+          "curves": {
+            "title": "Les deux courbes",
+            "actual": "Réel — tes gains effectifs, main par main. C'est ce qui est arrivé.",
+            "expected": "Attendu — ce que tu aurais gagné en moyenne avec tes equities. C'est ta performance théorique."
+          },
+          "gap": {
+            "title": "L'écart entre les deux",
+            "positive": "Tu as gagné {{actual}} pour {{expected}} attendus : {{luck}} de plus que prévu. Le board t'a favorisé — un run-good. Ça ne reflète pas une meilleure qualité de jeu.",
+            "negative": "Tu as gagné {{actual}} pour {{expected}} attendus : {{luck}} de moins que prévu. Le board t'a coûté — un run-bad. Ça ne reflète pas un défaut de jeu.",
+            "neutral": "Tu as gagné {{actual}} pour {{expected}} attendus : l'écart est négligeable. Tu reçois exactement ta part de chance."
+          },
+          "sample": {
+            "title": "Significativité",
+            "low": "Avec seulement {{count}} all-in, l'écart est encore du bruit statistique. Il faut davantage de mains pour tirer une conclusion.",
+            "ok": "Avec {{count}} all-in, l'échantillon commence à être parlant. L'écart reflète une tendance, même s'il peut encore évoluer."
+          },
+          "takeaway": {
+            "title": "Ce qu'il faut retenir",
+            "positive": "La courbe attendue est la seule que tu contrôles : c'est ta prise de décision. Le run-good actuel va s'estomper avec le volume. Concentre-toi sur la pente de la courbe attendue.",
+            "negative": "La courbe attendue est la seule que tu contrôles : c'est ta prise de décision. Le run-bad actuel va se corriger avec le volume. Si la courbe attendue monte, ton jeu est bon — la variance fait le reste.",
+            "neutral": "La courbe attendue est la seule que tu contrôles : c'est ta prise de décision. L'écart nul confirme que la variance ne te coûte rien. Continue à surveiller la pente de la courbe attendue."
+          }
+        }
       },
       "sections": {
         "preflop": "Preflop",

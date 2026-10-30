@@ -137,6 +137,131 @@ h3 {
   text-align: right;
 }
 
+// Coach explain panel
+
+.explain-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast),
+    color var(--motion-fast),
+    background var(--motion-fast);
+
+  --icon-size: 1rem;
+
+  &:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    background: var(--surface-hover);
+  }
+
+  &[aria-expanded='true'] {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+}
+
+.explain {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: explain-rise var(--motion-base) var(--easing-emphasized) both;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--accent-primary) 0%,
+      color-mix(in srgb, var(--accent-primary) 40%, transparent) 60%,
+      transparent 100%
+    );
+  }
+}
+
+@keyframes explain-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.explain__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.explain__section {
+  h4 {
+    margin: 0 0 var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-primary);
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    line-height: var(--line-height-body);
+  }
+}
+
+.explain__swatch {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 2px;
+
+  &--actual {
+    background: var(--accent-primary);
+  }
+
+  &--expected {
+    border-top: 2px dashed var(--text-secondary);
+    height: 0;
+  }
+}
+
 .skeleton-chart {
   display: block;
   height: 12rem;

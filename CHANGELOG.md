@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- Modernize coaching panels with accent bar, animations and glow effects
+
 ## [2026.10.30-f76001c] — 2026-10-30
 
 ### Fonctionnalités

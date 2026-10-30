@@ -46,6 +46,71 @@
           <p class="hint">{{ t('few') }}</p>
         }
 
+        <button
+          class="explain-toggle"
+          type="button"
+          (click)="showExplain.set(!showExplain())"
+          [attr.aria-expanded]="showExplain()"
+          aria-controls="luck-explain"
+        >
+          <app-icon [icon]="icons.HelpCircle" />
+          {{ t(showExplain() ? 'explain.hide' : 'explain.show') }}
+        </button>
+
+        @if (showExplain()) {
+          <div
+            id="luck-explain"
+            class="explain glass"
+            role="region"
+            [attr.aria-label]="t('explain.title')"
+          >
+            <h3 class="explain__title">{{ t('explain.title') }}</h3>
+
+            <div class="explain__section">
+              <h4>{{ t('explain.curves.title') }}</h4>
+              <ul>
+                <li>
+                  <span class="explain__swatch explain__swatch--actual"></span
+                  >{{ t('explain.curves.actual') }}
+                </li>
+                <li>
+                  <span class="explain__swatch explain__swatch--expected"></span
+                  >{{ t('explain.curves.expected') }}
+                </li>
+              </ul>
+            </div>
+
+            <div class="explain__section">
+              <h4>{{ t('explain.gap.title') }}</h4>
+              <p>
+                {{
+                  t('explain.gap.' + sign(luck.luck), {
+                    luck: bb(Math.abs(luck.luck)),
+                    actual: bb(luck.actualBigBlinds),
+                    expected: bb(luck.expectedBigBlinds),
+                  })
+                }}
+              </p>
+            </div>
+
+            <div class="explain__section">
+              <h4>{{ t('explain.sample.title') }}</h4>
+              <p>
+                {{
+                  t(luck.allIns < fewAllIns ? 'explain.sample.low' : 'explain.sample.ok', {
+                    count: luck.allIns,
+                  })
+                }}
+              </p>
+            </div>
+
+            <div class="explain__section">
+              <h4>{{ t('explain.takeaway.title') }}</h4>
+              <p>{{ t('explain.takeaway.' + sign(luck.luck)) }}</p>
+            </div>
+          </div>
+        }
+
         @if (points().length > 1) {
           <div class="legend" aria-hidden="true">
             <span class="legend-actual">{{ t('chart.actual') }}</span>
