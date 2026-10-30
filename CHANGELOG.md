@@ -1,11 +1,12 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.30-f76001c] — 2026-10-30
 
 ### Fonctionnalités
 
 - Add Replay button on tournament detail opening the poker table directly
 - Expose poker room and show room logos on tournament and cash session detail
+- Switch typography to Inter + Space Grotesk
 
 ## [2026.10.30-acaf1b9] — 2026-10-30
 
