@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.30-e7ffe4f] — 2026-10-30
 
 ### Fonctionnalités
 
 - Improve AI coaching voice with persona, tone overlays, few-shot examples and headline cap
+- Show AI credits remaining in the topbar with link to subscription
 
 ## [2026.10.29-50b77b5] — 2026-10-29
 

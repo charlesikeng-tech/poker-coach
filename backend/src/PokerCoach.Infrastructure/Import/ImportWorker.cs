@@ -78,7 +78,7 @@ internal sealed partial class ImportWorker(
 
                     if (!factsDue && affectedUserIds.Count > 0)
                     {
-                        _ = SyncContactsAsync(scope.ServiceProvider, affectedUserIds);
+                        _ = SyncContactsAsync(scopes, affectedUserIds, logger);
                         affectedUserIds = [];
                     }
                 }
@@ -151,10 +151,12 @@ internal sealed partial class ImportWorker(
         }
     }
 
-    private static async Task SyncContactsAsync(IServiceProvider services, IReadOnlyCollection<Guid> userIds)
+    private static async Task SyncContactsAsync(IServiceScopeFactory scopes, IReadOnlyCollection<Guid> userIds, ILogger logger)
     {
         try
         {
+            await using var scope = scopes.CreateAsyncScope();
+            var services = scope.ServiceProvider;
             var contactSync = services.GetRequiredService<IContactSync>();
             var db = services.GetRequiredService<PokerCoachDbContext>();
 
@@ -190,9 +192,10 @@ internal sealed partial class ImportWorker(
                     CancellationToken.None);
             }
         }
-        catch (Exception)
+        catch (Exception exception)
         {
             // Fire-and-forget: import processing must never fail because of Brevo.
+            LogContactSyncFailed(logger, exception);
         }
     }
 
@@ -201,4 +204,7 @@ internal sealed partial class ImportWorker(
 
     [LoggerMessage(Level = LogLevel.Error, Message = "Import processing failed; the file will be retried.")]
     private static partial void LogProcessingFailed(ILogger logger, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Contact sync after import failed (non-blocking).")]
+    private static partial void LogContactSyncFailed(ILogger logger, Exception exception);
 }
