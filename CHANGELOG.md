@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.30-86ad364] — 2026-10-30
+
+### Correctifs
+
+- Give SyncContactsAsync its own DI scope to prevent connection reuse race
+
 ## [2026.10.30-e7ffe4f] — 2026-10-30
 
 ### Fonctionnalités

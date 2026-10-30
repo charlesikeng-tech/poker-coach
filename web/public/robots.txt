@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+# Public pages
+Allow: /sign-in
+Allow: /privacy

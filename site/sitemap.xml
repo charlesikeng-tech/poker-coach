@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home -->
+  <url>
+    <loc>https://nutsiq.com/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nutsiq.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nutsiq.com/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://nutsiq.com/es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nutsiq.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://nutsiq.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nutsiq.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nutsiq.com/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://nutsiq.com/es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nutsiq.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://nutsiq.com/es/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nutsiq.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nutsiq.com/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://nutsiq.com/es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nutsiq.com/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Tools -->
+  <url>
+    <loc>https://nutsiq.com/outils</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nutsiq.com/outils" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nutsiq.com/en/tools" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://nutsiq.com/es/herramientas" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nutsiq.com/en/tools</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nutsiq.com/outils" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nutsiq.com/en/tools" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://nutsiq.com/es/herramientas" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nutsiq.com/es/herramientas</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nutsiq.com/outils" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://nutsiq.com/en/tools" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://nutsiq.com/es/herramientas" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Demo -->
+  <url>
+    <loc>https://nutsiq.com/demo</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Legal -->
+  <url>
+    <loc>https://nutsiq.com/cgv</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://nutsiq.com/mentions-legales</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+
+</urlset>
