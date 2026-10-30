@@ -14,7 +14,6 @@ import { HelpCircle } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
 import { formatDateTime } from '../../shared/format/format';
-import { Button } from '../../shared/ui/button/button';
 import { StatTile } from '../../shared/ui/effects/stat-tile';
 import { Icon } from '../../shared/ui/icon/icon';
 import { PlayingCard } from '../../shared/ui/playing-card/playing-card';
@@ -30,7 +29,7 @@ const FEW_ALL_INS = 30;
  */
 @Component({
   selector: 'app-all-in-luck',
-  imports: [TranslocoDirective, RouterLink, Button, Icon, StatTile, LineChart, PlayingCard],
+  imports: [TranslocoDirective, RouterLink, Icon, StatTile, LineChart, PlayingCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './all-in-luck.html',
   styleUrl: './all-in-luck.scss',

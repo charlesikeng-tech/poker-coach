@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.30-dc6b940] — 2026-10-30
 
 ### Fonctionnalités
 
 - Modernize coaching panels with accent bar, animations and glow effects
+- Add coach explanation panel to all-in luck chart
 
 ## [2026.10.30-f76001c] — 2026-10-30
 
