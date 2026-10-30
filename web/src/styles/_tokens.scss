@@ -100,9 +100,9 @@
 
 :root {
   // Typography: one family, scale based on a 1.2 ratio from a 14px base (dense analytics UI).
-  --font-sans: 'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  // Headings and figures: geometric, wide, confident. Body stays in Plex for dense reading.
-  --font-display: 'Sora Variable', 'IBM Plex Sans Variable', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // Headings and figures: angular, tech, distinctive. Body stays in Inter for dense reading.
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', system-ui, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.8125rem;
   --font-size-md: 0.875rem;
