@@ -231,6 +231,38 @@ ul {
   display: none;
 }
 
+.topbar__credits {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--radius-full, 9999px);
+  transition:
+    color 0.15s,
+    background 0.15s;
+
+  &:hover {
+    color: var(--text-primary);
+    background: var(--surface-hover, color-mix(in srgb, var(--text-primary) 8%, transparent));
+  }
+
+  &--low {
+    color: var(--status-warning, #f59e0b);
+  }
+
+  &--empty {
+    color: var(--status-error, #ef4444);
+  }
+
+  app-icon {
+    font-size: 1rem;
+  }
+}
+
 .topbar__user {
   max-width: 12rem;
   margin-left: var(--space-2);
@@ -347,6 +379,7 @@ ul {
     padding: 0 var(--space-4);
   }
 
+  .topbar__credits span,
   .topbar__user {
     display: none;
   }

@@ -49,7 +49,8 @@
     "signOut": "Sign out",
     "account": "My account",
     "planWindow": "Starter: you see the last {{days}} days. Your whole history is kept.",
-    "planWindowAction": "See it all with Pro"
+    "planWindowAction": "See it all with Pro",
+    "credits": "AI credits remaining"
   },
   "pages": {
     "dashboard": {

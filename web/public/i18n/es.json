@@ -49,7 +49,8 @@
     "signOut": "Cerrar sesión",
     "account": "Mi cuenta",
     "planWindow": "Starter: ves los últimos {{days}} días. Todo tu historial se conserva.",
-    "planWindowAction": "Verlo todo con Pro"
+    "planWindowAction": "Verlo todo con Pro",
+    "credits": "Créditos IA restantes"
   },
   "pages": {
     "dashboard": {

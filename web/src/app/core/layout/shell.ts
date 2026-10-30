@@ -19,6 +19,7 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  Sparkles,
   Sun,
   X,
 } from 'lucide';
@@ -97,6 +98,7 @@ export class Shell {
     Moon,
     PanelLeftClose,
     PanelLeftOpen,
+    Sparkles,
     Sun,
     X,
   };
@@ -118,6 +120,13 @@ export class Shell {
       this.billing.isStarter() &&
       WINDOWED_PAGES.some((page) => this.url().split('?')[0].startsWith(page)),
   );
+
+  /** Total AI credits remaining: monthly allowance not yet used + purchased top-up balance. */
+  protected readonly creditsLeft = computed(() => {
+    const s = this.billing.summary();
+    if (!s) return null;
+    return Math.max(0, s.monthlyCredits - s.creditsUsedThisMonth) + s.purchasedCreditsBalance;
+  });
 
   /** Desktop only: tablets always use the compact rail, phones the off-canvas drawer (see shell.scss). */
   protected readonly collapsed = signal(this.store.read(SIDEBAR_STORAGE_KEY) === 'true');

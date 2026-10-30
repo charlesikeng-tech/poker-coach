@@ -140,6 +140,19 @@
 
         <div class="topbar__spacer"></div>
 
+        @if (creditsLeft() !== null) {
+          <a
+            class="topbar__credits"
+            [class.topbar__credits--low]="creditsLeft()! <= 5 && creditsLeft()! > 0"
+            [class.topbar__credits--empty]="creditsLeft() === 0"
+            routerLink="/subscription"
+            [attr.title]="t('shell.credits')"
+          >
+            <app-icon [icon]="icons.Sparkles" />
+            <span>{{ creditsLeft() }}</span>
+          </a>
+        }
+
         <app-language-select />
 
         <button

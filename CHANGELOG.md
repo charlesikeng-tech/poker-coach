@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- Improve AI coaching voice with persona, tone overlays, few-shot examples and headline cap
+
 ## [2026.10.29-50b77b5] — 2026-10-29
 
 ### Fonctionnalités
