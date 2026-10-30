@@ -150,6 +150,7 @@ builder.Services.AddHostedService<WeeklyNotificationBackgroundService>();
 builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<AdminOptions>>().Value);
 builder.Services.AddScoped<PlanAccess>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<InvitationService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<AiUsageGuard>();
 builder.Services.AddScoped<LeakCoachService>();

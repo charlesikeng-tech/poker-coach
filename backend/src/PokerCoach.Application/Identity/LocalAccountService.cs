@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using PokerCoach.Application.Notifications;
+using PokerCoach.Application.Subscriptions;
 using PokerCoach.Domain.Identity;
 
 namespace PokerCoach.Application.Identity;
@@ -125,7 +126,8 @@ public sealed class LocalAccountService(
     IPasswordHasher hasher,
     IEmailSender email,
     IContactSync contactSync,
-    TimeProvider time)
+    TimeProvider time,
+    InvitationService? invitationService = null)
 {
     public const int MinPasswordLength = 10;
     public const int MaxPasswordLength = 128;
@@ -269,6 +271,11 @@ public sealed class LocalAccountService(
         var outcome = await CompleteSignInAsync(credential, check, password!, now, cancellationToken);
         if (outcome.User is { } confirmedUser)
         {
+            if (invitationService is not null)
+            {
+                await invitationService.ClaimAsync(confirmedUser.Id, credential.Email, cancellationToken);
+            }
+
             _ = contactSync.SyncAsync(
                 new ContactAttributes(
                     credential.Email,

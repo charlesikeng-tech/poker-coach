@@ -2454,7 +2454,9 @@
         "VALIDATION_FAILED": "Give a reason and a future end date.",
         "ADMIN_REQUIRED": "Administrators only.",
         "network": "Cannot connect. Check your network.",
-        "unknown": "Something unexpected went wrong."
+        "unknown": "Something unexpected went wrong.",
+        "ALREADY_REGISTERED": "This email already has an account. Use \"Grant access\" instead.",
+        "INVITATION_NOT_FOUND": "This invitation does not exist."
       },
       "plans": {
         "pro": "Pro",
@@ -2490,6 +2492,31 @@
           "strategyPlan": "Strategy plan",
           "playerProfile": "Player profile"
         }
+      },
+      "invite": {
+        "title": "Invite someone",
+        "description": "Send an email invitation to someone without an account. The chosen plan will be activated automatically when they sign up.",
+        "email": "Email",
+        "plan": "Plan",
+        "reason": "Reason",
+        "reasonPlaceholder": "Spotted player, friend, tester",
+        "grantEndsOn": "Plan ends on (optional)",
+        "action": "Invite",
+        "done": "Invitation sent to {{email}}."
+      },
+      "invitations": {
+        "title": "Invitations ({{count}})",
+        "columns": {
+          "email": "Email",
+          "plan": "Plan",
+          "status": "Status",
+          "expires": "Expires"
+        },
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "expired": "Expired",
+        "delete": "Delete",
+        "confirm": "Confirm"
       }
     },
     "cashSessions": {

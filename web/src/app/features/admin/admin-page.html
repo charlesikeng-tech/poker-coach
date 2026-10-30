@@ -90,6 +90,122 @@
   }
 
   <section class="card glass">
+    <h2><app-icon [icon]="icons.Mail" />{{ t('invite.title') }}</h2>
+    <p>{{ t('invite.description') }}</p>
+    <form class="grant-form" (submit)="invite($event)">
+      <label class="field">
+        <span>{{ t('invite.email') }}</span>
+        <input
+          type="email"
+          required
+          autocomplete="off"
+          [value]="invEmail()"
+          (input)="invEmail.set(value($event))"
+        />
+      </label>
+      <label class="field">
+        <span>{{ t('invite.plan') }}</span>
+        <select [value]="invPlan()" (change)="invPlan.set($any($event.target).value)">
+          <option value="pro">Pro</option>
+          <option value="elite">Elite</option>
+          <option value="ultimate">Ultimate</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>{{ t('invite.reason') }}</span>
+        <input
+          type="text"
+          required
+          maxlength="200"
+          [placeholder]="t('invite.reasonPlaceholder')"
+          [value]="invReason()"
+          (input)="invReason.set(value($event))"
+        />
+      </label>
+      <label class="field">
+        <span>{{ t('invite.grantEndsOn') }}</span>
+        <input type="date" [value]="invGrantEndsOn()" (input)="invGrantEndsOn.set(value($event))" />
+      </label>
+      <button appButton variant="primary" type="submit" [disabled]="invSaving()">
+        {{ t('invite.action') }}
+      </button>
+    </form>
+    @if (invSent(); as who) {
+      <p class="notice" role="status">{{ t('invite.done', { email: who }) }}</p>
+    }
+    @if (invError(); as code) {
+      <p class="notice notice--danger" role="alert">{{ t('errors.' + code) }}</p>
+    }
+  </section>
+
+  @if (overview(); as o) {
+    @if (o.invitations.length > 0) {
+      <section class="card glass">
+        <h2>{{ t('invitations.title', { count: o.invitations.length }) }}</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ t('invitations.columns.email') }}</th>
+                <th>{{ t('invitations.columns.plan') }}</th>
+                <th>{{ t('invitations.columns.status') }}</th>
+                <th>{{ t('invitations.columns.expires') }}</th>
+                <th>
+                  <span class="sr-only">{{ t('columns.actions') }}</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (inv of o.invitations; track inv.id) {
+                <tr>
+                  <td>{{ inv.email }}</td>
+                  <td>
+                    <span class="plan-tag">{{ t('plans.' + inv.plan) }}</span>
+                    <span class="muted">{{ inv.reason }}</span>
+                  </td>
+                  <td>
+                    @if (inv.acceptedAt) {
+                      <span class="status" data-status="active">{{
+                        t('invitations.accepted')
+                      }}</span>
+                    } @else if (isExpired(inv)) {
+                      <span class="status" data-status="canceled">{{
+                        t('invitations.expired')
+                      }}</span>
+                    } @else {
+                      <span class="status" data-status="trialing">{{
+                        t('invitations.pending')
+                      }}</span>
+                    }
+                  </td>
+                  <td class="numeric">{{ date(inv.expiresAt) }}</td>
+                  <td class="actions">
+                    @if (!inv.acceptedAt) {
+                      <button
+                        appButton
+                        variant="ghost"
+                        type="button"
+                        [class.danger]="confirmingDeleteInv() === inv.id"
+                        (click)="deleteInvitation(inv)"
+                      >
+                        <app-icon [icon]="icons.Trash2" />{{
+                          confirmingDeleteInv() === inv.id
+                            ? t('invitations.confirm')
+                            : t('invitations.delete')
+                        }}
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  }
+
+  <section class="card glass">
     <h2><app-icon [icon]="icons.Gift" />{{ t('grant.title') }}</h2>
     <p>{{ t('grant.description') }}</p>
     <form class="grant-form" (submit)="grant($event)">

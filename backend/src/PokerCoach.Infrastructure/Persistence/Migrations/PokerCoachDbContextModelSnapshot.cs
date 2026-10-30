@@ -414,6 +414,59 @@ namespace PokerCoach.Infrastructure.Persistence.Migrations
                     b.ToTable("custom_opening_ranges", "ranges");
                 });
 
+            modelBuilder.Entity("PokerCoach.Domain.Subscriptions.Invitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("AcceptedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("accepted_at");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)")
+                        .HasColumnName("email");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<DateTimeOffset?>("GrantEndsAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("grant_ends_at");
+
+                    b.Property<Guid>("InvitedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("invited_by");
+
+                    b.Property<string>("Plan")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasColumnName("plan");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("reason");
+
+                    b.HasKey("Id")
+                        .HasName("pk_invitations");
+
+                    b.HasIndex("Email")
+                        .HasDatabaseName("ix_invitations_email");
+
+                    b.ToTable("invitations", "subscriptions");
+                });
+
             modelBuilder.Entity("PokerCoach.Domain.Subscriptions.ProGrant", b =>
                 {
                     b.Property<Guid>("UserId")

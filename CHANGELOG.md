@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.30-122d10c] — 2026-10-30
+
+### Fonctionnalités
+
+- Add robots.txt, sitemap.xml and OG meta tags for SEO
+
 ## [2026.10.30-86ad364] — 2026-10-30
 
 ### Correctifs

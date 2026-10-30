@@ -2454,7 +2454,9 @@
         "VALIDATION_FAILED": "Indique un motif et une date de fin future.",
         "ADMIN_REQUIRED": "Réservé aux administrateurs.",
         "network": "Connexion impossible. Vérifie ton réseau.",
-        "unknown": "Une erreur inattendue est survenue."
+        "unknown": "Une erreur inattendue est survenue.",
+        "ALREADY_REGISTERED": "Cette adresse a déjà un compte. Utilise « Offrir un accès » à la place.",
+        "INVITATION_NOT_FOUND": "Cette invitation n'existe pas."
       },
       "plans": {
         "pro": "Pro",
@@ -2490,6 +2492,31 @@
           "strategyPlan": "Plan stratégique",
           "playerProfile": "Profil joueur"
         }
+      },
+      "invite": {
+        "title": "Inviter quelqu'un",
+        "description": "Envoie une invitation par e-mail à quelqu'un qui n'a pas encore de compte. L'accès au plan choisi sera activé automatiquement à l'inscription.",
+        "email": "E-mail",
+        "plan": "Offre",
+        "reason": "Motif",
+        "reasonPlaceholder": "Joueur repéré, ami, testeur",
+        "grantEndsOn": "Fin du plan (optionnel)",
+        "action": "Inviter",
+        "done": "Invitation envoyée à {{email}}."
+      },
+      "invitations": {
+        "title": "Invitations ({{count}})",
+        "columns": {
+          "email": "E-mail",
+          "plan": "Offre",
+          "status": "Statut",
+          "expires": "Expire le"
+        },
+        "pending": "En attente",
+        "accepted": "Acceptée",
+        "expired": "Expirée",
+        "delete": "Supprimer",
+        "confirm": "Confirmer"
       }
     },
     "cashSessions": {

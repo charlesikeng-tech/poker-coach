@@ -2454,7 +2454,9 @@
         "VALIDATION_FAILED": "Indica un motivo y una fecha de fin futura.",
         "ADMIN_REQUIRED": "Solo para administradores.",
         "network": "No hay conexión. Revisa tu red.",
-        "unknown": "Ha ocurrido un error inesperado."
+        "unknown": "Ha ocurrido un error inesperado.",
+        "ALREADY_REGISTERED": "Este correo ya tiene cuenta. Usa « Ofrecer acceso » en su lugar.",
+        "INVITATION_NOT_FOUND": "Esta invitación no existe."
       },
       "plans": {
         "pro": "Pro",
@@ -2490,6 +2492,31 @@
           "strategyPlan": "Plan estratégico",
           "playerProfile": "Perfil de jugador"
         }
+      },
+      "invite": {
+        "title": "Invitar a alguien",
+        "description": "Envía una invitación por correo a alguien sin cuenta. El plan elegido se activará automáticamente al registrarse.",
+        "email": "Correo",
+        "plan": "Plan",
+        "reason": "Motivo",
+        "reasonPlaceholder": "Jugador detectado, amigo, tester",
+        "grantEndsOn": "Fin del plan (opcional)",
+        "action": "Invitar",
+        "done": "Invitación enviada a {{email}}."
+      },
+      "invitations": {
+        "title": "Invitaciones ({{count}})",
+        "columns": {
+          "email": "Correo",
+          "plan": "Plan",
+          "status": "Estado",
+          "expires": "Caduca"
+        },
+        "pending": "Pendiente",
+        "accepted": "Aceptada",
+        "expired": "Caducada",
+        "delete": "Eliminar",
+        "confirm": "Confirmar"
       }
     },
     "cashSessions": {

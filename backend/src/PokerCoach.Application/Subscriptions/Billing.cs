@@ -155,6 +155,34 @@ public sealed record CheckoutRequest(
 
 public sealed record TopUpRequest(Guid UserId, int Credits, string Language, Uri SuccessUrl, Uri CancelUrl);
 
+/// <summary>An invitation as administrators see it.</summary>
+public sealed record InvitationView(
+    Guid Id,
+    string Email,
+    Plan Plan,
+    string Reason,
+    DateTimeOffset? GrantEndsAt,
+    DateTimeOffset ExpiresAt,
+    DateTimeOffset? AcceptedAt,
+    DateTimeOffset CreatedAt);
+
+public interface IInvitationStore
+{
+    /// <summary>The active (not accepted, not expired) invitation for this email, if any.</summary>
+    Task<Invitation?> FindActiveByEmailAsync(string normalizedEmail, DateTimeOffset now, CancellationToken cancellationToken);
+
+    Task<Invitation?> FindByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>Adds or replaces the active invitation for this email.</summary>
+    Task SaveAsync(Invitation invitation, CancellationToken cancellationToken);
+
+    Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<InvitationView>> ListAsync(CancellationToken cancellationToken);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken);
+}
+
 /// <summary>What an account has, and why.</summary>
 public sealed record PlanGrant(Plan Plan, PlanSource Source, DateTimeOffset? GrantEndsAt = null);
 

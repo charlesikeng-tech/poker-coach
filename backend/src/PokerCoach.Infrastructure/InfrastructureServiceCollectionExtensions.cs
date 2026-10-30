@@ -104,6 +104,7 @@ public static class InfrastructureServiceCollectionExtensions
 
         // Stripe (ADR-0014); without a secret key billing is off and every account has Pro.
         services.AddScoped<ISubscriptionStore, SubscriptionStore>();
+        services.AddScoped<IInvitationStore, InvitationStore>();
         services.AddOptions<StripeOptions>().BindConfiguration(StripeOptions.SectionName);
         services.AddHttpClient<IBillingGateway, StripeBillingGateway>(client => client.Timeout = TimeSpan.FromSeconds(20));
 

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { Cpu, ExternalLink, Gift, Trash2 } from 'lucide';
+import { Cpu, ExternalLink, Gift, Mail, Trash2 } from 'lucide';
 import { firstValueFrom } from 'rxjs';
 
 import { BillingInterval, PaidPlan, SubscriptionStatus } from '../../core/billing/billing.service';
@@ -64,12 +64,30 @@ interface AiUsage {
 /** Share of the budget from which the meter turns to a warning, as the server's log alert. */
 const AI_ALERT_SHARE = 0.8;
 
+interface InvitationItem {
+  readonly id: string;
+  readonly email: string;
+  readonly plan: PaidPlan;
+  readonly reason: string;
+  readonly grantEndsAt: string | null;
+  readonly expiresAt: string;
+  readonly acceptedAt: string | null;
+  readonly createdAt: string;
+}
+
 interface Overview {
   readonly grants: readonly Grant[];
   readonly subscribers: readonly Subscriber[];
+  readonly invitations: readonly InvitationItem[];
 }
 
-const GRANT_ERRORS = new Set(['USER_NOT_FOUND', 'VALIDATION_FAILED', 'ADMIN_REQUIRED']);
+const GRANT_ERRORS = new Set([
+  'USER_NOT_FOUND',
+  'VALIDATION_FAILED',
+  'ADMIN_REQUIRED',
+  'ALREADY_REGISTERED',
+  'INVITATION_NOT_FOUND',
+]);
 
 /**
  * Administration (ADR-0015): give Pro without payment (partners, friends, a support gesture) and see who
@@ -89,7 +107,7 @@ export class AdminPage {
     initialValue: inject(TranslocoService).getActiveLang(),
   });
 
-  protected readonly icons = { Cpu, ExternalLink, Gift, Trash2 };
+  protected readonly icons = { Cpu, ExternalLink, Gift, Mail, Trash2 };
   protected readonly aiUsage = signal<AiUsage | null>(null);
   protected readonly aiShare = computed(() => {
     const usage = this.aiUsage();
@@ -112,6 +130,16 @@ export class AdminPage {
   protected readonly granted = signal('');
   /** The grant whose revocation awaits a second click. */
   protected readonly confirmingRevoke = signal<string | null>(null);
+
+  // Invitation form
+  protected readonly invEmail = signal('');
+  protected readonly invReason = signal('');
+  protected readonly invPlan = signal<PaidPlan>('pro');
+  protected readonly invGrantEndsOn = signal('');
+  protected readonly invSaving = signal(false);
+  protected readonly invError = signal('');
+  protected readonly invSent = signal('');
+  protected readonly confirmingDeleteInv = signal<string | null>(null);
 
   constructor() {
     void this.load();
@@ -189,6 +217,56 @@ export class AdminPage {
     } finally {
       await this.load();
     }
+  }
+
+  protected async invite(event: Event): Promise<void> {
+    event.preventDefault();
+    if (this.invSaving()) {
+      return;
+    }
+    this.invSaving.set(true);
+    this.invError.set('');
+    this.invSent.set('');
+    const grantEndsAt = this.invGrantEndsOn()
+      ? new Date(`${this.invGrantEndsOn()}T23:59:59`).toISOString()
+      : null;
+    try {
+      await firstValueFrom(
+        this.http.post('/api/admin/invitations', {
+          email: this.invEmail().trim(),
+          plan: this.invPlan(),
+          reason: this.invReason().trim(),
+          grantEndsAt,
+        }),
+      );
+      this.invSent.set(this.invEmail().trim());
+      this.invEmail.set('');
+      this.invReason.set('');
+      this.invPlan.set('pro');
+      this.invGrantEndsOn.set('');
+      await this.load();
+    } catch (error) {
+      this.invError.set(errorCode(error));
+    } finally {
+      this.invSaving.set(false);
+    }
+  }
+
+  protected async deleteInvitation(inv: InvitationItem): Promise<void> {
+    if (this.confirmingDeleteInv() !== inv.id) {
+      this.confirmingDeleteInv.set(inv.id);
+      return;
+    }
+    this.confirmingDeleteInv.set(null);
+    try {
+      await firstValueFrom(this.http.delete(`/api/admin/invitations/${inv.id}`));
+    } finally {
+      await this.load();
+    }
+  }
+
+  protected isExpired(inv: InvitationItem): boolean {
+    return !inv.acceptedAt && new Date(inv.expiresAt) < new Date();
   }
 
   private async load(): Promise<void> {
