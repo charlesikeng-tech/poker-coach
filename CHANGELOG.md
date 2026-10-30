@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.29-50b77b5] — 2026-10-29
 
 ### Fonctionnalités
 
 - Allow deleting tournaments without summary or result
+- Gate opponent AI coaching behind Pro plan
 
 ## [2026.10.29-2743d36] — 2026-10-29
 

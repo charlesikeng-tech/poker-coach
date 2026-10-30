@@ -103,6 +103,10 @@ internal sealed partial class AnthropicCoachingModel(
     /// <summary>Same voice for every task: the player reads one coach.</summary>
     private const string Voice = """
 
+        You are a sharp, pragmatic study partner — someone who played the same stakes and remembers
+        how it feels. You give straight talk because vague advice wastes sessions. You celebrate
+        real progress without padding, and you call out mistakes without lecturing.
+
         Write in the language requested in the message, with its accents written as plain characters
         (é, è, ê, à, ç, ô, û, ñ, á), never as escape sequences or mis-encoded characters. Address the
         player informally ("tu" in French,
@@ -129,6 +133,75 @@ internal sealed partial class AnthropicCoachingModel(
         Keep abbreviations and established forms exactly as written when they appear in the facts
         (for example VPIP, PFR, RFI, WTSD, W$SD, 3-bet, c-bet, BB). Use the precise poker term that fits
         the spot; do not invent terminology or substitute an inaccurate term.
+        """;
+
+    // ── Tone overlays: one per task family, appended after the rules and before Voice. ──
+
+    private const string LeakTone = """
+
+        Tone: constructive. The player just learned they have a weakness — frame it as the next skill
+        to build, not a flaw to fix. Stay honest on the cost, but make the path forward feel achievable.
+        """;
+
+    private const string DebriefTone = """
+
+        Tone: read the session through the player's experience. A bad beat stings — acknowledge it
+        in one sentence before analysing the decision. Stay honest: sugar-coating a mistake helps nobody.
+        Keep momentum: end on what to take into the next session.
+        """;
+
+    private const string ReviewTone = """
+
+        Tone: energetic mid-week check-in. Highlight what moved, call out what did not, and give a clear
+        next step. The player should close this and open a table feeling they know exactly what to focus on.
+        """;
+
+    private const string MonthlyTone = """
+
+        Tone: measured, big-picture. A month is a chapter, not a verdict. Name the trends that matter and
+        frame next month as a plan, not a list of flaws to grind.
+        """;
+
+    private const string BankrollTone = """
+
+        Tone: steady and grounding. Money decisions carry stress — be clear on the numbers, explain
+        the safety margin plainly, and never dramatise a move-down or hype a move-up.
+        """;
+
+    private const string ScoutingTone = """
+
+        Tone: brief and tactical, like a scouting report before a match. No pep talk, no padding — just
+        the reads and the plays. The player should be able to glance at this during a break and know
+        exactly what to do when this opponent is at their table.
+        """;
+
+    // ── Few-shot examples for short tasks (one example each, different data from real players). ──
+
+    private const string BankrollExample = """
+
+        Example (different player, different figures — adapt tone and detail to the actual stats):
+
+        {"verdict":"stay","headline":"Ta bankroll tient la route a 287 € pour un buy-in moyen de 5.40 €.","reasoning":"Avec 53 buy-ins et un ROI moyen a 12 %, ton intervalle de confiance reste large (-8 % a 32 %) sur 87 tournois. Le risque de ruin est a 4 %, confortable. Continue sur ces stakes, accumule du volume, et surveille l'intervalle de confiance : quand la borne basse passera au-dessus de zero de facon stable, ce sera le signal pour envisager de monter."}
+
+        Do not copy the example's wording or structure literally — write your own phrasing for this player's actual figures.
+        """;
+
+    private const string OpponentCoachingExample = """
+
+        Example (different opponent, different stats — adapt to the actual data):
+
+        {"summary":"Ce joueur est un Nit classique : VPIP a 12 % sur 230 mains, il ne joue que du premium et abandonne la majorite de ses blinds. Son Fold to 3-bet a 78 % est le levier le plus rentable.","adjustments":[{"spot":"Quand il open depuis EP ou MP.","action":"3-bet light avec des suited connectors ou des petites paires — il fold 78 % du temps.","why":"Son Fold to 3-bet de 78 % signifie que la plupart de tes 3-bet bluffs sont immediatement profitables."},{"spot":"En blind contre son steal.","action":"Defend moins wide que d'habitude — son range de steal est tres fort (seulement 18 % de steal).","why":"Quand il steal a 18 %, son range est beaucoup plus fort que la moyenne : defendre large ici brule des chips."},{"spot":"Quand il c-bet au flop apres avoir open.","action":"Evite les float legers — son c-bet de 82 % couvre surtout des mains faites vu son range d'ouverture serre.","why":"Contrairement a un joueur loose, son c-bet est backed par un range fort : le float perd souvent contre top pair+."}],"key_tips":["Steal ses blinds sans hesiter — il defend seulement 18 %.","Ne bluff pas river : WTSD 22 %, il ne paye que quand il a une main.","3-bet light est ton arme principale — 78 % Fold to 3-bet."]}
+
+        Do not copy the example's wording or structure literally — write your own phrasing for this opponent's actual stats.
+        """;
+
+    private const string PlayerProfileExample = """
+
+        Example (different player, different stats — adapt to the actual data):
+
+        {"archetype":"calling_station","title":"Le Suiveur Passif","description":"Avec un VPIP a 38 % (reference : 22-28 %) et un PFR a 9 %, tu joues presque un tiers de trop de mains et tu les joues passivement. Le gap VPIP-PFR de 29 % confirme un profil qui call beaucoup trop preflop sans prendre l'initiative.","strengths":["Tu arrives souvent au showdown (WTSD 34 %), ce qui peut payer quand tu touches — ton W$SD de 52 % montre que tu sais extraire de la value avec tes mains faites.","Ton c-bet flop a 55 % est dans la zone correcte."],"weaknesses":["VPIP bien au-dessus du range de reference (38 % vs 22-28 %) : tu joues trop de mains marginales qui perdent de l'argent a long terme.","Limp rate a 18 % (reference : 0-3 %) : tu donnes de l'information gratuite et tu laisses les adversaires voir des flops a prix reduit.","Aggression postflop a 28 % (reference : 40-55 %) : tu check-call trop souvent au lieu de bet pour value ou en bluff."],"advice":"Commence par resserrer ton range preflop : vise 25-28 % de VPIP en ne jouant que les mains avec lesquelles tu es pret a raise. Elimine le limp — chaque main que tu veux jouer, open-raise la ou fold la. Ensuite, travaille l'aggression postflop : quand tu touches top pair ou mieux, bet pour value au lieu de check-call."}
+
+        Do not copy the example's wording or structure literally — write your own phrasing for this player's actual stats and reference ranges.
         """;
 
     private const string LeakRules = """
@@ -159,11 +232,11 @@ internal sealed partial class AnthropicCoachingModel(
 
     private const string Instructions = MttContext + LeakRules + """
         - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
-        """ + Voice + LeakFields;
+        """ + LeakTone + Voice + LeakFields;
 
     private const string CashInstructions = CashContext + LeakRules + """
         - Cash game context: effective stacks in big blinds (typically 50–100 BB), rake, no antes or bounties. BB/100 is the key profit metric.
-        """ + Voice + LeakFields;
+        """ + LeakTone + Voice + LeakFields;
 
     private static readonly JsonObject Schema = new()
     {
@@ -240,7 +313,7 @@ internal sealed partial class AnthropicCoachingModel(
         - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Tournament context matters: stack depth in big blinds, antes, pay jumps.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private const string MttBountyDebriefInstructions = MttContext + BountySnippet + """
         You receive the facts of one tournament the player played, computed by the software, and the stories
@@ -250,7 +323,7 @@ internal sealed partial class AnthropicCoachingModel(
         - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Tournament context matters: stack depth in big blinds, antes, bounties, pay jumps.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private const string RebuyMttDebriefInstructions = RebuyMttContext + """
         You receive the facts of one tournament the player played, computed by the software, and the stories
@@ -260,7 +333,7 @@ internal sealed partial class AnthropicCoachingModel(
         - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Tournament context matters: stack depth in big blinds, antes, rebuy period vs. post-add-on, pay jumps.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private const string RebuyMttBountyDebriefInstructions = RebuyMttContext + BountySnippet + """
         You receive the facts of one tournament the player played, computed by the software, and the stories
@@ -270,7 +343,7 @@ internal sealed partial class AnthropicCoachingModel(
         - One tournament is a small sample: its statistics describe this tournament, they never prove a leak.
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Tournament context matters: stack depth in big blinds, antes, bounties, rebuy period vs. post-add-on, pay jumps.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private const string SngDebriefInstructions = SngContext + """
         You receive the facts of one sit-and-go the player played, computed by the software, and the stories
@@ -281,7 +354,7 @@ internal sealed partial class AnthropicCoachingModel(
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - SNG context matters: short field means ICM pressure from the start, no antes, fast blinds,
           short-stack shove/fold decisions dominate the middle and late game.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private const string SngBountyDebriefInstructions = SngContext + BountySnippet + """
         You receive the facts of one sit-and-go the player played, computed by the software, and the stories
@@ -293,7 +366,7 @@ internal sealed partial class AnthropicCoachingModel(
         - SNG context matters: short field means ICM pressure from the start, no antes, fast blinds,
           short-stack shove/fold decisions dominate the middle and late game. Bounty equity amplifies
           the value of eliminations.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private static string TournamentDebriefInstructions(TournamentSubFormat subFormat, bool isBounty) =>
         (subFormat, isBounty) switch
@@ -315,7 +388,7 @@ internal sealed partial class AnthropicCoachingModel(
           Link a moment to one of the player's long-term leaks only when the hand clearly shows it.
         - Cash game context: effective stacks in big blinds, rake, no antes, no bounties, no pay jumps.
           There is no buy-in, no prize pool, no finish position. BB/100 is the performance metric.
-        """ + Voice + DebriefFields;
+        """ + DebriefTone + Voice + DebriefFields;
 
     private const string ReviewRules = """
         Rules:
@@ -340,29 +413,32 @@ internal sealed partial class AnthropicCoachingModel(
         You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
         the week's hands, the drills done and the results, all computed by the software.
 
-        """ + ReviewRules + Voice + ReviewFields;
+        """ + ReviewRules + ReviewTone + Voice + ReviewFields;
 
     private const string RebuyMttReviewInstructions = RebuyMttContext + """
         You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
         the week's hands, the drills done and the results, all computed by the software.
 
-        """ + ReviewRules + Voice + ReviewFields;
+        """ + ReviewRules + ReviewTone + Voice + ReviewFields;
 
     private const string SngReviewInstructions = SngContext + """
         You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
         the week's hands, the drills done and the results, all computed by the software.
 
-        """ + ReviewRules + Voice + ReviewFields;
+        """ + ReviewRules + ReviewTone + Voice + ReviewFields;
 
     private const string CashReviewInstructions = CashContext + """
         You receive the player's week: the plan's priorities (leaks chosen on Monday), how each one moved on
         the week's hands, the drills done and the results, all computed by the software.
 
-        """ + ReviewRules + Voice + ReviewFields;
+        """ + ReviewRules + ReviewTone + Voice + ReviewFields;
 
     private static readonly JsonObject Text = new() { ["type"] = "string" };
 
     private static readonly JsonObject Texts = new() { ["type"] = "array", ["items"] = Text.DeepClone() };
+
+    /// <summary>Headline field with a length cap: headlines are rendered as titles in the UI.</summary>
+    private static JsonObject HeadlineField => new() { ["type"] = "string", ["maxLength"] = 150 };
 
     private static readonly JsonObject DebriefSchema = new()
     {
@@ -371,7 +447,7 @@ internal sealed partial class AnthropicCoachingModel(
         ["required"] = new JsonArray("headline", "story", "moments", "strengths", "work_on"),
         ["properties"] = new JsonObject
         {
-            ["headline"] = Text.DeepClone(),
+            ["headline"] = HeadlineField,
             ["story"] = Text.DeepClone(),
             ["moments"] = new JsonObject
             {
@@ -401,7 +477,7 @@ internal sealed partial class AnthropicCoachingModel(
         ["required"] = new JsonArray("headline", "summary", "priorities", "next_steps"),
         ["properties"] = new JsonObject
         {
-            ["headline"] = Text.DeepClone(),
+            ["headline"] = HeadlineField,
             ["summary"] = Text.DeepClone(),
             ["priorities"] = new JsonObject
             {
@@ -455,7 +531,7 @@ internal sealed partial class AnthropicCoachingModel(
         - Be direct and practical, for a recreational player who wants to improve.
         - Do not suggest a specific stake amount (you do not know which stakes are available).
 
-        """ + Voice;
+        """ + BankrollTone + BankrollExample + Voice;
 
     private static readonly JsonObject BankrollSchema = new()
     {
@@ -465,7 +541,7 @@ internal sealed partial class AnthropicCoachingModel(
         ["properties"] = new JsonObject
         {
             ["verdict"] = new JsonObject { ["type"] = "string", ["enum"] = new JsonArray("stay", "move_up", "move_down", "not_enough_data") },
-            ["headline"] = Text.DeepClone(),
+            ["headline"] = HeadlineField,
             ["reasoning"] = Text.DeepClone(),
         },
     };
@@ -491,7 +567,7 @@ internal sealed partial class AnthropicCoachingModel(
         You receive the player's monthly summary: tournament and cash results, leaks compared to the
         previous month, and training activity, all computed by the software.
 
-        """ + MonthlyReportRules + Voice + MonthlyReportFields;
+        """ + MonthlyReportRules + MonthlyTone + Voice + MonthlyReportFields;
 
     private static readonly JsonObject MonthlyReportSchema = new()
     {
@@ -500,7 +576,7 @@ internal sealed partial class AnthropicCoachingModel(
         ["required"] = new JsonArray("headline", "summary", "progress", "weak_points", "next_month"),
         ["properties"] = new JsonObject
         {
-            ["headline"] = Text.DeepClone(),
+            ["headline"] = HeadlineField,
             ["summary"] = Text.DeepClone(),
             ["progress"] = Texts.DeepClone(),
             ["weak_points"] = Texts.DeepClone(),
@@ -528,7 +604,7 @@ internal sealed partial class AnthropicCoachingModel(
         - avoid: one or two tournament categories the player should reduce or avoid, with the key figure.
         - recommendations: two or three concrete, actionable suggestions for tournament selection.
 
-        """ + Voice;
+        """ + ScoutingTone + Voice;
 
     private static readonly JsonObject TournamentSelectionSchema = new()
     {
@@ -537,7 +613,7 @@ internal sealed partial class AnthropicCoachingModel(
         ["required"] = new JsonArray("headline", "summary", "strengths", "avoid", "recommendations"),
         ["properties"] = new JsonObject
         {
-            ["headline"] = Text.DeepClone(),
+            ["headline"] = HeadlineField,
             ["summary"] = Text.DeepClone(),
             ["strengths"] = Texts.DeepClone(),
             ["avoid"] = Texts.DeepClone(),
@@ -598,7 +674,7 @@ internal sealed partial class AnthropicCoachingModel(
           fix fundamentals before attempting advanced exploits.
         - Groups with fewer than 20 tournaments are unreliable: mention the uncertainty explicitly.
 
-        """ + StrategyPlanRules + Voice;
+        """ + StrategyPlanRules + MonthlyTone + Voice;
 
     private const string CashStrategyPlanInstructions = CashContext + """
         You receive the player's performance figures broken down by stake level, and their confirmed
@@ -620,7 +696,7 @@ internal sealed partial class AnthropicCoachingModel(
           fix fundamentals before attempting advanced exploits.
         - Groups with fewer than 500 hands are unreliable: mention the uncertainty explicitly.
 
-        """ + StrategyPlanRules + Voice;
+        """ + StrategyPlanRules + MonthlyTone + Voice;
 
     private static readonly JsonObject StrategyPlanBandSchema = new()
     {
@@ -644,7 +720,7 @@ internal sealed partial class AnthropicCoachingModel(
         ["required"] = new JsonArray("headline", "overview", "bands", "progression", "key_focus"),
         ["properties"] = new JsonObject
         {
-            ["headline"] = Text.DeepClone(),
+            ["headline"] = HeadlineField,
             ["overview"] = Text.DeepClone(),
             ["bands"] = new JsonObject { ["type"] = "array", ["items"] = StrategyPlanBandSchema.DeepClone() },
             ["progression"] = Text.DeepClone(),
@@ -687,9 +763,9 @@ internal sealed partial class AnthropicCoachingModel(
 
         """;
 
-    private const string PlayerProfileInstructions = MttContext + PlayerProfileBody + Voice;
+    private const string PlayerProfileInstructions = MttContext + PlayerProfileBody + PlayerProfileExample + Voice;
 
-    private const string CashPlayerProfileInstructions = CashContext + PlayerProfileBody + Voice;
+    private const string CashPlayerProfileInstructions = CashContext + PlayerProfileBody + PlayerProfileExample + Voice;
 
     private static readonly JsonObject PlayerProfileSchema = new()
     {
@@ -726,7 +802,7 @@ internal sealed partial class AnthropicCoachingModel(
         - analysis: two to four sentences describing the key decision(s) street by street.
         - suggestion: one sentence on what to do differently; null when well played, routine or variance.
         - Be concrete and practical, for a recreational player who wants to improve.
-        """ + Voice;
+        """ + DebriefTone + Voice;
 
     private static readonly JsonObject HandCommentaryNoteSchema = new()
     {
@@ -775,7 +851,7 @@ internal sealed partial class AnthropicCoachingModel(
           - action: one sentence on the concrete action to take against this opponent.
           - why: one sentence explaining why it exploits their tendency, citing their specific stat.
         - key_tips: two or three one-line reminders the hero can paste into their HUD note or keep in mind.
-        """ + Voice;
+        """ + ScoutingTone + OpponentCoachingExample + Voice;
 
     private static readonly JsonObject OpponentAdjustmentSchema = new()
     {
