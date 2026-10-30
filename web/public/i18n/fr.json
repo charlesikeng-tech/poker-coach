@@ -456,7 +456,8 @@
           "bigBlind": "Big blind",
           "unknown": "Inconnue"
         },
-        "reviewLink": "Revoir toutes les mains avec l'IA"
+        "reviewLink": "Revoir toutes les mains avec l'IA",
+        "replay": "Replay"
       },
       "review": {
         "pageTitle": "Revue de tournoi",

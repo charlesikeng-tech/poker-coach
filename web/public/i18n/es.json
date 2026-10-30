@@ -456,7 +456,8 @@
           "bigBlind": "Ciega grande",
           "unknown": "Desconocida"
         },
-        "reviewLink": "Revisar todas las manos con IA"
+        "reviewLink": "Revisar todas las manos con IA",
+        "replay": "Replay"
       },
       "review": {
         "pageTitle": "Revisión del torneo",

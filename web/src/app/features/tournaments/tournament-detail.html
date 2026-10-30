@@ -26,7 +26,18 @@
         @let r = d.tournament.result;
         <header class="head">
           <div>
-            <h2>{{ d.tournament.name }}</h2>
+            <h2>
+              @if (d.tournament.room) {
+                <img
+                  class="room-logo"
+                  [src]="roomLogo(d.tournament.room)"
+                  [alt]="roomName(d.tournament.room)"
+                  width="24"
+                  height="24"
+                />
+              }
+              {{ d.tournament.name }}
+            </h2>
             <p class="head__meta">
               <span>{{ date(d.tournament.startedAt) }}</span>
               @if (d.mode) {
@@ -47,6 +58,14 @@
               }
             </p>
           </div>
+          @if (d.firstHandId) {
+            <div class="head__actions">
+              <a appButton variant="secondary" [routerLink]="['/hands', d.firstHandId]">
+                <app-icon [icon]="icons.Play" />
+                {{ t('detail.replay') }}
+              </a>
+            </div>
+          }
           <div class="head__result">
             @if (r.status === 'known') {
               <span class="head__profit numeric" [attr.data-sign]="sign(r.profit)">

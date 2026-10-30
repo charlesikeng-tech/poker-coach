@@ -12,9 +12,10 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { ArrowLeft, CircleAlert, LoaderCircle, Radar } from 'lucide';
+import { ArrowLeft, CircleAlert, LoaderCircle, Play, Radar } from 'lucide';
 
 import { LanguageService } from '../../core/i18n/language.service';
+import { roomLogo, roomName } from '../../core/poker/rooms';
 import {
   formatDateTime,
   formatInteger,
@@ -68,7 +69,7 @@ export class TournamentDetailPage {
   protected readonly state = signal<LoadState>('loading');
   protected readonly detail = signal<TournamentDetail | null>(null);
   protected readonly unit = signal<StackUnit>('bigBlinds');
-  protected readonly icons = { ArrowLeft, CircleAlert, LoaderCircle, Radar };
+  protected readonly icons = { ArrowLeft, CircleAlert, LoaderCircle, Play, Radar };
   protected readonly sessionStats = SESSION_STATS;
 
   private readonly locale = computed(() => this.language.current());
@@ -201,6 +202,9 @@ export class TournamentDetailPage {
     }
     return moment.netChips > 0 ? 'gain' : 'loss';
   }
+
+  protected readonly roomLogo = roomLogo;
+  protected readonly roomName = roomName;
 
   protected sign(value: number | null): 'positive' | 'negative' | 'neutral' {
     return value === null || value === 0 ? 'neutral' : value > 0 ? 'positive' : 'negative';

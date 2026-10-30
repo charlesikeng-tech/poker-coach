@@ -47,6 +47,7 @@ public sealed record TournamentResponse(
     int? FinishPosition,
     int HandCount,
     TournamentResultResponse Result,
+    PokerRoom Room,
     TournamentCoverageResponse? Coverage)
 {
     public static TournamentResponse From(TournamentListItem i) => new(
@@ -59,6 +60,7 @@ public sealed record TournamentResponse(
         i.FinishPosition,
         i.HandCount,
         new TournamentResultResponse(i.Result.Status, i.Result.Entries, i.Result.TotalBuyIn, i.Result.PrizeWinnings, i.Result.BountyWinnings, i.Result.Profit),
+        i.Room,
         TournamentCoverageResponse.From(i.Coverage));
 }
 
@@ -83,6 +85,7 @@ public sealed record KeyMomentResponse(
 /// <param name="HandsDurationMinutes">From the first to the last imported hand; null with fewer than two hands.</param>
 /// <param name="Stats">Over this tournament's hands only: descriptive, too few hands to judge a leak.</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: stats and key moments are partial until 0.</param>
+/// <param name="FirstHandId">The first hand of the tournament, for direct replay navigation; null when no hands exist.</param>
 public sealed record TournamentDetailResponse(
     TournamentResponse Tournament,
     string? Type,
@@ -92,7 +95,8 @@ public sealed record TournamentDetailResponse(
     IReadOnlyList<StackPointResponse> Stack,
     IReadOnlyList<KeyMomentResponse> KeyMoments,
     StatLineResponse Stats,
-    int PendingHands);
+    int PendingHands,
+    Guid? FirstHandId);
 
 /// <summary>Money and rates cover tournaments with a known result only.</summary>
 /// <param name="Roi">Ratio: 0.12 means +12 %.</param>
@@ -269,7 +273,8 @@ public static class TournamentEndpoints
                 k.Moment.StackShare,
                 k.Moment.Stage)).ToList(),
             StatLineResponse.From(detail.Stats),
-            detail.PendingHands));
+            detail.PendingHands,
+            detail.FirstHandId));
     }
 
     /// <summary>Deletes a tournament that has no summary or entries. Hands and coaching reports are removed with it.</summary>

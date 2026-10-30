@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.30-acaf1b9] — 2026-10-30
+
+### Fonctionnalités
+
+- Admin invitations with auto-grant on sign-up
+
 ## [2026.10.30-122d10c] — 2026-10-30
 
 ### Fonctionnalités

@@ -44,6 +44,7 @@ public sealed record KeyMomentDetail(
 /// <param name="HandsDuration">From the first to the last imported hand; null with fewer than two hands.</param>
 /// <param name="Stats">Over hands with computed facts only. One tournament is a small sample: rates are descriptive, never leaks.</param>
 /// <param name="PendingHands">Hands whose facts are still being computed: stats and key moments are partial until 0.</param>
+/// <param name="FirstHandId">The first hand of the tournament, for direct replay navigation; null when no hands exist.</param>
 public sealed record TournamentDetail(
     TournamentListItem Tournament,
     string? Type,
@@ -55,7 +56,8 @@ public sealed record TournamentDetail(
     IReadOnlyList<StackPoint> Stack,
     IReadOnlyList<KeyMomentDetail> KeyMoments,
     StatLine Stats,
-    int PendingHands);
+    int PendingHands,
+    Guid? FirstHandId);
 
 /// <summary>The detail of one tournament: result, stack over time, the hands that decided it, session stats.</summary>
 public sealed class TournamentDetailService(ITournamentDetailStore store)
@@ -111,6 +113,7 @@ public sealed class TournamentDetailService(ITournamentDetailStore store)
             stack,
             moments,
             StatLine.From(counts),
-            hands.Count(h => h.Facts is null));
+            hands.Count(h => h.Facts is null),
+            hands.Count > 0 ? hands[0].HandId : null);
     }
 }

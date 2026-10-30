@@ -456,7 +456,8 @@
           "bigBlind": "Big blind",
           "unknown": "Unknown"
         },
-        "reviewLink": "Review all hands with AI"
+        "reviewLink": "Review all hands with AI",
+        "replay": "Replay"
       },
       "review": {
         "pageTitle": "Tournament review",

@@ -43,6 +43,7 @@ export interface Tournament {
   readonly finishPosition: number | null;
   readonly handCount: number;
   readonly result: TournamentResult;
+  readonly room: string;
   readonly coverage: TournamentCoverage | null;
 }
 
@@ -133,6 +134,8 @@ export interface TournamentDetail {
   /** This tournament only: descriptive, too few hands to judge a leak. */
   readonly stats: StatLine;
   readonly pendingHands: number;
+  /** The first hand of the tournament, for direct replay; null when no hands exist. */
+  readonly firstHandId: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
