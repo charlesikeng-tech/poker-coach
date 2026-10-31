@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Npgsql;
 using PokerCoach.Application.Tournaments;
 using PokerCoach.Domain.Tournaments;
 using PokerCoach.Infrastructure.Persistence;
@@ -141,7 +142,18 @@ internal sealed class CoverageStore(PokerCoachDbContext db, TimeProvider time) :
             record.EndSeen = value.EndSeen;
         }
 
-        await db.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: "23503" })
+        {
+            // Tournament deleted between GetStaleAsync and SaveAsync; skip the batch.
+            // The worker retries and GetStaleAsync no longer returns the deleted tournament.
+            db.ChangeTracker.Clear();
+            return;
+        }
+
         db.ChangeTracker.Clear();
     }
 }

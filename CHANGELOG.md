@@ -1,10 +1,11 @@
 # Changelog
 
-## [Non publié]
+## [2026.10.31-dcbf290] — 2026-10-31
 
 ### Fonctionnalités
 
 - Add Betclic tournament hand history parsing
+- Mark Betclic MTT as available on landing page
 
 ## [2026.10.31-6535979] — 2026-10-31
 
