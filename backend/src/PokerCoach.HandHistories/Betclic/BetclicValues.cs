@@ -37,6 +37,27 @@ internal static class BetclicValues
         return text.Length > 1 && text[0] == EuroSign && TryParseCents(text[1..], out cents);
     }
 
+    /// <summary>Parse a tournament chip amount (non-negative integer, e.g. "520").</summary>
+    internal static bool TryParseChips(string text, out long chips)
+    {
+        chips = 0;
+        return long.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out chips)
+            && chips >= 0 && chips <= MaxChipAmount;
+    }
+
+    /// <summary>Parse a buy-in with trailing euro sign (e.g. "5.00€").</summary>
+    internal static bool TryParseBuyIn(string text, out decimal amount)
+    {
+        amount = 0m;
+        if (text.Length < 2 || text[^1] != EuroSign)
+        {
+            return false;
+        }
+
+        return decimal.TryParse(text[..^1], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out amount)
+            && amount >= 0;
+    }
+
     internal static bool TryParseCards(string text, out List<Card> cards)
     {
         cards = [];

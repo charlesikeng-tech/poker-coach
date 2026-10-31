@@ -1,0 +1,1093 @@
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68TE24AHP2YVFS3B7YNE6NY
+Date & Time: 2026-10-31 11:10:05 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 520
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain1 (230, €2.50 bounty) [BTN]
+Seat 2: Hero (250, €2.50 bounty) [SB Hero]
+Seat 4: Vilain2 (300, €2.50 bounty) [BB]
+Seat 5: Vilain3 (2727, €6.10 bounty)
+*** HOLE CARDS ***
+Hero: [9d 9s]
+Vilain3: [Ts Th]
+*** PRE-FLOP ***
+11:10:05 - Hero: Posts SB 10
+11:10:05 - Vilain2: Posts BB 20
+11:10:09 - Vilain3: Raises to 40
+11:10:16 - Vilain1: Folds
+11:10:23 - Hero: Raises to 250 and is all-in
+11:10:24 - Vilain2: Folds
+11:10:31 - Vilain3: Calls 210
+*** FLOP *** [3s 6h 8c]
+*** TURN *** [3s 6h 8c 7s]
+*** RIVER *** [3s 6h 8c 7s Kc]
+*** SHOWDOWN ***
+Hero shows [9d 9s] (Pair) [9s 9d Kc 8c 7s]
+Vilain3 shows [Ts Th] (Pair) [Ts Th Kc 8c 7s]
+*** SUMMARY ***
+Vilain3 wins main pot of 520
+Hero finished 24th
+Vilain3 wins €0.50 for eliminating Hero (x0.4), Vilain3 own bounty increases from €6.10 to €6.60
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68TCFK5A88HDJMA9WKXNGYR
+Date & Time: 2026-10-31 11:09:13 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 962
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain1 (250, €2.50 bounty) [BB]
+Seat 2: Hero (250, €2.50 bounty) [Hero]
+Seat 3: Vilain5 (300, €2.50 bounty)
+Seat 5: Vilain3 (2086, €4.10 bounty) [BTN]
+Seat 6: Vilain4 (321, €3.00 bounty) [SB]
+*** HOLE CARDS ***
+Hero: [3h 2c]
+Vilain5: [Ah Ks]
+Vilain3: [Kd Qs]
+Vilain4: [Ac Ts]
+*** PRE-FLOP ***
+11:09:13 - Vilain4: Posts SB 10
+11:09:13 - Vilain1: Posts BB 20
+11:09:16 - Hero: Folds
+11:09:18 - Vilain5: Raises to 50
+11:09:22 - Vilain3: Calls 50
+11:09:24 - Vilain4: Raises to 321 and is all-in
+11:09:25 - Vilain1: Folds
+11:09:27 - Vilain5: Calls 250 and is all-in
+11:09:33 - Vilain3: Calls 271
+*** FLOP *** [3s Jd Qc]
+*** TURN *** [3s Jd Qc 6d]
+*** RIVER *** [3s Jd Qc 6d 4h]
+*** SHOWDOWN ***
+Vilain4 shows [Ac Ts] (High Card) [Ac Qc Jd Ts 6d]
+Vilain3 shows [Kd Qs] (Pair) [Qs Qc Kd Jd 6d]
+Vilain5 shows [Ah Ks] (High Card) [Ah Ks Qc Jd 6d]
+*** SUMMARY ***
+Vilain3 wins main pot of 920
+Vilain3 wins 1st side pot of 42
+Vilain4 finished 26th
+Vilain5 finished 27th
+Vilain3 wins €0.50 for eliminating Vilain5 (x0.4), Vilain3 own bounty increases from €4.10 to €4.60
+Vilain3 wins €1.50 for eliminating Vilain4 (x1), Vilain3 own bounty increases from €4.60 to €6.10
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68TC0N3EZYCWARM6M9GYRCN
+Date & Time: 2026-10-31 11:08:58 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 2086
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain1 (250, €2.50 bounty)
+Seat 2: Hero (250, €2.50 bounty) [BTN Hero]
+Seat 5: Vilain3 (2066, €4.10 bounty) [SB]
+Seat 6: Vilain4 (341, €3.00 bounty) [BB]
+*** HOLE CARDS ***
+Hero: [8s 6c]
+*** PRE-FLOP ***
+11:08:58 - Vilain3: Posts SB 10
+11:08:58 - Vilain4: Posts BB 20
+11:09:00 - Vilain1: Folds
+11:09:00 - Hero: Folds
+11:09:08 - Vilain3: Raises to 2066 and is all-in
+11:09:10 - Vilain4: Folds
+*** SUMMARY ***
+Vilain3 wins main pot of 2086
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68TA5E2YMPKAJMJNKQ3QP2N
+Date & Time: 2026-10-31 11:07:57 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 341
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain1 (270, €2.50 bounty) [BTN]
+Seat 2: Hero (270, €2.50 bounty) [SB Hero]
+Seat 4: Vilain6 (1, €2.50 bounty) [BB]
+Seat 5: Vilain3 (2066, €4.10 bounty)
+Seat 6: Vilain4 (300, €2.50 bounty)
+*** HOLE CARDS ***
+Hero: [9c Ks]
+Vilain6: [Js Kh]
+Vilain4: [2s Th]
+*** PRE-FLOP ***
+11:07:57 - Hero: Posts SB 10
+11:07:57 - Vilain6: Posts BB 1 and is all-in
+11:08:12 - Vilain3: Folds
+11:08:13 - Vilain4: Calls 20
+11:08:21 - Vilain1: Calls 20
+11:08:24 - Hero: Calls 10
+*** FLOP *** [8d Ts 9d]
+11:08:27 - Hero: Checks
+11:08:29 - Vilain4: Bets 280 and is all-in
+11:08:37 - Vilain1: Folds
+11:08:37 - Hero: Folds
+*** TURN *** [8d Ts 9d 3c]
+*** RIVER *** [8d Ts 9d 3c Ad]
+*** SHOWDOWN ***
+Vilain4 shows [2s Th] (Pair) [Ts Th Ad 9d 8d]
+Vilain6 shows [Js Kh] (High Card) [Ad Kh Js Ts 9d]
+*** SUMMARY ***
+Vilain4 wins main pot of 4
+Vilain4 wins 1st side pot of 337
+Vilain6 finished 28th
+Vilain4 wins €0.50 for eliminating Vilain6 (x0.4), Vilain4 own bounty increases from €2.50 to €3.00
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T8W7SHSNR4Q2P6V94NXQY
+Date & Time: 2026-10-31 11:07:15 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 2066
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain1 (280, €2.50 bounty) [SB]
+Seat 2: Hero (290, €2.50 bounty) [BB Hero]
+Seat 3: Vilain7 (190, €2.50 bounty)
+Seat 4: Vilain6 (924, €2.50 bounty)
+Seat 5: Vilain3 (923, €3.60 bounty) [BTN]
+*** HOLE CARDS ***
+Hero: [9c 5d]
+Vilain7: [6h 6c]
+Vilain6: [5c 5s]
+Vilain3: [8d 8h]
+*** PRE-FLOP ***
+11:07:15 - Vilain1: Posts SB 10
+11:07:15 - Hero: Posts BB 20
+11:07:18 - Vilain7: Raises to 190 and is all-in
+11:07:24 - Vilain6: Raises to 924 and is all-in
+11:07:33 - Vilain3: Calls 923 and is all-in
+11:07:35 - Vilain1: Folds
+11:07:35 - Hero: Folds
+*** FLOP *** [Td 2d 7s]
+11:07:38 - Vilain1: Sits in
+*** TURN *** [Td 2d 7s Qc]
+*** RIVER *** [Td 2d 7s Qc 4s]
+*** SHOWDOWN ***
+Vilain6 shows [5c 5s] (Pair) [5s 5c Qc Td 7s]
+Vilain3 shows [8d 8h] (Pair) [8h 8d Qc Td 7s]
+Vilain7 shows [6h 6c] (Pair) [6h 6c Qc Td 7s]
+*** SUMMARY ***
+Vilain3 wins main pot of 600
+Vilain3 wins 1st side pot of 1466
+Vilain7 finished 30th
+Vilain3 wins €0.50 for eliminating Vilain7 (x0.4), Vilain3 own bounty increases from €3.60 to €4.10
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T81R94E0YSQDJBX2N1D16
+Date & Time: 2026-10-31 11:06:48 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 923
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain1 (300, €2.50 bounty) [BB]
+Seat 2: Hero (290, €2.50 bounty) [Hero]
+Seat 3: Vilain7 (210, €2.50 bounty)
+Seat 4: Vilain6 (924, €2.50 bounty) [BTN]
+Seat 5: Vilain3 (883, €3.60 bounty) [SB]
+*** HOLE CARDS ***
+Hero: [4c 8d]
+*** PRE-FLOP ***
+11:06:48 - Vilain3: Posts SB 10
+11:06:48 - Vilain1: Posts BB 20
+11:06:50 - Hero: Folds
+11:06:52 - Vilain7: Calls 20
+11:06:53 - Vilain6: Folds
+11:06:57 - Vilain3: Raises to 883 and is all-in
+11:07:12 - Vilain1: Sits out
+11:07:12 - Vilain1: Folds
+11:07:12 - Vilain7: Folds
+*** SUMMARY ***
+Vilain3 wins main pot of 923
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T5HX9319HH06XWSPZWHVG
+Date & Time: 2026-10-31 11:05:26 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 924
+Rake: 0
+*** PLAYERS ***
+Seat 2: Hero (290, €2.50 bounty) [Hero]
+Seat 3: Vilain7 (270, €2.50 bounty) [BTN]
+Seat 4: Vilain6 (745, €2.50 bounty) [SB]
+Seat 5: Vilain3 (1002, €3.60 bounty) [BB]
+*** HOLE CARDS ***
+Hero: [6c 8d]
+*** PRE-FLOP ***
+11:05:26 - Vilain6: Posts SB 10
+11:05:26 - Vilain3: Posts BB 20
+11:05:29 - Hero: Folds
+11:05:30 - Vilain7: Calls 20
+11:05:34 - Vilain6: Raises to 60
+11:05:40 - Vilain3: Calls 40
+11:05:41 - Vilain7: Calls 40
+*** FLOP *** [6s Jc 2c]
+11:05:47 - Vilain6: Checks
+11:05:58 - Vilain3: Checks
+11:05:58 - Vilain7: Checks
+*** TURN *** [6s Jc 2c 3c]
+11:06:06 - Vilain6: Checks
+11:06:14 - Vilain3: Checks
+11:06:15 - Vilain7: Checks
+*** RIVER *** [6s Jc 2c 3c 8s]
+11:06:24 - Vilain6: Checks
+11:06:30 - Vilain3: Bets 59
+11:06:30 - Vilain7: Folds
+11:06:42 - Vilain6: Raises to 685 and is all-in
+11:06:45 - Vilain3: Folds
+*** SUMMARY ***
+Vilain6 wins main pot of 924
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T4R9V032VA37STA9KNHR2
+Date & Time: 2026-10-31 11:05:00 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 40
+Rake: 0
+*** PLAYERS ***
+Seat 2: Hero (290, €2.50 bounty) [BTN Hero]
+Seat 3: Vilain7 (290, €2.50 bounty) [SB]
+Seat 4: Vilain6 (725, €2.50 bounty) [BB]
+Seat 5: Vilain3 (1002, €3.60 bounty)
+*** HOLE CARDS ***
+Hero: [6d 5s]
+Vilain7: [Td 7s]
+Vilain6: [2c Kd]
+*** PRE-FLOP ***
+11:05:00 - Vilain7: Posts SB 10
+11:05:00 - Vilain6: Posts BB 20
+11:05:03 - Vilain3: Folds
+11:05:04 - Hero: Folds
+11:05:05 - Vilain7: Calls 10
+11:05:07 - Vilain6: Checks
+*** FLOP *** [Qc 6c Ac]
+11:05:10 - Vilain7: Checks
+11:05:12 - Vilain6: Checks
+*** TURN *** [Qc 6c Ac Qd]
+11:05:14 - Vilain7: Checks
+11:05:16 - Vilain6: Checks
+*** RIVER *** [Qc 6c Ac Qd 9h]
+11:05:19 - Vilain7: Checks
+11:05:20 - Vilain6: Checks
+*** SHOWDOWN ***
+Vilain7 shows [Td 7s] (Pair) [Qd Qc Ac Td 9h]
+Vilain6 shows [2c Kd] (Pair) [Qd Qc Ac Kd 9h]
+*** SUMMARY ***
+Vilain6 wins main pot of 40
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T4GFQQSWZ7PK9BDEGT4HG
+Date & Time: 2026-10-31 11:04:52 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 30
+Rake: 0
+*** PLAYERS ***
+Seat 2: Hero (300, €2.50 bounty) [SB Hero]
+Seat 3: Vilain7 (280, €2.50 bounty) [BB]
+Seat 4: Vilain6 (725, €2.50 bounty)
+Seat 5: Vilain3 (1002, €3.60 bounty) [BTN]
+*** HOLE CARDS ***
+Hero: [5s 9c]
+*** PRE-FLOP ***
+11:04:52 - Hero: Posts SB 10
+11:04:52 - Vilain7: Posts BB 20
+11:04:54 - Vilain6: Folds
+11:04:57 - Vilain3: Folds
+11:04:57 - Hero: Folds
+*** SUMMARY ***
+Vilain7 wins main pot of 30
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T36W1FAJ2N0WVKYT4AB1R
+Date & Time: 2026-10-31 11:04:09 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 280
+Rake: 0
+*** PLAYERS ***
+Seat 2: Hero (320, €2.50 bounty) [BB Hero]
+Seat 3: Vilain7 (300, €2.50 bounty)
+Seat 4: Vilain6 (805, €2.50 bounty) [BTN]
+Seat 5: Vilain3 (882, €3.60 bounty) [SB]
+*** HOLE CARDS ***
+Hero: [2c Jd]
+*** PRE-FLOP ***
+11:04:09 - Vilain3: Posts SB 10
+11:04:09 - Hero: Posts BB 20
+11:04:11 - Vilain7: Calls 20
+11:04:18 - Vilain6: Calls 20
+11:04:20 - Vilain3: Calls 10
+11:04:20 - Hero: Checks
+*** FLOP *** [8d Qs Ts]
+11:04:25 - Vilain3: Checks
+11:04:25 - Hero: Checks
+11:04:26 - Vilain7: Checks
+11:04:28 - Vilain6: Bets 60
+11:04:38 - Vilain3: Raises to 140
+11:04:38 - Hero: Folds
+11:04:38 - Vilain7: Folds
+11:04:49 - Vilain6: Folds
+*** SUMMARY ***
+Vilain3 wins main pot of 280
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T27Y895N1SWJ994TV6KG9
+Date & Time: 2026-10-31 11:03:38 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 582
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (286, €3.00 bounty)
+Seat 2: Hero (320, €2.50 bounty) [BTN Hero]
+Seat 4: Vilain6 (815, €2.50 bounty) [SB]
+Seat 5: Vilain3 (586, €3.00 bounty) [BB]
+*** HOLE CARDS ***
+Vilain8: [As 5c]
+Hero: [Jd 7s]
+Vilain3: [2h 2c]
+*** PRE-FLOP ***
+11:03:38 - Vilain6: Posts SB 10
+11:03:38 - Vilain3: Posts BB 20
+11:03:40 - Vilain8: Raises to 286 and is all-in
+11:03:40 - Hero: Folds
+11:03:42 - Vilain6: Folds
+11:03:48 - Vilain3: Calls 266
+*** FLOP *** [9c Kd Tc]
+*** TURN *** [9c Kd Tc 6c]
+*** RIVER *** [9c Kd Tc 6c Ks]
+*** SHOWDOWN ***
+Vilain3 shows [2h 2c] (Two Pair) [Ks Kd 2h 2c Tc]
+Vilain8 shows [As 5c] (Pair) [Ks Kd As Tc 9c]
+*** SUMMARY ***
+Vilain3 wins main pot of 582
+Vilain8 finished 33th
+Vilain3 wins €0.60 for eliminating Vilain8 (x0.4), Vilain3 own bounty increases from €3.00 to €3.60
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T1JAHZDTAXK69DC51Z42M
+Date & Time: 2026-10-31 11:03:16 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 320
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (436, €3.00 bounty) [BTN]
+Seat 2: Hero (150, €2.50 bounty) [SB Hero]
+Seat 4: Vilain6 (835, €2.50 bounty) [BB]
+Seat 5: Vilain3 (586, €3.00 bounty)
+*** HOLE CARDS ***
+Vilain8: [4c 4s]
+Hero: [As 6c]
+*** PRE-FLOP ***
+11:03:16 - Hero: Posts SB 10
+11:03:16 - Vilain6: Posts BB 20
+11:03:18 - Vilain3: Folds
+11:03:19 - Vilain8: Raises to 436 and is all-in
+11:03:21 - Hero: Calls 140 and is all-in
+11:03:26 - Vilain6: Folds
+*** FLOP *** [Kc Ad 6s]
+*** TURN *** [Kc Ad 6s Th]
+*** RIVER *** [Kc Ad 6s Th 7d]
+*** SHOWDOWN ***
+Hero shows [As 6c] (Two Pair) [As Ad 6s 6c Kc]
+Vilain8 shows [4c 4s] (Pair) [4s 4c Ad Kc Th]
+*** SUMMARY ***
+Hero wins main pot of 320
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68T0NBSYRM8PAW5M845VG5X
+Date & Time: 2026-10-31 11:02:46 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 242
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (446, €3.00 bounty) [SB]
+Seat 2: Hero (170, €2.50 bounty) [BB Hero]
+Seat 3: Vilain9 (106, €2.50 bounty)
+Seat 4: Vilain6 (835, €2.50 bounty)
+Seat 5: Vilain3 (450, €2.50 bounty) [BTN]
+*** HOLE CARDS ***
+Hero: [Kh 4d]
+Vilain9: [3h Kc]
+Vilain3: [Ad 2d]
+*** PRE-FLOP ***
+11:02:46 - Vilain8: Posts SB 10
+11:02:46 - Hero: Posts BB 20
+11:02:48 - Vilain9: Raises to 106 and is all-in
+11:02:52 - Vilain6: Folds
+11:02:54 - Vilain3: Raises to 450 and is all-in
+11:02:54 - Vilain8: Folds
+11:02:54 - Hero: Folds
+*** FLOP *** [Qs 6h 6c]
+*** TURN *** [Qs 6h 6c 7c]
+*** RIVER *** [Qs 6h 6c 7c 7h]
+*** SHOWDOWN ***
+Vilain9 shows [3h Kc] (Two Pair) [7h 7c 6h 6c Kc]
+Vilain3 shows [Ad 2d] (Two Pair) [7h 7c 6h 6c Ad]
+*** SUMMARY ***
+Vilain3 wins main pot of 242
+Vilain9 finished 35th
+Vilain3 wins €0.50 for eliminating Vilain9 (x0.4), Vilain3 own bounty increases from €2.50 to €3.00
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SZG8J7GN5HS3FG66BFJBP
+Date & Time: 2026-10-31 11:02:08 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 835
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (570, €3.00 bounty) [BB]
+Seat 2: Hero (170, €2.50 bounty) [Hero]
+Seat 3: Vilain9 (230, €2.50 bounty)
+Seat 4: Vilain6 (577, €2.50 bounty) [BTN]
+Seat 5: Vilain3 (460, €2.50 bounty) [SB]
+*** HOLE CARDS ***
+Hero: [2c 7s]
+*** PRE-FLOP ***
+11:02:08 - Vilain3: Posts SB 10
+11:02:08 - Vilain8: Posts BB 20
+11:02:10 - Hero: Folds
+11:02:18 - Vilain9: Calls 20
+11:02:20 - Vilain6: Calls 20
+11:02:21 - Vilain3: Folds
+11:02:22 - Vilain8: Checks
+*** FLOP *** [5h 3h Ac]
+11:02:25 - Vilain8: Checks
+11:02:26 - Vilain9: Bets 20
+11:02:30 - Vilain6: Calls 20
+11:02:31 - Vilain8: Calls 20
+*** TURN *** [5h 3h Ac 6c]
+11:02:34 - Vilain8: Bets 84
+11:02:38 - Vilain9: Calls 84
+11:02:41 - Vilain6: Raises to 537 and is all-in
+11:02:42 - Vilain8: Folds
+11:02:43 - Vilain9: Folds
+*** SUMMARY ***
+Vilain6 wins main pot of 835
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SY7QG0SNK31DHWTZJGNZ5
+Date & Time: 2026-10-31 11:01:26 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 577
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (570, €3.00 bounty)
+Seat 2: Hero (220, €2.50 bounty) [Hero]
+Seat 3: Vilain9 (230, €2.50 bounty) [BTN]
+Seat 4: Vilain6 (507, €2.50 bounty) [SB]
+Seat 5: Vilain3 (480, €2.50 bounty) [BB]
+*** HOLE CARDS ***
+Hero: [Qs Tc]
+*** PRE-FLOP ***
+11:01:26 - Vilain6: Posts SB 10
+11:01:26 - Vilain3: Posts BB 20
+11:01:28 - Vilain8: Folds
+11:01:30 - Hero: Calls 20
+11:01:30 - Vilain9: Folds
+11:01:33 - Vilain6: Raises to 50
+11:01:38 - Vilain3: Disconnected
+11:01:43 - Vilain3: Reconnected
+11:01:51 - Vilain3: Folds
+11:01:52 - Hero: Calls 30
+*** FLOP *** [Jd 9d Ad]
+11:01:55 - Vilain3: Reconnected
+11:02:02 - Vilain6: Bets 457 and is all-in
+11:02:05 - Hero: Folds
+*** SUMMARY ***
+Vilain6 wins main pot of 577
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SXDFTEPZN0DJNK5FCKGSJ
+Date & Time: 2026-10-31 11:01:00 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 570
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (270, €3.00 bounty)
+Seat 2: Hero (490, €2.50 bounty) [BTN Hero]
+Seat 3: Vilain9 (240, €2.50 bounty) [SB]
+Seat 4: Vilain6 (527, €2.50 bounty) [BB]
+Seat 5: Vilain3 (480, €2.50 bounty)
+*** HOLE CARDS ***
+Vilain8: [8h 9s]
+Hero: [Kd Kh]
+*** PRE-FLOP ***
+11:01:00 - Vilain9: Posts SB 10
+11:01:00 - Vilain6: Posts BB 20
+11:01:03 - Vilain3: Folds
+11:01:05 - Vilain8: Raises to 270 and is all-in
+11:01:10 - Vilain3: Reconnected
+11:01:15 - Hero: Raises to 490 and is all-in
+11:01:15 - Vilain9: Folds
+11:01:15 - Vilain6: Folds
+*** FLOP *** [7d Kc Jh]
+*** TURN *** [7d Kc Jh Ts]
+*** RIVER *** [7d Kc Jh Ts As]
+*** SHOWDOWN ***
+Vilain8 shows [8h 9s] (Straight) [Jh Ts 9s 8h 7d]
+Hero shows [Kd Kh] (Three of a Kind) [Kh Kd Kc As Jh]
+*** SUMMARY ***
+Vilain8 wins main pot of 570
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SHQ1FVKTEHZ9576K2V7CZ
+Date & Time: 2026-10-31 10:54:36 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 270
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (240, €3.00 bounty) [BTN]
+Seat 2: Hero (500, €2.50 bounty) [SB Hero]
+Seat 3: Vilain9 (260, €2.50 bounty) [BB]
+Seat 4: Vilain6 (527, €2.50 bounty)
+Seat 5: Vilain3 (480, €2.50 bounty)
+*** HOLE CARDS ***
+Hero: [Kh 4c]
+*** PRE-FLOP ***
+10:54:36 - Hero: Posts SB 10
+10:54:36 - Vilain9: Posts BB 20
+10:54:38 - Vilain6: Folds
+10:54:40 - Vilain3: Folds
+10:54:41 - Vilain8: Raises to 240 and is all-in
+10:55:03 - Hero: Folds
+10:55:03 - Vilain9: Folds
+*** SUMMARY ***
+Vilain8 wins main pot of 270
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SGFXT4R3K38DYF2GFMXV5
+Date & Time: 2026-10-31 10:53:56 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 480
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (460, €3.00 bounty) [SB]
+Seat 2: Hero (520, €2.50 bounty) [BB Hero]
+Seat 3: Vilain9 (260, €2.50 bounty)
+Seat 4: Vilain6 (547, €2.50 bounty)
+Seat 5: Vilain3 (220, €2.50 bounty) [BTN]
+*** HOLE CARDS ***
+Vilain8: [Ac As]
+Hero: [Qc 5h]
+Vilain3: [Ah 8d]
+*** PRE-FLOP ***
+10:53:56 - Vilain8: Posts SB 10
+10:53:56 - Hero: Posts BB 20
+10:53:58 - Vilain9: Folds
+10:54:10 - Vilain6: Calls 20
+10:54:14 - Vilain3: Raises to 220 and is all-in
+10:54:15 - Vilain8: Raises to 460 and is all-in
+10:54:24 - Hero: Folds
+10:54:24 - Vilain6: Folds
+*** FLOP *** [Kh Qh 7h]
+*** TURN *** [Kh Qh 7h 6h]
+*** RIVER *** [Kh Qh 7h 6h 9h]
+*** SHOWDOWN ***
+Vilain8 shows [Ac As] (Flush) [Kh Qh 9h 7h 6h]
+Vilain3 shows [Ah 8d] (Flush) [Ah Kh Qh 9h 7h]
+*** SUMMARY ***
+Vilain3 wins main pot of 480
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SFE6KTDXCW2YP396GVSRQ
+Date & Time: 2026-10-31 10:53:22 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 460
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (410, €3.00 bounty) [BB]
+Seat 2: Hero (520, €2.50 bounty) [Hero]
+Seat 3: Vilain9 (300, €2.50 bounty)
+Seat 4: Vilain6 (547, €2.50 bounty) [BTN]
+Seat 5: Vilain3 (230, €2.50 bounty) [SB]
+*** HOLE CARDS ***
+Hero: [Ks 2s]
+*** PRE-FLOP ***
+10:53:22 - Vilain3: Posts SB 10
+10:53:22 - Vilain8: Posts BB 20
+10:53:24 - Hero: Folds
+10:53:25 - Vilain9: Raises to 40
+10:53:40 - Vilain6: Folds
+10:53:45 - Vilain3: Folds
+10:53:46 - Vilain8: Raises to 410 and is all-in
+10:53:53 - Vilain9: Folds
+*** SUMMARY ***
+Vilain8 wins main pot of 460
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SDWE2MZ0YBCDB651XD4PW
+Date & Time: 2026-10-31 10:52:31 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 224
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (410, €3.00 bounty)
+Seat 2: Hero (520, €2.50 bounty) [BTN Hero]
+Seat 4: Vilain6 (477, €2.50 bounty) [SB]
+Seat 5: Vilain3 (300, €2.50 bounty) [BB]
+*** HOLE CARDS ***
+Hero: [6s 3s]
+*** PRE-FLOP ***
+10:52:31 - Vilain6: Posts SB 10
+10:52:31 - Vilain3: Posts BB 20
+10:52:33 - Vilain8: Folds
+10:52:33 - Hero: Folds
+10:52:42 - Vilain6: Raises to 50
+10:52:44 - Vilain3: Calls 30
+*** FLOP *** [Ac Kd 7d]
+10:52:50 - Vilain6: Checks
+10:52:53 - Vilain3: Checks
+*** TURN *** [Ac Kd 7d 6c]
+10:52:55 - Vilain8: Reconnected
+10:52:56 - Vilain6: Checks
+10:53:00 - Vilain3: Bets 20
+10:53:08 - Vilain6: Raises to 104
+10:53:18 - Vilain3: Folds
+*** SUMMARY ***
+Vilain6 wins main pot of 224
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SCKSQNFSGS159HBEZG5DG
+Date & Time: 2026-10-31 10:51:49 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 410
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (370, €2.50 bounty) [BTN]
+Seat 2: Hero (530, €2.50 bounty) [SB Hero]
+Seat 3: Vilain10 (10, €2.50 bounty) [BB]
+Seat 4: Vilain6 (497, €2.50 bounty)
+*** HOLE CARDS ***
+Vilain8: [3d Jh]
+Hero: [8h 9s]
+Vilain10: [Ts 4h]
+*** PRE-FLOP ***
+10:51:49 - Hero: Posts SB 10
+10:51:49 - Vilain10: Posts BB 10 and is all-in
+10:52:01 - Vilain6: Calls 20
+10:52:03 - Vilain8: Raises to 370 and is all-in
+10:52:04 - Hero: Folds
+10:52:08 - Vilain6: Folds
+*** FLOP *** [6d 5s Jd]
+*** TURN *** [6d 5s Jd 5h]
+*** RIVER *** [6d 5s Jd 5h 8d]
+*** SHOWDOWN ***
+Vilain8 shows [3d Jh] (Two Pair) [Jh Jd 5s 5h 8d]
+Vilain10 shows [Ts 4h] (Pair) [5s 5h Jd Ts 8d]
+*** SUMMARY ***
+Vilain8 wins main pot of 40
+Vilain8 wins 1st side pot of 370
+Vilain10 finished 41th
+Vilain8 wins €0.50 for eliminating Vilain10 (x0.4), Vilain8 own bounty increases from €2.50 to €3.00
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SBX09VYHSWQ690H8EFQP6
+Date & Time: 2026-10-31 10:51:26 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 530
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (380, €2.50 bounty) [SB]
+Seat 2: Hero (260, €2.50 bounty) [BB Hero]
+Seat 3: Vilain10 (270, €2.50 bounty)
+Seat 4: Vilain6 (497, €2.50 bounty) [BTN]
+*** HOLE CARDS ***
+Hero: [2h 2c]
+Vilain10: [7h Ac]
+*** PRE-FLOP ***
+10:51:26 - Vilain8: Posts SB 10
+10:51:26 - Hero: Posts BB 20
+10:51:28 - Vilain10: Raises to 70
+10:51:30 - Vilain6: Folds
+10:51:30 - Vilain8: Folds
+10:51:31 - Hero: Calls 50
+*** FLOP *** [2s 4c 9d]
+10:51:35 - Hero: Checks
+10:51:37 - Vilain10: Bets 150
+10:51:38 - Hero: Raises to 190 and is all-in
+10:51:39 - Vilain10: Calls 40
+*** TURN *** [2s 4c 9d 6s]
+*** RIVER *** [2s 4c 9d 6s Js]
+*** SHOWDOWN ***
+Hero shows [2h 2c] (Three of a Kind) [2s 2h 2c Js 9d]
+Vilain10 shows [7h Ac] (High Card) [Ac Js 9d 7h 6s]
+*** SUMMARY ***
+Hero wins main pot of 530
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SB8W6HP0C1VZNAV7EJN13
+Date & Time: 2026-10-31 10:51:05 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 60
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (360, €2.50 bounty) [BB]
+Seat 2: Hero (260, €2.50 bounty) [Hero]
+Seat 3: Vilain10 (270, €2.50 bounty) [BTN]
+Seat 4: Vilain6 (517, €2.50 bounty) [SB]
+*** HOLE CARDS ***
+Hero: [5h Kd]
+*** PRE-FLOP ***
+10:51:05 - Vilain6: Posts SB 10
+10:51:05 - Vilain8: Posts BB 20
+10:51:07 - Hero: Folds
+10:51:08 - Vilain10: Folds
+10:51:09 - Vilain6: Calls 10
+10:51:09 - Vilain8: Checks
+*** FLOP *** [9h Ah Jd]
+10:51:15 - Vilain6: Checks
+10:51:15 - Vilain8: Checks
+*** TURN *** [9h Ah Jd 7s]
+10:51:18 - Vilain6: Checks
+10:51:21 - Vilain8: Bets 20
+10:51:22 - Vilain6: Folds
+*** SUMMARY ***
+Vilain8 wins main pot of 60
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SB3QX3MS7KR77A28HNJ91
+Date & Time: 2026-10-31 10:51:00 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 30
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (360, €2.50 bounty)
+Seat 2: Hero (260, €2.50 bounty) [BTN Hero]
+Seat 3: Vilain10 (280, €2.50 bounty) [SB]
+Seat 4: Vilain6 (507, €2.50 bounty) [BB]
+*** HOLE CARDS ***
+Hero: [Js 2d]
+*** PRE-FLOP ***
+10:51:00 - Vilain10: Posts SB 10
+10:51:00 - Vilain6: Posts BB 20
+10:51:01 - Vilain8: Folds
+10:51:02 - Hero: Folds
+10:51:02 - Vilain10: Folds
+*** SUMMARY ***
+Vilain6 wins main pot of 30
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SAMXJB2P9NR7D89KYYC24
+Date & Time: 2026-10-31 10:50:45 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 360
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (330, €2.50 bounty) [BTN]
+Seat 2: Hero (270, €2.50 bounty) [SB Hero]
+Seat 3: Vilain10 (300, €2.50 bounty) [BB]
+*** HOLE CARDS ***
+Hero: [Kc 8c]
+*** PRE-FLOP ***
+10:50:45 - Hero: Posts SB 10
+10:50:45 - Vilain10: Posts BB 20
+10:50:47 - Vilain8: Raises to 330 and is all-in
+10:50:51 - Hero: Folds
+10:50:56 - Vilain10: Folds
+*** SUMMARY ***
+Vilain8 wins main pot of 360
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SAFE1BAMPBP5XNHC9Y0CF
+Date & Time: 2026-10-31 10:50:39 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 30
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (320, €2.50 bounty) [BB]
+Seat 2: Hero (280, €2.50 bounty) [BTN SB Hero]
+*** HOLE CARDS ***
+Hero: [2s 5d]
+*** PRE-FLOP ***
+10:50:39 - Hero: Posts SB 10
+10:50:39 - Vilain8: Posts BB 20
+10:50:41 - Hero: Folds
+*** SUMMARY ***
+Vilain8 wins main pot of 30
+
+------------
+
+*** HEADER ***
+Site: Betclic.fr
+Game Mode: Tournament
+Game Type: NL Texas Hold'em
+Tournament Type: SKO
+Game Name: Hyper Blast
+Game ID: 01M67M3300V17WMNQ60F4TT70J
+Buy In: 5.00€
+Hand ID: 01M68SA7AEBWKXMRQA6KN59V31
+Date & Time: 2026-10-31 10:50:31 (UTC)
+Table ID: 01M68SA3DRMS9GV704HRWH0SVS
+Blinds: 10/20
+Total Pot: 320
+Rake: 0
+*** PLAYERS ***
+Seat 1: Vilain8 (300, €2.50 bounty) [BTN SB]
+Seat 2: Hero (300, €2.50 bounty) [BB Hero]
+*** HOLE CARDS ***
+Hero: [5c 7s]
+*** PRE-FLOP ***
+10:50:31 - Vilain8: Posts SB 10
+10:50:31 - Hero: Posts BB 20
+10:50:33 - Vilain8: Raises to 300 and is all-in
+10:50:36 - Hero: Folds
+*** SUMMARY ***
+Vilain8 wins main pot of 320

@@ -21,7 +21,7 @@ public sealed class BetclicHandHistoryParser : IHandHistoryParser
                 current = [line];
                 blocks.Add(current);
             }
-            else if (line.Text.Length == 0)
+            else if (line.Text.Length == 0 || IsBlockSeparator(line.Text))
             {
                 continue;
             }
@@ -56,6 +56,25 @@ public sealed class BetclicHandHistoryParser : IHandHistoryParser
         }
 
         return new HandHistoryParseResult(hands, errors);
+    }
+
+    /// <summary>Block separator between hands in tournament exports (e.g. "------------").</summary>
+    private static bool IsBlockSeparator(string text)
+    {
+        if (text.Length < 3)
+        {
+            return false;
+        }
+
+        foreach (var c in text)
+        {
+            if (c != '-')
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

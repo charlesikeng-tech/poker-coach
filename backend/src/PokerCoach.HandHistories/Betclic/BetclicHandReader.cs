@@ -39,6 +39,14 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
     private long rake;
     private ParseError? error;
 
+    // Tournament state.
+    private bool isTournament;
+    private string? externalTournamentId;
+    private string? tournamentName;
+    private readonly List<ParsedElimination> eliminations = [];
+    private readonly List<ParsedBountyAward> bountyAwards = [];
+    private HandBuyIn? buyIn;
+
     public (ParsedHand? Hand, ParseError? Error) Read()
     {
         for (var i = 0; i < block.Count; i++)
@@ -67,18 +75,19 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
             return (null, error);
         }
 
+        UpgradeSingleToMainWhenSidePotsExist();
         pot = NormalizeUncalledBetReturn(pot);
 
         var hand = new ParsedHand
         {
             Room = PokerRoom.Betclic,
-            GameType = GameType.CashGame,
+            GameType = isTournament ? GameType.Tournament : GameType.CashGame,
             ExternalHandId = header.HandId,
-            TournamentName = null,
-            ExternalTournamentId = null,
-            BuyIn = null,
+            TournamentName = tournamentName,
+            ExternalTournamentId = externalTournamentId,
+            BuyIn = buyIn,
             TableName = header.TableId,
-            MaxSeats = header.MaxSeats,
+            MaxSeats = isTournament ? seats.Max(s => s.SeatNumber) : header.MaxSeats,
             IsRealMoney = true,
             Level = 0,
             Ante = null,
@@ -94,8 +103,10 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
             ShownCards = shownCards,
             Collections = collections,
             TotalPot = pot,
-            Rake = rake,
-            Stakes = header.Stakes,
+            Rake = isTournament ? null : rake,
+            Stakes = isTournament ? null : header.Stakes,
+            Eliminations = eliminations,
+            BountyAwards = bountyAwards,
             LineNumber = block[0].Number,
         };
         return (hand, null);
@@ -179,10 +190,40 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         }
 
         if (text.StartsWith("Site: ", StringComparison.Ordinal)
-            || text.StartsWith("Game Mode: ", StringComparison.Ordinal)
-            || text.StartsWith("Game Type: ", StringComparison.Ordinal)
-            || text.StartsWith("Game ID: ", StringComparison.Ordinal))
+            || text.StartsWith("Game Type: ", StringComparison.Ordinal))
         {
+            return true;
+        }
+
+        if (text.StartsWith("Game Mode: ", StringComparison.Ordinal))
+        {
+            isTournament = text["Game Mode: ".Length..] == "Tournament";
+            return true;
+        }
+
+        if (text.StartsWith("Tournament Type: ", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        if (text.StartsWith("Game ID: ", StringComparison.Ordinal))
+        {
+            if (isTournament)
+            {
+                externalTournamentId = text["Game ID: ".Length..];
+            }
+
+            return true;
+        }
+
+        if (text.StartsWith("Buy In: ", StringComparison.Ordinal))
+        {
+            if (!BetclicValues.TryParseBuyIn(text["Buy In: ".Length..], out var amount))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+
+            buyIn = new HandBuyIn(amount, 0m, BetclicValues.Currency);
             return true;
         }
 
@@ -230,7 +271,7 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         if (text.StartsWith("Total Pot: ", StringComparison.Ordinal))
         {
             var potText = text["Total Pot: ".Length..];
-            if (!BetclicValues.TryParseEuroAmount(potText, out var pot))
+            if (!TryParsePotAmount(potText, out var pot))
             {
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
@@ -242,7 +283,7 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         if (text.StartsWith("Rake: ", StringComparison.Ordinal))
         {
             var rakeText = text["Rake: ".Length..];
-            if (!BetclicValues.TryParseEuroAmount(rakeText, out var rakeValue))
+            if (!TryParsePotAmount(rakeText, out var rakeValue))
             {
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
@@ -256,6 +297,13 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
     private bool ReadGameName(string gameName, SourceLine line)
     {
+        if (isTournament)
+        {
+            tournamentName = gameName;
+            header = new HeaderInfo(handId ?? string.Empty, string.Empty, DateTimeOffset.MinValue, null, 0, 0, 0);
+            return true;
+        }
+
         // "NLHE 0.25/0.5 6 max Deep" or "NLHE 0.10/0.25 6 Max Deep"
         var parts = gameName.Split(' ');
         if (parts.Length < 3)
@@ -275,17 +323,28 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
     private bool ReadBlinds(string blindsText, SourceLine line)
     {
-        // "€0.25/€0.50"
         var slash = blindsText.IndexOf('/');
         if (slash < 0)
         {
             return Fail(ParseErrorCodes.MissingField, line);
         }
 
-        if (!BetclicValues.TryParseEuroAmount(blindsText[..slash], out var sb)
-            || !BetclicValues.TryParseEuroAmount(blindsText[(slash + 1)..], out var bb))
+        long sb, bb;
+        if (isTournament)
         {
-            return Fail(ParseErrorCodes.InvalidNumber, line);
+            if (!BetclicValues.TryParseChips(blindsText[..slash], out sb)
+                || !BetclicValues.TryParseChips(blindsText[(slash + 1)..], out bb))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+        }
+        else
+        {
+            if (!BetclicValues.TryParseEuroAmount(blindsText[..slash], out sb)
+                || !BetclicValues.TryParseEuroAmount(blindsText[(slash + 1)..], out bb))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
         }
 
         if (header is not null)
@@ -298,16 +357,34 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
     private bool ReadSeat(SourceLine line)
     {
-        var match = BetclicPatterns.SeatLine().Match(line.Text);
+        var match = isTournament
+            ? BetclicPatterns.TournamentSeatLine().Match(line.Text)
+            : BetclicPatterns.SeatLine().Match(line.Text);
+
         if (!match.Success)
         {
             return Fail(ParseErrorCodes.UnrecognizedLine, line);
         }
 
-        if (!int.TryParse(match.Groups["seat"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var seatNumber)
-            || !BetclicValues.TryParseCents(match.Groups["stack"].Value, out var stack))
+        if (!int.TryParse(match.Groups["seat"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var seatNumber))
         {
             return Fail(ParseErrorCodes.InvalidNumber, line);
+        }
+
+        long stack;
+        if (isTournament)
+        {
+            if (!BetclicValues.TryParseChips(match.Groups["stack"].Value, out stack))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
+        }
+        else
+        {
+            if (!BetclicValues.TryParseCents(match.Groups["stack"].Value, out stack))
+            {
+                return Fail(ParseErrorCodes.InvalidNumber, line);
+            }
         }
 
         var name = match.Groups["name"].Value;
@@ -324,7 +401,14 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         if (tags.Contains("BB", StringComparison.Ordinal))
             mandatoryBbPlayer = name;
 
-        seats.Add(new ParsedSeat(seatNumber, name, stack, null));
+        decimal? bounty = null;
+        if (isTournament && match.Groups["bounty"].Success
+            && decimal.TryParse(match.Groups["bounty"].Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var bountyValue))
+        {
+            bounty = bountyValue;
+        }
+
+        seats.Add(new ParsedSeat(seatNumber, name, stack, bounty));
         streetContributions[name] = 0;
         return true;
     }
@@ -439,9 +523,13 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
             return Fail(ParseErrorCodes.UnknownPlayer, line);
         }
 
-        if (BetclicPatterns.Post().Match(actionText) is { Success: true } post)
+        var postMatch = isTournament
+            ? BetclicPatterns.TournamentPost().Match(actionText)
+            : BetclicPatterns.Post().Match(actionText);
+
+        if (postMatch.Success)
         {
-            return ReadPost(playerName, post, line);
+            return ReadPost(playerName, postMatch, line);
         }
 
         if (BetclicPatterns.Fold().IsMatch(actionText))
@@ -456,33 +544,45 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
             return true;
         }
 
-        if (BetclicPatterns.Call().Match(actionText) is { Success: true } call)
+        var callMatch = isTournament
+            ? BetclicPatterns.TournamentCall().Match(actionText)
+            : BetclicPatterns.Call().Match(actionText);
+
+        if (callMatch.Success)
         {
-            if (!BetclicValues.TryParseCents(call.Groups["amount"].Value, out var amount))
+            if (!TryParseActionAmount(callMatch.Groups["amount"].Value, out var amount))
             {
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
 
             AddToStreet(playerName, amount);
-            AddAction(playerName, ParsedActionType.Call, amount, raiseTo: null, call.Groups["allIn"].Success);
+            AddAction(playerName, ParsedActionType.Call, amount, raiseTo: null, callMatch.Groups["allIn"].Success);
             return true;
         }
 
-        if (BetclicPatterns.Bet().Match(actionText) is { Success: true } bet)
+        var betMatch = isTournament
+            ? BetclicPatterns.TournamentBet().Match(actionText)
+            : BetclicPatterns.Bet().Match(actionText);
+
+        if (betMatch.Success)
         {
-            if (!BetclicValues.TryParseCents(bet.Groups["amount"].Value, out var amount))
+            if (!TryParseActionAmount(betMatch.Groups["amount"].Value, out var amount))
             {
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
 
             AddToStreet(playerName, amount);
-            AddAction(playerName, ParsedActionType.Bet, amount, raiseTo: null, bet.Groups["allIn"].Success);
+            AddAction(playerName, ParsedActionType.Bet, amount, raiseTo: null, betMatch.Groups["allIn"].Success);
             return true;
         }
 
-        if (BetclicPatterns.Raise().Match(actionText) is { Success: true } raise)
+        var raiseMatch = isTournament
+            ? BetclicPatterns.TournamentRaise().Match(actionText)
+            : BetclicPatterns.Raise().Match(actionText);
+
+        if (raiseMatch.Success)
         {
-            if (!BetclicValues.TryParseCents(raise.Groups["to"].Value, out var raiseTo))
+            if (!TryParseActionAmount(raiseMatch.Groups["to"].Value, out var raiseTo))
             {
                 return Fail(ParseErrorCodes.InvalidNumber, line);
             }
@@ -494,7 +594,7 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
                 return Fail(ParseErrorCodes.InconsistentRaise, line);
             }
 
-            AddAction(playerName, ParsedActionType.Raise, increment, raiseTo, raise.Groups["allIn"].Success);
+            AddAction(playerName, ParsedActionType.Raise, increment, raiseTo, raiseMatch.Groups["allIn"].Success);
             streetContributions[playerName] = raiseTo;
             currentBet = raiseTo;
             return true;
@@ -505,7 +605,7 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
     private bool ReadPost(string playerName, Match post, SourceLine line)
     {
-        if (!BetclicValues.TryParseCents(post.Groups["amount"].Value, out var amount))
+        if (!TryParseActionAmount(post.Groups["amount"].Value, out var amount))
         {
             return Fail(ParseErrorCodes.InvalidNumber, line);
         }
@@ -535,7 +635,8 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         }
         // Non-mandatory SB: dead blind — no contribution to streetContributions.
 
-        AddAction(playerName, type, amount, raiseTo: null, isAllIn: false);
+        var isAllIn = post.Groups["allIn"].Success;
+        AddAction(playerName, type, amount, raiseTo: null, isAllIn: isAllIn);
         return true;
     }
 
@@ -559,14 +660,47 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
     private bool ReadSummaryLine(SourceLine line)
     {
-        var wins = BetclicPatterns.Wins().Match(line.Text);
+        // Tournament elimination and bounty lines.
+        if (isTournament)
+        {
+            var finished = BetclicPatterns.FinishedLine().Match(line.Text);
+            if (finished.Success)
+            {
+                if (int.TryParse(finished.Groups["position"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var position))
+                {
+                    eliminations.Add(new ParsedElimination(finished.Groups["name"].Value, position));
+                }
+
+                return true;
+            }
+
+            var bounty = BetclicPatterns.BountyLine().Match(line.Text);
+            if (bounty.Success)
+            {
+                if (decimal.TryParse(bounty.Groups["amount"].Value, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var bountyAmount))
+                {
+                    bountyAwards.Add(new ParsedBountyAward(
+                        bounty.Groups["winner"].Value,
+                        bounty.Groups["eliminated"].Value,
+                        bountyAmount,
+                        BetclicValues.Currency));
+                }
+
+                return true;
+            }
+        }
+
+        var wins = isTournament
+            ? BetclicPatterns.TournamentWins().Match(line.Text)
+            : BetclicPatterns.Wins().Match(line.Text);
+
         if (!wins.Success)
         {
             return Fail(ParseErrorCodes.UnrecognizedLine, line);
         }
 
         var playerName = wins.Groups["name"].Value;
-        if (!BetclicValues.TryParseCents(wins.Groups["amount"].Value, out var amount))
+        if (!TryParseActionAmount(wins.Groups["amount"].Value, out var amount))
         {
             return Fail(ParseErrorCodes.InvalidNumber, line);
         }
@@ -628,7 +762,10 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         {
             if (line.Text.StartsWith("Seat ", StringComparison.Ordinal) && line.Text.Contains("[BTN", StringComparison.Ordinal))
             {
-                var match = BetclicPatterns.SeatLine().Match(line.Text);
+                var match = isTournament
+                    ? BetclicPatterns.TournamentSeatLine().Match(line.Text)
+                    : BetclicPatterns.SeatLine().Match(line.Text);
+
                 if (match.Success && int.TryParse(match.Groups["seat"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out var seatNumber))
                 {
                     return seatNumber;
@@ -651,6 +788,37 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
 
         return seats.Count > 0 ? seats[0].SeatNumber : 1;
     }
+
+    /// <summary>
+    /// When side pots exist, the "wins main pot" collection was initially marked Single
+    /// (before the side pot was seen). Upgrade it to Main. Runs before NormalizeUncalledBetReturn
+    /// so that uncalled returns added later keep their Single kind.
+    /// </summary>
+    private void UpgradeSingleToMainWhenSidePotsExist()
+    {
+        if (!collections.Exists(c => c.Kind == PotKind.Side))
+        {
+            return;
+        }
+
+        for (var i = 0; i < collections.Count; i++)
+        {
+            if (collections[i].Kind == PotKind.Single)
+            {
+                collections[i] = collections[i] with { Kind = PotKind.Main };
+            }
+        }
+    }
+
+    private bool TryParsePotAmount(string text, out long amount) =>
+        isTournament
+            ? BetclicValues.TryParseChips(text, out amount)
+            : BetclicValues.TryParseEuroAmount(text, out amount);
+
+    private bool TryParseActionAmount(string text, out long amount) =>
+        isTournament
+            ? BetclicValues.TryParseChips(text, out amount)
+            : BetclicValues.TryParseCents(text, out amount);
 
     private void AddToStreet(string player, long amount)
     {
@@ -720,7 +888,7 @@ internal sealed class BetclicHandReader(IReadOnlyList<SourceLine> block)
         string HandId,
         string TableId,
         DateTimeOffset StartedAt,
-        string Stakes,
+        string? Stakes,
         long SmallBlind,
         long BigBlind,
         int MaxSeats);

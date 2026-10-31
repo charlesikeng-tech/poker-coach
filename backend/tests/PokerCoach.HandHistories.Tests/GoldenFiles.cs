@@ -54,6 +54,9 @@ internal static class GoldenFiles
     /// <summary>7 hands: fold preflop, raise + flop, hero wins, 5-max, showdown, all-in, side pot.</summary>
     public const string BetclicCash6Max = "cash_nlhe_025_050_6max.txt";
 
+    /// <summary>27 hands: SKO Hyper Blast €5, bounties, side pots, BB all-in, heads-up, eliminations.</summary>
+    public const string BetclicTournamentSko = "tournament_sko_hyper_blast.txt";
+
     /// <summary>7 hands: fold preflop, 3-bet + flop/turn, hero DEALER walk, hero wins + mucks, all-in showdown, raise + all-in turn, 4-bet all-in preflop.</summary>
     public const string PmuCash6Max = "cash_nlhe_025_050_6max.txt";
 

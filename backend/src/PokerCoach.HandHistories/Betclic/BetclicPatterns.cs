@@ -38,4 +38,30 @@ internal static partial class BetclicPatterns
 
     [GeneratedRegex(@"^(?<name>.+?) wins (?:main pot|(?<sideOrd>[0-9]+)(?:st|nd|rd|th) side pot) of €(?<amount>[0-9]+(?:\.[0-9]+)?)$", Options)]
     internal static partial Regex Wins();
+
+    // --- Tournament variants (chip amounts without € prefix) ---
+
+    [GeneratedRegex(@"^Seat (?<seat>[0-9]+): (?<name>.+?) \((?<stack>[0-9]+)(?:, €(?<bounty>[0-9]+(?:\.[0-9]+)?) bounty)?\)(?<tags> \[.+\])?$", Options)]
+    internal static partial Regex TournamentSeatLine();
+
+    [GeneratedRegex(@"^Posts (?<kind>SB|BB) (?<amount>[0-9]+)(?<allIn> and is all-in)?$", Options)]
+    internal static partial Regex TournamentPost();
+
+    [GeneratedRegex(@"^Calls (?<amount>[0-9]+)(?<allIn> and is all-in)?$", Options)]
+    internal static partial Regex TournamentCall();
+
+    [GeneratedRegex(@"^Bets (?<amount>[0-9]+)(?<allIn> and is all-in)?$", Options)]
+    internal static partial Regex TournamentBet();
+
+    [GeneratedRegex(@"^Raises to (?<to>[0-9]+)(?<allIn> and is all-in)?$", Options)]
+    internal static partial Regex TournamentRaise();
+
+    [GeneratedRegex(@"^(?<name>.+?) wins (?:main pot|(?<sideOrd>[0-9]+)(?:st|nd|rd|th) side pot) of (?<amount>[0-9]+)$", Options)]
+    internal static partial Regex TournamentWins();
+
+    [GeneratedRegex(@"^(?<name>.+) finished (?<position>[0-9]+)(?:st|nd|rd|th)$", Options)]
+    internal static partial Regex FinishedLine();
+
+    [GeneratedRegex(@"^(?<winner>.+?) wins €(?<amount>[0-9]+(?:\.[0-9]+)?) for eliminating (?<eliminated>.+?) \(x[0-9]+(?:\.[0-9]+)?\),.+$", Options)]
+    internal static partial Regex BountyLine();
 }

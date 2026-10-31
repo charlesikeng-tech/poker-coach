@@ -79,6 +79,12 @@ public sealed record ParsedHand
     /// <summary>Table's advertised blinds for display and grouping ("0.25/0.50"). Null for tournaments.</summary>
     public string? Stakes { get; init; }
 
+    /// <summary>Players eliminated in this hand with their finishing position. Empty for cash games or no eliminations.</summary>
+    public IReadOnlyList<ParsedElimination> Eliminations { get; init; } = [];
+
+    /// <summary>Bounty awards in this hand. Empty for non-bounty tournaments or no eliminations.</summary>
+    public IReadOnlyList<ParsedBountyAward> BountyAwards { get; init; } = [];
+
     /// <summary>1-based line of the hand header in the source file.</summary>
     public required int LineNumber { get; init; }
 }
@@ -126,3 +132,9 @@ public enum PotKind
     Main,
     Side,
 }
+
+/// <summary>A player eliminated from a tournament in this hand.</summary>
+public sealed record ParsedElimination(string PlayerName, int FinishPosition);
+
+/// <summary>A bounty awarded for eliminating a player (PKO/SKO tournaments).</summary>
+public sealed record ParsedBountyAward(string Winner, string EliminatedPlayer, decimal Amount, string Currency);

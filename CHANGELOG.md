@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.31-6535979] — 2026-10-31
+
+### Maintenance
+
+- Replace Betclic logo with SVG version
+
 ## [2026.10.30-38d2177] — 2026-10-30
 
 ### Correctifs
