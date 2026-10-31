@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026.10.30-38d2177] — 2026-10-30
+
+### Correctifs
+
+- Remove unused Button import from AllInLuckPanel
+
 ## [2026.10.30-dc6b940] — 2026-10-30
 
 ### Fonctionnalités
