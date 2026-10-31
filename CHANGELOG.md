@@ -1,5 +1,11 @@
 # Changelog
 
+## [Non publié]
+
+### Fonctionnalités
+
+- Add Betclic tournament hand history parsing
+
 ## [2026.10.31-6535979] — 2026-10-31
 
 ### Maintenance
